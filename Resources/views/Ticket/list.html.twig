@@ -1,0 +1,45 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% set pageTitle = 'Tickets' %}
+
+{% block navButtons %}
+    {{ UI.addButton({
+    'path' : path('diamante_ticket_create'),
+    'title' : 'Create Ticket',
+    'label' : 'Create Ticket'
+    }) }}
+{% endblock %}
+
+{% block content_datagrid %}
+
+    {% set gridName = 'diamante-ticket-grid' %}
+
+    <div class="left-panel-container diam-filter-container">
+        <div class="placeholder">
+            <div class="scrollable-container">
+                <div class="left-panel">
+                    <table class="grid table-hover table table-bordered table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Filters:</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for link in linksList %}
+                            <tr>
+                                <td><a href="{{ path('diamante_ticket_list') }}{{ link['url'] }}"
+                                        class="no-hash">{{ link['name'] }}</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="content" style="background-color: #fff;">
+                    {{ dataGrid.renderGrid(gridName) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content_datagrid %}

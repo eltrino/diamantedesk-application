@@ -1,0 +1,14 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% set gridName = 'diamante-branch-grid' %}
+{% set pageTitle = 'Branches' %}
+
+{% block navButtons %}
+    {{
+        UI.addButton({
+            'path' : path('diamante_branch_create'),
+            'title' : 'Create',
+            'label' : 'Create'
+        })
+    }}
+{% endblock %}

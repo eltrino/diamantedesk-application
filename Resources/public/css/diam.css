@@ -1,0 +1,91 @@
+.diam-atachments li {
+    text-align: center;
+    border: 1px #e5e5e5 solid;
+    border-radius: 5px;
+}
+.diam-atachments strong {
+    font-weight: normal;
+    display: block;
+    margin-right: 4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.diam-atachments figcaption {
+    text-align: left;
+    padding: .6em 0;
+}
+
+.diam-comments {
+    margin: 0 0 1em;
+}
+
+.diam-comment {
+    padding: 1em;
+    padding-left: 6.5em ;
+}
+
+.diam-comment:nth-child(odd) {
+    background: #fafafa;
+}
+
+.diam-comment:hover {
+    background: #eee;
+}
+
+.diam-comment-user-image {
+    float: left;
+    margin-left: -5.5em;
+}
+.diam-comment-meta {
+    margin: 0 0 .8em;
+}
+.diam-comment-attachments-box {
+    margin: .8em 0 0;
+}
+.diam-comment:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.diam-comment-form-attachments {
+    width: 294px;
+    padding: 5px;
+    background: #fafafa;
+    border-radius: 5px;
+}
+.diam-comment-form-attachments .diam-comment-attachments {
+    margin: 0;
+}
+
+.diam-filter-container {
+
+}
+.diam-filter-container > .placeholder {
+    margin-left: 180px !important;
+    border-left: none !important;
+    background: none !important;
+}
+.diam-filter-container > .placeholder > * {
+    margin-left: -180px !important;
+}
+.diam-filter-container > .placeholder > * > .left-panel {
+    width: 180px !important;
+    border-top: none !important;
+}
+.diam-filter-container > .placeholder > * > .content {
+    margin-left: 180px !important;
+    overflow: hidden;
+}
+
+.diam-filter-container .scrollable-container{
+    overflow-x: inherit;
+    overflow-y: auto;
+    height: 575px;
+}
+.diam-filter-container .left-panel .grid{
+    width:auto;
+    margin: 15px 0 0 15px;
+}
+

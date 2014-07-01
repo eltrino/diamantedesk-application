@@ -1,0 +1,16 @@
+Eltrino\DiamanteDeskBundle\Entity\Branch:
+    alias: diamante_branch
+    label: Branch
+
+    title_fields: [name]
+    route:
+        name: diamante_branch_view
+        parameters:
+            id: id
+    search_template: EltrinoDiamanteDeskBundle:Branch:searchResult.html.twig
+    entity_icon_class: icon-home
+    fields:
+        -
+            name: name
+            target_type: text
+            target_fields: [name]

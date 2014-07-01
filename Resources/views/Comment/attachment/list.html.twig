@@ -1,0 +1,19 @@
+{% import 'OroUIBundle::macros.html.twig' as ui %}
+
+<div class="control-group">
+    <label class="control-label required" for="diamante_comment_form_content">
+        Attachments</label>
+
+    <div class="controls diam-comment-form-attachments">
+    {% for attachment in attachments %}
+        <ul class="diam-comment-attachments unstyled">
+            <li>
+                <a class="pull-right" href="{{ path('diamante_ticket_comment_attachment_remove', {'commentId': comment_id, 'attachId': attachment.id}) }}"><i
+                            class="icon-trash hide-text"
+                            title="Delete File">Delete File</i></a>
+                <i class="icon-paper-clip"></i> <a href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment_id, 'attachId': attachment.id}) }}">{{ attachment.filename|escape }}</a>
+            </li>
+       </ul>
+    {% endfor %}
+    </div>
+</div>

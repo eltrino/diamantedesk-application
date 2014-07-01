@@ -1,0 +1,25 @@
+oro_menu_config:
+    items:
+        desk_tab:
+            label: 'Desk'
+            uri: '#'
+            extras:
+                position: 100
+
+        diamante_branch_list:
+            label: 'Branches'
+            route: diamante_branch_list
+        diamante_ticket_list:
+            label: 'All Tickets'
+            route: diamante_ticket_list
+    tree:
+        application_menu:
+            children:
+                desk_tab:
+                    children:
+                        diamante_branch_list: ~
+                        diamante_ticket_list: ~
+
+oro_titles:
+    diamante_comment_create: New Comment
+    diamante_comment_update: Edit Comment

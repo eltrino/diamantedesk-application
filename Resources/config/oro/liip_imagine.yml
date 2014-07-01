@@ -1,0 +1,7 @@
+liip_imagine:
+    filter_sets:
+        attach_preview:
+            quality:          95
+            filters:
+                thumbnail:    { size: [140, 140], mode: outbound }
+                strip:        ~

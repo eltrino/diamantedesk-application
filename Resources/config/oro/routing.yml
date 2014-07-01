@@ -1,0 +1,4 @@
+eltrino_diamante_desk_bundle:
+    resource:     "@EltrinoDiamanteDeskBundle/Controller"
+    type:         annotation
+    prefix:       /desk

@@ -1,0 +1,99 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.ticket.entity.class">Eltrino\DiamanteDeskBundle\Entity\Ticket</parameter>
+        <parameter key="diamante.comment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Comment</parameter>
+        <parameter key="diamante.ticket.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl</parameter>
+        <parameter key="diamante.ticket.internal.attachment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\AttachmentServiceImpl</parameter>
+        <parameter key="diamante.ticket.internal.grid_filters_service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\TicketGridFiltersService</parameter>
+        <parameter key="diamante.ticket.filter_url_generator_factory.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\FilterUrlGeneratorFactory</parameter>
+        <parameter key="diamante.ticket.all_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\AllTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_open_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyOpenTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_reported_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyReportedTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.internal.user.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\OroUserService</parameter>
+        <parameter key="diamante.comment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.ticket.internal.attachment.service" class="%diamante.ticket.internal.attachment.service.class%">
+            <argument type="service" id="diamante.attachment.service"/>
+        </service>
+
+        <service id="diamante.ticket.internal.user.service" class="%diamante.ticket.internal.user.service.class%">
+            <argument type="service" id="oro_user.manager"/>
+        </service>
+
+        <service id="diamante.ticket.service" class="%diamante.ticket.service.class%"
+                 factory-class="%diamante.ticket.service.class%" factory-method="create">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="diamante.ticket.internal.attachment.service"/>
+            <argument type="service" id="diamante.ticket.internal.user.service"/>
+        </service>
+
+        <service id="diamante.ticket.internal.grid_filters_service"
+                 class="%diamante.ticket.internal.grid_filters_service.class%"
+                 factory-class="%diamante.ticket.internal.grid_filters_service.class%"
+                 factory-method="create">
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
+
+        <service id="diamante.ticket.filter_url_generator_factory" class="%diamante.ticket.filter_url_generator_factory.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante.ticket.all_tickets_filter_url_generator"
+                 class="%diamante.ticket.all_tickets_filter_url_generator.class%"
+                 factory-service="diamante.ticket.filter_url_generator_factory"
+                 factory-method="createAllTicketsFilterUrlGenerator"
+                >
+        </service>
+
+        <service id="diamante.ticket.my_tickets_filter_url_generator"
+                 class="%diamante.ticket.my_tickets_filter_url_generator.class%"
+                 factory-service="diamante.ticket.filter_url_generator_factory"
+                 factory-method="createMyTicketsFilterUrlGenerator"
+                >
+        </service>
+
+        <service id="diamante.ticket.my_open_tickets_filter_url_generator"
+                 class="%diamante.ticket.my_open_tickets_filter_url_generator.class%"
+                 factory-service="diamante.ticket.filter_url_generator_factory"
+                 factory-method="createMyOpenTicketsFilterUrlGenerator"
+                >
+        </service>
+
+        <service id="diamante.ticket.my_reported_tickets_filter_url_generator"
+                 class="%diamante.ticket.my_reported_tickets_filter_url_generator.class%"
+                 factory-service="diamante.ticket.filter_url_generator_factory"
+                 factory-method="createMyReportedTicketsFilterUrlGenerator"
+                >
+        </service>
+
+        <service id="diamante.comment.service" class="%diamante.comment.service.class%"
+                 factory-class="%diamante.comment.service.class%" factory-method="create">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="diamante.ticket.internal.user.service"/>
+            <argument type="service" id="diamante.ticket.internal.attachment.service"/>
+        </service>
+    </services>
+</container>

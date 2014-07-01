@@ -1,0 +1,55 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
+{% set title = 'Attach File'|trans %}
+{#{% oro_title_set({params : {"Attach File": form.vars.value.subject|default('N/A')} }) %}#}
+{% set formAction = path('diamante_ticket_create_attach_post', { 'id': form.vars.value.ticketId }) %}
+{% block head_script %}
+    {{ parent() }}
+
+    {% block stylesheets %}
+        {{ form_stylesheet(form) }}
+    {% endblock %}
+{% endblock %}
+
+{% block navButtons %}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': form.vars.value.ticketId }), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
+    {{ UI.saveAndCloseButton() }}
+{% endblock %}
+
+{% block pageHeader %}
+    {#{% if form.vars.value.ticketId %}#}
+        {#{% set breadcrumbs = {#}
+            {#'entity':      form.vars.value,#}
+            {#'indexPath':   path('diamante_ticket_view', {'id': form.vars.value.ticketId}),#}
+            {#'indexLabel':  form.vars.value.ticketId,#}
+            {#'entityTitle': form.vars.value.subject|default('N/A')#}
+        {#}#}
+        {#%}#}
+        {#{{ parent() }}#}
+    {#{% else %}#}
+        {#{% include 'OroUIBundle::page_title_block.html.twig' %}#}
+    {#{% endif %}#}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'ticketAttachment' %}
+
+    {% set dataBlocks = [{
+        'title': 'General'|trans,
+        'class': 'active',
+        'subblocks': [
+            {
+                'title': 'Attachment'|trans,
+                'data': [
+                    form_row(form.file),
+                ]
+            }
+        ]
+    }] %}
+
+    {% set data = {
+        'formErrors': form_errors(form)? form_errors(form) : null,
+        'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

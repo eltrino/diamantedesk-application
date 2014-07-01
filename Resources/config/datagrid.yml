@@ -1,0 +1,244 @@
+datagrid:
+    diamante-branch-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - b.id
+                    - b.name
+                    - b.logo
+                from:
+                    - { table: %diamante.branch.entity.class%, alias: b }
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_branch_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      diamante_branch_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      diamante_branch_delete
+                params:     [ id ]
+        sorters:
+            columns:
+                name:
+                  data_name: b.name
+        filters:
+            columns:
+                name:
+                    type: string
+                    data_name: b.name
+        columns:
+            logo:
+                label: Logo
+                type: twig
+                frontend_type: html
+                template: EltrinoDiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
+            name:
+                label: Branch Name
+        actions:
+            view:
+                type:          navigate
+                label:         View
+                icon:          user
+                link:          view_link
+                rowAction:     true
+            update:
+                type:          navigate
+                label:         Update
+                icon:          edit
+                link:          update_link
+            delete:
+                type:          delete
+                label:         Delete
+                icon:          trash
+                link:          delete_link
+        options:
+            entityHint: branches
+
+    diamante-branch-tickets-grid:
+        extends: diamante-ticket-grid
+        source:
+            query:
+                where:
+                    and:
+                        - i.branch = :branch
+    diamante-ticket-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - i.id
+                    - i.subject
+                    - i.priority
+                    - i.status
+                    - assignee.id as assigneeId
+                    - reporter.id as reporterId
+                    - branch.name as branchName
+                    - CONCAT(reporter.firstName, CONCAT(' ', reporter.lastName)) as reporterFullName
+                    - CONCAT(assignee.firstName, CONCAT(' ', assignee.lastName)) as assigneeFullName
+                    - i.createdAt
+                    - i.updatedAt
+                from:
+                    - { table: EltrinoDiamanteDeskBundle:Ticket, alias: i }
+                join:
+                    left:
+                        - { join: i.branch, alias: branch }
+                        - { join: i.reporter, alias: reporter }
+                        - { join: i.assignee, alias: assignee }
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_ticket_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      diamante_ticket_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      diamante_ticket_delete
+                params:     [ id ]
+        columns:
+            subject:
+                label:   Subject
+            branchName:
+                label:   Branch
+            assigneeFullName:
+                label:   Assignee
+            reporterFullName:
+                label:   Reporter
+            priority:
+                label:   Priority
+            assigneeId:
+                label:   AssigneeId
+                renderable: false
+            reporterId:
+                label:   ReporterId
+                renderable: false
+            status:
+                label:   Status
+            createdAt:
+                label:   Created
+                frontend_type: datetime
+            updatedAt:
+                label:   Updated
+                frontend_type: datetime
+        sorters:
+            columns:
+                subject:
+                  data_name: i.subject
+                branchName:
+                  data_name: branchName
+                assigneeFullName:
+                  data_name: assigneeFullName
+                reporterFullName:
+                  data_name: reporterFullName
+                priority:
+                  data_name: i.priority
+                status:
+                  data_name: i.status
+                createdAt:
+                  data_name: i.createdAt
+                updatedAt:
+                  data_name: i.updatedAt
+            default:
+                updatedAt: DESC
+        filters:
+            columns:
+                subject:
+                    type:      string
+                    data_name: i.subject
+                branchName:
+                    type:      entity
+                    data_name: i.branch
+                    options:
+                        field_options:
+                            class: EltrinoDiamanteDeskBundle:Branch
+                            property: name
+                assigneeFullName:
+                    type:      string
+                    data_name: assignee
+                reporterFullName:
+                    type:      string
+                    data_name: reporter
+                priority:
+                    type:      string
+                    data_name: i.priority
+                assigneeId:
+                    type:       number
+                    data_name:  assigneeId
+                reporterId:
+                    type:       number
+                    data_name:  reporterId
+                status:
+                    type:      string
+                    data_name: i.status
+                createdAt:
+                    type:      datetime
+                    data_name: i.createdAt
+                updatedAt:
+                    type:      datetime
+                    data_name: i.updatedAt
+        actions:
+            view:
+                type:          navigate
+                label:         View
+                icon:          user
+                link:          view_link
+                rowAction:     true
+            update:
+                type:          navigate
+                label:         Update
+                icon:          edit
+                link:          update_link
+            delete:
+                type:          delete
+                label:         Delete
+                icon:          trash
+                link:          delete_link
+        options:
+            entityHint: tickets
+
+    diamante-ticket-attachments-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - a.id
+                    - a.file
+                from:
+                    - { table: %diamante.attachment.entity.class%, alias: a }
+                where:
+                    and:
+                        - a.ticket = :ticket
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_attachment_view
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      diamante_attachment_delete
+                params:     [ id ]
+        columns:
+            file:
+                label: File
+        actions:
+            view:
+                type:          navigate
+                label:         View
+                icon:          user
+                link:          view_link
+                rowAction:     true
+            delete:
+                type:          delete
+                label:         Delete
+                icon:          trash
+                link:          delete_link

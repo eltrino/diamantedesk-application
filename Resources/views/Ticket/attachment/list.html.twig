@@ -1,0 +1,25 @@
+{% import 'OroUIBundle::macros.html.twig' as ui %}
+
+<div class="widget-content">
+    {% for key, attachment in attachments %}
+        {% if (key % 4 == 0) %}
+        <ul class="row-fluid diam-atachments">
+        {% endif %}
+            <li class="span3">
+                <figure>
+                    {% set attachmentPreviewSrc = asset('bundles/eltrinodiamantedesk/img/logo_oro.png') %}
+                    <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview') }}" alt=""/>
+                    <figcaption>
+                        <span class="pull-right">
+                            <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="Download">download</i></a>
+                            <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="Delete">delete</i></a>
+                        </span>
+                        <strong>{{ attachment.filename|escape }}</strong>
+                    </figcaption>
+                </figure>
+            </li>
+        {% if (key % 4 == 3) %}
+        </ul>
+        {% endif %}
+    {% endfor %}
+</div>
