@@ -15,10 +15,9 @@
     <testsuites>
         <testsuite name="Diamante Desk Test Suite">
             <directory suffix="Test.php">Tests/Attachment</directory>
+            <directory suffix="Test.php">Tests/Branch</directory>
             <directory suffix="Test.php">Tests/Entity</directory>
             <directory suffix="Test.php">Tests/Model</directory>
-            <directory suffix="Test.php">Tests/Repository</directory>
-            <directory suffix="Test.php">Tests/Services</directory>
             <directory suffix="Test.php">Tests/Ticket</directory>
         </testsuite>
     </testsuites>
