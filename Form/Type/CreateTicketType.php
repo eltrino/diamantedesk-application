@@ -48,6 +48,9 @@ class CreateTicketType extends AbstractType
             array(
                 'label' => 'Description',
                 'required' => true,
+                'attr'  => array(
+                    'class' => 'diam-ticket-description'
+                ),
             )
         );
 
