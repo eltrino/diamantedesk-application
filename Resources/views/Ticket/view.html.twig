@@ -43,6 +43,31 @@
 {% endmacro %}
 
 {% block navButtons %}
+    {% set changeStatusTitle = 'Change Status' %}
+    {{ UI.clientButton({
+        'dataUrl': path('diamante_ticket_change_status', {'id': entity.id}),
+        'aCss': 'no-hash',
+        'iCss': 'icon-edit',
+        'dataId': entity.id,
+        'title' : changeStatusTitle,
+        'label' : changeStatusTitle,
+        'widget' : {
+            'type' : 'dialog',
+            'multiple' : true,
+            'reload-grid-name' : '',
+            'options' : {
+                'alias': 'status-dialog',
+                'dialogOptions' : {
+                    'title' : changeStatusTitle,
+                    'allowMaximize': true,
+                    'allowMinimize': true,
+                    'dblclick': 'maximize',
+                    'maximizedHeightDecreaseBy': 'minimize-bar',
+                    'width': 500
+                }
+            }
+        }
+    }) }}
     {{ UI.button({
         'path': path('diamante_ticket_create'),
         'iClass': 'icon-user',
@@ -70,22 +95,6 @@
         'title': 'Attach File'|trans,
         'label': 'Attach File'|trans
     }) }}
-
-    {% if entity.canReopen %}
-        {{ UI.button({
-        'path': path('diamante_ticket_reopen', {'id': entity.id}),
-        'iClass': 'icon-edit',
-        'title': 'Reopen Ticket'|trans,
-        'label': 'Reopen Ticket'|trans
-        }) }}
-    {% else %}
-        {{ UI.button({
-        'path': path('diamante_ticket_close', {'id': entity.id}),
-        'iClass': 'icon-edit',
-        'title': 'Close Ticket'|trans,
-        'label': 'Close Ticket'|trans
-        }) }}
-    {% endif %}
 
     {{ UI.deleteButton({
         'dataUrl': path('diamante_ticket_delete', {'id': entity.id}),
@@ -119,7 +128,7 @@
     {% set dataSubBlocks = [UI.attibuteRow('Subject', entity.subject)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Branch', entity.branchName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Description', entity.description)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Status', entity.status)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Status', entity.status.getValue)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Reporter', entity.reporterFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Assignee', entity.assigneeFullName)]) %}
 

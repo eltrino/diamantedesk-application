@@ -38,7 +38,7 @@ class Ticket implements AttachmentHolder
     protected $description;
 
     /**
-     * @var string
+     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\Status
      */
     protected $status;
 
@@ -131,7 +131,7 @@ class Ticket implements AttachmentHolder
     }
 
     /**
-     * @return string
+     * @return Status
      */
     public function getStatus()
     {
@@ -205,10 +205,14 @@ class Ticket implements AttachmentHolder
 
     public function create($subject, $description, $branch, $status, $reporter, $assignee)
     {
+        if (null == $status) {
+            $status = Status::STATUS_NEW;
+        }
+        $this->status = new Status($status);
+
         $this->subject = $subject;
         $this->description = $description;
         $this->branch = $branch;
-        $this->status = $status;
         $this->priority = new Priority();
         $this->reporter = $reporter;
         $this->assignee = $assignee;
@@ -218,7 +222,12 @@ class Ticket implements AttachmentHolder
     {
         $this->subject = $subject;
         $this->description = $description;
-        $this->status = $status;
+        $this->status = new Status($status);
+    }
+
+    public function updateStatus($status)
+    {
+        $this->status = new Status($status);
     }
 
     public function assign(User $newAssignee)

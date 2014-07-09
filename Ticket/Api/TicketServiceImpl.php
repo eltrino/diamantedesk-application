@@ -22,6 +22,7 @@ use Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
 use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -146,9 +147,9 @@ class TicketServiceImpl implements TicketService
      * @param $reporterId
      * @param $assigneeId
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required branch, reporter, assignee
+     * @throws \RuntimeException if unable to load required branch, reporter, assignee or status doesn't exist
      */
-    public function createTicket($branchId, $subject, $description, $status, $reporterId, $assigneeId)
+    public function createTicket($branchId, $subject, $description, $status = null, $reporterId, $assigneeId)
     {
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
@@ -163,6 +164,11 @@ class TicketServiceImpl implements TicketService
         $assignee = $this->userService->getUserById($assigneeId);
         if (is_null($assignee)) {
             throw new \RuntimeException('Assignee not found.');
+        }
+
+        $possibleStatuses = Status::getPossibleValues();
+        if (!in_array($status, $possibleStatuses)) {
+            throw new \RuntimeException('Status not found.');
         }
 
         $ticket = $this->ticketFactory
@@ -180,7 +186,6 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository->store($ticket);
 
         return $ticket;
-
     }
 
     /**
@@ -214,6 +219,31 @@ class TicketServiceImpl implements TicketService
             $ticket->assign($assignee);
         }
 
+        $this->ticketRepository->store($ticket);
+
+        return $ticket;
+    }
+
+    /**
+     * @param $ticketId
+     * @param $status
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+     * @throws \RuntimeException if unable to load required ticket or status doesn't exist
+     */
+    public function updateStatus($ticketId, $status)
+    {
+        $ticket = $this->ticketRepository->get($ticketId);
+
+        if (is_null($ticket)) {
+            throw new \RuntimeException('Ticket not found.');
+        }
+
+        $possibleStatuses = Status::getPossibleValues();
+        if (!in_array($status, $possibleStatuses)) {
+            throw new \RuntimeException('Status not found.');
+        }
+
+        $ticket->updateStatus($status);
         $this->ticketRepository->store($ticket);
 
         return $ticket;
@@ -255,44 +285,6 @@ class TicketServiceImpl implements TicketService
         }
 
         $ticket->assign($assignee);
-        $this->ticketRepository->store($ticket);
-
-        return $ticket;
-    }
-
-    /**
-     * Close Ticket
-     * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required ticket
-     */
-    public function closeTicket($ticketId)
-    {
-        $ticket = $this->ticketRepository->get($ticketId);
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
-        }
-
-        $ticket->close();
-        $this->ticketRepository->store($ticket);
-
-        return $ticket;
-    }
-
-    /**
-     * Reopen Ticket
-     * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required ticket
-     */
-    public function reopenTicket($ticketId)
-    {
-        $ticket = $this->ticketRepository->get($ticketId);
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
-        }
-
-        $ticket->reopen();
         $this->ticketRepository->store($ticket);
 
         return $ticket;

@@ -25,6 +25,7 @@ use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
 use Eltrino\DiamanteDeskBundle\Form\Type\AssigneeTicketType;
 use Eltrino\DiamanteDeskBundle\Form\Type\AttachmentType;
 use Eltrino\DiamanteDeskBundle\Form\Type\CreateTicketType;
+use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
 use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketType;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -78,6 +79,54 @@ class TicketController extends Controller
     public function viewAction(Ticket $ticket)
     {
         return ['entity'  => $ticket];
+    }
+
+    /**
+     * @Route(
+     *      "/status/ticket/{id}",
+     *      name="diamante_ticket_change_status",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Template("EltrinoDiamanteDeskBundle:Ticket:widget/info.html.twig")
+     */
+    public function changeStatusAction(Ticket $ticket)
+    {
+        $command = $this->get('diamante.command_factory')
+            ->createUpdateStatusCommandForView($ticket);
+
+        $form = $this->createForm(new UpdateTicketStatusType(), $command);
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @Route(
+     *      "/statusPost/ticket/{id}",
+     *      name="diamante_ticket_change_status_post",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Template("EltrinoDiamanteDeskBundle:Ticket:widget/info.html.twig")
+     */
+    public function changeStatusPostAction(Ticket $ticket)
+    {
+        $response = null;
+        $command = $this->get('diamante.command_factory')
+            ->createUpdateStatusCommandForView($ticket);
+
+        $form = $this->createForm(new UpdateTicketStatusType(), $command);
+        try {
+            $this->handle($form);
+            $this->get('diamante.ticket.service')
+                ->updateStatus(
+                    $command->id,
+                    $command->status
+                );
+            $this->addSuccessMessage('Status changed');
+            $response = array('saved' => true);
+        } catch (\LogicException $e) {
+            $response = array('form' => $form->createView());
+        }
+
+        return $response;
     }
 
     /**
@@ -210,50 +259,6 @@ class TicketController extends Controller
             $response = array('form' => $form->createView());
         }
         return $response;
-    }
-
-    /**
-     * @Route(
-     *      "/close/{id}",
-     *      name="diamante_ticket_close",
-     *      requirements={"id"="\d+"}
-     * )
-     *
-     * @param Ticket $ticket
-     * @return RedirectResponse
-     */
-    public function closeAction(Ticket $ticket)
-    {
-        $this->get('diamante.ticket.service')
-            ->closeTicket($ticket->getId());
-
-        $this->addSuccessMessage('Ticket closed');
-
-        return $this->redirect(
-            $this->getViewUrl($ticket)
-        );
-    }
-
-    /**
-     * @Route(
-     *      "/reopen/{id}",
-     *      name="diamante_ticket_reopen",
-     *      requirements={"id"="\d+"}
-     * )
-     *
-     * @param Ticket $ticket
-     * @return RedirectResponse
-     */
-    public function reopenAction(Ticket $ticket)
-    {
-        $this->get('diamante.ticket.service')
-            ->reopenTicket($ticket->getId());
-
-        $this->addSuccessMessage('Ticket reopened');
-
-        return $this->redirect(
-            $this->getViewUrl($ticket)
-        );
     }
 
     /**
