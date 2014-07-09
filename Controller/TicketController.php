@@ -125,7 +125,6 @@ class TicketController extends Controller
         } catch (\LogicException $e) {
             $response = array('form' => $form->createView());
         }
-
         return $response;
     }
 

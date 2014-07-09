@@ -234,7 +234,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
 
-        if (is_null($ticket)) {
+        if (!($ticket)) {
             throw new \RuntimeException('Ticket not found.');
         }
 

@@ -24,6 +24,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_TICKET_ID     = 1;
     const DUMMY_ATTACHMENT_ID = 1;
+    const DUMMY_STATUS        = 'dummy';
 
     /**
      * @var TicketServiceImpl
@@ -200,5 +201,46 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
         $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket not found.
+     */
+    public function testUpdateStatusWhenTicketDoesNotExists()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, self::DUMMY_STATUS);
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Status not found.
+     */
+    public function testUpdateStatusWhenStatusDoesNotExists()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, self::DUMMY_STATUS);
+    }
+
+    /**
+     * @test
+     */
+    public function testUpdateStatus()
+    {
+        $status = 'new';
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
     }
 }
