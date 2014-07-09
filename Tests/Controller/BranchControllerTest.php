@@ -104,7 +104,6 @@ class BranchControllerTest extends WebTestCase
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
 
-        //$branchName = md5(time());
         $form['diamante_branch_form[name]'] = $branchName;
         $form['diamante_branch_form[description]'] = 'Branch Description Changed';
         $form['diamante_branch_form[logoFile]'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
