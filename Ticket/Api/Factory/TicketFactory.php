@@ -19,8 +19,15 @@ use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 
 class TicketFactory
 {
-    public function create()
+    public function create($subject, $description, $branch, $status, $reporter, $assignee)
     {
-        return new Ticket();
+        return new Ticket(
+            $subject,
+            $description,
+            $branch,
+            $status,
+            $reporter,
+            $assignee
+        );
     }
 }

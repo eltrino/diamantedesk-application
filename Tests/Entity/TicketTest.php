@@ -27,11 +27,10 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $ticket = new Ticket();
         $branch = $this->createBranch();
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
-        $ticket->create(
+        $ticket = new Ticket(
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $branch,
@@ -39,6 +38,14 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee
         );
+//        $ticket->create(
+//            self::TICKET_SUBJECT,
+//            self::TICKET_DESCRIPTION,
+//            $branch,
+//            self::TICKET_STATUS_OPEN,
+//            $reporter,
+//            $assignee
+//        );
 
         $this->assertEquals('Subject', $ticket->getSubject());
         $this->assertEquals('Description', $ticket->getDescription());
@@ -101,8 +108,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     private function createTicket()
     {
-        $ticket = new Ticket();
-        $ticket->create(
+        $ticket = new Ticket(
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $this->createBranch(),
@@ -110,13 +116,20 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee()
         );
+//        $ticket->create(
+//            self::TICKET_SUBJECT,
+//            self::TICKET_DESCRIPTION,
+//            $this->createBranch(),
+//            self::TICKET_STATUS_OPEN,
+//            $this->createReporter(),
+//            $this->createAssignee()
+//        );
         return $ticket;
     }
 
     private function createClosedTicket()
     {
-        $ticket = new Ticket();
-        $ticket->create(
+        $ticket = new Ticket(
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $this->createBranch(),
@@ -124,6 +137,14 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee()
         );
+//        $ticket->create(
+//            self::TICKET_SUBJECT,
+//            self::TICKET_DESCRIPTION,
+//            $this->createBranch(),
+//            self::TICKET_STATUS_CLOSE,
+//            $this->createReporter(),
+//            $this->createAssignee()
+//        );
         return $ticket;
     }
 

@@ -166,16 +166,21 @@ class TicketServiceImpl implements TicketService
         }
 
         $ticket = $this->ticketFactory
-            ->create();
+            ->create($subject,
+                $description,
+                $branch,
+                $status,
+                $reporter,
+                $assignee);
 
-        $ticket->create(
-            $subject,
-            $description,
-            $branch,
-            $status,
-            $reporter,
-            $assignee
-        );
+//        $ticket->create(
+//            $subject,
+//            $description,
+//            $branch,
+//            $status,
+//            $reporter,
+//            $assignee
+//        );
 
         $this->ticketRepository->store($ticket);
 

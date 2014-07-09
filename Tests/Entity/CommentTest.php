@@ -55,8 +55,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
 
     private function createTicket()
     {
-        $ticket = new Ticket();
-        $ticket->create(
+        $ticket = new Ticket(
             TicketTest::TICKET_SUBJECT,
             TicketTest::TICKET_DESCRIPTION,
             new Branch('DUMMY_NAME', 'DUMMY_DESC'),
@@ -64,6 +63,14 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             new User(),
             new User()
         );
+//        $ticket->create(
+//            TicketTest::TICKET_SUBJECT,
+//            TicketTest::TICKET_DESCRIPTION,
+//            new Branch('DUMMY_NAME', 'DUMMY_DESC'),
+//            TicketTest::TICKET_STATUS_OPEN,
+//            new User(),
+//            new User()
+//        );
         return $ticket;
     }
 
