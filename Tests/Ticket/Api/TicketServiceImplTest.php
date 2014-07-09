@@ -17,13 +17,19 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_TICKET_ID     = 1;
     const DUMMY_ATTACHMENT_ID = 1;
+    const DUMMY_TICKET_SUBJECT      = 'Subject';
+    const DUMMY_TICKET_DESCRIPTION  = 'Description';
+    const DUMMY_TICKET_STATUS_OPEN  = 'open';
+    const DUMMY_TICKET_STATUS_CLOSE = 'close';
 
     /**
      * @var TicketServiceImpl
@@ -105,7 +111,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
-        $ticket = new Ticket();
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT,
+            self::DUMMY_TICKET_DESCRIPTION,
+            $this->createBranch(),
+            self::DUMMY_TICKET_STATUS_CLOSE,
+            $this->createReporter(),
+            $this->createAssignee()
+        );
         $ticket->addAttachment(new Attachment('filename.ext'));
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
@@ -142,7 +155,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentAddsForTicket()
     {
-        $ticket = new Ticket();
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT,
+            self::DUMMY_TICKET_DESCRIPTION,
+            $this->createBranch(),
+            self::DUMMY_TICKET_STATUS_CLOSE,
+            $this->createReporter(),
+            $this->createAssignee()
+        );
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
         $this->ticketAttachmentService->expects($this->once())->method('createAttachmentForItHolder')
@@ -172,7 +192,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {
-        $ticket = new Ticket();
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT,
+            self::DUMMY_TICKET_DESCRIPTION,
+            $this->createBranch(),
+            self::DUMMY_TICKET_STATUS_CLOSE,
+            $this->createReporter(),
+            $this->createAssignee()
+        );
         $ticket->addAttachment(new Attachment('filename.ext'));
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
@@ -200,5 +227,20 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
         $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+    }
+
+    private function createBranch()
+    {
+        return new Branch('DUMMY_NAME', 'DUMYY_DESC');
+    }
+
+    private function createReporter()
+    {
+        return new User();
+    }
+
+    private function createAssignee()
+    {
+        return new User();
     }
 }

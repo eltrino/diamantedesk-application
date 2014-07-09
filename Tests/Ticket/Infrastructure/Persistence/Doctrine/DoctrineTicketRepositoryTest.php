@@ -16,8 +16,10 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doctrine;
 
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,7 +51,14 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function thatTicketStores()
     {
-        $ticket = new Ticket();
+        $ticket = new Ticket(
+            'Subject',
+            'Description',
+            new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
+            'open',
+            new User(),
+            new User()
+        );
         $this->em->expects($this->once())->method('persist')->with($this->equalTo($ticket));
         $this->em->expects($this->once())->method('flush');
 
@@ -61,7 +70,14 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemoves()
     {
-        $ticket = new Ticket();
+        $ticket = new Ticket(
+            'Subject',
+            'Description',
+            new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
+            'open',
+            new User(),
+            new User()
+        );
         $this->em->expects($this->once())->method('remove')->with($this->equalTo($ticket));
         $this->em->expects($this->once())->method('flush');
 

@@ -38,14 +38,6 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee
         );
-//        $ticket->create(
-//            self::TICKET_SUBJECT,
-//            self::TICKET_DESCRIPTION,
-//            $branch,
-//            self::TICKET_STATUS_OPEN,
-//            $reporter,
-//            $assignee
-//        );
 
         $this->assertEquals('Subject', $ticket->getSubject());
         $this->assertEquals('Description', $ticket->getDescription());
@@ -116,14 +108,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee()
         );
-//        $ticket->create(
-//            self::TICKET_SUBJECT,
-//            self::TICKET_DESCRIPTION,
-//            $this->createBranch(),
-//            self::TICKET_STATUS_OPEN,
-//            $this->createReporter(),
-//            $this->createAssignee()
-//        );
+
         return $ticket;
     }
 
@@ -137,14 +122,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee()
         );
-//        $ticket->create(
-//            self::TICKET_SUBJECT,
-//            self::TICKET_DESCRIPTION,
-//            $this->createBranch(),
-//            self::TICKET_STATUS_CLOSE,
-//            $this->createReporter(),
-//            $this->createAssignee()
-//        );
+
         return $ticket;
     }
 
