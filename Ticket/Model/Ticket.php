@@ -210,27 +210,6 @@ class Ticket implements AttachmentHolder
 
     /** LEGACY CODE START */
 
-    /**
-     * @param $subject
-     * @param $description
-     * @param $branch
-     * @param $status
-     * @param $reporter
-     * @param $assignee
-     *
-     * @deprecated
-     */
-    public function create($subject, $description, $branch, $status, $reporter, $assignee)
-    {
-        $this->subject = $subject;
-        $this->description = $description;
-        $this->branch = $branch;
-        $this->status = $status;
-        $this->priority = new Priority();
-        $this->reporter = $reporter;
-        $this->assignee = $assignee;
-    }
-
     public function update($subject, $description, $status)
     {
         $this->subject = $subject;
