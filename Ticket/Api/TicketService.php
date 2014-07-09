@@ -15,6 +15,7 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface TicketService
@@ -29,12 +30,12 @@ interface TicketService
     public function getTicketAttachment($ticketId, $attachmentId);
 
     /**
-     * Adds Attachment for Ticket
-     * @param UploadedFile $uploadedFile
+     * Adds Attachments for Ticket
+     * @param FilesListDto $filesListDto
      * @param $ticketId
      * @return void
      */
-    public function addAttachmentForTicket(UploadedFile $uploadedFile, $ticketId);
+    public function addAttachmentsForTicket(FilesListDto $filesListDto, $ticketId);
 
     /**
      * Remove Attachment from Ticket

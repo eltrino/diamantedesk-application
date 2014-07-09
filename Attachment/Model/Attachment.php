@@ -16,11 +16,10 @@ class Attachment
      * @var integer
      */
     protected $id;
-
     /**
-     * @var string
+     * @var File
      */
-    protected $filename;
+    protected $file;
 
     /**
      * @var \DateTime
@@ -32,9 +31,9 @@ class Attachment
      */
     protected $updatedAt;
 
-    public function __construct($filename)
+    public function __construct(File $file)
     {
-        $this->filename  = $filename;
+        $this->file      = $file;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
     }
@@ -52,7 +51,7 @@ class Attachment
      */
     public function getFilename()
     {
-        return $this->filename;
+        return $this->file->getFilename();
     }
 
     /**

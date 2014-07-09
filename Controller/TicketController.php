@@ -18,6 +18,8 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
 use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Command\CreateticketCommand;
@@ -270,7 +272,9 @@ class TicketController extends Controller
     {
         $commandFactory = new CommandFactory();
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
-        return array('form' => $form->createView());
+        $formView = $form->createView();
+        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
+        return array('form' => $formView);
     }
 
     /**
@@ -288,6 +292,8 @@ class TicketController extends Controller
         $response = null;
         $commandFactory = new CommandFactory();
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
+        $formView = $form->createView();
+        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
         try {
             $this->handle($form);
 
@@ -296,11 +302,20 @@ class TicketController extends Controller
 
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
-            $ticketService->addAttachmentForTicket($command->file, $ticket->getId());
+
+            $fileDtoArray = array();
+            foreach ($command->files as $file) {
+                $fileDtoArray[] = FileDto::createFromUploadedFile($file);
+            }
+
+            $filesListDto = new FilesListDto();
+            $filesListDto->setFiles($fileDtoArray);
+
+            $ticketService->addAttachmentsForTicket($filesListDto, $ticket->getId());
 
             $this->get('session')->getFlashBag()->add(
                 'success',
-                $this->get('translator')->trans('Attachment uploaded')
+                $this->get('translator')->trans('Attachments uploaded')
             );
             $response = $this->get('oro_ui.router')->actionRedirect(
                 array(
@@ -313,7 +328,7 @@ class TicketController extends Controller
                 )
             );
         } catch (Exception $e) {
-            $response = array('form' => $form->createView());
+            $response = array('form' => $formView);
         }
         return $response;
     }
@@ -361,7 +376,6 @@ class TicketController extends Controller
         $ticketService = $this->get('diamante.ticket.service');
         $attachment = $ticketService->getTicketAttachment($ticketId, $attachId);
 
-        $filename = $attachment->getFilename();
         $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachment')
             . '/' . $attachment->getFilename();
 
@@ -373,8 +387,8 @@ class TicketController extends Controller
         $response->trustXSendfileTypeHeader();
         $response->setContentDisposition(
             \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $filename,
-            iconv('UTF-8', 'ASCII//TRANSLIT', $filename)
+            $attachment->getFilename(),
+            iconv('UTF-8', 'ASCII//TRANSLIT', $attachment->getFilename())
         );
 
         return $response;

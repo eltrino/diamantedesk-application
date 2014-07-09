@@ -15,6 +15,9 @@
 
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl;
@@ -24,6 +27,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_TICKET_ID     = 1;
     const DUMMY_ATTACHMENT_ID = 1;
+    const DUMMY_FILENAME      = 'dummy_filename.ext';
+    const DUMMY_FILE_CONTENT  = 'DUMMY_CONTENT';
 
     /**
      * @var TicketServiceImpl
@@ -41,12 +46,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService
      */
     private $ticketAttachmentService;
-
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
-     */
-    private $uploadedFile;
 
     /**
      * @var \Eltrino\DiamanteDeskBundle\Entity\Ticket
@@ -106,7 +105,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
         $ticket = new Ticket();
-        $ticket->addAttachment(new Attachment('filename.ext'));
+        $ticket->addAttachment($this->attachment());
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
@@ -118,7 +117,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatTicketAttachmentRetrieves()
     {
-        $attachment = new Attachment('filename.ext');
+        $attachment = $this->attachment();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
@@ -132,24 +131,25 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Ticket not found.
      */
-    public function thatAttachmentAddingThrowsExceptionWhenTicketNotExists()
+    public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
-        $this->ticketService->addAttachmentForTicket($this->uploadedFile, self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($this->filesListDto(), self::DUMMY_TICKET_ID);
     }
 
     /**
      * @test
      */
-    public function thatAttachmentAddsForTicket()
+    public function thatAttachmentsAddsForTicket()
     {
         $ticket = new Ticket();
+        $filesListDto = $this->filesListDto();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
-        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentForItHolder')
-            ->with($this->equalTo($this->uploadedFile), $this->equalTo($ticket));
+        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
+            ->with($this->equalTo($filesListDto), $this->equalTo($ticket));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->ticketService->addAttachmentForTicket($this->uploadedFile, self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($filesListDto, self::DUMMY_TICKET_ID);
     }
 
     /**
@@ -173,7 +173,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {
         $ticket = new Ticket();
-        $ticket->addAttachment(new Attachment('filename.ext'));
+        $ticket->addAttachment($this->attachment());
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
@@ -185,7 +185,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovesFromTicket()
     {
-        $attachment = new Attachment('filename.ext');
+        $attachment = $this->attachment();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
@@ -200,5 +200,26 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
         $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+    }
+
+    /**
+     * @return Attachment
+     */
+    private function attachment()
+    {
+        return new Attachment(new File('filename.ext'));
+    }
+
+    /**
+     * @return FilesListDto
+     */
+    private function filesListDto()
+    {
+        $fileDto = new FileDto();
+        $fileDto->setFilename(self::DUMMY_FILENAME);
+        $fileDto->setData(self::DUMMY_FILE_CONTENT);
+        $filesListDto = new FilesListDto();
+        $filesListDto->setFiles(array($fileDto));
+        return $filesListDto;
     }
 }

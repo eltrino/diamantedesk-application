@@ -32,6 +32,13 @@ class EltrinoDiamanteDeskBundle extends Bundle
             );
         }
 
+        if (!Type::hasType('file')) {
+            Type::addType(
+                'file',
+                'Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Persistence\Doctrine\DBAL\Types\FileType'
+            );
+        }
+
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $conn = $em->getConnection();
 

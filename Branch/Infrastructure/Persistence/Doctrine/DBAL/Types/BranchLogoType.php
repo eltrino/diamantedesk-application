@@ -21,7 +21,7 @@ use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 
 class BranchLogoType extends StringType
 {
-     const FILE = 'file';
+     const BRANCH_LOGO = 'branch_logo';
 
     /**
      * Gets the name of this type.
@@ -30,7 +30,7 @@ class BranchLogoType extends StringType
      */
     public function getName()
     {
-        return self::FILE;
+        return self::BRANCH_LOGO;
     }
 
     /**

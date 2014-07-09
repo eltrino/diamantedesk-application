@@ -17,5 +17,5 @@ namespace Eltrino\DiamanteDeskBundle\Form\Command;
 class AttachmentCommand
 {
     public $ticketId;
-    public $file;
+    public $files;
 }

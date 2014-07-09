@@ -20,6 +20,6 @@ class EditCommentCommand
     public $content;
     public $ticket;
     public $author;
-    public $attachments;
+    public $files;
     public $attachmentList;
 }

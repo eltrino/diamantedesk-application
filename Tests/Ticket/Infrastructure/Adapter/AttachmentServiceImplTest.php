@@ -15,6 +15,9 @@
 
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Adapter;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\AttachmentServiceImpl;
@@ -50,11 +53,14 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentCreatesForTicket()
     {
-        $this->attachmentContextService->expects($this->once())->method('createAttachment')
-            ->with($this->equalTo($this->uploadedFile), $this->equalTo($this->attachmentHolder));
+        $filesListDto = new FilesListDto();
+        $filesListDto->setFiles(array(new FileDto()));
+
+        $this->attachmentContextService->expects($this->once())->method('createAttachments')
+            ->with($this->equalTo($filesListDto), $this->equalTo($this->attachmentHolder));
 
         $adapterAttachmentService = new AttachmentServiceImpl($this->attachmentContextService);
-        $adapterAttachmentService->createAttachmentForItHolder($this->uploadedFile, $this->attachmentHolder);
+        $adapterAttachmentService->createAttachmentsForItHolder($filesListDto, $this->attachmentHolder);
     }
 
     /**
@@ -62,7 +68,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovesFromTicket()
     {
-        $attachment = new Attachment('filename.ext');
+        $attachment = new Attachment(new File('filename.ext'));
         $adapterAttachmentService = new AttachmentServiceImpl($this->attachmentContextService);
         $adapterAttachmentService->removeAttachmentFromItHolder($attachment);
     }

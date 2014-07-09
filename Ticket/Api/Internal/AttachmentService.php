@@ -15,21 +15,21 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api\Internal;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Comment;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface AttachmentService
 {
     /**
-     * Creates Attachment for Holder
+     * Creates Attachments for Holder
      * @param UploadedFile $file
      * @param AttachmentHolder $holder
      * @return void
      */
-    public function createAttachmentForItHolder(UploadedFile $file, AttachmentHolder $holder);
+    public function createAttachmentsForItHolder(FilesListDto $filesListDto, AttachmentHolder $holder);
 
     /**
      * Removes Attachment

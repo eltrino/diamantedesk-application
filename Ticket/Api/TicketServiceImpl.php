@@ -16,6 +16,7 @@
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 
 use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand;
@@ -24,7 +25,6 @@ use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
 use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TicketServiceImpl implements TicketService
 {
@@ -87,18 +87,18 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * Adds Attachment for ticket
-     * @param UploadedFile $uploadedFile
+     * Adds Attachments for Ticket
+     * @param FilesListDto $filesListDto
      * @param $ticketId
      * @return void
      */
-    public function addAttachmentForTicket(UploadedFile $uploadedFile, $ticketId)
+    public function addAttachmentsForTicket(FilesListDto $filesListDto, $ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (!$ticket) {
             throw new \RuntimeException('Ticket not found.');
         }
-        $this->attachmentService->createAttachmentForItHolder($uploadedFile, $ticket);
+        $this->attachmentService->createAttachmentsForItHolder($filesListDto, $ticket);
         $this->ticketRepository->store($ticket);
     }
 

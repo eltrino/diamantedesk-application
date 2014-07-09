@@ -14,7 +14,8 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
@@ -57,7 +58,7 @@ class CommentController extends Controller
                     $command->content,
                     $command->ticket->getId(),
                     $command->author->getId(),
-                    $command->attachments
+                    $this->buildFilesListDto($command)
                 );
         }, $ticket);
     }
@@ -80,8 +81,21 @@ class CommentController extends Controller
             ->createEditCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
             $this->get('diamante.comment.service')
-                ->updateTicketComment($comment->getId(), $command->content, $command->attachments);
+                ->updateTicketComment($comment->getId(), $command->content, $this->buildFilesListDto($command));
         }, $comment->getTicket());
+    }
+
+    private function buildFilesListDto(EditCommentCommand $command)
+    {
+        $fileDtoArray = array();
+        foreach ($command->files as $file) {
+            $fileDtoArray[] = FileDto::createFromUploadedFile($file);
+        }
+
+        $filesListDto = new FilesListDto();
+        $filesListDto->setFiles($fileDtoArray);
+
+        return $filesListDto;
     }
 
     /**
@@ -109,13 +123,18 @@ class CommentController extends Controller
     {
         $response = null;
         $form = $this->createForm(new CommentType(), $command);
+        $formView = $form->createView();
+        $formView->children['files']->vars = array_replace(
+            $formView->children['files']->vars,
+            array('full_name' => 'diamante_comment_form[files][]')
+        );
         try {
             $this->handle($form);
             $callback($command);
             $this->addSuccessMessage('Comment saved');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $response = array('form' => $form->createView());
+            $response = array('form' => $formView);
         }
         return $response;
     }

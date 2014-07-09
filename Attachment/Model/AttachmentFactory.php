@@ -19,11 +19,11 @@ class AttachmentFactory
 {
     /**
      * Create Attachment entity
-     * @param string $filename
+     * @param File $file
      * @return Attachment
      */
-    public function create($filename)
+    public function create(File $file)
     {
-        return new \Eltrino\DiamanteDeskBundle\Entity\Attachment($filename);
+        return new \Eltrino\DiamanteDeskBundle\Entity\Attachment($file);
     }
 }

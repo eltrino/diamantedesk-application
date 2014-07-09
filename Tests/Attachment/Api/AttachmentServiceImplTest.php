@@ -16,12 +16,15 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Attachment\Api;
 
 use Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentServiceImpl;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_FILENAME      = 'dummy_file.jpg';
+    const DUMMY_FILE_CONTENT  = 'DUMMY_CONTENT';
     const DUMMY_ATTACHMENT_ID = 1;
 
     /**
@@ -54,8 +57,8 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $fileRemoveHandler;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\File\File
-     * @Mock \Symfony\Component\HttpFoundation\File\File
+     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\File
+     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\File
      */
     private $file;
 
@@ -92,11 +95,12 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentCreationThrowsException()
     {
-        $this->fileUploadHandler->expects($this->once())->method('upload')->with($this->equalTo($this->uploadedFile))
-            ->will($this->throwException(new \RuntimeException()));
+        $this->fileUploadHandler->expects($this->once())->method('upload')->with(
+                $this->equalTo(self::DUMMY_FILENAME), $this->equalTo(self::DUMMY_FILE_CONTENT)
+            )->will($this->throwException(new \RuntimeException()));
 
         $this->service
-            ->createAttachment($this->uploadedFile, $this->attachmentHolder);
+            ->createAttachments($this->filesListDto(), $this->attachmentHolder);
     }
 
     /**
@@ -104,22 +108,16 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentCreates()
     {
-        $this->file->expects($this->once())->method('getFilename')->will($this->returnValue(self::DUMMY_FILENAME));
+        $this->fileUploadHandler->expects($this->once())->method('upload')->with(
+                $this->equalTo(self::DUMMY_FILENAME), $this->equalTo(self::DUMMY_FILE_CONTENT)
+            )->will($this->returnValue($this->file));
 
-        $this->fileUploadHandler->expects($this->once())->method('upload')->with($this->equalTo($this->uploadedFile))
-            ->will($this->returnValue($this->file));
-
-        $this->attachmentFactory->expects($this->once())->method('create')->with($this->equalTo(self::DUMMY_FILENAME))
+        $this->attachmentFactory->expects($this->once())->method('create')->with($this->equalTo($this->file))
             ->will($this->returnValue($this->attachment));
-
-        $this->attachment->expects($this->once())->method('getId')->will($this->returnValue(self::DUMMY_ATTACHMENT_ID));
 
         $this->attachmentRepository->expects($this->once())->method('store')->with($this->equalTo($this->attachment));
 
-        $attachmentId = $this->service
-            ->createAttachment($this->uploadedFile, $this->attachmentHolder);
-
-        $this->assertEquals(self::DUMMY_ATTACHMENT_ID, $attachmentId);
+        $this->service->createAttachments($this->filesListDto(), $this->attachmentHolder);
     }
 
     /**
@@ -158,7 +156,9 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemoves()
     {
-        $attachment = new Attachment(self::DUMMY_FILENAME);
+        $attachment = new Attachment($this->file);
+
+        $this->file->expects($this->once())->method('getFilename')->will($this->returnValue(self::DUMMY_FILENAME));
 
         $this->attachmentRepository->expects($this->once())->method('get')
             ->with($this->equalTo(self::DUMMY_ATTACHMENT_ID))
@@ -169,5 +169,18 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->attachmentRepository->expects($this->once())->method('remove')->with($this->equalTo($attachment));
 
         $this->service->removeAttachment(self::DUMMY_ATTACHMENT_ID);
+    }
+
+    /**
+     * @return FilesListDto
+     */
+    private function filesListDto()
+    {
+        $fileDto = new FileDto();
+        $fileDto->setFilename(self::DUMMY_FILENAME);
+        $fileDto->setData(self::DUMMY_FILE_CONTENT);
+        $filesListDto = new FilesListDto();
+        $filesListDto->setFiles(array($fileDto));
+        return $filesListDto;
     }
 }
