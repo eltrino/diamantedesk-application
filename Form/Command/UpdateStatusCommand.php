@@ -16,6 +16,6 @@ namespace Eltrino\DiamanteDeskBundle\Form\Command;
 
 class UpdateStatusCommand
 {
-    public $id;
+    public $ticketId;
     public $status;
 } 

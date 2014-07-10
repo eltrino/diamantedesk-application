@@ -44,7 +44,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[branch]']      = $this->chooseBranchFromGrid()['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
-        $form['diamante_ticket_form[status]']      = 'open';
+        $form['diamante_ticket_form[status]']      = '0';
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
@@ -68,7 +68,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[branch]']      = $branch['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
-        $form['diamante_ticket_form[status]']      = 'open';
+        $form['diamante_ticket_form[status]']      = '0';
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
@@ -125,26 +125,11 @@ class TicketControllerTest extends WebTestCase
     public function testChangeStatus()
     {
         $ticket              = $this->chooseTicketFromGrid();
-        $updateStatusFormUrl = $this->client->generate('diamante_ticket_change_status', array('id' => $ticket['id']));
+        $updateStatusFormUrl = $this->client->generate('diamante_ticket_status_change', array('id' => $ticket['id']));
         $crawler             = $this->client->request('GET', $updateStatusFormUrl);
 
         $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
         $this->assertEquals("Change", $crawler->selectButton('Change')->html());
-    }
-
-    public function testChangeStatusPost()
-    {
-        $ticket              = $this->chooseTicketFromGrid();
-        $updateStatusFormUrl = $this->client->generate('diamante_ticket_change_status', array('id' => $ticket['id']));
-        $crawler             = $this->client->request('GET', $updateStatusFormUrl);
-
-        $form = $crawler->selectButton('Change')->form();
-        $form['diamante_ticket_status_form[status]'] = 'new';
-        $this->client->followRedirects(true);
-
-        $this->client->submit($form);
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testUpdate()

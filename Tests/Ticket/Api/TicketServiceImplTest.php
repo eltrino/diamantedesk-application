@@ -17,6 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -218,23 +219,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Status not found.
-     */
-    public function testUpdateStatusWhenStatusDoesNotExists()
-    {
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($this->ticket));
-
-        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, self::DUMMY_STATUS);
-    }
-
-    /**
-     * @test
      */
     public function testUpdateStatus()
     {
-        $status = 'new';
+        $status = STATUS::NEW_ONE;
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));

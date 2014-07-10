@@ -84,47 +84,37 @@ class TicketController extends Controller
     /**
      * @Route(
      *      "/status/ticket/{id}",
-     *      name="diamante_ticket_change_status",
+     *      name="diamante_ticket_status_change",
      *      requirements={"id"="\d+"}
      * )
      * @Template("EltrinoDiamanteDeskBundle:Ticket:widget/info.html.twig")
      */
     public function changeStatusAction(Ticket $ticket)
     {
+        $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
+
         $command = $this->get('diamante.command_factory')
             ->createUpdateStatusCommandForView($ticket);
 
         $form = $this->createForm(new UpdateTicketStatusType(), $command);
-        return array('form' => $form->createView());
-    }
 
-    /**
-     * @Route(
-     *      "/statusPost/ticket/{id}",
-     *      name="diamante_ticket_change_status_post",
-     *      requirements={"id"="\d+"}
-     * )
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:widget/info.html.twig")
-     */
-    public function changeStatusPostAction(Ticket $ticket)
-    {
-        $response = null;
-        $command = $this->get('diamante.command_factory')
-            ->createUpdateStatusCommandForView($ticket);
-
-        $form = $this->createForm(new UpdateTicketStatusType(), $command);
-        try {
-            $this->handle($form);
-            $this->get('diamante.ticket.service')
-                ->updateStatus(
-                    $command->id,
-                    $command->status
-                );
-            $this->addSuccessMessage('Status changed');
-            $response = array('saved' => true);
-        } catch (\LogicException $e) {
+        if (false === $redirect) {
+            try {
+                $this->handle($form);
+                $this->get('diamante.ticket.service')
+                    ->updateStatus(
+                        $command->ticketId,
+                        $command->status
+                    );
+                $this->addSuccessMessage('Status changed');
+                $response = array('saved' => true);
+            } catch (\LogicException $e) {
+                $response = array('form' => $form->createView());
+            }
+        } else {
             $response = array('form' => $form->createView());
         }
+
         return $response;
     }
 
@@ -154,14 +144,15 @@ class TicketController extends Controller
                     $command->branch->getId(),
                     $command->subject,
                     $command->description,
-                    $command->status,
                     $command->reporter->getId(),
-                    $command->assignee->getId()
+                    $command->assignee->getId(),
+                    $command->status
                 );
             $this->addSuccessMessage('Ticket created');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
             //@todo in case of error appears screen does not changes and error does not appear
+
             $response = array('form' => $form->createView());
         }
         return $response;

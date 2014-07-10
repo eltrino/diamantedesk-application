@@ -16,12 +16,12 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 
 class Status
 {
-    const STATUS_NEW         = 'new';
-    const STATUS_OPEN        = 'open';
-    const STATUS_PENDING     = 'pending';
-    const STATUS_IN_PROGRESS = 'in progress';
-    const STATUS_CLOSED      = 'closed';
-    const STATUS_ON_HOLD     = 'on hold';
+    const NEW_ONE     = 'new';
+    const OPEN        = 'open';
+    const PENDING     = 'pending';
+    const IN_PROGRESS = 'in progress';
+    const CLOSED      = 'closed';
+    const ON_HOLD     = 'on hold';
 
     /**
      * @var string
@@ -29,14 +29,9 @@ class Status
     private $status;
 
     /**
-     * @var array
+     * @param $status
      */
-    private static $possibleValues = array();
-
-    /**
-     * @param null $status
-     */
-    public function __construct($status = null)
+    public function __construct($status)
     {
         if (false === in_array($status, self::getPossibleValues())) {
             throw new \InvalidArgumentException('Given status is wrong');
@@ -48,24 +43,9 @@ class Status
     /**
      * @return array
      */
-    public static function getPossibleValues()
+    private static function getPossibleValues()
     {
-        if (empty(self::$possibleValues)) {
-            $reflection = new \ReflectionClass(__CLASS__);
-            self::$possibleValues = $reflection->getConstants();
-        }
-
-        return self::$possibleValues;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getOptions()
-    {
-        return array_combine(
-            self::getPossibleValues(), self::getPossibleValues()
-        );
+        return [self::NEW_ONE, self::OPEN, self::PENDING, self::IN_PROGRESS, self::CLOSED, self::ON_HOLD];
     }
 
     /**

@@ -147,9 +147,9 @@ class TicketServiceImpl implements TicketService
      * @param $reporterId
      * @param $assigneeId
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required branch, reporter, assignee or status doesn't exist
+     * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $status = null, $reporterId, $assigneeId)
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null)
     {
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
@@ -166,11 +166,6 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Assignee not found.');
         }
 
-        $possibleStatuses = Status::getPossibleValues();
-        if (!in_array($status, $possibleStatuses)) {
-            throw new \RuntimeException('Status not found.');
-        }
-
         $ticket = $this->ticketFactory
             ->create();
 
@@ -178,9 +173,9 @@ class TicketServiceImpl implements TicketService
             $subject,
             $description,
             $branch,
-            $status,
             $reporter,
-            $assignee
+            $assignee,
+            $status
         );
 
         $this->ticketRepository->store($ticket);
@@ -228,7 +223,7 @@ class TicketServiceImpl implements TicketService
      * @param $ticketId
      * @param $status
      * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
-     * @throws \RuntimeException if unable to load required ticket or status doesn't exist
+     * @throws \RuntimeException if unable to load required ticket
      */
     public function updateStatus($ticketId, $status)
     {
@@ -236,11 +231,6 @@ class TicketServiceImpl implements TicketService
 
         if (!($ticket)) {
             throw new \RuntimeException('Ticket not found.');
-        }
-
-        $possibleStatuses = Status::getPossibleValues();
-        if (!in_array($status, $possibleStatuses)) {
-            throw new \RuntimeException('Status not found.');
         }
 
         $ticket->updateStatus($status);

@@ -203,11 +203,12 @@ class Ticket implements AttachmentHolder
 
     /** LEGACY CODE START */
 
-    public function create($subject, $description, $branch, $status, $reporter, $assignee)
+    public function create($subject, $description, $branch, $reporter, $assignee, $status)
     {
         if (null == $status) {
-            $status = Status::STATUS_NEW;
+            $status = Status::NEW_ONE;
         }
+
         $this->status = new Status($status);
 
         $this->subject = $subject;
@@ -233,21 +234,6 @@ class Ticket implements AttachmentHolder
     public function assign(User $newAssignee)
     {
         $this->assignee = $newAssignee;
-    }
-
-    public function close()
-    {
-        $this->status = 'close';
-    }
-
-    public function reopen()
-    {
-        $this->status = 'open';
-    }
-
-    public function canReopen()
-    {
-        return $this->status === 'close';
     }
 
     /** LEGACY CODE END */

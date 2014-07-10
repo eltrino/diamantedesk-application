@@ -21,16 +21,24 @@ use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 
 class StatusTransformer implements DataTransformerInterface
 {
+    private $statusOptions = array();
+
+    public function __construct()
+    {
+        $this->statusOptions = $this->getOptions();
+    }
+
     /**
      * @param mixed $status
-     * @return int|mixed
+     * @return mixed|string
      */
     public function transform($status)
     {
-        if (null === $status) {
+        if (null === $status || (false === ($status instanceof Status))) {
             return '';
         }
-        return $status->getValue();
+
+        return array_search($status, $this->statusOptions);
     }
 
     /**
@@ -42,7 +50,8 @@ class StatusTransformer implements DataTransformerInterface
         if ('' === $status) {
             return null;
         }
-        return $status;
+
+        return $this->statusOptions[$status];
     }
 
     /**
@@ -50,6 +59,17 @@ class StatusTransformer implements DataTransformerInterface
      */
     public function getOptions()
     {
-        return STATUS::getOptions();
+        if (empty($this->statusOptions)) {
+            $this->statusOptions =
+                array(
+                    0 => Status::NEW_ONE,
+                    1 => Status::OPEN,
+                    2 => Status::PENDING,
+                    3 => Status::IN_PROGRESS,
+                    4 => Status::CLOSED,
+                    5 => Status::ON_HOLD
+                );
+        }
+        return $this->statusOptions;
     }
 } 

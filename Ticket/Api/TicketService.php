@@ -54,9 +54,9 @@ interface TicketService
      * @param $reporterId
      * @param $assigneeId
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required branch, reporter, assignee or status doesn't exist
+     * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $status = null, $reporterId, $assigneeId);
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null);
 
     /**
      * Update Ticket
@@ -74,7 +74,7 @@ interface TicketService
      * @param $ticketId
      * @param $status
      * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
-     * @throws \RuntimeException if unable to load required ticket or status doesn't exist
+     * @throws \RuntimeException if unable to load required ticket
      */
     public function updateStatus($ticketId, $status);
 

@@ -12,7 +12,7 @@
         </script>
     {% else %}
     <div class="form-container">
-        <form id="{{ form.vars.name }}" action="{{ path('diamante_ticket_change_status_post', { 'id': form.vars.value.id} ) }}" method="post">
+        <form id="{{ form.vars.name }}" action="{{ path('diamante_ticket_status_change', { 'id': form.vars.value.ticketId, 'no_redirect': true} ) }}" method="post">
             <fieldset class="form form-horizontal">
                 <div class="span6">
                     {{ form_row(form.status) }}

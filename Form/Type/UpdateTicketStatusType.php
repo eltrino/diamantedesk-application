@@ -24,13 +24,14 @@ class UpdateTicketStatusType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $statusTransformer = new StatusTransformer();
+        $statusOptions = $statusTransformer->getOptions();
 
         $builder->add(
             $builder->create('status', 'choice',
                 array(
                     'label' => 'Status',
                     'required' => true,
-                    'choices' => $statusTransformer->getOptions()
+                    'choices' => $statusOptions
                 ))
                 ->addModelTransformer($statusTransformer)
         );

@@ -126,9 +126,9 @@ class CommandFactory
      */
     public function createUpdateStatusCommandForView(Ticket $ticket)
     {
-        $command = new UpdateStatusCommand();
-        $command->id = $ticket->getId();
-        $command->status = $ticket->getStatus();
+        $command           = new UpdateStatusCommand();
+        $command->ticketId = $ticket->getId();
+        $command->status   = $ticket->getStatus();
 
         return $command;
     }
