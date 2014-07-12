@@ -95,7 +95,7 @@ class AttachmentServiceImpl implements AttachmentService
             $this->fileRemoveHandler->remove($attachment->getFilename());
             $this->attachmentRepository->remove($attachment);
         } catch (\Exception $e) {
-            throw new \RuntimeException('Can not remove attachment.', 0, $e);
+            throw new \RuntimeException('Unable to remove attachment.', 0, $e);
         }
     }
 

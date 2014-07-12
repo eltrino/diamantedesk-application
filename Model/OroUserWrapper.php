@@ -38,7 +38,7 @@ class OroUserWrapper implements UserWrapper
     {
         $oroUser = $this->userManager->findUserBy(array('id' => $id));
         if (!$oroUser->getId()) {
-            throw new \LogicException('User is not exists.');
+            throw new \LogicException("User doesn't exist.");
         }
         return new User(
             $oroUser->getId(),

@@ -40,7 +40,7 @@ class UpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write('Updating Db Schema...');
+            $output->write('Updating DB schema...');
             $this->updateDbSchema();
             $output->writeln('Done');
         } catch (\Exception $e) {
@@ -48,7 +48,7 @@ class UpdateCommand extends ContainerAwareCommand
             return;
         }
 
-        $output->writeln('Updated.');
+        $output->writeln('Updated!');
     }
 
     /**
@@ -73,7 +73,7 @@ class UpdateCommand extends ContainerAwareCommand
         $toUpdate = array_diff($sql, $sql2);
 
         if (empty($toUpdate)) {
-            throw new \Exception('Nothing to update');
+            throw new \Exception('No new updates found. Diamante Desk is up to date!');
         }
 
         $conn = $em->getConnection();

@@ -53,7 +53,7 @@ class TicketControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket created", $crawler->html());
+        $this->assertContains("Ticket successfully created.", $crawler->html());
     }
 
     public function testCreateWithBranchId()
@@ -77,7 +77,7 @@ class TicketControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket created", $crawler->html());
+        $this->assertContains("Ticket successfully created.", $crawler->html());
     }
 
     public function testList()
@@ -137,7 +137,7 @@ class TicketControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket updated", $crawler->html());
+        $this->assertContains("Ticket successfully saved.", $crawler->html());
     }
 
 
@@ -157,7 +157,7 @@ class TicketControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket assigned", $crawler->html());
+        $this->assertContains("Ticket successfully re-assigned.", $crawler->html());
     }
 
     public function testClose()

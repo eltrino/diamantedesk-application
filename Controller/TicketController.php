@@ -115,7 +115,9 @@ class TicketController extends Controller
             $this->addSuccessMessage('Ticket created');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            //@todo in case of error appears screen does not changes and error does not appear
+            $response = array('form' => $form->createView());
+        } catch (\Exception $e) {
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -150,9 +152,12 @@ class TicketController extends Controller
                     $command->status,
                     $command->assignee->getId()
                 );
-            $this->addSuccessMessage('Ticket updated');
+            $this->addSuccessMessage('Ticket successfully saved.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
+            $response = array('form' => $form->createView());
+        } catch (\Exception $e) {
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -173,7 +178,7 @@ class TicketController extends Controller
         $this->get('diamante.ticket.service')
             ->deleteTicket($ticket->getId());
 
-        $this->addSuccessMessage('Ticket deleted');
+        $this->addSuccessMessage('Ticket successfully deleted.');
 
         return $this->redirect(
             $this->generateUrl('diamante_ticket_list')
@@ -206,9 +211,10 @@ class TicketController extends Controller
                     $command->id,
                     $command->assignee->getId()
                 );
-            $this->addSuccessMessage('Ticket assigned');
+            $this->addSuccessMessage('Ticket successfully re-assigned.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -229,7 +235,7 @@ class TicketController extends Controller
         $this->get('diamante.ticket.service')
             ->closeTicket($ticket->getId());
 
-        $this->addSuccessMessage('Ticket closed');
+        $this->addSuccessMessage('Ticket closed.');
 
         return $this->redirect(
             $this->getViewUrl($ticket)
@@ -251,7 +257,7 @@ class TicketController extends Controller
         $this->get('diamante.ticket.service')
             ->reopenTicket($ticket->getId());
 
-        $this->addSuccessMessage('Ticket reopened');
+        $this->addSuccessMessage('Ticket reopened.');
 
         return $this->redirect(
             $this->getViewUrl($ticket)
@@ -315,7 +321,7 @@ class TicketController extends Controller
 
             $this->get('session')->getFlashBag()->add(
                 'success',
-                $this->get('translator')->trans('Attachments uploaded')
+                $this->get('translator')->trans('Attachment(s) successfully uploaded.')
             );
             $response = $this->get('oro_ui.router')->actionRedirect(
                 array(
@@ -352,7 +358,7 @@ class TicketController extends Controller
         $ticketService->removeAttachmentFromTicket($ticketId, $attachId);
         $this->get('session')->getFlashBag()->add(
             'success',
-            $this->get('translator')->trans('Attachment removed.')
+            $this->get('translator')->trans('Attachment successfully deleted.')
         );
         $response = $this->redirect($this->generateUrl(
             'diamante_ticket_view',
@@ -418,13 +424,13 @@ class TicketController extends Controller
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be supported only via POST method');
+            throw new \LogicException('Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form is not valid');
+            throw new \RuntimeException('Form object validation failed, form is invalid.');
         }
     }
 
@@ -439,21 +445,23 @@ class TicketController extends Controller
         );
     }
 
+    private function addErrorMessage($message)
+    {
+        $this->get('session')->getFlashBag()->add(
+            'error',
+            $this->get('translator')->trans($message)
+        );
+    }
+
     /**
      * @param Ticket $ticket
      * @return array
      */
     private function getSuccessSaveResponse(Ticket $ticket)
     {
-        return $this->get('oro_ui.router')->actionRedirect(
-            array(
-                'route' => 'diamante_ticket_update',
-                'parameters' => array('id' => $ticket->getId()),
-            ),
-            array(
-                'route' => 'diamante_ticket_view',
-                'parameters' => array('id' => $ticket->getId())
-            )
+        return $this->get('oro_ui.router')->redirectAfterSave(
+            ['route' => 'diamante_ticket_update', 'parameters' => ['id' => $ticket->getId()]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticket->getId()]]
         );
     }
 

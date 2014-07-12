@@ -77,11 +77,11 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
         $attachment = $ticket->getAttachment($attachmentId);
         if (!$attachment) {
-            throw new \RuntimeException('Ticket has no such attachment.');
+            throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
         }
         return $attachment;
     }
@@ -96,7 +96,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (!$ticket) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
         $this->attachmentService->createAttachmentsForItHolder($filesListDto, $ticket);
         $this->ticketRepository->store($ticket);
@@ -113,11 +113,11 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (!$ticket) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
         $attachment = $ticket->getAttachment($attachmentId);
         if (!$attachment) {
-            throw new \RuntimeException('Ticket has no such attachment.');
+            throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
         }
         $this->attachmentService->removeAttachmentFromItHolder($attachment);
         $ticket->removeAttachment($attachment);
@@ -152,17 +152,17 @@ class TicketServiceImpl implements TicketService
     {
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
-            throw new \RuntimeException('Branch not found.');
+            throw new \RuntimeException('Branch loading failed, branch not found.');
         }
 
         $reporter = $this->userService->getUserById($reporterId);
         if (is_null($reporter)) {
-            throw new \RuntimeException('Reporter not found.');
+            throw new \RuntimeException('Reporter loading failed, reporter not found.');
         }
 
         $assignee = $this->userService->getUserById($assigneeId);
         if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee not found.');
+            throw new \RuntimeException('Assignee validation failed, assignee not found.');
         }
 
         $ticket = $this->ticketFactory
@@ -197,7 +197,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
         $ticket->update(
@@ -229,7 +229,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
         $this->ticketRepository->remove($ticket);
@@ -246,7 +246,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
         $assignee = $this->userService->getUserById($assigneeId);
@@ -270,7 +270,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
         $ticket->close();
@@ -289,7 +289,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
         $ticket->reopen();

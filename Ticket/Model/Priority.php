@@ -39,7 +39,7 @@ class Priority
         static::initValueLabelsMap();
 
         if (false === isset(static::$valueToLabelMap[$priority])) {
-            throw new \InvalidArgumentException('Given priority is wrong');
+            throw new \InvalidArgumentException("Priority doesn't exist.");
         }
 
         $this->priority = (int) $priority;

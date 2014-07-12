@@ -29,7 +29,7 @@ class CreateTicketType extends AbstractType
                 'label' => 'Branch',
                 'class' => 'EltrinoDiamanteDeskBundle:Branch',
                 'property' => 'name',
-                'empty_value' => 'Choose a branch...'
+                'empty_value' => 'Choose branch...'
             )
         );
 

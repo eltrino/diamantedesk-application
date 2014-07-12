@@ -123,7 +123,7 @@ class BranchServiceImpl implements BranchService
     {
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
-            throw new \RuntimeException('Branch not found.');
+            throw new \RuntimeException('Branch loading failed, branch not found. ');
         }
         if ($branch->getLogo()) {
             $this->branchLogoHandler->remove($branch->getLogo());

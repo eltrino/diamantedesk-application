@@ -58,17 +58,17 @@ class TicketGridFiltersService
         $filter = $this->filterRepository->get($filterId);
 
         if (!$filter) {
-            throw new \RuntimeException('Filter not found.');
+            throw new \RuntimeException('Filter loading failed, filter not found.');
         }
 
         $concreteFilterUrlGenerator = $this->container->get($filter->getServiceId());
 
         if (!$concreteFilterUrlGenerator) {
-            throw new \RuntimeException('Concrete Filter Generator not found.');
+            throw new \RuntimeException('Filter generator loading failed, filter generator not found.');
         }
 
         if (!($concreteFilterUrlGenerator instanceof FilterUrlGeneratorInterface)) {
-            throw new \InvalidArgumentException($concreteFilterUrlGenerator . " should be an instance of FilterUrlGeneratorInterface.");
+            throw new \InvalidArgumentException(sprintf('Object should be an instance of FilterUrlGeneratorInterface.'));
         }
 
         return $concreteFilterUrlGenerator->generateFilterUrlPart();

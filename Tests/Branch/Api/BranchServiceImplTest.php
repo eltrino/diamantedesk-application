@@ -246,7 +246,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Branch not found.
+     * @expectedExceptionMessage Branch loading failed, branch not found.
      */
     public function thatBranchDeleteThrowsExceptionIfBranchDoesNotExists()
     {

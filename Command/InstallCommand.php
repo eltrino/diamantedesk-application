@@ -64,15 +64,15 @@ class InstallCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write('Creating Branch Logo directory...');
+            $output->write('Creating Branch logo directory...');
             $this->createBranchLogoDirectory();
             $output->writeln('Done');
 
-            $output->write('Creating Attachments directory...');
+            $output->write('Creating attachments directory...');
             $this->createAttachmentsDirectory();
             $output->writeln('Done');
 
-            $output->write('Installing Db Schema...');
+            $output->write('Installing DB schema...');
             $this->installDbSchema();
             $output->writeln('Done');
 
@@ -87,7 +87,7 @@ class InstallCommand extends ContainerAwareCommand
             return;
         }
 
-        $output->writeln('Installed.');
+        $output->writeln('Installed!');
         return 0;
     }
 

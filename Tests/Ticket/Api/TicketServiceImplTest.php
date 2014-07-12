@@ -87,7 +87,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -100,7 +100,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket has no such attachment.
+     * @expectedExceptionMessage Attachment loading failed. Ticket has no such attachment.
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
@@ -129,7 +129,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
@@ -155,7 +155,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -168,7 +168,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket has no such attachment.
+     * @expectedExceptionMessage Attachment loading failed. Ticket has no such attachment.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {

@@ -79,7 +79,7 @@ class BranchController extends Controller
 
         try {
             $result = $this->edit($command, function ($command) {
-                $this->get('diamante.branch.service')
+                return $this->get('diamante.branch.service')
                     ->createBranch(
                         $command->name,
                         $command->description,
@@ -88,7 +88,8 @@ class BranchController extends Controller
                     );
             });
         } catch(\Exception $e) {
-            $this->addErrorMessage($e->getMessage());
+            // @todo log original error
+            $this->addErrorMessage('Error occurred when creating the branch. Branch is not created. Enter all required data and try again.');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
@@ -116,7 +117,7 @@ class BranchController extends Controller
 
         try {
             $result = $this->edit($command, function ($command) use ($branch) {
-                $this->get('diamante.branch.service')
+                return $this->get('diamante.branch.service')
                     ->updateBranch(
                         $branch->getId(),
                         $command->name,
@@ -126,7 +127,8 @@ class BranchController extends Controller
                     );
             }, $branch);
         } catch(\Exception $e) {
-            $this->addErrorMessage($e->getMessage());
+            // @todo log original error
+            $this->addErrorMessage('Error occurred when saving the branch. Branch is not saved. Enter all required data and try again');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_update',
@@ -152,7 +154,11 @@ class BranchController extends Controller
         try {
             $this->handle($form);
             $branchId = $callback($command);
-            $this->addSuccessMessage('Branch saved');
+            if ($command->id) {
+                $this->addSuccessMessage('Branch successfully saved.');
+            } else {
+                $this->addSuccessMessage('Branch successfully created.');
+            }
             $response = $this->getSuccessSaveResponse($branchId);
         } catch (\LogicException $e) {
             $response = array('form' => $form->createView());
@@ -188,13 +194,13 @@ class BranchController extends Controller
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be supported only via POST method');
+            throw new \LogicException('Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form is not valid');
+            throw new \RuntimeException('Form object validation failed, form is invalid.');
         }
     }
 
@@ -226,15 +232,9 @@ class BranchController extends Controller
      */
     private function getSuccessSaveResponse($branchId)
     {
-        return $this->get('oro_ui.router')->actionRedirect(
-            array(
-                'route' => 'diamante_branch_update',
-                'parameters' => array('id' => $branchId),
-            ),
-            array(
-                'route' => 'diamante_branch_view',
-                'parameters' => array('id' => $branchId)
-            )
+        return $this->get('oro_ui.router')->redirectAfterSave(
+            ['route' => 'diamante_branch_update', 'parameters' => ['id' => $branchId]],
+            ['route' => 'diamante_branch_view', 'parameters' => ['id' => $branchId]]
         );
     }
 }

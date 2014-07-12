@@ -14,11 +14,22 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Form\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class EditCommentCommand
 {
     public $id;
+    /**
+     * @Assert\NotBlank
+     */
     public $content;
+    /**
+     * @Assert\NotBlank
+     */
     public $ticket;
+    /**
+     * @Assert\NotBlank
+     */
     public $author;
     public $files;
     public $attachmentList;

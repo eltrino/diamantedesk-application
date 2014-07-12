@@ -83,7 +83,7 @@ class BranchControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Branch saved", $crawler->html());
+        $this->assertContains("Branch successfully created.", $crawler->html());
         $this->assertTrue($crawler->filter('html:contains("Dproject.png")')->count() == 0);
     }
 
@@ -106,7 +106,7 @@ class BranchControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Branch saved", $crawler->html());
+        $this->assertContains("Branch successfully saved.", $crawler->html());
         $this->assertTrue($crawler->filter('html:contains("Dproject.png")')->count() == 0);
     }
 

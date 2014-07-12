@@ -69,7 +69,7 @@ class TicketGridFiltersServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Filter not found.
+     * @expectedExceptionMessage Filter loading failed, filter not found.
      */
     public function testGenerateGridFilterUrlThrowsExceptionWhenFilterDoesNotExists()
     {
@@ -84,7 +84,7 @@ class TicketGridFiltersServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Concrete Filter Generator not found.
+     * @expectedExceptionMessage Filter generator loading failed, filter generator not found.
      */
     public function testGenerateGridFilterUrlThrowsExceptionWhenFilterGeneratorDoesNotExists()
     {
