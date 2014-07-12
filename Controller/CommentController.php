@@ -131,7 +131,11 @@ class CommentController extends Controller
         try {
             $this->handle($form);
             $callback($command);
-            $this->addSuccessMessage('Comment successfully saved.');
+            if ($command->id) {
+                $this->addSuccessMessage('Comment successfully saved.');
+            } else {
+                $this->addSuccessMessage('Comment successfully created.');
+            }
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
             $response = array('form' => $formView);

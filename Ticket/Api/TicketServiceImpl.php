@@ -209,7 +209,7 @@ class TicketServiceImpl implements TicketService
         if ($assigneeId != $ticket->getAssigneeId()) {
             $assignee = $this->userService->getUserById($assigneeId);
             if (is_null($assignee)) {
-                throw new \RuntimeException('Assignee not found.');
+                throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }
             $ticket->assign($assignee);
         }
@@ -251,7 +251,7 @@ class TicketServiceImpl implements TicketService
 
         $assignee = $this->userService->getUserById($assigneeId);
         if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee not found.');
+            throw new \RuntimeException('Assignee loading failed, assignee not found.');
         }
 
         $ticket->assign($assignee);

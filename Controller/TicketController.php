@@ -112,7 +112,7 @@ class TicketController extends Controller
                     $command->reporter->getId(),
                     $command->assignee->getId()
                 );
-            $this->addSuccessMessage('Ticket created');
+            $this->addSuccessMessage('Ticket successfully created.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
             $response = array('form' => $form->createView());
