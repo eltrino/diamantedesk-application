@@ -203,7 +203,7 @@ class Ticket implements AttachmentHolder
 
     /** LEGACY CODE START */
 
-    public function create($subject, $description, $branch, $reporter, $assignee, $status)
+    public function create($subject, $description, $branch, $reporter, $assignee, $status = null)
     {
         if (null == $status) {
             $status = Status::NEW_ONE;
