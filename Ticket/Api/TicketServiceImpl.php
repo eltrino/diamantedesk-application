@@ -23,6 +23,7 @@ use Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
 use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
 
@@ -148,7 +149,7 @@ class TicketServiceImpl implements TicketService
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $status, $reporterId, $assigneeId)
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null)
     {
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
@@ -172,15 +173,14 @@ class TicketServiceImpl implements TicketService
             $subject,
             $description,
             $branch,
-            $status,
             $reporter,
-            $assignee
+            $assignee,
+            $status
         );
 
         $this->ticketRepository->store($ticket);
 
         return $ticket;
-
     }
 
     /**
@@ -220,19 +220,21 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * Delete Ticket
      * @param $ticketId
-     * @return null
+     * @param $status
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($ticketId)
+    public function updateStatus($ticketId, $status)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+        $ticket->updateStatus($status);
+        $this->ticketRepository->store($ticket);
 
-        $this->ticketRepository->remove($ticket);
+        return $ticket;
     }
 
     /**
@@ -261,40 +263,18 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * Close Ticket
+     * Delete Ticket
      * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @return null
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function closeTicket($ticketId)
+    public function deleteTicket($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        $ticket->close();
-        $this->ticketRepository->store($ticket);
-
-        return $ticket;
-    }
-
-    /**
-     * Reopen Ticket
-     * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required ticket
-     */
-    public function reopenTicket($ticketId)
-    {
-        $ticket = $this->ticketRepository->get($ticketId);
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
-
-        $ticket->reopen();
-        $this->ticketRepository->store($ticket);
-
-        return $ticket;
+        $this->ticketRepository->remove($ticket);
     }
 }

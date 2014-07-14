@@ -19,39 +19,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
 
-class CreateTicketType extends AbstractType
+class UpdateTicketStatusType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'branch',
-            'entity',
-            array(
-                'label' => 'Branch',
-                'class' => 'EltrinoDiamanteDeskBundle:Branch',
-                'property' => 'name',
-                'empty_value' => 'Choose branch...'
-            )
-        );
-
-        $builder->add(
-            'subject',
-            'text',
-            array(
-                'label' => 'Subject',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
-            'description',
-            'textarea',
-            array(
-                'label' => 'Description',
-                'required' => true,
-            )
-        );
-
         $statusTransformer = new StatusTransformer();
         $statusOptions = $statusTransformer->getOptions();
 
@@ -64,22 +35,6 @@ class CreateTicketType extends AbstractType
                 ))
                 ->addModelTransformer($statusTransformer)
         );
-
-        $builder->add(
-            'reporter',
-            'oro_user_select',
-            array(
-                'required' => true
-            )
-        );
-
-        $builder->add(
-            'assignee',
-            'oro_user_select',
-            array(
-                'required' => false
-            )
-        );
     }
 
     /**
@@ -89,8 +44,8 @@ class CreateTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand',
-                'intention' => 'ticket',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\UpdateStatusCommand',
+                'intention' => 'ticket_status',
                 'cascade_validation' => true
             )
         );
@@ -103,6 +58,6 @@ class CreateTicketType extends AbstractType
      */
     public function getName()
     {
-        return 'diamante_ticket_form';
+        return 'diamante_ticket_status_form';
     }
 }
