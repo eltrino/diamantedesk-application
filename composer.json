@@ -23,8 +23,8 @@
     ],
     "require": {
         "php": ">=5.4.4",
-        "oro/platform": "1.1.*",
-        "oro/crm": "1.1.*",
+        "oro/platform": "1.2.*",
+        "oro/crm": "1.2.*",
         "beberlei/assert": "*"
     },
     "require-dev": {
