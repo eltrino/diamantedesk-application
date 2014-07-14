@@ -22,9 +22,11 @@ class BranchFactory
 {
     /**
      * Create Branch
+     *
      * @param $name
      * @param $description
      * @param \SplFileInfo $logo
+     * @param null $tags
      * @return Branch
      */
     public function create($name, $description, \SplFileInfo $logo = null, $tags = null)
