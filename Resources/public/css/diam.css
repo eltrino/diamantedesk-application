@@ -89,3 +89,8 @@
     margin: 15px 0 0 15px;
 }
 
+.diam-ticket-description {
+    width:  560px;
+    height: 200px;
+    resize: vertical;
+}
