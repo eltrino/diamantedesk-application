@@ -227,7 +227,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function testUpdateStatusWhenTicketDoesNotExists()
     {
