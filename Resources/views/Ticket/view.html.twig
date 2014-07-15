@@ -128,7 +128,7 @@
     {% set dataSubBlocks = [UI.attibuteRow('Subject', entity.subject)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Branch', entity.branchName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Description', entity.description)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Status', entity.status.getValue)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Status', entity.status.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Reporter', entity.reporterFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Assignee', entity.assigneeFullName)]) %}
 

@@ -38,7 +38,7 @@ class StatusTransformer implements DataTransformerInterface
             return '';
         }
 
-        return array_search($status, $this->statusOptions);
+        return $status->getValue();
     }
 
     /**
@@ -51,7 +51,7 @@ class StatusTransformer implements DataTransformerInterface
             return null;
         }
 
-        return $this->statusOptions[$status];
+        return $status;
     }
 
     /**
@@ -62,12 +62,12 @@ class StatusTransformer implements DataTransformerInterface
         if (empty($this->statusOptions)) {
             $this->statusOptions =
                 array(
-                    0 => Status::NEW_ONE,
-                    1 => Status::OPEN,
-                    2 => Status::PENDING,
-                    3 => Status::IN_PROGRESS,
-                    4 => Status::CLOSED,
-                    5 => Status::ON_HOLD
+                    Status::NEW_ONE     => Status::LABEL_NEW_ONE,
+                    Status::OPEN        => Status::LABEL_OPEN,
+                    Status::PENDING     => Status::LABEL_PENDING,
+                    Status::IN_PROGRESS => Status::LABEL_IN_PROGRESS,
+                    Status::CLOSED      => Status::LABEL_CLOSED,
+                    Status::ON_HOLD     => Status::LABEL_ON_HOLD
                 );
         }
         return $this->statusOptions;
