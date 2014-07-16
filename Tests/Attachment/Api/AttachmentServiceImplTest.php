@@ -123,7 +123,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Attachment not found.
+     * @expectedExceptionMessage Attachment loading failed, attachment not found.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenAttachmentDoesNotExist()
     {
@@ -137,7 +137,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Can not remove attachment.
+     * @expectedExceptionMessage Unable to remove attachment.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenRemovesFile()
     {

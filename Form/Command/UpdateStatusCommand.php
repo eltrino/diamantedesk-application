@@ -14,28 +14,8 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Form\Command;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
-class UpdateTicketCommand
+class UpdateStatusCommand
 {
-    /**
-     * @Assert\NotBlank
-     */
-    public $id;
-    /**
-     * @Assert\NotBlank
-     */
-    public $subject;
-    /**
-     * @Assert\NotBlank
-     */
-    public $description;
-    /**
-     * @Assert\NotBlank
-     */
+    public $ticketId;
     public $status;
-    /**
-     * @Assert\NotBlank
-     */
-    public $assignee;
-}
+} 

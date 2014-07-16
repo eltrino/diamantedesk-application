@@ -89,13 +89,13 @@ class AttachmentServiceImpl implements AttachmentService
     {
         $attachment = $this->attachmentRepository->get($attachmentId);
         if (is_null($attachment)) {
-            throw new \RuntimeException('Attachment not found.');
+            throw new \RuntimeException('Attachment loading failed, attachment not found.');
         }
         try {
             $this->fileRemoveHandler->remove($attachment->getFilename());
             $this->attachmentRepository->remove($attachment);
         } catch (\Exception $e) {
-            throw new \RuntimeException('Can not remove attachment.', 0, $e);
+            throw new \RuntimeException('Unable to remove attachment.', 0, $e);
         }
     }
 

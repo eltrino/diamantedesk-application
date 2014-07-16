@@ -27,6 +27,7 @@ use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
 use Eltrino\DiamanteDeskBundle\Form\Type\AssigneeTicketType;
 use Eltrino\DiamanteDeskBundle\Form\Type\AttachmentType;
 use Eltrino\DiamanteDeskBundle\Form\Type\CreateTicketType;
+use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
 use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketType;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -84,6 +85,43 @@ class TicketController extends Controller
 
     /**
      * @Route(
+     *      "/status/ticket/{id}",
+     *      name="diamante_ticket_status_change",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Template("EltrinoDiamanteDeskBundle:Ticket:widget/info.html.twig")
+     */
+    public function changeStatusAction(Ticket $ticket)
+    {
+        $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
+
+        $command = $this->get('diamante.command_factory')
+            ->createUpdateStatusCommandForView($ticket);
+
+        $form = $this->createForm(new UpdateTicketStatusType(), $command);
+
+        if (false === $redirect) {
+            try {
+                $this->handle($form);
+                $this->get('diamante.ticket.service')
+                    ->updateStatus(
+                        $command->ticketId,
+                        $command->status
+                    );
+                $this->addSuccessMessage('Status successfully changed');
+                $response = array('saved' => true);
+            } catch (\LogicException $e) {
+                $response = array('form' => $form->createView());
+            }
+        } else {
+            $response = array('form' => $form->createView());
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
      *      "/create/{id}",
      *      name="diamante_ticket_create",
      *      requirements={"id" = "\d+"},
@@ -108,14 +146,16 @@ class TicketController extends Controller
                     $command->branch->getId(),
                     $command->subject,
                     $command->description,
-                    $command->status,
                     $command->reporter->getId(),
-                    $command->assignee->getId()
+                    $command->assignee->getId(),
+                    $command->status
                 );
-            $this->addSuccessMessage('Ticket created');
+            $this->addSuccessMessage('Ticket successfully created.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            //@todo in case of error appears screen does not changes and error does not appear
+            $response = array('form' => $form->createView());
+        } catch (\Exception $e) {
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -150,9 +190,12 @@ class TicketController extends Controller
                     $command->status,
                     $command->assignee->getId()
                 );
-            $this->addSuccessMessage('Ticket updated');
+            $this->addSuccessMessage('Ticket successfully saved.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
+            $response = array('form' => $form->createView());
+        } catch (\Exception $e) {
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -173,7 +216,7 @@ class TicketController extends Controller
         $this->get('diamante.ticket.service')
             ->deleteTicket($ticket->getId());
 
-        $this->addSuccessMessage('Ticket deleted');
+        $this->addSuccessMessage('Ticket successfully deleted.');
 
         return $this->redirect(
             $this->generateUrl('diamante_ticket_list')
@@ -206,56 +249,13 @@ class TicketController extends Controller
                     $command->id,
                     $command->assignee->getId()
                 );
-            $this->addSuccessMessage('Ticket assigned');
+            $this->addSuccessMessage('Ticket successfully re-assigned.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $form->createView());
         }
         return $response;
-    }
-
-    /**
-     * @Route(
-     *      "/close/{id}",
-     *      name="diamante_ticket_close",
-     *      requirements={"id"="\d+"}
-     * )
-     *
-     * @param Ticket $ticket
-     * @return RedirectResponse
-     */
-    public function closeAction(Ticket $ticket)
-    {
-        $this->get('diamante.ticket.service')
-            ->closeTicket($ticket->getId());
-
-        $this->addSuccessMessage('Ticket closed');
-
-        return $this->redirect(
-            $this->getViewUrl($ticket)
-        );
-    }
-
-    /**
-     * @Route(
-     *      "/reopen/{id}",
-     *      name="diamante_ticket_reopen",
-     *      requirements={"id"="\d+"}
-     * )
-     *
-     * @param Ticket $ticket
-     * @return RedirectResponse
-     */
-    public function reopenAction(Ticket $ticket)
-    {
-        $this->get('diamante.ticket.service')
-            ->reopenTicket($ticket->getId());
-
-        $this->addSuccessMessage('Ticket reopened');
-
-        return $this->redirect(
-            $this->getViewUrl($ticket)
-        );
     }
 
     /**
@@ -315,7 +315,7 @@ class TicketController extends Controller
 
             $this->get('session')->getFlashBag()->add(
                 'success',
-                $this->get('translator')->trans('Attachments uploaded')
+                $this->get('translator')->trans('Attachment(s) successfully uploaded.')
             );
             $response = $this->get('oro_ui.router')->actionRedirect(
                 array(
@@ -352,7 +352,7 @@ class TicketController extends Controller
         $ticketService->removeAttachmentFromTicket($ticketId, $attachId);
         $this->get('session')->getFlashBag()->add(
             'success',
-            $this->get('translator')->trans('Attachment removed.')
+            $this->get('translator')->trans('Attachment successfully deleted.')
         );
         $response = $this->redirect($this->generateUrl(
             'diamante_ticket_view',
@@ -418,13 +418,13 @@ class TicketController extends Controller
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be supported only via POST method');
+            throw new \LogicException('Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form is not valid');
+            throw new \RuntimeException('Form object validation failed, form is invalid.');
         }
     }
 
@@ -439,21 +439,23 @@ class TicketController extends Controller
         );
     }
 
+    private function addErrorMessage($message)
+    {
+        $this->get('session')->getFlashBag()->add(
+            'error',
+            $this->get('translator')->trans($message)
+        );
+    }
+
     /**
      * @param Ticket $ticket
      * @return array
      */
     private function getSuccessSaveResponse(Ticket $ticket)
     {
-        return $this->get('oro_ui.router')->actionRedirect(
-            array(
-                'route' => 'diamante_ticket_update',
-                'parameters' => array('id' => $ticket->getId()),
-            ),
-            array(
-                'route' => 'diamante_ticket_view',
-                'parameters' => array('id' => $ticket->getId())
-            )
+        return $this->get('oro_ui.router')->redirectAfterSave(
+            ['route' => 'diamante_ticket_update', 'parameters' => ['id' => $ticket->getId()]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticket->getId()]]
         );
     }
 

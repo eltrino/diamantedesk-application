@@ -44,7 +44,7 @@ class FileUploadHandler
     public function upload($filename, $content)
     {
         if (false === $this->uploadDir->isDir() || false === $this->uploadDir->isWritable()) {
-            throw new \RuntimeException('Upload directory is not writable or does not exist.');
+            throw new \RuntimeException("Upload directory is not writable, doesn't exist or no space left on the disk.");
         }
         $this->fs->dumpFile($this->uploadDir->getRealPath() . '/' . $filename, $content);
         return new File($this->uploadDir->getRealPath() . '/' . $filename);

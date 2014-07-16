@@ -15,12 +15,12 @@
 namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\SmallIntType;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
+use Doctrine\DBAL\Types\StringType;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 
-class PriorityType extends SmallIntType
+class StatusType extends StringType
 {
-    const PRIORITY_TYPE = 'priority';
+    const STATUS_TYPE = 'status';
 
     /**
      * Gets the name of this type.
@@ -29,12 +29,12 @@ class PriorityType extends SmallIntType
      */
     public function getName()
     {
-        return self::PRIORITY_TYPE;
+        return self::STATUS_TYPE;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return new Priority($value);
+        return new Status($value);
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
@@ -42,9 +42,9 @@ class PriorityType extends SmallIntType
         if (!$value) {
             return '';
         }
-        if (false === ($value instanceof Priority)) {
-            throw new \RuntimeException("Variable type validation failed, value should be a Priority type");
+        if (false === ($value instanceof Status)) {
+            throw new \RuntimeException("Value should be a Status type.");
         }
         return parent::convertToDatabaseValue($value->getValue(), $platform);
     }
-}
+} 

@@ -51,7 +51,7 @@ class FileUploadHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Upload directory is not writable or does not exist.
+     * @expectedExceptionMessage Upload directory is not writable, doesn't exist or no space left on the disk.
      */
     public function thatFileUploadingThrowsExceptionWhenDirIsNotCreated()
     {
@@ -64,7 +64,7 @@ class FileUploadHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Upload directory is not writable or does not exist.
+     * @expectedExceptionMessage Upload directory is not writable, doesn't exist or no space left on the disk.
      */
     public function thatFileUploadingThrowsExceptionWhenDirIsNotWritable()
     {

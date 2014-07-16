@@ -17,6 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class CommentTest extends \PHPUnit_Framework_TestCase
@@ -60,9 +61,9 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             TicketTest::TICKET_SUBJECT,
             TicketTest::TICKET_DESCRIPTION,
             new Branch('DUMMY_NAME', 'DUMMY_DESC'),
-            TicketTest::TICKET_STATUS_OPEN,
             new User(),
-            new User()
+            new User(),
+            Status::OPEN
         );
         return $ticket;
     }

@@ -52,7 +52,7 @@ class CommentControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Comment saved", $crawler->html());
+        $this->assertContains("Comment successfully created.", $crawler->html());
     }
 
     public function testUpdate()
@@ -72,7 +72,7 @@ class CommentControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Comment saved", $crawler->html());
+        $this->assertContains("Comment successfully saved.", $crawler->html());
     }
 
     public function testDelete()

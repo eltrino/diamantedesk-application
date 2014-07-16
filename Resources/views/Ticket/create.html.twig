@@ -44,7 +44,6 @@
                 'data': [
                     form_row(form.branch),
                     form_row(form.subject),
-                    form_row(form.description),
                     form_row(form.status),
                     form_row(form.reporter),
                     form_row(form.assignee)
@@ -52,6 +51,18 @@
             }
         ]
     }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title' : 'Description'|trans,
+        'subblocks': [
+            {
+                'title' : '',
+                'data' : [
+                    form_row(form.description)
+                ]
+            }]
+        }]
+    ) %}
 
     {% set data = {
         'formErrors': form_errors(form)? form_errors(form) : null,

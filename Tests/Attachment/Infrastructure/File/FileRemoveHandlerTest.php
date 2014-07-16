@@ -49,7 +49,7 @@ class FileRemoveHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \LogicException
-     * @expectedExceptionMessage File name can not be empty string.
+     * @expectedExceptionMessage Attachment validation failed, filename cannot be empty.
      */
     public function thatFileRemovingThrowsExceptionWhenFilenameIsEmpty()
     {
