@@ -90,6 +90,7 @@
 }
 
 .diam-ticket-description {
-    width:560px;
-    resize:none;
+    width:  560px;
+    height: 200px;
+    resize: vertical;
 }

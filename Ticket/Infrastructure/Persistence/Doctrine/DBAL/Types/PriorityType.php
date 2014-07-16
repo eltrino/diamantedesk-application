@@ -43,7 +43,7 @@ class PriorityType extends SmallIntType
             return '';
         }
         if (false === ($value instanceof Priority)) {
-            throw new \RuntimeException("Value should be a Priority type.");
+            throw new \RuntimeException("Variable type validation failed, value should be a Priority type");
         }
         return parent::convertToDatabaseValue($value->getValue(), $platform);
     }

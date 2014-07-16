@@ -15,13 +15,17 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
 use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\EltrinoDiamanteDeskBundle;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
-use Eltrino\DiamanteDeskBundle\Entity\Comment;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 
@@ -33,8 +37,8 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_COMMENT_ID      = 1;
     const DUMMY_TICKET_SUBJECT      = 'Subject';
     const DUMMY_TICKET_DESCRIPTION  = 'Description';
-    const DUMMY_TICKET_STATUS_OPEN  = 'open';
-    const DUMMY_TICKET_STATUS_CLOSE = 'close';
+    const DUMMY_FILENAME        = 'dummy-filename.ext';
+    const DUMMY_FILE_CONTENT    = 'DUMMY_CONTENT';
 
     /**
      * @var CommentServiceImpl
@@ -72,12 +76,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentService;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
-     */
-    private $uploadedFile;
-
-    /**
      * @var \Eltrino\DiamanteDeskBundle\Entity\Comment
      * @Mock \Eltrino\DiamanteDeskBundle\Entity\Comment
      */
@@ -98,16 +96,16 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
-            self::DUMMY_TICKET_STATUS_CLOSE,
             $this->createReporter(),
-            $this->createAssignee()
+            $this->createAssignee(),
+            Status::CLOSED
         );
     }
 
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatCommentPostThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -169,14 +167,16 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->attachmentService->expects($this->once())->method('createAttachmentForItHolder')
-            ->with($this->equalTo($this->uploadedFile), $this->equalTo($comment));
+        $filesListDto = $this->filesListDto();
+
+        $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
+            ->with($this->equalTo($filesListDto), $this->equalTo($comment));
 
         $this->service->postNewCommentForTicket(
             self::DUMMY_COMMENT_CONTENT,
             self::DUMMY_TICKET_ID,
             self::DUMMY_USER_ID,
-            $this->uploadedFile
+            $filesListDto
         );
 
         $this->assertCount(1, $ticket->getComments());
@@ -186,7 +186,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Comment not found.
+     * @expectedExceptionMessage Comment loading failed, comment not found.
      */
     public function thatCommentUpdateThrowsExceptionIfCommentDoesNotExists()
     {
@@ -229,18 +229,19 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
 
-        $this->attachmentService->expects($this->once())->method('createAttachmentForItHolder')
-            ->with($this->equalTo($this->uploadedFile), $this->equalTo($comment));
+        $filesListDto = $this->filesListDto();
 
-        $this->service->updateTicketComment(self::DUMMY_COMMENT_ID, $updatedContent, $this->uploadedFile);
+        $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
+            ->with($this->equalTo($filesListDto), $this->equalTo($comment));
 
+        $this->service->updateTicketComment(self::DUMMY_COMMENT_ID, $updatedContent, $filesListDto);
         $this->assertEquals($updatedContent, $comment->getContent());
     }
 
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Comment not found.
+     * @expectedExceptionMessage Comment loading failed, comment not found.
      */
     public function thtCommentDeleteThrowsExceptionIfCommentDoesNotExists()
     {
@@ -269,12 +270,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Comment has no such attachment.
+     * @expectedExceptionMessage Attachment loading failed. Comment has no such attachment.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenCommentHasNoAttachment()
     {
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
-        $comment->addAttachment(new Attachment('filename.ext'));
+        $comment->addAttachment(new Attachment(new File('filename.ext')));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
@@ -286,7 +287,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovesFromTicket()
     {
-        $attachment = new Attachment('filename.ext');
+        $attachment = new Attachment(new File('filename.ext'));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($this->comment));
 
@@ -316,5 +317,18 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private function createAssignee()
     {
         return new User();
+    }
+
+    /**
+     * @return FilesListDto
+     */
+    private function filesListDto()
+    {
+        $fileDto = new FileDto();
+        $fileDto->setFilename(self::DUMMY_FILENAME);
+        $fileDto->setData(self::DUMMY_FILE_CONTENT);
+        $filesListDto = new FilesListDto();
+        $filesListDto->setFiles(array($fileDto));
+        return $filesListDto;
     }
 }

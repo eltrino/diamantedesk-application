@@ -17,6 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
 
 class CreateTicketType extends AbstractType
 {
@@ -29,7 +30,7 @@ class CreateTicketType extends AbstractType
                 'label' => 'Branch',
                 'class' => 'EltrinoDiamanteDeskBundle:Branch',
                 'property' => 'name',
-                'empty_value' => 'Choose a branch...'
+                'empty_value' => 'Choose branch...'
             )
         );
 
@@ -54,17 +55,17 @@ class CreateTicketType extends AbstractType
             )
         );
 
+        $statusTransformer = new StatusTransformer();
+        $statusOptions = $statusTransformer->getOptions();
+
         $builder->add(
-            'status',
-            'choice',
-            array(
-                'label' => 'Status',
-                'required' => true,
-                'choices' => array(
-                    'open' => 'open',
-                    'close' => 'close'
-                )
-            )
+            $builder->create('status', 'choice',
+                array(
+                    'label' => 'Status',
+                    'required' => true,
+                    'choices' => $statusOptions
+                ))
+                ->addModelTransformer($statusTransformer)
         );
 
         $builder->add(

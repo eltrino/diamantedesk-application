@@ -50,11 +50,7 @@ class BranchType extends AbstractType
             array(
                 'label'    => 'Image',
                 'required' => false,
-                'tooltip' => 'The Image must be in JPEG or PNG formats',
-                'attr' => array(
-//                    "accept" => "image/*",
-//                    'multiple' => 'multiple'
-                )
+                'tooltip' => '"JPEG" and "PNG" image formats are supported only.'
             )
         );
 

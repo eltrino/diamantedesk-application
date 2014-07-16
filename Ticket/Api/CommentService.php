@@ -25,10 +25,10 @@ interface CommentService
      * @param string $content
      * @param integer $ticketId
      * @param integer $authorId
-     * @param \Symfony\Component\HttpFoundation\UploadedFile $uploadedFile optional
+     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
      * @return void
      */
-    public function postNewCommentForTicket($content, $ticketId, $authorId, \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile = null);
+    public function postNewCommentForTicket($content, $ticketId, $authorId, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null);
 
     public function getCommentAttachment($commentId, $attachmentId);
 
@@ -36,9 +36,9 @@ interface CommentService
      * Update Ticket Comment content
      * @param integer $commentId
      * @param string $content
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile
+     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
      */
-    public function updateTicketComment($commentId, $content, \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile = null);
+    public function updateTicketComment($commentId, $content, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null);
 
     /**
      * Delete Ticket Comment

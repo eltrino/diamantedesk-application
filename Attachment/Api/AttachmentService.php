@@ -14,18 +14,18 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Attachment\Api;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface AttachmentService
 {
     /**
-     * Create Attachment
-     * @param UploadedFile $uploadedFile
+     * Create Attachments
+     * @param FilesListDto $filesList
      * @param AttachmentHolder $attachmentHolder
-     * @return int
+     * @return void
      */
-    public function createAttachment(UploadedFile $uploadedFile, AttachmentHolder $attachmentHolder);
+    public function createAttachments(FilesListDto $filesList, AttachmentHolder $attachmentHolder);
 
     /**
      * Remove Attachment

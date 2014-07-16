@@ -15,9 +15,13 @@
 
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -28,8 +32,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_ATTACHMENT_ID = 1;
     const DUMMY_TICKET_SUBJECT      = 'Subject';
     const DUMMY_TICKET_DESCRIPTION  = 'Description';
-    const DUMMY_TICKET_STATUS_OPEN  = 'open';
-    const DUMMY_TICKET_STATUS_CLOSE = 'close';
+    const DUMMY_FILENAME      = 'dummy_filename.ext';
+    const DUMMY_FILE_CONTENT  = 'DUMMY_CONTENT';
+    const DUMMY_STATUS        = 'dummy';
 
     /**
      * @var TicketServiceImpl
@@ -47,12 +52,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService
      */
     private $ticketAttachmentService;
-
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
-     */
-    private $uploadedFile;
 
     /**
      * @var \Eltrino\DiamanteDeskBundle\Entity\Ticket
@@ -94,7 +93,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -107,7 +106,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket has no such attachment.
+     * @expectedExceptionMessage Attachment loading failed. Ticket has no such attachment.
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
@@ -115,11 +114,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
-            self::DUMMY_TICKET_STATUS_CLOSE,
             $this->createReporter(),
-            $this->createAssignee()
+            $this->createAssignee(),
+            Status::CLOSED
         );
-        $ticket->addAttachment(new Attachment('filename.ext'));
+        $ticket->addAttachment($this->attachment());
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
@@ -131,7 +130,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatTicketAttachmentRetrieves()
     {
-        $attachment = new Attachment('filename.ext');
+        $attachment = $this->attachment();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
@@ -143,39 +142,40 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
-    public function thatAttachmentAddingThrowsExceptionWhenTicketNotExists()
+    public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
-        $this->ticketService->addAttachmentForTicket($this->uploadedFile, self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($this->filesListDto(), self::DUMMY_TICKET_ID);
     }
 
     /**
      * @test
      */
-    public function thatAttachmentAddsForTicket()
+    public function thatAttachmentsAddsForTicket()
     {
         $ticket = new Ticket(
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
-            self::DUMMY_TICKET_STATUS_CLOSE,
             $this->createReporter(),
-            $this->createAssignee()
+            $this->createAssignee(),
+            Status::CLOSED
         );
+        $filesListDto = $this->filesListDto();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
-        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentForItHolder')
-            ->with($this->equalTo($this->uploadedFile), $this->equalTo($ticket));
+        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
+            ->with($this->equalTo($filesListDto), $this->equalTo($ticket));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->ticketService->addAttachmentForTicket($this->uploadedFile, self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($filesListDto, self::DUMMY_TICKET_ID);
     }
 
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket not found.
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -188,7 +188,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket has no such attachment.
+     * @expectedExceptionMessage Attachment loading failed. Ticket has no such attachment.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {
@@ -196,11 +196,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
-            self::DUMMY_TICKET_STATUS_CLOSE,
             $this->createReporter(),
-            $this->createAssignee()
+            $this->createAssignee(),
+            Status::CLOSED
         );
-        $ticket->addAttachment(new Attachment('filename.ext'));
+        $ticket->addAttachment($this->attachment());
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
@@ -212,7 +212,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovesFromTicket()
     {
-        $attachment = new Attachment('filename.ext');
+        $attachment = $this->attachment();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
@@ -242,5 +242,53 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private function createAssignee()
     {
         return new User();
+    }
+
+    /**
+     * @return Attachment
+     */
+    private function attachment()
+    {
+        return new Attachment(new File('filename.ext'));
+    }
+
+    /**
+     * @return FilesListDto
+     */
+    private function filesListDto()
+    {
+        $fileDto = new FileDto();
+        $fileDto->setFilename(self::DUMMY_FILENAME);
+        $fileDto->setData(self::DUMMY_FILE_CONTENT);
+        $filesListDto = new FilesListDto();
+        $filesListDto->setFiles(array($fileDto));
+        return $filesListDto;
+    }
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testUpdateStatusWhenTicketDoesNotExists()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, self::DUMMY_STATUS);
+    }
+
+    /**
+     * @test
+     */
+    public function testUpdateStatus()
+    {
+        $status = STATUS::NEW_ONE;
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
     }
 }

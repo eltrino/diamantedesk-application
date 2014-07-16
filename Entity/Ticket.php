@@ -50,7 +50,7 @@ class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=10, nullable=false, options={"default"="open"})
+     * @ORM\Column(type="status")
      */
     protected $status;
 

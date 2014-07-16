@@ -20,8 +20,8 @@ use Eltrino\DiamanteDeskBundle\Form\Command\AssigneeTicketCommand;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Form\Command\UpdateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\UpdateCommentCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\CreateCommentCommand;
+use Eltrino\DiamanteDeskBundle\Form\Command\UpdateStatusCommand;
+
 use Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand;
 
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
@@ -116,6 +116,19 @@ class CommandFactory
         $command->author = $comment->getAuthor();
         $command->ticket = $comment->getTicket();
         $command->attachmentList = $comment->getAttachments();
+
+        return $command;
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @return UpdateStatusCommand
+     */
+    public function createUpdateStatusCommandForView(Ticket $ticket)
+    {
+        $command           = new UpdateStatusCommand();
+        $command->ticketId = $ticket->getId();
+        $command->status   = $ticket->getStatus();
 
         return $command;
     }

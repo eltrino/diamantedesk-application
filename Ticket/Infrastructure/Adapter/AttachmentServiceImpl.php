@@ -15,13 +15,13 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Comment;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AttachmentServiceImpl implements AttachmentService
 {
@@ -36,14 +36,14 @@ class AttachmentServiceImpl implements AttachmentService
     }
 
     /**
-     * Creates Attachment for Holder
+     * Creates Attachments for Holder
      * @param UploadedFile $file
      * @param AttachmentHolder $holder
      * @return void
      */
-    public function createAttachmentForItHolder(UploadedFile $file, AttachmentHolder $holder)
+    public function createAttachmentsForItHolder(FilesListDto $filesListDto, AttachmentHolder $holder)
     {
-        $this->attachmentContextService->createAttachment($file, $holder);
+        $this->attachmentContextService->createAttachments($filesListDto, $holder);
     }
 
     /**

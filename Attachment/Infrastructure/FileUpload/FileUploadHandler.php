@@ -15,38 +15,47 @@
 
 namespace Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload;
 
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
+use Symfony\Component\Filesystem\Filesystem;
 
 class FileUploadHandler
 {
+    /**
+     * @var Filesystem
+     */
+    private $fs;
+
     private $uploadDir;
 
-    public function __construct(\SplFileInfo $uploadDir)
+    public function __construct(\SplFileInfo $uploadDir, Filesystem $fs)
     {
         $this->uploadDir = $uploadDir;
+        $this->fs = $fs;
     }
 
     /**
      * Upload (move to target dir) given file
-     * @param UploadedFile $uploadedFile
-     * @param $destRelativePath
+     * @param string $filename
+     * @param string $content
      * @return File
+     * @throws \RuntimeException
      */
-    public function upload(UploadedFile $uploadedFile)
+    public function upload($filename, $content)
     {
         if (false === $this->uploadDir->isDir() || false === $this->uploadDir->isWritable()) {
-            throw new \RuntimeException('Upload directory is not writable or does not exist.');
+            throw new \RuntimeException("Upload directory is not writable, doesn't exist or no space left on the disk.");
         }
-
-        return $uploadedFile->move($this->uploadDir->getRealPath(), $uploadedFile->getClientOriginalName());
+        $this->fs->dumpFile($this->uploadDir->getRealPath() . '/' . $filename, $content);
+        return new File($this->uploadDir->getRealPath() . '/' . $filename);
     }
 
     public static function create($kernelRootDir)
     {
         return new FileUploadHandler(
             new \SplFileInfo(realpath($kernelRootDir . '/'
-                . \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment::ATTACHMENTS_DIRECTORY))
+                . \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment::ATTACHMENTS_DIRECTORY)),
+            new Filesystem()
         );
     }
 }

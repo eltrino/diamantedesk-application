@@ -23,11 +23,15 @@ class AttachmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'file',
+            'files',
             'file',
             array(
                 'label' => 'File',
-                'required' => true
+                'required' => true,
+                'attr' => array(
+//                    "accept" => "image/*",
+                    'multiple' => 'multiple'
+                )
             )
         );
     }

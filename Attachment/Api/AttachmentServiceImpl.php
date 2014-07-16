@@ -15,12 +15,12 @@
 namespace Eltrino\DiamanteDeskBundle\Attachment\Api;
 
 use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\File\FileRemoveHandler;
 use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AttachmentServiceImpl implements AttachmentService
 {
@@ -57,26 +57,25 @@ class AttachmentServiceImpl implements AttachmentService
     }
 
     /**
-     * Create Attachment
-     * @todo UploadedFile is a part of Symfony and should be changed in own object or simple type parameter
-     * @param UploadedFile $uploadedFile
+     * Create Attachments
+     * @param FilesListDto $filesList
      * @param AttachmentHolder $attachmentHolder
-     * @return int
-     * @throws \RuntimeException when can not upload (move) uploaded file correctly. Possible problems - upload dir is not exists or is not writable
+     * @return void
      */
-    public function createAttachment(UploadedFile $uploadedFile, AttachmentHolder $attachmentHolder)
+    public function createAttachments(FilesListDto $filesList, AttachmentHolder $attachmentHolder)
     {
-        try {
-            $file = $this->fileUploadHandler->upload($uploadedFile);
-            $attachment = $this->attachmentFactory->create($file->getFilename());
-            $attachmentHolder->addAttachment($attachment);
-            $this->attachmentRepository->store($attachment);
-            return $attachment->getId();
-        } catch (\RuntimeException $e) {
-            /**
-             * @todo logging
-             */
-            throw $e;
+        foreach ($filesList->getFiles() as $fileDto) {
+            try {
+                $file = $this->fileUploadHandler->upload($fileDto->getFilename(), $fileDto->getData());
+                $attachment = $this->attachmentFactory->create($file);
+                $attachmentHolder->addAttachment($attachment);
+                $this->attachmentRepository->store($attachment);
+            } catch (\RuntimeException $e) {
+                /**
+                 * @todo logging
+                 */
+                throw $e;
+            }
         }
     }
 
@@ -90,13 +89,13 @@ class AttachmentServiceImpl implements AttachmentService
     {
         $attachment = $this->attachmentRepository->get($attachmentId);
         if (is_null($attachment)) {
-            throw new \RuntimeException('Attachment not found.');
+            throw new \RuntimeException('Attachment loading failed, attachment not found.');
         }
         try {
             $this->fileRemoveHandler->remove($attachment->getFilename());
             $this->attachmentRepository->remove($attachment);
         } catch (\Exception $e) {
-            throw new \RuntimeException('Can not remove attachment.', 0, $e);
+            throw new \RuntimeException('Unable to remove attachment.', 0, $e);
         }
     }
 

@@ -16,6 +16,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Attachment\Infrastructure\Persistance\Doctrine;
 
 use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Persistence\Doctrine\DoctrineAttachmentRepository;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -49,7 +50,7 @@ class DoctrineAttachmentRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentStores()
     {
-        $attachment = new Attachment('dummy_filename.ext');
+        $attachment = new Attachment(new File('dummy_filename.ext'));
         $this->em->expects($this->once())->method('persist')->with($this->equalTo($attachment));
         $this->em->expects($this->once())->method('flush');
 
@@ -61,7 +62,7 @@ class DoctrineAttachmentRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemoves()
     {
-        $attachment = new Attachment('dummy_filename.ext');
+        $attachment = new Attachment(new File('dummy_filename.ext'));
         $this->em->expects($this->once())->method('remove')->with($this->equalTo($attachment));
         $this->em->expects($this->once())->method('flush');
 

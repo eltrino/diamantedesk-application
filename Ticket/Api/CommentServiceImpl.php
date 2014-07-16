@@ -71,22 +71,25 @@ class CommentServiceImpl implements CommentService
      * @param string $content
      * @param integer $ticketId
      * @param integer $authorId
+     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
      * @return void
      */
-    public function postNewCommentForTicket($content, $ticketId, $authorId, \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile = null)
+    public function postNewCommentForTicket($content, $ticketId, $authorId, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null)
     {
         $ticket = $this->ticketRepository->get($ticketId);
 
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
         $author = $this->userService->getUserById($authorId);
 
         $comment = $this->commentFactory->create($content, $ticket, $author);
-        if ($uploadedFile) {
-            $this->attachmentService->createAttachmentForItHolder($uploadedFile, $comment);
+
+        if ($filesListDto) {
+            $this->attachmentService->createAttachmentsForItHolder($filesListDto, $comment);
         }
+
         $ticket->postNewComment($comment);
 
         $this->ticketRepository->store($ticket);
@@ -96,11 +99,11 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $attachment = $comment->getAttachment($attachmentId);
         if (is_null($attachment)) {
-            throw new \RuntimeException('Comment has no such attachment.');
+            throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
         return $attachment;
     }
@@ -109,17 +112,17 @@ class CommentServiceImpl implements CommentService
      * Update Ticket Comment content
      * @param integer $commentId
      * @param string $content
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile
+     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
      */
-    public function updateTicketComment($commentId, $content, \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile = null)
+    public function updateTicketComment($commentId, $content, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null)
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $comment->updateContent($content);
-        if ($uploadedFile) {
-            $this->attachmentService->createAttachmentForItHolder($uploadedFile, $comment);
+        if ($filesListDto) {
+            $this->attachmentService->createAttachmentsForItHolder($filesListDto, $comment);
         }
         $this->commentRepository->store($comment);
     }
@@ -132,7 +135,7 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $this->commentRepository->remove($comment);
     }
@@ -148,11 +151,11 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (!$comment) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $attachment = $comment->getAttachment($attachmentId);
         if (!$attachment) {
-            throw new \RuntimeException('Comment has no such attachment.');
+            throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
         $this->attachmentService->removeAttachmentFromItHolder($attachment);
         $comment->removeAttachment($attachment);

@@ -15,6 +15,7 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface TicketService
@@ -29,12 +30,12 @@ interface TicketService
     public function getTicketAttachment($ticketId, $attachmentId);
 
     /**
-     * Adds Attachment for Ticket
-     * @param UploadedFile $uploadedFile
+     * Adds Attachments for Ticket
+     * @param FilesListDto $filesListDto
      * @param $ticketId
      * @return void
      */
-    public function addAttachmentForTicket(UploadedFile $uploadedFile, $ticketId);
+    public function addAttachmentsForTicket(FilesListDto $filesListDto, $ticketId);
 
     /**
      * Remove Attachment from Ticket
@@ -56,7 +57,7 @@ interface TicketService
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $status, $reporterId, $assigneeId);
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null);
 
     /**
      * Update Ticket
@@ -69,6 +70,14 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
     public function updateTicket($ticketId, $subject, $description, $status, $assigneeId);
+
+    /**
+     * @param $ticketId
+     * @param $status
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+     * @throws \RuntimeException if unable to load required ticket
+     */
+    public function updateStatus($ticketId, $status);
 
     /**
      * Delete Ticket
@@ -86,20 +95,4 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket($ticketId, $assigneeId);
-
-    /**
-     * Close Ticket
-     * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required ticket
-     */
-    public function closeTicket($ticketId);
-
-    /**
-     * Reopen Ticket
-     * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required ticket
-     */
-    public function reopenTicket($ticketId);
 }

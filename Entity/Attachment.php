@@ -32,11 +32,11 @@ class Attachment extends \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment
     protected $id;
 
     /**
-     * @var string
+     * @var File
      *
-     * @ORM\Column(name="filename", type="string", length=255, nullable=false)
+     * @ORM\Column(name="file", type="file")
      */
-    protected $filename;
+    protected $file;
 
     /**
      * @var \DateTime

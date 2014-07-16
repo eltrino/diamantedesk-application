@@ -15,19 +15,19 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api\Factory;
 
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
 
 class TicketFactory
 {
-    public function create($subject, $description, $branch, $status, $reporter, $assignee)
+    public function create($subject, $description, $branch, $reporter, $assignee, $status)
     {
         return new Ticket(
             $subject,
             $description,
             $branch,
-            $status,
             $reporter,
-            $assignee
+            $assignee,
+            $status
         );
     }
 }

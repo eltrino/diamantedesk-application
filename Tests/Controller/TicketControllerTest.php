@@ -79,7 +79,7 @@ class TicketControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket created", $crawler->html());
+        $this->assertContains("Ticket successfully created.", $crawler->html());
     }
 
     /**
@@ -106,7 +106,7 @@ class TicketControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket created", $crawler->html());
+        $this->assertContains("Ticket successfully created.", $crawler->html());
 
         $uri = $this->client->getRequest()->getUri();
         $uriArray = explode('/', $uri);
@@ -127,6 +127,7 @@ class TicketControllerTest extends WebTestCase
         $filtersList = array(
             'My Tickets',
             'My Open Tickets',
+            'All Tickets',
             'My Reported Tickets',
         );
 
@@ -159,6 +160,16 @@ class TicketControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("Comments")')->count() == 1);
     }
 
+    public function testChangeStatus()
+    {
+        $ticket              = $this->chooseTicketFromGrid();
+        $updateStatusFormUrl = $this->client->generate('diamante_ticket_status_change', array('id' => $ticket['id']));
+        $crawler             = $this->client->request('GET', $updateStatusFormUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
     /**
      * @depends testCreateWithBranchId
      */
@@ -171,14 +182,13 @@ class TicketControllerTest extends WebTestCase
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
         $form['diamante_ticket_form[subject]'] = 'Just Changed';
-        $form['diamante_ticket_form[status]'] = 'close';
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket updated", $crawler->html());
+        $this->assertContains("Ticket successfully saved.", $crawler->html());
 
         return $ticketId;
     }
@@ -202,42 +212,7 @@ class TicketControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket assigned", $crawler->html());
-
-        return $ticketId;
-    }
-
-    /**
-     * @depends testAssign
-     */
-    public function testClose($ticketId)
-    {
-        $ticket        = $this->chooseTicketFromGridById($ticketId);
-        $closeticketUrl = $this->client->generate('diamante_ticket_close', array('id' => $ticket['id']));
-        $crawler      = $this->client->request('GET', $closeticketUrl);
-        $response     = $this->client->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket closed", $crawler->html());
-
-        return $ticketId;
-    }
-
-    /**
-     * @depends testClose
-     */
-    public function testReopen($ticketId)
-    {
-        $reopenTicketUrl = $this->client->generate(
-            'diamante_ticket_reopen',
-            array('id' => $ticketId)
-        );
-
-        $crawler       = $this->client->request('GET', $reopenTicketUrl);
-        $response      = $this->client->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket reopened", $crawler->html());
+        $this->assertContains("Ticket successfully re-assigned.", $crawler->html());
 
         return $ticketId;
     }

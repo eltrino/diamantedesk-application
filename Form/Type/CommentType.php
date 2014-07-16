@@ -32,13 +32,13 @@ class CommentType extends AbstractType
         );
 
         $builder->add(
-            'attachments',
+            'files',
             'file',
             array(
-                'label'    => 'Attachment',
+                'label'    => 'Attachments',
                 'required' => false,
                 'attr' => array(
-//                    'multiple' => 'multiple'
+                    'multiple' => 'multiple'
                 )
             )
         );

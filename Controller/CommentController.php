@@ -14,7 +14,8 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
@@ -57,7 +58,7 @@ class CommentController extends Controller
                     $command->content,
                     $command->ticket->getId(),
                     $command->author->getId(),
-                    $command->attachments
+                    $this->buildFilesListDto($command)
                 );
         }, $ticket);
     }
@@ -80,8 +81,21 @@ class CommentController extends Controller
             ->createEditCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
             $this->get('diamante.comment.service')
-                ->updateTicketComment($comment->getId(), $command->content, $command->attachments);
+                ->updateTicketComment($comment->getId(), $command->content, $this->buildFilesListDto($command));
         }, $comment->getTicket());
+    }
+
+    private function buildFilesListDto(EditCommentCommand $command)
+    {
+        $fileDtoArray = array();
+        foreach ($command->files as $file) {
+            $fileDtoArray[] = FileDto::createFromUploadedFile($file);
+        }
+
+        $filesListDto = new FilesListDto();
+        $filesListDto->setFiles($fileDtoArray);
+
+        return $filesListDto;
     }
 
     /**
@@ -109,13 +123,22 @@ class CommentController extends Controller
     {
         $response = null;
         $form = $this->createForm(new CommentType(), $command);
+        $formView = $form->createView();
+        $formView->children['files']->vars = array_replace(
+            $formView->children['files']->vars,
+            array('full_name' => 'diamante_comment_form[files][]')
+        );
         try {
             $this->handle($form);
             $callback($command);
-            $this->addSuccessMessage('Comment saved');
+            if ($command->id) {
+                $this->addSuccessMessage('Comment successfully saved.');
+            } else {
+                $this->addSuccessMessage('Comment successfully created.');
+            }
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $response = array('form' => $form->createView());
+            $response = array('form' => $formView);
         }
         return $response;
     }
@@ -194,7 +217,7 @@ class CommentController extends Controller
         $commentService->removeAttachmentFromComment($commentId, $attachId);
         $this->get('session')->getFlashBag()->add(
             'success',
-            $this->get('translator')->trans('Attachment removed.')
+            $this->get('translator')->trans('Attachment successfully deleted.')
         );
         $response = $this->redirect($this->generateUrl(
             'diamante_comment_update',
@@ -211,13 +234,13 @@ class CommentController extends Controller
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be supported only via POST method');
+            throw new \LogicException('Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form is not valid');
+            throw new \RuntimeException('Form object validation failed, form is invalid.');
         }
     }
 
@@ -238,15 +261,9 @@ class CommentController extends Controller
      */
     private function getSuccessSaveResponse(Ticket $ticket)
     {
-        return $this->get('oro_ui.router')->actionRedirect(
-            array(
-                'route' => 'diamante_comment_update',
-                'parameters' => array('id' => $ticket->getId()),
-            ),
-            array(
-                'route' => 'diamante_ticket_view',
-                'parameters' => array('id' => $ticket->getId())
-            )
+        return $this->get('oro_ui.router')->redirectAfterSave(
+            ['route' => 'diamante_comment_update', 'parameters' => ['id' => $ticket->getId()]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticket->getId()]]
         );
     }
 

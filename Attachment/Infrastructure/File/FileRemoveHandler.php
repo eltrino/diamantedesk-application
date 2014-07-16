@@ -41,7 +41,7 @@ class FileRemoveHandler
     public function remove($filename)
     {
         if (empty($filename)) {
-            throw new \LogicException('File name can not be empty string.');
+            throw new \LogicException('Attachment validation failed, filename cannot be empty.');
         }
         $this->fs->remove($this->uploadDir->getRealPath() . '/' . $filename);
     }
