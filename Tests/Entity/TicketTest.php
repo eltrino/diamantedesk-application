@@ -24,7 +24,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     const TICKET_SUBJECT      = 'Subject';
     const TICKET_DESCRIPTION  = 'Description';
 
-    public function testCreate()
+    public function testCreateWhenStatusIsNotNull()
     {
         $ticket = new Ticket();
         $branch = $this->createBranch();
@@ -42,7 +42,29 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Subject', $ticket->getSubject());
         $this->assertEquals('Description', $ticket->getDescription());
         $this->assertEquals($branch, $ticket->getBranch());
-        $this->assertEquals('open', $ticket->getStatus());
+        $this->assertEquals('open', $ticket->getStatus()->getValue());
+        $this->assertEquals($reporter, $ticket->getReporter());
+        $this->assertEquals($assignee, $ticket->getAssignee());
+    }
+
+    public function testCreateWhenStatusIsNull()
+    {
+        $ticket = new Ticket();
+        $branch = $this->createBranch();
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+        $ticket->create(
+            self::TICKET_SUBJECT,
+            self::TICKET_DESCRIPTION,
+            $branch,
+            $reporter,
+            $assignee
+        );
+
+        $this->assertEquals('Subject', $ticket->getSubject());
+        $this->assertEquals('Description', $ticket->getDescription());
+        $this->assertEquals($branch, $ticket->getBranch());
+        $this->assertEquals('new', $ticket->getStatus()->getValue());
         $this->assertEquals($reporter, $ticket->getReporter());
         $this->assertEquals($assignee, $ticket->getAssignee());
     }
@@ -55,7 +77,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('New Subject', $ticket->getSubject());
         $this->assertEquals('New Description', $ticket->getDescription());
-        $this->assertEquals(Status::CLOSED, $ticket->getStatus());
+        $this->assertEquals(Status::CLOSED, $ticket->getStatus()->getValue());
     }
 
     public function testAssign()

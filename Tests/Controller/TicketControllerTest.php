@@ -44,7 +44,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[branch]']      = $this->chooseBranchFromGrid()['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
-        $form['diamante_ticket_form[status]']      = '0';
+        $form['diamante_ticket_form[status]']      = 'open';
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
@@ -68,7 +68,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[branch]']      = $branch['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
-        $form['diamante_ticket_form[status]']      = '0';
+        $form['diamante_ticket_form[status]']      = 'open';
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
