@@ -16,7 +16,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doc
 
 use Doctrine\DBAL\LockMode;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
+use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Oro\Bundle\UserBundle\Entity\User;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;

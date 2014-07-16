@@ -43,7 +43,6 @@
 
         <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
             <argument type="string">branch</argument>
-            <argument type="service" id="oro_datagrid.datagrid.request_parameters_factory"/>
             <argument type="constant">false</argument>
             <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-branch-tickets-grid" method="onBuildAfter"/>
         </service>

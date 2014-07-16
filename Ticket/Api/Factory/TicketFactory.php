@@ -15,7 +15,7 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api\Factory;
 
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
+use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 
 class TicketFactory
 {
