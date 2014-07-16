@@ -268,19 +268,6 @@ class TicketControllerTest extends WebTestCase
         return current($result['data']);
     }
 
-    private function chooseTicketFromGrid()
-    {
-        $response = ToolsAPI::getEntityGrid(
-            $this->client,
-            'diamante-ticket-grid'
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $result = ToolsAPI::jsonToArray($response->getContent());
-        return current($result['data']);
-    }
-
     private function chooseTicketFromGridById($id)
     {
         $response = ToolsAPI::getEntityGrid(
