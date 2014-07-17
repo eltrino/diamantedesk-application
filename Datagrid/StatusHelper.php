@@ -15,7 +15,7 @@
 namespace Eltrino\DiamanteDeskBundle\Datagrid;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 
-class Helper
+class StatusHelper
 {
     /**
      * @return array
@@ -32,4 +32,13 @@ class Helper
                 Status::ON_HOLD     => Status::LABEL_ON_HOLD
             );
     }
+
+    /**
+     * @return string
+     */
+    public function getOpenStatus()
+    {
+        return STATUS::OPEN;
+    }
+
 } 

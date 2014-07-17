@@ -67,6 +67,10 @@ datagrid:
                 where:
                     and:
                         - i.branch = :branch
+        filters:
+            default:
+                status: { value: ['@diamante.ticket.datagrid_status_helper->getOpenStatus'] }
+
     diamante-ticket-grid:
         source:
             type: orm
@@ -182,7 +186,7 @@ datagrid:
                     options:
                         field_options:
                             multiple: true
-                            choices:  @diamante.ticket.datagrid_helper->getTicketStatuses
+                            choices:  @diamante.ticket.datagrid_status_helper->getTicketStatuses
                 createdAt:
                     type:      datetime
                     data_name: i.createdAt

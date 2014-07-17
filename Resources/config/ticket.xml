@@ -35,7 +35,7 @@
 <!-- filters end-->
         <parameter key="diamante.ticket.internal.user.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\OroUserService</parameter>
         <parameter key="diamante.comment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl</parameter>
-        <parameter key="diamante.ticket.datagrid_helper.class">Eltrino\DiamanteDeskBundle\Datagrid\Helper</parameter>
+        <parameter key="diamante.ticket.datagrid_status_helper.class">Eltrino\DiamanteDeskBundle\Datagrid\StatusHelper</parameter>
     </parameters>
 
     <services>
@@ -116,6 +116,6 @@
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
         </service>
 
-        <service id="diamante.ticket.datagrid_helper" class="%diamante.ticket.datagrid_helper.class%" />
+        <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%" />
     </services>
 </container>
