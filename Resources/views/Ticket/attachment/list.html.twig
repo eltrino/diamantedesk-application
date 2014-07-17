@@ -3,23 +3,32 @@
 <div class="widget-content">
     {% for key, attachment in attachments %}
         {% if (key % 4 == 0) %}
-        <ul class="row-fluid diam-atachments">
+            <ul class="row-fluid diam-atachments">
         {% endif %}
-            <li class="span3">
-                <figure>
-                    {% set attachmentPreviewSrc = asset('bundles/eltrinodiamantedesk/img/logo_oro.png') %}
-                    <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview') }}" alt=""/>
-                    <figcaption>
+        <li class="span3">
+            <figure>
+                {% set attachmentExtension = attachment.file.extension %}
+                {% set attachmentPreviewSrc = attachment.file.Pathname %}
+                {% if attachmentExtension == '' %}
+                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt=""/>
+                {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
+                attachmentExtension == 'png' or attachmentExtension == 'gif')
+                %}
+                    <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt=""/>
+                {% else %}
+                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/attachment/types/' ~ attachmentExtension ~ '.png') | imagine_filter('attach_preview_default') }}" alt=""/>
+                {% endif %}
+                <figcaption>
                         <span class="pull-right">
                             <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="Download">download</i></a>
                             <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="Delete">delete</i></a>
                         </span>
-                        <strong>{{ attachment.filename|escape }}</strong>
-                    </figcaption>
-                </figure>
-            </li>
+                    <strong>{{ attachment.filename|escape }}</strong>
+                </figcaption>
+            </figure>
+        </li>
         {% if (key % 4 == 3) %}
-        </ul>
+            </ul>
         {% endif %}
     {% endfor %}
 </div>

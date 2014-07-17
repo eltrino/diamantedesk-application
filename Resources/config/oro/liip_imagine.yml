@@ -1,7 +1,14 @@
 liip_imagine:
     filter_sets:
-        attach_preview:
+        attach_preview_img:
+            data_loader: diamante_attachment
             quality:          95
             filters:
-                thumbnail:    { size: [140, 140], mode: outbound }
+                upscale: { min: [140, 140] }
+                thumbnail:    { size: [140, 140], mode: outbound, allow_upscale: true }
+                strip:        ~
+        attach_preview_default:
+            quality:          95
+            filters:
+                thumbnail:    { size: [140, 140], mode: outbound, allow_upscale: true }
                 strip:        ~

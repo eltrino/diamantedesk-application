@@ -47,4 +47,18 @@ class File
     {
         return $this->filename;
     }
+
+    /**
+     * @return string
+     */
+    public function getExtension()
+    {
+        $path     = $this->getPathname();
+        $fileInfo = pathinfo($path);
+
+        if (!array_key_exists('extension', $fileInfo)) {
+            return '';
+        }
+        return strtolower($fileInfo['extension']);
+    }
 }

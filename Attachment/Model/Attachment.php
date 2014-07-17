@@ -22,6 +22,7 @@ class Attachment
      * @var integer
      */
     protected $id;
+
     /**
      * @var File
      */
@@ -74,5 +75,13 @@ class Attachment
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return File
+     */
+    public function getFile()
+    {
+        return $this->file;
     }
 }

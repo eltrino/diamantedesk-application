@@ -23,6 +23,7 @@
         <parameter key="diamante.attachment.factory.class">Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory</parameter>
         <parameter key="diamante.attachment.file_upload_handler.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler</parameter>
         <parameter key="diamante.attachment.file_remove_handler.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\File\FileRemoveHandler</parameter>
+        <parameter key="diamante.attachment.imagine_data_loader.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
     </parameters>
 
     <services>
@@ -44,6 +45,11 @@
             <argument type="service" id="diamante.attachment.factory"/>
             <argument type="service" id="diamante.attachment.file_upload_handler"/>
             <argument type="service" id="diamante.attachment.file_remove_handler"/>
+        </service>
+
+        <service id="diamante.attachment.imagine_data_loader" class="%diamante.attachment.imagine_data_loader.class%">
+            <tag name="liip_imagine.data.loader" loader="diamante_attachment" />
+            <argument type="service" id="liip_imagine" />
         </service>
     </services>
 </container>
