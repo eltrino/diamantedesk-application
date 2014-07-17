@@ -1,8 +1,6 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-
-{% set pageTitle = 'Tickets' %}
-
+{% set pageTitle = 'All Tickets'|trans %}
 {% block navButtons %}
     {{ UI.addButton({
     'path' : path('diamante_ticket_create'),

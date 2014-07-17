@@ -1,7 +1,6 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 {% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
-{% set title = 'Ticket'|trans %}
-{% oro_title_set({params : {"Ticket": form.vars.value.subject|default('N/A')} }) %}
+{% oro_title_set({params : {"%ticket.subject%": form.vars.value.subject }}) %}
 {% set formAction = path('diamante_ticket_update', { 'id': form.vars.value.id }) %}
 {% block head_script %}
     {{ parent() }}
@@ -21,15 +20,13 @@
         {% set breadcrumbs = {
             'entity':      form.vars.value,
             'indexPath':   path('diamante_ticket_list'),
-            'indexLabel': 'Tickets'|trans,
+            'indexLabel': 'All Tickets'|trans,
             'entityTitle': form.vars.value.subject|default('N/A'),
             'hasAvatar': true,
             'imagePath': form.vars.value.branch.logo ? form.vars.value.branch.logo.pathname : null
         }
         %}
         {{ parent() }}
-    {% else %}
-        {% include 'OroUIBundle::page_title_block.html.twig' %}
     {% endif %}
 {% endblock pageHeader %}
 

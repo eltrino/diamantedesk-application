@@ -1,7 +1,5 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 {% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
-{% set title = 'New Ticket'|trans %}
-{% oro_title_set({params : {"Ticket": form.vars.value.subject|default('N/A')} }) %}
 {% set formAction = path('diamante_ticket_assign', { 'id': form.vars.value.id }) %}
 {% block head_script %}
     {{ parent() }}

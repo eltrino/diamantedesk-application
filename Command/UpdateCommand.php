@@ -43,6 +43,10 @@ class UpdateCommand extends ContainerAwareCommand
             $output->write('Updating DB schema...');
             $this->updateDbSchema();
             $output->writeln('Done');
+
+            $output->write('Updating navigation...');
+            $this->updateNavigation($output);
+            $output->writeln('Done');
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
@@ -81,5 +85,14 @@ class UpdateCommand extends ContainerAwareCommand
         foreach ($toUpdate as $sql) {
             $conn->executeQuery($sql);
         }
+    }
+
+    /**
+     * Update oro navigation
+     * @param OutputInterface $output
+     */
+    private function updateNavigation(OutputInterface $output)
+    {
+        $this->runExistingCommand('oro:navigation:init', $output);
     }
 }

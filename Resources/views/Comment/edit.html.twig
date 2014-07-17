@@ -2,16 +2,8 @@
 {% form_theme form with ['OroAddressBundle:Include:fields.html.twig', 'OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
 
 {% set editCommand = form.vars.value %}
-{% set title = 'New Comment'|trans %}
+{% oro_title_set({params : {"%ticket.subject%": editCommand.ticket.subject }}) %}
 {% set formAction = editCommand.id ? path('diamante_comment_update', { 'id': editCommand.id }) : path('diamante_comment_create', { 'id': editCommand.ticket.id }) %}
-
-{% block breadcrumb %}
-    {% set breadcrumbs = [
-        { label: 'Desk'|trans },
-        { label: 'Ticket' |trans }
-    ] %}
-    {% include 'OroNavigationBundle:Menu:breadcrumbs.html.twig' %}
-{% endblock breadcrumb %}
 
 {% block head_script %}
     {{ parent() }}
@@ -34,10 +26,10 @@
             'indexLabel':  editCommand.ticket.subject,
             'entityTitle': 'Edit Comment'|trans
         } %}
-
         {{ parent() }}
     {% else %}
-        {% include 'OroUIBundle::page_title_block.html.twig' %}
+        {% set title = 'Add Comment'|trans %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
 
@@ -47,7 +39,7 @@
         {% if editCommand.id %}
             {{ oro_widget_render({
                 'widgetType': 'block',
-                'url': path('diamant_comment_widget_attachment_list', {id: editCommand.id})
+                'url': path('diamante_comment_widget_attachment_list', {id: editCommand.id})
             }) }}
         {% endif %}
     {% endset %}
