@@ -14,7 +14,7 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters;
 
-class MyOpenTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implements FilterUrlGeneratorInterface
+class MyNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implements FilterUrlGeneratorInterface
 {
     /**
      * @var string

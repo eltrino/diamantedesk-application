@@ -14,7 +14,7 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters;
 
-class MyOpenTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implements FilterUrlGeneratorInterface
+class MyReportedNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implements FilterUrlGeneratorInterface
 {
     /**
      * @var string
@@ -39,11 +39,10 @@ class MyOpenTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator impleme
     {
         return '|g/i=1&p='. $this->defaultPerPage .'&' .
         's' . $this->encodeSquareBrackets('updatedAt') . '=1&' .
-        'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('value') . "=$this->userId&" .
-        'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('type') . "=$this->textFiltertype&" .
+        'f' . $this->encodeSquareBrackets('reporterId') . $this->encodeSquareBrackets('value') . "=$this->userId&" .
+        'f' . $this->encodeSquareBrackets('reporterId') . $this->encodeSquareBrackets('type') . "=$this->textFiltertype&" .
         'f' . $this->encodeSquareBrackets('status') . $this->encodeSquareBrackets('value') . $this->encodeSquareBrackets() .
         "=$this->status&" .
         't=diamante-ticket-grid';
     }
-
-}
+} 

@@ -177,8 +177,12 @@ datagrid:
                     type:       number
                     data_name:  reporterId
                 status:
-                    type:      string
+                    type: choice
                     data_name: i.status
+                    options:
+                        field_options:
+                            multiple: true
+                            choices:  @diamante.ticket.datagrid_helper->getTicketStatuses
                 createdAt:
                     type:      datetime
                     data_name: i.createdAt
