@@ -125,10 +125,12 @@ class TicketControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("Tickets")')->count() >= 1);
 
         $filtersList = array(
-            'My Tickets',
-            'My Open Tickets',
-            'All Tickets',
-            'My Reported Tickets',
+            'All tickets',
+            'My tickets',
+            'My new tickets',
+            'My open tickets',
+            'Reported tickets',
+            'New reported tickets',
         );
 
         // test filters

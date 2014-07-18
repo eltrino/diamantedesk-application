@@ -78,6 +78,10 @@ class InstallCommand extends ContainerAwareCommand
 
             $this->loadData($output);
 
+            $output->write('Updating navigation...');
+            $this->updateNavigation($output);
+            $output->writeln('Done');
+
             $this->assetsInstall($output);
 
             $this->asseticDump($output);
@@ -204,5 +208,14 @@ class InstallCommand extends ContainerAwareCommand
         if (!$directory->isWritable()) {
             $this->filesystem->chmod($directory->getRealPath(), 0777);
         }
+    }
+
+    /**
+     * Update oro navigation
+     * @param OutputInterface $output
+     */
+    private function updateNavigation(OutputInterface $output)
+    {
+        $this->runExistingCommand('oro:navigation:init', $output);
     }
 }

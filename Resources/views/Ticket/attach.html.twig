@@ -1,7 +1,5 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 {% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
-{% set title = 'Attach File'|trans %}
-{#{% oro_title_set({params : {"Attach File": form.vars.value.subject|default('N/A')} }) %}#}
 {% set formAction = path('diamante_ticket_create_attach_post', { 'id': form.vars.value.ticketId }) %}
 {% block head_script %}
     {{ parent() }}
@@ -17,18 +15,8 @@
 {% endblock %}
 
 {% block pageHeader %}
-    {#{% if form.vars.value.ticketId %}#}
-        {#{% set breadcrumbs = {#}
-            {#'entity':      form.vars.value,#}
-            {#'indexPath':   path('diamante_ticket_view', {'id': form.vars.value.ticketId}),#}
-            {#'indexLabel':  form.vars.value.ticketId,#}
-            {#'entityTitle': form.vars.value.subject|default('N/A')#}
-        {#}#}
-        {#%}#}
-        {#{{ parent() }}#}
-    {#{% else %}#}
-        {#{% include 'OroUIBundle::page_title_block.html.twig' %}#}
-    {#{% endif %}#}
+    {% set title = 'Add Attachment'|trans %}
+    {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
 {% endblock pageHeader %}
 
 {% block content_data %}

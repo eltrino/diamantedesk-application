@@ -100,7 +100,7 @@ class CommentController extends Controller
 
     /**
      * @Route("/attachment/list/{id}",
-     *      name="diamant_comment_widget_attachment_list",
+     *      name="diamante_comment_widget_attachment_list",
      *      requirements={"id"="\d+"}
      * )
      * @Template("EltrinoDiamanteDeskBundle:Comment:attachment/list.html.twig")

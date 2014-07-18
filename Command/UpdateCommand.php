@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class UpdateCommand extends ContainerAwareCommand
 {
@@ -42,6 +43,10 @@ class UpdateCommand extends ContainerAwareCommand
         try {
             $output->write('Updating DB schema...');
             $this->updateDbSchema();
+            $output->writeln('Done');
+
+            $output->write('Updating navigation...');
+            $this->updateNavigation($output);
             $output->writeln('Done');
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
@@ -81,5 +86,31 @@ class UpdateCommand extends ContainerAwareCommand
         foreach ($toUpdate as $sql) {
             $conn->executeQuery($sql);
         }
+    }
+
+    /**
+     * Update oro navigation
+     * @param OutputInterface $output
+     */
+    private function updateNavigation(OutputInterface $output)
+    {
+        $this->runExistingCommand('oro:navigation:init', $output);
+    }
+
+    /**
+     * Run existing command in system
+     * @param string $commandName
+     * @param OutputInterface $output
+     */
+    private function runExistingCommand($commandName, OutputInterface $output)
+    {
+        $command = $this->getApplication()->find($commandName);
+
+        $arguments = array(
+            'command' => $commandName
+        );
+
+        $input = new ArrayInput($arguments);
+        $command->run($input, $output);
     }
 }

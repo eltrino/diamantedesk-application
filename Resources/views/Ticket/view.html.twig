@@ -2,8 +2,7 @@
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
-{% oro_title_set({params : {"Ticket: ": entity.subject|default('N/A')} }) %}
-
+{% oro_title_set({params : {"%ticket.subject%": entity.subject }}) %}
 {% macro renderComments(entity) %}
     {% set comments = entity.comments %}
     {% import 'OroUIBundle::macros.html.twig' as UI %}

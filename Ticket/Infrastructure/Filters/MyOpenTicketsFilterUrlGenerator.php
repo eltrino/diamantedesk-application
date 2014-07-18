@@ -41,8 +41,8 @@ class MyOpenTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator impleme
         's' . $this->encodeSquareBrackets('updatedAt') . '=1&' .
         'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('value') . "=$this->userId&" .
         'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('type') . "=$this->textFiltertype&" .
-        'f' . $this->encodeSquareBrackets('status') . $this->encodeSquareBrackets('value') . "=$this->status&" .
-        'f' . $this->encodeSquareBrackets('status') . $this->encodeSquareBrackets('type') . "=$this->textFiltertype&" .
+        'f' . $this->encodeSquareBrackets('status') . $this->encodeSquareBrackets('value') . $this->encodeSquareBrackets() .
+        "=$this->status&" .
         't=diamante-ticket-grid';
     }
 

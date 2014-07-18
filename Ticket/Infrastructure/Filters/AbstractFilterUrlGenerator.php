@@ -49,7 +49,7 @@ class AbstractFilterUrlGenerator
      * @param $string
      * @return string
      */
-    protected function encodeSquareBrackets($string)
+    protected function encodeSquareBrackets($string = '')
     {
         return urlencode('[') . $string . urlencode(']');
     }

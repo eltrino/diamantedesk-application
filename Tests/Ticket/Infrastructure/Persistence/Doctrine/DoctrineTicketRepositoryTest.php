@@ -15,7 +15,7 @@
 
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doctrine;
 
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
+use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository;
