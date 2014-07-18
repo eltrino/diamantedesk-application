@@ -42,7 +42,7 @@ class LoadFilterData extends AbstractFixture
         $manager->persist($myReportedFilter);
 
         $myReportedNewFilter = new Filter('New reported tickets', 'diamante.ticket.my_reported_new_tickets_filter_url_generator');
-        $manager->persist($myReportedFilter);
+        $manager->persist($myReportedNewFilter);
 
         $manager->flush();
     }
