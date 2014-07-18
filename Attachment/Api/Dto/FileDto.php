@@ -60,17 +60,20 @@ class FileDto
         return $this->data;
     }
 
-    public static function createFromUploadedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile)
+    public static function createFromUploadedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile = null)
     {
         $dto = new FileDto();
-        $dto->setFilename($uploadedFile->getClientOriginalName());
-        $data = '';
-        $file = $uploadedFile->openFile();
-        $file->rewind();
-        while (false === $file->eof()) {
-            $data .= $file->fgets();
+        if (!is_null($uploadedFile)) {
+            $dto->setFilename($uploadedFile->getClientOriginalName());
+            $data = '';
+            $file = $uploadedFile->openFile();
+            $file->rewind();
+            while (false === $file->eof()) {
+                $data .= $file->fgets();
+            }
+            $dto->setData($data);
         }
-        $dto->setData($data);
+
         return $dto;
     }
 }

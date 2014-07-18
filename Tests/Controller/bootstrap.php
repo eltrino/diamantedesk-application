@@ -54,7 +54,7 @@ $purgeInput = new ArrayInput(array(
 $application->add($loadCommand);
 $input = new ArrayInput(array(
     'command'               => 'doctrine:fixtures:load',
-    '--fixtures'            => "{$kernelDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/",
+    '--fixtures'            => "{$kernelDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/Test",
     '--append'              => true,
     '--no-interaction'      => true
 
