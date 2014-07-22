@@ -169,6 +169,14 @@ class Ticket implements AttachmentHolder
     /**
      * @return string
      */
+    public function getReporterId()
+    {
+        return $this->reporter->getId();
+    }
+
+    /**
+     * @return string
+     */
     public function getReporterFullName()
     {
         return $this->reporter->getFirstName() . ' ' . $this->reporter->getLastName();
@@ -215,10 +223,11 @@ class Ticket implements AttachmentHolder
 
     /** LEGACY CODE START */
 
-    public function update($subject, $description, $status)
+    public function update($subject, $description, User $reporter, $status)
     {
         $this->subject = $subject;
         $this->description = $description;
+        $this->reporter = $reporter;
         $this->status = new Status($status);
     }
 

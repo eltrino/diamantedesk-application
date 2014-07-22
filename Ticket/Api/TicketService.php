@@ -60,16 +60,16 @@ interface TicketService
     public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null);
 
     /**
-     * Update Ticket
      * @param $ticketId
      * @param $subject
      * @param $description
-     * @param $status
+     * @param $reporterId
      * @param $assigneeId
+     * @param $status
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $status, $assigneeId);
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status);
 
     /**
      * @param $ticketId

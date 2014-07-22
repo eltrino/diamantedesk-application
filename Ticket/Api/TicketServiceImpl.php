@@ -184,21 +184,30 @@ class TicketServiceImpl implements TicketService
      * @param $ticketId
      * @param $subject
      * @param $description
-     * @param $status
+     * @param $reporterId
      * @param $assigneeId
+     * @param $status
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $status, $assigneeId)
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
+        if ($reporterId != $ticket->getReporterId()) {
+            $reporter = $this->userService->getUserById($reporterId);
+            if (is_null($reporter)) {
+                throw new \RuntimeException('Reporter loading failed, reporter not found.');
+            }
+        }
+
         $ticket->update(
             $subject,
             $description,
+            $reporter,
             $status
         );
 

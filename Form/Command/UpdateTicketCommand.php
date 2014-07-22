@@ -22,18 +22,27 @@ class UpdateTicketCommand
      * @Assert\NotBlank
      */
     public $id;
+
     /**
      * @Assert\NotBlank
      */
     public $subject;
+
     /**
      * @Assert\NotBlank
      */
     public $description;
+
     /**
      * @Assert\NotBlank
      */
     public $status;
+
+    /**
+     * @Assert\NotBlank
+     */
+    public $reporter;
+
     /**
      * @Assert\NotBlank
      */

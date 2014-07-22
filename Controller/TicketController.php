@@ -187,8 +187,9 @@ class TicketController extends Controller
                     $command->id,
                     $command->subject,
                     $command->description,
-                    $command->status,
-                    $command->assignee->getId()
+                    $command->reporter->getId(),
+                    $command->assignee->getId(),
+                    $command->status
                 );
             $this->addSuccessMessage('Ticket successfully saved.');
             $response = $this->getSuccessSaveResponse($ticket);

@@ -62,8 +62,9 @@ class CommandFactory
         $command->id = $ticket->getId();
         $command->subject = $ticket->getSubject();
         $command->description = $ticket->getDescription();
-        $command->status = $ticket->getStatus();
+        $command->reporter = $ticket->getReporter();
         $command->assignee = $ticket->getAssignee();
+        $command->status = $ticket->getStatus();
         $command->branch = $ticket->getBranch();
 
         return $command;
