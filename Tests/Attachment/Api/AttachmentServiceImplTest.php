@@ -16,7 +16,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Attachment\Api;
 
 use Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentServiceImpl;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -45,16 +45,10 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler
+     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService
+     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService
      */
-    private $fileUploadHandler;
-
-    /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\File\FileRemoveHandler
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\File\FileRemoveHandler
-     */
-    private $fileRemoveHandler;
+    private $fileStorageService;
 
     /**
      * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\File
@@ -85,7 +79,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
         MockAnnotations::init($this);
 
         $this->service = new AttachmentServiceImpl(
-            $this->attachmentFactory, $this->attachmentRepository, $this->fileUploadHandler, $this->fileRemoveHandler
+            $this->attachmentFactory, $this->attachmentRepository, $this->fileStorageService
         );
     }
 
@@ -95,12 +89,15 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentCreationThrowsException()
     {
-        $this->fileUploadHandler->expects($this->once())->method('upload')->with(
-                $this->equalTo(self::DUMMY_FILENAME), $this->equalTo(self::DUMMY_FILE_CONTENT)
+        $this->fileStorageService->expects($this->once())->method('upload')->with(
+                $this->logicalAnd(
+                    $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                    $this->stringContains(self::DUMMY_FILENAME)
+                ), $this->equalTo(self::DUMMY_FILE_CONTENT)
             )->will($this->throwException(new \RuntimeException()));
 
         $this->service
-            ->createAttachments($this->filesListDto(), $this->attachmentHolder);
+            ->createAttachments($this->attachmentsInputDTOs(), $this->attachmentHolder);
     }
 
     /**
@@ -108,16 +105,27 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentCreates()
     {
-        $this->fileUploadHandler->expects($this->once())->method('upload')->with(
-                $this->equalTo(self::DUMMY_FILENAME), $this->equalTo(self::DUMMY_FILE_CONTENT)
-            )->will($this->returnValue($this->file));
+        $fileRealPath = 'dummy/file/real/path/' . self::DUMMY_FILENAME;
+        $this->fileStorageService->expects($this->once())->method('upload')->with(
+            $this->logicalAnd(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->stringContains(self::DUMMY_FILENAME)
+            ), $this->equalTo(self::DUMMY_FILE_CONTENT)
+        )->will($this->returnValue($fileRealPath));
 
-        $this->attachmentFactory->expects($this->once())->method('create')->with($this->equalTo($this->file))
-            ->will($this->returnValue($this->attachment));
+        $this->attachmentFactory->expects($this->once())->method('create')->with(
+            $this->logicalAnd(
+                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Attachment\Model\File'),
+                $this->callback(function($other) {
+                    return AttachmentServiceImplTest::DUMMY_FILENAME == $other->getFilename();
+                })
+            )
+        )->will($this->returnValue($this->attachment));
 
+        $this->attachmentHolder->expects($this->once())->method('addAttachment')->with($this->equalTo($this->attachment));
         $this->attachmentRepository->expects($this->once())->method('store')->with($this->equalTo($this->attachment));
 
-        $this->service->createAttachments($this->filesListDto(), $this->attachmentHolder);
+        $this->service->createAttachments($this->attachmentsInputDTOs(), $this->attachmentHolder);
     }
 
     /**
@@ -145,7 +153,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(self::DUMMY_ATTACHMENT_ID))
             ->will($this->returnValue($this->attachment));
 
-        $this->fileRemoveHandler->expects($this->once())->method('remove')->with($this->equalTo(''))
+        $this->fileStorageService->expects($this->once())->method('remove')->with($this->equalTo(''))
             ->will($this->throwException(new \Exception()));
 
         $this->service->removeAttachment(self::DUMMY_ATTACHMENT_ID);
@@ -164,7 +172,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(self::DUMMY_ATTACHMENT_ID))
             ->will($this->returnValue($attachment));
 
-        $this->fileRemoveHandler->expects($this->once())->method('remove')->with($this->equalTo(self::DUMMY_FILENAME));
+        $this->fileStorageService->expects($this->once())->method('remove')->with($this->equalTo(self::DUMMY_FILENAME));
 
         $this->attachmentRepository->expects($this->once())->method('remove')->with($this->equalTo($attachment));
 
@@ -174,13 +182,11 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @return FilesListDto
      */
-    private function filesListDto()
+    private function attachmentsInputDTOs()
     {
-        $fileDto = new FileDto();
-        $fileDto->setFilename(self::DUMMY_FILENAME);
-        $fileDto->setData(self::DUMMY_FILE_CONTENT);
-        $filesListDto = new FilesListDto();
-        $filesListDto->setFiles(array($fileDto));
-        return $filesListDto;
+        $attachmentInput = new AttachmentInput();
+        $attachmentInput->setFilename(self::DUMMY_FILENAME);
+        $attachmentInput->setContent(self::DUMMY_FILE_CONTENT);
+        return array($attachmentInput);
     }
 }

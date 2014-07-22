@@ -14,8 +14,7 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Controller;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
@@ -58,7 +57,7 @@ class CommentController extends Controller
                     $command->content,
                     $command->ticket->getId(),
                     $command->author->getId(),
-                    $this->buildFilesListDto($command)
+                    $this->buildAttachmentsInputDTO($command)
                 );
         }, $ticket);
     }
@@ -81,21 +80,22 @@ class CommentController extends Controller
             ->createEditCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
             $this->get('diamante.comment.service')
-                ->updateTicketComment($comment->getId(), $command->content, $this->buildFilesListDto($command));
+                ->updateTicketComment($comment->getId(), $command->content, $this->buildAttachmentsInputDTO($command));
         }, $comment->getTicket());
     }
 
-    private function buildFilesListDto(EditCommentCommand $command)
+    /**
+     * @param EditCommentCommand $command
+     * @return array of AttachmentInput DTOs
+     */
+    private function buildAttachmentsInputDTO(EditCommentCommand $command)
     {
-        $fileDtoArray = array();
+        $attachmentsInput = array();
         foreach ($command->files as $file) {
-            $fileDtoArray[] = FileDto::createFromUploadedFile($file);
+            $attachmentsInput[] = AttachmentInput::createFromUploadedFile($file);
         }
 
-        $filesListDto = new FilesListDto();
-        $filesListDto->setFiles($fileDtoArray);
-
-        return $filesListDto;
+        return $attachmentsInput;
     }
 
     /**

@@ -15,8 +15,7 @@
 
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
@@ -133,7 +132,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
-        $this->ticketService->addAttachmentsForTicket($this->filesListDto(), self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($this->attachmentInputs(), self::DUMMY_TICKET_ID);
     }
 
     /**
@@ -142,14 +141,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentsAddsForTicket()
     {
         $ticket = new Ticket();
-        $filesListDto = $this->filesListDto();
+        $attachmentInputs = $this->attachmentInputs();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
         $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($filesListDto), $this->equalTo($ticket));
+            ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->ticketService->addAttachmentsForTicket($filesListDto, self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($attachmentInputs, self::DUMMY_TICKET_ID);
     }
 
     /**
@@ -211,15 +210,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return FilesListDto
+     * @return AttachmentInput
      */
-    private function filesListDto()
+    private function attachmentInputs()
     {
-        $fileDto = new FileDto();
-        $fileDto->setFilename(self::DUMMY_FILENAME);
-        $fileDto->setData(self::DUMMY_FILE_CONTENT);
-        $filesListDto = new FilesListDto();
-        $filesListDto->setFiles(array($fileDto));
-        return $filesListDto;
+        $attachmentInput = new AttachmentInput();
+        $attachmentInput->setFilename(self::DUMMY_FILENAME);
+        $attachmentInput->setContent(self::DUMMY_FILE_CONTENT);
+        return array($attachmentInput);
     }
 }

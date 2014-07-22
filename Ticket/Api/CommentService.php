@@ -25,20 +25,26 @@ interface CommentService
      * @param string $content
      * @param integer $ticketId
      * @param integer $authorId
-     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      * @return void
      */
-    public function postNewCommentForTicket($content, $ticketId, $authorId, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null);
+    public function postNewCommentForTicket($content, $ticketId, $authorId, array $attachmentsInput = null);
 
+    /**
+     * Retrieves Comment Attachment
+     * @param integer $commentId
+     * @param integer $attachmentId
+     * @return Attachment
+     */
     public function getCommentAttachment($commentId, $attachmentId);
 
     /**
      * Update Ticket Comment content
      * @param integer $commentId
      * @param string $content
-     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      */
-    public function updateTicketComment($commentId, $content, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null);
+    public function updateTicketComment($commentId, $content, array $attachmentsInput = null);
 
     /**
      * Delete Ticket Comment

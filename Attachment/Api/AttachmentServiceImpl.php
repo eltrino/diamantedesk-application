@@ -21,6 +21,8 @@ use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHa
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService;
 
 class AttachmentServiceImpl implements AttachmentService
 {
@@ -35,25 +37,18 @@ class AttachmentServiceImpl implements AttachmentService
     private $attachmentFactory;
 
     /**
-     * @var FileUploadHandler
+     * @var FileStorageService
      */
-    private $fileUploadHandler;
-
-    /**
-     * @var FileRemoveHandler
-     */
-    private $fileRemoveHandler;
+    private $fileStorageService;
 
     public function __construct(
         AttachmentFactory $attachmentFactory,
         AttachmentRepository $attachmentRepository,
-        FileUploadHandler $fileUploadHandler,
-        FileRemoveHandler $fileRemoveHandler
+        FileStorageService $fileStorageService
     ) {
         $this->attachmentFactory = $attachmentFactory;
         $this->attachmentRepository = $attachmentRepository;
-        $this->fileUploadHandler = $fileUploadHandler;
-        $this->fileRemoveHandler = $fileRemoveHandler;
+        $this->fileStorageService = $fileStorageService;
     }
 
     /**
@@ -62,12 +57,21 @@ class AttachmentServiceImpl implements AttachmentService
      * @param AttachmentHolder $attachmentHolder
      * @return void
      */
-    public function createAttachments(FilesListDto $filesList, AttachmentHolder $attachmentHolder)
+    public function createAttachments(array $attachmentsInput, AttachmentHolder $attachmentHolder)
     {
-        foreach ($filesList->getFiles() as $fileDto) {
+        \Assert\that($attachmentsInput)->all()
+            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
+        $filenamePrefix = $this->exposeFilenamePrefixFrom($attachmentHolder);
+        foreach ($attachmentsInput as $attachmentInput) {
             try {
-                $file = $this->fileUploadHandler->upload($fileDto->getFilename(), $fileDto->getData());
+                $path = $this->fileStorageService->upload(
+                    $filenamePrefix . '/' . $attachmentInput->getFilename(), $attachmentInput->getContent()
+                );
+
+                $file = new File($path);
+
                 $attachment = $this->attachmentFactory->create($file);
+
                 $attachmentHolder->addAttachment($attachment);
                 $this->attachmentRepository->store($attachment);
             } catch (\RuntimeException $e) {
@@ -77,6 +81,17 @@ class AttachmentServiceImpl implements AttachmentService
                 throw $e;
             }
         }
+    }
+
+    /**
+     * @param AttachmentHolder $attachmentHolder
+     * @return string
+     */
+    private function exposeFilenamePrefixFrom(AttachmentHolder $attachmentHolder)
+    {
+        $parts = explode("\\", get_class($attachmentHolder));
+        $prefix = strtolower(array_pop($parts));
+        return $prefix;
     }
 
     /**
@@ -92,7 +107,7 @@ class AttachmentServiceImpl implements AttachmentService
             throw new \RuntimeException('Attachment not found.');
         }
         try {
-            $this->fileRemoveHandler->remove($attachment->getFilename());
+            $this->fileStorageService->remove($attachment->getFilename());
             $this->attachmentRepository->remove($attachment);
         } catch (\Exception $e) {
             throw new \RuntimeException('Can not remove attachment.', 0, $e);
@@ -102,14 +117,12 @@ class AttachmentServiceImpl implements AttachmentService
     public static function create(
         EntityManager $em,
         AttachmentFactory $attachmentFactory,
-        FileUploadHandler $fileUploadHandler,
-        FileRemoveHandler $fileRemoveHandler
+        FileStorageService $fileStorageService
     ) {
         return new AttachmentServiceImpl(
             $attachmentFactory,
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Attachment'),
-            $fileUploadHandler,
-            $fileRemoveHandler
+            $fileStorageService
         );
     }
 }

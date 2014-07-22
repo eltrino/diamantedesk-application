@@ -18,8 +18,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Command\CreateticketCommand;
@@ -300,18 +299,14 @@ class TicketController extends Controller
             /** @var AttachmentCommand $command */
             $command = $form->getData();
 
-            /** @var TicketService $ticketService */
-            $ticketService = $this->get('diamante.ticket.service');
-
-            $fileDtoArray = array();
+            $attachments = array();
             foreach ($command->files as $file) {
-                $fileDtoArray[] = FileDto::createFromUploadedFile($file);
+                array_push($attachments, AttachmentInput::createFromUploadedFile($file));
             }
 
-            $filesListDto = new FilesListDto();
-            $filesListDto->setFiles($fileDtoArray);
-
-            $ticketService->addAttachmentsForTicket($filesListDto, $ticket->getId());
+            /** @var TicketService $ticketService */
+            $ticketService = $this->get('diamante.ticket.service');
+            $ticketService->addAttachmentsForTicket($attachments, $ticket->getId());
 
             $this->get('session')->getFlashBag()->add(
                 'success',

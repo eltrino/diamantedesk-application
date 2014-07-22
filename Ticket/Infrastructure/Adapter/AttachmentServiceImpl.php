@@ -37,13 +37,13 @@ class AttachmentServiceImpl implements AttachmentService
 
     /**
      * Creates Attachments for Holder
-     * @param UploadedFile $file
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      * @param AttachmentHolder $holder
      * @return void
      */
-    public function createAttachmentsForItHolder(FilesListDto $filesListDto, AttachmentHolder $holder)
+    public function createAttachmentsForItHolder(array $attachmentsInput, AttachmentHolder $holder)
     {
-        $this->attachmentContextService->createAttachments($filesListDto, $holder);
+        $this->attachmentContextService->createAttachments($attachmentsInput, $holder);
     }
 
     /**

@@ -15,8 +15,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\EltrinoDiamanteDeskBundle;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
@@ -149,16 +148,16 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $filesListDto = $this->filesListDto();
+        $attachmentInputs = $this->attachmentInputs();
 
         $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($filesListDto), $this->equalTo($comment));
+            ->with($this->equalTo($attachmentInputs), $this->equalTo($comment));
 
         $this->service->postNewCommentForTicket(
             self::DUMMY_COMMENT_CONTENT,
             self::DUMMY_TICKET_ID,
             self::DUMMY_USER_ID,
-            $filesListDto
+            $attachmentInputs
         );
 
         $this->assertCount(1, $ticket->getComments());
@@ -211,7 +210,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
 
-        $filesListDto = $this->filesListDto();
+        $filesListDto = $this->attachmentInputs();
 
         $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
             ->with($this->equalTo($filesListDto), $this->equalTo($comment));
@@ -288,15 +287,13 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return FilesListDto
+     * @return array of AttachmentInput
      */
-    private function filesListDto()
+    private function attachmentInputs()
     {
-        $fileDto = new FileDto();
-        $fileDto->setFilename(self::DUMMY_FILENAME);
-        $fileDto->setData(self::DUMMY_FILE_CONTENT);
-        $filesListDto = new FilesListDto();
-        $filesListDto->setFiles(array($fileDto));
-        return $filesListDto;
+        $attachmentInput = new AttachmentInput();
+        $attachmentInput->setFilename(self::DUMMY_FILENAME);
+        $attachmentInput->setContent(self::DUMMY_FILE_CONTENT);
+        return array($attachmentInput);
     }
 }

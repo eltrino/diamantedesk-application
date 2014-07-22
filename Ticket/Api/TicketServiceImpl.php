@@ -88,17 +88,17 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Adds Attachments for Ticket
-     * @param FilesListDto $filesListDto
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      * @param $ticketId
      * @return void
      */
-    public function addAttachmentsForTicket(FilesListDto $filesListDto, $ticketId)
+    public function addAttachmentsForTicket(array $attachmentsInput, $ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (!$ticket) {
             throw new \RuntimeException('Ticket not found.');
         }
-        $this->attachmentService->createAttachmentsForItHolder($filesListDto, $ticket);
+        $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $ticket);
         $this->ticketRepository->store($ticket);
     }
 

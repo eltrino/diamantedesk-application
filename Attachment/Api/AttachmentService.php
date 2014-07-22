@@ -25,7 +25,7 @@ interface AttachmentService
      * @param AttachmentHolder $attachmentHolder
      * @return void
      */
-    public function createAttachments(FilesListDto $filesList, AttachmentHolder $attachmentHolder);
+    public function createAttachments(array $attachmentsInput, AttachmentHolder $attachmentHolder);
 
     /**
      * Remove Attachment

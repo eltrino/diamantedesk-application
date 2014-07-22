@@ -31,11 +31,11 @@ interface TicketService
 
     /**
      * Adds Attachments for Ticket
-     * @param FilesListDto $filesListDto
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      * @param $ticketId
      * @return void
      */
-    public function addAttachmentsForTicket(FilesListDto $filesListDto, $ticketId);
+    public function addAttachmentsForTicket(array $attachmentsInput, $ticketId);
 
     /**
      * Remove Attachment from Ticket
