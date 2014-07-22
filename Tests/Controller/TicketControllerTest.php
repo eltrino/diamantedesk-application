@@ -40,6 +40,10 @@ class TicketControllerTest extends WebTestCase
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
+
+        $this->assertEquals($form['diamante_ticket_form[branch]'], "");
+        $this->assertNotEquals($form['diamante_ticket_form[reporter]'], "");
+
         $form['diamante_ticket_form[branch]']      = $this->chooseBranchFromGrid()['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
@@ -64,6 +68,10 @@ class TicketControllerTest extends WebTestCase
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
+
+        $this->assertEquals($form['diamante_ticket_form[branch]'], $branch['id']);
+        $this->assertNotEquals($form['diamante_ticket_form[reporter]'], "");
+
         $form['diamante_ticket_form[branch]']      = $branch['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
