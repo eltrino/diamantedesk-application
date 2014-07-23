@@ -229,6 +229,34 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
     }
 
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testUpdateStatusWhenTicketDoesNotExists()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, self::DUMMY_STATUS);
+    }
+
+    /**
+     * @test
+     */
+    public function testUpdateStatus()
+    {
+        $status = STATUS::NEW_ONE;
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
+    }
+
     private function createBranch()
     {
         return new Branch('DUMMY_NAME', 'DUMYY_DESC');
@@ -263,32 +291,5 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $filesListDto = new FilesListDto();
         $filesListDto->setFiles(array($fileDto));
         return $filesListDto;
-    }
-    /**
-     * @test
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
-     */
-    public function testUpdateStatusWhenTicketDoesNotExists()
-    {
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue(null));
-
-        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, self::DUMMY_STATUS);
-    }
-
-    /**
-     * @test
-     */
-    public function testUpdateStatus()
-    {
-        $status = STATUS::NEW_ONE;
-
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($this->ticket));
-
-        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
-        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
-        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
     }
 }
