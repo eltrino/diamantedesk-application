@@ -13,8 +13,8 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-require_once __DIR__.'/../../../../../app/bootstrap.php.cache';
-require_once __DIR__.'/../../../../../app/AppKernel.php';
+require_once 'bootstrap.php.cache';
+require_once 'AppKernel.php';
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;

@@ -30,6 +30,7 @@
         </whitelist>
     </filter>
     <php>
+        <includePath>../../../../../app/</includePath>
         <env name="AUTOLOAD_FIXTURES" value="false"/>
     </php>
 </phpunit>
