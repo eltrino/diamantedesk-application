@@ -79,7 +79,7 @@ class CommentServiceImpl implements CommentService
         $ticket = $this->ticketRepository->get($ticketId);
 
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket not found.');
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
         $author = $this->userService->getUserById($authorId);
@@ -105,11 +105,11 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $attachment = $comment->getAttachment($attachmentId);
         if (is_null($attachment)) {
-            throw new \RuntimeException('Comment has no such attachment.');
+            throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
         return $attachment;
     }
@@ -124,7 +124,7 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $comment->updateContent($content);
         if ($attachmentsInput) {
@@ -141,7 +141,7 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $this->commentRepository->remove($comment);
     }
@@ -157,11 +157,11 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (!$comment) {
-            throw new \RuntimeException('Comment not found.');
+            throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $attachment = $comment->getAttachment($attachmentId);
         if (!$attachment) {
-            throw new \RuntimeException('Comment has no such attachment.');
+            throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
         $this->attachmentService->removeAttachmentFromItHolder($attachment);
         $comment->removeAttachment($attachment);

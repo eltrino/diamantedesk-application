@@ -2,7 +2,8 @@
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
-{% oro_title_set({params : {"Branch: ": entity.name|default('N/A')} }) %}
+
+{% oro_title_set({params : {"%branch.name%": entity.name|default('N/A') }}) %}
 
 {% block navButtons %}
     {{ UI.button({
@@ -25,7 +26,7 @@
         'aCss': 'no-hash remove-button',
         'dataId': entity.id,
         'id': 'btn-remove-account',
-        'dataMessage': 'Are you sure you want to delete this branch?'|trans,
+        'dataMessage': 'Are you sure you want to delete this branch with ALL its tickets? Please note that it cannot be undone!'|trans,
         'successMessage': 'Branch deleted'|trans,
         'title': 'Delete branch'|trans,
         'label': 'Delete'|trans

@@ -16,34 +16,54 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
 
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketTest extends \PHPUnit_Framework_TestCase
 {
     const TICKET_SUBJECT      = 'Subject';
     const TICKET_DESCRIPTION  = 'Description';
-    const TICKET_STATUS_OPEN  = 'open';
-    const TICKET_STATUS_CLOSE = 'close';
 
-    public function testCreate()
+    public function testCreateWhenStatusIsNotNull()
     {
-        $ticket = new Ticket();
         $branch = $this->createBranch();
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
-        $ticket->create(
+        $ticket = new Ticket(
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $branch,
-            self::TICKET_STATUS_OPEN,
             $reporter,
-            $assignee
+            $assignee,
+            Status::OPEN
         );
 
         $this->assertEquals('Subject', $ticket->getSubject());
         $this->assertEquals('Description', $ticket->getDescription());
         $this->assertEquals($branch, $ticket->getBranch());
-        $this->assertEquals('open', $ticket->getStatus());
+        $this->assertEquals('open', $ticket->getStatus()->getValue());
+        $this->assertEquals($reporter, $ticket->getReporter());
+        $this->assertEquals($assignee, $ticket->getAssignee());
+    }
+
+    public function testCreateWhenStatusIsNull()
+    {
+        $branch = $this->createBranch();
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+        $ticket = new Ticket(
+            self::TICKET_SUBJECT,
+            self::TICKET_DESCRIPTION,
+            $branch,
+            $reporter,
+            $assignee,
+            Status::NEW_ONE
+        );
+
+        $this->assertEquals('Subject', $ticket->getSubject());
+        $this->assertEquals('Description', $ticket->getDescription());
+        $this->assertEquals($branch, $ticket->getBranch());
+        $this->assertEquals('new', $ticket->getStatus()->getValue());
         $this->assertEquals($reporter, $ticket->getReporter());
         $this->assertEquals($assignee, $ticket->getAssignee());
     }
@@ -52,11 +72,11 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     {
         $ticket = $this->createTicket();
 
-        $ticket->update('New Subject', 'New Description', 'close');
+        $ticket->update('New Subject', 'New Description', Status::CLOSED);
 
         $this->assertEquals('New Subject', $ticket->getSubject());
         $this->assertEquals('New Description', $ticket->getDescription());
-        $this->assertEquals('close', $ticket->getStatus());
+        $this->assertEquals(Status::CLOSED, $ticket->getStatus()->getValue());
     }
 
     public function testAssign()
@@ -70,60 +90,17 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($newAssignee, $ticket->getAssignee());
     }
 
-    public function testClose()
-    {
-        $ticket = $this->createTicket();
-
-        $ticket->close();
-
-        $this->assertEquals('close', $ticket->getStatus());
-    }
-
-    public function testReopen()
-    {
-        $ticket = $this->createClosedTicket();
-
-        $ticket->reopen();
-
-        $this->assertEquals('open', $ticket->getStatus());
-    }
-
-    public function testCanReopen()
-    {
-        $ticket = $this->createTicket();
-
-        $this->assertFalse($ticket->canReopen());
-
-        $ticket->close();
-
-        $this->assertTrue($ticket->canReopen());
-    }
-
     private function createTicket()
     {
-        $ticket = new Ticket();
-        $ticket->create(
+        $ticket = new Ticket(
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $this->createBranch(),
-            self::TICKET_STATUS_OPEN,
             $this->createReporter(),
-            $this->createAssignee()
+            $this->createAssignee(),
+            Status::OPEN
         );
-        return $ticket;
-    }
 
-    private function createClosedTicket()
-    {
-        $ticket = new Ticket();
-        $ticket->create(
-            self::TICKET_SUBJECT,
-            self::TICKET_DESCRIPTION,
-            $this->createBranch(),
-            self::TICKET_STATUS_CLOSE,
-            $this->createReporter(),
-            $this->createAssignee()
-        );
         return $ticket;
     }
 

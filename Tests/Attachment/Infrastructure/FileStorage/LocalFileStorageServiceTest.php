@@ -49,7 +49,7 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Upload directory can not be created.
+     * @expectedExceptionMessage Upload directory is not writable, doesn't exist or no space left on the disk.
      */
     public function thatThrowsExceptionIfDestinationDirectoryCannotBeCreated()
     {
@@ -64,7 +64,7 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Upload directory is not writable.
+     * @expectedExceptionMessage Upload directory is not writable, doesn't exist or no space left on the disk.
      */
     public function thatThrowsExceptionIfDestinationDirectoryIsNotWritable()
     {

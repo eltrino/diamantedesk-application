@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class UpdateCommand extends ContainerAwareCommand
 {
@@ -40,15 +41,19 @@ class UpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write('Updating Db Schema...');
+            $output->write('Updating DB schema...');
             $this->updateDbSchema();
+            $output->writeln('Done');
+
+            $output->write('Updating navigation...');
+            $this->updateNavigation($output);
             $output->writeln('Done');
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
         }
 
-        $output->writeln('Updated.');
+        $output->writeln('Updated!');
     }
 
     /**
@@ -73,7 +78,7 @@ class UpdateCommand extends ContainerAwareCommand
         $toUpdate = array_diff($sql, $sql2);
 
         if (empty($toUpdate)) {
-            throw new \Exception('Nothing to update');
+            throw new \Exception('No new updates found. Diamante Desk is up to date!');
         }
 
         $conn = $em->getConnection();
@@ -81,5 +86,31 @@ class UpdateCommand extends ContainerAwareCommand
         foreach ($toUpdate as $sql) {
             $conn->executeQuery($sql);
         }
+    }
+
+    /**
+     * Update oro navigation
+     * @param OutputInterface $output
+     */
+    private function updateNavigation(OutputInterface $output)
+    {
+        $this->runExistingCommand('oro:navigation:init', $output);
+    }
+
+    /**
+     * Run existing command in system
+     * @param string $commandName
+     * @param OutputInterface $output
+     */
+    private function runExistingCommand($commandName, OutputInterface $output)
+    {
+        $command = $this->getApplication()->find($commandName);
+
+        $arguments = array(
+            'command' => $commandName
+        );
+
+        $input = new ArrayInput($arguments);
+        $command->run($input, $output);
     }
 }

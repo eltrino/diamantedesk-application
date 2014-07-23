@@ -57,19 +57,27 @@ interface TicketService
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $status, $reporterId, $assigneeId);
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null);
 
     /**
-     * Update Ticket
      * @param $ticketId
      * @param $subject
      * @param $description
-     * @param $status
+     * @param $reporterId
      * @param $assigneeId
+     * @param $status
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $status, $assigneeId);
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status);
+
+    /**
+     * @param $ticketId
+     * @param $status
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+     * @throws \RuntimeException if unable to load required ticket
+     */
+    public function updateStatus($ticketId, $status);
 
     /**
      * Delete Ticket
@@ -87,20 +95,4 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket($ticketId, $assigneeId);
-
-    /**
-     * Close Ticket
-     * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required ticket
-     */
-    public function closeTicket($ticketId);
-
-    /**
-     * Reopen Ticket
-     * @param $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @throws \RuntimeException if unable to load required ticket
-     */
-    public function reopenTicket($ticketId);
 }

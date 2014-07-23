@@ -34,7 +34,7 @@ class OroUserService implements UserService
     {
         $user = $this->userManager->findUserBy(array('id' => $id));
         if (is_null($user)) {
-            throw new \RuntimeException('User is not exists.');
+            throw new \RuntimeException("User doesn't exist.");
         }
         return $user;
     }

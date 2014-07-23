@@ -1,7 +1,5 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 {% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
-{% set title = 'New Ticket'|trans %}
-{% oro_title_set({params : {"Ticket": form.vars.value.subject|default('N/A')} }) %}
 {% set formAction = path('diamante_ticket_create')  %}
 {% block head_script %}
     {{ parent() }}
@@ -18,18 +16,8 @@
 {% endblock %}
 
 {% block pageHeader %}
-    {% if form.vars.value.id %}
-        {% set breadcrumbs = {
-            'entity':      form.vars.value,
-            'indexPath':   path('diamante_ticket_list'),
-            'indexLabel': 'Ticket'|trans,
-            'entityTitle': form.vars.value.subject|default('N/A')
-        }
-        %}
-        {{ parent() }}
-    {% else %}
-        {% include 'OroUIBundle::page_title_block.html.twig' %}
-    {% endif %}
+    {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'Ticket'|trans}) %}
+    {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
 {% endblock pageHeader %}
 
 {% block content_data %}
@@ -44,7 +32,6 @@
                 'data': [
                     form_row(form.branch),
                     form_row(form.subject),
-                    form_row(form.description),
                     form_row(form.status),
                     form_row(form.reporter),
                     form_row(form.assignee)
@@ -52,6 +39,18 @@
             }
         ]
     }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title' : 'Description'|trans,
+        'subblocks': [
+            {
+                'title' : '',
+                'data' : [
+                    form_row(form.description)
+                ]
+            }]
+        }]
+    ) %}
 
     {% set data = {
         'formErrors': form_errors(form)? form_errors(form) : null,

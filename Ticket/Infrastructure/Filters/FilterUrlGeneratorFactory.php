@@ -15,6 +15,7 @@
 namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters;
 use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 
 class FilterUrlGeneratorFactory
 {
@@ -70,13 +71,19 @@ class FilterUrlGeneratorFactory
     }
 
     /**
+     * @return MyNewTicketsFilterUrlGenerator
+     */
+    public function createMyNewTicketsFilterUrlGenerator()
+    {
+        return new MyNewTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId, STATUS::NEW_ONE);
+    }
+
+    /**
      * @return MyOpenTicketsFilterUrlGenerator
      */
     public function createMyOpenTicketsFilterUrlGenerator()
     {
-        $status = 'open';
-
-        return new MyOpenTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId, $status);
+        return new MyOpenTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId, STATUS::OPEN);
     }
 
     /**
@@ -85,5 +92,13 @@ class FilterUrlGeneratorFactory
     public function createMyReportedTicketsFilterUrlGenerator()
     {
         return new MyReportedTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId);
+    }
+
+    /**
+     * @return MyReportedNewTicketsFilterUrlGenerator
+     */
+    public function createMyReportedNewTicketsFilterUrlGenerator()
+    {
+        return new MyReportedNewTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId, STATUS::NEW_ONE);
     }
 } 

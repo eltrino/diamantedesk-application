@@ -58,7 +58,7 @@ class BranchLogoHandler
     public function upload(\Symfony\Component\HttpFoundation\File\UploadedFile $logo, $targetFilename = null)
     {
         if (!in_array($logo->getMimeType(), $this->permittedMimeTypes)) {
-            throw new LogoHandlerLogicException(sprintf('%s File Mime Type is not permitted, use images for Logo', $logo->getMimeType()));
+            throw new LogoHandlerLogicException(sprintf('"%s" file type is not permitted. Use images for logo and try again.', $logo->getMimeType()));
         }
 
         if (is_null($targetFilename)) {
@@ -66,7 +66,7 @@ class BranchLogoHandler
         }
 
         if (false === $this->branchLogoDir->isDir() || false === $this->branchLogoDir->isWritable()) {
-            throw new \RuntimeException(sprintf('Branch logo directory is not writable or does not exist (%s).', $this->branchLogoDir->getRealPath()));
+            throw new \RuntimeException(sprintf("Branch logo directory (%s) is not writable, doesn't exist or no space left on the disk.", $this->branchLogoDir->getRealPath()));
         }
 
         return $logo->move($this->branchLogoDir->getRealPath(), $targetFilename);

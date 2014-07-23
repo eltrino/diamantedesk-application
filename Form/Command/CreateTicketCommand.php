@@ -14,13 +14,33 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Form\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class CreateTicketCommand
 {
     public $id;
+    /**
+     * @Assert\NotBlank
+     */
     public $branch;
+    /**
+     * @Assert\NotBlank
+     */
     public $subject;
+    /**
+     * @Assert\NotBlank
+     */
     public $description;
+    /**
+     * @Assert\NotBlank
+     */
     public $status;
+    /**
+     * @Assert\NotBlank
+     */
     public $reporter;
+    /**
+     * @Assert\NotBlank
+     */
     public $assignee;
 }

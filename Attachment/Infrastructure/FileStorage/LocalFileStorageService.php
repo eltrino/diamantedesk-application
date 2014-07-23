@@ -37,6 +37,9 @@ class LocalFileStorageService implements FileStorageService
     }
 
     /**
+     * Upload (move to target dir) given file
+     * @param string $filename
+     * @param string $content
      * @return string path to filename
      */
     public function upload($filename, $content)

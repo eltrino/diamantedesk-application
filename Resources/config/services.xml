@@ -37,7 +37,6 @@
 
         <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
             <argument type="string">ticket</argument>
-            <argument type="service" id="oro_datagrid.datagrid.request_params"/>
             <argument type="constant">false</argument>
             <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-ticket-attachments-grid" method="onBuildAfter"/>
         </service>

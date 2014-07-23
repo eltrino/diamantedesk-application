@@ -49,20 +49,6 @@ class BranchControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("Branches")')->count() == 1);
     }
 
-    public function testView()
-    {
-        $branch        = $this->chooseBranchFromGrid();
-        $branchViewUrl = $this->client->generate('diamante_branch_view', array('id' => $branch['id']));
-        $crawler        = $this->client->request('GET', $branchViewUrl);
-        $response       = $this->client->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertTrue($response->headers->contains('Content-Type', 'text/html; charset=UTF-8'));
-        $this->assertTrue($crawler->filter('html:contains("Branch Details")')->count() >= 1);
-
-        $this->assertTrue($crawler->filter('html:contains("Tickets")')->count() == 1);
-    }
-
     public function testCreate()
     {
         $crawler = $this->client->request(
@@ -83,20 +69,41 @@ class BranchControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Branch saved", $crawler->html());
+        $this->assertContains("Branch successfully created.", $crawler->html());
         $this->assertTrue($crawler->filter('html:contains("Dproject.png")')->count() == 0);
+
+        return $branchName;
     }
 
-    public function testUpdate()
+    /**
+     * @depends testCreate
+     */
+    public function testView($branchName)
     {
-        $branch          = $this->chooseBranchFromGrid();
+        $branch          = $this->chooseBranchByNameFromGrid($branchName);
+        $branchViewUrl = $this->client->generate('diamante_branch_view', array('id' => $branch['id']));
+        $crawler        = $this->client->request('GET', $branchViewUrl);
+        $response       = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($response->headers->contains('Content-Type', 'text/html; charset=UTF-8'));
+        $this->assertTrue($crawler->filter('html:contains("Branch Details")')->count() >= 1);
+
+        $this->assertTrue($crawler->filter('html:contains("Tickets")')->count() == 1);
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testUpdate($branchName)
+    {
+        $branch          = $this->chooseBranchByNameFromGrid($branchName);
         $branchUpdateUrl = $this->client->generate('diamante_branch_update', array('id' => $branch['id']));
         $crawler          = $this->client->request('GET', $branchUpdateUrl);
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
 
-        $branchName = md5(time());
         $form['diamante_branch_form[name]'] = $branchName;
         $form['diamante_branch_form[description]'] = 'Branch Description Changed';
         $form['diamante_branch_form[logoFile]'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
@@ -106,13 +113,18 @@ class BranchControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Branch saved", $crawler->html());
+        $this->assertContains("Branch successfully saved.", $crawler->html());
         $this->assertTrue($crawler->filter('html:contains("Dproject.png")')->count() == 0);
+
+        return $branchName;
     }
 
-    public function testDelete()
+    /**
+     * @depends testUpdate
+     */
+    public function testDelete($branchName)
     {
-        $branch          = $this->chooseBranchFromGrid();
+        $branch          = $this->chooseBranchByNameFromGrid($branchName);
         $branchDeleteUrl = $this->client->generate('diamante_branch_delete', array('id' => $branch['id']));
         $crawler          = $this->client->request('GET', $branchDeleteUrl);
         $response         = $this->client->getResponse();

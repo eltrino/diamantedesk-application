@@ -24,6 +24,7 @@
         <parameter key="diamante.attachment.service.class">Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentServiceImpl</parameter>
         <parameter key="diamante.attachment.factory.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory</parameter>
         <parameter key="diamante.attachment.file_storage.service.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileStorage\LocalFileStorageService</parameter>
+        <parameter key="diamante.attachment.imagine_data_loader.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
     </parameters>
 
     <services>
@@ -40,6 +41,11 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.attachment.factory"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>
+        </service>
+
+        <service id="diamante.attachment.imagine_data_loader" class="%diamante.attachment.imagine_data_loader.class%">
+            <tag name="liip_imagine.data.loader" loader="diamante_attachment" />
+            <argument type="service" id="liip_imagine" />
         </service>
     </services>
 </container>

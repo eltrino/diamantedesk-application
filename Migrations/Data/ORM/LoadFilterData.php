@@ -26,17 +26,23 @@ class LoadFilterData extends AbstractFixture
      */
     public function load(ObjectManager $manager)
     {
-        $allTicketsFilter = new Filter('All Tickets', 'diamante.ticket.all_tickets_filter_url_generator');
+        $allTicketsFilter = new Filter('All tickets', 'diamante.ticket.all_tickets_filter_url_generator');
         $manager->persist($allTicketsFilter);
 
-        $myTicketsFilter = new Filter('My Tickets', 'diamante.ticket.my_tickets_filter_url_generator');
+        $myTicketsFilter = new Filter('My tickets', 'diamante.ticket.my_tickets_filter_url_generator');
         $manager->persist($myTicketsFilter);
 
-        $myOpenTicketsFilter = new Filter('My Open Tickets', 'diamante.ticket.my_open_tickets_filter_url_generator');
+        $myNewTicketsFilter = new Filter('My new tickets', 'diamante.ticket.my_new_tickets_filter_url_generator');
+        $manager->persist($myNewTicketsFilter);
+
+        $myOpenTicketsFilter = new Filter('My open tickets', 'diamante.ticket.my_open_tickets_filter_url_generator');
         $manager->persist($myOpenTicketsFilter);
 
-        $myReportedFilter = new Filter('My Reported Tickets', 'diamante.ticket.my_reported_tickets_filter_url_generator');
+        $myReportedFilter = new Filter('Reported tickets', 'diamante.ticket.my_reported_tickets_filter_url_generator');
         $manager->persist($myReportedFilter);
+
+        $myReportedNewFilter = new Filter('New reported tickets', 'diamante.ticket.my_reported_new_tickets_filter_url_generator');
+        $manager->persist($myReportedNewFilter);
 
         $manager->flush();
     }

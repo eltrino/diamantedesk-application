@@ -79,4 +79,12 @@ class Attachment
     {
         return $this->updatedAt;
     }
+
+    /**
+     * @return File
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
 }

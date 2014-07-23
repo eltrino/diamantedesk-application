@@ -23,7 +23,6 @@ class UpdateTicketType extends CreateTicketType
     {
         parent::buildForm($builder, $options);
         $builder->remove('branch');
-        $builder->remove('reporter');
     }
 
     /**

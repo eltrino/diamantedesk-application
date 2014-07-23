@@ -100,7 +100,7 @@ class CommentController extends Controller
 
     /**
      * @Route("/attachment/list/{id}",
-     *      name="diamant_comment_widget_attachment_list",
+     *      name="diamante_comment_widget_attachment_list",
      *      requirements={"id"="\d+"}
      * )
      * @Template("EltrinoDiamanteDeskBundle:Comment:attachment/list.html.twig")
@@ -131,7 +131,11 @@ class CommentController extends Controller
         try {
             $this->handle($form);
             $callback($command);
-            $this->addSuccessMessage('Comment saved');
+            if ($command->id) {
+                $this->addSuccessMessage('Comment successfully saved.');
+            } else {
+                $this->addSuccessMessage('Comment successfully created.');
+            }
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
             $response = array('form' => $formView);
@@ -213,7 +217,7 @@ class CommentController extends Controller
         $commentService->removeAttachmentFromComment($commentId, $attachId);
         $this->get('session')->getFlashBag()->add(
             'success',
-            $this->get('translator')->trans('Attachment removed.')
+            $this->get('translator')->trans('Attachment successfully deleted.')
         );
         $response = $this->redirect($this->generateUrl(
             'diamante_comment_update',
@@ -230,13 +234,13 @@ class CommentController extends Controller
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be supported only via POST method');
+            throw new \LogicException('Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form is not valid');
+            throw new \RuntimeException('Form object validation failed, form is invalid.');
         }
     }
 
@@ -257,15 +261,9 @@ class CommentController extends Controller
      */
     private function getSuccessSaveResponse(Ticket $ticket)
     {
-        return $this->get('oro_ui.router')->actionRedirect(
-            array(
-                'route' => 'diamante_comment_update',
-                'parameters' => array('id' => $ticket->getId()),
-            ),
-            array(
-                'route' => 'diamante_ticket_view',
-                'parameters' => array('id' => $ticket->getId())
-            )
+        return $this->get('oro_ui.router')->redirectAfterSave(
+            ['route' => 'diamante_comment_update', 'parameters' => ['id' => $ticket->getId()]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticket->getId()]]
         );
     }
 

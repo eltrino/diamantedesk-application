@@ -31,11 +31,16 @@ class EltrinoDiamanteDeskBundle extends Bundle
                 'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\PriorityType'
             );
         }
-
         if (!Type::hasType('file')) {
             Type::addType(
                 'file',
                 'Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Persistence\Doctrine\DBAL\Types\FileType'
+            );
+        }
+        if (!Type::hasType('status')) {
+            Type::addType(
+                'status',
+                'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\StatusType'
             );
         }
 

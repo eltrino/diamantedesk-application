@@ -15,8 +15,11 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doctrine;
 
 use Doctrine\DBAL\LockMode;
-use Eltrino\DiamanteDeskBundle\Entity\Comment;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Oro\Bundle\UserBundle\Entity\User;
+use Eltrino\DiamanteDeskBundle\Entity\Comment;
+use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineCommentRepository;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -123,6 +126,16 @@ class DoctrineCommentRepositoryTest extends \PHPUnit_Framework_TestCase
 
     private function comment()
     {
-        return new Comment('Content', new Ticket(), 'author');
+        return new Comment(
+            'Content',
+            new Ticket(
+                'Subject',
+                'Description',
+                new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
+                new User(),
+                new User(),
+                Status::NEW_ONE
+            ),
+            'author');
     }
 }

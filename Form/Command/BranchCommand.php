@@ -16,10 +16,14 @@ namespace Eltrino\DiamanteDeskBundle\Form\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BranchCommand implements Taggable
 {
     public $id;
+    /**
+     * @Assert\NotBlank
+     */
     public $name;
     public $description;
     public $tags;
