@@ -13,9 +13,24 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
+require_once __DIR__.'/../../../../../app/bootstrap.php.cache';
+require_once __DIR__.'/../../../../../app/AppKernel.php';
 
-if (!is_file($autoload = getcwd() . '/vendor/autoload.php')) {
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\ArrayInput;
+
+use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
+use Eltrino\DiamanteDeskBundle\Command\FixturesPurgeCommand;
+
+$kernel = new AppKernel('test', true);
+$kernel->boot();
+
+$application = new Application($kernel);
+$kernelDir = $kernel->getRootDir();
+
+if (!is_file($autoload = $kernelDir . '/../vendor/autoload.php')) {
     throw new \LogicException('Run "composer install --dev" to create autoloader.');
 }
 
@@ -24,6 +39,36 @@ $loader = require $autoload;
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
 // Set kernel folder path dynamically to avoid absolute path in config file
-$_SERVER['KERNEL_DIR'] = getcwd() . '/app';
+$_SERVER['KERNEL_DIR'] = $kernelDir;
+
+$loadCommand = new LoadDataFixturesDoctrineCommand();
+$output = new ConsoleOutput();
+$purgeCommand = new FixturesPurgeCommand();
+
+$application->add($purgeCommand);
+$purgeInput = new ArrayInput(array(
+    'command'              => 'diamante:fixtures:purge',
+    '--no-interaction'     => true,
+));
+
+$application->add($loadCommand);
+$input = new ArrayInput(array(
+    'command'               => 'doctrine:fixtures:load',
+    '--fixtures'            => "{$kernelDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/",
+    '--append'              => true,
+    '--no-interaction'      => true
+
+));
+
+try {
+    $output->writeln('Removing previously loaded test fixtures');
+    $purgeCommand->run($purgeInput, $output);
+    $output->writeln("Loading fixtures...\n");
+    $loadCommand->run($input, $output);
+} catch (\Exception $e) {
+    $output->writeln("\n");
+    $output->writeln("Failed to load fixtures. Error: " . $e->getMessage());
+    $output->writeln("\n");
+}
 
 return $loader;
