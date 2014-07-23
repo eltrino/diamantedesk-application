@@ -197,8 +197,8 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
+        $reporter = $this->userService->getUserById($reporterId);
         if ($reporterId != $ticket->getReporterId()) {
-            $reporter = $this->userService->getUserById($reporterId);
             if (is_null($reporter)) {
                 throw new \RuntimeException('Reporter loading failed, reporter not found.');
             }
