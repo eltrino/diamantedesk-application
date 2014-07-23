@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 
-class UpdateCommand extends ContainerAwareCommand
+class UpdateCommand extends PreprocessCommand
 {
     /**
      * Configures the current command.
@@ -48,69 +48,19 @@ class UpdateCommand extends ContainerAwareCommand
             $output->write('Updating navigation...');
             $this->updateNavigation($output);
             $output->writeln('Done');
+
+            $output->write('Installing assets...');
+            $this->assetsInstall($output);
+            $this->asseticDump($output, array(
+                '--no-debug' => true,
+            ));
+            $output->write('Done');
+
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
         }
 
         $output->writeln('Updated!');
-    }
-
-    /**
-     * Updates DB Schema. Changes from Diamante only will be applied for current schema. Other bundles updating skips
-     * @throws \Exception if there are no changes in entities
-     */
-    protected function updateDbSchema()
-    {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $schemaTool = new SchemaTool($em);
-        $entitiesMetadata = array(
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Branch::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Ticket::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Comment::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Filter::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Attachment::getClassName())
-        );
-
-        $sql = $schemaTool->getUpdateSchemaSql($entitiesMetadata);
-        $sql2 = $schemaTool->getUpdateSchemaSql(array());
-
-        $toUpdate = array_diff($sql, $sql2);
-
-        if (empty($toUpdate)) {
-            throw new \Exception('No new updates found. Diamante Desk is up to date!');
-        }
-
-        $conn = $em->getConnection();
-
-        foreach ($toUpdate as $sql) {
-            $conn->executeQuery($sql);
-        }
-    }
-
-    /**
-     * Update oro navigation
-     * @param OutputInterface $output
-     */
-    private function updateNavigation(OutputInterface $output)
-    {
-        $this->runExistingCommand('oro:navigation:init', $output);
-    }
-
-    /**
-     * Run existing command in system
-     * @param string $commandName
-     * @param OutputInterface $output
-     */
-    private function runExistingCommand($commandName, OutputInterface $output)
-    {
-        $command = $this->getApplication()->find($commandName);
-
-        $arguments = array(
-            'command' => $commandName
-        );
-
-        $input = new ArrayInput($arguments);
-        $command->run($input, $output);
     }
 }
