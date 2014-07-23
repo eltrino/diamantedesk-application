@@ -19,7 +19,7 @@
                     <img src="{{ imagePath ? imagePath|imagine_filter('avatar_med') : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="test">
                 </div>
                 <div class="diam-comment-meta">{{ comment.author.firstname }} {{ comment.author.lastname }} added a comment - {{ comment.createdAt|oro_format_datetime }}</div>
-                <div class="diam-comment-content">{{ comment.content }}</div>
+                <div class="diam-comment-content">{{ comment.content|nl2br }}</div>
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
                         <strong class="diam-comment-attachments-title">Attachments:</strong>
