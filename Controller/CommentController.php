@@ -92,7 +92,9 @@ class CommentController extends Controller
     {
         $attachmentsInput = array();
         foreach ($command->files as $file) {
-            $attachmentsInput[] = AttachmentInput::createFromUploadedFile($file);
+            if (!empty($file)) {
+                $attachmentsInput[] = AttachmentInput::createFromUploadedFile($file);
+            }
         }
 
         return $attachmentsInput;
