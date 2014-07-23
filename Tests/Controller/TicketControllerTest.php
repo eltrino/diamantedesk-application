@@ -159,7 +159,7 @@ class TicketControllerTest extends WebTestCase
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save')->form();
-        $form['diamante_ticket_form_assignee[assignee]'] = 315;
+        $form['diamante_ticket_form_assignee[assignee]'] = 1;
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
