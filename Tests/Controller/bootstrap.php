@@ -30,7 +30,7 @@ $kernel->boot();
 $application = new Application($kernel);
 $kernelDir = $kernel->getRootDir();
 
-$autoloadFlag = $kernel->getContainer()->getParameter('diamante.test.fixture.autoload');
+$autoloadFlag = getenv('AUTOLOAD_FIXTURES');
 $output = new ConsoleOutput();
 
 if (!is_file($autoload = $kernelDir . '/../vendor/autoload.php')) {
@@ -44,7 +44,7 @@ AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 // Set kernel folder path dynamically to avoid absolute path in config file
 $_SERVER['KERNEL_DIR'] = $kernelDir;
 
-if (true === $autoloadFlag) {
+if (true === (bool)$autoloadFlag) {
     $loadCommand = new LoadDataFixturesDoctrineCommand();
     $purgeCommand = new FixturesPurgeCommand();
 

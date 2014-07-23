@@ -29,5 +29,7 @@
             </exclude>
         </whitelist>
     </filter>
-
+    <php>
+        <env name="AUTOLOAD_FIXTURES" value="false"/>
+    </php>
 </phpunit>
