@@ -88,7 +88,6 @@ class FixturesPurgeCommand extends ContainerAwareCommand
             $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Branch::getClassName()),
             $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Ticket::getClassName()),
             $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Comment::getClassName()),
-            $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Filter::getClassName()),
             $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Attachment::getClassName())
         );
 
