@@ -128,7 +128,6 @@
     {% set id = 'navbarTicketView' %}
     {% set dataSubBlocks = [UI.attibuteRow('Subject', entity.subject)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Branch', entity.branchName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Description', entity.description)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Status', entity.status.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Reporter', entity.reporterFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Assignee', entity.assigneeFullName)]) %}
@@ -154,6 +153,15 @@
     }
     ]
     %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'Description'|trans,
+        'subblocks': [{
+            'title': null,
+            'data': [UI.attibuteRow(null, entity.description)]
+        }]
+    }]
+    ) %}
 
     {% set dataBlocks = dataBlocks|merge([{
     'title' : 'Attachments'|trans,

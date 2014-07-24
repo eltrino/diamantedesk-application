@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class InstallCommand extends ContainerAwareCommand
+class InstallCommand extends PreprocessCommand
 {
     /**
      * @var string
@@ -73,7 +73,7 @@ class InstallCommand extends ContainerAwareCommand
             $output->writeln('Done');
 
             $output->write('Installing DB schema...');
-            $this->installDbSchema();
+            $this->updateDbSchema();
             $output->writeln('Done');
 
             $this->loadData($output);
@@ -84,7 +84,9 @@ class InstallCommand extends ContainerAwareCommand
 
             $this->assetsInstall($output);
 
-            $this->asseticDump($output);
+            $this->asseticDump($output, array(
+                '--no-debug' => true,
+            ));
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
@@ -118,84 +120,6 @@ class InstallCommand extends ContainerAwareCommand
     }
 
     /**
-     * Install DB Schema.
-     * @throws \Exception if entities already installed
-     */
-    protected function installDbSchema()
-    {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $schemaTool = new SchemaTool($em);
-        $entitiesMetadata = array(
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Branch::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Ticket::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Comment::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Filter::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Attachment::getClassName())
-        );
-
-        $toCreate = array();
-
-        /** @var $entity \Doctrine\ORM\Mapping\ClassMetadata */
-        foreach ($entitiesMetadata as $entity) {
-            $skip = $em->getConnection()->getSchemaManager()->tablesExist(array($entity->getTableName()));
-            if ($skip) {
-                continue;
-            }
-            $toCreate[] = $entity;
-        }
-
-//        if (empty($toCreate)) {
-//            throw new \Exception('All entities are created in schema. Please, run command diamante:update');
-//        }
-
-//        $schemaTool->createSchema($toCreate);
-    }
-
-    /**
-     * Install assets
-     * @param OutputInterface $output
-     */
-    protected function assetsInstall(OutputInterface $output)
-    {
-        $this->runExistingCommand('assets:install', $output);
-    }
-
-    /**
-     * Dump assetic
-     * @param OutputInterface $output
-     */
-    protected function asseticDump(OutputInterface $output)
-    {
-        $this->runExistingCommand('assetic:dump', $output);
-    }
-
-    /**
-     * Load data fixtures
-     * @param OutputInterface $output
-     */
-    protected function loadData(OutputInterface $output)
-    {
-        $this->runExistingCommand('oro:migration:data:load', $output);
-    }
-
-    /**
-     * Run existing command in system
-     * @param string $commandName
-     * @param OutputInterface $output
-     */
-    private function runExistingCommand($commandName, OutputInterface $output)
-    {
-        $command = $this->getApplication()->find($commandName);
-
-        $arguments = array(
-            'command' => $commandName
-        );
-
-        $input = new ArrayInput($arguments);
-        $command->run($input, $output);
-    }
-
-    /**
      * Create directory
      * @param string $directory
      */
@@ -211,11 +135,11 @@ class InstallCommand extends ContainerAwareCommand
     }
 
     /**
-     * Update oro navigation
+     * Load data fixtures
      * @param OutputInterface $output
      */
-    private function updateNavigation(OutputInterface $output)
+    private function loadData(OutputInterface $output)
     {
-        $this->runExistingCommand('oro:navigation:init', $output);
+        $this->runExistingCommand('oro:migration:data:load', $output);
     }
 }
