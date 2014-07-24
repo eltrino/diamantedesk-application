@@ -14,7 +14,7 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Attachment\Api\Dto;
 
-class AttachmentInput
+class FileDto
 {
     /**
      * @var string
@@ -60,20 +60,17 @@ class AttachmentInput
         return $this->data;
     }
 
-    public static function createFromUploadedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile = null)
+    public static function createFromUploadedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile)
     {
         $dto = new AttachmentInput();
-        if (!is_null($uploadedFile)) {
-            $dto->setFilename($uploadedFile->getClientOriginalName());
-            $data = '';
-            $file = $uploadedFile->openFile();
-            $file->rewind();
-            while (false === $file->eof()) {
-                $data .= $file->fgets();
-            }
-            $dto->setData($data);
+        $dto->setFilename($uploadedFile->getClientOriginalName());
+        $data = '';
+        $file = $uploadedFile->openFile();
+        $file->rewind();
+        while (false === $file->eof()) {
+            $data .= $file->fgets();
         }
-
+        $dto->setData($data);
         return $dto;
     }
 }

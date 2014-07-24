@@ -72,7 +72,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     {
         $ticket = $this->createTicket();
 
-        $ticket->update('New Subject', 'New Description', Status::CLOSED);
+        $ticket->update('New Subject', 'New Description', $this->createReporter(), Status::CLOSED);
 
         $this->assertEquals('New Subject', $ticket->getSubject());
         $this->assertEquals('New Description', $ticket->getDescription());

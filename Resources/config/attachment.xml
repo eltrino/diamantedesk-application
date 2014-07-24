@@ -20,6 +20,7 @@
 
     <parameters>
         <parameter key="diamante.attachment.directory.name">attachments</parameter>
+        <parameter key="diamante.attachment.upload_dir.path">%kernel.root_dir%/%diamante.attachment.directory.name%</parameter>
 
         <parameter key="diamante.attachment.service.class">Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentServiceImpl</parameter>
         <parameter key="diamante.attachment.factory.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory</parameter>
@@ -32,8 +33,8 @@
 
         <service id="diamante.attachment.file_storage.service" class="%diamante.attachment.file_storage.service.class%"
                  factory-class="%diamante.attachment.file_storage.service.class%" factory-method="create">
-            <argument>%kernel.root_dir%</argument>
-            <argument>%diamante.attachment.directory.name%</argument>
+            <argument>%diamante.attachment.upload_dir.path%</argument>
+            <argument type="service" id="filesystem"/>
         </service>
 
         <service id="diamante.attachment.service" class="%diamante.attachment.service.class%"

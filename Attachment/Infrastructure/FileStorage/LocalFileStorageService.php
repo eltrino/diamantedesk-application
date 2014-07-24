@@ -48,12 +48,12 @@ class LocalFileStorageService implements FileStorageService
             try {
                 $this->fs->mkdir($this->uploadDir->getPathname());
             } catch (\Exception $e) {
-                throw new \RuntimeException('Upload directory can not be created.');
+                throw new \RuntimeException('Upload directory is not writable, doesn\'t exist or no space left on the disk.');
             }
         }
 
         if (false === $this->uploadDir->isWritable()) {
-            throw new \RuntimeException('Upload directory is not writable.');
+            throw new \RuntimeException('Upload directory is not writable, doesn\'t exist or no space left on the disk.');
         }
 
         $this->fs->dumpFile($this->uploadDir->getRealPath() . '/' . $filename, $content);
@@ -68,11 +68,8 @@ class LocalFileStorageService implements FileStorageService
         $this->fs->remove($this->uploadDir->getRealPath() . '/' . $filename);
     }
 
-    public static function create($kernelRootDir, $attachmentsDirectoryName)
+    public static function create($attachmentUploadDirPath, $fs)
     {
-        return new LocalFileStorageService(
-            new \SplFileInfo(realpath($kernelRootDir) . '/' . $attachmentsDirectoryName),
-            new Filesystem()
-        );
+        return new LocalFileStorageService(new \SplFileInfo($attachmentUploadDirPath), $fs);
     }
 }
