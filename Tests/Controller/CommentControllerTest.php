@@ -142,26 +142,6 @@ class CommentControllerTest extends WebTestCase
         return $ticketId;
     }
 
-    /**
-     * @depends testUpdate
-     */
-    public function testDelete($ticketId)
-    {
-        $ticketViewUrl = $this->client->generate('diamante_ticket_view', array('id' => $ticketId));
-        $crawler = $this->client->request('GET', $ticketViewUrl);
-        $deleteLink = $crawler->filter('.diam-comments a:contains("Delete")')->eq(0)->link();
-        $this->client->click($deleteLink);
-        $response = $this->client->getResponse();
-
-        $this->client->click($deleteLink);
-        $newResponse = $this->client->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(404, $newResponse->getStatusCode());
-
-        return $ticketId;
-    }
-
     private function chooseBranchFromGridByName($name)
     {
         $response = ToolsAPI::getEntityGrid(

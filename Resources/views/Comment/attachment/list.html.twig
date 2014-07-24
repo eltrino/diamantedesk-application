@@ -5,15 +5,51 @@
         Attachments</label>
 
     <div class="controls diam-comment-form-attachments">
-    {% for attachment in attachments %}
-        <ul class="diam-comment-attachments unstyled">
-            <li>
-                <a class="pull-right" href="{{ path('diamante_ticket_comment_attachment_remove', {'commentId': comment_id, 'attachId': attachment.id}) }}"><i
-                            class="icon-trash hide-text"
-                            title="Delete File">Delete File</i></a>
-                <i class="icon-paper-clip"></i> <a href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment_id, 'attachId': attachment.id}) }}">{{ attachment.filename|escape }}</a>
-            </li>
-       </ul>
-    {% endfor %}
+        {% for attachment in attachments %}
+            <ul class="diam-comment-attachments unstyled">
+                <li>
+                    <a class="pull-right delete-item-confirmation action" href="#"
+                       data-url = "{{ path('diamante_ticket_comment_attachment_remove', {'commentId': comment_id, 'attachId': attachment.id}) }}"><i
+                                class="icon-trash hide-text"
+                                title="Delete File">Delete File</i></a>
+                    <i class="icon-paper-clip"></i>
+                    <a href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment_id, 'attachId': attachment.id}) }}"
+                       class="no-hash">
+                        {{ attachment.filename|escape }}</a>
+                </li>
+            </ul>
+        {% endfor %}
     </div>
+
+    <script type="text/javascript">
+        require(['jquery', 'oroui/js/modal', 'oronavigation/js/navigation', 'orotranslation/js/translator'],
+                function($, Modal, Navigation, __) {
+                    $('.delete-item-confirmation').click(function (e) {
+                        e.preventDefault();
+                        var url = $(this).data('url');
+
+                        if (dialog) {
+                            dialog.close();
+                            dialog.remove();
+                        }
+
+                        var dialog = new Modal({
+                            content: 'Are you sure you want to delete this attachment?',
+                            okText: __('Ok'),
+                            cancelText: __('Cancel'),
+                            title: __('Delete Confirmation'),
+                            className: 'modal oro-modal-danger'
+                        });
+
+                        dialog.open(function () {
+                            var navigation = Navigation.getInstance();
+                            if (navigation) {
+                                navigation.loadingMask.show();
+                            }
+                            navigation.setLocation(url);
+
+                        });
+                    })
+                });
+    </script>
 </div>
