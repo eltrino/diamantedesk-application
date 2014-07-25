@@ -160,6 +160,7 @@ class CommentController extends Controller
         $this->get('diamante.comment.service')
             ->deleteTicketComment($comment->getId());
 
+        $this->addSuccessMessage('Comment successfully deleted.');
         return $this->redirect(
             $this->generateUrl('diamante_ticket_view', array(
                 'id' => $comment->getTicket()->getId())
