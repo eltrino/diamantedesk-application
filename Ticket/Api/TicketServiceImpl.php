@@ -143,14 +143,17 @@ class TicketServiceImpl implements TicketService
      * @param $branchId
      * @param $subject
      * @param $description
-     * @param $status
      * @param $reporterId
      * @param $assigneeId
+     * @param $status
+     * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null)
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null, array $attachmentInputs = null)
     {
+        \Assert\that($attachmentInputs)->nullOr()->all()
+            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found.');
@@ -174,6 +177,10 @@ class TicketServiceImpl implements TicketService
                 $assignee,
                 $status);
 
+        if (is_array($attachmentInputs) && false === empty($attachmentInputs)) {
+            $this->attachmentService->createAttachmentsForItHolder($attachmentInputs, $ticket);
+        }
+
         $this->ticketRepository->store($ticket);
 
         return $ticket;
@@ -187,16 +194,20 @@ class TicketServiceImpl implements TicketService
      * @param $reporterId
      * @param $assigneeId
      * @param $status
+     * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status)
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status, array $attachmentInputs = null)
     {
+        \Assert\that($attachmentInputs)->nullOr()->all()
+            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
+        $reporter = $ticket->getReporter();
         if ($reporterId != $ticket->getReporterId()) {
             $reporter = $this->userService->getUserById($reporterId);
             if (is_null($reporter)) {
@@ -217,6 +228,10 @@ class TicketServiceImpl implements TicketService
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }
             $ticket->assign($assignee);
+        }
+
+        if (is_array($attachmentInputs) && false === empty($attachmentInputs)) {
+            $this->attachmentService->createAttachmentsForItHolder($attachmentInputs, $ticket);
         }
 
         $this->ticketRepository->store($ticket);

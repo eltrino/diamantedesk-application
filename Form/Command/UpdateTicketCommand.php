@@ -39,6 +39,11 @@ class UpdateTicketCommand
     public $status;
 
     /**
+     * @var array
+     */
+    public $files;
+
+    /**
      * @Assert\NotBlank
      */
     public $reporter;

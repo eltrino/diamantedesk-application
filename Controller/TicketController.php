@@ -138,8 +138,16 @@ class TicketController extends Controller
 
         $response = null;
         $form = $this->createForm(new CreateTicketType(), $command);
+        $formView = $form->createView();
+        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
         try {
             $this->handle($form);
+
+            $attachments = array();
+            foreach ($command->files as $file) {
+                array_push($attachments, AttachmentInput::createFromUploadedFile($file));
+            }
+
             $ticket = $this->get('diamante.ticket.service')
                 ->createTicket(
                     $command->branch->getId(),
@@ -147,15 +155,17 @@ class TicketController extends Controller
                     $command->description,
                     $command->reporter->getId(),
                     $command->assignee->getId(),
-                    $command->status
+                    $command->status,
+                    $attachments
                 );
+
             $this->addSuccessMessage('Ticket successfully created.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $response = array('form' => $form->createView());
+            $response = array('form' => $formView);
         } catch (\Exception $e) {
             $this->addErrorMessage($e->getMessage());
-            $response = array('form' => $form->createView());
+            $response = array('form' => $formView);
         }
         return $response;
     }
@@ -179,8 +189,16 @@ class TicketController extends Controller
 
         $response = null;
         $form = $this->createForm(new UpdateTicketType(), $command);
+        $formView = $form->createView();
+        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
         try {
             $this->handle($form);
+
+            $attachments = array();
+            foreach ($command->files as $file) {
+                array_push($attachments, AttachmentInput::createFromUploadedFile($file));
+            }
+
             $ticket = $this->get('diamante.ticket.service')
                 ->updateTicket(
                     $command->id,
@@ -188,15 +206,16 @@ class TicketController extends Controller
                     $command->description,
                     $command->reporter->getId(),
                     $command->assignee->getId(),
-                    $command->status
+                    $command->status,
+                    $attachments
                 );
             $this->addSuccessMessage('Ticket successfully saved.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $response = array('form' => $form->createView());
+            $response = array('form' => $formView);
         } catch (\Exception $e) {
             $this->addErrorMessage($e->getMessage());
-            $response = array('form' => $form->createView());
+            $response = array('form' => $formView);
         }
         return $response;
     }
