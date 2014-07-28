@@ -62,6 +62,5 @@ class EltrinoDiamanteDeskExtension extends Extension implements PrependExtension
         $loader->load('branch.xml');
         $loader->load('attachment.xml');
         $loader->load('ticket.xml');
-        $loader->load('test.xml');
     }
 }

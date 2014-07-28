@@ -13,8 +13,8 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-require_once __DIR__.'/../../../../../app/bootstrap.php.cache';
-require_once __DIR__.'/../../../../../app/AppKernel.php';
+require_once 'bootstrap.php.cache';
+require_once 'AppKernel.php';
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -30,7 +30,7 @@ $kernel->boot();
 $application = new Application($kernel);
 $kernelDir = $kernel->getRootDir();
 
-$autoloadFlag = $kernel->getContainer()->getParameter('diamante.test.fixture.autoload');
+$autoloadFlag = getenv('AUTOLOAD_FIXTURES');
 $output = new ConsoleOutput();
 
 if (!is_file($autoload = $kernelDir . '/../vendor/autoload.php')) {
@@ -44,7 +44,7 @@ AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 // Set kernel folder path dynamically to avoid absolute path in config file
 $_SERVER['KERNEL_DIR'] = $kernelDir;
 
-if (true === $autoloadFlag) {
+if (true === (bool)$autoloadFlag) {
     $loadCommand = new LoadDataFixturesDoctrineCommand();
     $purgeCommand = new FixturesPurgeCommand();
 
