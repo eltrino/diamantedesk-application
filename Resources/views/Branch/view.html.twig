@@ -49,10 +49,11 @@
 
 {% block content_data %}
     {% set id = 'branchUpdate' %}
+    {% set branchDescription = entity.description %}
 
     {% set dataSubBlocks = [UI.attibuteRow('Name', entity.name)] %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Description', entity.description)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
+
     {% set dataBlocks =
         [{
             'title': 'General'|trans,
@@ -63,6 +64,15 @@
             }]
         }]
     %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'Description',
+        'subblocks':[{
+            'title': null,
+            'data': [UI.attibuteRow(null, entity.description)]}]
+        }]
+    ) %}
+
     {% set dataBlocks = dataBlocks|merge([{
         'title' : 'Tickets'|trans,
         'subblocks': [

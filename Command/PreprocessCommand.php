@@ -16,63 +16,14 @@ namespace Eltrino\DiamanteDeskBundle\Command;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Filesystem\Filesystem;
 
-class UpdateCommand extends PreprocessCommand
+class PreprocessCommand extends ContainerAwareCommand
 {
-    /**
-     * Configures the current command.
-     */
-    protected function configure()
-    {
-        $this->setName('diamante:update')
-            ->setDescription('Update Diamante Desk');
-    }
-
-    /**
-     * Executes update process
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return null|integer null or 0 if everything went fine, or an error code
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        try {
-            $output->write("Clearing cache... \n");
-            $this->runExistingCommand('cache:clear', $output);
-            $output->write('Done');
-
-            $output->write("Updating DB schema... \n");
-            $this->updateDbSchema();
-            $output->writeln('Done');
-
-            $output->write("Updating navigation... \n");
-            $this->updateNavigation($output);
-            $output->writeln('Done');
-
-            $output->write('Installing assets...');
-            $this->assetsInstall($output);
-            $this->asseticDump($output, array(
-                '--no-debug' => true,
-            ));
-            $output->write('Done');
-
-
-            $output->write("Updating assets...\n");
-            $this->updateAssets($output);
-            $output->writeln('Done');
-
-        } catch (\Exception $e) {
-            $output->writeln($e->getMessage());
-            return;
-        }
-
-        $output->writeln('Updated!');
-    }
-
     /**
      * Updates DB Schema. Changes from Diamante only will be applied for current schema. Other bundles updating skips
      * @throws \Exception if there are no changes in entities
@@ -106,48 +57,48 @@ class UpdateCommand extends PreprocessCommand
     }
 
     /**
-     * Update oro navigation
+     * Install assets
      * @param OutputInterface $output
      */
-    private function updateNavigation(OutputInterface $output)
+    protected function assetsInstall(OutputInterface $output)
     {
-        $this->runExistingCommand('oro:navigation:init', $output);
+        $this->runExistingCommand('assets:install', $output);
     }
 
     /**
-     * Update assets
-     *
+     * Dump assetic
+     * @param OutputInterface $output
+     * @param array $params
+     */
+    protected function asseticDump(OutputInterface $output, array $params = array())
+    {
+        $this->runExistingCommand('assetic:dump', $output, $params);
+    }
+
+    /**
+     * Update oro navigation
      * @param OutputInterface $output
      */
-    private function updateAssets(OutputInterface $output)
+    protected function updateNavigation(OutputInterface $output)
     {
-        /**
-         * Install all assets from scratch.
-         */
-        $this->runExistingCommand('oro:assets:install', $output);
-
-        /**
-         * Rebuild all the css and js according to the assetic setup
-         */
-        $this->runExistingCommand('assetic:dump', $output, array(
-            '--no-debug' => true
-        ));
+        $this->runExistingCommand('oro:navigation:init', $output);
     }
 
     /**
      * Run existing command in system
      * @param string $commandName
      * @param OutputInterface $output
-     * @param array $optionalParams
+     * @param array $parameters
      */
-    private function runExistingCommand($commandName, OutputInterface $output, array $optionalParams = array())
+    protected function runExistingCommand($commandName, OutputInterface $output, array $parameters = array())
     {
         $command = $this->getApplication()->find($commandName);
 
         $arguments = array(
             'command' => $commandName
         );
-        $arguments = array_merge($arguments, $optionalParams);
+
+        $arguments = array_merge($arguments, $parameters);
 
         $input = new ArrayInput($arguments);
         $command->run($input, $output);

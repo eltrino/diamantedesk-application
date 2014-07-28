@@ -46,13 +46,24 @@
                 'title': 'Branch Details'|trans,
                 'data': [
                     form_row(form.name),
-                    form_row(form.description),
                     form_row(form.logoFile),
                     form_row(form.tags)
                 ]
             }
         ]
     }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'Description'|trans,
+        'subblocks': [
+            {
+                'title':null,
+                'data': [
+                    form_row(form.description),
+                ]
+            }]
+        }]
+    ) %}
 
     {% set data = {
         'formErrors': form_errors(form)? form_errors(form) : null,
