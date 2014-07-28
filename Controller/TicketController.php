@@ -135,7 +135,7 @@ class TicketController extends Controller
     public function createAction(Branch $branch = null)
     {
         $command = $this->get('diamante.command_factory')
-            ->createCreateTicketCommand($branch);
+            ->createCreateTicketCommand($branch, $this->getUser());
 
         $response = null;
         $form = $this->createForm(new CreateTicketType(), $command);

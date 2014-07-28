@@ -47,11 +47,14 @@ class CommandFactory
         return $command;
     }
 
-    public function createCreateTicketCommand(Branch $branch = null)
+    public function createCreateTicketCommand(Branch $branch = null, User $reporter = null)
     {
         $command = new CreateTicketCommand();
         if ($branch) {
             $command->branch = $branch;
+        }
+        if ($reporter) {
+            $command->reporter = $reporter;
         }
         return $command;
     }
@@ -88,7 +91,7 @@ class CommandFactory
     }
 
     /**
-     * Create cpmment command for create action
+     * Create comment command for create action
      * @param Ticket $ticket
      * @param User $author
      * @return EditCommentCommand
