@@ -19,27 +19,26 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Bundle\TestFrameworkBundle\Test\ToolsAPI;
 
 class CommentControllerTest extends WebTestCase
 {
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     public function setUp()
     {
-        $this->client = static::createClient(
+        $this->initClient(
             array(),
-            array_merge(ToolsAPI::generateBasicHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
         );
     }
 
     public function testCreateBranch()
     {
         $crawler = $this->client->request(
-            'GET', $this->client->generate('diamante_branch_create')
+            'GET', $this->getUrl('diamante_branch_create')
         );
 
         /** @var Form $form */
@@ -69,7 +68,7 @@ class CommentControllerTest extends WebTestCase
     {
         $branch = $this->chooseBranchFromGridByName($branchName);
         $crawler = $this->client->request(
-            'GET', $this->client->generate('diamante_ticket_create',  array('id' => $branch['id']))
+            'GET', $this->getUrl('diamante_ticket_create',  array('id' => $branch['id']))
         );
 
         /** @var Form $form */
@@ -101,7 +100,7 @@ class CommentControllerTest extends WebTestCase
     public function testCreate($ticketId)
     {
         $crawler = $this->client->request(
-            'GET', $this->client->generate('diamante_comment_create', array('id' => $ticketId))
+            'GET', $this->getUrl('diamante_comment_create', array('id' => $ticketId))
         );
 
         /** @var Form $form */
@@ -123,7 +122,7 @@ class CommentControllerTest extends WebTestCase
      */
     public function testUpdate($ticketId)
     {
-        $ticketViewUrl = $this->client->generate('diamante_ticket_view', array('id' => $ticketId));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticketId));
         $crawler = $this->client->request('GET', $ticketViewUrl);
         $link = $crawler->filter('.diam-comments a:contains("Edit")')->eq(0)->link();
         $crawler = $this->client->click($link);
@@ -154,7 +153,7 @@ class CommentControllerTest extends WebTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $result = ToolsAPI::jsonToArray($response->getContent());
+        $result = $this->jsonToArray($response->getContent());
         return current($result['data']);
     }
 }
