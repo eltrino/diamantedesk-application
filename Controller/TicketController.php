@@ -145,7 +145,9 @@ class TicketController extends Controller
 
             $attachments = array();
             foreach ($command->files as $file) {
-                array_push($attachments, AttachmentInput::createFromUploadedFile($file));
+                if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+                    array_push($attachments, AttachmentInput::createFromUploadedFile($file));
+                }
             }
 
             $ticket = $this->get('diamante.ticket.service')
@@ -196,7 +198,9 @@ class TicketController extends Controller
 
             $attachments = array();
             foreach ($command->files as $file) {
-                array_push($attachments, AttachmentInput::createFromUploadedFile($file));
+                if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+                    array_push($attachments, AttachmentInput::createFromUploadedFile($file));
+                }
             }
 
             $ticket = $this->get('diamante.ticket.service')
