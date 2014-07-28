@@ -69,6 +69,18 @@ class CreateTicketType extends AbstractType
         );
 
         $builder->add(
+            'files',
+            'file',
+            array(
+                'label' => 'File',
+                'required' => true,
+                'attr' => array(
+                    'multiple' => 'multiple'
+                )
+            )
+        );
+
+        $builder->add(
             'reporter',
             'oro_user_select',
             array(

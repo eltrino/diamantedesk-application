@@ -71,10 +71,10 @@ class CommentServiceImpl implements CommentService
      * @param string $content
      * @param integer $ticketId
      * @param integer $authorId
-     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      * @return void
      */
-    public function postNewCommentForTicket($content, $ticketId, $authorId, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null)
+    public function postNewCommentForTicket($content, $ticketId, $authorId, array $attachmentsInput = null)
     {
         $ticket = $this->ticketRepository->get($ticketId);
 
@@ -86,8 +86,8 @@ class CommentServiceImpl implements CommentService
 
         $comment = $this->commentFactory->create($content, $ticket, $author);
 
-        if ($filesListDto) {
-            $this->attachmentService->createAttachmentsForItHolder($filesListDto, $comment);
+        if ($attachmentsInput) {
+            $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $comment);
         }
 
         $ticket->postNewComment($comment);
@@ -95,6 +95,12 @@ class CommentServiceImpl implements CommentService
         $this->ticketRepository->store($ticket);
     }
 
+    /**
+     * Retrieves Comment Attachment
+     * @param integer $commentId
+     * @param integer $attachmentId
+     * @return Attachment
+     */
     public function getCommentAttachment($commentId, $attachmentId)
     {
         $comment = $this->commentRepository->get($commentId);
@@ -112,17 +118,17 @@ class CommentServiceImpl implements CommentService
      * Update Ticket Comment content
      * @param integer $commentId
      * @param string $content
-     * @param \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      */
-    public function updateTicketComment($commentId, $content, \Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto $filesListDto = null)
+    public function updateTicketComment($commentId, $content, array $attachmentsInput = null)
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
             throw new \RuntimeException('Comment loading failed, comment not found.');
         }
         $comment->updateContent($content);
-        if ($filesListDto) {
-            $this->attachmentService->createAttachmentsForItHolder($filesListDto, $comment);
+        if ($attachmentsInput) {
+            $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $comment);
         }
         $this->commentRepository->store($comment);
     }

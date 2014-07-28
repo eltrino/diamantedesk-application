@@ -12,23 +12,21 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Eltrino\DiamanteDeskBundle\Tests\Attachment\Infrastructure\FileStorage;
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Attachment\Infrastructure\FileUpload;
-
-use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler;
+use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileStorage\LocalFileStorageService;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Symfony\Component\HttpFoundation\File\File;
 
-class FileUploadHandlerTest extends \PHPUnit_Framework_TestCase
+class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const DUMMY_REAL_PATH = 'dummy_real_path';
+    const DUMMY_REAL_PATH = '/system/app/attachments';
     const DUMMY_FILENAME  = 'dummy-filename.ext';
     const DUMMY_CONTENT   = 'DUMMY_CONTENT';
 
     /**
-     * @var FileUploadHandler
+     * @var LocalFileStorageService
      */
-    private $fileUploadHandler;
+    private $localFileStorageService;
 
     /**
      * @var \SplFileInfo
@@ -45,7 +43,7 @@ class FileUploadHandlerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->fileUploadHandler = new FileUploadHandler($this->fileInfo, $this->fs);
+        $this->localFileStorageService = new LocalFileStorageService($this->fileInfo, $this->fs);
     }
 
     /**
@@ -53,12 +51,14 @@ class FileUploadHandlerTest extends \PHPUnit_Framework_TestCase
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Upload directory is not writable, doesn't exist or no space left on the disk.
      */
-    public function thatFileUploadingThrowsExceptionWhenDirIsNotCreated()
+    public function thatThrowsExceptionIfDestinationDirectoryCannotBeCreated()
     {
         $this->fileInfo->expects($this->once())->method('isDir')->will($this->returnValue(false));
-        $this->fileInfo->expects($this->exactly(0))->method('isWritable')->will($this->returnValue(true));
+        $this->fileInfo->expects($this->once())->method('getPathname')->will($this->returnValue(self::DUMMY_REAL_PATH));
+        $this->fs->expects($this->once())->method('mkdir')->with($this->equalTo(self::DUMMY_REAL_PATH))
+            ->will($this->throwException(new \Exception()));
 
-        $justUploadedFile = $this->fileUploadHandler->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
+        $justUploadedFile = $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
     }
 
     /**
@@ -66,12 +66,12 @@ class FileUploadHandlerTest extends \PHPUnit_Framework_TestCase
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Upload directory is not writable, doesn't exist or no space left on the disk.
      */
-    public function thatFileUploadingThrowsExceptionWhenDirIsNotWritable()
+    public function thatThrowsExceptionIfDestinationDirectoryIsNotWritable()
     {
         $this->fileInfo->expects($this->once())->method('isDir')->will($this->returnValue(true));
         $this->fileInfo->expects($this->once())->method('isWritable')->will($this->returnValue(false));
 
-        $justUploadedFile = $this->fileUploadHandler->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
+        $justUploadedFile = $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
     }
 
     /**
@@ -89,10 +89,31 @@ class FileUploadHandlerTest extends \PHPUnit_Framework_TestCase
             $this->equalTo(self::DUMMY_REAL_PATH . '/' . self::DUMMY_FILENAME), $this->equalTo(self::DUMMY_CONTENT)
         );
 
-        $file = $this->fileUploadHandler->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
+        $fileRealPath = $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
 
-        $this->assertInstanceOf('\Eltrino\DiamanteDeskBundle\Attachment\Model\File', $file);
-        $this->assertEquals(self::DUMMY_REAL_PATH . '/' . self::DUMMY_FILENAME, $file->getPathname());
-        $this->assertEquals(self::DUMMY_FILENAME, $file->getFilename());
+        $this->assertEquals(self::DUMMY_REAL_PATH . '/' . self::DUMMY_FILENAME, $fileRealPath);
+    }
+
+    /**
+     * @test
+     * @expectedException \LogicException
+     * @expectedExceptionMessage File name can not be empty string.
+     */
+    public function thatFileRemovingThrowsExceptionWhenFilenameIsEmpty()
+    {
+        $this->localFileStorageService->remove('');
+    }
+
+    /**
+     * @test
+     */
+    public function thatFileRemoves()
+    {
+        $this->fileInfo->expects($this->once())->method('getRealPath')->will($this->returnValue(self::DUMMY_REAL_PATH));
+        $this->fs->expects($this->once())->method('remove')->with(
+            $this->equalTo(self::DUMMY_REAL_PATH . '/' . self::DUMMY_FILENAME)
+        );
+
+        $this->localFileStorageService->remove(self::DUMMY_FILENAME);
     }
 }

@@ -19,26 +19,37 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CreateTicketCommand
 {
     public $id;
+
     /**
      * @Assert\NotBlank
      */
     public $branch;
+
     /**
      * @Assert\NotBlank
      */
     public $subject;
+
     /**
      * @Assert\NotBlank
      */
     public $description;
+
     /**
      * @Assert\NotBlank
      */
     public $status;
+
+    /**
+     * @var array
+     */
+    public $files;
+
     /**
      * @Assert\NotBlank
      */
     public $reporter;
+
     /**
      * @Assert\NotBlank
      */

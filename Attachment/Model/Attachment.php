@@ -16,8 +16,6 @@ namespace Eltrino\DiamanteDeskBundle\Attachment\Model;
 
 class Attachment
 {
-    const ATTACHMENTS_DIRECTORY = 'attachment';
-
     /**
      * @var integer
      */
@@ -38,6 +36,11 @@ class Attachment
      */
     protected $updatedAt;
 
+    /**
+     * @param Uri $file
+     * @param int $size
+     * @param string $mimeType
+     */
     public function __construct(File $file)
     {
         $this->file      = $file;

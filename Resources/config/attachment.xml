@@ -19,32 +19,29 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="diamante.attachment.directory.name">attachments</parameter>
+        <parameter key="diamante.attachment.upload_dir.path">%kernel.root_dir%/%diamante.attachment.directory.name%</parameter>
+
         <parameter key="diamante.attachment.service.class">Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentServiceImpl</parameter>
-        <parameter key="diamante.attachment.factory.class">Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory</parameter>
-        <parameter key="diamante.attachment.file_upload_handler.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler</parameter>
-        <parameter key="diamante.attachment.file_remove_handler.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\File\FileRemoveHandler</parameter>
+        <parameter key="diamante.attachment.factory.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory</parameter>
+        <parameter key="diamante.attachment.file_storage.service.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileStorage\LocalFileStorageService</parameter>
         <parameter key="diamante.attachment.imagine_data_loader.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
     </parameters>
 
     <services>
         <service id="diamante.attachment.factory" class="%diamante.attachment.factory.class%"/>
 
-        <service id="diamante.attachment.file_upload_handler" class="%diamante.attachment.file_upload_handler.class%"
-                 factory-class="%diamante.attachment.file_upload_handler.class%" factory-method="create">
-            <argument>%kernel.root_dir%</argument>
-        </service>
-
-        <service id="diamante.attachment.file_remove_handler" class="%diamante.attachment.file_remove_handler.class%"
-                 factory-class="%diamante.attachment.file_remove_handler.class%" factory-method="create">
-            <argument>%kernel.root_dir%</argument>
+        <service id="diamante.attachment.file_storage.service" class="%diamante.attachment.file_storage.service.class%"
+                 factory-class="%diamante.attachment.file_storage.service.class%" factory-method="create">
+            <argument>%diamante.attachment.upload_dir.path%</argument>
+            <argument type="service" id="filesystem"/>
         </service>
 
         <service id="diamante.attachment.service" class="%diamante.attachment.service.class%"
                  factory-class="%diamante.attachment.service.class%" factory-method="create">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.attachment.factory"/>
-            <argument type="service" id="diamante.attachment.file_upload_handler"/>
-            <argument type="service" id="diamante.attachment.file_remove_handler"/>
+            <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
 
         <service id="diamante.attachment.imagine_data_loader" class="%diamante.attachment.imagine_data_loader.class%">

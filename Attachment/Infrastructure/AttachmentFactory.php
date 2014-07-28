@@ -12,29 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Attachment\Api\Dto;
+namespace Eltrino\DiamanteDeskBundle\Attachment\Infrastructure;
 
-class FilesListDto
+use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
+
+class AttachmentFactory implements \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory
 {
     /**
-     * @var FileDto[]
+     * Create Attachment entity
+     * @param File $file
+     * @return Attachment
      */
-    private $files;
-
-    /**
-     * @param array $files
-     */
-    public function setFiles(array $files)
+    public function create(File $file)
     {
-        \Assert\that($files)->all()->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto');
-        $this->files = $files;
-    }
-
-    /**
-     * @return FileDto[]
-     */
-    public function getFiles()
-    {
-        return $this->files;
+        return new \Eltrino\DiamanteDeskBundle\Entity\Attachment($file);
     }
 }

@@ -31,11 +31,11 @@ interface TicketService
 
     /**
      * Adds Attachments for Ticket
-     * @param FilesListDto $filesListDto
+     * @param array $attachmentsInput array of AttachmentInput DTOs
      * @param $ticketId
      * @return void
      */
-    public function addAttachmentsForTicket(FilesListDto $filesListDto, $ticketId);
+    public function addAttachmentsForTicket(array $attachmentsInput, $ticketId);
 
     /**
      * Remove Attachment from Ticket
@@ -51,13 +51,14 @@ interface TicketService
      * @param $branchId
      * @param $subject
      * @param $description
-     * @param $status
      * @param $reporterId
      * @param $assigneeId
+     * @param $status
+     * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null);
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null, array $attachmentInputs = null);
 
     /**
      * @param $ticketId
@@ -66,10 +67,11 @@ interface TicketService
      * @param $reporterId
      * @param $assigneeId
      * @param $status
+     * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status);
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status, array $attachmentInputs = null);
 
     /**
      * @param $ticketId

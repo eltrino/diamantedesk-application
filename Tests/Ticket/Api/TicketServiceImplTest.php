@@ -15,8 +15,7 @@
 
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Api;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FileDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
@@ -92,6 +91,208 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function thatTicketCreatesWithDefaultStatusAndNoAttachments()
+    {
+        $branchId = 1;
+        $branch = $this->createBranch();
+        $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
+            ->will($this->returnValue($branch));
+
+        $reporterId = 2;
+        $assigneeId = 3;
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
+            ->will($this->returnValue($reporter));
+
+        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
+
+        $status = Status::NEW_ONE;
+
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $status
+        );
+
+        $this->ticketFactory->expects($this->once())->method('create')->with(
+            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
+            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee)
+        )->will($this->returnValue($ticket));
+
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
+
+        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder')
+            ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
+
+        $ticket = $this->ticketService->createTicket(
+            $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function thatTicketCreatesWithStatusAndNoAttachments()
+    {
+        $branchId = 1;
+        $branch = $this->createBranch();
+        $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
+            ->will($this->returnValue($branch));
+
+        $reporterId = 2;
+        $assigneeId = 3;
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
+            ->will($this->returnValue($reporter));
+
+        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
+
+        $status = Status::IN_PROGRESS;
+
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $status
+        );
+
+        $this->ticketFactory->expects($this->once())->method('create')->with(
+            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
+            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee)
+        )->will($this->returnValue($ticket));
+
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
+
+        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder')
+            ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
+
+        $ticket = $this->ticketService->createTicket(
+            $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId, $status
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function thatTicketCreatesWithDefaultStatusAndAttachments()
+    {
+        $branchId = 1;
+        $branch = $this->createBranch();
+        $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
+            ->will($this->returnValue($branch));
+
+        $reporterId = 2;
+        $assigneeId = 3;
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
+            ->will($this->returnValue($reporter));
+
+        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
+
+        $status = Status::NEW_ONE;
+
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $status
+        );
+
+        $this->ticketFactory->expects($this->once())->method('create')->with(
+            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
+            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee)
+        )->will($this->returnValue($ticket));
+
+        $attachmentInputs = $this->attachmentInputs();
+
+        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
+            ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
+
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
+
+        $ticket = $this->ticketService->createTicket(
+            $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
+            $reporterId, $assigneeId, null, $attachmentInputs
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function thatTicketUpdatesWithNoAttachments()
+    {
+        $reporterId = 2;
+        $assigneeId = 3;
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
+            ->will($this->returnValue($reporter));
+
+        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
+
+        $newStatus = Status::IN_PROGRESS;
+        $branch = $this->createBranch();
+
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, Status::NEW_ONE
+        );
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($ticket));
+
+        $this->ticketService->updateTicket(
+            self::DUMMY_TICKET_ID, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
+            $reporterId, $assigneeId, $newStatus
+        );
+
+        $this->assertEquals($ticket->getStatus()->getValue(), $newStatus);
+    }
+
+    /**
+     * @test
+     */
+    public function thatTicketUpdatesWithAttachments()
+    {
+        $reporterId = 2;
+        $assigneeId = 3;
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
+            ->will($this->returnValue($reporter));
+
+        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
+
+        $newStatus = Status::IN_PROGRESS;
+        $branch = $this->createBranch();
+
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, Status::NEW_ONE
+        );
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($ticket));
+
+        $attachmentInputs = $this->attachmentInputs();
+
+        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
+            ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
+
+        $this->ticketService->updateTicket(
+            self::DUMMY_TICKET_ID, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
+            $reporterId, $assigneeId, $newStatus, $attachmentInputs
+        );
+
+        $this->assertEquals($ticket->getStatus()->getValue(), $newStatus);
+    }
+
+    /**
+     * @test
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
@@ -146,7 +347,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
-        $this->ticketService->addAttachmentsForTicket($this->filesListDto(), self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($this->attachmentInputs(), self::DUMMY_TICKET_ID);
     }
 
     /**
@@ -162,14 +363,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createAssignee(),
             Status::CLOSED
         );
-        $filesListDto = $this->filesListDto();
+        $attachmentInputs = $this->attachmentInputs();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
         $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($filesListDto), $this->equalTo($ticket));
+            ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->ticketService->addAttachmentsForTicket($filesListDto, self::DUMMY_TICKET_ID);
+        $this->ticketService->addAttachmentsForTicket($attachmentInputs, self::DUMMY_TICKET_ID);
     }
 
     /**
@@ -281,15 +482,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return FilesListDto
+     * @return AttachmentInput
      */
-    private function filesListDto()
+    private function attachmentInputs()
     {
-        $fileDto = new FileDto();
-        $fileDto->setFilename(self::DUMMY_FILENAME);
-        $fileDto->setData(self::DUMMY_FILE_CONTENT);
-        $filesListDto = new FilesListDto();
-        $filesListDto->setFiles(array($fileDto));
-        return $filesListDto;
+        $attachmentInput = new AttachmentInput();
+        $attachmentInput->setFilename(self::DUMMY_FILENAME);
+        $attachmentInput->setContent(self::DUMMY_FILE_CONTENT);
+        return array($attachmentInput);
     }
 }

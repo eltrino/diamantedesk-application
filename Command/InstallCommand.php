@@ -30,6 +30,11 @@ class InstallCommand extends BaseCommand
     private $kernelRootDir;
 
     /**
+     * @var string
+     */
+    private $attachmentsDir;
+
+    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -50,8 +55,9 @@ class InstallCommand extends BaseCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->kernelRootDir = $this->getContainer()->getParameter('kernel.root_dir');
-        $this->filesystem    = $this->getContainer()->get('filesystem');
+        $this->kernelRootDir  = $this->getContainer()->getParameter('kernel.root_dir');
+        $this->attachmentsDir = $this->getContainer()->getParameter('diamante.attachment.directory.name');
+        $this->filesystem     = $this->getContainer()->get('filesystem');
     }
 
     /**
@@ -113,9 +119,7 @@ class InstallCommand extends BaseCommand
      */
     protected function createAttachmentsDirectory()
     {
-        $attachmentsDir = $this->kernelRootDir . '/'
-            . \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment::ATTACHMENTS_DIRECTORY;
-
+        $attachmentsDir = $this->kernelRootDir . '/' . $this->attachmentsDir;
         $this->createDirectory($attachmentsDir);
     }
 
