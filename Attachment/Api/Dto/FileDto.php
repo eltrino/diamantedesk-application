@@ -71,6 +71,7 @@ class FileDto
             $data .= $file->fgets();
         }
         $dto->setData($data);
+
         return $dto;
     }
 }

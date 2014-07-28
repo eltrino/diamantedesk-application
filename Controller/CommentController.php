@@ -89,7 +89,9 @@ class CommentController extends Controller
     {
         $fileDtoArray = array();
         foreach ($command->files as $file) {
-            $fileDtoArray[] = FileDto::createFromUploadedFile($file);
+            if (!empty($file)) {
+                $fileDtoArray[] = FileDto::createFromUploadedFile($file);
+            }
         }
 
         $filesListDto = new FilesListDto();

@@ -14,7 +14,6 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
 
-use Oro\Bundle\TestFrameworkBundle\Test\ToolsAPI;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\UserBundle\Entity\User;
 
@@ -23,46 +22,20 @@ class TicketControllerTest extends WebTestCase
     /**
      * @var \Oro\Bundle\TestFrameworkBundle\Test\Client
      */
-    private $client;
+    protected $client;
 
     public function setUp()
     {
-        $this->client = static::createClient(
+        $this->initClient(
             array(),
-            array_merge(ToolsAPI::generateBasicHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
         );
-    }
-
-    public function testCreateBranch()
-    {
-        $crawler = $this->client->request(
-            'GET', $this->client->generate('diamante_branch_create')
-        );
-
-        /** @var Form $form */
-        $form = $crawler->selectButton('Save and Close')->form();
-
-        $branchName = md5(time());
-        $form['diamante_branch_form[name]']        = $branchName;
-        $form['diamante_branch_form[description]'] = 'Test Description';
-        $form['diamante_branch_form[logoFile]']    = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
-
-        $this->client->followRedirects(true);
-
-        $crawler  = $this->client->submit($form);
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Branch saved", $crawler->html());
-        $this->assertTrue($crawler->filter('html:contains("Dproject.png")')->count() == 0);
-
-        return $branchName;
     }
 
     public function testCreateWithoutBranchId()
     {
         $crawler = $this->client->request(
-            'GET', $this->client->generate('diamante_ticket_create')
+            'POST', $this->getUrl('diamante_ticket_create')
         );
 
         /** @var Form $form */
@@ -82,14 +55,11 @@ class TicketControllerTest extends WebTestCase
         $this->assertContains("Ticket successfully created.", $crawler->html());
     }
 
-    /**
-     * @depends testCreateBranch
-     */
-    public function testCreateWithBranchId($branchName)
+    public function testCreateWithBranchId()
     {
-        $branch = $this->chooseBranchFromGridByName($branchName);
+        $branch = $this->chooseBranchFromGrid();
         $crawler = $this->client->request(
-            'GET', $this->client->generate('diamante_ticket_create',  array('id' => $branch['id']))
+            'GET', $this->getUrl('diamante_ticket_create',  array('id' => $branch['id']))
         );
 
         /** @var Form $form */
@@ -107,17 +77,11 @@ class TicketControllerTest extends WebTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains("Ticket successfully created.", $crawler->html());
-
-        $uri = $this->client->getRequest()->getUri();
-        $uriArray = explode('/', $uri);
-        $ticketId = array_pop($uriArray);
-
-        return $ticketId;
     }
 
     public function testList()
     {
-        $crawler  = $this->client->request('GET', $this->client->generate('diamante_ticket_list'));
+        $crawler  = $this->client->request('GET', $this->getUrl('diamante_ticket_list'));
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -144,13 +108,10 @@ class TicketControllerTest extends WebTestCase
         }
     }
 
-    /**
-     * @depends testCreateWithBranchId
-     */
-    public function testView($ticketId)
+    public function testView()
     {
-        $ticket        = $this->chooseTicketFromGridById($ticketId);
-        $ticketViewUrl = $this->client->generate('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticket        = $this->chooseTicketFromGrid();
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
         $crawler     = $this->client->request('GET', $ticketViewUrl);
         $response    = $this->client->getResponse();
 
@@ -165,20 +126,17 @@ class TicketControllerTest extends WebTestCase
     public function testChangeStatus()
     {
         $ticket              = $this->chooseTicketFromGrid();
-        $updateStatusFormUrl = $this->client->generate('diamante_ticket_status_change', array('id' => $ticket['id']));
+        $updateStatusFormUrl = $this->getUrl('diamante_ticket_status_change', array('id' => $ticket['id']));
         $crawler             = $this->client->request('GET', $updateStatusFormUrl);
 
         $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
         $this->assertEquals("Change", $crawler->selectButton('Change')->html());
     }
 
-    /**
-     * @depends testCreateWithBranchId
-     */
-    public function testUpdate($ticketId)
+    public function testUpdate()
     {
-        $ticket        = $this->chooseTicketFromGridById($ticketId);
-        $ticketUpdateUrl = $this->client->generate('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticket        = $this->chooseTicketFromGrid();
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -191,18 +149,12 @@ class TicketControllerTest extends WebTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains("Ticket successfully saved.", $crawler->html());
-
-        return $ticketId;
     }
 
-
-    /**
-     * @depends testUpdate
-     */
-    public function testAssign($ticketId)
+    public function testAssign()
     {
-        $ticket        = $this->chooseTicketFromGridById($ticketId);
-        $ticketAssignUrl = $this->client->generate('diamante_ticket_assign', array('id' => $ticket['id']));
+        $ticket        = $this->chooseTicketFromGrid();
+        $ticketAssignUrl = $this->getUrl('diamante_ticket_assign', array('id' => $ticket['id']));
         $crawler = $this->client->request('GET', $ticketAssignUrl);
 
         /** @var Form $form */
@@ -215,74 +167,46 @@ class TicketControllerTest extends WebTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains("Ticket successfully re-assigned.", $crawler->html());
-
-        return $ticketId;
     }
 
-    /**
-     * @depends testReopen
-     */
-    public function testDelete($ticketId)
+    public function testDelete()
     {
-        $ticket        = $this->chooseTicketFromGridById($ticketId);
-        $ticketDeleteUrl = $this->client->generate('diamante_ticket_delete', array('id' => $ticket['id']));
+        $ticket        = $this->chooseTicketFromGrid();
+        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('id' => $ticket['id']));
         $crawler       = $this->client->request('GET', $ticketDeleteUrl);
         $response      = $this->client->getResponse();
 
         $this->client->request(
             'GET',
-            $this->client->generate('diamante_ticket_view', array('id' => $ticket['id']))
+            $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']))
         );
         $viewResponse = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(404, $viewResponse->getStatusCode());
-
-        return $ticketId;
     }
 
     private function chooseBranchFromGrid()
     {
-        $response = ToolsAPI::getEntityGrid(
-            $this->client,
+        $response = $this->client->requestGrid(
             'diamante-branch-grid'
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $result = ToolsAPI::jsonToArray($response->getContent());
+        $result = $this->jsonToArray($response->getContent());
         return current($result['data']);
     }
 
-    private function chooseBranchFromGridByName($name)
+    private function chooseTicketFromGrid()
     {
-        $response = ToolsAPI::getEntityGrid(
-            $this->client,
-            'diamante-branch-grid',
-            array(
-                'diamante-branch-grid[_filter][name][value]' => $name,
-            )
+        $response = $this->client->requestGrid(
+            'diamante-ticket-grid'
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $result = ToolsAPI::jsonToArray($response->getContent());
-        return current($result['data']);
-    }
-
-    private function chooseTicketFromGridById($id)
-    {
-        $response = ToolsAPI::getEntityGrid(
-            $this->client,
-            'diamante-ticket-grid',
-            array(
-                'diamante-ticket-grid[_filter][id][value]' => $id,
-            )
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $result = ToolsAPI::jsonToArray($response->getContent());
+        $result = $this->jsonToArray($response->getContent());
 
         return current($result['data']);
     }
