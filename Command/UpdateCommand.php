@@ -41,13 +41,22 @@ class UpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write('Updating DB schema...');
+            $output->write("Clearing cache... \n");
+            $this->runExistingCommand('cache:clear', $output);
+            $output->write('Done');
+
+            $output->write("Updating DB schema... \n");
             $this->updateDbSchema();
             $output->writeln('Done');
 
-            $output->write('Updating navigation...');
+            $output->write("Updating navigation... \n");
             $this->updateNavigation($output);
             $output->writeln('Done');
+
+            $output->write("Updating assets...\n");
+            $this->updateAssets($output);
+            $output->writeln('Done');
+
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
@@ -98,17 +107,39 @@ class UpdateCommand extends ContainerAwareCommand
     }
 
     /**
+     * Update assets
+     *
+     * @param OutputInterface $output
+     */
+    private function updateAssets(OutputInterface $output)
+    {
+        /**
+         * Install all assets from scratch.
+         */
+        $this->runExistingCommand('oro:assets:install', $output);
+
+        /**
+         * Rebuild all the css and js according to the assetic setup
+         */
+        $this->runExistingCommand('assetic:dump', $output, array(
+            '--no-debug' => true
+        ));
+    }
+
+    /**
      * Run existing command in system
      * @param string $commandName
      * @param OutputInterface $output
+     * @param array $optionalParams
      */
-    private function runExistingCommand($commandName, OutputInterface $output)
+    private function runExistingCommand($commandName, OutputInterface $output, array $optionalParams = array())
     {
         $command = $this->getApplication()->find($commandName);
 
         $arguments = array(
             'command' => $commandName
         );
+        $arguments = array_merge($arguments, $optionalParams);
 
         $input = new ArrayInput($arguments);
         $command->run($input, $output);
