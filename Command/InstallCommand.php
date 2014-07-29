@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class InstallCommand extends BaseCommand
+class InstallCommand extends AbstractCommand
 {
     /**
      * @var string
