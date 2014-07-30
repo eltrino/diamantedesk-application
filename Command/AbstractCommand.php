@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class BaseCommand extends ContainerAwareCommand
+abstract class AbstractCommand extends ContainerAwareCommand
 {
     /**
      * Updates DB Schema. Changes from Diamante only will be applied for current schema. Other bundles updating skips
