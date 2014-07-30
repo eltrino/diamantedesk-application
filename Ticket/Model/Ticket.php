@@ -43,7 +43,7 @@ class Ticket implements AttachmentHolder
     protected $status;
 
     /**
-     * @var string
+     * @var int
      */
     protected $priority;
 
