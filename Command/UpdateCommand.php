@@ -60,7 +60,6 @@ class UpdateCommand extends AbstractCommand
             ));
             $output->write('Done');
 
-
             $output->write("Updating assets...\n");
             $this->updateAssets($output);
             $output->writeln('Done');
