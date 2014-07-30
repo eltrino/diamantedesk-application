@@ -52,4 +52,9 @@ class UpdateTicketCommand
      * @Assert\NotBlank
      */
     public $assignee;
+
+    /**
+     * @Assert\NotBlank
+     */
+    public $priority;
 }

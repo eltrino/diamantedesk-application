@@ -16,11 +16,11 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 
 class Priority
 {
-    const DEFAULT_PRIORITY = 1;
+    const DEFAULT_PRIORITY = 'medium';
 
-    const PRIORITY_LOW = 0;
-    const PRIORITY_MEDIUM = 1;
-    const PRIORITY_HIGH = 2;
+    const PRIORITY_LOW = 'low';
+    const PRIORITY_MEDIUM = 'medium';
+    const PRIORITY_HIGH = 'high';
 
     const PRIORITY_LOW_LABEL = 'Low';
     const PRIORITY_MEDIUM_LABEL = 'Medium';
@@ -42,7 +42,7 @@ class Priority
             throw new \InvalidArgumentException("Priority doesn't exist.");
         }
 
-        $this->priority = (int) $priority;
+        $this->priority = $priority;
     }
 
     /**
@@ -60,7 +60,7 @@ class Priority
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getValue()
     {

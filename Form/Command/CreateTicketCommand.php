@@ -54,4 +54,9 @@ class CreateTicketCommand
      * @Assert\NotBlank
      */
     public $assignee;
+
+    /**
+     * @Assert\NotBlank
+     */
+    public $priority;
 }
