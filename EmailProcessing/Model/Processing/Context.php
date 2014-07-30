@@ -34,7 +34,7 @@ class Context
     /**
      * @param Message $message
      */
-    public function execute($message)
+    public function execute(Message $message)
     {
         $this->strategy->process($message);
     }
