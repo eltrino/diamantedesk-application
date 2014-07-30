@@ -136,8 +136,67 @@
     margin: 15px 0 0 15px;
 }
 
-.diam-ticket-description {
-    width:  560px;
-    height: 200px;
-    resize: vertical;
+/**
+ * Drag&Drop zone
+ */
+
+.diam-attachments * {
+    pointer-events: none;
+}
+
+.diam-dropzone-placeholder {
+    margin: 1em;
+    overflow: hidden;
+    position: relative;
+    height: 208px;
+}
+
+.diam-dropzone label {
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin: -44px 0 0 -55px;
+    text-align: center;
+    text-transform: uppercase !important;
+    color: #ccc;
+    width: 110px;
+    height: 88px;
+}
+.diam-dropzone i[class^='icon'] {
+    font-size: 500%;
+    display: block !important;
+}
+.diam-dropzone-active .diam-dropzone-placeholder {
+    background: #eee;
+}
+.diam-dropzone-active label {
+    color: #000;
+}
+
+.diam-dropzone input {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    font-size: 1000%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    float: right;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    z-index: 10;
+}
+
+.diam-dropzone-loader {
+    display: none;
+    position: absolute;
+    top:50%;
+    left:50%;
+    text-align: center;
+    margin: -35px 0 0 -35px;
+    color: #ccc;
+    width: 70px;
+    height: 70px;
 }
