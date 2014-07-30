@@ -21,6 +21,7 @@ use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 
 class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -79,6 +80,7 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
             new User(),
             new User(),
+            Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
     }
