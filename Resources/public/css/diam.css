@@ -4,6 +4,7 @@
 .diam-attachment {
     float: left;
     margin: 0 0 2em 2em;
+    width: 200px;
     text-align: center;
     border: 1px #e5e5e5 solid;
     border-radius: 5px;
@@ -24,6 +25,20 @@
     font-size: 0;
     height: 172px;
     width: 172px;
+    position: relative;
+}
+.diam-attachment-label {
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 18px;
+    width:100%;
+    text-align: center;
+    top:110px;
+    color: #fff;
+    left:0;
+    opacity: .9;
+    text-shadow: 0 0 2px #eee;
+    font-weight: 100;
 }
 .diam-attachment-preview:before,
 .diam-attachment-preview:after{

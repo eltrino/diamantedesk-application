@@ -15,7 +15,9 @@
                 %}
                     <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt="{{ attachment.filename|escape }}"/>
                 {% else %}
-                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/attachment/types/' ~ attachmentExtension ~ '.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
+                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/file.png') }}" alt="{{
+                    attachment.filename|escape }}"/>
+                    <span class="diam-attachment-label">{{ attachmentExtension }}</span>
                 {% endif %}
                 </div>
                 <figcaption>
