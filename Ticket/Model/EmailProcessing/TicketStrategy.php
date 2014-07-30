@@ -12,30 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing;
+namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing;
 
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
 
-class Context
+class TicketStrategy implements Strategy
 {
-    /**
-     * @var Strategy
-     */
-    private $strategy;
-
-    /**
-     * @param Strategy $strategy
-     */
-    public function __construct(Strategy $strategy)
+    public function process(Message $message)
     {
-        $this->strategy = $strategy;
+        //...
     }
-
-    /**
-     * @param Message $message
-     */
-    public function execute($message)
-    {
-        $this->strategy->process($message);
-    }
-}
+} 
