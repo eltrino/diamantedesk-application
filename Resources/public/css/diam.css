@@ -1,5 +1,5 @@
 .diam-attachments {
-
+    position: relative;
 }
 .diam-attachment {
     float: left;
@@ -140,8 +140,16 @@
  * Drag&Drop zone
  */
 
-.diam-attachments * {
+.diam-attachment {
     pointer-events: none;
+}
+.diam-dropzone {
+    float: left;
+    margin: 0 0 2em 2em;
+    width: 200px;
+    text-align: center;
+    border: 1px #e5e5e5 solid;
+    border-radius: 5px;
 }
 
 .diam-dropzone-placeholder {
@@ -166,11 +174,27 @@
     font-size: 500%;
     display: block !important;
 }
-.diam-dropzone-active .diam-dropzone-placeholder {
+.diam-dropzone-active {
+    position: absolute;
+    width: 100%;
     background: #eee;
+    margin: 0;
+    top:0;
+    bottom: 2em;
+}
+.diam-dropzone-active .diam-dropzone-placeholder {
+    margin: 0;
+    height: 100%;
 }
 .diam-dropzone-active label {
     color: #000;
+}
+
+.diam-attachment-placeholder {
+    display: none;
+}
+.diam-dropzone-active + .diam-attachment-placeholder {
+    display: block;
 }
 
 .diam-dropzone input {
@@ -199,4 +223,21 @@
     color: #ccc;
     width: 70px;
     height: 70px;
+}
+
+.diam-attachment-new {
+    background: #eee;
+    animation: blink 500ms  step-start 0s 5;
+    -webkit-animation: blink 500ms step-start 0s 5;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: .1; }
+    100% { opacity: 1; }
+}
+@-webkit-keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: .1; }
+    100% { opacity: 1; }
 }

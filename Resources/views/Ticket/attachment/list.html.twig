@@ -30,12 +30,17 @@
             </figure>
         </li>
     {% endfor %}
-        <li class="diam-attachment diam-dropzone" id="diam-dropzone">
+        <li class="diam-dropzone" id="diam-dropzone">
             <div class="diam-dropzone-placeholder">
                 <form id="diam-dropzone-form" action="{{ path('diamante_ticket_create_attach_post', {'id': ticket_id}) }}" method="post" enctype="multipart/form-data">
                     <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> Drop File Here</label>
                     <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>
                 </form>
+            </div>
+        </li>
+        <li class="diam-attachment diam-attachment-placeholder">
+            <div class="diam-dropzone-placeholder">
+
             </div>
         </li>
     </ul>

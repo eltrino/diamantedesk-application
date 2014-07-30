@@ -7,15 +7,15 @@ define(['jquery', 'underscore'],
         $loader = $('#diam-dropzone-loader'),
         file = document.createElement('input');
 
-    $attachments[0].addEventListener('dragenter', function (e) {
+    $attachments.on('dragenter', function (e) {
       console.log('enter');
       $dropzone.addClass('diam-dropzone-active');
-    }, false);
+    });
 
-    $attachments[0].addEventListener('dragleave', function (e) {
+    $dropzone.on('dragleave', function (e) {
       console.log('leave');
       $dropzone.removeClass('diam-dropzone-active');
-    }, false);
+    });
 
     file.type = 'file';
     file.name = 'diamante_attachment_form[files][]';
@@ -32,12 +32,12 @@ define(['jquery', 'underscore'],
       $loader.show();
 
       req.onload = function () {
-        var div = document.createElement('div');
+        var newElements = $.parseHTML(req.response);
+        newElements.addClass('diam-attachment-new')
         $label.show();
         $loader.hide();
         $dropzone.removeClass('diam-dropzone-active');
-        div.innerHTML = req.response;
-        $attachments.append(div.firstChild);
+        $dropzone.before(newElements);
         form.reset();
       };
 
