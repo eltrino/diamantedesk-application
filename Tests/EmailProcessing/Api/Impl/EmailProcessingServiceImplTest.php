@@ -17,6 +17,8 @@ namespace Eltrino\DiamanteDeskBundle\Tests\EmailProcessing\Api\Impl;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Api\EmailProcessingService;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl\EmailProcessingServiceImpl;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -38,10 +40,23 @@ class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $processingContext;
 
+    /**
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder
+     */
+    private $strategyHolder;
+
+    /**
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy
+     */
+    private $strategy;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->emailProcessingService = new EmailProcessingServiceImpl($this->mailService, $this->processingContext);
+        $this->emailProcessingService = new EmailProcessingServiceImpl($this->mailService, $this->processingContext,
+            $this->strategyHolder);
     }
 
     /**
@@ -50,11 +65,30 @@ class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatEmailsProcesses()
     {
         $message = new Message();
+
+        /** @var Strategy[] $strategies */
+        $strategies = array($this->strategy);
+
         /** @var Message[] $messages */
         $messages = array($message);
-        $this->mailService->expects($this->once())->method('getUnreadMessages')->will($this->returnValue($messages));
-        $this->processingContext->expects($this->exactly(count($messages)))->method('execute')
+
+        $this->mailService
+            ->expects($this->once())
+            ->method('getUnreadMessages')
+            ->will($this->returnValue($messages));
+
+        $this->strategyHolder
+            ->expects($this->once())
+            ->method('getStrategies')
+            ->will($this->returnValue($strategies));
+
+        $this->processingContext->expects($this->exactly(count($strategies)))->method('setStrategy')
+            ->with($this->isInstanceOf('\Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy'));
+
+        $this->processingContext->expects($this->exactly(count($messages) * count($strategies)))->method('execute')
             ->with($this->isInstanceOf('\Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message'));
+
         $this->emailProcessingService->process();
     }
+
 }

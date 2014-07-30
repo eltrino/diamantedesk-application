@@ -16,6 +16,7 @@ namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Api\EmailProcessingService;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MailService;
 
 class EmailProcessingServiceImpl implements EmailProcessingService
@@ -30,10 +31,13 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     private $processingContext;
 
-    public function __construct(MailService $mailService, Context $processingContext)
+    private $strategyHolder;
+
+    public function __construct(MailService $mailService, Context $processingContext, StrategyHolder $strategyHolder)
     {
         $this->mailService = $mailService;
         $this->processingContext = $processingContext;
+        $this->strategyHolder = $strategyHolder;
     }
 
     /**
@@ -42,9 +46,13 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     public function process()
     {
-        $messages = $this->mailService->getUnreadMessages();
-        foreach ($messages as $message) {
-            $this->processingContext->execute($message);
+        $messages   = $this->mailService->getUnreadMessages();
+        $strategies = $this->strategyHolder->getStrategies();
+        foreach($strategies as $strategy) {
+            $this->processingContext->setStrategy($strategy);
+            foreach ($messages as $message) {
+                $this->processingContext->execute($message);
+            }
         }
     }
 

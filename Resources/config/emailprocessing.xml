@@ -20,20 +20,22 @@
 
     <parameters>
         <parameter key="diamante.email_processing.context.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context</parameter>
+        <parameter key="diamante.email_processing.strategy_holder.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder</parameter>
         <parameter key="diamante.email_processing.service.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl\EmailProcessingServiceImpl</parameter>
         <parameter key="diamante.email_processing.mail.service.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MailServiceImpl</parameter>
     </parameters>
 
     <services>
-        <service id="diamante.email_processing.context" class="%diamante.email_processing.context.class%">
-            <argument type="service" id="diamante.ticket.email_processing.strategy.service"/>
-        </service>
+        <service id="diamante.email_processing.strategy_holder" class="%diamante.email_processing.strategy_holder.class%" />
+
+        <service id="diamante.email_processing.context" class="%diamante.email_processing.context.class%" />
 
         <service id="diamante.email_processing.mail.service" class="%diamante.email_processing.mail.service.class%" />
 
         <service id="diamante.email_processing.service" class="%diamante.email_processing.service.class%">
             <argument type="service" id="diamante.email_processing.mail.service"/>
             <argument type="service" id="diamante.email_processing.context"/>
+            <argument type="service" id="diamante.email_processing.strategy_holder"/>
         </service>
     </services>
 </container>

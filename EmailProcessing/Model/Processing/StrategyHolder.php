@@ -14,28 +14,22 @@
  */
 namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing;
 
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
-
-class Context
+class StrategyHolder
 {
-    /**
-     * @var Strategy
-     */
-    private $strategy;
+    private $strategies;
 
-    /**
-     * @param Message $message
-     */
-    public function execute(Message $message)
+    public function __construct()
     {
-        $this->strategy->process($message);
+        $this->strategies = array();
     }
 
-    /**
-     * @param Strategy $strategy
-     */
-    public function setStrategy(Strategy $strategy)
+    public function addStrategy(Strategy $strategy)
     {
-        $this->strategy = $strategy;
+        $this->strategies[] = $strategy;
     }
-}
+
+    public function getStrategies()
+    {
+        return $this->strategies;
+    }
+} 
