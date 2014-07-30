@@ -33,7 +33,7 @@ define(['jquery', 'underscore'],
 
       req.onload = function () {
         var newElements = $.parseHTML(req.response);
-        newElements.addClass('diam-attachment-new')
+        newElements.find('diam-attachment').addClass('diam-attachment-new')
         $label.show();
         $loader.hide();
         $dropzone.removeClass('diam-dropzone-active');
