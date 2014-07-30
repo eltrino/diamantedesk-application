@@ -20,16 +20,11 @@
 
     <parameters>
         <parameter key="diamante.email_processing.context.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context</parameter>
-        <parameter key="diamante.email_processing.service.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl\EmailProcessingServiceImpl</parameter>
     </parameters>
 
     <services>
         <service id="diamante.email_processing.context" class="%diamante.email_processing.context.class%">
             <argument type="service" id="diamante.ticket.email_processing.strategy.service"/>
-        </service>
-
-        <service id="diamante.email_processing.service" class="%diamante.email_processing.service.class%">
-            <argument type="service" id="diamante.email_processing.context"/>
         </service>
     </services>
 </container>
