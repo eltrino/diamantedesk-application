@@ -88,6 +88,10 @@ class InstallCommand extends AbstractCommand
             $this->updateNavigation($output);
             $output->writeln('Done');
 
+            $output->write('Loading migration data');
+            $this->loadDataFixtures($output);
+            $output->writeln('Done');
+
             $this->assetsInstall($output);
 
             $this->asseticDump($output, array(
@@ -145,5 +149,22 @@ class InstallCommand extends AbstractCommand
     private function loadData(OutputInterface $output)
     {
         $this->runExistingCommand('oro:migration:data:load', $output);
+    }
+
+    /**
+     * Load migrations from DataFixtures/ORM folder
+     * @param OutputInterface $output
+     */
+    protected function loadDataFixtures(OutputInterface $output)
+    {
+        $kernelRootDir  = $this->getContainer()->getParameter('kernel.root_dir');
+
+        $this->runExistingCommand('doctrine:fixtures:load', $output,
+            array(
+                '--fixtures'       => "{$kernelRootDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/ORM",
+                '--append'         => true,
+                '--no-interaction' => true,
+            )
+        );
     }
 }
