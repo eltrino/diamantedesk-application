@@ -1,34 +1,32 @@
 {% import 'OroUIBundle::macros.html.twig' as ui %}
 
 <div class="widget-content">
+    <ul class="diam-attachments unstyled clearfix">
     {% for key, attachment in attachments %}
-        {% if (key % 4 == 0) %}
-            <ul class="row-fluid diam-atachments">
-        {% endif %}
-        <li class="span3">
+        <li class="diam-attachment">
             <figure>
+                <div class="diam-attachment-preview">
                 {% set attachmentExtension = attachment.file.extension %}
                 {% set attachmentPreviewSrc = attachment.file.Pathname %}
                 {% if attachmentExtension == '' %}
-                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt=""/>
+                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
                 {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
                 attachmentExtension == 'png' or attachmentExtension == 'gif')
                 %}
-                    <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt=""/>
+                    <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt="{{ attachment.filename|escape }}"/>
                 {% else %}
-                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/attachment/types/' ~ attachmentExtension ~ '.png') | imagine_filter('attach_preview_default') }}" alt=""/>
+                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/attachment/types/' ~ attachmentExtension ~ '.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
                 {% endif %}
+                </div>
                 <figcaption>
-                        <span class="pull-right">
-                            <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="Download">download</i></a>
-                            <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="Delete">delete</i></a>
-                        </span>
+                    <span class="pull-right">
+                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="Download">download</i></a>
+                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="Delete">delete</i></a>
+                    </span>
                     <strong>{{ attachment.filename|escape }}</strong>
                 </figcaption>
             </figure>
         </li>
-        {% if (key % 4 == 3) %}
-            </ul>
-        {% endif %}
     {% endfor %}
+    </ul>
 </div>
