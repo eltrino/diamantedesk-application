@@ -190,7 +190,7 @@
     'title': 'Description'|trans,
     'subblocks': [{
     'title': null,
-    'data': [UI.attibuteRow(null, entity.description)]
+    'data': [entity.description|escape('html')|nl2br]
     }]
     }]
     ) %}
