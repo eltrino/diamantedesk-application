@@ -103,6 +103,7 @@ class CommandFactory
         $command->content = null;
         $command->author = $author;
         $command->ticket = $ticket;
+        $command->ticketStatus = $ticket->getStatus();
 
         return $command;
     }
@@ -120,6 +121,7 @@ class CommandFactory
         $command->author = $comment->getAuthor();
         $command->ticket = $comment->getTicket();
         $command->attachmentList = $comment->getAttachments();
+        $command->ticketStatus = $comment->getTicket()->getStatus();
 
         return $command;
     }

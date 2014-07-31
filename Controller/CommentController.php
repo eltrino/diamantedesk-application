@@ -19,6 +19,7 @@ use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Type\CommentType;
+use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -133,6 +134,17 @@ class CommentController extends Controller
         try {
             $this->handle($form);
             $callback($command);
+
+            $newStatus = $form->get('ticketStatus')->getData();
+
+            if (false === ($newStatus == $ticket->getStatus()->getValue())) {
+                $this->get('diamante.ticket.service')
+                    ->updateStatus(
+                        $command->ticket->getId(),
+                        $newStatus
+                    );
+            }
+
             if ($command->id) {
                 $this->addSuccessMessage('Comment successfully saved.');
             } else {
