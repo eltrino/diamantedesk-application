@@ -35,7 +35,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($creator, $comment->getAuthor());
     }
 
-    public function testUpdateConstent()
+    public function testUpdateContent()
     {
         $comment = $this->createComment();
         $comment->updateContent('New Comment Content');
