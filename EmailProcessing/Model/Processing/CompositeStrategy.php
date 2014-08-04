@@ -16,26 +16,27 @@ namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
 
-class Context
+class CompositeStrategy implements Strategy
 {
-    /**
-     * @var Strategy
-     */
-    private $strategy;
-
-    /**
-     * @param Message $message
-     */
-    public function execute(Message $message)
-    {
-        $this->strategy->process($message);
-    }
+    private $strategies = array();
 
     /**
      * @param Strategy $strategy
      */
-    public function setStrategy(Strategy $strategy)
+    public function addStrategy(Strategy $strategy)
     {
-        $this->strategy = $strategy;
+        if (!in_array($strategy, $this->strategies)) {
+            $this->strategies[] = $strategy;
+        }
     }
-}
+
+    /**
+     * @param Message $message
+     */
+    public function process(Message $message)
+    {
+        foreach ($this->strategies as $strategy) {
+            $strategy->process($message);
+        }
+    }
+} 

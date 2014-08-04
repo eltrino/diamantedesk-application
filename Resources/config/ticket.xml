@@ -36,9 +36,15 @@
         <parameter key="diamante.ticket.internal.user.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\OroUserService</parameter>
         <parameter key="diamante.comment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl</parameter>
         <parameter key="diamante.ticket.datagrid_status_helper.class">Eltrino\DiamanteDeskBundle\Datagrid\StatusHelper</parameter>
+
+        <parameter key="diamante.ticket.email_processing.strategy.service.class">Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\TicketStrategy</parameter>
     </parameters>
 
     <services>
+        <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
+            <tag name="email_processing.strategy" />
+        </service>
+
         <service id="diamante.ticket.internal.attachment.service" class="%diamante.ticket.internal.attachment.service.class%">
             <argument type="service" id="diamante.attachment.service"/>
         </service>

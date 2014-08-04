@@ -12,30 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service;
 
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
-
-class Context
+class MailServiceImpl implements MailService
 {
-    /**
-     * @var Strategy
-     */
-    private $strategy;
-
-    /**
-     * @param Message $message
-     */
-    public function execute(Message $message)
+    public function getUnreadMessages()
     {
-        $this->strategy->process($message);
+        // TODO: Implement getUnreadMessages() method.
     }
-
-    /**
-     * @param Strategy $strategy
-     */
-    public function setStrategy(Strategy $strategy)
-    {
-        $this->strategy = $strategy;
-    }
-}
+} 
