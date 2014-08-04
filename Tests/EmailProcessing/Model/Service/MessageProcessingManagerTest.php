@@ -37,10 +37,23 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $context;
 
+    /**
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder
+     */
+    private $strategyHolder;
+
+    /**
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy
+     */
+    private $strategy;
+
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->manager = new MessageProcessingManager($this->context);
+        $this->manager = new MessageProcessingManager($this->context, $this->strategyHolder);
     }
 
     /**
@@ -49,9 +62,15 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
     public function thatHandles()
     {
         $messages = array(new Message());
+        $strategies = array($this->strategy);
+
         $this->provider->expects($this->once())->method('fetchMessagesToProcess')->will($this->returnValue($messages));
-        $this->context->expects($this->once())->method('execute')
+        $this->strategyHolder->expects($this->once())->method('getStrategies')->will($this->returnValue($strategies));
+        $this->context->expects($this->exactly(count($strategies)))->method('setStrategy')
+            ->with($this->isInstanceOf('\Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy'));
+        $this->context->expects($this->exactly(count($messages) * count($strategies)))->method('execute')
             ->with($this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message'));
+
         $this->manager->handle($this->provider);
     }
 }

@@ -16,17 +16,21 @@ namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder;
 
 class MessageProcessingManager implements ManagerInterface
 {
     /**
      * @var Context
      */
-    private $context;
+    private $processingContext;
 
-    public function __construct(Context $context)
+    private $strategyHolder;
+
+    public function __construct(Context $processingContext, StrategyHolder $strategyHolder)
     {
-        $this->context = $context;
+        $this->processingContext = $processingContext;
+        $this->strategyHolder = $strategyHolder;
     }
 
     /**
@@ -36,8 +40,12 @@ class MessageProcessingManager implements ManagerInterface
     public function handle(MessageProvider $provider)
     {
         $messages = $provider->fetchMessagesToProcess();
-        foreach ($messages as $message) {
-            $this->context->execute($message);
+        $strategies = $this->strategyHolder->getStrategies();
+        foreach($strategies as $strategy) {
+            $this->processingContext->setStrategy($strategy);
+            foreach ($messages as $message) {
+                $this->processingContext->execute($message);
+            }
         }
     }
 }
