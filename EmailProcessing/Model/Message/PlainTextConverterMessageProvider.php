@@ -12,20 +12,20 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
 
-interface EmailProcessingService
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\MessageProcessingException;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
+
+class PlainTextConverterMessageProvider implements MessageProvider
 {
     /**
-     * Run Email Processing
-     * @return void
+     * Fetch messages that should be processed
+     * @return array|Message[]
+     * @throws MessageProcessingException
      */
-    public function process();
-
-    /**
-     * Run Email Process of given message
-     * @param $input
-     * @return void
-     */
-    public function pipe($input);
+    public function fetchMessagesToProcess()
+    {
+        return array(new Message());
+    }
 }

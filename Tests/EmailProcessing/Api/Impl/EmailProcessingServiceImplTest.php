@@ -22,39 +22,34 @@ use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var EmailProcessingService
+     * @var EmailProcessingServiceImpl
      */
     private $emailProcessingService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MailService
-     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MailService
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\ManagerInterface
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\ManagerInterface
      */
-    private $mailService;
-
-    /**
-     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context
-     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context
-     */
-    private $processingContext;
+    private $manager;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->emailProcessingService = new EmailProcessingServiceImpl($this->mailService, $this->processingContext);
+        $this->emailProcessingService = new EmailProcessingServiceImpl($this->manager);
     }
 
     /**
      * @test
      */
-    public function thatEmailsProcesses()
+    public function thatEmailsProcessHandlesViaManager()
     {
-        $message = new Message();
-        /** @var Message[] $messages */
-        $messages = array($message);
-        $this->mailService->expects($this->once())->method('getUnreadMessages')->will($this->returnValue($messages));
-        $this->processingContext->expects($this->exactly(count($messages)))->method('execute')
-            ->with($this->isInstanceOf('\Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message'));
+        $this->manager->expects($this->once())->method('handle')->with(
+            $this->logicalAnd(
+                $this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider'),
+                $this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MailStorageMessageProvider')
+            )
+        );
+
         $this->emailProcessingService->process();
     }
 }

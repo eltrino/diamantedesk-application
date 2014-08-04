@@ -12,20 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Mail;
 
-interface EmailProcessingService
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\Storage;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\StorageFactory;
+
+class ZendImapAdapterFactory implements StorageFactory
 {
     /**
-     * Run Email Processing
-     * @return void
+     * @return Storage
      */
-    public function process();
-
-    /**
-     * Run Email Process of given message
-     * @param $input
-     * @return void
-     */
-    public function pipe($input);
+    public function create()
+    {
+        return new Zend\ImapAdapter();
+    }
 }

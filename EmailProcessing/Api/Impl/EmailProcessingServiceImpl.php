@@ -15,25 +15,21 @@
 namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Api\EmailProcessingService;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MailStorageMessageProvider;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\PlainTextConverterMessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MailService;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\ManagerInterface;
 
 class EmailProcessingServiceImpl implements EmailProcessingService
 {
     /**
-     * @var MailService
+     * @var ManagerInterface
      */
-    private $mailService;
+    private $manager;
 
-    /**
-     * @var Context
-     */
-    private $processingContext;
-
-    public function __construct(MailService $mailService, Context $processingContext)
+    public function __construct(ManagerInterface $manager)
     {
-        $this->mailService = $mailService;
-        $this->processingContext = $processingContext;
+        $this->manager = $manager;
     }
 
     /**
@@ -42,19 +38,18 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     public function process()
     {
-        $messages = $this->mailService->getUnreadMessages();
-        foreach ($messages as $message) {
-            $this->processingContext->execute($message);
-        }
+        $provider = new MailStorageMessageProvider();
+        $this->manager->handle($provider);
     }
 
     /**
      * Run Email Process of given message
-     * @param string $message
+     * @param string $input
      * @return void
      */
-    public function pipe($message)
+    public function pipe($input)
     {
-        // TODO: Implement pipe() method.
+        $provider = new PlainTextConverterMessageProvider();
+        $this->manager->handle($provider);
     }
 }

@@ -12,20 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api;
 
-interface EmailProcessingService
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail;
+
+interface StorageFactory
 {
     /**
-     * Run Email Processing
-     * @return void
+     * Create storage instance
+     * @return Storage
      */
-    public function process();
-
-    /**
-     * Run Email Process of given message
-     * @param $input
-     * @return void
-     */
-    public function pipe($input);
+    public function create();
 }

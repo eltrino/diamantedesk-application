@@ -12,20 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Mail\Zend;
 
-interface EmailProcessingService
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\Storage;
+
+class ImapAdapter implements Storage
 {
     /**
-     * Run Email Processing
-     * @return void
+     * Retrieves unread messages from mail storage
+     * @return array
      */
-    public function process();
-
-    /**
-     * Run Email Process of given message
-     * @param $input
-     * @return void
-     */
-    public function pipe($input);
+    public function listUnreadMessages()
+    {
+    }
 }
