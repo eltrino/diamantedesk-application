@@ -5,7 +5,8 @@ define(['jquery', 'underscore'],
         $dropzone = $('#diam-dropzone'),
         $label = $('#diam-dropzone-label'),
         $loader = $('#diam-dropzone-loader'),
-        file = document.createElement('input');
+        file = document.createElement('input'),
+        template = _.template(document.getElementById('template-attachments').innerHTML);
 
     $attachments.on('dragenter', function (e) {
       console.log('enter');
@@ -25,24 +26,25 @@ define(['jquery', 'underscore'],
     });
 
     file.addEventListener('change', function () {
-      var req = new XMLHttpRequest(),
-          formData = new FormData(form);
 
       $label.hide();
       $loader.show();
 
-      req.onload = function () {
-        var newElements = $.parseHTML(req.response);
-        newElements.find('diam-attachment').addClass('diam-attachment-new')
+      $.ajax({
+        url: form.action,
+        data:  new FormData(form),
+        processData: false,
+        contentType: false,
+        type: 'POST'
+      }).done(function(response){
+        var attachments =  $.parseJSON(response),
+            newElements = template({attachments : attachments});
         $label.show();
         $loader.hide();
         $dropzone.removeClass('diam-dropzone-active');
         $dropzone.before(newElements);
         form.reset();
-      };
-
-      req.open(form.method, form.action, true);
-      req.send(formData);
+      });
 
     }, false);
   }

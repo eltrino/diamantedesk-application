@@ -48,3 +48,27 @@
 <script type="text/javascript">
     require(['eltrinodiamantedesk/js/diam.attachments']);
 </script>
+
+<script type="text/html" id="template-attachments">
+    <% _.each(attachments, function(attachment){ %>
+    <li class="diam-attachment diam-attachment-new">
+        <figure>
+            <div class="diam-attachment-preview">
+                <% if( attachment.src) { %>
+                <img src="<%= attachment.src %>" alt="<%= _.escape(attachment.filename) %>"/>
+                <% } else { %>
+                <img src="{{ asset('bundles/eltrinodiamantedesk/img/file.png') }}" alt="<%= _.escape(attachment.filename) %>"/>
+                <span class="diam-attachment-label"><%= attachment.ext %></span>
+                <% } %>
+            </div>
+            <figcaption>
+                <span class="pull-right">
+                    <a class="no-hash" href="<%= attachment.url %>"><i class="icon-download-alt hide-text" title="Download">download</i></a>
+                    <a href="<%= attachment.delete %>"><i class="icon-trash hide-text" title="Delete">delete</i></a>
+                </span>
+                <strong><%= _.escape(attachment.filename) %></strong>
+            </figcaption>
+        </figure>
+    </li>
+    <% }) %>
+</script>
