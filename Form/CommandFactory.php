@@ -55,6 +55,7 @@ class CommandFactory
         }
         if ($reporter) {
             $command->reporter = $reporter;
+            $command->assignee = $reporter;
         }
         return $command;
     }
