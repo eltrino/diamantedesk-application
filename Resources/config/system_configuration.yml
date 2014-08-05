@@ -1,0 +1,94 @@
+oro_system_configuration:
+    groups:
+        diamantedesk_setup:
+            title: 'DiamanteDesk'
+            priority: 30
+
+        diamantedesk_email_integration:
+            title: 'Email Integration'
+            icon:  icon-envelope
+
+        diamantedesk_remote_mailbox:
+            title:       'Remote Mailbox'
+
+        diamantedesk_mail:
+            title:       'Mail'
+
+    fields:
+        eltrino_diamante_desk.remote_mailbox_enable:
+            type: choice
+            priority: 100
+            options:
+                label: 'Enable'
+                choices:
+                    - No
+                    - Yes
+
+        eltrino_diamante_desk.remote_mailbox_protocol:
+            type: text
+            priority: 95
+            options:
+                label: 'Protocol'
+
+        eltrino_diamante_desk.remote_mailbox_server_address:
+            type: text
+            priority: 90
+            options:
+                label: 'Server Address'
+
+        eltrino_diamante_desk.remote_mailbox_port:
+            type: text
+            priority: 85
+            options:
+                label: 'Port'
+
+        eltrino_diamante_desk.remote_mailbox_ssl:
+            type: choice
+            priority: 80
+            options:
+                label: 'SSL'
+                choices:
+                    - No
+                    - Yes
+
+        eltrino_diamante_desk.remote_mailbox_username:
+            type: text
+            priority: 75
+            options:
+                label: 'Username'
+
+        eltrino_diamante_desk.remote_mailbox_password:
+            type: password
+            priority: 70
+            options:
+                label: 'Password'
+
+        eltrino_diamante_desk.mail_delimiter:
+            type: text
+            priority: 100
+            options:
+                label: 'Delimiter'
+    tree:
+        system_configuration:
+            platform:
+                children:
+                    diamantedesk_setup:
+                        children:
+                            diamantedesk_email_integration:
+                                children:
+                                    diamantedesk_remote_mailbox:
+                                        priority: 260
+                                        children:
+                                            - eltrino_diamante_desk.remote_mailbox_enable
+                                            - eltrino_diamante_desk.remote_mailbox_protocol
+                                            - eltrino_diamante_desk.remote_mailbox_server_address
+                                            - eltrino_diamante_desk.remote_mailbox_port
+                                            - eltrino_diamante_desk.remote_mailbox_ssl
+                                            - eltrino_diamante_desk.remote_mailbox_username
+                                            - eltrino_diamante_desk.remote_mailbox_password
+                                    diamantedesk_mail:
+                                        priority: 255
+                                        children:
+                                            - eltrino_diamante_desk.mail_delimiter
+
+
