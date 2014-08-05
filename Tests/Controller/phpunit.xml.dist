@@ -14,7 +14,7 @@
     bootstrap                   = "bootstrap.php">
 
     <testsuites>
-        <testsuite name="Diamante Desk Functional Test Suite">
+        <testsuite name="DiamanteDesk Functional Test Suite">
             <directory suffix="Test.php">.</directory>
         </testsuite>
     </testsuites>

@@ -45,7 +45,7 @@ class InstallCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('diamante:install')
-            ->setDescription('Install Diamante Desk');
+            ->setDescription('Install DiamanteDesk');
     }
 
     /**
