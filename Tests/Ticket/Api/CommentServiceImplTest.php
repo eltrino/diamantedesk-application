@@ -25,6 +25,7 @@ use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 
@@ -97,6 +98,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
     }

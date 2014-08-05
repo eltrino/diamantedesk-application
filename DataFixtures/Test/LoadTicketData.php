@@ -24,6 +24,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 
 class LoadTicketData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -67,6 +68,7 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
                 $this->branchRepository->findOneBy(array('name' => 'branchName' . $i)),
                 $reporter,
                 $assignee,
+                Priority::DEFAULT_PRIORITY,
                 'open'
             );
 
