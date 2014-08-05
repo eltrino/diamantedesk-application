@@ -19,7 +19,8 @@ interface StorageFactory
 {
     /**
      * Create storage instance
+     * @param array $params
      * @return Storage
      */
-    public function create();
+    public function create(array $params);
 }

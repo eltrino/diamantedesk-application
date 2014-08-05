@@ -16,6 +16,7 @@ namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\Storage;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\StorageFactory;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\MessageProcessingException;
 
 class MailStorageMessageProvider implements MessageProvider
@@ -38,7 +39,7 @@ class MailStorageMessageProvider implements MessageProvider
     protected function initialize()
     {
         if (is_null($this->storage)) {
-            $this->storage = $this->storageFactory->create();
+            $this->storage = $this->storageFactory->create(array());
         }
     }
 

@@ -20,10 +20,12 @@ use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\StorageFactory;
 class ZendImapAdapterFactory implements StorageFactory
 {
     /**
-     * @return Storage
+     * Create storage instance
+     * @param array $params
+     * @return Zend\ImapAdapter|Storage
      */
-    public function create()
+    public function create(array $params)
     {
-        return new Zend\ImapAdapter();
+        return new Zend\ImapAdapter(new \Zend\Mail\Storage\Imap($params));
     }
 }
