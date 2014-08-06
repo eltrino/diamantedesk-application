@@ -12,16 +12,21 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Mail;
 
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\ImapMessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProviderFactory;
 
-interface ManagerInterface
+class ZendImapMessageProviderFactory implements MessageProviderFactory
 {
     /**
-     * Handle mail process
-     * @param MessageProvider $provider
-     * @return void
+     * Create message provider
+     * @param array $params
+     * @return MessageProvider
      */
-    public function handle(MessageProvider $provider);
+    public function create(array $params)
+    {
+        return new ImapMessageProvider(new \Zend\Mail\Storage\Imap($params));
+    }
 }

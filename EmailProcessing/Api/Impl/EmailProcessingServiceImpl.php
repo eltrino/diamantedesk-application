@@ -15,8 +15,11 @@
 namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Api\EmailProcessingService;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MailStorageMessageProvider;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\PlainTextConverterMessageProvider;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Mail\ZendImapMessageProviderFactory;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\ImapMessageProvider;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\MessageConverter;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\RawMessageProvider;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProviderFactory;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\ManagerInterface;
 
@@ -27,9 +30,23 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     private $manager;
 
-    public function __construct(ManagerInterface $manager)
-    {
+    /**
+     * @var MessageProviderFactory
+     */
+    private $mailboxMessageProviderFactory;
+
+    /**
+     * @var MessageProviderFactory
+     */
+    private $rawMessageProviderFactory;
+
+    public function __construct(ManagerInterface $manager,
+                                MessageProviderFactory $mailboxMessageProviderFactory,
+                                MessageProviderFactory $rawMessageProviderFactory
+    ) {
         $this->manager = $manager;
+        $this->mailboxMessageProviderFactory = $mailboxMessageProviderFactory;
+        $this->rawMessageProviderFactory = $rawMessageProviderFactory;
     }
 
     /**
@@ -38,8 +55,7 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     public function process()
     {
-        $provider = new MailStorageMessageProvider();
-        $this->manager->handle($provider);
+        $this->manager->handle($this->mailboxMessageProviderFactory->create(array()));
     }
 
     /**
@@ -49,7 +65,6 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     public function pipe($input)
     {
-        $provider = new PlainTextConverterMessageProvider();
-        $this->manager->handle($provider);
+        $this->manager->handle($this->rawMessageProviderFactory->create(array('raw_message' => $input)));
     }
 }

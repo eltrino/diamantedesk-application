@@ -61,7 +61,7 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function thatHandles()
     {
-        $messages = array(new Message());
+        $messages = array(new Message('dummy_unique_id', 'DUMMY_CONTENT'));
         $strategies = array($this->strategy);
 
         $this->provider->expects($this->once())->method('fetchMessagesToProcess')->will($this->returnValue($messages));

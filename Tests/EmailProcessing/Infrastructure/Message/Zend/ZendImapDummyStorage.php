@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\EmailProcessing\Infrastructure\Mail\Zend;
+namespace Eltrino\DiamanteDeskBundle\Tests\EmailProcessing\Infrastructure\Message\Zend;
 
-class ZendMailImapDummyStorage extends \Zend\Mail\Storage\Imap
+class ZendImapDummyStorage extends \Zend\Mail\Storage\Imap
 {
     private $messages;
 

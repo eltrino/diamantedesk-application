@@ -12,20 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Mail;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend;
 
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\Storage;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\StorageFactory;
+use Zend\Mail\Message;
 
-class ZendImapAdapterFactory implements StorageFactory
+class MessageConverter
 {
     /**
-     * Create storage instance
-     * @param array $params
-     * @return Zend\ImapAdapter|Storage
+     * @return Message
      */
-    public function create(array $params)
+    public function fromRawMessage($rawMessage)
     {
-        return new Zend\ImapAdapter(new \Zend\Mail\Storage\Imap($params));
+        return \Zend\Mail\Message::fromString($input);
     }
 }

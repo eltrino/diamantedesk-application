@@ -14,18 +14,12 @@
  */
 namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
 
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\MessageProcessingException;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
-
-class PlainTextConverterMessageProvider implements MessageProvider
+interface MessageProviderFactory
 {
     /**
-     * Fetch messages that should be processed
-     * @return array|Message[]
-     * @throws MessageProcessingException
+     * Create message provider
+     * @param array $params
+     * @return MessageProvider
      */
-    public function fetchMessagesToProcess()
-    {
-        return array(new Message());
-    }
+    public function create(array $params);
 }

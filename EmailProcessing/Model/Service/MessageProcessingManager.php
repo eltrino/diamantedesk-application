@@ -34,7 +34,8 @@ class MessageProcessingManager implements ManagerInterface
     }
 
     /**
-     * Handle mail processing
+     * Handle mail process
+     * @param MessageProvider $provider
      * @return void
      */
     public function handle(MessageProvider $provider)

@@ -21,6 +21,8 @@ use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
 {
+    const DUMMY_RAW_MESSAGE = 'DUMMY_RAW_MESSAGE';
+
     /**
      * @var EmailProcessingServiceImpl
      */
@@ -32,10 +34,26 @@ class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $manager;
 
+    /**
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProviderFactory
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProviderFactory
+     */
+    private $messageProviderFactory;
+
+    /**
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider
+     */
+    private $messageProvider;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->emailProcessingService = new EmailProcessingServiceImpl($this->manager);
+        $this->emailProcessingService = new EmailProcessingServiceImpl(
+            $this->manager,
+            $this->messageProviderFactory,
+            $this->messageProviderFactory
+        );
     }
 
     /**
@@ -43,13 +61,33 @@ class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatEmailsProcessHandlesViaManager()
     {
+        $this->messageProviderFactory->expects($this->once())->method('create')
+            ->will($this->returnValue($this->messageProvider));
+
         $this->manager->expects($this->once())->method('handle')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider'),
-                $this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MailStorageMessageProvider')
+                $this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider')
             )
         );
 
         $this->emailProcessingService->process();
+    }
+
+    /**
+     * @test
+     */
+    public function thatPipeProcessHandlesViaManager()
+    {
+        $this->messageProviderFactory->expects($this->once())->method('create')
+            ->with($this->equalTo(array('raw_message' => self::DUMMY_RAW_MESSAGE)))
+            ->will($this->returnValue($this->messageProvider));
+
+        $this->manager->expects($this->once())->method('handle')->with(
+            $this->logicalAnd(
+                $this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider')
+            )
+        );
+
+        $this->emailProcessingService->pipe(self::DUMMY_RAW_MESSAGE);
     }
 }

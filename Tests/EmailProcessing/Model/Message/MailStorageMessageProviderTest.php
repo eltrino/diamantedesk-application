@@ -20,8 +20,8 @@ class MailStorageMessageProviderTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\StorageFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\StorageFactory
+     * @var \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\Factory
+     * @Mock \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\Factory
      */
     private $storageFactory;
 

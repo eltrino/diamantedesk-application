@@ -12,34 +12,31 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend;
 
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\Storage;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\StorageFactory;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\MessageProcessingException;
 
-class MailStorageMessageProvider implements MessageProvider
+class RawMessageProvider implements MessageProvider
 {
-    /**
-     * @var StorageFactory
-     */
-    private $storageFactory;
+    private $input;
 
-    /**
-     * @var Storage
-     */
-    private $storage;
+    private $converter;
 
-    public function __construct(StorageFactory $storageFactory)
+    private $message;
+
+    public function __construct($input, MessageConverter $converter)
     {
-        $this->storageFactory = $storageFactory;
+        $this->validate($input);
+        $this->input = $input;
+        $this->converter = $converter;
     }
 
-    protected function initialize()
+    private function validate($input)
     {
-        if (is_null($this->storage)) {
-            $this->storage = $this->storageFactory->create(array());
+        if (false === is_string($input)) {
+            throw new MessageProcessingException('Input raw message should be a string.');
         }
     }
 
@@ -50,8 +47,7 @@ class MailStorageMessageProvider implements MessageProvider
      */
     public function fetchMessagesToProcess()
     {
-        $this->initialize();
-        $messages = $this->storage->listUnreadMessages();
-        return $messages;
+        $zendMailMessage = $this->converter->fromRawMessage($this->input);
+        return array(new Message('1', 'c'));
     }
 }
