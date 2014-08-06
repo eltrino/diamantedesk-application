@@ -23,6 +23,7 @@
         <parameter key="diamante.email_processing.strategy_holder.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder</parameter>
         <parameter key="diamante.email_processing.service.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl\EmailProcessingServiceImpl</parameter>
         <parameter key="diamante.email_processing.mail.service.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MailServiceImpl</parameter>
+        <parameter key="diamante.email_processing.mail_system_settings.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\SystemSettings</parameter>
     </parameters>
 
     <services>
@@ -33,9 +34,16 @@
         <service id="diamante.email_processing.mail.service" class="%diamante.email_processing.mail.service.class%" />
 
         <service id="diamante.email_processing.service" class="%diamante.email_processing.service.class%">
+           <!--
             <argument type="service" id="diamante.email_processing.mail.service"/>
             <argument type="service" id="diamante.email_processing.context"/>
             <argument type="service" id="diamante.email_processing.strategy_holder"/>
+           -->
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
+        </service>
+
+        <service id="diamante.email_processing.mail_system_settings" class="%diamante.email_processing.mail_system_settings.class%">
+            <argument type="service" id="oro_config.global"/>
         </service>
     </services>
 </container>

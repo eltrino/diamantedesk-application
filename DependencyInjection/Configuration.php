@@ -42,31 +42,22 @@ class Configuration implements ConfigurationInterface
         SettingsBuilder::append(
             $rootNode,
             array(
-                'remote_mailbox_enable'   => array('value' => false, 'type' => 'bool'),
-                'remote_mailbox_protocol' => array(
+                'mailbox_server_address' => array(
                     'value' => '',
                     'type' => 'scalar'
                 ),
-                'remote_mailbox_server_address' => array(
+                'mailbox_port' => array(
                     'value' => '',
                     'type' => 'scalar'
                 ),
-                'remote_mailbox_port' => array(
+                'mailbox_ssl'     => array('value' => false, 'type' => 'bool'),
+                'mailbox_username' => array(
                     'value' => '',
                     'type' => 'scalar'
                 ),
-                'remote_mailbox_ssl'     => array('value' => false, 'type' => 'bool'),
-                'remote_mailbox_username' => array(
-                    'value' => '',
-                    'type' => 'scalar'
-                ),
-                'remote_mailbox_password' => array(
+                'mailbox_password' => array(
                     'value' => '',
                     'type' => 'password'
-                ),
-                'mail_delimiter' => array(
-                    'value' => '',
-                    'type' => 'scalar'
                 )
             )
         );
