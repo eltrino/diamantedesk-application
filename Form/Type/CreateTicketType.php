@@ -14,10 +14,12 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Form\Type;
 
+use Eltrino\DiamanteDeskBundle\Form\DataTransformer\PriorityTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 
 class CreateTicketType extends AbstractType
 {
@@ -78,6 +80,22 @@ class CreateTicketType extends AbstractType
                     'multiple' => 'multiple'
                 )
             )
+        );
+
+        $priorityTransformer = new PriorityTransformer();
+        $priorities = $priorityTransformer->getOptions();
+
+        $builder->add(
+            $builder->create(
+                'priority',
+                'choice',
+                array(
+                    'label'    => 'Priority',
+                    'required' => true,
+                    'choices'  => $priorities,
+                )
+            )
+            ->addModelTransformer($priorityTransformer)
         );
 
         $builder->add(

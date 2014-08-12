@@ -53,12 +53,13 @@ interface TicketService
      * @param $description
      * @param $reporterId
      * @param $assigneeId
+     * @param $priority
      * @param $status
      * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $status = null, array $attachmentInputs = null);
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority, $status = null, array $attachmentInputs = null);
 
     /**
      * @param $ticketId
@@ -66,12 +67,13 @@ interface TicketService
      * @param $description
      * @param $reporterId
      * @param $assigneeId
+     * @param $priority
      * @param $status
      * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $status, array $attachmentInputs = null);
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $priority, $status, array $attachmentInputs = null);
 
     /**
      * @param $ticketId

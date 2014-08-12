@@ -55,6 +55,7 @@ class CommandFactory
         }
         if ($reporter) {
             $command->reporter = $reporter;
+            $command->assignee = $reporter;
         }
         return $command;
     }
@@ -68,6 +69,7 @@ class CommandFactory
         $command->reporter = $ticket->getReporter();
         $command->assignee = $ticket->getAssignee();
         $command->status = $ticket->getStatus();
+        $command->priority = $ticket->getPriority();
         $command->branch = $ticket->getBranch();
 
         return $command;

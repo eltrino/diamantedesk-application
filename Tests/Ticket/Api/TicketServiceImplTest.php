@@ -20,7 +20,9 @@ use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\PriorityType;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -111,23 +113,24 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
+        $priority = Priority::DEFAULT_PRIORITY;
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $status
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $priority, $status
         );
 
         $this->ticketFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee)
+            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo($priority)
         )->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder')
-            ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
+        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder');
+            //->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
 
         $ticket = $this->ticketService->createTicket(
-            $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId
+            $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId, $priority
         );
     }
 
@@ -153,23 +156,24 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::IN_PROGRESS;
+        $priority = Priority::DEFAULT_PRIORITY;
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $status
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $priority, $status
         );
 
         $this->ticketFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee)
+            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo($priority)
         )->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder')
-            ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
+        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder');
+            //->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
 
         $ticket = $this->ticketService->createTicket(
-            $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId, $status
+            $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId, $priority, $status
         );
     }
 
@@ -195,14 +199,15 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
+        $priority = Priority::DEFAULT_PRIORITY;
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $status
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, $priority, $status
         );
 
         $this->ticketFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee)
+            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo($priority)
         )->will($this->returnValue($ticket));
 
         $attachmentInputs = $this->attachmentInputs();
@@ -214,7 +219,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $ticket = $this->ticketService->createTicket(
             $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
-            $reporterId, $assigneeId, null, $attachmentInputs
+            $reporterId, $assigneeId, $priority, null, $attachmentInputs
         );
     }
 
@@ -238,7 +243,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, Status::NEW_ONE
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, Priority::DEFAULT_PRIORITY, Status::NEW_ONE
         );
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
@@ -246,7 +251,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketService->updateTicket(
             self::DUMMY_TICKET_ID, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
-            $reporterId, $assigneeId, $newStatus
+            $reporterId, $assigneeId, Priority::DEFAULT_PRIORITY, $newStatus
         );
 
         $this->assertEquals($ticket->getStatus()->getValue(), $newStatus);
@@ -272,7 +277,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, Status::NEW_ONE
+            self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $branch, $reporter, $assignee, Priority::DEFAULT_PRIORITY, Status::NEW_ONE
         );
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
@@ -285,7 +290,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketService->updateTicket(
             self::DUMMY_TICKET_ID, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
-            $reporterId, $assigneeId, $newStatus, $attachmentInputs
+            $reporterId, $assigneeId, Priority::DEFAULT_PRIORITY, $newStatus, $attachmentInputs
         );
 
         $this->assertEquals($ticket->getStatus()->getValue(), $newStatus);
@@ -317,6 +322,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());
@@ -361,6 +367,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $attachmentInputs = $this->attachmentInputs();
@@ -399,6 +406,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());

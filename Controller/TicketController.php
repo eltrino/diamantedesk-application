@@ -157,6 +157,7 @@ class TicketController extends Controller
                     $command->description,
                     $command->reporter->getId(),
                     $command->assignee->getId(),
+                    $command->priority,
                     $command->status,
                     $attachments
                 );
@@ -210,6 +211,7 @@ class TicketController extends Controller
                     $command->description,
                     $command->reporter->getId(),
                     $command->assignee->getId(),
+                    $command->priority,
                     $command->status,
                     $attachments
                 );

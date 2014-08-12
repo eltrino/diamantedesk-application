@@ -55,7 +55,7 @@ class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
     protected $status;
 
     /**
-     * @var integer
+     * @var string
      *
      * @ORM\Column(type="priority")
      */

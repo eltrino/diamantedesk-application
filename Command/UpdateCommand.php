@@ -28,7 +28,7 @@ class UpdateCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('diamante:update')
-            ->setDescription('Update Diamante Desk');
+            ->setDescription('Update DiamanteDesk');
     }
 
     /**
@@ -94,7 +94,7 @@ class UpdateCommand extends AbstractCommand
         $toUpdate = array_diff($sql, $sql2);
 
         if (empty($toUpdate)) {
-            throw new \Exception('No new updates found. Diamante Desk is up to date!');
+            throw new \Exception('No new updates found. DiamanteDesk is up to date!');
         }
 
         $conn = $em->getConnection();

@@ -1,4 +1,4 @@
-Diamante Desk
+DiamanteDesk
 ========================
 
 This software extends base OroCRM functionality. Integrates support system for customers in your CRM system.
@@ -10,7 +10,7 @@ At this moment software in alpha version. Eltrino Team working forward to improv
 Requirements
 ------------
 
-Diamante Desk supports OroCRM version 1.1
+DiamanteDesk supports OroCRM version 1.2
 
 Installation
 ------------
@@ -21,7 +21,7 @@ Add as dependency in composer
 composer require eltrino/diamante-desk-bundle:dev-master
 ```
 
-In addition you will need to run Diamante Desk internal command to install
+In addition you will need to run DiamanteDesk internal command to install
 
 ```bash
 php app/console diamante:install

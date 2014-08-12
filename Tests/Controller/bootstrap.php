@@ -13,9 +13,6 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-require_once 'bootstrap.php.cache';
-require_once 'AppKernel.php';
-
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -24,27 +21,28 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
 use Eltrino\DiamanteDeskBundle\Command\FixturesPurgeCommand;
 
-$kernel = new AppKernel('test', true);
-$kernel->boot();
-
-$application = new Application($kernel);
-$kernelDir = $kernel->getRootDir();
-
-$autoloadFlag = getenv('AUTOLOAD_FIXTURES');
-$output = new ConsoleOutput();
-
-if (!is_file($autoload = $kernelDir . '/../vendor/autoload.php')) {
+if (!is_file($autoload = __DIR__ . getenv('CLASS_AUTOLOADER'))) {
     throw new \LogicException('Run "composer install --dev" to create autoloader.');
 }
 
+// Set kernel folder path dynamically to avoid absolute path in config file
+$_SERVER['KERNEL_DIR'] = __DIR__ . getenv('KERNEL_DIR');
+
 $loader = require $autoload;
+$output = new ConsoleOutput();
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
-// Set kernel folder path dynamically to avoid absolute path in config file
-$_SERVER['KERNEL_DIR'] = $kernelDir;
+$autoloadFlag = getenv('AUTOLOAD_FIXTURES');
 
 if (true === (bool)$autoloadFlag) {
+    $kernel = new AppKernel('test', true);
+    $kernel->boot();
+
+    $application = new Application($kernel);
+    $kernelDir = $kernel->getRootDir();
+
+
     $loadCommand = new LoadDataFixturesDoctrineCommand();
     $purgeCommand = new FixturesPurgeCommand();
 
