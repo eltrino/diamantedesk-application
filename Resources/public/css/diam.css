@@ -139,10 +139,6 @@
 /**
  * Drag&Drop zone
  */
-
-body {
-    pointer-events: none;
-}
 .diam-dropzone {
     float: left;
     margin: 0 0 2em 2em;
