@@ -19,6 +19,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 
 class CommentControllerTest extends WebTestCase
 {
@@ -49,6 +50,26 @@ class CommentControllerTest extends WebTestCase
         $this->assertContains("Comment successfully created.", $crawler->html());
     }
 
+    public function testCreateCommentAndChangeTicketStatus()
+    {
+        $ticket = $this->chooseTicket();
+        $crawler = $this->client->request(
+            'GET', $this->getUrl('diamante_comment_create', array('id' => $ticket['id']))
+        );
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Add')->form();
+        $form['diamante_comment_form[content]'] = 'Creating comment and setting ticket status to "in progress"';
+        $form['diamante_comment_form[ticketStatus]'] = Status::IN_PROGRESS;
+        $this->client->followRedirects(true);
+
+        $crawler  = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Comment successfully created.", $crawler->html());
+    }
+
     public function testUpdate()
     {
         $ticket = $this->chooseTicket();
@@ -60,6 +81,27 @@ class CommentControllerTest extends WebTestCase
         /** @var Form $form */
         $form = $crawler->selectButton('Edit')->form();
         $form['diamante_comment_form[content]'] = 'Updated comment';
+        $this->client->followRedirects(true);
+
+        $crawler  = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Comment successfully saved.", $crawler->html());
+    }
+
+    public function testUpdateCommentAndChangeTicketStatus()
+    {
+        $ticket = $this->chooseTicket();
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $crawler = $this->client->request('GET', $ticketViewUrl);
+        $link = $crawler->filter('.diam-comments a:contains("Edit")')->eq(0)->link();
+        $crawler = $this->client->click($link);
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Edit')->form();
+        $form['diamante_comment_form[content]'] = 'Changed ticket status wile updating comment';
+        $form['diamante_comment_form[ticketStatus]'] = Status::ON_HOLD;
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
