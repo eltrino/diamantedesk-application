@@ -71,7 +71,10 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
         $this->uploadDir = sys_get_temp_dir();
         $this->dirMock = new TestFileInfo($this->uploadDir);
         $this->fixturesDir = __DIR__ . self::FIXTURE_FOLDER;
-        $this->fileMock = new TestUploadedFile($this->fixturesDir . '/' . self::PNG_FIXTURE_NAME, self::PNG_FIXTURE_NAME);
+        $this->fileMock = new TestUploadedFile(
+            $this->fixturesDir . DIRECTORY_SEPARATOR . self::PNG_FIXTURE_NAME,
+            self::PNG_FIXTURE_NAME
+        );
         $this->handler = new BranchLogoHandler($this->dirMock, $this->fileSysMock);
     }
 
@@ -81,7 +84,10 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileUploadThrowExceptionWhenMimeTypeIsNotPermitted()
     {
-        $pictureWithNotPermittedMimeType = new TestUploadedFile($this->fixturesDir . '/' . self::BMP_FIXTURE_NAME, self::BMP_FIXTURE_NAME);
+        $pictureWithNotPermittedMimeType = new TestUploadedFile(
+            $this->fixturesDir . DIRECTORY_SEPARATOR . self::BMP_FIXTURE_NAME,
+            self::BMP_FIXTURE_NAME
+        );
         $this->handler->upload($pictureWithNotPermittedMimeType, self::BMP_FIXTURE_NAME);
     }
 
@@ -98,7 +104,10 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->dirMock->isWritable());
 
         $uploadedFile = $this->handler->upload($this->fileMock, self::PNG_FIXTURE_NAME);
-        $this->assertEquals($this->uploadDir . '/' . self::PNG_FIXTURE_NAME, $uploadedFile->getPathname());
+        $this->assertEquals(
+            $this->uploadDir . DIRECTORY_SEPARATOR . self::PNG_FIXTURE_NAME,
+            $uploadedFile->getPathname()
+        );
     }
 
     /**

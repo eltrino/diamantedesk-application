@@ -37,7 +37,7 @@ $autoloadFlag = getenv('AUTOLOAD_FIXTURES');
 
 if (true === (bool)$autoloadFlag) {
     $kernelDir = $_SERVER['KERNEL_DIR'];
-    $appKernelClass = $kernelDir . DS . 'AppKernel.php';
+    $appKernelClass = $kernelDir . DIRECTORY_SEPARATOR . 'AppKernel.php';
 
     require $appKernelClass;
 

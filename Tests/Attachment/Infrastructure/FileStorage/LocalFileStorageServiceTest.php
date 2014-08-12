@@ -89,12 +89,15 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
         $localFileStorageService = new LocalFileStorageService($fileInfo, $this->fs);
 
         $this->fs->expects($this->once())->method('dumpFile')->with(
-            $this->equalTo($fileInfo->getPathname() . '/' . self::DUMMY_FILENAME), $this->equalTo(self::DUMMY_CONTENT)
+            $this->equalTo(
+                $fileInfo->getPathname() . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME),
+                $this->equalTo(self::DUMMY_CONTENT
+                )
         );
 
         $fileRealPath = $localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
 
-        $this->assertEquals($fileInfo->getPathname() . '/' . self::DUMMY_FILENAME, $fileRealPath);
+        $this->assertEquals($fileInfo->getPathname() . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME, $fileRealPath);
     }
 
     /**
@@ -113,7 +116,7 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
     public function thatFileRemoves()
     {
         $this->fs->expects($this->once())->method('remove')->with(
-            $this->equalTo(self::DUMMY_REAL_PATH . '/' . self::DUMMY_FILENAME)
+            $this->equalTo(self::DUMMY_REAL_PATH . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME)
         );
 
         $this->localFileStorageService->remove(self::DUMMY_FILENAME);
