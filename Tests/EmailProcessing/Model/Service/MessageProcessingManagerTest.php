@@ -70,6 +70,26 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
             ->with($this->isInstanceOf('\Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy'));
         $this->context->expects($this->exactly(count($messages) * count($strategies)))->method('execute')
             ->with($this->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message'));
+        $this->provider->expects($this->once())->method('markMessagesAsProcessed')
+            ->with($this->logicalAnd(
+                    $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY),
+                    $this->countOf(count($messages)),
+                    $this->callback(function($other) {
+                        $result = true;
+                        foreach ($other as $message) {
+                            $constraint = \PHPUnit_Framework_Assert::isInstanceOf(
+                                'Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message'
+                            );
+                            try {
+                                \PHPUnit_Framework_Assert::assertThat($message, $constraint);
+                            } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+                                $result = false;
+                            }
+                        }
+                        return $result;
+                    })
+                )
+            );
 
         $this->manager->handle($this->provider);
     }

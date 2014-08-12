@@ -50,4 +50,14 @@ class RawMessageProvider implements MessageProvider
         $zendMailMessage = $this->converter->fromRawMessage($this->input);
         return array(new Message('1', 'c'));
     }
+
+    /**
+     * Mark given messages as Processed
+     * @param array $messages
+     * @return void
+     */
+    public function markMessagesAsProcessed(array $messages)
+    {
+        // not implemented
+    }
 }

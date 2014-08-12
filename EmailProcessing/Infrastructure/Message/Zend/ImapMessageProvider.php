@@ -20,11 +20,27 @@ use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\MessageProcessingException;
 
 class ImapMessageProvider implements MessageProvider
 {
+    const BATCH_SIZE_OF_MESSAGES_IN_BYTES = 20000;
+    const NAME_OF_FOLDER_OF_PROCESSED_MESSAGES = 'Processed';
+
+    /**
+     * @var \Zend\Mail\Storage\Imap
+     */
     private $zendImapStorage;
 
-    public function __construct(\Zend\Mail\Storage\Imap $zendImapStorage)
-    {
+    private $batchSizeInBytes;
+
+    /**
+     * @var \Zend\Mail\Storage\Folder
+     */
+    private $folderOfProcessedMessages;
+
+    public function __construct(
+        \Zend\Mail\Storage\Imap $zendImapStorage,
+        $batchSizeInBytes = self::BATCH_SIZE_OF_MESSAGES_IN_BYTES
+    ) {
         $this->zendImapStorage = $zendImapStorage;
+        $this->batchSizeInBytes = $batchSizeInBytes;
     }
 
     /**
@@ -36,16 +52,93 @@ class ImapMessageProvider implements MessageProvider
     {
         $messages = array();
         try {
-            foreach ($this->zendImapStorage as $messageId => $message) {
+            foreach ($this->computeMessageIdsToProcess() as $uniqueMessageId) {
                 /** @var \Zend\Mail\Storage\Message $message */
-                if ($message->hasFlag(\Zend\Mail\Storage::FLAG_SEEN)) {
-                    continue;
-                }
-                $messages[] = new Message($this->zendImapStorage->getUniqueId($messageId), $message->getContent());
+                $message = $this->zendImapStorage->getMessage(
+                    $this->zendImapStorage->getNumberByUniqueId($uniqueMessageId)
+                );
+                $messages[] = new Message($uniqueMessageId, $message->getContent());
             }
         } catch (\Exception $e) {
             throw new MessageProcessingException($e->getMessage());
         }
         return $messages;
+    }
+
+    /**
+     * Retrieve uniqu message ids that should be processed in current batch.
+     * Computing is depending on size of messages
+     * @return array
+     */
+    private function computeMessageIdsToProcess()
+    {
+        $totalSize = 0;
+        $messageIds = array();
+        foreach ($this->zendImapStorage->getSize() as $messageId => $size) {
+            if (($totalSize + $size) > $this->batchSizeInBytes) {
+                if (empty($messageIds)) {
+                    $messageIds[] = $messageId;
+                }
+                break;
+            }
+            $messageIds[] = $this->zendImapStorage->getUniqueId($messageId);
+            $totalSize += $size;
+        }
+        return $messageIds;
+    }
+
+    /**
+     * Mark given messages as Processed
+     * @param array|Message[] $messages
+     * @return void
+     */
+    public function markMessagesAsProcessed(array $messages)
+    {
+        \Assert\that($messages)->all()->isInstanceOf('Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message');
+        foreach ($messages as $message) {
+            $this->zendImapStorage->moveMessage(
+                $this->zendImapStorage->getNumberByUniqueId($message->getUniqueId()),
+                $this->folderOfProcessedMessages()
+            );
+        }
+    }
+
+    /**
+     * Initialize mailbox folder with name 'Processing'. If folder is not exists - it will be created
+     * @return void
+     */
+    private function initialize()
+    {
+        if (is_null($this->folderOfProcessedMessages)) {
+            $exists = false;
+            $iterator = new \RecursiveIteratorIterator($this->zendImapStorage->getFolders());
+            foreach ($iterator as $folder) {
+                if ($folder->getLocalName() == self::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES) {
+                    $exists = true;
+                    break;
+                }
+            }
+            if (false === $exists) {
+                $this->zendImapStorage
+                    ->createFolder(
+                        self::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES,
+                        new \Zend\Mail\Storage\Folder('INBOX')
+                    );
+            }
+            $this->folderOfProcessedMessages = new \Zend\Mail\Storage\Folder(
+                'INBOX/' . self::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES
+            );
+        }
+    }
+
+    /**
+     * @return \Zend\Mail\Storage\Folder
+     */
+    private function folderOfProcessedMessages()
+    {
+        if (is_null($this->folderOfProcessedMessages)) {
+            $this->initialize();
+        }
+        return $this->folderOfProcessedMessages;
     }
 }

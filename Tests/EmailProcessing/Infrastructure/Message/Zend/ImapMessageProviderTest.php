@@ -16,11 +16,12 @@ namespace Eltrino\DiamanteDeskBundle\Tests\EmailProcessing\Infrastructure\Messag
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\ImapMessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider;
-use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Zend\Mail\Storage\Message;
 
 class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
 {
+    const DUMMY_BATCH_SIZE_IN_BYTES = 5;
+
     /**
      * @var ImapMessageProvider
      */
@@ -28,8 +29,29 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        MockAnnotations::init($this);
-        $this->messageProvider = new ImapMessageProvider(new ZendImapDummyStorage($this->messages()));
+        $this->messageProvider = new ImapMessageProvider(
+            new ZendImapDummyStorage($this->messages()), self::DUMMY_BATCH_SIZE_IN_BYTES
+        );
+    }
+
+    /**
+     * @test
+     * @expectedException \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\MessageProcessingException
+     * @expectsExceptionMessage Dummy_Exception_Message
+     */
+    public function thatExceptionThrowsWhenFetchingMessages()
+    {
+        $zendImapStorage = $this->getMockBuilder('\Zend\Mail\Storage\Imap')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $zendImapStorage->expects($this->once())->method('getSize')
+            ->will(
+                $this->throwException(
+                    new \Zend\Mail\Protocol\Exception\RuntimeException('Dummy_Exception_Message')
+                )
+            );
+        $messageProvider = new ImapMessageProvider($zendImapStorage, self::DUMMY_BATCH_SIZE_IN_BYTES);
+        $messageProvider->fetchMessagesToProcess();
     }
 
     /**
@@ -40,6 +62,82 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $messages = $this->messageProvider->fetchMessagesToProcess();
         $this->assertNotEmpty($messages);
         $this->assertContainsOnlyInstancesOf('\Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message', $messages);
+        $this->assertCount(2, $messages);
+    }
+
+    /**
+     * @test
+     */
+    public function thatMessagesMarkedAsProcessedAndProcessedFolderCreates()
+    {
+        $zendImapStorage = $this->getMockBuilder('\Zend\Mail\Storage\Imap')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $zendImapStorage->expects($this->any())->method('getNumberByUniqueId')
+            ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING))
+            ->will($this->returnValue(1));
+        $zendImapStorage->expects($this->once())->method('getFolders')->will(
+            $this->returnValue(
+                new \Zend\Mail\Storage\Folder('/', '/', false, array(
+                    new \Zend\Mail\Storage\Folder('INBOX'),
+                    new \Zend\Mail\Storage\Folder('SENT'))
+                )
+            )
+        );
+        $zendImapStorage->expects($this->once())->method('createFolder')->with(
+            $this->equalTo(ImapMessageProvider::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES),
+            $this->logicalAnd(
+                $this->isInstanceOf('\Zend\Mail\Storage\Folder'),
+                $this->attributeEqualTo('localName', 'INBOX')
+            )
+        );
+        $zendImapStorage->expects($this->any())->method('move')->with($this->equalTo(1), $this->logicalAnd(
+            $this->isInstanceOf('\Zend\Mail\Storage\Folder'),
+            $this->attributeEqualTo('localName', 'INBOX/' . ImapMessageProvider::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES)
+        ));
+        $messageProvider = new ImapMessageProvider($zendImapStorage);
+        $messages = array();
+        foreach ($this->messages() as $message) {
+            $messages[] = new \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message(
+                $message['unique_id'], $message['message']->getContent()
+            );
+        }
+        $messageProvider->markMessagesAsProcessed($messages);
+    }
+
+    /**
+     * @test
+     */
+    public function thatMessagesMarkedAsProcessedAndProcessedFolderAlreadyExists()
+    {
+        $zendImapStorage = $this->getMockBuilder('\Zend\Mail\Storage\Imap')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $zendImapStorage->expects($this->any())->method('getNumberByUniqueId')
+            ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING))
+            ->will($this->returnValue(1));
+        $zendImapStorage->expects($this->once())->method('getFolders')->will(
+            $this->returnValue(
+                new \Zend\Mail\Storage\Folder('/', '/', false, array(
+                    new \Zend\Mail\Storage\Folder('INBOX'),
+                    new \Zend\Mail\Storage\Folder('SENT'),
+                    new \Zend\Mail\Storage\Folder(ImapMessageProvider::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES))
+                )
+            )
+        );
+        $zendImapStorage->expects($this->never())->method('createFolder');
+        $zendImapStorage->expects($this->any())->method('move')->with($this->equalTo(1), $this->logicalAnd(
+            $this->isInstanceOf('\Zend\Mail\Storage\Folder'),
+            $this->attributeEqualTo('localName', 'INBOX/' . ImapMessageProvider::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES)
+        ));
+        $messageProvider = new ImapMessageProvider($zendImapStorage);
+        $messages = array();
+        foreach ($this->messages() as $message) {
+            $messages[] = new \Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message(
+                $message['unique_id'], $message['message']->getContent()
+            );
+        }
+        $messageProvider->markMessagesAsProcessed($messages);
     }
 
     /**
@@ -48,8 +146,21 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
     private function messages()
     {
         return array(
-            1 => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT')),
-            2 => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT'))
+            1 => array(
+                'unique_id' => 'u1',
+                'size' => 1,
+                'message' => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT'))
+            ),
+            2 => array(
+                'unique_id' => 'u2',
+                'size' => 3,
+                'message' => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT'))
+            ),
+            3 => array(
+                'unique_id' => 'u3',
+                'size' => 5,
+                'message' => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT'))
+            )
         );
     }
 }

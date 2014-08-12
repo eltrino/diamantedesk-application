@@ -16,5 +16,4 @@ namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Model;
 
 class MessageProcessingException extends \RuntimeException
 {
-    public function __construct()
 }

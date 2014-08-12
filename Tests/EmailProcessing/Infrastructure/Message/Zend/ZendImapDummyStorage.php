@@ -41,6 +41,14 @@ class ZendImapDummyStorage extends \Zend\Mail\Storage\Imap
      */
     public function getSize($id = 0)
     {
+        if ($id && isset($this->messages[$id])) {
+            return $this->messages[$id]['size'];
+        }
+        $sizeOfMessages = array();
+        foreach ($this->messages as $messageId => $message) {
+            $sizeOfMessages[$messageId] = $message['size'];
+        }
+        return $sizeOfMessages;
     }
 
     /**
@@ -48,10 +56,10 @@ class ZendImapDummyStorage extends \Zend\Mail\Storage\Imap
      */
     public function getMessage($id)
     {
-        if (!isset($this->messages[$id])) {
-            return null;
+        if (isset($this->messages[$id])) {
+            return $this->messages[$id]['message'];
         }
-        return $this->messages[$id];
+        throw new \Zend\Mail\Protocol\Exception\RuntimeException('the single id was not found in response');
     }
 
     /**
@@ -94,6 +102,10 @@ class ZendImapDummyStorage extends \Zend\Mail\Storage\Imap
      */
     public function getUniqueId($id = null)
     {
+        if (isset($this->messages[$id])) {
+            return $this->messages[$id]['unique_id'];
+        }
+        throw new \Zend\Mail\Protocol\Exception\RuntimeException('the single id was not found in response');
     }
 
     /**
@@ -101,5 +113,11 @@ class ZendImapDummyStorage extends \Zend\Mail\Storage\Imap
      */
     public function getNumberByUniqueId($id)
     {
+        foreach ($this->messages as $messageId => $message) {
+            if ($message['unique_id'] == $id) {
+                return $messageId;
+            }
+        }
+        throw new Exception\InvalidArgumentException('unique id not found');
     }
 }

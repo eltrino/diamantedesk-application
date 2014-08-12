@@ -24,4 +24,11 @@ interface MessageProvider
      * @throws MessageProcessingException
      */
     public function fetchMessagesToProcess();
+
+    /**
+     * Mark given messages as Processed
+     * @param array $messages
+     * @return void
+     */
+    public function markMessagesAsProcessed(array $messages);
 }

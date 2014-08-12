@@ -40,13 +40,20 @@ class MessageProcessingManager implements ManagerInterface
      */
     public function handle(MessageProvider $provider)
     {
-        $messages = $provider->fetchMessagesToProcess();
+        $messagesToMove = array();
         $strategies = $this->strategyHolder->getStrategies();
-        foreach($strategies as $strategy) {
-            $this->processingContext->setStrategy($strategy);
-            foreach ($messages as $message) {
-                $this->processingContext->execute($message);
+        foreach ($provider->fetchMessagesToProcess() as $message) {
+            foreach($strategies as $strategy) {
+                $this->processingContext->setStrategy($strategy);
+                try {
+                    $this->processingContext->execute($message);
+                    if (false === isset($messagesToMove[$message->getUniqueId()])) {
+                        $messagesToMove[$message->getUniqueId()] = $message;
+                    }
+                } catch (\Exception $e) {
+                }
             }
         }
+        $provider->markMessagesAsProcessed($messagesToMove);
     }
 }
