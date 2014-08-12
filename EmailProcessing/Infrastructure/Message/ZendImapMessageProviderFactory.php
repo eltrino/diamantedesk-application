@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Mail;
+namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\ImapMessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider;
@@ -27,6 +27,11 @@ class ZendImapMessageProviderFactory implements MessageProviderFactory
      */
     public function create(array $params)
     {
+        if (isset($params['ssl']) && true === $params['ssl']) {
+            $params['ssl'] = 'SSL';
+        } elseif (isset($params['ssl']) && false === $params['ssl']) {
+            unset($params['ssl']);
+        }
         return new ImapMessageProvider(new \Zend\Mail\Storage\Imap($params));
     }
 }

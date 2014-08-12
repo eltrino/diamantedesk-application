@@ -48,7 +48,7 @@ class RawMessageProvider implements MessageProvider
     public function fetchMessagesToProcess()
     {
         $zendMailMessage = $this->converter->fromRawMessage($this->input);
-        return array(new Message('1', 'c'));
+        return array(new Message(uniqid($zendMailMessage->getSubject()), $zendMailMessage->getBodyText()));
     }
 
     /**

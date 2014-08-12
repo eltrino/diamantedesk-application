@@ -32,6 +32,6 @@ class ZendRawMessageProviderFactory implements MessageProviderFactory
         if (!isset($params['raw_message']) || false === is_string($params['raw_message'])) {
             throw new MessageProcessingException('Input raw message is missed or has a wrong type.');
         }
-        return new RawMessageProvider($params['input'], new MessageConverter());
+        return new RawMessageProvider($params['raw_message'], new MessageConverter());
     }
 }

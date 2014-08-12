@@ -32,10 +32,12 @@ class PipeEmailProcessingCommand extends ContainerAwareCommand
     {
         $output->writeln("Start Pipe Email Processing");
         $message = '';
-        while (!feof(STDIN)) {
-            $message .= fread(STDIN, 8192);
+        $in = fopen('php://stdin', 'r');
+        while (!feof($in)) {
+            $message .= fread($in, 1024);
         }
+        fclose($in);
         $this->getContainer()->get('diamante.email_processing.service')->pipe($message);
         $output->writeln("Pipe Email Processing Done");
     }
-} 
+}

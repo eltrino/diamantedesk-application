@@ -23,6 +23,6 @@ class MessageConverter
      */
     public function fromRawMessage($rawMessage)
     {
-        return \Zend\Mail\Message::fromString($input);
+        return \Zend\Mail\Message::fromString($rawMessage);
     }
 }

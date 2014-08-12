@@ -15,10 +15,9 @@
 namespace Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl;
 
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Api\EmailProcessingService;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Mail\ZendImapMessageProviderFactory;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\ImapMessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\MessageConverter;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\Zend\RawMessageProvider;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\SystemSettings;
+use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProvider;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message\MessageProviderFactory;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context;
 use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\ManagerInterface;
@@ -40,13 +39,25 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     private $rawMessageProviderFactory;
 
+    /**
+     * @var SystemSettings
+     */
+    private $settings;
+
+    /**
+     * @var MessageProvider
+     */
+    private $mailboxMessageProvider;
+
     public function __construct(ManagerInterface $manager,
                                 MessageProviderFactory $mailboxMessageProviderFactory,
-                                MessageProviderFactory $rawMessageProviderFactory
+                                MessageProviderFactory $rawMessageProviderFactory,
+                                SystemSettings $settings
     ) {
         $this->manager = $manager;
         $this->mailboxMessageProviderFactory = $mailboxMessageProviderFactory;
         $this->rawMessageProviderFactory = $rawMessageProviderFactory;
+        $this->settings = $settings;
     }
 
     /**
@@ -55,7 +66,20 @@ class EmailProcessingServiceImpl implements EmailProcessingService
      */
     public function process()
     {
-        $this->manager->handle($this->mailboxMessageProviderFactory->create(array()));
+        $this->manager->handle($this->getMailBoxMessageProvider());
+    }
+
+    private function getMailBoxMessageProvider()
+    {
+        if (is_null($this->mailBoxMessageProvider)) {
+            $this->mailboxMessageProvider = $this->mailboxMessageProviderFactory->create(array(
+                'host' => $this->settings->getServerAddress(),
+                'user' => $this->settings->getUsername(),
+                'password' => $this->settings->getPassword(),
+                'ssl' => $this->settings->getSslEnabled()
+            ));
+        }
+        return $this->mailboxMessageProvider;
     }
 
     /**

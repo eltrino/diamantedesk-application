@@ -22,8 +22,10 @@
         <parameter key="diamante.email_processing.context.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Context</parameter>
         <parameter key="diamante.email_processing.strategy_holder.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\StrategyHolder</parameter>
         <parameter key="diamante.email_processing.service.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Api\Impl\EmailProcessingServiceImpl</parameter>
-        <parameter key="diamante.email_processing.mail.service.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MailServiceImpl</parameter>
         <parameter key="diamante.email_processing.mail_system_settings.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Mail\SystemSettings</parameter>
+        <parameter key="diamante.email_processing.message_processing_manager.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Service\MessageProcessingManager</parameter>
+        <parameter key="diamante.email_processing.zend_imap_message_provider.factory.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\ZendImapMessageProviderFactory</parameter>
+        <parameter key="diamante.email_processing.zend_raw_message_provider.factory.class">Eltrino\DiamanteDeskBundle\EmailProcessing\Infrastructure\Message\ZendRawMessageProviderFactory</parameter>
     </parameters>
 
     <services>
@@ -31,14 +33,18 @@
 
         <service id="diamante.email_processing.context" class="%diamante.email_processing.context.class%" />
 
-        <service id="diamante.email_processing.mail.service" class="%diamante.email_processing.mail.service.class%" />
+        <service id="diamante.email_processing.zend_imap_message_provider.factory" class="%diamante.email_processing.zend_imap_message_provider.factory.class%"/>
+        <service id="diamante.email_processing.zend_raw_message_provider.factory" class="%diamante.email_processing.zend_raw_message_provider.factory.class%"/>
 
-        <service id="diamante.email_processing.service" class="%diamante.email_processing.service.class%">
-           <!--
-            <argument type="service" id="diamante.email_processing.mail.service"/>
+        <service id="diamante.email_processing.message_processing_manager" class="%diamante.email_processing.message_processing_manager.class%">
             <argument type="service" id="diamante.email_processing.context"/>
             <argument type="service" id="diamante.email_processing.strategy_holder"/>
-           -->
+        </service>
+
+        <service id="diamante.email_processing.service" class="%diamante.email_processing.service.class%">
+            <argument type="service" id="diamante.email_processing.message_processing_manager"/>
+            <argument type="service" id="diamante.email_processing.zend_imap_message_provider.factory"/>
+            <argument type="service" id="diamante.email_processing.zend_raw_message_provider.factory"/>
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
         </service>
 

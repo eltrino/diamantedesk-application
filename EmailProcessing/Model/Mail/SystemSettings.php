@@ -29,7 +29,7 @@ class SystemSettings
     private $port;
 
     /**
-     * @var string
+     * @var bool
      */
     private $sslEnabled;
 
@@ -50,7 +50,7 @@ class SystemSettings
     {
         $this->serverAddress = $configManager->get('eltrino_diamante_desk.mailbox_server_address');
         $this->port          = $configManager->get('eltrino_diamante_desk.mailbox_port');
-        $this->sslEnabled    = $configManager->get('eltrino_diamante_desk.mailbox_ssl');
+        $this->sslEnabled    = (bool) $configManager->get('eltrino_diamante_desk.mailbox_ssl');
         $this->username      = $configManager->get('eltrino_diamante_desk.mailbox_username');
         $this->password      = $configManager->get('eltrino_diamante_desk.mailbox_password');
     }
@@ -72,7 +72,7 @@ class SystemSettings
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getSslEnabled()
     {
@@ -94,4 +94,4 @@ class SystemSettings
     {
         return $this->password;
     }
-} 
+}
