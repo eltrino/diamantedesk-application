@@ -18,12 +18,15 @@ use Eltrino\DiamanteDeskBundle\Form\Command\BranchCommand;
 use Eltrino\DiamanteDeskBundle\Branch\Api\BranchServiceImpl;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskbundle\Tests\Stubs\TestUploadedFile;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_BRANCH_ID = 1;
+    const LOGO_DIR = '/../../Fixture/files';
+    const LOGO_NAME = '/fixture.png';
 
     /**
      * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
@@ -55,8 +58,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $tagManager;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @var TestUploadedFile
      */
     private $fileMock;
 
@@ -82,6 +84,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->branchLogoHandler,
             $this->tagManager
         );
+
+        $this->fileMock = new TestUploadedFile(__DIR__ . self::LOGO_DIR . DIRECTORY_SEPARATOR . self::LOGO_NAME, self::LOGO_NAME);
     }
 
     /**
@@ -95,11 +99,11 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $description = 'DUMMY_DESC';
         $logoFile = $this->fileMock;
 
-//        $this->branchLogoHandler
-//            ->expects($this->once())
-//            ->method('upload')
-//            ->with($this->equalTo($this->fileMock))
-//            ->will($this->returnValue($this->fileMock));
+        $this->branchLogoHandler
+            ->expects($this->once())
+            ->method('upload')
+            ->with($this->equalTo($this->fileMock))
+            ->will($this->returnValue($this->fileMock));
 
         $this->branchFactory
             ->expects($this->once())
@@ -160,22 +164,19 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue($this->branch));
 
-//        $this->branch->expects($this->exactly(2))
-//            ->method('getLogo')
-//            ->will($this->returnValue($this->logo));
+        $this->branch->expects($this->exactly(2))
+            ->method('getLogo')
+            ->will($this->returnValue($this->logo));
 
-//        $this->branchLogoHandler->expects($this->once())
-//            ->method('remove')
-//            ->with($this->equalTo($this->logo));
+        $this->branchLogoHandler->expects($this->once())
+            ->method('remove')
+            ->with($this->equalTo($this->logo));
 
-//        $this->branchLogoHandler
-//            ->expects($this->once())
-//            ->method('upload')
-//            ->with($this->equalTo($this->fileMock))
-//            ->will($this->returnValue($this->fileMock));
-
-//        $this->fileMock->expects($this->once())
-//            ->method('getFilename');
+        $this->branchLogoHandler
+            ->expects($this->once())
+            ->method('upload')
+            ->with($this->equalTo($this->fileMock))
+            ->will($this->returnValue($this->fileMock));
 
         $name = 'DUMMY_NAME_UPDT';
         $description = 'DUMMY_DESC_UPDT';
@@ -213,8 +214,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branch->expects($this->never())
             ->method('getLogo');
 
-//        $this->branchLogoHandler->expects($this->never())
-//            ->method('remove');
+        $this->branchLogoHandler->expects($this->never())
+            ->method('remove');
 
         $this->branchLogoHandler
             ->expects($this->never())
