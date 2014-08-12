@@ -22,7 +22,6 @@ define(['jquery', 'underscore'],
         event.originalEvent.dataTransfer.effectAllowed= 'none';
         event.originalEvent.dataTransfer.dropEffect= 'none';
 
-        console.log(event.target);
         if(event.target == file) {
           event.originalEvent.dataTransfer.effectAllowed= 'copyMove';
           event.originalEvent.dataTransfer.dropEffect= 'move';
