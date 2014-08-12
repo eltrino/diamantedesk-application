@@ -21,12 +21,12 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
 use Eltrino\DiamanteDeskBundle\Command\FixturesPurgeCommand;
 
-if (!is_file($autoload = __DIR__ . getenv('CLASS_AUTOLOADER'))) {
+if (!is_file($autoload = realpath(__DIR__ . getenv('CLASS_AUTOLOADER')))) {
     throw new \LogicException('Run "composer install --dev" to create autoloader.');
 }
 
 // Set kernel folder path dynamically to avoid absolute path in config file
-$_SERVER['KERNEL_DIR'] = __DIR__ . getenv('KERNEL_DIR');
+$_SERVER['KERNEL_DIR'] = realpath(__DIR__ . getenv('KERNEL_DIR'));
 
 $loader = require $autoload;
 $output = new ConsoleOutput();
@@ -36,6 +36,11 @@ AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 $autoloadFlag = getenv('AUTOLOAD_FIXTURES');
 
 if (true === (bool)$autoloadFlag) {
+    $kernelDir = $_SERVER['KERNEL_DIR'];
+    $appKernelClass = $kernelDir . DS . 'AppKernel.php';
+
+    require $appKernelClass;
+
     $kernel = new AppKernel('test', true);
     $kernel->boot();
 
@@ -62,7 +67,7 @@ if (true === (bool)$autoloadFlag) {
     ));
 
     try {
-        $output->writeln('Removing previously loaded test fixtures');
+        $output->writeln("\033[32m\033[1mRemoving previously loaded test fixtures\033[0m");
         $purgeCommand->run($purgeInput, $output);
         $output->writeln("Loading fixtures...\n");
         $loadCommand->run($input, $output);
@@ -72,7 +77,7 @@ if (true === (bool)$autoloadFlag) {
         $output->writeln("\n");
     }
 } else {
-    $output->writeln('Autoload of test fixtures with prior purge is disabled in config');
+    $output->writeln("\033[31m\033[1mAutoload of test fixtures with prior purge is disabled in config\033[0m");
 }
 
 return $loader;

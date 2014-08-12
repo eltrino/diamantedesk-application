@@ -33,5 +33,6 @@
         <env name="AUTOLOAD_FIXTURES" value="false"/>
         <env name="CLASS_AUTOLOADER"  value="/../../../../../vendor/autoload.php"/>
         <env name="KERNEL_DIR" value="/../../../../../app"/>
+        <const name="DS" value="/"/>
     </php>
 </phpunit>

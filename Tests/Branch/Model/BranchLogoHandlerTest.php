@@ -15,22 +15,30 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Branch\Model;
 
 use Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler;
+use Eltrino\DiamanteDeskBundle\Branch\Model\Branch;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Exception\LogoHandlerLogicException;
+use Eltrino\DiamanteDeskBundle\Tests\Stubs\TestFileInfo;
+use Eltrino\DiamanteDeskBundle\Tests\Stubs\TestUploadedFile;
 
 class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
 {
+
+    const PNG_FIXTURE_NAME = 'fixture.png';
+    const BMP_FIXTURE_NAME = 'fixture.bmp';
+    const NON_WRITABLE_DIR = '/var/log';
+    const NON_EXISTENT_DIR = '/non_existent_dir';
+    const FIXTURE_FOLDER   = '/../../Fixture/files';
+
     /**
-     * @var \SplFileInfo
-     * @Mock \SplFileInfo
+     * @var TestFileInfo
      */
     private $dirMock;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @var TestUploadedFile
      */
     private $fileMock;
 
@@ -46,9 +54,24 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
      */
     private $handler;
 
+    /**
+     * @var string
+     */
+    private $uploadDir;
+
+    /**
+     * @var string
+     */
+    private $fixturesDir;
+
+
     protected function setUp()
     {
         MockAnnotations::init($this);
+        $this->uploadDir = sys_get_temp_dir();
+        $this->dirMock = new TestFileInfo($this->uploadDir);
+        $this->fixturesDir = __DIR__ . self::FIXTURE_FOLDER;
+        $this->fileMock = new TestUploadedFile($this->fixturesDir . '/' . self::PNG_FIXTURE_NAME, self::PNG_FIXTURE_NAME);
         $this->handler = new BranchLogoHandler($this->dirMock, $this->fileSysMock);
     }
 
@@ -58,12 +81,8 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileUploadThrowExceptionWhenMimeTypeIsNotPermitted()
     {
-        $this->fileMock
-            ->expects($this->exactly(2))
-            ->method('getMimeType')
-            ->will($this->returnValue('wrongMimeType'));
-
-        $this->handler->upload($this->fileMock);
+        $pictureWithNotPermittedMimeType = new TestUploadedFile($this->fixturesDir . '/' . self::BMP_FIXTURE_NAME, self::BMP_FIXTURE_NAME);
+        $this->handler->upload($pictureWithNotPermittedMimeType, self::BMP_FIXTURE_NAME);
     }
 
     /**
@@ -71,38 +90,15 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileUploadToCorrectDir()
     {
-        $this->fileMock
-            ->expects($this->exactly(1))
-            ->method('getMimeType')
-            ->will($this->returnValue('image/gif'));
+        $this->assertEquals('image/png', $this->fileMock->getMimeType());
+        $this->assertEquals('png', strtolower($this->fileMock->guessExtension()));
 
-        $this->fileMock
-            ->expects($this->once())
-            ->method('guessExtension')
-            ->will($this->returnValue('dummy'));
+        $this->assertEquals($this->uploadDir, $this->dirMock->getRealPath());
+        $this->assertTrue($this->dirMock->isDir());
+        $this->assertTrue($this->dirMock->isWritable());
 
-        $this->dirMock->expects($this->exactly(1))
-            ->method('getRealPath')
-            ->will($this->returnValue('logo/fdirectory/full/path'));
-
-        $this->dirMock->expects($this->once())
-            ->method('isDir')
-            ->will($this->returnValue(true));
-
-        $this->dirMock->expects($this->once())
-            ->method('isWritable')
-            ->will($this->returnValue(true));
-
-        $movedFile = $this->getMockBuilder('Symfony\Component\HttpFoundation\File\UploadedFile')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->fileMock->expects($this->once())
-            ->method('move')
-            ->with($this->equalTo('logo/fdirectory/full/path'), $this->matchesRegularExpression('/.(\.)dummy/'))
-            ->will($this->returnValue($movedFile));
-
-        $this->handler->upload($this->fileMock);
+        $uploadedFile = $this->handler->upload($this->fileMock, self::PNG_FIXTURE_NAME);
+        $this->assertEquals($this->uploadDir . '/' . self::PNG_FIXTURE_NAME, $uploadedFile->getPathname());
     }
 
     /**
@@ -111,25 +107,15 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileUploadThrowExceptionWhenDirectoryIsNotWritable()
     {
-        $this->fileMock
-            ->expects($this->exactly(1))
-            ->method('getMimeType')
-            ->will($this->returnValue('image/gif'));
+        $this->dirMock = new TestFileInfo(self::NON_WRITABLE_DIR);
+        $this->handler = new BranchLogoHandler($this->dirMock, $this->fileSysMock);
+        $this->assertEquals('image/png', $this->fileMock->getMimeType());
+        $this->assertEquals('png', strtolower($this->fileMock->guessExtension()));
 
-        $this->fileMock
-            ->expects($this->once())
-            ->method('guessExtension')
-            ->will($this->returnValue('dummy'));
+        $this->assertEquals(true, $this->dirMock->isDir());
+        $this->assertEquals(false, $this->dirMock->isWritable());
 
-        $this->dirMock->expects($this->once())
-            ->method('isDir')
-            ->will($this->returnValue(true));
-
-        $this->dirMock->expects($this->once())
-            ->method('isWritable')
-            ->will($this->returnValue(false));
-
-        $this->handler->upload($this->fileMock);
+        $this->handler->upload($this->fileMock, self::PNG_FIXTURE_NAME);
     }
 
     /**
@@ -138,24 +124,14 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileUploadThrowExceptionWhenDirectoryDoesNotExist()
     {
-        $this->fileMock
-            ->expects($this->exactly(1))
-            ->method('getMimeType')
-            ->will($this->returnValue('image/gif'));
+        $this->dirMock = new TestFileInfo(self::NON_EXISTENT_DIR);
+        $this->handler = new BranchLogoHandler($this->dirMock, $this->fileSysMock);
+        $this->assertEquals('image/png', $this->fileMock->getMimeType());
+        $this->assertEquals('png', strtolower($this->fileMock->guessExtension()));
 
-        $this->fileMock
-            ->expects($this->once())
-            ->method('guessExtension')
-            ->will($this->returnValue('dummy'));
+        $this->assertEquals(false, $this->dirMock->isDir());
+        $this->assertEquals(false, $this->dirMock->isWritable());
 
-        $this->dirMock->expects($this->once())
-            ->method('isDir')
-            ->will($this->returnValue(false));
-
-        $this->dirMock->expects($this->exactly(0))
-            ->method('isWritable')
-            ->will($this->returnValue(false));
-
-        $this->handler->upload($this->fileMock);
+        $this->handler->upload($this->fileMock, self::PNG_FIXTURE_NAME);
     }
 }
