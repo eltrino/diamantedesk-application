@@ -6,23 +6,47 @@ define(['jquery', 'underscore'],
         $label = $('#diam-dropzone-label'),
         $loader = $('#diam-dropzone-loader'),
         file = document.createElement('input'),
-        template = _.template(document.getElementById('template-attachments').innerHTML);
+        template = _.template(document.getElementById('template-attachments').innerHTML),
+        dropZoneHideDelay = 70,
+        dropZoneTimer = null,
+        dropZoneVisible = null;
 
-    $attachments.on('dragenter', function (e) {
-      console.log('enter');
-      $dropzone.addClass('diam-dropzone-active');
-    });
+    $(document).on('dragstart dragenter dragover', function(event) {
+      if ($.inArray('Files', event.originalEvent.dataTransfer.types) > -1) {
+        event.stopPropagation();
 
-    $dropzone.on('dragleave', function (e) {
-      console.log('leave');
-      $dropzone.removeClass('diam-dropzone-active');
+
+        $dropzone.addClass('diam-dropzone-active');
+        dropZoneVisible= true;
+
+        event.originalEvent.dataTransfer.effectAllowed= 'none';
+        event.originalEvent.dataTransfer.dropEffect= 'none';
+
+        console.log(event.target);
+        if(event.target == file) {
+          event.originalEvent.dataTransfer.effectAllowed= 'copyMove';
+          event.originalEvent.dataTransfer.dropEffect= 'move';
+        } else {
+          event.preventDefault();
+        }
+      }
+    }).on('drop dragleave dragend', function (event) {
+      dropZoneVisible= false;
+
+      clearTimeout(dropZoneTimer);
+      dropZoneTimer = setTimeout( function(){
+        if( !dropZoneVisible ) {
+          $dropzone.removeClass('diam-dropzone-active');
+        }
+      }, dropZoneHideDelay);
     });
 
     file.type = 'file';
     file.name = 'diamante_attachment_form[files][]';
     file.multiple = true;
+
     $(window).load(function () {
-      form.appendChild(file)
+      $(form).append(file);
     });
 
     file.addEventListener('change', function () {

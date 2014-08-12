@@ -140,7 +140,7 @@
  * Drag&Drop zone
  */
 
-.diam-attachment {
+body {
     pointer-events: none;
 }
 .diam-dropzone {
@@ -181,6 +181,8 @@
     margin: 0;
     top:0;
     bottom: 2em;
+    left: 2em;
+    opacity: .9;
 }
 .diam-dropzone-active .diam-dropzone-placeholder {
     margin: 0;
