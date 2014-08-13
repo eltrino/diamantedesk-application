@@ -1,5 +1,5 @@
-define(['jquery', 'underscore'],
-  function ($, _) {
+define(['jquery', 'underscore', 'oroui/js/modal'],
+  function ($, _, Modal) {
     return function($file){
       var form = document.getElementById('diam-dropzone-form'),
           $dropzone = $('#diam-dropzone'),
@@ -26,15 +26,21 @@ define(['jquery', 'underscore'],
             }).done(function(response){
               var attachments =  $.parseJSON(response),
                 newElements = template({attachments : attachments});
-
+                $dropzone.before(newElements);
+            }).always(function(){
               $label.show();
               $loader.hide();
-
               $dropzone.removeClass('diam-dropzone-active');
-              $dropzone.before(newElements);
-
               form.reset();
-            })
+            }).fail(function(){
+              var dialog = new Modal({
+                content: 'Something went wrong, try upload file once more',
+                cancelText: 'Close',
+                title: 'File Upload Error',
+                className: 'modal oro-modal-danger'
+              });
+              dialog.open()
+            });
 
           },
           onDragStart = function(event) {
