@@ -43,16 +43,24 @@ define(['jquery', 'underscore'],
       file.name = 'diamante_attachment_form[files][]';
       file.multiple = true;
 
-      $(form).append(file);
+      if(document.readyState === "complete"){
+        $(form).append(file);
+      } else {
+        $(window).load(function(){ $(form).append(file); });
+      }
+
+
 
       file.addEventListener('change', function () {
+        var data = new FormData(form);
+        data.append('diam-dropzone', 1);
 
         $label.hide();
         $loader.show();
 
         $.ajax({
           url: form.action,
-          data:  new FormData(form),
+          data: data,
           processData: false,
           contentType: false,
           type: 'POST'
