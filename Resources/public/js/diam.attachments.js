@@ -1,80 +1,82 @@
 define(['jquery', 'underscore'],
   function ($, _) {
-    return function(){
+    return function($file){
       var form = document.getElementById('diam-dropzone-form'),
           $dropzone = $('#diam-dropzone'),
           $label = $('#diam-dropzone-label'),
           $loader = $('#diam-dropzone-loader'),
-          file = document.createElement('input'),
           template = _.template(document.getElementById('template-attachments').innerHTML),
           dropZoneHideDelay = 70,
           dropZoneTimer = null,
-          dropZoneVisible = null;
+          dropZoneVisible = null,
 
-      $(document).on('dragstart dragenter dragover', function(event) {
-        if ($.inArray('Files', event.originalEvent.dataTransfer.types) > -1) {
-          event.stopPropagation();
+          onChange = function () {
+            var data = new FormData(form);
+            data.append('diam-dropzone', 1);
 
-          $dropzone.addClass('diam-dropzone-active');
-          dropZoneVisible= true;
+            $label.hide();
+            $loader.show();
 
-          event.originalEvent.dataTransfer.effectAllowed= 'none';
-          event.originalEvent.dataTransfer.dropEffect= 'none';
+            $.ajax({
+              url: form.action,
+              data: data,
+              processData: false,
+              contentType: false,
+              type: 'POST'
+            }).done(function(response){
+              var attachments =  $.parseJSON(response),
+                newElements = template({attachments : attachments});
 
-          if(event.target == file) {
-            event.originalEvent.dataTransfer.effectAllowed= 'copyMove';
-            event.originalEvent.dataTransfer.dropEffect= 'move';
-          } else {
-            event.preventDefault();
-          }
-        }
-      }).on('drop dragleave dragend', function (event) {
-        dropZoneVisible= false;
+              $label.show();
+              $loader.hide();
 
-        clearTimeout(dropZoneTimer);
-        dropZoneTimer = setTimeout( function(){
-          if( !dropZoneVisible ) {
-            $dropzone.removeClass('diam-dropzone-active');
-          }
-        }, dropZoneHideDelay);
+              $dropzone.removeClass('diam-dropzone-active');
+              $dropzone.before(newElements);
+
+              form.reset();
+            })
+
+          },
+          onDragStart = function(event) {
+            if ($.inArray('Files', event.originalEvent.dataTransfer.types) > -1) {
+              event.stopPropagation();
+
+              $dropzone.addClass('diam-dropzone-active');
+              dropZoneVisible= true;
+
+              event.originalEvent.dataTransfer.effectAllowed= 'none';
+              event.originalEvent.dataTransfer.dropEffect= 'none';
+              if(event.target.id = 'diam-dropzone-file') {
+                event.originalEvent.dataTransfer.effectAllowed= 'copyMove';
+                event.originalEvent.dataTransfer.dropEffect= 'move';
+              } else {
+                event.preventDefault();
+              }
+            }
+          },
+          onDragEnd = function (event) {
+            dropZoneVisible= false;
+
+            clearTimeout(dropZoneTimer);
+            dropZoneTimer = setTimeout( function(){
+              if( !dropZoneVisible ) {
+                $dropzone.removeClass('diam-dropzone-active');
+              }
+            }, dropZoneHideDelay);
+          };
+
+      $(document).off('dragstart dragenter dragover', onDragStart).off('drop dragleave dragend', onDragEnd);
+      $(document).on('dragstart dragenter dragover', onDragStart).on('drop dragleave dragend', onDragEnd);
+
+      $file.on('uniformInit', function(){
+        $.uniform.restore($file);
       });
-
-      file.type = 'file';
-      file.name = 'diamante_attachment_form[files][]';
-      file.multiple = true;
-
-      if(document.readyState === "complete"){
-        $(form).append(file);
-      } else {
-        $(window).load(function(){ $(form).append(file); });
+      if($.uniform) {
+        $.uniform.restore($file);
       }
 
 
-
-      file.addEventListener('change', function () {
-        var data = new FormData(form);
-        data.append('diam-dropzone', 1);
-
-        $label.hide();
-        $loader.show();
-
-        $.ajax({
-          url: form.action,
-          data: data,
-          processData: false,
-          contentType: false,
-          type: 'POST'
-        }).done(function(response){
-          var attachments =  $.parseJSON(response),
-              newElements = template({attachments : attachments});
-          $label.show();
-          $loader.hide();
-          $dropzone.removeClass('diam-dropzone-active');
-          $dropzone.before(newElements);
-          form.reset();
-        });
-
-      }, false);
+      $file.on('change', onChange);
     }
   }
 );

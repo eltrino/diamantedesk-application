@@ -35,6 +35,8 @@
                 <form id="diam-dropzone-form" action="{{ path('diamante_ticket_create_attach_post', {'id': ticket_id}) }}" method="post" enctype="multipart/form-data">
                     <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> Drop File Here</label>
                     <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>
+                    <input type="hidden" name="diamante_attachment_form[_token]" value="{{ csrf_token('diamante_attachment_form') }}" />
+                    <input id="diam-dropzone-file" type="file" name="diamante_attachment_form[files][]" multiple />
                 </form>
             </div>
         </li>
@@ -47,7 +49,7 @@
 </div>
 <script type="text/javascript">
     require(['eltrinodiamantedesk/js/diam.attachments'], function(attachments){
-        attachments();
+        attachments($('#diam-dropzone-file'));
     });
 </script>
 
