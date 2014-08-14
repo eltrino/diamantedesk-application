@@ -39,29 +39,6 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
-        SettingsBuilder::append(
-            $rootNode,
-            array(
-                'mailbox_server_address' => array(
-                    'value' => '',
-                    'type' => 'scalar'
-                ),
-                'mailbox_port' => array(
-                    'value' => '',
-                    'type' => 'scalar'
-                ),
-                'mailbox_ssl'     => array('value' => false, 'type' => 'bool'),
-                'mailbox_username' => array(
-                    'value' => '',
-                    'type' => 'scalar'
-                ),
-                'mailbox_password' => array(
-                    'value' => '',
-                    'type' => 'password'
-                )
-            )
-        );
-
         return $treeBuilder;
     }
 }

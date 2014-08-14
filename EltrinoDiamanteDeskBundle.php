@@ -15,9 +15,7 @@
 namespace Eltrino\DiamanteDeskBundle;
 
 use Doctrine\DBAL\Types\Type;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Eltrino\DiamanteDeskBundle\DependencyInjection\Compiler\EmailProcessingStrategyPass;
 
 class EltrinoDiamanteDeskBundle extends Bundle
 {
@@ -50,12 +48,5 @@ class EltrinoDiamanteDeskBundle extends Bundle
 
         $conn->getDatabasePlatform()
             ->registerDoctrineTypeMapping('FILE', 'string');
-    }
-
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new EmailProcessingStrategyPass());
     }
 }

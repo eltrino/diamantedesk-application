@@ -14,8 +14,8 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing;
 
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Processing\Strategy;
-use Eltrino\DiamanteDeskBundle\EmailProcessing\Model\Message;
+use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
+use Eltrino\EmailProcessingBundle\Model\Message;
 
 class TicketStrategy implements Strategy
 {
@@ -23,4 +23,4 @@ class TicketStrategy implements Strategy
     {
         //...
     }
-} 
+}
