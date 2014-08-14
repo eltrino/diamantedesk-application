@@ -26,6 +26,7 @@ define(['jquery', 'underscore', 'oroui/js/modal'],
               type: 'POST'
             }).done(function(json){
               var newElements = template({attachments : json});
+              $dropzone.find('.diam-attachment-new').removeClass('diam-attachment-new');
               $dropzone.before(newElements);
             }).always(function(){
               $label.show();
