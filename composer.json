@@ -1,0 +1,40 @@
+{
+    "name": "eltrino/diamantedesk-email-processing-bundle",
+    "description": "Diamante Desk Email Processing Bundle",
+    "homepage": "https://github.com/eltrino/EltrinoEmailProcessingBundle",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrino LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Eltrino\\EmailProcessingBundle": "."
+        }
+    },
+    "target-dir": "Eltrino/EmailProcessingBundle",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/eltrino/EltrinoEmailProcessingBundle.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.4",
+        "oro/platform": "1.2.*",
+        "beberlei/assert": "*",
+        "zendframework/zend-mail": "2.*.*"
+    },
+    "require-dev": {
+        "eltrino/phpunit-mockannotations": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

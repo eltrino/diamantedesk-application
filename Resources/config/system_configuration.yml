@@ -1,0 +1,64 @@
+oro_system_configuration:
+    groups:
+        diamantedesk_setup:
+            title: 'DiamanteDesk'
+            priority: 30
+
+        diamantedesk_email_integration:
+            title: 'Email Integration'
+            icon:  icon-envelope
+
+        diamantedesk_mailbox:
+            title:       'Mailbox'
+
+    fields:
+        eltrino_email_processing.mailbox_server_address:
+            type: text
+            priority: 95
+            options:
+                label: 'Server Address'
+
+        eltrino_email_processing.mailbox_port:
+            type: text
+            priority: 90
+            options:
+                label: 'Port'
+
+        eltrino_email_processing.mailbox_ssl:
+            type: choice
+            priority: 85
+            options:
+                label: 'SSL'
+                choices:
+                    - No
+                    - Yes
+
+        eltrino_email_processing.mailbox_username:
+            type: text
+            priority: 80
+            options:
+                label: 'Username'
+
+        eltrino_email_processing.mailbox_password:
+            type: password
+            priority: 75
+            options:
+                label: 'Password'
+
+    tree:
+        system_configuration:
+            platform:
+                children:
+                    diamantedesk_setup:
+                        children:
+                            diamantedesk_email_integration:
+                                children:
+                                    diamantedesk_mailbox:
+                                        priority: 260
+                                        children:
+                                            - eltrino_email_processing.mailbox_server_address
+                                            - eltrino_email_processing.mailbox_port
+                                            - eltrino_email_processing.mailbox_ssl
+                                            - eltrino_email_processing.mailbox_username
+                                            - eltrino_email_processing.mailbox_password
+
