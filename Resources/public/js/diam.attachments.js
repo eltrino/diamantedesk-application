@@ -20,13 +20,13 @@ define(['jquery', 'underscore', 'oroui/js/modal'],
             $.ajax({
               url: form.action,
               data: data,
+              dataType: 'json',
               processData: false,
               contentType: false,
               type: 'POST'
-            }).done(function(response){
-              var attachments =  $.parseJSON(response),
-                newElements = template({attachments : attachments});
-                $dropzone.before(newElements);
+            }).done(function(json){
+              var newElements = template({attachments : json});
+              $dropzone.before(newElements);
             }).always(function(){
               $label.show();
               $loader.hide();
