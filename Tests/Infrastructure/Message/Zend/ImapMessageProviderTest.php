@@ -14,6 +14,7 @@
  */
 namespace Eltrino\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
+use Eltrino\EmailProcessingBundle\Infrastructure\Message\MessageFactory;
 use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
 use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
 use Zend\Mail\Storage\Message;
@@ -21,6 +22,12 @@ use Zend\Mail\Storage\Message;
 class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_BATCH_SIZE_IN_BYTES = 5;
+
+    const DUMMY_MESSAGE_ID        = 'dummy_message_id';
+    const DUMMY_MESSAGE_SUBJECT   = 'dummy_message_subject';
+    const DUMMY_MESSAGE_CONTENT   = 'dummy_message_content';
+    const DUMMY_MESSAGE_REFERENCE = 'dummy_message_reference';
+
 
     /**
      * @var ImapMessageProvider
@@ -30,7 +37,9 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->messageProvider = new ImapMessageProvider(
-            new ZendImapDummyStorage($this->messages()), self::DUMMY_BATCH_SIZE_IN_BYTES
+            new ZendImapDummyStorage($this->messages()),
+            new MessageFactory(),
+            self::DUMMY_BATCH_SIZE_IN_BYTES
         );
     }
 
@@ -44,13 +53,18 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $zendImapStorage = $this->getMockBuilder('\Zend\Mail\Storage\Imap')
             ->disableOriginalConstructor()
             ->getMock();
+
         $zendImapStorage->expects($this->once())->method('getSize')
             ->will(
                 $this->throwException(
                     new \Zend\Mail\Protocol\Exception\RuntimeException('Dummy_Exception_Message')
                 )
             );
-        $messageProvider = new ImapMessageProvider($zendImapStorage, self::DUMMY_BATCH_SIZE_IN_BYTES);
+
+        $messageFactory = $this->getMockBuilder('Eltrino\EmailProcessingBundle\Infrastructure\Message\MessageFactory')
+            ->getMock();
+
+        $messageProvider = new ImapMessageProvider($zendImapStorage, $messageFactory, self::DUMMY_BATCH_SIZE_IN_BYTES);
         $messageProvider->fetchMessagesToProcess();
     }
 
@@ -73,9 +87,11 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $zendImapStorage = $this->getMockBuilder('\Zend\Mail\Storage\Imap')
             ->disableOriginalConstructor()
             ->getMock();
+
         $zendImapStorage->expects($this->any())->method('getNumberByUniqueId')
             ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING))
             ->will($this->returnValue(1));
+
         $zendImapStorage->expects($this->once())->method('getFolders')->will(
             $this->returnValue(
                 new \Zend\Mail\Storage\Folder('/', '/', false, array(
@@ -91,15 +107,24 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
                 $this->attributeEqualTo('localName', 'INBOX')
             )
         );
+
         $zendImapStorage->expects($this->any())->method('move')->with($this->equalTo(1), $this->logicalAnd(
             $this->isInstanceOf('\Zend\Mail\Storage\Folder'),
             $this->attributeEqualTo('localName', 'INBOX/' . ImapMessageProvider::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES)
         ));
-        $messageProvider = new ImapMessageProvider($zendImapStorage);
+
+        $messageFactory = $this->getMockBuilder('Eltrino\EmailProcessingBundle\Infrastructure\Message\MessageFactory')
+            ->getMock();
+
+        $messageProvider = new ImapMessageProvider($zendImapStorage, $messageFactory);
         $messages = array();
         foreach ($this->messages() as $message) {
             $messages[] = new \Eltrino\EmailProcessingBundle\Model\Message(
-                $message['unique_id'], $message['message']->getContent()
+                $message['unique_id'],
+                self::DUMMY_MESSAGE_ID,
+                self::DUMMY_MESSAGE_SUBJECT,
+                self::DUMMY_MESSAGE_CONTENT,
+                self::DUMMY_MESSAGE_REFERENCE
             );
         }
         $messageProvider->markMessagesAsProcessed($messages);
@@ -113,9 +138,11 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $zendImapStorage = $this->getMockBuilder('\Zend\Mail\Storage\Imap')
             ->disableOriginalConstructor()
             ->getMock();
+
         $zendImapStorage->expects($this->any())->method('getNumberByUniqueId')
             ->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING))
             ->will($this->returnValue(1));
+
         $zendImapStorage->expects($this->once())->method('getFolders')->will(
             $this->returnValue(
                 new \Zend\Mail\Storage\Folder('/', '/', false, array(
@@ -125,16 +152,26 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
                 )
             )
         );
+
         $zendImapStorage->expects($this->never())->method('createFolder');
+
         $zendImapStorage->expects($this->any())->method('move')->with($this->equalTo(1), $this->logicalAnd(
             $this->isInstanceOf('\Zend\Mail\Storage\Folder'),
             $this->attributeEqualTo('localName', 'INBOX/' . ImapMessageProvider::NAME_OF_FOLDER_OF_PROCESSED_MESSAGES)
         ));
-        $messageProvider = new ImapMessageProvider($zendImapStorage);
+
+        $messageFactory = $this->getMockBuilder('Eltrino\EmailProcessingBundle\Infrastructure\Message\MessageFactory')
+            ->getMock();
+
+        $messageProvider = new ImapMessageProvider($zendImapStorage, $messageFactory);
         $messages = array();
         foreach ($this->messages() as $message) {
             $messages[] = new \Eltrino\EmailProcessingBundle\Model\Message(
-                $message['unique_id'], $message['message']->getContent()
+                $message['unique_id'],
+                self::DUMMY_MESSAGE_ID,
+                self::DUMMY_MESSAGE_SUBJECT,
+                self::DUMMY_MESSAGE_CONTENT,
+                self::DUMMY_MESSAGE_REFERENCE
             );
         }
         $messageProvider->markMessagesAsProcessed($messages);

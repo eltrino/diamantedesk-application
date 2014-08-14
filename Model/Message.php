@@ -19,17 +19,43 @@ class Message
     /**
      * @var string
      */
+    private $messageId;
+
+    /**
+     * @var string
+     */
     private $uniqueId;
+
+    /**
+     * @var string
+     */
+    private $reference;
 
     /**
      * @var string
      */
     private $content;
 
-    public function __construct($uniqueId, $content)
+    /**
+     * @var string
+     */
+    private $subject;
+
+    public function __construct($uniqueId, $messageId, $subject, $content, $reference = null)
     {
-        $this->uniqueId = $uniqueId;
-        $this->content = $content;
+        $this->uniqueId   = $uniqueId;
+        $this->messageId  = $messageId;
+        $this->subject    = $subject;
+        $this->content    = $content;
+        $this->reference  = $reference;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessageId()
+    {
+        return $this->messageId;
     }
 
     /**
@@ -46,5 +72,21 @@ class Message
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
     }
 }

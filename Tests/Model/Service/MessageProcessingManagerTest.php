@@ -20,6 +20,11 @@ use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
 {
+    const DUMMY_MESSAGE_ID        = 'dummy_message_id';
+    const DUMMY_MESSAGE_SUBJECT   = 'dummy_message_subject';
+    const DUMMY_MESSAGE_CONTENT   = 'dummy_message_content';
+    const DUMMY_MESSAGE_REFERENCE = 'dummy_message_reference';
+
     /**
      * @var MessageProcessingManager
      */
@@ -61,7 +66,7 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function thatHandles()
     {
-        $messages = array(new Message('dummy_unique_id', 'DUMMY_CONTENT'));
+        $messages = array(new Message('dummy_unique_id', 'DUMMY_CONTENT' ,'' , ''));
         $strategies = array($this->strategy);
 
         $this->provider->expects($this->once())->method('fetchMessagesToProcess')->will($this->returnValue($messages));

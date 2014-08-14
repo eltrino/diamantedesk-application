@@ -14,6 +14,7 @@
  */
 namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend;
 
+use Eltrino\EmailProcessingBundle\Infrastructure\Message\MessageFactory;
 use Eltrino\EmailProcessingBundle\Model\Message;
 use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
 use Eltrino\EmailProcessingBundle\Model\MessageProcessingException;
@@ -28,6 +29,11 @@ class ImapMessageProvider implements MessageProvider
      */
     private $zendImapStorage;
 
+    /**
+     * @var MessageFactory
+     */
+    private $messageFactory;
+
     private $batchSizeInBytes;
 
     /**
@@ -37,9 +43,11 @@ class ImapMessageProvider implements MessageProvider
 
     public function __construct(
         \Zend\Mail\Storage\Imap $zendImapStorage,
+        MessageFactory $messageFactory,
         $batchSizeInBytes = self::BATCH_SIZE_OF_MESSAGES_IN_BYTES
     ) {
-        $this->zendImapStorage = $zendImapStorage;
+        $this->zendImapStorage  = $zendImapStorage;
+        $this->messageFactory   = $messageFactory;
         $this->batchSizeInBytes = $batchSizeInBytes;
     }
 
@@ -54,10 +62,10 @@ class ImapMessageProvider implements MessageProvider
         try {
             foreach ($this->computeMessageIdsToProcess() as $uniqueMessageId) {
                 /** @var \Zend\Mail\Storage\Message $message */
-                $message = $this->zendImapStorage->getMessage(
+                $imapMessage = $this->zendImapStorage->getMessage(
                     $this->zendImapStorage->getNumberByUniqueId($uniqueMessageId)
                 );
-                $messages[] = new Message($uniqueMessageId, $message->getContent());
+                $messages[] = $this->messageFactory->create($uniqueMessageId, $imapMessage);
             }
         } catch (\Exception $e) {
             throw new MessageProcessingException($e->getMessage());

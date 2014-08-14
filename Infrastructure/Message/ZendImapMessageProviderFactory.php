@@ -32,6 +32,6 @@ class ZendImapMessageProviderFactory implements MessageProviderFactory
         } elseif (isset($params['ssl']) && false === $params['ssl']) {
             unset($params['ssl']);
         }
-        return new ImapMessageProvider(new \Zend\Mail\Storage\Imap($params));
+        return new ImapMessageProvider(new \Zend\Mail\Storage\Imap($params), new MessageFactory());
     }
 }
