@@ -38,6 +38,7 @@ use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("tickets")
@@ -338,16 +339,20 @@ class TicketController extends Controller
                 'success',
                 $this->get('translator')->trans('Attachment(s) successfully uploaded.')
             );
-            $response = $this->get('oro_ui.router')->actionRedirect(
-                array(
-                    'route' => 'diamante_attachment_attach',
-                    'parameters' => array(),
-                ),
-                array(
-                    'route' => 'diamante_ticket_view',
-                    'parameters' => array('id' => $ticket->getId())
-                )
-            );
+            if ($this->getRequest()->request->get('diam-dropzone')) {
+                $response = $this->getAttachmentsJson($ticket);
+            } else {
+                $response = $this->get('oro_ui.router')->actionRedirect(
+                    array(
+                        'route' => 'diamante_attachment_attach',
+                        'parameters' => array(),
+                    ),
+                    array(
+                        'route' => 'diamante_ticket_view',
+                        'parameters' => array('id' => $ticket->getId())
+                    )
+                );
+            }
         } catch (Exception $e) {
             $response = array('form' => $formView);
         }
@@ -490,5 +495,33 @@ class TicketController extends Controller
             'diamante_ticket_view',
             array('id' => $ticket->getId())
         );
+    }
+
+    private function getAttachmentsJson(Ticket $ticket)
+    {
+        $responseArray = array();
+        $attachments = $ticket->getAttachments()->toArray();
+
+        foreach ($attachments as $attachment) {
+            $isPicture = in_array($attachment->getFile()->getExtension(), array('jpg','png','gif','bmp'));
+            $responseArray[] = array(
+                'filename' => $attachment->getFile()->getPathname(),
+                'src'      => $isPicture ? $attachment->getFile()->getPathname() : '',
+                'ext'      => $attachment->getFile()->getExtension(),
+                'url'      => $this->get('router')->generate(
+                    'diamante_ticket_attachment_download',
+                    array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
+                ),
+                'delete'   => $this->get('router')->generate(
+                    'diamante_ticket_attachment_remove',
+                    array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
+                ),
+                'id'       => $attachment->getId(),
+            );
+        }
+
+        $response = new JsonResponse($responseArray);
+
+        return $response;
     }
 }
