@@ -197,9 +197,10 @@
 
 .diam-dropzone input {
     position: absolute;
-    width: 200%;
-    height: 200%;
+    width: 100%;
+    height: 100%;
     font-size: 1000%;
+    line-height: 200%;
     top: 0;
     right: 0;
     bottom: 0;
