@@ -324,6 +324,8 @@ class TicketController extends Controller
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
         $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
+        $beforeUploadAttachments = $ticket->getAttachments()->toArray();
+
         try {
             $this->handle($form);
 
@@ -344,7 +346,9 @@ class TicketController extends Controller
                 $this->get('translator')->trans('Attachment(s) successfully uploaded.')
             );
             if ($this->getRequest()->request->get('diam-dropzone')) {
-                $response = $this->getAttachmentsJson($ticket);
+                $afterUploadAttachments = $ticket->getAttachments()->toArray();
+                $diff = $this->getAttachmentsDiff($afterUploadAttachments, $beforeUploadAttachments);
+                $response = $this->getAttachmentsJson($ticket, $diff);
             } else {
                 $response = $this->get('oro_ui.router')->actionRedirect(
                     array(
@@ -506,14 +510,14 @@ class TicketController extends Controller
      * Get attachments list as JSON
      *
      * @param Ticket $ticket
+     * @param array $diff
      * @return JsonResponse
      */
-    private function getAttachmentsJson(Ticket $ticket)
+    private function getAttachmentsJson(Ticket $ticket, $diff)
     {
         $responseArray = array();
-        $attachments = $ticket->getAttachments()->toArray();
 
-        foreach ($attachments as $attachment) {
+        foreach ($diff as $attachment) {
 
             $isPicture = in_array($attachment->getFile()->getExtension(), array('jpg','png','gif','bmp'));
             $downloadLink = $this->get('router')->generate(
@@ -538,5 +542,34 @@ class TicketController extends Controller
         $response = new JsonResponse($responseArray);
 
         return $response;
+    }
+
+    /**
+     * Get diff between ticket's attachments before and after upload
+     *
+     * @param array $afterUpload
+     * @param array $beforeUpload
+     * @return array
+     */
+    private function getAttachmentsDiff(array $afterUpload, array $beforeUpload = array())
+    {
+        $diff = $beforeUploadItems = array();
+
+        if (!empty($beforeUpload)) {
+            foreach ($beforeUpload as $item) {
+                $beforeUploadItems[] = $item->getId();
+            }
+        } else {
+            $diff = $afterUpload;
+            return $diff;
+        }
+
+        foreach ($afterUpload as $index=>$item) {
+            if (!in_array($item->getId(), $beforeUploadItems)) {
+                $diff[] = $afterUpload[$index];
+            }
+        }
+
+        return $diff;
     }
 }
