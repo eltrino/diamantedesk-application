@@ -293,6 +293,8 @@ class TicketController extends Controller
      *
      * @param Ticket $ticket
      * @Template
+     *
+     * @return array
      */
     public function attachAction(Ticket $ticket)
     {
@@ -312,6 +314,8 @@ class TicketController extends Controller
      *
      * @param Ticket $ticket
      * @Template
+     *
+     * @return Response
      */
     public function attachPostAction(Ticket $ticket)
     {
@@ -367,9 +371,10 @@ class TicketController extends Controller
      * )
      *
      * @param integer $ticketId
-     * @param integer $ticketId
-     * @param integer $attachmentId
+     * @param integer $attachId
      * @Template
+     *
+     * @return Response
      */
     public function removeAttachmentAction($ticketId, $attachId)
     {
@@ -402,7 +407,7 @@ class TicketController extends Controller
         $ticketService = $this->get('diamante.ticket.service');
         $attachment = $ticketService->getTicketAttachment($ticketId, $attachId);
 
-        $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachment')
+        $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachments/ticket')
             . '/' . $attachment->getFilename();
 
         if (!file_exists($filePathname)) {
@@ -497,25 +502,35 @@ class TicketController extends Controller
         );
     }
 
+    /**
+     * Get attachments list as JSON
+     *
+     * @param Ticket $ticket
+     * @return JsonResponse
+     */
     private function getAttachmentsJson(Ticket $ticket)
     {
         $responseArray = array();
         $attachments = $ticket->getAttachments()->toArray();
 
         foreach ($attachments as $attachment) {
+
             $isPicture = in_array($attachment->getFile()->getExtension(), array('jpg','png','gif','bmp'));
+            $downloadLink = $this->get('router')->generate(
+                'diamante_ticket_attachment_download',
+                array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
+            );
+            $deleteLink = $this->get('router')->generate(
+                'diamante_ticket_attachment_remove',
+                array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
+            );
+
             $responseArray[] = array(
-                'filename' => $attachment->getFile()->getPathname(),
-                'src'      => $isPicture ? $attachment->getFile()->getPathname() : '',
+                'filename' => $attachment->getFile()->getFileName(),
+                'src'      => $isPicture ? $downloadLink : '',
                 'ext'      => $attachment->getFile()->getExtension(),
-                'url'      => $this->get('router')->generate(
-                    'diamante_ticket_attachment_download',
-                    array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
-                ),
-                'delete'   => $this->get('router')->generate(
-                    'diamante_ticket_attachment_remove',
-                    array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
-                ),
+                'url'      => $downloadLink,
+                'delete'   => $deleteLink,
                 'id'       => $attachment->getId(),
             );
         }
