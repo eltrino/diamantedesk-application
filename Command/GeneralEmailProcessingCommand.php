@@ -14,16 +14,17 @@
  */
 namespace Eltrino\EmailProcessingBundle\Command;
 
+use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GeneralEmailProcessingCommand extends ContainerAwareCommand
+class GeneralEmailProcessingCommand extends ContainerAwareCommand implements CronCommandInterface
 {
     protected function configure()
     {
         $this
-            ->setName('diamante:emailprocessing:general')
+            ->setName('oro:cron:diamante:emailprocessing:general')
             ->setDescription('General Email Processing')
         ;
     }
@@ -35,4 +36,12 @@ class GeneralEmailProcessingCommand extends ContainerAwareCommand
         $output->writeln("General Email Processing Done");
     }
 
+    /**
+     * Run current command every 5 minutes
+     * @return string
+     */
+    public function getDefaultDefinition()
+    {
+        return '*/5 * * * *';
+    }
 }
