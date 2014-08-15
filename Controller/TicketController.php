@@ -39,6 +39,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @Route("tickets")
@@ -320,6 +321,7 @@ class TicketController extends Controller
     public function attachPostAction(Ticket $ticket)
     {
         $response = null;
+        $session = $this->get('session');
         $commandFactory = new CommandFactory();
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
@@ -346,9 +348,19 @@ class TicketController extends Controller
                 $this->get('translator')->trans('Attachment(s) successfully uploaded.')
             );
             if ($this->getRequest()->request->get('diam-dropzone')) {
-                $afterUploadAttachments = $ticket->getAttachments()->toArray();
-                $diff = $this->getAttachmentsDiff($afterUploadAttachments, $beforeUploadAttachments);
-                $response = $this->getAttachmentsJson($ticket, $diff);
+                $response = new Response();
+                try {
+                    $afterUploadAttachments = $ticket->getAttachments()->toArray();
+                    $uploadedAttachments = $this->getAttachmentsDiff($afterUploadAttachments, $beforeUploadAttachments);
+
+                    foreach ($uploadedAttachments as $att) {
+                        $uploadedAttachmentsIds[] = $att->getId();
+                    }
+                    $session->set('recent_attachments_ids', $uploadedAttachmentsIds);
+                    $response->setStatusCode(200);
+                } catch (\Exception $e) {
+                    $response->setStatusCode(500);
+                }
             } else {
                 $response = $this->get('oro_ui.router')->actionRedirect(
                     array(
@@ -431,8 +443,39 @@ class TicketController extends Controller
 
     /**
      * @Route(
-            "/attachment/list/{id}",
-     *      name="diamant_ticket_widget_attachment_list",
+     *      "/attachment/latest/ticket/{ticketId}",
+     *      name="diamante_ticket_attachment_latest",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     * @param int $ticketId
+     * @return Response
+     */
+    public function getRecentlyUploadedAttachmentsAction($ticketId)
+    {
+        $session = $this->get('session');
+
+        if ($session->has('recent_attachments_ids')) {
+            $uploadedAttachmentsIds = $session->get('recent_attachments_ids');
+            $ticketService = $this->get('diamante.ticket.service');
+
+            foreach ($uploadedAttachmentsIds as $attachmentId) {
+                $recentAttachments[] = $ticketService->getTicketAttachment($ticketId, $attachmentId);
+            }
+
+            $list = $this->getRecentAttachmentsList($ticketId, $recentAttachments);
+            $response = new JsonResponse($list);
+        } else {
+            $response = new Response();
+            $response->setStatusCode(500);
+        }
+        $session->remove('recent_attachments_ids');
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *       "/attachment/list/{id}",
+     *      name="diamante_ticket_widget_attachment_list",
      *      requirements={"id"="\d+"}
      * )
      * @Template("EltrinoDiamanteDeskBundle:Ticket:attachment/list.html.twig")
@@ -509,27 +552,30 @@ class TicketController extends Controller
     /**
      * Get attachments list as JSON
      *
-     * @param Ticket $ticket
-     * @param array $diff
-     * @return JsonResponse
+     * @param int $ticketId
+     * @param array $attachments
+     * @return array
      */
-    private function getAttachmentsJson(Ticket $ticket, $diff)
+    private function getRecentAttachmentsList($ticketId, $attachments)
     {
-        $responseArray = array();
+        $data = array(
+            "result"        => true,
+            "attachments"   => array(),
+        );
 
-        foreach ($diff as $attachment) {
+        foreach ($attachments as $attachment) {
 
             $isPicture = in_array($attachment->getFile()->getExtension(), array('jpg','png','gif','bmp'));
             $downloadLink = $this->get('router')->generate(
                 'diamante_ticket_attachment_download',
-                array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
+                array('ticketId' => $ticketId, 'attachId' => $attachment->getId())
             );
             $deleteLink = $this->get('router')->generate(
                 'diamante_ticket_attachment_remove',
-                array('ticketId' => $ticket->getId(), 'attachId' => $attachment->getId())
+                array('ticketId' => $ticketId, 'attachId' => $attachment->getId())
             );
 
-            $responseArray[] = array(
+            $data["attachments"][] = array(
                 'filename' => $attachment->getFile()->getFileName(),
                 'src'      => $isPicture ? $downloadLink : '',
                 'ext'      => $attachment->getFile()->getExtension(),
@@ -539,9 +585,7 @@ class TicketController extends Controller
             );
         }
 
-        $response = new JsonResponse($responseArray);
-
-        return $response;
+        return $data;
     }
 
     /**
@@ -559,15 +603,13 @@ class TicketController extends Controller
             foreach ($beforeUpload as $item) {
                 $beforeUploadItems[] = $item->getId();
             }
+            foreach ($afterUpload as $index=>$item) {
+                if (!in_array($item->getId(), $beforeUploadItems)) {
+                    $diff[] = $afterUpload[$index];
+                }
+            }
         } else {
             $diff = $afterUpload;
-            return $diff;
-        }
-
-        foreach ($afterUpload as $index=>$item) {
-            if (!in_array($item->getId(), $beforeUploadItems)) {
-                $diff[] = $afterUpload[$index];
-            }
         }
 
         return $diff;
