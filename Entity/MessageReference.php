@@ -12,74 +12,43 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Eltrino\DiamanteDeskBundle\Entity;
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doctrine;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository;
-use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
-
-class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
+/**
+ * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineMessageReferenceRepository")
+ * @ORM\Table(name="diamante_ticket_message_reference")
+ */
+class MessageReference extends \Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference
 {
     /**
-     * @var DoctrineTicketRepository
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $repository;
+    protected $id;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
-     * @Mock \Doctrine\ORM\EntityManager
+     * @var string
+     *
+     * @ORM\Column(name="message_id", type="string", length=255, nullable=false)
      */
-    private $em;
+    protected $messageId;
 
     /**
-     * @var \Doctrine\ORM\Mapping\ClassMetadata
-     * @Mock \Doctrine\ORM\Mapping\ClassMetadata
+     * @var Ticket
+     *
+     * @ORM\ManyToOne(targetEntity="Ticket")
+     * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $classMetadata;
+    protected $ticket;
 
-    protected function setUp()
+    public static function getClassName()
     {
-        MockAnnotations::init($this);
-        $this->repository = new DoctrineTicketRepository($this->em, $this->classMetadata);
-    }
-
-    /**
-     * @test
-     */
-    public function thatTicketStores()
-    {
-        $ticket = $this->ticket();
-        $this->em->expects($this->once())->method('persist')->with($this->equalTo($ticket));
-        $this->em->expects($this->once())->method('flush');
-
-        $this->repository->store($ticket);
-    }
-
-    /**
-     * @test
-     */
-    public function thatAttachmentRemoves()
-    {
-        $ticket = $this->ticket();
-        $this->em->expects($this->once())->method('remove')->with($this->equalTo($ticket));
-        $this->em->expects($this->once())->method('flush');
-
-        $this->repository->remove($ticket);
-    }
-
-    private function ticket()
-    {
-        return new Ticket(
-            'Subject',
-            'Description',
-            new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
-            new User(),
-            new User(),
-            Status::OPEN
-        );
+        return __CLASS__;
     }
 }
