@@ -2,6 +2,7 @@ define(['jquery', 'underscore', 'oroui/js/modal'],
   function ($, _, Modal) {
     return function($file){
       var form = document.getElementById('diam-dropzone-form'),
+          $attachment = $('#diam-attachments'),
           $dropzone = $('#diam-dropzone'),
           $label = $('#diam-dropzone-label'),
           $loader = $('#diam-dropzone-loader'),
@@ -20,29 +21,39 @@ define(['jquery', 'underscore', 'oroui/js/modal'],
             $.ajax({
               url: form.action,
               data: data,
-              dataType: 'json',
               processData: false,
               contentType: false,
-              type: 'POST'
-            }).done(function(json){
-              var newElements = template({attachments : json});
-              $dropzone.find('.diam-attachment-new').removeClass('diam-attachment-new');
-              $dropzone.before(newElements);
-            }).always(function(){
-              $label.show();
-              $loader.hide();
-              $dropzone.removeClass('diam-dropzone-active');
-              form.reset();
-            }).fail(function(){
+              type: 'post'
+            }).done(onPost).fail(function(){
               var dialog = new Modal({
                 content: 'Something went wrong, try upload file once more',
                 cancelText: 'Close',
                 title: 'File Upload Error',
                 className: 'modal oro-modal-danger'
               });
+              resetDropZone();
               dialog.open()
             });
-
+          },
+          onPost = function(){
+            $.ajax({
+              url : $(form).data('update'),
+              type : 'get',
+              dataType: 'json'
+            }).done(function(json){
+              if(json.result){
+                var newElements = template({attachments : json.attachments});
+                $attachment.find('.diam-attachment-new').removeClass('diam-attachment-new');
+                $dropzone.before(newElements);
+              }
+              resetDropZone();
+            })
+          },
+          resetDropZone = function(){
+            $label.show();
+            $loader.hide();
+            $dropzone.removeClass('diam-dropzone-active');
+            form.reset();
           },
           onDragStart = function(event) {
             if ($.inArray('Files', event.originalEvent.dataTransfer.types) > -1) {

@@ -225,23 +225,24 @@
 }
 
 .diam-attachment-new {
-    background: #eee;
-    animation: blink 500ms  step-start 0s 5;
+    background: rgba(238, 238, 238, 1);
     -webkit-animation: blink 500ms step-start 0s 5;
+    -moz-animation: blink 500ms  step-start 0s 5;
+    animation: blink 500ms  step-start 0s 5;
 }
 
 @keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: .1; }
-    100% { opacity: 1; }
+    0% { background: rgba(238, 238, 238, 1); }
+    50% { background: rgba(238, 238, 238, .1); }
+    100% { background: rgba(238, 238, 238, 1); }
 }
 @-moz-keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: .1; }
-    100% { opacity: 1; }
+    0% { background: rgba(238, 238, 238, 1); }
+    50% { background: rgba(238, 238, 238, .1); }
+    100% { background: rgba(238, 238, 238, 1); }
 }
 @-webkit-keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: .1; }
-    100% { opacity: 1; }
+    0% { background: rgba(238, 238, 238, 1); }
+    50% { background: rgba(238, 238, 238, .1); }
+    100% { background: rgba(238, 238, 238, 1); }
 }
