@@ -82,7 +82,7 @@ class Ticket implements AttachmentHolder
      */
     protected $updatedAt;
 
-    public function __construct($subject, $description, $branch, $reporter, $assignee, $status)
+    public function __construct($subject, $description, $branch, $reporter, $assignee, $status = null)
     {
         $this->subject = $subject;
         $this->description = $description;

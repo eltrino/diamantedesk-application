@@ -14,13 +14,21 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing;
 
-use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
-use Eltrino\EmailProcessingBundle\Model\Message;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference;
 
-class TicketStrategy implements Strategy
+interface MessageReferenceRepository
 {
-    public function process(Message $message)
-    {
-        //...
-    }
-}
+    /**
+     * Retrieves MessageReference by given message id
+     * @param string $messageId
+     * @return MessageReference
+     */
+    public function getReferenceByMessageId($messageId);
+
+    /**
+     * Store MessageReference
+     * @param MessageReference $messageReference
+     * @return void
+     */
+    public function store(MessageReference $messageReference);
+} 
