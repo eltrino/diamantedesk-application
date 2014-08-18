@@ -564,8 +564,6 @@ class TicketController extends Controller
         );
 
         foreach ($attachments as $attachment) {
-
-            $isPicture = in_array($attachment->getFile()->getExtension(), array('jpg','png','gif','bmp'));
             $downloadLink = $this->get('router')->generate(
                 'diamante_ticket_attachment_download',
                 array('ticketId' => $ticketId, 'attachId' => $attachment->getId())
@@ -575,9 +573,18 @@ class TicketController extends Controller
                 array('ticketId' => $ticketId, 'attachId' => $attachment->getId())
             );
 
+            if (in_array($attachment->getFile()->getExtension(), array('jpg','png','gif','bmp', 'jpeg'))) {
+                $previewLink = $this->get('router')->generate(
+                    '_imagine_attach_preview_img',
+                    array('path' => $attachment->getFile()->getPathname())
+                );
+            } else {
+                $previewLink = '';
+            }
+
             $data["attachments"][] = array(
                 'filename' => $attachment->getFile()->getFileName(),
-                'src'      => $isPicture ? $downloadLink : '',
+                'src'      => $previewLink,
                 'ext'      => $attachment->getFile()->getExtension(),
                 'url'      => $downloadLink,
                 'delete'   => $deleteLink,
