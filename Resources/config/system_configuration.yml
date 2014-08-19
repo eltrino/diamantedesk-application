@@ -23,6 +23,7 @@ oro_system_configuration:
             priority: 90
             options:
                 label: 'Port'
+                tooltip: "It's typically on port 143. But IMAP over SSL is usually on port 993."
 
         eltrino_email_processing.mailbox_ssl:
             type: choice
