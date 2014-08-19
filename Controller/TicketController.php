@@ -238,14 +238,18 @@ class TicketController extends Controller
      */
     public function deleteAction(Ticket $ticket)
     {
-        $this->get('diamante.ticket.service')
-            ->deleteTicket($ticket->getId());
+        try {
+            $this->get('diamante.ticket.service')
+                ->deleteTicket($ticket->getId());
 
-        $this->addSuccessMessage('Ticket successfully deleted.');
+            $this->addSuccessMessage('Ticket successfully deleted.');
 
-        return $this->redirect(
-            $this->generateUrl('diamante_ticket_list')
-        );
+            return $this->redirect(
+                $this->generateUrl('diamante_ticket_list')
+            );
+        } catch (Exception $e) {
+            return new Response($e->getMessage(), 500);
+        }
     }
 
     /**

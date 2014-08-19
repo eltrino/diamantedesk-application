@@ -23,6 +23,8 @@ use Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 
 class BranchServiceImpl implements BranchService
 {
@@ -46,16 +48,23 @@ class BranchServiceImpl implements BranchService
      */
     private $tagManager;
 
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     public function __construct(
         BranchFactory $branchFactory,
         BranchRepository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
-        TagManager $tagManager
+        TagManager $tagManager,
+        SecurityFacade $securityFacade
     ) {
         $this->branchFactory     = $branchFactory;
         $this->branchRepository  = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
         $this->tagManager        = $tagManager;
+        $this->securityFacade    = $securityFacade;
     }
 
     /**
@@ -68,6 +77,10 @@ class BranchServiceImpl implements BranchService
      */
     public function createBranch($name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
     {
+        if (!$this->securityFacade->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch')) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+
         $logo = null;
 
         if ($logoFile) {
@@ -94,6 +107,10 @@ class BranchServiceImpl implements BranchService
      */
     public function updateBranch($branchId, $name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
     {
+        if (!$this->securityFacade->isGranted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Branch')) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+
         $branch = $this->branchRepository->get($branchId);
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
         $file = null;
@@ -121,6 +138,10 @@ class BranchServiceImpl implements BranchService
      */
     public function deleteBranch($branchId)
     {
+        if (!$this->securityFacade->isGranted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Branch')) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found. ');
@@ -138,13 +159,18 @@ class BranchServiceImpl implements BranchService
      * @param $tagManager
      * @return BranchServiceImpl
      */
-    public static function create(BranchFactory $branchFactory, EntityManager $em, $branchLogoHandler, $tagManager)
-    {
+    public static function create(BranchFactory $branchFactory,
+                                    EntityManager $em,
+                                    $branchLogoHandler,
+                                    $tagManager,
+                                    SecurityFacade $securityFacade
+    ) {
         return new BranchServiceImpl(
             $branchFactory,
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Branch'),
             $branchLogoHandler,
-            $tagManager
+            $tagManager,
+            $securityFacade
         );
     }
 

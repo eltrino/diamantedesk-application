@@ -78,6 +78,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $userService;
 
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -87,7 +93,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->branchRepository,
             $this->ticketFactory,
             $this->ticketAttachmentService,
-            $this->userService
+            $this->userService,
+            $this->securityFacade
         );
     }
 
@@ -128,6 +135,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder');
             //->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Ticket'))
+            ->will($this->returnValue(true));
 
         $ticket = $this->ticketService->createTicket(
             $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId, $priority
@@ -171,6 +184,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder');
             //->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Ticket'))
+            ->will($this->returnValue(true));
 
         $ticket = $this->ticketService->createTicket(
             $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION, $reporterId, $assigneeId, $priority, $status
@@ -217,6 +236,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Ticket'))
+            ->will($this->returnValue(true));
+
         $ticket = $this->ticketService->createTicket(
             $branchId, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
             $reporterId, $assigneeId, $priority, null, $attachmentInputs
@@ -248,6 +273,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
+            ->will($this->returnValue(true));
 
         $this->ticketService->updateTicket(
             self::DUMMY_TICKET_ID, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
@@ -287,6 +318,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
             ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
+            ->will($this->returnValue(true));
 
         $this->ticketService->updateTicket(
             self::DUMMY_TICKET_ID, self::DUMMY_TICKET_SUBJECT, self::DUMMY_TICKET_DESCRIPTION,
@@ -377,6 +414,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
+            ->will($this->returnValue(true));
+
         $this->ticketService->addAttachmentsForTicket($attachmentInputs, self::DUMMY_TICKET_ID);
     }
 
@@ -413,6 +456,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
+            ->will($this->returnValue(true));
+
         $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
     }
 
@@ -434,6 +483,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($attachment));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
 
         $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
     }
@@ -463,6 +518,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticket->expects($this->once())->method('updateStatus')->with($status);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
         $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
     }
 
@@ -498,5 +560,93 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $attachmentInput->setFilename(self::DUMMY_FILENAME);
         $attachmentInput->setContent(self::DUMMY_FILE_CONTENT);
         return array($attachmentInput);
+    }
+
+    public function testAssignTicket()
+    {
+        $assigneeId = 3;
+        $assignee = $this->createAssignee();
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
+
+        $this->ticket->expects($this->once())->method('assign')->with($assignee);
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->ticketService->assignTicket(self::DUMMY_TICKET_ID, $assigneeId);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testAssignTicketWhenTicketDoesNotExist()
+    {
+        $assigneeId = 3;
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->assignTicket(self::DUMMY_TICKET_ID, $assigneeId);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Assignee loading failed, assignee not found.
+     */
+    public function testAssignTicketWhenAssigneeDoesNotExist()
+    {
+        $assigneeId = 3;
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->assignTicket(self::DUMMY_TICKET_ID, $assigneeId);
+    }
+
+    public function testDeleteTicket()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testDeleteTicketWhenTicketDoesNotExist()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
     }
 }

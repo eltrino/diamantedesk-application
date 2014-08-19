@@ -25,6 +25,8 @@ use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
 use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
+use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 
 class TicketServiceImpl implements TicketService
 {
@@ -53,17 +55,24 @@ class TicketServiceImpl implements TicketService
      */
     private $userService;
 
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     public function __construct(TicketRepository $ticketRepository,
                                 BranchRepository $branchRepository,
                                 TicketFactory $ticketFactory,
                                 AttachmentService $attachmentService,
-                                UserService $userService
+                                UserService $userService,
+                                SecurityFacade $securityFacade
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
         $this->ticketFactory = $ticketFactory;
         $this->userService = $userService;
         $this->attachmentService = $attachmentService;
+        $this->securityFacade = $securityFacade;
     }
 
     /**
@@ -95,9 +104,15 @@ class TicketServiceImpl implements TicketService
     public function addAttachmentsForTicket(array $attachmentsInput, $ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
-        if (!$ticket) {
+
+        if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+
         $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $ticket);
         $this->ticketRepository->store($ticket);
     }
@@ -112,9 +127,15 @@ class TicketServiceImpl implements TicketService
     public function removeAttachmentFromTicket($ticketId, $attachmentId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
-        if (!$ticket) {
+
+        if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+
         $attachment = $ticket->getAttachment($attachmentId);
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
@@ -126,14 +147,16 @@ class TicketServiceImpl implements TicketService
 
     public static function create(EntityManager $em,
                                   AttachmentService $attachmentService,
-                                  UserService $userService
+                                  UserService $userService,
+                                  SecurityFacade $securityFacade
     ) {
         return new TicketServiceImpl(
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Ticket'),
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Branch'),
             new TicketFactory(),
             $attachmentService,
-            $userService
+            $userService,
+            $securityFacade
         );
     }
 
@@ -152,6 +175,10 @@ class TicketServiceImpl implements TicketService
      */
     public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority, $status = null, array $attachmentInputs = null)
     {
+        if (!$this->securityFacade->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket')) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+
         \Assert\that($attachmentInputs)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
         $branch = $this->branchRepository->get($branchId);
@@ -190,6 +217,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Update Ticket
+     *
      * @param $ticketId
      * @param $subject
      * @param $description
@@ -206,8 +234,13 @@ class TicketServiceImpl implements TicketService
         \Assert\that($attachmentInputs)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
+
+        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
+            throw new ForbiddenException("Not enough permissions.");
         }
 
         $reporter = $ticket->getReporter();
@@ -252,9 +285,15 @@ class TicketServiceImpl implements TicketService
     public function updateStatus($ticketId, $status)
     {
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+
         $ticket->updateStatus($status);
         $this->ticketRepository->store($ticket);
 
@@ -271,8 +310,13 @@ class TicketServiceImpl implements TicketService
     public function assignTicket($ticketId, $assigneeId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
+
+        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
+            throw new ForbiddenException("Not enough permissions.");
         }
 
         $assignee = $this->userService->getUserById($assigneeId);
@@ -295,8 +339,13 @@ class TicketServiceImpl implements TicketService
     public function deleteTicket($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
+
+        if (!$this->securityFacade->isGranted('DELETE', $ticket)) {
+            throw new ForbiddenException("Not enough permissions.");
         }
 
         $this->ticketRepository->remove($ticket);

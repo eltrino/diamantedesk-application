@@ -19,10 +19,20 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\Persistence\Doctrine\DoctrineBranchRepository")
  * @ORM\Table(name="diamante_branch")
+ * @Config(
+ *      defaultValues={
+ *          "security"={
+ *              "type"="ACL",
+ *              "group_name"="eltrino.diamantedesk"
+ *          }
+ *      }
+ * )
  */
 class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
 {

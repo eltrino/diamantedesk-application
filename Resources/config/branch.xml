@@ -39,6 +39,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.branch.logo_handler"/>
             <argument type="service" id="oro_tag.tag.manager"/>
+            <argument type="service" id="oro_security.security_facade"/>
         </service>
 
         <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">

@@ -169,13 +169,18 @@ class CommentController extends Controller
      */
     public function deleteAction(Comment $comment)
     {
-        $this->get('diamante.comment.service')
-            ->deleteTicketComment($comment->getId());
+        try {
+            $this->get('diamante.comment.service')
+                ->deleteTicketComment($comment->getId());
 
-        $this->addSuccessMessage('Comment successfully deleted.');
+            $this->addSuccessMessage('Comment successfully deleted.');
+        } catch (Exception $e) {
+            $this->addErrorMessage($e->getMessage());
+        }
+
         return $this->redirect(
             $this->generateUrl('diamante_ticket_view', array(
-                'id' => $comment->getTicket()->getId())
+                    'id' => $comment->getTicket()->getId())
             )
         );
     }
@@ -266,6 +271,17 @@ class CommentController extends Controller
     {
         $this->get('session')->getFlashBag()->add(
             'success',
+            $this->get('translator')->trans($message)
+        );
+    }
+
+    /**
+     * @param $message
+     */
+    private function addErrorMessage($message)
+    {
+        $this->get('session')->getFlashBag()->add(
+            'error',
             $this->get('translator')->trans($message)
         );
     }
