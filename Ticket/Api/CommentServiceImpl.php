@@ -85,9 +85,7 @@ class CommentServiceImpl implements CommentService
      */
     public function postNewCommentForTicket($content, $ticketId, $authorId, array $attachmentsInput = null)
     {
-        if (!$this->securityFacade->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment')) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment');
 
         $ticket = $this->ticketRepository->get($ticketId);
 
@@ -120,6 +118,9 @@ class CommentServiceImpl implements CommentService
         if (is_null($comment)) {
             throw new \RuntimeException('Comment loading failed, comment not found.');
         }
+
+        $this->isGranted('VIEW', $comment);
+
         $attachment = $comment->getAttachment($attachmentId);
         if (is_null($attachment)) {
             throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
@@ -141,9 +142,7 @@ class CommentServiceImpl implements CommentService
             throw new \RuntimeException('Comment loading failed, comment not found.');
         }
 
-        if (!$this->securityFacade->isGranted('EDIT', $comment)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', $comment);
 
         $comment->updateContent($content);
         if ($attachmentsInput) {
@@ -164,9 +163,7 @@ class CommentServiceImpl implements CommentService
             throw new \RuntimeException('Comment loading failed, comment not found.');
         }
 
-        if (!$this->securityFacade->isGranted('DELETE', $comment)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('DELETE', $comment);
 
         $this->commentRepository->remove($comment);
     }
@@ -186,9 +183,7 @@ class CommentServiceImpl implements CommentService
             throw new \RuntimeException('Comment loading failed, comment not found.');
         }
 
-        if (!$this->securityFacade->isGranted('EDIT', $comment)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', $comment);
 
         $attachment = $comment->getAttachment($attachmentId);
         if (!$attachment) {
@@ -213,5 +208,19 @@ class CommentServiceImpl implements CommentService
             $attachmentService,
             $securityFacade
         );
+    }
+
+    /**
+     * Verify permissions through Oro Platform security bundle
+     *
+     * @param $operation
+     * @param $entity
+     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     */
+    private function isGranted($operation, $entity)
+    {
+        if (!$this->securityFacade->isGranted($operation, $entity)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
     }
 }

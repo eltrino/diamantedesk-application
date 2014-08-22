@@ -366,6 +366,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($ticket))
+            ->will($this->returnValue(true));
+
         $this->ticketService->getTicketAttachment(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
     }
 
@@ -377,6 +383,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $attachment = $this->attachment();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
 
         $this->ticket->expects($this->once())->method('getAttachment')->with($this->equalTo(self::DUMMY_ATTACHMENT_ID))
             ->will($this->returnValue($attachment));

@@ -88,6 +88,9 @@ class TicketServiceImpl implements TicketService
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->isGranted('VIEW', $ticket);
+
         $attachment = $ticket->getAttachment($attachmentId);
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
@@ -109,9 +112,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', $ticket);
 
         $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $ticket);
         $this->ticketRepository->store($ticket);
@@ -132,9 +133,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', $ticket);
 
         $attachment = $ticket->getAttachment($attachmentId);
         if (!$attachment) {
@@ -175,9 +174,7 @@ class TicketServiceImpl implements TicketService
      */
     public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority, $status = null, array $attachmentInputs = null)
     {
-        if (!$this->securityFacade->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket')) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket');
 
         \Assert\that($attachmentInputs)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
@@ -239,9 +236,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', $ticket);
 
         $reporter = $ticket->getReporter();
         if ($reporterId != $ticket->getReporterId()) {
@@ -290,9 +285,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', $ticket);
 
         $ticket->updateStatus($status);
         $this->ticketRepository->store($ticket);
@@ -315,9 +308,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        if (!$this->securityFacade->isGranted('EDIT', $ticket)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', $ticket);
 
         $assignee = $this->userService->getUserById($assigneeId);
         if (is_null($assignee)) {
@@ -344,10 +335,22 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        if (!$this->securityFacade->isGranted('DELETE', $ticket)) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('DELETE', $ticket);
 
         $this->ticketRepository->remove($ticket);
+    }
+
+    /**
+     * Verify permissions through Oro Platform security bundle
+     *
+     * @param $operation
+     * @param $entity
+     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     */
+    private function isGranted($operation, $entity)
+    {
+        if (!$this->securityFacade->isGranted($operation, $entity)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
     }
 }

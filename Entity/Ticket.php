@@ -32,7 +32,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *          },
  *          "security"={
  *              "type"="ACL",
- *              "group_name"="eltrino.diamantedesk"
+ *              "group_name"="DiamanteDesk"
  *          }
  *      }
  * )

@@ -77,9 +77,7 @@ class BranchServiceImpl implements BranchService
      */
     public function createBranch($name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
     {
-        if (!$this->securityFacade->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch')) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch');
 
         $logo = null;
 
@@ -107,9 +105,7 @@ class BranchServiceImpl implements BranchService
      */
     public function updateBranch($branchId, $name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
     {
-        if (!$this->securityFacade->isGranted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Branch')) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Branch');
 
         $branch = $this->branchRepository->get($branchId);
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
@@ -138,9 +134,7 @@ class BranchServiceImpl implements BranchService
      */
     public function deleteBranch($branchId)
     {
-        if (!$this->securityFacade->isGranted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Branch')) {
-            throw new ForbiddenException("Not enough permissions.");
-        }
+        $this->isGranted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Branch');
 
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
@@ -181,5 +175,19 @@ class BranchServiceImpl implements BranchService
     private function handleLogoUpload(UploadedFile $file)
     {
         return $this->branchLogoHandler->upload($file);
+    }
+
+    /**
+     * Verify permissions through Oro Platform security bundle
+     *
+     * @param $operation
+     * @param $entity
+     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     */
+    private function isGranted($operation, $entity)
+    {
+        if (!$this->securityFacade->isGranted($operation, $entity)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
     }
 } 
