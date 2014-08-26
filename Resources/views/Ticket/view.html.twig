@@ -84,7 +84,7 @@
 {% endmacro %}
 
 {% block navButtons %}
-    {% if resource_granted('EDIT', entity) %}
+    {% if (entity.assignee.id == app.user.id or resource_granted('EDIT', entity)) %}
         {% set changeStatusTitle = 'Change Status' %}
         {{ UI.clientButton({
         'dataUrl': path('diamante_ticket_status_change', { 'id': entity.id }),

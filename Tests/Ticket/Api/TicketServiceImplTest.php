@@ -524,6 +524,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testUpdateStatus()
     {
         $status = STATUS::NEW_ONE;
+        $assignee = $currentUser = 3;
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
@@ -531,13 +532,49 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->once())->method('updateStatus')->with($status);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
+        $this->ticket->expects($this->once())->method('getAssigneeId')->will($this->returnValue($assignee));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('getLoggedUserId')
+            ->will($this->returnValue($currentUser));
+
+        $this->securityFacade
+            ->expects($this->never())
+            ->method('isGranted');
+
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
+    }
+
+    /**
+     * @test
+     */
+    public function testUpdateStatusOfTicketAssignedToSomeoneElse()
+    {
+        $status = STATUS::NEW_ONE;
+        $assignee = 3;
+        $currentUser = 2;
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticket->expects($this->once())->method('getAssigneeId')->will($this->returnValue($assignee));
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('getLoggedUserId')
+            ->will($this->returnValue($currentUser));
+
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status, $currentUser);
     }
 
     private function createBranch()

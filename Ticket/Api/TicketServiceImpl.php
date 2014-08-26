@@ -285,7 +285,9 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        $this->isGranted('EDIT', $ticket);
+        if ($ticket->getAssigneeId() != $this->securityFacade->getLoggedUserId()) {
+            $this->isGranted('EDIT', $ticket);
+        }
 
         $ticket->updateStatus($status);
         $this->ticketRepository->store($ticket);
