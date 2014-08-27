@@ -14,25 +14,20 @@
  */
 namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend;
 
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\MessageFactory;
 use Eltrino\EmailProcessingBundle\Model\Message;
 use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
 use Eltrino\EmailProcessingBundle\Model\MessageProcessingException;
+use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
 
 class ImapMessageProvider implements MessageProvider
 {
-    const BATCH_SIZE_OF_MESSAGES_IN_BYTES = 20000;
+    const BATCH_SIZE_OF_MESSAGES_IN_BYTES = 20000000;
     const NAME_OF_FOLDER_OF_PROCESSED_MESSAGES = 'Processed';
 
     /**
      * @var \Zend\Mail\Storage\Imap
      */
     private $zendImapStorage;
-
-    /**
-     * @var MessageFactory
-     */
-    private $messageFactory;
 
     private $batchSizeInBytes;
 
@@ -43,11 +38,9 @@ class ImapMessageProvider implements MessageProvider
 
     public function __construct(
         \Zend\Mail\Storage\Imap $zendImapStorage,
-        MessageFactory $messageFactory,
         $batchSizeInBytes = self::BATCH_SIZE_OF_MESSAGES_IN_BYTES
     ) {
         $this->zendImapStorage  = $zendImapStorage;
-        $this->messageFactory   = $messageFactory;
         $this->batchSizeInBytes = $batchSizeInBytes;
     }
 
@@ -65,7 +58,17 @@ class ImapMessageProvider implements MessageProvider
                 $imapMessage = $this->zendImapStorage->getMessage(
                     $this->zendImapStorage->getNumberByUniqueId($uniqueMessageId)
                 );
-                $messages[] = $this->messageFactory->create($uniqueMessageId, $imapMessage);
+
+                $headers            = $imapMessage->getHeaders();
+
+                $messageId          = $this->processMessageId($headers);
+                $messageSubject     = $this->processSubject($headers);
+                $messageContent     = $this->processContent($imapMessage);
+                $messageReference   = $this->processMessageReference($headers);
+                $messageAttachments = $this->processAttachments($imapMessage);
+
+                $messages[] = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
+                    $messageReference, $messageAttachments);
             }
         } catch (\Exception $e) {
             throw new MessageProcessingException($e->getMessage());
@@ -74,7 +77,104 @@ class ImapMessageProvider implements MessageProvider
     }
 
     /**
-     * Retrieve uniqu message ids that should be processed in current batch.
+     * Retrieves Message ID
+     *
+     * @param \Zend\Mail\Headers $headers
+     * @return string|null
+     */
+    private function processMessageId($headers)
+    {
+        $messageId = null;
+        if ($headers->get('messageid')) {
+            preg_match('/<([^<]+)>/', $headers->get('messageid')->getFieldValue(), $matches);
+            $messageId = $matches[1];
+        }
+        return $messageId;
+    }
+
+    /**
+     * Retrieves Message Subject
+     *
+     * @param \Zend\Mail\Headers $headers
+     * @return string|null
+     */
+    private function processSubject($headers)
+    {
+        $messageSubject = $headers->get('subject') ? $headers->get('subject')->getFieldValue() : null;
+        return $messageSubject;
+    }
+
+    /**
+     * Retrieves Message Content
+     *
+     * @param \Zend\Mail\Storage\Message $imapMessage
+     * @return string|null
+     */
+    private function processContent($imapMessage)
+    {
+        $messageContent = null;
+        if ($imapMessage->isMultipart()) {
+            foreach (new \RecursiveIteratorIterator($imapMessage) as $part) {
+                $headers = $part->getHeaders();
+                if ($headers->get('contenttype')) {
+                    if ($headers->get('contenttype')->getType() == \Zend\Mime\Mime::TYPE_TEXT) {
+                        $messageContent = $part->getContent();
+                    }
+                }
+            }
+        } else {
+            $messageContent = $imapMessage->getContent();
+        }
+
+        return $messageContent;
+    }
+
+    /**
+     * Retrieves Message Attachments
+     *
+     * @param \Zend\Mail\Storage\Message $imapMessage
+     * @return array
+     */
+    private function processAttachments($imapMessage)
+    {
+        $attachments = array();
+        if ($imapMessage->isMultipart()) {
+            foreach (new \RecursiveIteratorIterator($imapMessage) as $part) {
+                $headers = $part->getHeaders();
+                if ($headers->get('contentdisposition')) {
+                    $contentDisposition = $headers->get('contentdisposition');
+                    $disposition = \Zend\Mime\Decode::splitHeaderField($contentDisposition->getFieldValue());
+
+                    if ($disposition[0] == \Zend\Mime\Mime::DISPOSITION_ATTACHMENT && isset($disposition['filename'])) {
+                        $fileName    = $disposition['filename'];
+                        $fileContent = $part->getContent();
+                        $attachments[] = new Attachment($fileName, base64_decode($fileContent));
+                    }
+                }
+            }
+        }
+
+        return $attachments;
+    }
+
+    /**
+     * Retrieves Message Reference
+     *
+     * @param \Zend\Mail\Headers $headers
+     * @return string|null
+     */
+    private function processMessageReference($headers)
+    {
+        $messageReference = null;
+        if ($headers->get('references')) {
+            preg_match('/<([^<]+)>/', $headers->get('references')->getFieldValue(), $matches);
+            $messageReference = $matches[1];
+        }
+        return $messageReference;
+    }
+
+    /**
+     * Retrieve unique message ids that should be processed in current batch.
      * Computing is depending on size of messages
      * @return array
      */

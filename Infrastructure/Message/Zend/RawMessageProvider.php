@@ -22,15 +22,16 @@ class RawMessageProvider implements MessageProvider
 {
     private $input;
 
+    /**
+     * @var MessageConverter
+     */
     private $converter;
-
-    private $message;
 
     public function __construct($input, MessageConverter $converter)
     {
         $this->validate($input);
-        $this->input = $input;
-        $this->converter = $converter;
+        $this->input           = $input;
+        $this->converter       = $converter;
     }
 
     private function validate($input)
@@ -48,7 +49,20 @@ class RawMessageProvider implements MessageProvider
     public function fetchMessagesToProcess()
     {
         $zendMailMessage = $this->converter->fromRawMessage($this->input);
-        return array(new Message(uniqid($zendMailMessage->getSubject()), $zendMailMessage->getBodyText()));
+
+        $headers            = $zendMailMessage->getHeaders();
+
+        $uniqueMessageId    = uniqid($zendMailMessage->getSubject());
+        $messageId          = $this->processMessageId($headers);
+        $messageSubject     = $this->processSubject($headers);
+        $messageContent     = $this->processContent($zendMailMessage);
+        $messageReference   = $this->processMessageReference($headers);
+        $messageAttachments = $this->processAttachments($zendMailMessage);
+
+
+        $message = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
+            $messageReference, $messageAttachments);
+        return array($message);
     }
 
     /**

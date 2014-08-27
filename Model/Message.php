@@ -14,6 +14,8 @@
  */
 namespace Eltrino\EmailProcessingBundle\Model;
 
+use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
+
 class Message
 {
     /**
@@ -41,13 +43,27 @@ class Message
      */
     private $subject;
 
-    public function __construct($uniqueId, $messageId, $subject, $content, $reference = null)
+    /**
+     * @var array
+     */
+    private $attachments;
+
+    /**
+     * @param $uniqueId
+     * @param $messageId
+     * @param $subject
+     * @param $content
+     * @param array $attachments
+     * @param null $reference
+     */
+    public function __construct($uniqueId, $messageId, $subject, $content, $reference = null, array $attachments = null)
     {
-        $this->uniqueId   = $uniqueId;
-        $this->messageId  = $messageId;
-        $this->subject    = $subject;
-        $this->content    = $content;
-        $this->reference  = $reference;
+        $this->uniqueId    = $uniqueId;
+        $this->messageId   = $messageId;
+        $this->subject     = $subject;
+        $this->content     = $content;
+        $this->reference   = $reference;
+        $this->attachments = $attachments;
     }
 
     /**
@@ -88,5 +104,18 @@ class Message
     public function getReference()
     {
         return $this->reference;
+    }
+
+    /**
+     * Returns attachments array
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    public function addAttachment(Attachment $attachment)
+    {
+        $this->attachments[] = $attachment;
     }
 }
