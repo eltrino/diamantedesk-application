@@ -42,11 +42,14 @@ class TicketStrategy implements Strategy
         $reporterId = 1;
         $assigneeId = 1;
 
+        $attachments = $message->getAttachments();
+
         if (!$message->getReference()) {
             $this->messageReferenceServiceImpl->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
-                $message->getContent(), $reporterId, $assigneeId);
+                $message->getContent(), $reporterId, $assigneeId, null, $attachments);
         } else {
-            $this->messageReferenceServiceImpl->createCommentForTicket($message->getContent(), $reporterId, $message->getReference());
+            $this->messageReferenceServiceImpl->createCommentForTicket($message->getContent(), $reporterId,
+                $message->getReference(), $attachments);
         }
     }
 }

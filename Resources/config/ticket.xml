@@ -52,6 +52,7 @@
                  factory-class="%diamante.ticket.email_processing_message_reference.service.class%" factory-method="create">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
+            <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
 
         <service id="diamante.ticket.internal.attachment.service" class="%diamante.ticket.internal.attachment.service.class%">

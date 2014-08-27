@@ -26,10 +26,12 @@ interface MessageReferenceService
      * @param $reporterId
      * @param $assigneeId
      * @param null $status
+     * @param array $attachments
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId, $status = null);
+    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
+                                 $status = null, array $attachments = null);
 
     /**
      * Creates Comment for Ticket
@@ -37,7 +39,8 @@ interface MessageReferenceService
      * @param $content
      * @param $authorId
      * @param $messageId
+     * @param array $attachments
      * @return void
      */
-    public function createCommentForTicket($content, $authorId, $messageId);
+    public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null);
 } 
