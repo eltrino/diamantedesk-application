@@ -59,6 +59,16 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
+     * Retrieves list of all Branches
+     * @return Branch[]
+     */
+    public function listAllBranches()
+    {
+        $branches = $this->branchRepository->getAll();
+        return $branches;
+    }
+
+    /**
      * Create Branch
      * @param $name
      * @param $description
@@ -156,4 +166,4 @@ class BranchServiceImpl implements BranchService
     {
         return $this->branchLogoHandler->upload($file);
     }
-} 
+}

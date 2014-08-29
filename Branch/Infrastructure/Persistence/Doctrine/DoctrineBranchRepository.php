@@ -20,6 +20,15 @@ class DoctrineBranchRepository extends \Doctrine\ORM\EntityRepository
     implements \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
 {
     /**
+     * Retrieves all Branches
+     * @return Branch[]
+     */
+    public function getAll()
+    {
+        return $this->findAll();
+    }
+
+    /**
      * Retrieves Branch by given id
      * @param $id
      * @return Branch
@@ -50,4 +59,4 @@ class DoctrineBranchRepository extends \Doctrine\ORM\EntityRepository
         $this->getEntityManager()->remove($branch);
         $this->getEntityManager()->flush();
     }
-} 
+}
