@@ -1,9 +1,15 @@
-.diam-atachments li {
+.diam-attachments {
+    position: relative;
+}
+.diam-attachment {
+    float: left;
+    margin: 0 0 2em 2em;
+    width: 200px;
     text-align: center;
     border: 1px #e5e5e5 solid;
     border-radius: 5px;
 }
-.diam-atachments strong {
+.diam-attachment strong {
     font-weight: normal;
     display: block;
     margin-right: 4em;
@@ -11,7 +17,48 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.diam-atachments figcaption {
+.diam-attachment figure {
+    margin: 1em;
+}
+.diam-attachment-preview {
+    white-space: nowrap;
+    font-size: 0;
+    height: 172px;
+    width: 172px;
+    position: relative;
+}
+.diam-attachment-label {
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 18px;
+    width:100%;
+    text-align: center;
+    top:110px;
+    color: #fff;
+    left:0;
+    opacity: .9;
+    text-shadow: 0 0 2px #eee;
+    font-weight: 100;
+}
+.diam-attachment-preview:before,
+.diam-attachment-preview:after{
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 1px;
+    vertical-align: middle;
+}
+.diam-attachment-preview:before {
+    margin-left: -1px;
+}
+.diam-attachment-preview:after {
+    margin-right: -1px;
+}
+.diam-attachment img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.diam-attachment figcaption {
     text-align: left;
     padding: .6em 0;
 }
@@ -89,8 +136,113 @@
     margin: 15px 0 0 15px;
 }
 
-.diam-ticket-description {
-    width:  560px;
-    height: 200px;
-    resize: vertical;
+/**
+ * Drag&Drop zone
+ */
+.diam-dropzone {
+    float: left;
+    margin: 0 0 2em 2em;
+    width: 200px;
+    text-align: center;
+    border: 1px #e5e5e5 solid;
+    border-radius: 5px;
+}
+
+.diam-dropzone-placeholder {
+    margin: 1em;
+    overflow: hidden;
+    position: relative;
+    height: 208px;
+}
+
+.diam-dropzone label {
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin: -44px 0 0 -55px;
+    text-align: center;
+    text-transform: uppercase !important;
+    color: #ccc;
+    width: 110px;
+    height: 88px;
+}
+.diam-dropzone i[class^='icon'] {
+    font-size: 500%;
+    display: block !important;
+}
+.diam-dropzone-active {
+    position: absolute;
+    width: 100%;
+    background: #eee;
+    margin: 0;
+    top:0;
+    bottom: 2em;
+    left: 2em;
+    opacity: .9;
+}
+.diam-dropzone-active .diam-dropzone-placeholder {
+    margin: 0;
+    height: 100%;
+}
+.diam-dropzone-active label {
+    color: #000;
+}
+
+.diam-attachment-placeholder {
+    display: none;
+}
+.diam-dropzone-active + .diam-attachment-placeholder {
+    display: block;
+}
+
+.diam-dropzone input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 1000%;
+    line-height: 200%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    float: right;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    z-index: 10;
+}
+
+.diam-dropzone-loader {
+    display: none;
+    position: absolute;
+    top:50%;
+    left:50%;
+    text-align: center;
+    margin: -35px 0 0 -35px;
+    color: #ccc;
+    width: 70px;
+    height: 70px;
+}
+
+.diam-attachment-new {
+    background: rgba(238, 238, 238, 1);
+    -webkit-animation: blink 500ms step-start 0s 5;
+    -moz-animation: blink 500ms  step-start 0s 5;
+    animation: blink 500ms  step-start 0s 5;
+}
+
+@keyframes blink {
+    0% { background: rgba(238, 238, 238, 1); }
+    50% { background: rgba(238, 238, 238, .1); }
+    100% { background: rgba(238, 238, 238, 1); }
+}
+@-moz-keyframes blink {
+    0% { background: rgba(238, 238, 238, 1); }
+    50% { background: rgba(238, 238, 238, .1); }
+    100% { background: rgba(238, 238, 238, 1); }
+}
+@-webkit-keyframes blink {
+    0% { background: rgba(238, 238, 238, 1); }
+    50% { background: rgba(238, 238, 238, .1); }
+    100% { background: rgba(238, 238, 238, 1); }
 }
