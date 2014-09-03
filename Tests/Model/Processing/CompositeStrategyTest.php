@@ -39,7 +39,7 @@ class CompositeStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
-        $message = new Message(uniqid(), 'DUMMY_CONTENT');
+        $message = new Message(uniqid(), 'DUMMY_MESSAGE_ID', 'DUMMY_SUBJECT', 'DUMMY_CONTENT', 'DUMMY_REFERENCE');
 
         $this->strategy
             ->expects($this->once())
