@@ -524,7 +524,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testUpdateStatus()
     {
         $status = STATUS::NEW_ONE;
-        $assignee = $currentUser = 3;
+        $assignee = $currentUserId = 3;
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
@@ -535,9 +535,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->once())->method('getAssigneeId')->will($this->returnValue($assignee));
 
         $this->securityFacade
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUser));
+            ->will($this->returnValue($currentUserId));
 
         $this->securityFacade
             ->expects($this->never())
@@ -546,14 +546,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status);
     }
 
-    /**
-     * @test
-     */
     public function testUpdateStatusOfTicketAssignedToSomeoneElse()
     {
         $status = STATUS::NEW_ONE;
         $assignee = 3;
-        $currentUser = 2;
+        $currentUserId = 2;
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
@@ -562,11 +559,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->once())->method('getAssigneeId')->will($this->returnValue($assignee));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-
         $this->securityFacade
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUser));
+            ->will($this->returnValue($currentUserId));
 
         $this->securityFacade
             ->expects($this->once())
@@ -574,7 +570,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status, $currentUser);
+        $this->ticketService->updateStatus(self::DUMMY_TICKET_ID, $status, $currentUserId);
     }
 
     private function createBranch()
@@ -613,6 +609,34 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     public function testAssignTicket()
     {
+        $assigneeId = $currentUserId = 3;
+        $assignee = $this->createAssignee();
+
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
+
+        $this->ticket->expects($this->any())->method('getAssigneeId')->will($this->returnValue($assigneeId));
+        $this->ticket->expects($this->once())->method('assign')->with($assignee);
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->any())
+            ->method('getLoggedUserId')
+            ->will($this->returnValue($currentUserId));
+
+        $this->securityFacade
+            ->expects($this->never())
+            ->method('isGranted');
+
+        $this->ticketService->assignTicket(self::DUMMY_TICKET_ID, $assigneeId);
+    }
+
+    public function testAssignTicketOfTicketAssignedToSomeoneElse()
+    {
+        $currentUserId = 2;
         $assigneeId = 3;
         $assignee = $this->createAssignee();
 
@@ -622,8 +646,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
             ->will($this->returnValue($assignee));
 
+        $this->ticket->expects($this->any())->method('getAssigneeId')->will($this->returnValue($assigneeId));
         $this->ticket->expects($this->once())->method('assign')->with($assignee);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->any())
+            ->method('getLoggedUserId')
+            ->will($this->returnValue($currentUserId));
 
         $this->securityFacade
             ->expects($this->once())
@@ -654,10 +684,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testAssignTicketWhenAssigneeDoesNotExist()
     {
+        $currentUserId = 2;
         $assigneeId = 3;
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->any())
+            ->method('getLoggedUserId')
+            ->will($this->returnValue($currentUserId));
 
         $this->securityFacade
             ->expects($this->once())

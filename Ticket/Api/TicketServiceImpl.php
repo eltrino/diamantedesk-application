@@ -285,9 +285,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        if ($ticket->getAssigneeId() != $this->securityFacade->getLoggedUserId()) {
-            $this->isGranted('EDIT', $ticket);
-        }
+        $this->isAssigneeGranted($ticket);
 
         $ticket->updateStatus($status);
         $this->ticketRepository->store($ticket);
@@ -310,7 +308,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        $this->isGranted('EDIT', $ticket);
+        $this->isAssigneeGranted($ticket);
 
         $assignee = $this->userService->getUserById($assigneeId);
         if (is_null($assignee)) {
@@ -353,6 +351,19 @@ class TicketServiceImpl implements TicketService
     {
         if (!$this->securityFacade->isGranted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
+        }
+    }
+
+    /**
+     * Verify that current user assignee is current user
+     *
+     * @param Ticket $entity
+     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     */
+    private function isAssigneeGranted(Ticket $entity)
+    {
+        if ($entity->getAssigneeId() != $this->securityFacade->getLoggedUserId()) {
+            $this->isGranted('EDIT', $entity);
         }
     }
 }
