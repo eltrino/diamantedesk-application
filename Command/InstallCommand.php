@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class InstallCommand extends BaseCommand
+class InstallCommand extends AbstractCommand
 {
     /**
      * @var string
@@ -45,7 +45,7 @@ class InstallCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('diamante:install')
-            ->setDescription('Install Diamante Desk');
+            ->setDescription('Install DiamanteDesk');
     }
 
     /**
@@ -86,6 +86,10 @@ class InstallCommand extends BaseCommand
 
             $output->write('Updating navigation...');
             $this->updateNavigation($output);
+            $output->writeln('Done');
+
+            $output->write('Loading migration data');
+            $this->loadDataFixtures($output);
             $output->writeln('Done');
 
             $this->assetsInstall($output);
@@ -145,5 +149,22 @@ class InstallCommand extends BaseCommand
     private function loadData(OutputInterface $output)
     {
         $this->runExistingCommand('oro:migration:data:load', $output);
+    }
+
+    /**
+     * Load migrations from DataFixtures/ORM folder
+     * @param OutputInterface $output
+     */
+    protected function loadDataFixtures(OutputInterface $output)
+    {
+        $kernelRootDir  = $this->getContainer()->getParameter('kernel.root_dir');
+
+        $this->runExistingCommand('doctrine:fixtures:load', $output,
+            array(
+                '--fixtures'       => "{$kernelRootDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/ORM",
+                '--append'         => true,
+                '--no-interaction' => true,
+            )
+        );
     }
 }

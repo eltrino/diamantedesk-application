@@ -18,6 +18,7 @@ use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class CommentTest extends \PHPUnit_Framework_TestCase
@@ -35,7 +36,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($creator, $comment->getAuthor());
     }
 
-    public function testUpdateConstent()
+    public function testUpdateContent()
     {
         $comment = $this->createComment();
         $comment->updateContent('New Comment Content');
@@ -62,6 +63,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             new Branch('DUMMY_NAME', 'DUMMY_DESC'),
             new User(),
             new User(),
+            Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
 

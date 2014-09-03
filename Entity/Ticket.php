@@ -17,10 +17,25 @@ namespace Eltrino\DiamanteDeskBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository")
  * @ORM\Table(name="diamante_ticket")
+ * @Config(
+ *      defaultValues={
+ *          "ownership"={
+ *              "owner_type"="USER",
+ *              "owner_field_name"="reporter",
+ *              "owner_column_name"="reporter_id"
+ *          },
+ *          "security"={
+ *              "type"="ACL",
+ *              "group_name"="DiamanteDesk"
+ *          }
+ *      }
+ * )
  */
 class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
 {
@@ -55,7 +70,7 @@ class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
     protected $status;
 
     /**
-     * @var integer
+     * @var string
      *
      * @ORM\Column(type="priority")
      */

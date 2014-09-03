@@ -1,0 +1,3 @@
+config:
+    paths:
+        'diamante/attachments/draganddrop': 'bundles/eltrinodiamantedesk/js/diam.attachments.js'

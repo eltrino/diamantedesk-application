@@ -5,11 +5,13 @@
 {% set pageTitle = 'Branches'|trans %}
 
 {% block navButtons %}
-    {{
-        UI.addButton({
-            'path' : path('diamante_branch_create'),
-            'title' : 'Create',
-            'label' : 'Create'
-        })
-    }}
+    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch') %}
+        {{
+            UI.addButton({
+                'path' : path('diamante_branch_create'),
+                'title' : 'Create',
+                'label' : 'Create'
+            })
+        }}
+    {% endif %}
 {% endblock %}

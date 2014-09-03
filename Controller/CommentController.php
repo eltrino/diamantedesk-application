@@ -19,6 +19,7 @@ use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Type\CommentType;
+use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -133,6 +134,17 @@ class CommentController extends Controller
         try {
             $this->handle($form);
             $callback($command);
+
+            $newStatus = $form->get('ticketStatus')->getData();
+
+            if (false === ($newStatus == $ticket->getStatus()->getValue())) {
+                $this->get('diamante.ticket.service')
+                    ->updateStatus(
+                        $command->ticket->getId(),
+                        $newStatus
+                    );
+            }
+
             if ($command->id) {
                 $this->addSuccessMessage('Comment successfully saved.');
             } else {
@@ -157,13 +169,18 @@ class CommentController extends Controller
      */
     public function deleteAction(Comment $comment)
     {
-        $this->get('diamante.comment.service')
-            ->deleteTicketComment($comment->getId());
+        try {
+            $this->get('diamante.comment.service')
+                ->deleteTicketComment($comment->getId());
 
-        $this->addSuccessMessage('Comment successfully deleted.');
+            $this->addSuccessMessage('Comment successfully deleted.');
+        } catch (Exception $e) {
+            $this->addErrorMessage($e->getMessage());
+        }
+
         return $this->redirect(
             $this->generateUrl('diamante_ticket_view', array(
-                'id' => $comment->getTicket()->getId())
+                    'id' => $comment->getTicket()->getId())
             )
         );
     }
@@ -254,6 +271,17 @@ class CommentController extends Controller
     {
         $this->get('session')->getFlashBag()->add(
             'success',
+            $this->get('translator')->trans($message)
+        );
+    }
+
+    /**
+     * @param $message
+     */
+    private function addErrorMessage($message)
+    {
+        $this->get('session')->getFlashBag()->add(
+            'error',
             $this->get('translator')->trans($message)
         );
     }

@@ -7,41 +7,49 @@
     {% set comments = entity.comments %}
     {% import 'OroUIBundle::macros.html.twig' as UI %}
 
-<ol class="diam-comments unstyled">
-    {% for comment in comments %}
-        {% set imagePath = comment.author.imagePath %}
-        <li class="diam-comment">
-            <div class="pull-right">
-                <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action"><i class="icon-edit hide-text">Edit</i></a>
-                <a href="#" data-url = "{{ path('diamante_comment_delete', {'id': comment.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">Delete</i></a>
-            </div>
-            <div class="diam-comment-user-image">
-                <img src="{{ imagePath ? imagePath|imagine_filter('avatar_med') : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="test">
-            </div>
-            <div class="diam-comment-meta">{{ comment.author.firstname }} {{ comment.author.lastname }} added a comment - {{ comment.createdAt|oro_format_datetime }}</div>
-            <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
-            {% if comment.attachments is not empty %}
-                <div class="diam-comment-attachments-box">
-                    <strong class="diam-comment-attachments-title">Attachments:</strong>
-                    <ul class="diam-comment-attachments unstyled">
-                        {% for attachment in comment.attachments %}
-                            <li><i class="icon-paper-clip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
-                        {% endfor %}
-                    </ul>
+{% if resource_granted('VIEW', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+    <ol class="diam-comments unstyled">
+        {% for comment in comments %}
+            {% set imagePath = '' %}
+            <li class="diam-comment">
+                <div class="pull-right">
+                {% if resource_granted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action"><i class="icon-edit hide-text">Edit</i></a>
+                {% endif %}
+                {% if resource_granted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'id': comment.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">Delete</i></a>
+                {% endif %}
                 </div>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ol>
+                <div class="diam-comment-user-image">
+                    <img src="{{ imagePath ? imagePath|imagine_filter('avatar_med') : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="test">
+                </div>
+                <div class="diam-comment-meta">{{ comment.author.firstname }} {{ comment.author.lastname }} added a comment - {{ comment.createdAt|oro_format_datetime }}</div>
+                <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
+                {% if comment.attachments is not empty %}
+                    <div class="diam-comment-attachments-box">
+                        <strong class="diam-comment-attachments-title">Attachments:</strong>
+                        <ul class="diam-comment-attachments unstyled">
+                            {% for attachment in comment.attachments %}
+                                <li><i class="icon-paper-clip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}
 
-<p style="text-align: right;">{{ UI.button({
-    'path': path('diamante_comment_create', {'id': entity.id}),
-    'iClass': 'icon-edit',
-    'title': 'Comment'|trans,
-    'label': 'Comment'|trans
-    })
-    }}
-</p>
+{% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+    <p style="text-align: right;">{{ UI.button({
+        'path': path('diamante_comment_create', {'id': entity.id}),
+        'iClass': 'icon-edit',
+        'title': 'Comment'|trans,
+        'label': 'Comment'|trans
+        })
+        }}
+    </p>
+{% endif %}
 <script type="text/javascript">
     require(['jquery', 'oroui/js/modal', 'oronavigation/js/navigation', 'orotranslation/js/translator'],
             function($, Modal, Navigation, __) {
@@ -76,71 +84,82 @@
 {% endmacro %}
 
 {% block navButtons %}
-    {% set changeStatusTitle = 'Change Status' %}
-    {{ UI.clientButton({
-    'dataUrl': path('diamante_ticket_status_change', { 'id': entity.id }),
-    'aCss': 'no-hash',
-    'iCss': 'icon-edit',
-    'dataId': entity.id,
-    'title' : changeStatusTitle,
-    'label' : changeStatusTitle,
-    'widget' : {
-    'type' : 'dialog',
-    'multiple' : true,
-    'reload-grid-name' : '',
-    'options' : {
-    'alias': 'status-dialog',
-    'dialogOptions' : {
-    'title' : changeStatusTitle,
-    'allowMaximize': true,
-    'allowMinimize': true,
-    'dblclick': 'maximize',
-    'maximizedHeightDecreaseBy': 'minimize-bar',
-    'width': 500
-    }
-    }
-    }
-    }) }}
-    {{ UI.button({
-    'path': path('diamante_ticket_create'),
-    'iClass': 'icon-user',
-    'title': 'Create Ticket'|trans,
-    'label': 'Create'|trans
-    }) }}
+    {% if (entity.assignee.id == app.user.id or resource_granted('EDIT', entity)) %}
+        {% set changeStatusTitle = 'Change Status' %}
+        {{ UI.clientButton({
+        'dataUrl': path('diamante_ticket_status_change', { 'id': entity.id }),
+        'aCss': 'no-hash',
+        'iCss': 'icon-edit',
+        'dataId': entity.id,
+        'title' : changeStatusTitle,
+        'label' : changeStatusTitle,
+        'widget' : {
+        'type' : 'dialog',
+        'multiple' : true,
+        'reload-grid-name' : '',
+        'options' : {
+        'alias': 'status-dialog',
+        'dialogOptions' : {
+        'title' : changeStatusTitle,
+        'allowMaximize': true,
+        'allowMinimize': true,
+        'dblclick': 'maximize',
+        'maximizedHeightDecreaseBy': 'minimize-bar',
+        'width': 500
+        }
+        }
+        }
+        }) }}
+    {% endif %}
+    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
+        {{ UI.button({
+        'path': path('diamante_ticket_create'),
+        'iClass': 'icon-user',
+        'title': 'Create Ticket'|trans,
+        'label': 'Create'|trans
+        }) }}
+    {% endif %}
 
-    {{ UI.button({
-    'path': path('diamante_ticket_update', {'id': entity.id}),
-    'iClass': 'icon-edit',
-    'title': 'Edit Ticket'|trans,
-    'label': 'Edit'|trans
-    }) }}
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.button({
+        'path': path('diamante_ticket_update', {'id': entity.id}),
+        'iClass': 'icon-edit',
+        'title': 'Edit Ticket'|trans,
+        'label': 'Edit'|trans
+        }) }}
+    {% endif %}
 
-    {{ UI.button({
-    'path': path('diamante_ticket_assign', {'id': entity.id}),
-    'iClass': 'icon-edit',
-    'title': 'Assign'|trans,
-    'label': 'Assign'|trans
-    }) }}
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.button({
+        'path': path('diamante_ticket_assign', {'id': entity.id}),
+        'iClass': 'icon-edit',
+        'title': 'Assign'|trans,
+        'label': 'Assign'|trans
+        }) }}
+    {% endif %}
 
-    {{ UI.button({
-    'path': path('diamante_ticket_create_attach', {'id': entity.id}),
-    'iClass': 'icon-edit',
-    'title': 'Attach File'|trans,
-    'label': 'Attach File'|trans
-    }) }}
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.button({
+        'path': path('diamante_ticket_create_attach', {'id': entity.id}),
+        'iClass': 'icon-edit',
+        'title': 'Attach File'|trans,
+        'label': 'Attach File'|trans
+        }) }}
+    {% endif %}
 
-    {{ UI.deleteButton({
-    'dataUrl': path('diamante_ticket_delete', {'id': entity.id}),
-    'dataRedirect': path('diamante_ticket_list'),
-    'aCss': 'no-hash remove-button',
-    'dataId': entity.id,
-    'id': 'btn-remove-account',
-    'dataMessage': 'Are you sure you want to delete this ticket?'|trans,
-    'successMessage': 'Ticket successfully deleted.'|trans,
-    'title': 'Delete ticket'|trans,
-    'label': 'Delete'|trans
-    })
-    }}
+    {% if resource_granted('DELETE', entity) %}
+        {{ UI.deleteButton({
+        'dataUrl': path('diamante_ticket_delete', {'id': entity.id}),
+        'dataRedirect': path('diamante_ticket_list'),
+        'aCss': 'no-hash remove-button',
+        'dataId': entity.id,
+        'id': 'btn-remove-account',
+        'dataMessage': 'Are you sure you want to delete this ticket?'|trans,
+        'successMessage': 'Ticket successfully deleted.'|trans,
+        'title': 'Delete ticket'|trans,
+        'label': 'Delete'|trans
+        }) }}
+    {% endif %}
 {% endblock navButtons %}
 
 {% block pageHeader %}
@@ -161,13 +180,14 @@
     {% set dataSubBlocks = [UI.attibuteRow('Subject', entity.subject)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Branch', entity.branchName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Status', entity.status.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Priority', entity.priority.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Reporter', entity.reporterFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Assignee', entity.assigneeFullName)]) %}
 
     {% set attachmentListWidget %}
     {{ oro_widget_render({
     'widgetType': 'block',
-    'url': path('diamant_ticket_widget_attachment_list', {id: entity.id})
+    'url': path('diamante_ticket_widget_attachment_list', {id: entity.id})
     }) }}
     {% endset %}
 
@@ -190,7 +210,7 @@
     'title': 'Description'|trans,
     'subblocks': [{
     'title': null,
-    'data': [UI.attibuteRow(null, entity.description)]
+    'data': [entity.description|escape('html')|nl2br]
     }]
     }]
     ) %}

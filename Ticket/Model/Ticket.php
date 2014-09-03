@@ -43,7 +43,7 @@ class Ticket implements AttachmentHolder
     protected $status;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $priority;
 
@@ -82,7 +82,7 @@ class Ticket implements AttachmentHolder
      */
     protected $updatedAt;
 
-    public function __construct($subject, $description, $branch, $reporter, $assignee, $status)
+    public function __construct($subject, $description, $branch, $reporter, $assignee, $priority, $status)
     {
         $this->subject = $subject;
         $this->description = $description;
@@ -93,7 +93,7 @@ class Ticket implements AttachmentHolder
         }
 
         $this->status = new Status($status);
-        $this->priority = new Priority();
+        $this->priority = new Priority($priority);
         $this->reporter = $reporter;
         $this->assignee = $assignee;
         $this->comments  = new ArrayCollection();
@@ -223,12 +223,13 @@ class Ticket implements AttachmentHolder
 
     /** LEGACY CODE START */
 
-    public function update($subject, $description, User $reporter, $status)
+    public function update($subject, $description, User $reporter, $priority, $status)
     {
         $this->subject = $subject;
         $this->description = $description;
         $this->reporter = $reporter;
         $this->status = new Status($status);
+        $this->priority = new Priority($priority);
     }
 
     public function updateStatus($status)

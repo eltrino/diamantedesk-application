@@ -18,7 +18,6 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Form\Command\BranchCommand;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
@@ -178,12 +177,15 @@ class BranchController extends Controller
      */
     public function deleteAction(Branch $branch)
     {
-        $this->get('diamante.branch.service')
-            ->deleteBranch($branch);
-
-        return new Response(null, 204, array(
-            'Content-Type' => $this->getRequest()->getMimeType('json')
-        ));
+        try {
+            $this->get('diamante.branch.service')
+                ->deleteBranch($branch);
+            return new Response(null, 204, array(
+                'Content-Type' => $this->getRequest()->getMimeType('json')
+            ));
+        } catch (Exception $e) {
+            return new Response($e->getMessage(), 500);
+        }
     }
 
     /**

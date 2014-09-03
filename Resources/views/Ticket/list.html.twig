@@ -2,11 +2,13 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% set pageTitle = 'All Tickets'|trans %}
 {% block navButtons %}
-    {{ UI.addButton({
-    'path' : path('diamante_ticket_create'),
-    'title' : 'Create Ticket',
-    'label' : 'Create Ticket'
-    }) }}
+    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
+        {{ UI.addButton({
+        'path' : path('diamante_ticket_create'),
+        'title' : 'Create Ticket',
+        'label' : 'Create Ticket'
+        }) }}
+    {% endif %}
 {% endblock %}
 
 {% block content_datagrid %}

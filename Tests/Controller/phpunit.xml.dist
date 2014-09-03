@@ -14,7 +14,7 @@
     bootstrap                   = "bootstrap.php">
 
     <testsuites>
-        <testsuite name="Diamante Desk Functional Test Suite">
+        <testsuite name="DiamanteDesk Functional Test Suite">
             <directory suffix="Test.php">.</directory>
         </testsuite>
     </testsuites>
@@ -30,7 +30,8 @@
         </whitelist>
     </filter>
     <php>
-        <includePath>../../../../../app/</includePath>
         <env name="AUTOLOAD_FIXTURES" value="false"/>
+        <env name="CLASS_AUTOLOADER"  value="/../../../../../vendor/autoload.php"/>
+        <env name="KERNEL_DIR" value="/../../../../../app"/>
     </php>
 </phpunit>

@@ -52,6 +52,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
+            <argument type="service" id="oro_security.security_facade"/>
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"
@@ -114,6 +115,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
+            <argument type="service" id="oro_security.security_facade"/>
         </service>
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%" />

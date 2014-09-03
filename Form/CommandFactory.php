@@ -55,6 +55,7 @@ class CommandFactory
         }
         if ($reporter) {
             $command->reporter = $reporter;
+            $command->assignee = $reporter;
         }
         return $command;
     }
@@ -68,6 +69,7 @@ class CommandFactory
         $command->reporter = $ticket->getReporter();
         $command->assignee = $ticket->getAssignee();
         $command->status = $ticket->getStatus();
+        $command->priority = $ticket->getPriority();
         $command->branch = $ticket->getBranch();
 
         return $command;
@@ -103,6 +105,7 @@ class CommandFactory
         $command->content = null;
         $command->author = $author;
         $command->ticket = $ticket;
+        $command->ticketStatus = $ticket->getStatus();
 
         return $command;
     }
@@ -120,6 +123,7 @@ class CommandFactory
         $command->author = $comment->getAuthor();
         $command->ticket = $comment->getTicket();
         $command->attachmentList = $comment->getAttachments();
+        $command->ticketStatus = $comment->getTicket()->getStatus();
 
         return $command;
     }

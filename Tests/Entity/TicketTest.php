@@ -17,6 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketTest extends \PHPUnit_Framework_TestCase
@@ -35,6 +36,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
+            Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
 
@@ -57,6 +59,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
+            Priority::DEFAULT_PRIORITY,
             Status::NEW_ONE
         );
 
@@ -73,7 +76,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $ticket = $this->createTicket();
         $newReporter = new User();
 
-        $ticket->update('New Subject', 'New Description', $newReporter, Status::CLOSED);
+        $ticket->update('New Subject', 'New Description', $newReporter, Priority::DEFAULT_PRIORITY, Status::CLOSED);
 
         $this->assertEquals('New Subject', $ticket->getSubject());
         $this->assertEquals('New Description', $ticket->getDescription());
@@ -100,6 +103,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
 
