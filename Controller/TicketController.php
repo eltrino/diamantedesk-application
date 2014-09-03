@@ -487,7 +487,7 @@ class TicketController extends Controller
     public function attachmentList(Ticket $ticket)
     {
         return [
-            'ticket_id' => $ticket->getId(),
+            'ticket' => $ticket,
             'attachments' => $ticket->getAttachments()
         ];
     }

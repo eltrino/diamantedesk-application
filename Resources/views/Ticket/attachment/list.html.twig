@@ -22,19 +22,20 @@
                 </div>
                 <figcaption>
                     <span class="pull-right">
-                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="Download">download</i></a>
-                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket_id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="Delete">delete</i></a>
+                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="Download">download</i></a>
+                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="Delete">delete</i></a>
                     </span>
                     <strong>{{ attachment.filename|escape }}</strong>
                 </figcaption>
             </figure>
         </li>
     {% endfor %}
+    {% if resource_granted('EDIT', ticket) %}
         <li class="diam-dropzone" id="diam-dropzone">
             <div class="diam-dropzone-placeholder">
                 <form id="diam-dropzone-form"
-                      action="{{ path('diamante_ticket_create_attach_post', {'id': ticket_id}) }}"
-                      data-update="{{ path('diamante_ticket_attachment_latest', {'ticketId': ticket_id}) }}"
+                      action="{{ path('diamante_ticket_create_attach_post', {'id': ticket.id}) }}"
+                      data-update="{{ path('diamante_ticket_attachment_latest', {'ticketId': ticket.id}) }}"
                       method="post" enctype="multipart/form-data">
                     <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> Drop File Here</label>
                     <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>
@@ -48,6 +49,7 @@
 
             </div>
         </li>
+    {% endif %}
     </ul>
 </div>
 <script type="text/javascript">
