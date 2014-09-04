@@ -35,10 +35,12 @@ class CommandFactory
         $command = new CreateTicketCommand();
         if ($branch) {
             $command->branch = $branch;
+            if ($branch->getDefaultAssignee()) {
+                $command->assignee = $branch->getDefaultAssignee();
+            }
         }
         if ($reporter) {
             $command->reporter = $reporter;
-            $command->assignee = $reporter;
         }
         return $command;
     }
