@@ -60,10 +60,6 @@ class UpdateCommand extends AbstractCommand
             ));
             $output->write('Done');
 
-            $output->write("Updating assets...\n");
-            $this->updateAssets($output);
-            $output->writeln('Done');
-
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
