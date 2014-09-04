@@ -119,6 +119,6 @@ class DoctrineBranchRepositoryTest extends \PHPUnit_Framework_TestCase
 
     private function getBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMMY_DESC', new Logo('dummy'));
+        return new Branch('DUMMY_NAME', 'DUMMY_DESC');
     }
 }

@@ -17,9 +17,9 @@ namespace Eltrino\DiamanteDeskBundle\Controller;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
+use Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Form\Command\BranchCommand;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
 
 use Eltrino\DiamanteDeskBundle\Form\Type\BranchType;
@@ -73,18 +73,10 @@ class BranchController extends Controller
      */
     public function createAction()
     {
-        $command = $this->get('diamante.command_factory')
-            ->createEmptyBranchCommand();
-
+        $command = new BranchCommand();
         try {
             $result = $this->edit($command, function ($command) {
-                return $this->get('diamante.branch.service')
-                    ->createBranch(
-                        $command->name,
-                        $command->description,
-                        $command->logoFile,
-                        $command->tags
-                    );
+                return $this->get('diamante.branch.service')->createBranch($command);
             });
         } catch(\Exception $e) {
             // @todo log original error
@@ -106,24 +98,16 @@ class BranchController extends Controller
      * )
      * @Template("EltrinoDiamanteDeskBundle:Branch:edit.html.twig")
      *
-     * @param Branch $branch
+     * @param int $id
      * @return array
      */
-    public function updateAction(Branch $branch)
+    public function updateAction($id)
     {
-        $command = $this->get('diamante.command_factory')
-            ->createBranchCommand($branch);
-
+        $branch = $this->get('diamante.branch.service')->getBranch($id);
+        $command = BranchCommand::fromBranch($branch);
         try {
             $result = $this->edit($command, function ($command) use ($branch) {
-                return $this->get('diamante.branch.service')
-                    ->updateBranch(
-                        $branch->getId(),
-                        $command->name,
-                        $command->description,
-                        $command->logoFile,
-                        $command->tags
-                    );
+                return $this->get('diamante.branch.service')->updateBranch($command);
             }, $branch);
         } catch(\Exception $e) {
             // @todo log original error
@@ -132,7 +116,7 @@ class BranchController extends Controller
                 $this->generateUrl(
                     'diamante_branch_update',
                     array(
-                        'id' => $branch->getId()
+                        'id' => $id
                     )
                 )
             );
@@ -172,14 +156,14 @@ class BranchController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @param Branch $branch
+     * @param int $id
      * @return Response
      */
-    public function deleteAction(Branch $branch)
+    public function deleteAction($id)
     {
         try {
             $this->get('diamante.branch.service')
-                ->deleteBranch($branch);
+                ->deleteBranch($id);
             return new Response(null, 204, array(
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));

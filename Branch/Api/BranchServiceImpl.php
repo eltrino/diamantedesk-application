@@ -78,25 +78,42 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * Create Branch
-     * @param $name
-     * @param $description
-     * @param UploadedFile $logoFile
-     * @param $tags
-     * @return int|mixed
+     * Retrieves Branch by id
+     * @param $id
+     * @return Branch
      */
-    public function createBranch($name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
+    public function getBranch($id)
+    {
+        $branch = $this->branchRepository->get($id);
+        if (is_null($branch)) {
+            throw new \RuntimeException('Branch loading failed. Branch not found.');
+        }
+        return $branch;
+    }
+
+    /**
+     * Create Branch
+     * @param Command\BranchCommand $branchCommand
+     * @return int
+     */
+    public function createBranch(Command\BranchCommand $branchCommand)
     {
         $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch');
 
         $logo = null;
 
-        if ($logoFile) {
-            $logo = $this->handleLogoUpload($logoFile);
+        if ($branchCommand->logoFile) {
+            $logo = $this->handleLogoUpload($branchCommand->logoFile);
         }
 
         $branch = $this->branchFactory
-            ->create($name, $description, $logo, $tags);
+            ->create(
+                $branchCommand->name,
+                $branchCommand->description,
+                $branchCommand->defaultAssignee,
+                $logo,
+                $branchCommand->tags
+            );
 
         $this->branchRepository->store($branch);
         $this->tagManager->saveTagging($branch);
@@ -105,31 +122,27 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * Update Branch Info
-     * @param $branchId
-     * @param $name
-     * @param $description
-     * @param UploadedFile $logoFile
-     * @param $tags
-     * @return int|mixed
+     * Update Branch
+     * @param Command\BranchCommand $branchCommand
+     * @return int
      */
-    public function updateBranch($branchId, $name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
+    public function updateBranch(Command\BranchCommand $branchCommand)
     {
         $this->isGranted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Branch');
 
-        $branch = $this->branchRepository->get($branchId);
+        $branch = $this->branchRepository->get($branchCommand->id);
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
         $file = null;
-        if ($logoFile) {
+        if ($branchCommand->logoFile) {
             if ($branch->getLogo()) {
                 $this->branchLogoHandler->remove($branch->getLogo());
             }
-            $logo = $this->handleLogoUpload($logoFile);
+            $logo = $this->handleLogoUpload($branchCommand->logoFile);
             $file = new Logo($logo->getFilename());
         }
 
-        $branch->update($name, $description, $file);
-        $branch->setTags($tags);
+        $branch->update($branchCommand->name, $branchCommand->description, $branchCommand->defaultAssignee, $file);
+        $branch->setTags($branchCommand->tags);
 
         $this->branchRepository->store($branch);
         $this->tagManager->saveTagging($branch);
@@ -139,8 +152,8 @@ class BranchServiceImpl implements BranchService
 
     /**
      * Delete Branch
-     * @param $branchId
-     * @return mixed|void
+     * @param int $branchId
+     * @return void
      */
     public function deleteBranch($branchId)
     {

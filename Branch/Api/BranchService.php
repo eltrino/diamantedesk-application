@@ -23,30 +23,30 @@ interface BranchService
     public function listAllBranches();
 
     /**
-     * Create Branch
-     * @param $name
-     * @param $description
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile
-     * @param $tags
-     * @return mixed
+     * Retrieves Branch by id
+     * @param $id
+     * @return Branch
      */
-    public function createBranch($name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null);
+    public function getBranch($id);
 
     /**
-     * Update Branch Info
-     * @param $branchId
-     * @param $name
-     * @param $description
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile
-     * @param $tags
-     * @return mixed
+     * Create Branch
+     * @param Command\BranchCommand $branchCommand
+     * @return int
      */
-    public function updateBranch($branchId, $name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null);
+    public function createBranch(Command\BranchCommand $branchCommand);
+
+    /**
+     * Update Branch
+     * @param Command\BranchCommand $branchCommand
+     * @return int
+     */
+    public function updateBranch(Command\BranchCommand $branchCommand);
 
     /**
      * Delete Branch
-     * @param $branchId
-     * @return mixed
+     * @param int $branchId
+     * @return void
      */
     public function deleteBranch($branchId);
 }

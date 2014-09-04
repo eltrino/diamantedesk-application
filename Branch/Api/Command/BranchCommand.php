@@ -12,15 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Command;
+namespace Eltrino\DiamanteDeskBundle\Branch\Api\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Eltrino\DiamanteDeskBundle\Branch\Model\Branch;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BranchCommand implements Taggable
 {
     public $id;
+
     /**
      * @Assert\NotBlank
      */
@@ -28,20 +30,11 @@ class BranchCommand implements Taggable
     public $description;
     public $tags;
     public $logoFile;
+    public $defaultAssignee;
 
     public function __construct()
     {
         $this->tags = new ArrayCollection();
-    }
-
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-    }
-
-    public function getTags()
-    {
-        return $this->tags;
     }
 
     /**
@@ -52,5 +45,38 @@ class BranchCommand implements Taggable
     public function getTaggableId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set tag collection
+     *
+     * @param $tags
+     * @return $this
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * Returns the collection of tags for this Taggable entity
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    public static function fromBranch(Branch $branch)
+    {
+        $command                  = new self();
+        $command->id              = $branch->getId();
+        $command->name            = $branch->getName();
+        $command->description     = $branch->getDescription();
+        $command->defaultAssignee = $branch->getDefaultAssignee();
+        $command->tags            = $branch->getTags();
+        $command->logo            = $branch->getLogo();
+        return $command;
     }
 }

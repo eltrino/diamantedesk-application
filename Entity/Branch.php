@@ -65,6 +65,16 @@ class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
     protected $description;
 
     /**
+     * Branch default assignee
+     *
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="default_assignee_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $defaultAssignee;
+
+    /**
      * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Logo
      *
      * @ORM\Column(type="branch_logo")

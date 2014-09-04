@@ -30,23 +30,6 @@ use Oro\Bundle\UserBundle\Entity\User;
 
 class CommandFactory
 {
-    public function createEmptyBranchCommand()
-    {
-        return new BranchCommand();
-    }
-
-    public function createBranchCommand(Branch $branch)
-    {
-        $command              = new BranchCommand();
-        $command->id          = $branch->getId();
-        $command->name        = $branch->getName();
-        $command->tags        = $branch->getTags();
-        $command->setTags($branch->getTags());
-        $command->description = $branch->getDescription();
-        $command->logo        = $branch->getLogo();
-        return $command;
-    }
-
     public function createCreateTicketCommand(Branch $branch = null, User $reporter = null)
     {
         $command = new CreateTicketCommand();

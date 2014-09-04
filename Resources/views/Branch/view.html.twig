@@ -56,6 +56,9 @@
     {% set id = 'branchUpdate' %}
 
     {% set dataSubBlocks = [UI.attibuteRow('Name', entity.name)] %}
+
+    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssigneeFullName : 'Not Defined'|trans %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Default Assignee', defaultAssigneeFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
     {% set dataBlocks =

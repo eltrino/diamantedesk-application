@@ -17,6 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Oro\Bundle\TagBundle\Entity\Taggable;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class Branch implements Taggable
 {
@@ -34,6 +35,11 @@ class Branch implements Taggable
      * @var string
      */
     protected $description;
+
+    /**
+     * @var User
+     */
+    protected $defaultAssignee;
 
     /**
      * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Logo
@@ -55,10 +61,11 @@ class Branch implements Taggable
      */
     protected $updatedAt;
 
-    public function __construct($name, $description, Logo $logo = null, $tags = null)
+    public function __construct($name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
     {
         $this->name = $name;
         $this->description = $description;
+        $this->defaultAssignee = $defaultAssignee;
         $this->logo = $logo;
         $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
@@ -87,6 +94,25 @@ class Branch implements Taggable
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return User
+     */
+    public function getDefaultAssignee()
+    {
+        return $this->defaultAssignee;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultAssigneeFullName()
+    {
+        if (is_null($this->defaultAssignee)) {
+            return null;
+        }
+        return $this->defaultAssignee->getFirstName() . ' ' . $this->defaultAssignee->getLastName();
     }
 
     /**
@@ -119,12 +145,16 @@ class Branch implements Taggable
      * Update branch
      * @param $name
      * @param $description
-     * @param $logo
+     * @param null|User $defaultAssignee
+     * @param null|Logo $logo
+     * @param null|array $tags
+     * @return void
      */
-    public function update($name, $description, Logo $logo = null, $tags = null)
+    public function update($name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
     {
         $this->name = $name;
         $this->description = $description;
+        $this->defaultAssignee = $defaultAssignee;
         if ($logo) {
             $this->logo = $logo;
         }
@@ -163,4 +193,4 @@ class Branch implements Taggable
     {
         $this->tags = $tags;
     }
-} 
+}
