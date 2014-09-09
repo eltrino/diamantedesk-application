@@ -17,8 +17,10 @@ namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend;
 use Eltrino\EmailProcessingBundle\Model\Message;
 use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
 use Eltrino\EmailProcessingBundle\Model\MessageProcessingException;
+use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
+use Zend\Mime;
 
-class RawMessageProvider implements MessageProvider
+class RawMessageProvider extends AbstractMessageProvider implements MessageProvider
 {
     private $input;
 
@@ -54,15 +56,76 @@ class RawMessageProvider implements MessageProvider
 
         $uniqueMessageId    = uniqid($zendMailMessage->getSubject());
         $messageId          = $this->processMessageId($headers);
-        $messageSubject     = $this->processSubject($headers);
+        $messageSubject     = $zendMailMessage->getSubject();
+
         $messageContent     = $this->processContent($zendMailMessage);
         $messageReference   = $this->processMessageReference($headers);
         $messageAttachments = $this->processAttachments($zendMailMessage);
 
-
         $message = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
             $messageReference, $messageAttachments);
         return array($message);
+    }
+
+    /**
+     * Retrieves Message Content
+     *
+     * @param \Zend\Mail\Storage\Message $zendMailMessage
+     * @return string|null
+     */
+    private function processContent($zendMailMessage)
+    {
+        $messageContent = '';
+
+        if ($zendMailMessage->getBody()) {
+            $parts = $zendMailMessage->getBody()->getParts();
+
+            foreach ($parts as $part) {
+                $split = Mime\Decode::splitContentType($part->type);
+                if ($split['type'] == \Zend\Mime\Mime::TYPE_TEXT) {
+                    $messageContent = $part->getContent();
+                }
+
+                if ($split['type'] == \Zend\Mime\Mime::MULTIPART_ALTERNATIVE) {
+                    $boundary = $split['boundary'];
+                    $bodyParts = Mime\Decode::splitMessageStruct($part->getContent(), $boundary);
+                    foreach ($bodyParts as $bodyPart) {
+                        $headers = $bodyPart['header'];
+                        if ($headers->get('contenttype')->getType() == \Zend\Mime\Mime::TYPE_TEXT) {
+                            $messageContent = $bodyPart['body'];
+                        }
+                    }
+                }
+            }
+        }
+        return $messageContent;
+    }
+
+    /**
+     * Retrieves Message Attachments
+     *
+     * @param \Zend\Mail\Storage\Message $zendMailMessage
+     * @return array
+     */
+    private function processAttachments($zendMailMessage)
+    {
+        $attachments = array();
+
+        if ($zendMailMessage->getBody()) {
+            $parts = $zendMailMessage->getBody()->getParts();
+
+            foreach ($parts as $part) {
+                if ($part->disposition) {
+                    $disposition = \Zend\Mime\Decode::splitHeaderField($part->disposition);
+                    if ($disposition[0] == \Zend\Mime\Mime::DISPOSITION_ATTACHMENT && isset($disposition['filename'])) {
+                        $fileName = $disposition['filename'];
+                        $fileContent = $part->getContent();
+                        $attachments[] = new Attachment($fileName, base64_decode($fileContent));
+                    }
+                }
+            }
+        }
+        return $attachments;
     }
 
     /**

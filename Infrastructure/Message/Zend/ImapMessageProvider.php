@@ -19,7 +19,7 @@ use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
 use Eltrino\EmailProcessingBundle\Model\MessageProcessingException;
 use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
 
-class ImapMessageProvider implements MessageProvider
+class ImapMessageProvider extends AbstractMessageProvider implements MessageProvider
 {
     const BATCH_SIZE_OF_MESSAGES_IN_BYTES = 20000000;
     const NAME_OF_FOLDER_OF_PROCESSED_MESSAGES = 'Processed';
@@ -77,22 +77,6 @@ class ImapMessageProvider implements MessageProvider
     }
 
     /**
-     * Retrieves Message ID
-     *
-     * @param \Zend\Mail\Headers $headers
-     * @return string|null
-     */
-    private function processMessageId($headers)
-    {
-        $messageId = null;
-        if ($headers->get('messageid')) {
-            preg_match('/<([^<]+)>/', $headers->get('messageid')->getFieldValue(), $matches);
-            $messageId = $matches[1];
-        }
-        return $messageId;
-    }
-
-    /**
      * Retrieves Message Subject
      *
      * @param \Zend\Mail\Headers $headers
@@ -119,6 +103,7 @@ class ImapMessageProvider implements MessageProvider
                 if ($headers->get('contenttype')) {
                     if ($headers->get('contenttype')->getType() == \Zend\Mime\Mime::TYPE_TEXT) {
                         $messageContent = $part->getContent();
+                        break;
                     }
                 }
             }
@@ -155,22 +140,6 @@ class ImapMessageProvider implements MessageProvider
         }
 
         return $attachments;
-    }
-
-    /**
-     * Retrieves Message Reference
-     *
-     * @param \Zend\Mail\Headers $headers
-     * @return string|null
-     */
-    private function processMessageReference($headers)
-    {
-        $messageReference = null;
-        if ($headers->get('references')) {
-            preg_match('/<([^<]+)>/', $headers->get('references')->getFieldValue(), $matches);
-            $messageReference = $matches[1];
-        }
-        return $messageReference;
     }
 
     /**

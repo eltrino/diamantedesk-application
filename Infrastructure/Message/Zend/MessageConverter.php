@@ -13,8 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend;
-
-use Zend\Mail\Message;
+use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMessage;
 
 class MessageConverter
 {
@@ -23,6 +22,6 @@ class MessageConverter
      */
     public function fromRawMessage($rawMessage)
     {
-        return \Zend\Mail\Message::fromString($rawMessage);
+        return ZendMailMessage::fromString($rawMessage);
     }
 }

@@ -16,6 +16,7 @@ namespace Eltrino\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
 use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\RawMessageProvider;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMessage;
 
 class RawMessageProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,7 +46,7 @@ class RawMessageProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->converter->expects($this->once())->method('fromRawMessage')
             ->with($this->equalTo(self::DUMMY_RAW_MESSAGE))
-            ->will($this->returnValue(new \Zend\Mail\Message()));
+            ->will($this->returnValue(new ZendMailMessage()));
 
         $messages = $this->messageProvider->fetchMessagesToProcess();
 
