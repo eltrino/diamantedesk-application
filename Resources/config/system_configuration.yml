@@ -4,14 +4,22 @@ oro_system_configuration:
             title: 'DiamanteDesk'
             priority: 30
 
-        diamantedesk_email_integration:
-            title: 'Email Integration'
-            icon:  icon-envelope
+        diamantedesk_channels:
+            title: 'Channels'
+            icon: icon-desktop
 
-        diamantedesk_mailbox:
-            title:       'Mailbox'
+        diamantedesk_channels_email_group:
+            title: 'Email'
+
+        diamantedesk_channels_general_group:
+            title: 'General'
 
     fields:
+        eltrino_email_processing.default_branch:
+            type: diamante_email_processing_default_branch
+            options:
+                label: 'Default Branch'
+
         eltrino_email_processing.mailbox_server_address:
             type: text
             priority: 95
@@ -52,9 +60,13 @@ oro_system_configuration:
                 children:
                     diamantedesk_setup:
                         children:
-                            diamantedesk_email_integration:
+                            diamantedesk_channels:
                                 children:
-                                    diamantedesk_mailbox:
+                                    diamantedesk_channels_general_group:
+                                        priority: 300
+                                        children:
+                                            - eltrino_email_processing.default_branch
+                                    diamantedesk_channels_email_group:
                                         priority: 260
                                         children:
                                             - eltrino_email_processing.mailbox_server_address
@@ -62,4 +74,3 @@ oro_system_configuration:
                                             - eltrino_email_processing.mailbox_ssl
                                             - eltrino_email_processing.mailbox_username
                                             - eltrino_email_processing.mailbox_password
-

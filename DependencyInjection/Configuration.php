@@ -36,6 +36,10 @@ class Configuration implements ConfigurationInterface
         SettingsBuilder::append(
             $rootNode,
             array(
+                'default_branch' => array(
+                    'value' => '',
+                    'type' => 'scalar'
+                ),
                 'mailbox_server_address' => array(
                     'value' => '',
                     'type' => 'scalar'

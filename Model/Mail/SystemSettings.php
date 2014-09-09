@@ -19,6 +19,11 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 class SystemSettings
 {
     /**
+     * @var integer
+     */
+    private $defaultBranchId;
+
+    /**
      * @var string
      */
     private $serverAddress;
@@ -48,11 +53,20 @@ class SystemSettings
      */
     public function __construct(ConfigManager $configManager)
     {
-        $this->serverAddress = $configManager->get('eltrino_email_processing.mailbox_server_address');
-        $this->port          = $configManager->get('eltrino_email_processing.mailbox_port');
-        $this->sslEnabled    = (bool) $configManager->get('eltrino_email_processing.mailbox_ssl');
-        $this->username      = $configManager->get('eltrino_email_processing.mailbox_username');
-        $this->password      = $configManager->get('eltrino_email_processing.mailbox_password');
+        $this->defaultBranchId = (int) $configManager->get('eltrino_email_processing.default_branch');
+        $this->serverAddress   = $configManager->get('eltrino_email_processing.mailbox_server_address');
+        $this->port            = $configManager->get('eltrino_email_processing.mailbox_port');
+        $this->sslEnabled      = (bool) $configManager->get('eltrino_email_processing.mailbox_ssl');
+        $this->username        = $configManager->get('eltrino_email_processing.mailbox_username');
+        $this->password        = $configManager->get('eltrino_email_processing.mailbox_password');
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultBranchId()
+    {
+        return $this->defaultBranchId;
     }
 
     /**

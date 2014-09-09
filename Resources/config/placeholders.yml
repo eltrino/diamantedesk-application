@@ -1,0 +1,11 @@
+placeholders:
+
+    page_title_after:
+        items:
+            default_branch_notification: ~
+
+items:
+
+    default_branch_notification:
+        template: EltrinoEmailProcessingBundle::defaultBranchNotification.html.twig
+        default_branch: [entity]
