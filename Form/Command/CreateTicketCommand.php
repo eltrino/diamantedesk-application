@@ -59,4 +59,9 @@ class CreateTicketCommand
      * @Assert\NotBlank
      */
     public $priority;
+
+    /**
+     * @Assert\NotBlank
+     */
+    public $source;
 }

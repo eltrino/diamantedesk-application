@@ -15,6 +15,7 @@
 namespace Eltrino\DiamanteDeskBundle\Form\Type;
 
 use Eltrino\DiamanteDeskBundle\Form\DataTransformer\PriorityTransformer;
+use Eltrino\DiamanteDeskBundle\Form\DataTransformer\SourceTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -96,6 +97,22 @@ class CreateTicketType extends AbstractType
                 )
             )
             ->addModelTransformer($priorityTransformer)
+        );
+
+        $sourceTransformer = new SourceTransformer();
+        $sources = $sourceTransformer->getOptions();
+
+        $builder->add(
+            $builder->create(
+                'source',
+                'choice',
+                array(
+                    'label'    => 'Source',
+                    'required' => true,
+                    'choices'  => $sources,
+                )
+            )
+                ->addModelTransformer($sourceTransformer)
         );
 
         $builder->add(

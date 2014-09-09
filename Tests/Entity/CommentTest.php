@@ -17,6 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -64,6 +65,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             new User(),
             new User(),
             Priority::DEFAULT_PRIORITY,
+            Source::PHONE,
             Status::OPEN
         );
 

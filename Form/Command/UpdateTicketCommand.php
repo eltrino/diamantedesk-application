@@ -57,4 +57,9 @@ class UpdateTicketCommand
      * @Assert\NotBlank
      */
     public $priority;
+
+    /**
+     * @Assert\NotBlank
+     */
+    public $source;
 }

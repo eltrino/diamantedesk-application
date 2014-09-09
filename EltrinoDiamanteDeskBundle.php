@@ -43,6 +43,12 @@ class EltrinoDiamanteDeskBundle extends Bundle
                 'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\StatusType'
             );
         }
+        if (!Type::hasType('source')) {
+            Type::addType(
+                'source',
+                'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\SourceType'
+            );
+        }
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $conn = $em->getConnection();
