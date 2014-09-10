@@ -15,6 +15,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
 
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\UserBundle\Entity\User;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
@@ -52,6 +53,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[description]'] = 'Test Description';
         $form['diamante_ticket_form[status]']      = 'open';
         $form['diamante_ticket_form[priority]']    = Priority::DEFAULT_PRIORITY;
+        $form['diamante_ticket_form[source]']      = Source::PHONE;
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
@@ -81,6 +83,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[description]'] = 'Test Description';
         $form['diamante_ticket_form[status]']      = Status::OPEN;
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_LOW;
+        $form['diamante_ticket_form[source]']      = Source::PHONE;
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
@@ -173,6 +176,24 @@ class TicketControllerTest extends WebTestCase
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
         $form['diamante_ticket_form[priority]'] = Priority::PRIORITY_HIGH;
+        $this->client->followRedirects(true);
+
+        $crawler  = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Ticket successfully saved.", $crawler->html());
+    }
+
+    public function testUpdateSource()
+    {
+        $ticket        = $this->chooseTicketFromGrid();
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $crawler       = $this->client->request('GET', $ticketUpdateUrl);
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Save and Close')->form();
+        $form['diamante_ticket_form[source]'] = Source::EMAIL;
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
