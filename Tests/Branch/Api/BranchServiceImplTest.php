@@ -94,6 +94,22 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function thatListsAllBranches()
+    {
+        $branches = array(new Branch('DUMMY_NAME_1', 'DUMMY_DESC_1'), new Branch('DUMMY_NAME_2', 'DUMMY_DESC_2'));
+        $this->branchRepository->expects($this->once())->method('getAll')->will($this->returnValue($branches));
+
+        $retrievedBranches = $this->branchServiceImpl->listAllBranches();
+
+        $this->assertNotNull($retrievedBranches);
+        $this->assertTrue(is_array($retrievedBranches));
+        $this->assertNotEmpty($retrievedBranches);
+        $this->assertEquals($branches, $retrievedBranches);
+    }
+
+    /**
+     * @test
+     */
     public function createBranchWithLogo()
     {
         $branchStub = new Branch('DUMMY_NAME', 'DUMMY_DESC', new Logo('dummy'));

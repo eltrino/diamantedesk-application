@@ -40,11 +40,45 @@ class DoctrineBranchRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     private $classMetadata;
 
+    /**
+     * @var \Doctrine\ORM\UnitOfWork
+     * @Mock \Doctrine\ORM\UnitOfWork
+     */
+    private $unitOfWork;
+
+    /**
+     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
+     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
+     */
+    private $entityPersister;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
         $this->classMetadata->name = self::DUMMY_CLASS_NAME;
         $this->repository = new DoctrineBranchRepository($this->em, $this->classMetadata);
+    }
+
+    /**
+     * @test
+     */
+    public function thatGetsAll()
+    {
+        $branches = array(new Branch('DUMMY_NAME_1', 'DUMMY_DESC_1'), new Branch('DUMMY_NAME_2', 'DUMMY_DESC_2'));
+
+        $this->em->expects($this->once())->method('getUnitOfWork')->will($this->returnValue($this->unitOfWork));
+        $this->unitOfWork->expects($this->once())->method('getEntityPersister')
+            ->with($this->equalTo(self::DUMMY_CLASS_NAME))->will($this->returnValue($this->entityPersister));
+        $this->entityPersister->expects($this->once())->method('loadAll')
+            ->with($this->equalTo(array()), $this->equalTo(null), $this->equalTo(null), $this->equalTo(null))
+            ->will($this->returnValue($branches));
+
+        $retrievedBranches = $this->repository->getAll();
+
+        $this->assertNotNull($retrievedBranches);
+        $this->assertTrue(is_array($retrievedBranches));
+        $this->assertNotEmpty($retrievedBranches);
+        $this->assertEquals($branches, $retrievedBranches);
     }
 
     public function testGet()
@@ -87,4 +121,4 @@ class DoctrineBranchRepositoryTest extends \PHPUnit_Framework_TestCase
     {
         return new Branch('DUMMY_NAME', 'DUMMY_DESC', new Logo('dummy'));
     }
-} 
+}

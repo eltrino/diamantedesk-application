@@ -12,34 +12,23 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Model;
+namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing;
 
-interface BranchRepository
+use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference;
+
+interface MessageReferenceRepository
 {
     /**
-     * Retrieves all Branches
-     * @return Branch[]
+     * Retrieves MessageReference by given message id
+     * @param string $messageId
+     * @return MessageReference
      */
-    public function getAll();
+    public function getReferenceByMessageId($messageId);
 
     /**
-     * Retrieves Branch by given id
-     * @param $id
-     * @return Branch
-     */
-    public function get($id);
-
-    /**
-     * Store Branch
-     * @param Branch $branch
+     * Store MessageReference
+     * @param MessageReference $messageReference
      * @return void
      */
-    public function store(Branch $branch);
-
-    /**
-     * Delete Branch
-     * @param Branch $branch
-     * @return void
-     */
-    public function remove(Branch $branch);
-}
+    public function store(MessageReference $messageReference);
+} 

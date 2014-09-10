@@ -105,8 +105,8 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
     }

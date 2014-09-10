@@ -17,6 +17,12 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Api;
 interface BranchService
 {
     /**
+     * Retrieves list of all Branches
+     * @return Branch[]
+     */
+    public function listAllBranches();
+
+    /**
      * Create Branch
      * @param $name
      * @param $description
@@ -43,4 +49,4 @@ interface BranchService
      * @return mixed
      */
     public function deleteBranch($branchId);
-} 
+}

@@ -15,7 +15,6 @@
 namespace Eltrino\DiamanteDeskBundle;
 
 use Doctrine\DBAL\Types\Type;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class EltrinoDiamanteDeskBundle extends Bundle

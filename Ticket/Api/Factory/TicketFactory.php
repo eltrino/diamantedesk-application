@@ -27,8 +27,8 @@ class TicketFactory
             $branch,
             $reporter,
             $assignee,
-            $priority,
             $source,
+            $priority,
             $status
         );
     }

@@ -37,8 +37,8 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
 
@@ -62,8 +62,8 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::NEW_ONE
         );
 
@@ -115,8 +115,8 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
 

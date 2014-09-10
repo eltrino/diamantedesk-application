@@ -70,8 +70,8 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
                 $this->branchRepository->findOneBy(array('name' => 'branchName' . $i)),
                 $reporter,
                 $assignee,
-                Priority::DEFAULT_PRIORITY,
                 Source::PHONE,
+                Priority::DEFAULT_PRIORITY,
                 Status::OPEN
             );
 

@@ -130,8 +130,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            $priority,
             $source,
+            $priority,
             $status
         );
 
@@ -194,8 +194,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            $priority,
             $source,
+            $priority,
             $status
         );
 
@@ -259,8 +259,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            $priority,
             $source,
+            $priority,
             $status
         );
 
@@ -321,8 +321,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::NEW_ONE
         );
 
@@ -374,8 +374,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::NEW_ONE
         );
 
@@ -434,8 +434,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());
@@ -492,8 +492,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $attachmentInputs = $this->attachmentInputs();
@@ -538,8 +538,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());

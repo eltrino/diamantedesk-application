@@ -83,15 +83,23 @@ class Ticket implements AttachmentHolder
     protected $updatedAt;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\Source
+     * @param $subject
+     * @param $description
+     * @param $branch
+     * @param $reporter
+     * @param $assignee
+     * @param null $priority
+     * @param null $status
      */
-    protected $source;
-
-    public function __construct($subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
+    public function __construct($subject, $description, $branch, $reporter, $assignee, $source, $priority = null, $status = null)
     {
         $this->subject = $subject;
         $this->description = $description;
         $this->branch = $branch;
+
+        if (null == $priority) {
+            $status = Priority::PRIORITY_MEDIUM;
+        }
 
         if (null == $status) {
             $status = Status::NEW_ONE;

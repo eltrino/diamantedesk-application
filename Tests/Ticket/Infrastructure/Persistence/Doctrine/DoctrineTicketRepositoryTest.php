@@ -81,8 +81,8 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
             new User(),
             new User(),
-            Priority::DEFAULT_PRIORITY,
             Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
     }
