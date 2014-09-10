@@ -109,13 +109,14 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $description
      * @param $reporterId
      * @param $assigneeId
+     * @param null $priority
      * @param null $status
      * @param array $attachments
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId, $status = null,
-        array $attachments = null)
+    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
+             $priority = null, $status = null, array $attachments = null)
     {
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
@@ -138,6 +139,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
                 $branch,
                 $reporter,
                 $assignee,
+                $priority,
                 $status);
 
         if ($attachments) {

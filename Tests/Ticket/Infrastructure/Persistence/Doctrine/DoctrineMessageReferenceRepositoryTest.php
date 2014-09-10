@@ -19,6 +19,7 @@ use Doctrine\DBAL\LockMode;
 use Eltrino\DiamanteDeskBundle\Entity\MessageReference;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Oro\Bundle\UserBundle\Entity\User;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -114,6 +115,7 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
             new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
             new User(),
             new User(),
+            Priority::PRIORITY_MEDIUM,
             Status::OPEN
         );
 

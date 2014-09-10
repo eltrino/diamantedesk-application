@@ -16,6 +16,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Model\EmailProcessing\Services;
 
 use Eltrino\DiamanteDeskBundle\Entity\MessageReference;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
@@ -267,6 +268,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $reporterId,
             $assigneeId,
             null,
+            null,
             $this->attachments()
         );
     }
@@ -322,7 +324,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $author  = $this->createAuthor();
         $authorId = 1;
-
 
         $ticket = $this->createDummyTicket();
 
@@ -406,6 +407,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Priority::PRIORITY_MEDIUM,
             Status::CLOSED
         );
     }
