@@ -98,7 +98,7 @@ class Ticket implements AttachmentHolder
         $this->branch = $branch;
 
         if (null == $priority) {
-            $status = Priority::PRIORITY_MEDIUM;
+            $priority = Priority::PRIORITY_MEDIUM;
         }
 
         if (null == $status) {

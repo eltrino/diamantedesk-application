@@ -59,7 +59,7 @@ interface TicketService
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority, $status = null, array $attachmentInputs = null);
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority = null, $status = null, array $attachmentInputs = null);
 
     /**
      * @param $ticketId
