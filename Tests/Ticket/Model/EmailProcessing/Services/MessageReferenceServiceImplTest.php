@@ -170,7 +170,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('create')
             ->with(
                 $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-                $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(Source::EMAIL)
+                $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
             )->will($this->returnValue($this->ticket));
 
         $this->fileStorage->expects($this->exactly(0))
@@ -227,7 +227,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('create')
             ->with(
                 $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-                $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(Source::EMAIL)
+                $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
             )->will($this->returnValue($this->ticket));
 
         $fileRealPath = 'dummy/file/real/path/' . self::DUMMY_FILENAME;

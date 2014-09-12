@@ -105,6 +105,10 @@ class Ticket implements AttachmentHolder
             $status = Status::NEW_ONE;
         }
 
+        if (null == $source) {
+            $status = Source::PHONE;
+        }
+
         $this->status = new Status($status);
         $this->priority = new Priority($priority);
         $this->reporter = $reporter;
