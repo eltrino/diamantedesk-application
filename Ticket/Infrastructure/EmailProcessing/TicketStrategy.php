@@ -46,7 +46,7 @@ class TicketStrategy implements Strategy
 
         if (!$message->getReference()) {
             $this->messageReferenceServiceImpl->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
-                $message->getContent(), $reporterId, $assigneeId, null, $attachments);
+                $message->getContent(), $reporterId, $assigneeId, null, null, $attachments);
         } else {
             $this->messageReferenceServiceImpl->createCommentForTicket($message->getContent(), $reporterId,
                 $message->getReference(), $attachments);
