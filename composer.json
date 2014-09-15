@@ -24,8 +24,8 @@
     "require": {
         "php": ">=5.4.4",
         "oro/platform": "1.2.*",
-        "beberlei/assert": "*",
-        "zendframework/zend-mail": "2.*.*"
+        "beberlei/assert": "2.*",
+        "zendframework/zend-mail": "2.*"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"
