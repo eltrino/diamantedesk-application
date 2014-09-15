@@ -25,8 +25,7 @@
         "php": ">=5.4.4",
         "oro/platform": "1.2.*",
         "oro/crm": "1.2.*",
-        "beberlei/assert": "*",
-        "zendframework/zend-mail": "2.*.*",
+        "beberlei/assert": "2.*",
         "eltrino/diamantedesk-email-processing-bundle": "*"
     },
     "require-dev": {
