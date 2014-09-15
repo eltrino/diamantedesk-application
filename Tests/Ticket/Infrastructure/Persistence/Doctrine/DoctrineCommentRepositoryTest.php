@@ -15,6 +15,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doctrine;
 
 use Doctrine\DBAL\LockMode;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
@@ -135,6 +136,7 @@ class DoctrineCommentRepositoryTest extends \PHPUnit_Framework_TestCase
                 new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
                 new User(),
                 new User(),
+                Source::PHONE,
                 Priority::DEFAULT_PRIORITY,
                 Status::NEW_ONE
             ),

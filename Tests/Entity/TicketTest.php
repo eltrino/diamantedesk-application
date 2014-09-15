@@ -16,6 +16,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
 
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -36,6 +37,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
+            Source::PHONE,
             Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );
@@ -46,6 +48,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('open', $ticket->getStatus()->getValue());
         $this->assertEquals($reporter, $ticket->getReporter());
         $this->assertEquals($assignee, $ticket->getAssignee());
+        $this->assertEquals(Source::PHONE, $ticket->getSource()->getValue());
     }
 
     public function testCreateWhenStatusIsNull()
@@ -59,6 +62,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
+            Source::PHONE,
             Priority::DEFAULT_PRIORITY,
             Status::NEW_ONE
         );
@@ -69,6 +73,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('new', $ticket->getStatus()->getValue());
         $this->assertEquals($reporter, $ticket->getReporter());
         $this->assertEquals($assignee, $ticket->getAssignee());
+        $this->assertEquals(Source::PHONE, $ticket->getSource()->getValue());
     }
 
     public function testUpdate()
@@ -76,12 +81,19 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $ticket = $this->createTicket();
         $newReporter = new User();
 
-        $ticket->update('New Subject', 'New Description', $newReporter, Priority::DEFAULT_PRIORITY, Status::CLOSED);
+        $ticket->update('New Subject',
+            'New Description',
+            $newReporter,
+            Priority::DEFAULT_PRIORITY,
+            Status::CLOSED,
+            Source::PHONE
+        );
 
         $this->assertEquals('New Subject', $ticket->getSubject());
         $this->assertEquals('New Description', $ticket->getDescription());
         $this->assertEquals($newReporter, $ticket->getReporter());
         $this->assertEquals(Status::CLOSED, $ticket->getStatus()->getValue());
+        $this->assertEquals(Source::PHONE, $ticket->getSource()->getValue());
     }
 
     public function testAssign()
@@ -103,6 +115,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Source::PHONE,
             Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );

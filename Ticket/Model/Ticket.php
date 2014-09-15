@@ -82,14 +82,31 @@ class Ticket implements AttachmentHolder
      */
     protected $updatedAt;
 
-    public function __construct($subject, $description, $branch, $reporter, $assignee, $priority, $status)
+    /**
+     * @param $subject
+     * @param $description
+     * @param $branch
+     * @param $reporter
+     * @param $assignee
+     * @param null $priority
+     * @param null $status
+     */
+    public function __construct($subject, $description, $branch, $reporter, $assignee, $source, $priority = null, $status = null)
     {
         $this->subject = $subject;
         $this->description = $description;
         $this->branch = $branch;
 
+        if (null == $priority) {
+            $priority = Priority::PRIORITY_MEDIUM;
+        }
+
         if (null == $status) {
             $status = Status::NEW_ONE;
+        }
+
+        if (null == $source) {
+            $status = Source::PHONE;
         }
 
         $this->status = new Status($status);
@@ -100,6 +117,7 @@ class Ticket implements AttachmentHolder
         $this->attachments = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
+        $this->source = new Source($source);
     }
 
     /**
@@ -223,13 +241,14 @@ class Ticket implements AttachmentHolder
 
     /** LEGACY CODE START */
 
-    public function update($subject, $description, User $reporter, $priority, $status)
+    public function update($subject, $description, User $reporter, $priority, $status, $source)
     {
         $this->subject = $subject;
         $this->description = $description;
         $this->reporter = $reporter;
         $this->status = new Status($status);
         $this->priority = new Priority($priority);
+        $this->source = new Source($source);
     }
 
     public function updateStatus($status)
@@ -283,5 +302,13 @@ class Ticket implements AttachmentHolder
             return $elm->getId() == $attachmentId;
         })->first();
         return $attachment;
+    }
+
+    /**
+     * @return Source
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 }

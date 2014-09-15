@@ -132,8 +132,31 @@ class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      */
     protected $updatedAt;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="source")
+     */
+    protected $source;
+
     public static function getClassName()
     {
         return __CLASS__;
+    }
+
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->reporter;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOwnerId()
+    {
+        return $this->getOwner() ? $this->getOwner()->getId() : null;
     }
 }

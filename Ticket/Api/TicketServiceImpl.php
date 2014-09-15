@@ -167,12 +167,13 @@ class TicketServiceImpl implements TicketService
      * @param $reporterId
      * @param $assigneeId
      * @param $priority
+     * @param $source
      * @param $status
      * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority, $status = null, array $attachmentInputs = null)
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority = null, $source = null,  $status = null, array $attachmentInputs = null)
     {
         $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket');
 
@@ -200,6 +201,7 @@ class TicketServiceImpl implements TicketService
                 $reporter,
                 $assignee,
                 $priority,
+                $source,
                 $status
             );
 
@@ -222,11 +224,12 @@ class TicketServiceImpl implements TicketService
      * @param $assigneeId
      * @param $priority
      * @param $status
+     * @param $source
      * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $priority, $status, array $attachmentInputs = null)
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $priority, $source, $status, array $attachmentInputs = null)
     {
         \Assert\that($attachmentInputs)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
@@ -251,7 +254,8 @@ class TicketServiceImpl implements TicketService
             $description,
             $reporter,
             $priority,
-            $status
+            $status,
+            $source
         );
 
         if ($assigneeId != $ticket->getAssigneeId()) {

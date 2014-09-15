@@ -15,7 +15,6 @@
 namespace Eltrino\DiamanteDeskBundle;
 
 use Doctrine\DBAL\Types\Type;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class EltrinoDiamanteDeskBundle extends Bundle
@@ -41,6 +40,12 @@ class EltrinoDiamanteDeskBundle extends Bundle
             Type::addType(
                 'status',
                 'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\StatusType'
+            );
+        }
+        if (!Type::hasType('source')) {
+            Type::addType(
+                'source',
+                'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\SourceType'
             );
         }
 
