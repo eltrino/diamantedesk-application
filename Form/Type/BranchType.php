@@ -56,7 +56,7 @@ class BranchType extends AbstractType
 
         $builder->add(
             'defaultAssignee',
-            'oro_user_select',
+            'diamante_assignee_select',
             array(
                 'required' => false
             )

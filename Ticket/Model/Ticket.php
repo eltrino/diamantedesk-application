@@ -22,6 +22,8 @@ use Oro\Bundle\UserBundle\Entity\User;
 
 class Ticket implements AttachmentHolder
 {
+    const UNASSIGNED_LABEL = 'Unassigned';
+
     /**
      * @var integer
      */
@@ -205,19 +207,6 @@ class Ticket implements AttachmentHolder
         return $this->assignee;
     }
 
-    public function getAssigneeId()
-    {
-        return $this->assignee->getId();
-    }
-
-    /**
-     * @return string
-     */
-    public function getAssigneeFullName()
-    {
-        return $this->assignee->getFirstName() . ' ' . $this->assignee->getLastName();
-    }
-
     /**
      * @return \DateTime
      */
@@ -258,7 +247,14 @@ class Ticket implements AttachmentHolder
 
     public function assign(User $newAssignee)
     {
-        $this->assignee = $newAssignee;
+        if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
+            $this->assignee = $newAssignee;
+        }
+    }
+
+    public function unassign()
+    {
+        $this->assignee = null;
     }
 
     /** LEGACY CODE END */
@@ -302,6 +298,14 @@ class Ticket implements AttachmentHolder
             return $elm->getId() == $attachmentId;
         })->first();
         return $attachment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnassignedLabel()
+    {
+        return self::UNASSIGNED_LABEL;
     }
 
     /**

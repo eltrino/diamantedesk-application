@@ -48,9 +48,6 @@ class UpdateTicketCommand
      */
     public $reporter;
 
-    /**
-     * @Assert\NotBlank
-     */
     public $assignee;
 
     /**

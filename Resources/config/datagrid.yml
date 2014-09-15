@@ -117,7 +117,8 @@ datagrid:
             branchName:
                 label:   Branch
             assigneeFullName:
-                label:   Assignee
+                label:   Assignee,
+                type:    assignee
             reporterFullName:
                 label:   Reporter
             priority:

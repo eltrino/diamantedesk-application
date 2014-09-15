@@ -213,7 +213,7 @@ class TicketController extends Controller
                     $command->subject,
                     $command->description,
                     $command->reporter->getId(),
-                    $command->assignee->getId(),
+                    $command->assignee ? $command->assignee->getId() : null,
                     $command->priority,
                     $command->source,
                     $command->status,
@@ -280,7 +280,7 @@ class TicketController extends Controller
             $ticket = $this->get('diamante.ticket.service')
                 ->assignTicket(
                     $command->id,
-                    $command->assignee->getId()
+                    $command->assignee ? $command->assignee->getId() : null
                 );
             $this->addSuccessMessage('Ticket successfully re-assigned.');
             $response = $this->getSuccessSaveResponse($ticket);

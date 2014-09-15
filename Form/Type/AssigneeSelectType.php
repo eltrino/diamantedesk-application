@@ -14,44 +14,27 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Oro\Bundle\UserBundle\Form\Type\UserSelectType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AssigneeTicketType extends AbstractType
+class AssigneeSelectType extends UserSelectType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add(
-            'assignee',
-            'diamante_assignee_select',
-            array(
-                'required' => false
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\AssigneeTicketCommand',
-                'intention' => 'ticket',
-                'cascade_validation' => true
+                'configs' => array(
+                    'placeholder' => \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket::UNASSIGNED_LABEL,
+                    'result_template_twig' => 'OroUserBundle:User:Autocomplete/result.html.twig',
+                    'selection_template_twig' => 'OroUserBundle:User:Autocomplete/selection.html.twig'
+                ),
+                'autocomplete_alias' => 'users'
             )
         );
     }
 
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
     public function getName()
     {
-        return 'diamante_ticket_form_assignee';
+        return 'diamante_assignee_select';
     }
 }

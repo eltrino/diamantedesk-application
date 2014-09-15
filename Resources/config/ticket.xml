@@ -135,5 +135,10 @@
         </service>
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%" />
+
+        <service id="diamante.form.type.assignee_select" class="Eltrino\DiamanteDeskBundle\Form\Type\AssigneeSelectType">
+            <tag name="form.type" alias="diamante_assignee_select"/>
+        </service>
+
     </services>
 </container>

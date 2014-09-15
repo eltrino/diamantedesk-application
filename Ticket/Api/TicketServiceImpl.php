@@ -258,12 +258,14 @@ class TicketServiceImpl implements TicketService
             $source
         );
 
-        if ($assigneeId != $ticket->getAssigneeId()) {
+        if ($assigneeId) {
             $assignee = $this->userService->getUserById($assigneeId);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }
             $ticket->assign($assignee);
+        } else {
+            $ticket->unassign();
         }
 
         if (is_array($attachmentInputs) && false === empty($attachmentInputs)) {
@@ -314,12 +316,17 @@ class TicketServiceImpl implements TicketService
 
         $this->isAssigneeGranted($ticket);
 
-        $assignee = $this->userService->getUserById($assigneeId);
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee loading failed, assignee not found.');
+        if ($assigneeId) {
+            $assignee = $this->userService->getUserById($assigneeId);
+            if (is_null($assignee)) {
+                throw new \RuntimeException('Assignee loading failed, assignee not found.');
+            }
+            $ticket->assign($assignee);
+        } else {
+            $ticket->unassign();
         }
 
-        $ticket->assign($assignee);
+
         $this->ticketRepository->store($ticket);
 
         return $ticket;
@@ -366,7 +373,7 @@ class TicketServiceImpl implements TicketService
      */
     private function isAssigneeGranted(Ticket $entity)
     {
-        if ($entity->getAssigneeId() != $this->securityFacade->getLoggedUserId()) {
+        if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $this->securityFacade->getLoggedUserId()) {
             $this->isGranted('EDIT', $entity);
         }
     }

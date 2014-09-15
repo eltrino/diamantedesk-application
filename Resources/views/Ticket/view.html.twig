@@ -84,31 +84,31 @@
 {% endmacro %}
 
 {% block navButtons %}
-    {% if (entity.assignee.id == app.user.id or resource_granted('EDIT', entity)) %}
+    {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
         {% set changeStatusTitle = 'Change Status' %}
         {{ UI.clientButton({
-        'dataUrl': path('diamante_ticket_status_change', { 'id': entity.id }),
-        'aCss': 'no-hash',
-        'iCss': 'icon-edit',
-        'dataId': entity.id,
-        'title' : changeStatusTitle,
-        'label' : changeStatusTitle,
-        'widget' : {
-        'type' : 'dialog',
-        'multiple' : true,
-        'reload-grid-name' : '',
-        'options' : {
-        'alias': 'status-dialog',
-        'dialogOptions' : {
-        'title' : changeStatusTitle,
-        'allowMaximize': true,
-        'allowMinimize': true,
-        'dblclick': 'maximize',
-        'maximizedHeightDecreaseBy': 'minimize-bar',
-        'width': 500
-        }
-        }
-        }
+            'dataUrl': path('diamante_ticket_status_change', { 'id': entity.id }),
+            'aCss': 'no-hash',
+            'iCss': 'icon-edit',
+            'dataId': entity.id,
+            'title' : changeStatusTitle,
+            'label' : changeStatusTitle,
+            'widget' : {
+                'type' : 'dialog',
+                'multiple' : true,
+                'reload-grid-name' : '',
+                'options' : {
+                    'alias': 'status-dialog',
+                    'dialogOptions' : {
+                        'title' : changeStatusTitle,
+                        'allowMaximize': true,
+                        'allowMinimize': true,
+                        'dblclick': 'maximize',
+                        'maximizedHeightDecreaseBy': 'minimize-bar',
+                        'width': 500
+                    }
+                }
+            }
         }) }}
     {% endif %}
     {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
@@ -183,13 +183,13 @@
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Priority', entity.priority.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Source', entity.source.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Reporter', entity.reporterFullName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Assignee', entity.assigneeFullName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Assignee', entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
 
     {% set attachmentListWidget %}
-    {{ oro_widget_render({
-    'widgetType': 'block',
-    'url': path('diamante_ticket_widget_attachment_list', {id: entity.id})
-    }) }}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('diamante_ticket_widget_attachment_list', {id: entity.id})
+        }) }}
     {% endset %}
 
     {% set dataBlocks =
