@@ -17,23 +17,25 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Model\Factory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class BranchFactory
 {
     /**
      * Create Branch
      *
-     * @param $name
-     * @param $description
-     * @param \SplFileInfo $logo
-     * @param null $tags
+     * @param string $name
+     * @param string $description
+     * @param null|User $defaultAssignee
+     * @param null|\SplFileInfo $logo
+     * @param null|array $tags
      * @return Branch
      */
-    public function create($name, $description, \SplFileInfo $logo = null, $tags = null)
+    public function create($name, $description, User $defaultAssignee = null, \SplFileInfo $logo = null, $tags = null)
     {
         if ($logo) {
             $logo = new Logo($logo->getFilename());
         }
-        return new Branch($name, $description, $logo, $tags);
+        return new Branch($name, $description, $defaultAssignee, $logo, $tags);
     }
 }

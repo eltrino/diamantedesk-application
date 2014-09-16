@@ -16,11 +16,25 @@ namespace Eltrino\DiamanteDeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineCommentRepository")
  * @ORM\Table(name="diamante_comment")
- *
+ * @Config(
+ *      defaultValues={
+ *          "ownership"={
+ *              "owner_type"="USER",
+ *              "owner_field_name"="author",
+ *              "owner_column_name"="author"
+ *          },
+ *          "security"={
+ *              "type"="ACL",
+ *              "group_name"="DiamanteDesk"
+ *          }
+ *      }
+ * )
  */
 class Comment extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Comment
 {

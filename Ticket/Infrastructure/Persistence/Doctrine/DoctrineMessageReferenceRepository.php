@@ -1,0 +1,46 @@
+<?php
+/*
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ *
+ * Licensed under the Open Software License (OSL 3.0).
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://opensource.org/licenses/osl-3.0.php
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@eltrino.com so we can send you a copy immediately.
+ */
+namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine;
+
+use Doctrine\ORM\EntityRepository;
+
+use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReferenceRepository;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
+
+class DoctrineMessageReferenceRepository extends EntityRepository
+    implements MessageReferenceRepository
+{
+    /**
+     * Retrieves Reference by given message id
+     * @param $messageId
+     * @return Ticket
+     */
+    public function getReferenceByMessageId($messageId)
+    {
+        return $this->findOneBy(array('messageId' => $messageId));
+    }
+
+    /**
+     * Store MessageReference
+     * @param MessageReference $messageReference
+     * @return void
+     */
+    public function store(MessageReference $messageReference)
+    {
+        $this->getEntityManager()->persist($messageReference);
+        $this->getEntityManager()->flush();
+    }
+} 

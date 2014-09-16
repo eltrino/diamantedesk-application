@@ -24,9 +24,9 @@ class AssigneeTicketType extends AbstractType
     {
         $builder->add(
             'assignee',
-            'oro_user_select',
+            'diamante_assignee_select',
             array(
-                'required' => true
+                'required' => false
             )
         );
     }

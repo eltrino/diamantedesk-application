@@ -15,6 +15,8 @@
 namespace Eltrino\DiamanteDeskBundle\DataFixtures\Test;
 
 use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -68,8 +70,9 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
                 $this->branchRepository->findOneBy(array('name' => 'branchName' . $i)),
                 $reporter,
                 $assignee,
+                Source::PHONE,
                 Priority::DEFAULT_PRIORITY,
-                'open'
+                Status::OPEN
             );
 
             $manager->persist($ticket);

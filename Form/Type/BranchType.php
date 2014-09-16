@@ -54,6 +54,14 @@ class BranchType extends AbstractType
             )
         );
 
+        $builder->add(
+            'defaultAssignee',
+            'diamante_assignee_select',
+            array(
+                'required' => false
+            )
+        );
+
         // tags
         $builder->add(
             'tags',
@@ -71,7 +79,7 @@ class BranchType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\BranchCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand',
                 'intention' => 'branch',
                 'cascade_validation' => true
             )

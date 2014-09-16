@@ -47,16 +47,19 @@ datagrid:
                 icon:          user
                 link:          view_link
                 rowAction:     true
+                acl_resource:  VIEW;Entity:EltrinoDiamanteDeskBundle:Branch
             update:
                 type:          navigate
                 label:         Update
                 icon:          edit
                 link:          update_link
+                acl_resource:  UPDATE;Entity:EltrinoDiamanteDeskBundle:Branch
             delete:
                 type:          delete
                 label:         Delete
                 icon:          trash
                 link:          delete_link
+                acl_resource:  DELETE;Entity:EltrinoDiamanteDeskBundle:Branch
         options:
             entityHint: branches
 
@@ -114,7 +117,8 @@ datagrid:
             branchName:
                 label:   Branch
             assigneeFullName:
-                label:   Assignee
+                label:   Assignee,
+                type:    assignee
             reporterFullName:
                 label:   Reporter
             priority:
@@ -200,16 +204,19 @@ datagrid:
                 icon:          user
                 link:          view_link
                 rowAction:     true
+                acl_resource:  VIEW;Entity:EltrinoDiamanteDeskBundle:Ticket
             update:
                 type:          navigate
                 label:         Update
                 icon:          edit
                 link:          update_link
+                acl_resource:  EDIT;Entity:EltrinoDiamanteDeskBundle:Ticket
             delete:
                 type:          delete
                 label:         Delete
                 icon:          trash
                 link:          delete_link
+                acl_resource:  DELETE;Entity:EltrinoDiamanteDeskBundle:Ticket
         options:
             entityHint: tickets
 

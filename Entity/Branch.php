@@ -19,10 +19,20 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\Persistence\Doctrine\DoctrineBranchRepository")
  * @ORM\Table(name="diamante_branch")
+ * @Config(
+ *      defaultValues={
+ *          "security"={
+ *              "type"="ACL",
+ *              "group_name"="DiamanteDesk"
+ *          }
+ *      }
+ * )
  */
 class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
 {
@@ -53,6 +63,16 @@ class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $description;
+
+    /**
+     * Branch default assignee
+     *
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="default_assignee_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $defaultAssignee;
 
     /**
      * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Logo

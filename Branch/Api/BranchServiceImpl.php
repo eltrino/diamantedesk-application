@@ -23,6 +23,8 @@ use Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 
 class BranchServiceImpl implements BranchService
 {
@@ -46,36 +48,72 @@ class BranchServiceImpl implements BranchService
      */
     private $tagManager;
 
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     public function __construct(
         BranchFactory $branchFactory,
         BranchRepository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
-        TagManager $tagManager
+        TagManager $tagManager,
+        SecurityFacade $securityFacade
     ) {
         $this->branchFactory     = $branchFactory;
         $this->branchRepository  = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
         $this->tagManager        = $tagManager;
+        $this->securityFacade    = $securityFacade;
+    }
+
+    /**
+     * Retrieves list of all Branches
+     * @return Branch[]
+     */
+    public function listAllBranches()
+    {
+        $branches = $this->branchRepository->getAll();
+        return $branches;
+    }
+
+    /**
+     * Retrieves Branch by id
+     * @param $id
+     * @return Branch
+     */
+    public function getBranch($id)
+    {
+        $branch = $this->branchRepository->get($id);
+        if (is_null($branch)) {
+            throw new \RuntimeException('Branch loading failed. Branch not found.');
+        }
+        return $branch;
     }
 
     /**
      * Create Branch
-     * @param $name
-     * @param $description
-     * @param UploadedFile $logoFile
-     * @param $tags
-     * @return int|mixed
+     * @param Command\BranchCommand $branchCommand
+     * @return int
      */
-    public function createBranch($name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
+    public function createBranch(Command\BranchCommand $branchCommand)
     {
+        $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch');
+
         $logo = null;
 
-        if ($logoFile) {
-            $logo = $this->handleLogoUpload($logoFile);
+        if ($branchCommand->logoFile) {
+            $logo = $this->handleLogoUpload($branchCommand->logoFile);
         }
 
         $branch = $this->branchFactory
-            ->create($name, $description, $logo, $tags);
+            ->create(
+                $branchCommand->name,
+                $branchCommand->description,
+                $branchCommand->defaultAssignee,
+                $logo,
+                $branchCommand->tags
+            );
 
         $this->branchRepository->store($branch);
         $this->tagManager->saveTagging($branch);
@@ -84,29 +122,27 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * Update Branch Info
-     * @param $branchId
-     * @param $name
-     * @param $description
-     * @param UploadedFile $logoFile
-     * @param $tags
-     * @return int|mixed
+     * Update Branch
+     * @param Command\BranchCommand $branchCommand
+     * @return int
      */
-    public function updateBranch($branchId, $name, $description, \Symfony\Component\HttpFoundation\File\UploadedFile $logoFile = null, $tags = null)
+    public function updateBranch(Command\BranchCommand $branchCommand)
     {
-        $branch = $this->branchRepository->get($branchId);
+        $this->isGranted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Branch');
+
+        $branch = $this->branchRepository->get($branchCommand->id);
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
         $file = null;
-        if ($logoFile) {
+        if ($branchCommand->logoFile) {
             if ($branch->getLogo()) {
                 $this->branchLogoHandler->remove($branch->getLogo());
             }
-            $logo = $this->handleLogoUpload($logoFile);
+            $logo = $this->handleLogoUpload($branchCommand->logoFile);
             $file = new Logo($logo->getFilename());
         }
 
-        $branch->update($name, $description, $file);
-        $branch->setTags($tags);
+        $branch->update($branchCommand->name, $branchCommand->description, $branchCommand->defaultAssignee, $file);
+        $branch->setTags($branchCommand->tags);
 
         $this->branchRepository->store($branch);
         $this->tagManager->saveTagging($branch);
@@ -116,11 +152,13 @@ class BranchServiceImpl implements BranchService
 
     /**
      * Delete Branch
-     * @param $branchId
-     * @return mixed|void
+     * @param int $branchId
+     * @return void
      */
     public function deleteBranch($branchId)
     {
+        $this->isGranted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Branch');
+
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found. ');
@@ -138,13 +176,18 @@ class BranchServiceImpl implements BranchService
      * @param $tagManager
      * @return BranchServiceImpl
      */
-    public static function create(BranchFactory $branchFactory, EntityManager $em, $branchLogoHandler, $tagManager)
-    {
+    public static function create(BranchFactory $branchFactory,
+                                    EntityManager $em,
+                                    $branchLogoHandler,
+                                    $tagManager,
+                                    SecurityFacade $securityFacade
+    ) {
         return new BranchServiceImpl(
             $branchFactory,
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Branch'),
             $branchLogoHandler,
-            $tagManager
+            $tagManager,
+            $securityFacade
         );
     }
 
@@ -156,4 +199,18 @@ class BranchServiceImpl implements BranchService
     {
         return $this->branchLogoHandler->upload($file);
     }
-} 
+
+    /**
+     * Verify permissions through Oro Platform security bundle
+     *
+     * @param $operation
+     * @param $entity
+     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     */
+    private function isGranted($operation, $entity)
+    {
+        if (!$this->securityFacade->isGranted($operation, $entity)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+    }
+}

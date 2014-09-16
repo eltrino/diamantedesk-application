@@ -16,6 +16,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
 
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class BranchTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,11 +29,13 @@ class BranchTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCreate()
     {
+        $defaultAssignee = new User();
         $logo = new Logo('file.dummy');
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $logo);
+        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
 
         $this->assertEquals('DUMMY_NAME', $branch->getName());
         $this->assertEquals('DUMMY_DESC', $branch->getDescription());
+        $this->assertEquals($defaultAssignee, $branch->getDefaultAssignee());
         $this->assertEquals($logo, $branch->getLogo());
     }
 
@@ -41,14 +44,17 @@ class BranchTest extends \PHPUnit_Framework_TestCase
      */
     public function thatUpdate()
     {
+        $defaultAssignee = new User();
         $logo = new Logo('file.dummy');
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $logo);
+        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
 
+        $newDefaultAssignee = new User();
         $newLogo = new Logo('new_file.dummy');
-        $branch->update('New Name', 'New Description', $newLogo);
+        $branch->update('New Name', 'New Description', $newDefaultAssignee, $newLogo);
 
         $this->assertEquals('New Name', $branch->getName());
         $this->assertEquals('New Description', $branch->getDescription());
+        $this->assertEquals($newDefaultAssignee, $branch->getDefaultAssignee());
         $this->assertEquals($newLogo, $branch->getLogo());
     }
 

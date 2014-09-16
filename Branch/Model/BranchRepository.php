@@ -17,6 +17,12 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Model;
 interface BranchRepository
 {
     /**
+     * Retrieves all Branches
+     * @return Branch[]
+     */
+    public function getAll();
+
+    /**
      * Retrieves Branch by given id
      * @param $id
      * @return Branch

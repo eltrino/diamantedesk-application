@@ -16,6 +16,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doctrine;
 
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository;
@@ -80,6 +81,7 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
             new User(),
             new User(),
+            Source::PHONE,
             Priority::DEFAULT_PRIORITY,
             Status::OPEN
         );

@@ -30,32 +30,17 @@ use Oro\Bundle\UserBundle\Entity\User;
 
 class CommandFactory
 {
-    public function createEmptyBranchCommand()
-    {
-        return new BranchCommand();
-    }
-
-    public function createBranchCommand(Branch $branch)
-    {
-        $command              = new BranchCommand();
-        $command->id          = $branch->getId();
-        $command->name        = $branch->getName();
-        $command->tags        = $branch->getTags();
-        $command->setTags($branch->getTags());
-        $command->description = $branch->getDescription();
-        $command->logo        = $branch->getLogo();
-        return $command;
-    }
-
     public function createCreateTicketCommand(Branch $branch = null, User $reporter = null)
     {
         $command = new CreateTicketCommand();
         if ($branch) {
             $command->branch = $branch;
+            if ($branch->getDefaultAssignee()) {
+                $command->assignee = $branch->getDefaultAssignee();
+            }
         }
         if ($reporter) {
             $command->reporter = $reporter;
-            $command->assignee = $reporter;
         }
         return $command;
     }
@@ -105,6 +90,7 @@ class CommandFactory
         $command->content = null;
         $command->author = $author;
         $command->ticket = $ticket;
+        $command->ticketStatus = $ticket->getStatus();
 
         return $command;
     }
@@ -122,6 +108,7 @@ class CommandFactory
         $command->author = $comment->getAuthor();
         $command->ticket = $comment->getTicket();
         $command->attachmentList = $comment->getAttachments();
+        $command->ticketStatus = $comment->getTicket()->getStatus();
 
         return $command;
     }

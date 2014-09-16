@@ -23,6 +23,7 @@ use Eltrino\DiamanteDeskBundle\Ticket\Model\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
@@ -86,11 +87,17 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     protected $_dummyTicket;
 
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     public function setUp()
     {
         MockAnnotations::init($this);
         $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
-            $this->commentFactory, $this->userService, $this->attachmentService);
+            $this->commentFactory, $this->userService, $this->attachmentService, $this->securityFacade);
 
         $this->_dummyTicket = new Ticket(
             self::DUMMY_TICKET_SUBJECT,
@@ -98,6 +105,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
+            Source::PHONE,
             Priority::DEFAULT_PRIORITY,
             Status::CLOSED
         );
@@ -112,6 +120,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue(null));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
+            ->will($this->returnValue(true));
 
         $this->service->postNewCommentForTicket(self::DUMMY_COMMENT_CONTENT, self::DUMMY_TICKET_ID, self::DUMMY_USER_ID);
     }
@@ -138,6 +152,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         )->will($this->returnValue($comment));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
+            ->will($this->returnValue(true));
 
         $this->service->postNewCommentForTicket(self::DUMMY_COMMENT_CONTENT, self::DUMMY_TICKET_ID, self::DUMMY_USER_ID);
 
@@ -172,6 +192,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
             ->with($this->equalTo($attachmentInputs), $this->equalTo($comment));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
+            ->will($this->returnValue(true));
 
         $this->service->postNewCommentForTicket(
             self::DUMMY_COMMENT_CONTENT,
@@ -211,6 +237,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
 
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($comment))
+            ->will($this->returnValue(true));
+
         $this->service->updateTicketComment(self::DUMMY_COMMENT_ID, $updatedContent);
 
         $this->assertEquals($updatedContent, $comment->getContent());
@@ -234,6 +266,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
             ->with($this->equalTo($filesListDto), $this->equalTo($comment));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $comment)
+            ->will($this->returnValue(true));
 
         $this->service->updateTicketComment(self::DUMMY_COMMENT_ID, $updatedContent, $filesListDto);
         $this->assertEquals($updatedContent, $comment->getContent());
@@ -265,6 +303,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('remove')
             ->with($this->equalTo($comment));
 
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('DELETE'), $this->equalTo($comment))
+            ->will($this->returnValue(true));
+
         $this->service->deleteTicketComment(self::DUMMY_COMMENT_ID);
     }
 
@@ -279,6 +323,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $comment->addAttachment(new Attachment(new File('filename.ext')));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($comment))
+            ->will($this->returnValue(true));
 
         $this->service->removeAttachmentFromComment(self::DUMMY_COMMENT_ID, 1);
     }
@@ -301,6 +351,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($attachment));
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($this->comment));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->comment))
+            ->will($this->returnValue(true));
 
         $this->service->removeAttachmentFromComment(self::DUMMY_COMMENT_ID, 1);
     }

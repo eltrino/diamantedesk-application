@@ -25,6 +25,8 @@ use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
 use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
+use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 
 class TicketServiceImpl implements TicketService
 {
@@ -53,17 +55,24 @@ class TicketServiceImpl implements TicketService
      */
     private $userService;
 
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     public function __construct(TicketRepository $ticketRepository,
                                 BranchRepository $branchRepository,
                                 TicketFactory $ticketFactory,
                                 AttachmentService $attachmentService,
-                                UserService $userService
+                                UserService $userService,
+                                SecurityFacade $securityFacade
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
         $this->ticketFactory = $ticketFactory;
         $this->userService = $userService;
         $this->attachmentService = $attachmentService;
+        $this->securityFacade = $securityFacade;
     }
 
     /**
@@ -79,6 +88,9 @@ class TicketServiceImpl implements TicketService
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->isGranted('VIEW', $ticket);
+
         $attachment = $ticket->getAttachment($attachmentId);
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
@@ -95,9 +107,13 @@ class TicketServiceImpl implements TicketService
     public function addAttachmentsForTicket(array $attachmentsInput, $ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
-        if (!$ticket) {
+
+        if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->isGranted('EDIT', $ticket);
+
         $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $ticket);
         $this->ticketRepository->store($ticket);
     }
@@ -112,9 +128,13 @@ class TicketServiceImpl implements TicketService
     public function removeAttachmentFromTicket($ticketId, $attachmentId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
-        if (!$ticket) {
+
+        if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->isGranted('EDIT', $ticket);
+
         $attachment = $ticket->getAttachment($attachmentId);
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
@@ -126,14 +146,16 @@ class TicketServiceImpl implements TicketService
 
     public static function create(EntityManager $em,
                                   AttachmentService $attachmentService,
-                                  UserService $userService
+                                  UserService $userService,
+                                  SecurityFacade $securityFacade
     ) {
         return new TicketServiceImpl(
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Ticket'),
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Branch'),
             new TicketFactory(),
             $attachmentService,
-            $userService
+            $userService,
+            $securityFacade
         );
     }
 
@@ -145,13 +167,16 @@ class TicketServiceImpl implements TicketService
      * @param $reporterId
      * @param $assigneeId
      * @param $priority
+     * @param $source
      * @param $status
      * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority, $status = null, array $attachmentInputs = null)
+    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority = null, $source = null,  $status = null, array $attachmentInputs = null)
     {
+        $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket');
+
         \Assert\that($attachmentInputs)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
         $branch = $this->branchRepository->get($branchId);
@@ -176,6 +201,7 @@ class TicketServiceImpl implements TicketService
                 $reporter,
                 $assignee,
                 $priority,
+                $source,
                 $status
             );
 
@@ -190,6 +216,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Update Ticket
+     *
      * @param $ticketId
      * @param $subject
      * @param $description
@@ -197,18 +224,22 @@ class TicketServiceImpl implements TicketService
      * @param $assigneeId
      * @param $priority
      * @param $status
+     * @param $source
      * @param array $attachmentInputs
      * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $priority, $status, array $attachmentInputs = null)
+    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $priority, $source, $status, array $attachmentInputs = null)
     {
         \Assert\that($attachmentInputs)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->isGranted('EDIT', $ticket);
 
         $reporter = $ticket->getReporter();
         if ($reporterId != $ticket->getReporterId()) {
@@ -223,15 +254,18 @@ class TicketServiceImpl implements TicketService
             $description,
             $reporter,
             $priority,
-            $status
+            $status,
+            $source
         );
 
-        if ($assigneeId != $ticket->getAssigneeId()) {
+        if ($assigneeId) {
             $assignee = $this->userService->getUserById($assigneeId);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }
             $ticket->assign($assignee);
+        } else {
+            $ticket->unassign();
         }
 
         if (is_array($attachmentInputs) && false === empty($attachmentInputs)) {
@@ -252,9 +286,13 @@ class TicketServiceImpl implements TicketService
     public function updateStatus($ticketId, $status)
     {
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->isAssigneeGranted($ticket);
+
         $ticket->updateStatus($status);
         $this->ticketRepository->store($ticket);
 
@@ -271,16 +309,24 @@ class TicketServiceImpl implements TicketService
     public function assignTicket($ticketId, $assigneeId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        $assignee = $this->userService->getUserById($assigneeId);
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee loading failed, assignee not found.');
+        $this->isAssigneeGranted($ticket);
+
+        if ($assigneeId) {
+            $assignee = $this->userService->getUserById($assigneeId);
+            if (is_null($assignee)) {
+                throw new \RuntimeException('Assignee loading failed, assignee not found.');
+            }
+            $ticket->assign($assignee);
+        } else {
+            $ticket->unassign();
         }
 
-        $ticket->assign($assignee);
+
         $this->ticketRepository->store($ticket);
 
         return $ticket;
@@ -295,10 +341,40 @@ class TicketServiceImpl implements TicketService
     public function deleteTicket($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
+
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
+        $this->isGranted('DELETE', $ticket);
+
         $this->ticketRepository->remove($ticket);
+    }
+
+    /**
+     * Verify permissions through Oro Platform security bundle
+     *
+     * @param $operation
+     * @param $entity
+     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     */
+    private function isGranted($operation, $entity)
+    {
+        if (!$this->securityFacade->isGranted($operation, $entity)) {
+            throw new ForbiddenException("Not enough permissions.");
+        }
+    }
+
+    /**
+     * Verify that current user assignee is current user
+     *
+     * @param Ticket $entity
+     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     */
+    private function isAssigneeGranted(Ticket $entity)
+    {
+        if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $this->securityFacade->getLoggedUserId()) {
+            $this->isGranted('EDIT', $entity);
+        }
     }
 }

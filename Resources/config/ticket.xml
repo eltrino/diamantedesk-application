@@ -36,9 +36,25 @@
         <parameter key="diamante.ticket.internal.user.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\OroUserService</parameter>
         <parameter key="diamante.comment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl</parameter>
         <parameter key="diamante.ticket.datagrid_status_helper.class">Eltrino\DiamanteDeskBundle\Datagrid\StatusHelper</parameter>
+
+        <parameter key="diamante.ticket.email_processing.strategy.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\EmailProcessing\TicketStrategy</parameter>
+
+        <parameter key="diamante.ticket.email_processing_message_reference.service.class">Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
     </parameters>
 
     <services>
+        <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
+            <argument type="service" id="diamante.ticket.email_processing_message_reference.service"/>
+            <tag name="email_processing.strategy" />
+        </service>
+
+        <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%"
+                 factory-class="%diamante.ticket.email_processing_message_reference.service.class%" factory-method="create">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="diamante.ticket.internal.user.service"/>
+            <argument type="service" id="diamante.attachment.file_storage.service"/>
+        </service>
+
         <service id="diamante.ticket.internal.attachment.service" class="%diamante.ticket.internal.attachment.service.class%">
             <argument type="service" id="diamante.attachment.service"/>
         </service>
@@ -52,6 +68,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
+            <argument type="service" id="oro_security.security_facade"/>
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"
@@ -114,8 +131,14 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
+            <argument type="service" id="oro_security.security_facade"/>
         </service>
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%" />
+
+        <service id="diamante.form.type.assignee_select" class="Eltrino\DiamanteDeskBundle\Form\Type\AssigneeSelectType">
+            <tag name="form.type" alias="diamante_assignee_select"/>
+        </service>
+
     </services>
 </container>

@@ -27,6 +27,11 @@
 
     <services>
 
+        <service id="diamante.datagrid.extension.formatter.assignee_property" class="Eltrino\DiamanteDeskBundle\Datagrid\AssigneePropertyFormatter">
+            <argument type="service" id="translator"/>
+            <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
+        </service>
+
         <service id="diamante.user_wrapper" alias="diamante.oro_user_wrapper"/>
         <service id="diamante.oro_user_wrapper" class="%diamante.oro_user_wrapper.class%">
             <argument type="service" id="oro_user.manager"/>
