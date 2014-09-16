@@ -19,9 +19,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.oro_user_wrapper.class">Eltrino\DiamanteDeskBundle\Model\OroUserWrapper</parameter>
-        <parameter key="diamante.user_service.class">Eltrino\DiamanteDeskBundle\Services\UserService</parameter>
-        <parameter key="diamante.attachment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Attachment</parameter>
         <parameter key="diamante.command_factory.class">Eltrino\DiamanteDeskBundle\Form\CommandFactory</parameter>
     </parameters>
 
@@ -30,14 +27,6 @@
         <service id="diamante.datagrid.extension.formatter.assignee_property" class="Eltrino\DiamanteDeskBundle\Datagrid\AssigneePropertyFormatter">
             <argument type="service" id="translator"/>
             <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
-        </service>
-
-        <service id="diamante.user_wrapper" alias="diamante.oro_user_wrapper"/>
-        <service id="diamante.oro_user_wrapper" class="%diamante.oro_user_wrapper.class%">
-            <argument type="service" id="oro_user.manager"/>
-        </service>
-        <service id="diamante.user_service" class="%diamante.user_service.class%">
-            <argument type="service" id="diamante.user_wrapper"/>
         </service>
 
         <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
