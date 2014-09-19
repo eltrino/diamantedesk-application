@@ -76,6 +76,38 @@ class CommentServiceImpl implements CommentService
     }
 
     /**
+     * Load Comment by given comment id
+     * @param int $commentId
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Comment
+     */
+    public function loadComment($commentId)
+    {
+        return $this->loadCommentBy($commentId);
+    }
+
+    /**
+     * @param $commentId
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Comment
+     */
+    private function loadCommentBy($commentId)
+    {
+        $comment = $this->commentRepository->get($commentId);
+        if (is_null($comment)) {
+            throw new \RuntimeException('Comment loading failed, comment not found.');
+        }
+        return $comment;
+    }
+
+    private function loadTicketBy($ticketId)
+    {
+        $ticket = $this->ticketRepository->get($ticketId);
+        if (is_null($ticket)) {
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
+        return $ticket;
+    }
+
+    /**
      * Post Comment for Ticket
      * @param string $content
      * @param integer $ticketId
@@ -87,11 +119,7 @@ class CommentServiceImpl implements CommentService
     {
         $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment');
 
-        $ticket = $this->ticketRepository->get($ticketId);
-
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $author = $this->userService->getUserById($authorId);
 
@@ -114,10 +142,7 @@ class CommentServiceImpl implements CommentService
      */
     public function getCommentAttachment($commentId, $attachmentId)
     {
-        $comment = $this->commentRepository->get($commentId);
-        if (is_null($comment)) {
-            throw new \RuntimeException('Comment loading failed, comment not found.');
-        }
+        $comment = $this->loadCommentBy($commentId);
 
         $this->isGranted('VIEW', $comment);
 
@@ -136,11 +161,7 @@ class CommentServiceImpl implements CommentService
      */
     public function updateTicketComment($commentId, $content, array $attachmentsInput = null)
     {
-        $comment = $this->commentRepository->get($commentId);
-
-        if (is_null($comment)) {
-            throw new \RuntimeException('Comment loading failed, comment not found.');
-        }
+        $comment = $this->loadCommentBy($commentId);
 
         $this->isGranted('EDIT', $comment);
 
@@ -157,11 +178,7 @@ class CommentServiceImpl implements CommentService
      */
     public function deleteTicketComment($commentId)
     {
-        $comment = $this->commentRepository->get($commentId);
-
-        if (is_null($comment)) {
-            throw new \RuntimeException('Comment loading failed, comment not found.');
-        }
+        $comment = $this->loadCommentBy($commentId);
 
         $this->isGranted('DELETE', $comment);
 
@@ -177,11 +194,7 @@ class CommentServiceImpl implements CommentService
      */
     public function removeAttachmentFromComment($commentId, $attachmentId)
     {
-        $comment = $this->commentRepository->get($commentId);
-
-        if (is_null($comment)) {
-            throw new \RuntimeException('Comment loading failed, comment not found.');
-        }
+        $comment = $this->loadCommentBy($commentId);
 
         $this->isGranted('EDIT', $comment);
 

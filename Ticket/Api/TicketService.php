@@ -21,6 +21,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface TicketService
 {
     /**
+     * Load Ticket by given ticket id
+     * @param int $ticketId
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+     */
+    public function loadTicket($ticketId);
+
+    /**
      * Retrieves Ticket Attachment
      * @param $ticketId
      * @param $attachmentId
@@ -97,7 +104,6 @@ interface TicketService
      * Assign Ticket to specified User
      * @param $ticketId
      * @param $assigneeId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket($ticketId, $assigneeId);

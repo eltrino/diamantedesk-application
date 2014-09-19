@@ -21,6 +21,13 @@ use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 interface CommentService
 {
     /**
+     * Load Comment by given comment id
+     * @param int $commentId
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Comment
+     */
+    public function loadComment($commentId);
+
+    /**
      * Post Comment for Ticket
      * @param string $content
      * @param integer $ticketId

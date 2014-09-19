@@ -76,6 +76,29 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
+     * Load Ticket by given ticket id
+     * @param int $ticketId
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+     */
+    public function loadTicket($ticketId)
+    {
+        return $this->loadTicketBy($ticketId);
+    }
+
+    /**
+     * @param int $ticketId
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+     */
+    private function loadTicketBy($ticketId)
+    {
+        $ticket = $this->ticketRepository->get($ticketId);
+        if (is_null($ticket)) {
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
+        return $ticket;
+    }
+
+    /**
      * Retrieves Ticket Attachment
      * @param $ticketId
      * @param $attachmentId
@@ -84,10 +107,7 @@ class TicketServiceImpl implements TicketService
      */
     public function getTicketAttachment($ticketId, $attachmentId)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $this->isGranted('VIEW', $ticket);
 
@@ -106,11 +126,7 @@ class TicketServiceImpl implements TicketService
      */
     public function addAttachmentsForTicket(array $attachmentsInput, $ticketId)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
-
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -127,11 +143,7 @@ class TicketServiceImpl implements TicketService
      */
     public function removeAttachmentFromTicket($ticketId, $attachmentId)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
-
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -233,11 +245,8 @@ class TicketServiceImpl implements TicketService
     {
         \Assert\that($attachmentInputs)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
-        $ticket = $this->ticketRepository->get($ticketId);
 
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -285,11 +294,7 @@ class TicketServiceImpl implements TicketService
      */
     public function updateStatus($ticketId, $status)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
-
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $this->isAssigneeGranted($ticket);
 
@@ -308,11 +313,7 @@ class TicketServiceImpl implements TicketService
      */
     public function assignTicket($ticketId, $assigneeId)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
-
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $this->isAssigneeGranted($ticket);
 
@@ -326,10 +327,7 @@ class TicketServiceImpl implements TicketService
             $ticket->unassign();
         }
 
-
         $this->ticketRepository->store($ticket);
-
-        return $ticket;
     }
 
     /**
@@ -340,11 +338,7 @@ class TicketServiceImpl implements TicketService
      */
     public function deleteTicket($ticketId)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
-
-        if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
-        }
+        $ticket = $this->loadTicketBy($ticketId);
 
         $this->isGranted('DELETE', $ticket);
 

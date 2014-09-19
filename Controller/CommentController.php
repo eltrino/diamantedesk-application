@@ -48,8 +48,9 @@ class CommentController extends Controller
      * @param Ticket $ticket
      * @return array
      */
-    public function createAction(Ticket $ticket)
+    public function createAction($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
             ->createEditCommentCommandForCreate($ticket, $this->getUser());
         return $this->edit($command, function($command) {
@@ -75,8 +76,9 @@ class CommentController extends Controller
      * @param Comment $comment
      * @return array
      */
-    public function updateAction(Comment $comment)
+    public function updateAction($id)
     {
+        $comment = $this->get('diamante.comment.service')->loadComment($id);
         $command = $this->get('diamante.command_factory')
             ->createEditCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
@@ -108,8 +110,9 @@ class CommentController extends Controller
      * )
      * @Template("EltrinoDiamanteDeskBundle:Comment:attachment/list.html.twig")
      */
-    public function attachmentList(Comment $comment)
+    public function attachmentList($id)
     {
+        $comment = $this->get('diamante.comment.service')->loadComment($id);
         return [
             'comment_id' => $comment->getId(),
             'attachments' => $comment->getAttachments()
@@ -150,7 +153,7 @@ class CommentController extends Controller
             } else {
                 $this->addSuccessMessage('Comment successfully created.');
             }
-            $response = $this->getSuccessSaveResponse($ticket);
+            $response = $this->getSuccessSaveResponse($ticket->getId());
         } catch (\LogicException $e) {
             $response = array('form' => $formView);
         }
@@ -167,11 +170,11 @@ class CommentController extends Controller
      * @param Comment $comment
      * @return Response
      */
-    public function deleteAction(Comment $comment)
+    public function deleteAction($id)
     {
         try {
             $this->get('diamante.comment.service')
-                ->deleteTicketComment($comment->getId());
+                ->deleteTicketComment($id);
 
             $this->addSuccessMessage('Comment successfully deleted.');
         } catch (Exception $e) {
@@ -225,10 +228,10 @@ class CommentController extends Controller
      *      name="diamante_ticket_comment_attachment_remove",
      *      requirements={"commentId"="\d+", "attachId"="\d+"}
      * )
+     * @Template
      *
      * @param integer $commentId
      * @param integer $attachId
-     * @Template
      */
     public function removeAttachmentAction($commentId, $attachId)
     {
@@ -287,14 +290,14 @@ class CommentController extends Controller
     }
 
     /**
-     * @param Ticket $ticket
+     * @param int $ticketId
      * @return array
      */
-    private function getSuccessSaveResponse(Ticket $ticket)
+    private function getSuccessSaveResponse($ticketId)
     {
         return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_comment_update', 'parameters' => ['id' => $ticket->getId()]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticket->getId()]]
+            ['route' => 'diamante_comment_update', 'parameters' => ['id' => $ticketId]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticketId]]
         );
     }
 

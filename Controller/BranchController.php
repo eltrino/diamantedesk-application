@@ -60,8 +60,9 @@ class BranchController extends Controller
      * )
      * @Template
      */
-    public function viewAction(Branch $branch)
+    public function viewAction($id)
     {
+        $branch = $this->get('diamante.branch.service')->getBranch($id);
         return [
             'entity' => $branch
         ];
