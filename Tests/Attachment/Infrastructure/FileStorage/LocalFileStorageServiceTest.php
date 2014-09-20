@@ -16,7 +16,7 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Attachment\Infrastructure\FileStorage
 
 use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileStorage\LocalFileStorageService;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Tests\Stubs\TestFileInfo;
+use Eltrino\DiamanteDeskBundle\Tests\Stubs\FileInfoStub;
 
 class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,7 +30,7 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
     private $localFileStorageService;
 
     /**
-     * @var TestFileInfo
+     * @var FileInfoStub
      */
     private $fileInfo;
 
@@ -48,8 +48,6 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->fileInfo = new TestFileInfo(self::DUMMY_REAL_PATH);
-        $this->localFileStorageService = new LocalFileStorageService($this->fileInfo, $this->fs);
     }
 
     /**
@@ -59,6 +57,9 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function thatThrowsExceptionIfDestinationDirectoryCannotBeCreated()
     {
+        $this->fileInfo = $this->getFileInfoInstance(self::DUMMY_REAL_PATH);
+        $this->localFileStorageService = $this->getLocalFileStorageServiceInstance($this->fileInfo);
+
         $this->fs->expects($this->once())->method('mkdir')->with($this->equalTo(self::DUMMY_REAL_PATH))
             ->will($this->throwException(new \Exception()));
 
@@ -75,6 +76,10 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function thatThrowsExceptionIfDestinationDirectoryIsNotWritable()
     {
+        $this->fileInfo = $this->getFileInfoInstance(self::DUMMY_REAL_PATH, true, false);
+        $this->localFileStorageService = $this->getLocalFileStorageServiceInstance($this->fileInfo);
+
+        $this->assertEquals(true, $this->fileInfo->isDir());
         $this->assertEquals(false, $this->fileInfo->isWritable());
         $justUploadedFile = $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
     }
@@ -84,20 +89,19 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileUploads()
     {
-        $tempDir = sys_get_temp_dir();
-        $fileInfo = new TestFileInfo($tempDir);
-        $localFileStorageService = new LocalFileStorageService($fileInfo, $this->fs);
+        $this->fileInfo = $this->getFileInfoInstance(self::DUMMY_REAL_PATH, true, true);
+        $this->localFileStorageService = $this->getLocalFileStorageServiceInstance($this->fileInfo);
 
         $this->fs->expects($this->once())->method('dumpFile')->with(
             $this->equalTo(
-                $fileInfo->getPathname() . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME),
+                $this->fileInfo->getPathname() . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME),
                 $this->equalTo(self::DUMMY_CONTENT
                 )
         );
 
-        $fileRealPath = $localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
+        $fileRealPath = $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
 
-        $this->assertEquals($fileInfo->getPathname() . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME, $fileRealPath);
+        $this->assertEquals($this->fileInfo->getPathname() . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME, $fileRealPath);
     }
 
     /**
@@ -107,6 +111,9 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileRemovingThrowsExceptionWhenFilenameIsEmpty()
     {
+        $this->fileInfo = $this->getFileInfoInstance(self::DUMMY_REAL_PATH, true, true);
+        $this->localFileStorageService = $this->getLocalFileStorageServiceInstance($this->fileInfo);
+
         $this->localFileStorageService->remove('');
     }
 
@@ -115,10 +122,23 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function thatFileRemoves()
     {
+        $this->fileInfo = $this->getFileInfoInstance(self::DUMMY_REAL_PATH, true, true);
+        $this->localFileStorageService = $this->getLocalFileStorageServiceInstance($this->fileInfo);
+
         $this->fs->expects($this->once())->method('remove')->with(
             $this->equalTo(self::DUMMY_REAL_PATH . DIRECTORY_SEPARATOR . self::DUMMY_FILENAME)
         );
 
         $this->localFileStorageService->remove(self::DUMMY_FILENAME);
+    }
+
+    private function getFileInfoInstance($path, $isDir = false, $isWritable = false)
+    {
+        return new FileInfoStub($path, $isDir, $isWritable);
+    }
+
+    private function getLocalFileStorageServiceInstance(FileInfoStub $fileInfo)
+    {
+        return new LocalFileStorageService($fileInfo, $this->fs);
     }
 }

@@ -46,7 +46,7 @@ class TicketControllerTest extends WebTestCase
 
         $this->assertEquals($form['diamante_ticket_form[branch]']->getValue(), "");
         $this->assertNotEquals($form['diamante_ticket_form[reporter]']->getValue(), "");
-        $this->assertNotEquals($form['diamante_ticket_form[assignee]']->getValue(), "");
+        $this->assertNotEquals($form['diamante_ticket_form[assignee]']->getValue(), $this->equalTo(""));
 
         $form['diamante_ticket_form[branch]']      = $this->chooseBranchFromGrid()['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';

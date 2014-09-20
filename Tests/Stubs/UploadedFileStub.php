@@ -5,11 +5,15 @@ namespace Eltrino\DiamanteDeskbundle\Tests\Stubs;
 use \Symfony\Component\HttpFoundation\File\UploadedFile;
 use \Symfony\Component\HttpFoundation\File\File;
 
-class TestUploadedFile extends UploadedFile
+class UploadedFileStub extends UploadedFile
 {
-    public function __construct($path, $originalName)
+    private $originalName;
+    private $mimeType;
+
+    public function __construct($path, $originalName, $mimeType = null)
     {
-        parent::__construct($path, $originalName, null, null, null, true);
+        $this->originalName = $originalName;
+        $this->mimeType = $mimeType ?: 'application/octet-stream';
     }
 
     /**
@@ -21,11 +25,11 @@ class TestUploadedFile extends UploadedFile
      */
     public function move($directory, $name = null)
     {
-        if ($this->isValid()) {
-            $target = $this->getTargetFile($directory, $name);
-            copy($this->getPathname(), $target);
+        return new File($directory . '/' . $name, false);
+    }
 
-            return new File($target, false);
-        }
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 }
