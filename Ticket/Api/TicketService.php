@@ -16,6 +16,10 @@
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 
 use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AssigneeTicketCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateTicketCommand;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface TicketService
@@ -55,42 +59,25 @@ interface TicketService
 
     /**
      * Create Ticket
-     * @param $branchId
-     * @param $subject
-     * @param $description
-     * @param $reporterId
-     * @param $assigneeId
-     * @param $priority
-     * @param $source
-     * @param $status
-     * @param array $attachmentInputs
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @param CreateTicketCommand $command
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority = null, $source = null,  $status = null, array $attachmentInputs = null);
+    public function createTicket(CreateTicketCommand $command);
 
     /**
-     * @param $ticketId
-     * @param $subject
-     * @param $description
-     * @param $reporterId
-     * @param $assigneeId
-     * @param $priority
-     * @param $status
-     * @param $source
-     * @param array $attachmentInputs
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @param UpdateTicketCommand $command
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $priority, $status, $source, array $attachmentInputs = null);
+    public function updateTicket(UpdateTicketCommand $command);
 
     /**
-     * @param $ticketId
-     * @param $status
+     * @param UpdateStatusCommand $command
      * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function updateStatus($ticketId, $status);
+    public function updateStatus(UpdateStatusCommand $command);
 
     /**
      * Delete Ticket
@@ -102,9 +89,8 @@ interface TicketService
 
     /**
      * Assign Ticket to specified User
-     * @param $ticketId
-     * @param $assigneeId
+     * @param AssigneeTicketCommand $command
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
-    public function assignTicket($ticketId, $assigneeId);
+    public function assignTicket(AssigneeTicketCommand $command);
 }

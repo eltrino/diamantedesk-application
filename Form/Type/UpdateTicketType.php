@@ -32,7 +32,7 @@ class UpdateTicketType extends CreateTicketType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\UpdateTicketCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateTicketCommand',
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )

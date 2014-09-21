@@ -18,7 +18,10 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AssigneeTicketCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
@@ -173,52 +176,44 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Create Ticket
-     * @param $branchId
-     * @param $subject
-     * @param $description
-     * @param $reporterId
-     * @param $assigneeId
-     * @param $priority
-     * @param $source
-     * @param $status
-     * @param array $attachmentInputs
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @param CreateTicketCommand $command
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($branchId, $subject, $description, $reporterId, $assigneeId, $priority = null, $source = null,  $status = null, array $attachmentInputs = null)
+    public function createTicket(CreateTicketCommand $command)
     {
         $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket');
 
-        \Assert\that($attachmentInputs)->nullOr()->all()
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
-        $branch = $this->branchRepository->get($branchId);
+        $branch = $this->branchRepository->get($command->branch->getId());
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found.');
         }
 
-        $reporter = $this->userService->getUserById($reporterId);
+        $reporter = $this->userService->getUserById($command->reporter->getId());
         if (is_null($reporter)) {
             throw new \RuntimeException('Reporter loading failed, reporter not found.');
         }
 
-        $assignee = $this->userService->getUserById($assigneeId);
+        $assignee = $this->userService->getUserById($command->assignee->getId());
         if (is_null($assignee)) {
             throw new \RuntimeException('Assignee validation failed, assignee not found.');
         }
 
         $ticket = $this->ticketFactory
-            ->create($subject,
-                $description,
+            ->create($command->subject,
+                $command->description,
                 $branch,
                 $reporter,
                 $assignee,
-                $priority,
-                $source,
-                $status
+                $command->priority,
+                $command->source,
+                $command->status
             );
 
-        if (is_array($attachmentInputs) && false === empty($attachmentInputs)) {
-            $this->attachmentService->createAttachmentsForItHolder($attachmentInputs, $ticket);
+        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
+            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $ticket);
         }
 
         $this->ticketRepository->store($ticket);
@@ -229,46 +224,38 @@ class TicketServiceImpl implements TicketService
     /**
      * Update Ticket
      *
-     * @param $ticketId
-     * @param $subject
-     * @param $description
-     * @param $reporterId
-     * @param $assigneeId
-     * @param $priority
-     * @param $status
-     * @param $source
-     * @param array $attachmentInputs
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @param UpdateTicketCommand $command
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket($ticketId, $subject, $description, $reporterId, $assigneeId, $priority, $source, $status, array $attachmentInputs = null)
+    public function updateTicket(UpdateTicketCommand $command)
     {
-        \Assert\that($attachmentInputs)->nullOr()->all()
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
 
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($command->id);
 
         $this->isGranted('EDIT', $ticket);
 
         $reporter = $ticket->getReporter();
-        if ($reporterId != $ticket->getReporterId()) {
-            $reporter = $this->userService->getUserById($reporterId);
+        if ($command->reporter->getId() != $ticket->getReporterId()) {
+            $reporter = $this->userService->getUserById($command->reporter->getId());
             if (is_null($reporter)) {
                 throw new \RuntimeException('Reporter loading failed, reporter not found.');
             }
         }
 
         $ticket->update(
-            $subject,
-            $description,
+            $command->subject,
+            $command->description,
             $reporter,
-            $priority,
-            $status,
-            $source
+            $command->priority,
+            $command->status,
+            $command->source
         );
 
-        if ($assigneeId) {
-            $assignee = $this->userService->getUserById($assigneeId);
+        if ($command->assignee->getId()) {
+            $assignee = $this->userService->getUserById($command->assignee->getId());
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }
@@ -277,8 +264,8 @@ class TicketServiceImpl implements TicketService
             $ticket->unassign();
         }
 
-        if (is_array($attachmentInputs) && false === empty($attachmentInputs)) {
-            $this->attachmentService->createAttachmentsForItHolder($attachmentInputs, $ticket);
+        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
+            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $ticket);
         }
 
         $this->ticketRepository->store($ticket);
@@ -287,18 +274,17 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * @param $ticketId
-     * @param $status
+     * @@param UpdateStatusCommand $command
      * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function updateStatus($ticketId, $status)
+    public function updateStatus(UpdateStatusCommand $command)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($command->ticketId);
 
         $this->isAssigneeGranted($ticket);
 
-        $ticket->updateStatus($status);
+        $ticket->updateStatus($command->status);
         $this->ticketRepository->store($ticket);
 
         return $ticket;
@@ -306,19 +292,17 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Assign Ticket to specified User
-     * @param $ticketId
-     * @param $assigneeId
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @param AssigneeTicketCommand $command
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
-    public function assignTicket($ticketId, $assigneeId)
+    public function assignTicket(AssigneeTicketCommand $command)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($command->id);
 
         $this->isAssigneeGranted($ticket);
 
-        if ($assigneeId) {
-            $assignee = $this->userService->getUserById($assigneeId);
+        if ($command->assignee->getId()) {
+            $assignee = $this->userService->getUserById($command->assignee->getId());
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }

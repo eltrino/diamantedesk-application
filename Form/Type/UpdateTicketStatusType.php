@@ -44,7 +44,7 @@ class UpdateTicketStatusType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\UpdateStatusCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand',
                 'intention' => 'ticket_status',
                 'cascade_validation' => true
             )

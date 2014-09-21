@@ -20,8 +20,8 @@ use Doctrine\Common\Util\Inflector;
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\CreateticketCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
 use Eltrino\DiamanteDeskBundle\Form\Type\AssigneeTicketType;
 use Eltrino\DiamanteDeskBundle\Form\Type\AttachmentType;
@@ -116,11 +116,7 @@ class TicketController extends Controller
         if (false === $redirect) {
             try {
                 $this->handle($form);
-                $this->get('diamante.ticket.service')
-                    ->updateStatus(
-                        $command->ticketId,
-                        $command->status
-                    );
+                $this->get('diamante.ticket.service')->updateStatus($command);
                 $this->addSuccessMessage('Status successfully changed');
                 $response = array('saved' => true);
             } catch (\LogicException $e) {
@@ -147,7 +143,10 @@ class TicketController extends Controller
      */
     public function createAction($id = null)
     {
-        $branch = $this->get('diamante.branch.service')->getBranch($id);
+        $branch = null;
+        if ($id) {
+            $branch = $this->get('diamante.branch.service')->getBranch($id);
+        }
         $command = $this->get('diamante.command_factory')
             ->createCreateTicketCommand($branch, $this->getUser());
 
@@ -164,19 +163,9 @@ class TicketController extends Controller
                     array_push($attachments, AttachmentInput::createFromUploadedFile($file));
                 }
             }
+            $command->attachmentsInput = $attachments;
 
-            $ticket = $this->get('diamante.ticket.service')
-                ->createTicket(
-                    $command->branch->getId(),
-                    $command->subject,
-                    $command->description,
-                    $command->reporter->getId(),
-                    $command->assignee->getId(),
-                    $command->priority,
-                    $command->source,
-                    $command->status,
-                    $attachments
-                );
+            $ticket = $this->get('diamante.ticket.service')->createTicket($command);
 
             $this->addSuccessMessage('Ticket successfully created.');
             $response = $this->getSuccessSaveResponse($ticket);
@@ -220,19 +209,9 @@ class TicketController extends Controller
                     array_push($attachments, AttachmentInput::createFromUploadedFile($file));
                 }
             }
+            $command->attachmentsInput = $attachments;
 
-            $ticket = $this->get('diamante.ticket.service')
-                ->updateTicket(
-                    $command->id,
-                    $command->subject,
-                    $command->description,
-                    $command->reporter->getId(),
-                    $command->assignee ? $command->assignee->getId() : null,
-                    $command->priority,
-                    $command->source,
-                    $command->status,
-                    $attachments
-                );
+            $ticket = $this->get('diamante.ticket.service')->updateTicket($command);
             $this->addSuccessMessage('Ticket successfully saved.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
@@ -257,11 +236,8 @@ class TicketController extends Controller
     public function deleteAction($id)
     {
         try {
-            $this->get('diamante.ticket.service')
-                ->deleteTicket($id);
-
+            $this->get('diamante.ticket.service')->deleteTicket($id);
             $this->addSuccessMessage('Ticket successfully deleted.');
-
             return $this->redirect(
                 $this->generateUrl('diamante_ticket_list')
             );
@@ -292,11 +268,7 @@ class TicketController extends Controller
         $form = $this->createForm(new AssigneeTicketType(), $command);
         try {
             $this->handle($form);
-            $this->get('diamante.ticket.service')
-                ->assignTicket(
-                    $command->id,
-                    $command->assignee ? $command->assignee->getId() : null
-                );
+            $this->get('diamante.ticket.service')->assignTicket($command);
             $this->addSuccessMessage('Ticket successfully re-assigned.');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {

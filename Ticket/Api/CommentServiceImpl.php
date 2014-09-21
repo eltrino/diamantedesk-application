@@ -17,7 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Form\Command\CreateCommentCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
@@ -109,24 +109,21 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Post Comment for Ticket
-     * @param string $content
-     * @param integer $ticketId
-     * @param integer $authorId
-     * @param array $attachmentsInput array of AttachmentInput DTOs
+     * @param EditCommentCommand $command
      * @return void
      */
-    public function postNewCommentForTicket($content, $ticketId, $authorId, array $attachmentsInput = null)
+    public function postNewCommentForTicket(EditCommentCommand $command)
     {
         $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment');
 
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($command->ticket->getId());
 
-        $author = $this->userService->getUserById($authorId);
+        $author = $this->userService->getUserById($command->author->getId());
 
-        $comment = $this->commentFactory->create($content, $ticket, $author);
+        $comment = $this->commentFactory->create($command->content, $ticket, $author);
 
-        if ($attachmentsInput) {
-            $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $comment);
+        if ($command->attachmentsInput) {
+            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $comment);
         }
 
         $ticket->postNewComment($comment);
@@ -155,19 +152,18 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Update Ticket Comment content
-     * @param integer $commentId
-     * @param string $content
-     * @param array $attachmentsInput array of AttachmentInput DTOs
+     * @param EditCommentCommand $command
+     * @return void
      */
-    public function updateTicketComment($commentId, $content, array $attachmentsInput = null)
+    public function updateTicketComment(EditCommentCommand $command)
     {
-        $comment = $this->loadCommentBy($commentId);
+        $comment = $this->loadCommentBy($command->id);
 
         $this->isGranted('EDIT', $comment);
 
-        $comment->updateContent($content);
-        if ($attachmentsInput) {
-            $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $comment);
+        $comment->updateContent($command->content);
+        if ($command->attachmentsInput) {
+            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $comment);
         }
         $this->commentRepository->store($comment);
     }

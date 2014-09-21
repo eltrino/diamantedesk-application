@@ -65,7 +65,7 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand',
                 'intention' => 'comment',
                 'cascade_validation' => true
             )

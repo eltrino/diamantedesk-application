@@ -17,7 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Controller;
 use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Type\CommentType;
 use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
@@ -54,13 +54,9 @@ class CommentController extends Controller
         $command = $this->get('diamante.command_factory')
             ->createEditCommentCommandForCreate($ticket, $this->getUser());
         return $this->edit($command, function($command) {
+            $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')
-                ->postNewCommentForTicket(
-                    $command->content,
-                    $command->ticket->getId(),
-                    $command->author->getId(),
-                    $this->buildAttachmentsInputDTO($command)
-                );
+                ->postNewCommentForTicket($command);
         }, $ticket);
     }
 
@@ -82,8 +78,8 @@ class CommentController extends Controller
         $command = $this->get('diamante.command_factory')
             ->createEditCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
-            $this->get('diamante.comment.service')
-                ->updateTicketComment($comment->getId(), $command->content, $this->buildAttachmentsInputDTO($command));
+            $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
+            $this->get('diamante.comment.service')->updateTicketComment($command);
         }, $comment->getTicket());
     }
 

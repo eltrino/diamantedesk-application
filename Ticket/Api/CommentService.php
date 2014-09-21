@@ -16,7 +16,7 @@
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
 
 interface CommentService
 {
@@ -29,13 +29,10 @@ interface CommentService
 
     /**
      * Post Comment for Ticket
-     * @param string $content
-     * @param integer $ticketId
-     * @param integer $authorId
-     * @param array $attachmentsInput array of AttachmentInput DTOs
+     * @param EditCommentCommand $command
      * @return void
      */
-    public function postNewCommentForTicket($content, $ticketId, $authorId, array $attachmentsInput = null);
+    public function postNewCommentForTicket(EditCommentCommand $command);
 
     /**
      * Retrieves Comment Attachment
@@ -47,11 +44,10 @@ interface CommentService
 
     /**
      * Update Ticket Comment content
-     * @param integer $commentId
-     * @param string $content
-     * @param array $attachmentsInput array of AttachmentInput DTOs
+     * @param EditCommentCommand $command
+     * @return void
      */
-    public function updateTicketComment($commentId, $content, array $attachmentsInput = null);
+    public function updateTicketComment(EditCommentCommand $command);
 
     /**
      * Delete Ticket Comment

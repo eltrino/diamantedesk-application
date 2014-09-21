@@ -139,7 +139,7 @@ class CreateTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand',
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )
