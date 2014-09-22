@@ -16,6 +16,11 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 
 use Eltrino\DiamanteDeskBundle\Entity\Filter;
 
+/**
+ * Interface FilterRepository
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Model
+ * @codeCoverageIgnore
+ */
 interface FilterRepository
 {
     /**

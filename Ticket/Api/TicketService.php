@@ -18,6 +18,11 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * Interface TicketService
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Api
+ * @codeCoverageIgnore
+ */
 interface TicketService
 {
     /**

@@ -17,6 +17,11 @@ namespace Eltrino\DiamanteDeskBundle\Services;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Model\User;
 
+/**
+ * Interface UserServiceInterface
+ * @package Eltrino\DiamanteDeskBundle\Services
+ * @codeCoverageIgnore
+ */
 interface UserServiceInterface
 {
     /**

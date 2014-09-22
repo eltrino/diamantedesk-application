@@ -14,6 +14,11 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Branch\Model;
 
+/**
+ * Interface BranchRepository
+ * @package Eltrino\DiamanteDeskBundle\Branch\Model
+ * @codeCoverageIgnore
+ */
 interface BranchRepository
 {
     /**

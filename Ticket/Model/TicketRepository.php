@@ -15,6 +15,11 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 
+/**
+ * Interface TicketRepository
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Model
+ * @codeCoverageIgnore
+ */
 interface TicketRepository
 {
     /**
