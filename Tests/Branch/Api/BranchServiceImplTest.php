@@ -18,7 +18,7 @@ use Eltrino\DiamanteDeskBundle\Branch\Api\BranchServiceImpl;
 use Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskbundle\Tests\Stubs\UploadedFileStub;
+use Eltrino\DiamanteDeskBundle\Tests\Stubs\UploadedFileStub;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
