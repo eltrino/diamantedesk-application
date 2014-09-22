@@ -23,6 +23,9 @@
         <parameter key="diamante.user_service.class">Eltrino\DiamanteDeskBundle\Services\UserService</parameter>
         <parameter key="diamante.attachment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Attachment</parameter>
         <parameter key="diamante.command_factory.class">Eltrino\DiamanteDeskBundle\Form\CommandFactory</parameter>
+        <parameter key="diamante.email_processing.form.type.default_branch.class">Eltrino\DiamanteDeskBundle\Form\Type\DefaultBranchType</parameter>
+        <parameter key="diamante.email_processing.branchRemoveEventListener.class">Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\BranchRemoveEventListener</parameter>
+        <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Eltrino\DiamanteDeskBundle\Placeholder\DefaultBranchFilter</parameter>
     </parameters>
 
     <services>
@@ -47,5 +50,21 @@
         </service>
 
         <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>
+
+        <service id="diamante.email_processing.form.type.default_branch" class="%diamante.email_processing.form.type.default_branch.class%">
+            <argument type="service" id="diamante.branch.service"/>
+            <tag name="form.type" alias="diamante_email_processing_default_branch"/>
+        </service>
+
+        <service id="diamante.email_processing.branchRemoveEventListener" class="%diamante.email_processing.branchRemoveEventListener.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="preRemove"></tag>
+        </service>
+
+        <service id="diamante.email_processing.placeholder.filter.default_branch" class="%diamante.email_processing.placeholder.filter.default_branch.class%">
+            <!--<argument type="service" id="service_container"/>-->
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
+            <tag name="oro_ui_placeholder.filter"/>
+        </service>
     </services>
 </container>
