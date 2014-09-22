@@ -24,6 +24,18 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class AbstractCommand extends ContainerAwareCommand
 {
+    protected $translator;
+
+    /**
+     * Initializes parameters required for installation process
+     * @param InputInterface  $input  An InputInterface instance
+     * @param OutputInterface $output An OutputInterface instance
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->translator     = $this->getContainer()->get('translator');
+    }
+
     /**
      * Updates DB Schema. Changes from Diamante only will be applied for current schema. Other bundles updating skips
      * @throws \Exception if there are no changes in entities

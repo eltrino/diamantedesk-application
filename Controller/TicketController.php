@@ -109,9 +109,10 @@ class TicketController extends Controller
                         $command->ticketId,
                         $command->status
                     );
-                $this->addSuccessMessage('Status successfully changed');
+                $this->addSuccessMessage('eltrino.diamantedesk.ticket.actions.change_status.success');
                 $response = array('saved' => true);
             } catch (\LogicException $e) {
+                $this->addErrorMessage('eltrino.diamantedesk.ticket.actions.change_status.error');
                 $response = array('form' => $form->createView());
             }
         } else {
@@ -165,12 +166,14 @@ class TicketController extends Controller
                     $attachments
                 );
 
-            $this->addSuccessMessage('Ticket successfully created.');
+            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.create.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
+            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.create.error');
             $response = array('form' => $formView);
         } catch (\Exception $e) {
-            $this->addErrorMessage($e->getMessage());
+            //TODO: Log original exception
+            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.create.error');
             $response = array('form' => $formView);
         }
         return $response;
@@ -219,12 +222,14 @@ class TicketController extends Controller
                     $command->status,
                     $attachments
                 );
-            $this->addSuccessMessage('Ticket successfully saved.');
+            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.save.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
+            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.save.error');
             $response = array('form' => $formView);
         } catch (\Exception $e) {
-            $this->addErrorMessage($e->getMessage());
+            //TODO: Log original error
+            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.save.error');
             $response = array('form' => $formView);
         }
         return $response;
@@ -246,13 +251,14 @@ class TicketController extends Controller
             $this->get('diamante.ticket.service')
                 ->deleteTicket($ticket->getId());
 
-            $this->addSuccessMessage('Ticket successfully deleted.');
+            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.delete.success');
 
             return $this->redirect(
                 $this->generateUrl('diamante_ticket_list')
             );
         } catch (Exception $e) {
-            return new Response($e->getMessage(), 500);
+            //TODO: Log original error
+            return new Response($this->get('translator')->trans('eltrino.diamantedesk.ticket.messages.delete.error'), 500);
         }
     }
 
@@ -282,10 +288,11 @@ class TicketController extends Controller
                     $command->id,
                     $command->assignee ? $command->assignee->getId() : null
                 );
-            $this->addSuccessMessage('Ticket successfully re-assigned.');
+            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.reassign.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $this->addErrorMessage($e->getMessage());
+            //TODO: Log original exception
+            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.reassign.error');
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -349,10 +356,7 @@ class TicketController extends Controller
             $ticketService = $this->get('diamante.ticket.service');
             $ticketService->addAttachmentsForTicket($attachments, $ticket->getId());
 
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                $this->get('translator')->trans('Attachment(s) successfully uploaded.')
-            );
+            $this->addSuccessMessage('eltrino.diamantedesk.attachment.messages.create.success');
             if ($this->getRequest()->request->get('diam-dropzone')) {
                 $response = new Response();
                 try {
@@ -380,6 +384,7 @@ class TicketController extends Controller
                 );
             }
         } catch (Exception $e) {
+            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.create.error');
             $response = array('form' => $formView);
         }
         return $response;
@@ -402,11 +407,13 @@ class TicketController extends Controller
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
-        $ticketService->removeAttachmentFromTicket($ticketId, $attachId);
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans('Attachment successfully deleted.')
-        );
+        try {
+            $ticketService->removeAttachmentFromTicket($ticketId, $attachId);
+            $this->addSuccessMessage('eltrino.diamantedesk.attachment.messages.delete.success');
+        } catch (\Exception $e) {
+            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.delete.error');
+        }
+
         $response = $this->redirect($this->generateUrl(
             'diamante_ticket_view',
             array('id' => $ticketId)
@@ -433,6 +440,7 @@ class TicketController extends Controller
             . '/' . $attachment->getFilename();
 
         if (!file_exists($filePathname)) {
+            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }
 
