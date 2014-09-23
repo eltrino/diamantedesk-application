@@ -72,7 +72,7 @@ datagrid:
                         - i.branch = :branch
         filters:
             default:
-                status: { value: ['@diamante.ticket.datagrid_status_helper->getOpenStatus'] }
+                status: { value: ['@diamante.ticket.datagrid_status_helper->getNewStatus', '@diamante.ticket.datagrid_status_helper->getOpenStatus'] }
 
     diamante-ticket-grid:
         source:

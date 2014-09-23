@@ -38,7 +38,12 @@ class StatusHelper
      */
     public function getOpenStatus()
     {
-        return STATUS::OPEN;
+        return Status::OPEN;
+    }
+
+    public function getNewStatus()
+    {
+        return Status::NEW_ONE;
     }
 
 } 
