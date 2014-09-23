@@ -1,0 +1,36 @@
+{
+    "name": "eltrino/diamantedesk-front-bundle",
+    "description": "DiamanteDesk Front Bundle",
+    "homepage": "https://github.com/eltrino/DiamanteFrontBundle",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrino LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Diamante\\FrontBundle": "."
+        }
+    },
+    "target-dir": "Diamante/FrontBundle",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/eltrino/DiamanteFrontBundle.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.4",
+        "oro/platform": "1.2.*",
+        "eloquent/composer-npm-bridge": "~2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

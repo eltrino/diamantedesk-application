@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ *
+ * Licensed under the Open Software License (OSL 3.0).
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://opensource.org/licenses/osl-3.0.php
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@eltrino.com so we can send you a copy immediately.
+ */
+require.config({
+  paths : {
+    jquery : "vendor/jquery/dist/jquery",
+    underscore : "vendor/underscore/underscore",
+    backbone : "vendor/backbone/backbone",
+    marionette : "vendor/marionette/lib/backbone.marionette",
+    bootstrap : "vendor/bootstrap/js/bootstrap"
+  },
+  shim : {
+    jquery : {
+      exports : "jQuery"
+    },
+    underscore : {
+      exports : "_"
+    },
+    backbone : {
+      deps : ["jquery", "underscore"],
+      exports : 'Backbone'
+    },
+    marionette : {
+      deps : ["jquery", "underscore", "backbone"],
+      exports : "Marionette"
+    },
+    bootstrap : {
+      deps : ["jquery"]
+    }
+  }
+});
+
+
+require(['app'], function(app) {
+  app.start();
+  console.log(app);
+});
