@@ -39,8 +39,8 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $attachmentRepository;
 

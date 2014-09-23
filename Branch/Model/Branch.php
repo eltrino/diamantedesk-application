@@ -16,10 +16,11 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Branch implements Taggable
+class Branch implements Entity, Taggable
 {
     /**
      * @var integer

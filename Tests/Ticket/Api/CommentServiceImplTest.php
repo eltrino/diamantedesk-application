@@ -47,14 +47,14 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $service;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $ticketRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\CommentRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Model\CommentRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $commentRepository;
 

@@ -18,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineMessageReferenceRepository")
+ * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository")
  * @ORM\Table(name="diamante_ticket_message_reference")
  */
 class MessageReference extends \Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference

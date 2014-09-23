@@ -14,21 +14,15 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing;
 
+use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference;
 
-interface MessageReferenceRepository
+interface MessageReferenceRepository extends Repository
 {
     /**
      * Retrieves MessageReference by given message id
      * @param string $messageId
-     * @return MessageReference
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference
      */
     public function getReferenceByMessageId($messageId);
-
-    /**
-     * Store MessageReference
-     * @param MessageReference $messageReference
-     * @return void
-     */
-    public function store(MessageReference $messageReference);
-} 
+}

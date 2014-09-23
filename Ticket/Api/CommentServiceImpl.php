@@ -17,12 +17,11 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Form\Command\CreateCommentCommand;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\CommentRepository;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
@@ -30,12 +29,12 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 class CommentServiceImpl implements CommentService
 {
     /**
-     * @var TicketRepository
+     * @var Repository
      */
     private $ticketRepository;
 
     /**
-     * @var CommentRepository
+     * @var Repository
      */
     private $commentRepository;
 
@@ -60,8 +59,8 @@ class CommentServiceImpl implements CommentService
     private $securityFacade;
 
     public function __construct(
-        TicketRepository $ticketRepository,
-        CommentRepository $commentRepository,
+        Repository $ticketRepository,
+        Repository $commentRepository,
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentService $attachmentService,

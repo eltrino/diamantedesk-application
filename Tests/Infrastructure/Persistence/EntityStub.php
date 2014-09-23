@@ -12,22 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
+namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Persistence;
 
-use Eltrino\DiamanteDeskBundle\Entity\Filter;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
 
-interface FilterRepository
+class EntityStub implements Entity
 {
-    /**
-     * Retrieves Filter by given id
-     * @param $id
-     * @return Filter
-     */
-    public function get($id);
-
-    /**
-     * Retrieves Filters List
-     * @return mixed
-     */
-    public function getAll();
-} 
+}

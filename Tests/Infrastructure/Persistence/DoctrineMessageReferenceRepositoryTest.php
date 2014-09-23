@@ -12,8 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
-namespace Eltrino\DiamanteDeskBundle\Tests\Ticket\Infrastructure\Persistence\Doctrine;
+namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Persistence;
 
 use Doctrine\DBAL\LockMode;
 use Eltrino\DiamanteDeskBundle\Entity\MessageReference;
@@ -24,7 +23,7 @@ use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Oro\Bundle\UserBundle\Entity\User;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineMessageReferenceRepository;
+use Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository;
 
 class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,18 +63,6 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
         MockAnnotations::init($this);
         $this->classMetadata->name = self::DUMMY_CLASS_NAME;
         $this->repository = new DoctrineMessageReferenceRepository($this->em, $this->classMetadata);
-    }
-
-    /**
-     * @test
-     */
-    public function thatMessageReferenceStores()
-    {
-        $messageReference = $this->getMessageReference();
-        $this->em->expects($this->once())->method('persist')->with($this->equalTo($messageReference));
-        $this->em->expects($this->once())->method('flush');
-
-        $this->repository->store($messageReference);
     }
 
     /**
@@ -125,4 +112,4 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
             'dummmy_message_id', $ticket
         );
     }
-} 
+}

@@ -17,7 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Persistence\Doctrine\DoctrineAttachmentRepository")
+ * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_attachment")
  */
 class Attachment extends \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment

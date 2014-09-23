@@ -17,10 +17,10 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Api;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Persistence\ObjectManager;
-use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Factory\BranchFactory;
 use Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -29,7 +29,7 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 class BranchServiceImpl implements BranchService
 {
     /**
-     * @var BranchRepository
+     * @var Repository
      */
     private $branchRepository;
 
@@ -55,7 +55,7 @@ class BranchServiceImpl implements BranchService
 
     public function __construct(
         BranchFactory $branchFactory,
-        BranchRepository $branchRepository,
+        Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
         SecurityFacade $securityFacade

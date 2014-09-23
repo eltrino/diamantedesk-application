@@ -12,35 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine;
+namespace Eltrino\DiamanteDeskBundle\Infrastructure\Persistence;
 
-use Doctrine\ORM\EntityRepository;
-
-use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReferenceRepository;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
 
-class DoctrineMessageReferenceRepository extends EntityRepository
-    implements MessageReferenceRepository
+class DoctrineMessageReferenceRepository extends DoctrineGenericRepository implements MessageReferenceRepository
 {
     /**
      * Retrieves Reference by given message id
-     * @param $messageId
-     * @return Ticket
+     * @param string $messageId
+     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference
      */
     public function getReferenceByMessageId($messageId)
     {
         return $this->findOneBy(array('messageId' => $messageId));
     }
-
-    /**
-     * Store MessageReference
-     * @param MessageReference $messageReference
-     * @return void
-     */
-    public function store(MessageReference $messageReference)
-    {
-        $this->getEntityManager()->persist($messageReference);
-        $this->getEntityManager()->flush();
-    }
-} 
+}

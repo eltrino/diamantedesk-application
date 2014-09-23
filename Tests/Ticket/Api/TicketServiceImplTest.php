@@ -44,8 +44,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $ticketRepository;
 
@@ -62,8 +62,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticket;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $branchRepository;
 

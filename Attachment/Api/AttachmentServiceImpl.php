@@ -20,14 +20,14 @@ use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\File\FileRemoveHandler;
 use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 
 class AttachmentServiceImpl implements AttachmentService
 {
     /**
-     * @var AttachmentRepository
+     * @var Repository
      */
     private $attachmentRepository;
 
@@ -43,7 +43,7 @@ class AttachmentServiceImpl implements AttachmentService
 
     public function __construct(
         AttachmentFactory $attachmentFactory,
-        AttachmentRepository $attachmentRepository,
+        Repository $attachmentRepository,
         FileStorageService $fileStorageService
     ) {
         $this->attachmentFactory = $attachmentFactory;

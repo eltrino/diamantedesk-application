@@ -12,34 +12,30 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
+namespace Eltrino\DiamanteDeskBundle\Model\Shared;
 
-interface CommentRepository
+interface Repository
 {
     /**
-     * Retrieves Comment
-     * @param integer $id
-     * @return Comment
+     * @param $id
+     * @return Entity
      */
     public function get($id);
 
     /**
-     * Retrieves all Comments
-     * @return mixed
+     * @return Entity[]
      */
     public function getAll();
 
     /**
-     * Save Comment
-     * @param Comment $comment
+     * @param Entity $entity
      * @return void
      */
-    public function store(Comment $comment);
+    public function store(Entity $entity);
 
     /**
-     * Delete Comment
-     * @param Comment $comment
+     * @param Entity $entity
      * @return void
      */
-    public function remove(Comment $comment);
+    public function remove(Entity $entity);
 }

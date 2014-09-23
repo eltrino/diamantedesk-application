@@ -61,7 +61,7 @@ class BranchCommand implements Taggable
     /**
      * Returns the collection of tags for this Taggable entity
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTags()
     {
@@ -76,7 +76,7 @@ class BranchCommand implements Taggable
         $command->description     = $branch->getDescription();
         $command->defaultAssignee = $branch->getDefaultAssignee();
         $command->tags            = $branch->getTags();
-        $command->logo            = $branch->getLogo();
+        $command->logoFile        = $branch->getLogo();
         return $command;
     }
 }

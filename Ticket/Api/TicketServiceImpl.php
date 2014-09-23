@@ -18,6 +18,7 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AssigneeTicketCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
@@ -26,20 +27,18 @@ use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
-use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 
 class TicketServiceImpl implements TicketService
 {
     /**
-     * @var TicketRepository
+     * @var Repository
      */
     private $ticketRepository;
 
     /**
-     * @var BranchRepository
+     * @var Repository
      */
     private $branchRepository;
 
@@ -63,8 +62,8 @@ class TicketServiceImpl implements TicketService
      */
     private $securityFacade;
 
-    public function __construct(TicketRepository $ticketRepository,
-                                BranchRepository $branchRepository,
+    public function __construct(Repository $ticketRepository,
+                                Repository $branchRepository,
                                 TicketFactory $ticketFactory,
                                 AttachmentService $attachmentService,
                                 UserService $userService,

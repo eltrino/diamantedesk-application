@@ -15,8 +15,8 @@
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api\Internal;
 
 use Doctrine\ORM\EntityManager;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\FilterUrlGeneratorInterface;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\FilterRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TicketGridFiltersService
@@ -27,7 +27,7 @@ class TicketGridFiltersService
     private $container;
 
     /**
-     * @var FilterRepository
+     * @var Repository
      */
     private $filterRepository;
 
@@ -35,7 +35,7 @@ class TicketGridFiltersService
      * @param ContainerInterface $container
      * @param FilterRepository $filterRepository
      */
-    function __construct(ContainerInterface $container, FilterRepository $filterRepository)
+    function __construct(ContainerInterface $container, Repository $filterRepository)
     {
         $this->container = $container;
         $this->filterRepository = $filterRepository;
@@ -81,4 +81,4 @@ class TicketGridFiltersService
             $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Filter')
         );
     }
-} 
+}

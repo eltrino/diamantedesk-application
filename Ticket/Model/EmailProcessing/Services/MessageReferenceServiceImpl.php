@@ -19,17 +19,15 @@ use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository;
-use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\MessageReference;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReferenceRepository;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -39,17 +37,17 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $messageReferenceRepository;
 
     /**
-     * @var TicketRepository
+     * @var Repository
      */
     private $ticketRepository;
 
     /**
-     * @var BranchRepository
+     * @var Repository
      */
     private $branchRepository;
 
     /**
-     * @var AttachmentRepository
+     * @var Repository
      */
     private $attachmentRepository;
 
@@ -80,9 +78,9 @@ class MessageReferenceServiceImpl implements MessageReferenceService
 
     public function __construct(
         MessageReferenceRepository $messageReferenceRepository,
-        TicketRepository $ticketRepository,
-        BranchRepository $branchRepository,
-        AttachmentRepository $attachmentRepository,
+        Repository $ticketRepository,
+        Repository $branchRepository,
+        Repository $attachmentRepository,
         TicketFactory $ticketFactory,
         CommentFactory $commentFactory,
         AttachmentFactory $attachmentFactory,
@@ -251,4 +249,4 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             $fileStorageService
         );
     }
-} 
+}

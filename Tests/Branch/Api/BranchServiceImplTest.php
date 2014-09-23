@@ -27,8 +27,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_BRANCH_ID = 1;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $branchRepository;
 

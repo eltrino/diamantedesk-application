@@ -12,40 +12,39 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing;
+namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
 
-class MessageReference implements Entity
+class Filter implements Entity
 {
     /**
-     * @var string
+     * @var int
      */
     protected $id;
 
     /**
      * @var string
      */
-    protected $messageId;
+    protected $name;
 
     /**
-     * @var Ticket
+     * @var string
      */
-    protected $ticket;
+    protected $serviceId;
 
     /**
-     * @param $messageId
-     * @param $ticket
+     * @param string $name
+     * @param string $serviceId
      */
-    public function __construct($messageId, Ticket $ticket)
+    public function __construct($name, $serviceId)
     {
-        $this->messageId = $messageId;
-        $this->ticket  = $ticket;
+        $this->name      = $name;
+        $this->serviceId = $serviceId;
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -55,16 +54,16 @@ class MessageReference implements Entity
     /**
      * @return string
      */
-    public function getMessageId()
+    public function getName()
     {
-        return $this->messageId;
+        return $this->name;
     }
 
     /**
-     * @return Ticket
+     * @return string
      */
-    public function getTicket()
+    public function getServiceId()
     {
-        return $this->ticket;
+        return $this->serviceId;
     }
 }

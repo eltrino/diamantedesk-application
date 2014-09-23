@@ -12,29 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Eltrino\DiamanteDeskBundle\Model\Shared;
 
-namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
-
-interface TicketRepository
+interface Entity
 {
-    /**
-     * Retrieves Ticket by given id
-     * @param $id
-     * @return Ticket
-     */
-    public function get($id);
-
-    /**
-     * Store Ticket
-     * @param Ticket $ticket
-     * @return void
-     */
-    public function store(Ticket $ticket);
-
-    /**
-     * Delete Ticket
-     * @param Ticket $ticket
-     * @return void
-     */
-    public function remove(Ticket $ticket);
 }

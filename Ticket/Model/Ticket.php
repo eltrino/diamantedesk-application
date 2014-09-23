@@ -18,9 +18,10 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
+use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Ticket implements AttachmentHolder
+class Ticket implements Entity, AttachmentHolder
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
