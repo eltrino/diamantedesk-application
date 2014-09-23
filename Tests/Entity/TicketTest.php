@@ -104,7 +104,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
         $ticket->assign($newAssignee);
 
-        $this->assertEquals($newAssignee, $ticket->getAssignee());
+        $this->assertEquals($newAssignee->getId(), $ticket->getAssignee()->getId());
     }
 
     private function createTicket()
