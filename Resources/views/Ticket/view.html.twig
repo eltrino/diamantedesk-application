@@ -114,7 +114,7 @@
     {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
         {{ UI.button({
         'path': path('diamante_ticket_create'),
-        'iClass': 'icon-user',
+        'iCss': 'icon-plus',
         'title': 'Create Ticket'|trans,
         'label': 'Create'|trans
         }) }}
@@ -123,7 +123,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_update', {'id': entity.id}),
-        'iClass': 'icon-edit',
+        'iCss': 'icon-edit',
         'title': 'Edit Ticket'|trans,
         'label': 'Edit'|trans
         }) }}
@@ -132,7 +132,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_assign', {'id': entity.id}),
-        'iClass': 'icon-edit',
+        'iCss': 'icon-user',
         'title': 'Assign'|trans,
         'label': 'Assign'|trans
         }) }}
@@ -141,7 +141,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_create_attach', {'id': entity.id}),
-        'iClass': 'icon-edit',
+        'iCss': 'icon-file',
         'title': 'Attach File'|trans,
         'label': 'Attach File'|trans
         }) }}
