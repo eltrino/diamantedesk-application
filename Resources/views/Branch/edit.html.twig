@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_branch_list'), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_branch_list'), 'title' : 'eltrino.diamantedesk.ui.cancel'|trans, 'label' : 'eltrino.diamantedesk.ui.cancel'|trans}) }}
     {{ UI.saveAndStayButton() }}
     {{ UI.saveAndCloseButton() }}
 {% endblock %}
@@ -22,7 +22,7 @@
         {% set breadcrumbs = {
             'entity':      form.vars.value,
             'indexPath':   path('diamante_branch_list'),
-            'indexLabel':  'Branches'|trans,
+            'indexLabel':  'eltrino.diamantedesk.branch.entity_plural_label'|trans,
             'entityTitle': form.vars.value.name|default('N/A'),
             'hasAvatar':   true,
             'imagePath':   form.vars.value.logo ? form.vars.value.logo.pathname : null
@@ -30,7 +30,7 @@
         %}
         {{ parent() }}
     {% else %}
-        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'Branch'|trans}) %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'eltrino.diamantedesk.branch.entity_plural_label'|trans}) %}
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
@@ -39,11 +39,11 @@
     {% set id = 'branchEdit' %}
 
     {% set dataBlocks = [{
-        'title': 'General'|trans,
+        'title': 'eltrino.diamantedesk.common.general'|trans,
         'class': 'active',
         'subblocks': [
             {
-                'title': 'Branch Details'|trans,
+                'title': 'eltrino.diamantedesk.branch.details'|trans,
                 'data': [
                     form_row(form.name),
                     form_row(form.defaultAssignee),
@@ -55,7 +55,7 @@
     }] %}
 
     {% set dataBlocks = dataBlocks|merge([{
-        'title': 'Description'|trans,
+        'title': 'eltrino.diamantedesk.common.description'|trans,
         'subblocks': [
             {
                 'title':null,

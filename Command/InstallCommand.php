@@ -55,6 +55,8 @@ class InstallCommand extends AbstractCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
+        parent::initialize($input, $output);
+
         $this->kernelRootDir  = $this->getContainer()->getParameter('kernel.root_dir');
         $this->attachmentsDir = $this->getContainer()->getParameter('diamante.attachment.directory.name');
         $this->filesystem     = $this->getContainer()->get('filesystem');
@@ -70,40 +72,42 @@ class InstallCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write('Creating Branch logo directory...');
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.create_branch_dir') . "\n");
             $this->createBranchLogoDirectory();
-            $output->writeln('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
-            $output->write('Creating attachments directory...');
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.create_attach_dir') . "\n");
             $this->createAttachmentsDirectory();
-            $output->writeln('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
-            $output->write('Installing DB schema...');
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.install_db_schema') . "\n");
             $this->updateDbSchema();
-            $output->writeln('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
             $this->loadData($output);
 
-            $output->write('Updating navigation...');
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.update_navigation') . "\n");
             $this->updateNavigation($output);
-            $output->writeln('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
-            $output->write('Loading migration data');
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.process_migrations') . "\n");
             $this->loadDataFixtures($output);
-            $output->writeln('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.assets_install') . "\n");
             $this->assetsInstall($output);
 
             $this->asseticDump($output, array(
                 '--no-debug' => true,
             ));
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
         } catch (\Exception $e) {
-            $output->writeln($e->getMessage());
+            $output->writeln($this->translator->trans($e->getMessage()));
             return;
         }
 
-        $output->writeln('Installed!');
+        $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.installed') . "\n");
         return 0;
     }
 

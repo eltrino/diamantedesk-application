@@ -41,31 +41,31 @@ class UpdateCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write("Clearing cache... \n");
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.clear_cache') . "\n");
             $this->runExistingCommand('cache:clear', $output);
-            $output->write('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
-            $output->write("Updating DB schema... \n");
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.update_db_schema') . "\n");
             $this->updateDbSchema();
-            $output->writeln('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
-            $output->write("Updating navigation... \n");
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.update_navigation') . "\n");
             $this->updateNavigation($output);
-            $output->writeln('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
-            $output->write('Installing assets...');
+            $output->write($this->translator->trans('eltrino.diamantedesk.commands.assets_install') . "\n");
             $this->assetsInstall($output);
             $this->asseticDump($output, array(
                 '--no-debug' => true,
             ));
-            $output->write('Done');
+            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
 
         } catch (\Exception $e) {
-            $output->writeln($e->getMessage());
+            $output->writeln($this->translator->trans($e->getMessage()));
             return;
         }
 
-        $output->writeln('Updated!');
+        $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.updated') . "\n");
     }
 
     /**

@@ -14,20 +14,20 @@
             <li class="diam-comment">
                 <div class="pull-right">
                 {% if resource_granted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
-                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action"><i class="icon-edit hide-text">Edit</i></a>
+                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action"><i class="icon-edit hide-text">{{ 'eltrino.diamantedesk.ui.edit'|trans }}</i></a>
                 {% endif %}
                 {% if resource_granted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
-                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'id': comment.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">Delete</i></a>
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'id': comment.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">{{ 'eltrino.diamantedesk.ui.delete'|trans }}</i></a>
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
                     <img src="{{ imagePath ? imagePath|imagine_filter('avatar_med') : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="test">
                 </div>
-                <div class="diam-comment-meta">{{ comment.author.firstname }} {{ comment.author.lastname }} added a comment - {{ comment.createdAt|oro_format_datetime }}</div>
+                <div class="diam-comment-meta">{{ comment.author.firstname }} {{ comment.author.lastname }} {{ 'eltrino.diamantedesk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
                 <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
-                        <strong class="diam-comment-attachments-title">Attachments:</strong>
+                        <strong class="diam-comment-attachments-title">{{ 'eltrino.diamantedesk.attachment.entity_plural_label'|trans }}:</strong>
                         <ul class="diam-comment-attachments unstyled">
                             {% for attachment in comment.attachments %}
                                 <li><i class="icon-paper-clip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
@@ -44,8 +44,8 @@
     <p style="text-align: right;">{{ UI.button({
         'path': path('diamante_comment_create', {'id': entity.id}),
         'iClass': 'icon-edit',
-        'title': 'Comment'|trans,
-        'label': 'Comment'|trans
+        'title': 'eltrino.diamantedesk.comment.entity_label'|trans,
+        'label': 'eltrino.diamantedesk.comment.entity_label'|trans
         })
         }}
     </p>
@@ -63,10 +63,10 @@
                     }
 
                     var dialog = new Modal({
-                        content: 'Are you sure you want to delete this comment?',
-                        okText: __('Ok'),
-                        cancelText: __('Cancel'),
-                        title: __('Delete Confirmation'),
+                        content: '{{ 'eltrino.diamantedesk.comment.messages.delete.query'|trans }}',
+                        okText: __('{{ 'eltrino.diamantedesk.ui.ok'|trans }}'),
+                        cancelText: __('{{ 'eltrino.diamantedesk.ui.cancel'|trans }}'),
+                        title: __('{{ 'eltrino.diamantedesk.common.delete_confirmation'|trans }}'),
                         className: 'modal oro-modal-danger'
                     });
 
@@ -85,7 +85,7 @@
 
 {% block navButtons %}
     {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
-        {% set changeStatusTitle = 'Change Status' %}
+        {% set changeStatusTitle = 'eltrino.diamantedesk.ticket.actions.change_status'|trans %}
         {{ UI.clientButton({
             'dataUrl': path('diamante_ticket_status_change', { 'id': entity.id }),
             'aCss': 'no-hash',
@@ -114,36 +114,36 @@
     {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
         {{ UI.button({
         'path': path('diamante_ticket_create'),
-        'iCss': 'icon-plus',
-        'title': 'Create Ticket'|trans,
-        'label': 'Create'|trans
+        'iClass': 'icon-user',
+        'title': 'eltrino.diamantedesk.ticket.actions.create'|trans,
+        'label': 'eltrino.diamantedesk.ticket.actions.create'|trans
         }) }}
     {% endif %}
 
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_update', {'id': entity.id}),
-        'iCss': 'icon-edit',
-        'title': 'Edit Ticket'|trans,
-        'label': 'Edit'|trans
+        'iClass': 'icon-edit',
+        'title': 'eltrino.diamantedesk.ticket.actions.edit'|trans,
+        'label': 'eltrino.diamantedesk.ui.edit'|trans
         }) }}
     {% endif %}
 
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_assign', {'id': entity.id}),
-        'iCss': 'icon-user',
-        'title': 'Assign'|trans,
-        'label': 'Assign'|trans
+        'iClass': 'icon-edit',
+        'title': 'eltrino.diamantedesk.ticket.actions.assign'|trans,
+        'label': 'eltrino.diamantedesk.ticket.actions.assign'|trans
         }) }}
     {% endif %}
 
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_create_attach', {'id': entity.id}),
-        'iCss': 'icon-file',
-        'title': 'Attach File'|trans,
-        'label': 'Attach File'|trans
+        'iClass': 'icon-edit',
+        'title': 'eltrino.diamantedesk.attachment.actions.attach'|trans,
+        'label': 'eltrino.diamantedesk.attachment.actions.attach'|trans
         }) }}
     {% endif %}
 
@@ -154,10 +154,10 @@
         'aCss': 'no-hash remove-button',
         'dataId': entity.id,
         'id': 'btn-remove-account',
-        'dataMessage': 'Are you sure you want to delete this ticket?'|trans,
-        'successMessage': 'Ticket successfully deleted.'|trans,
-        'title': 'Delete ticket'|trans,
-        'label': 'Delete'|trans
+        'dataMessage': 'eltrino.diamantedesk.ticket.messages.delete.query'|trans,
+        'successMessage': 'eltrino.diamantedesk.ticket.messages.delete.success'|trans,
+        'title': 'eltrino.diamantedesk.ticket.actions.remove'|trans,
+        'label': 'eltrino.diamantedesk.ui.delete'|trans
         }) }}
     {% endif %}
 {% endblock navButtons %}
@@ -167,7 +167,7 @@
     'entity': entity,
     'indexPath': path('diamante_branch_view', {'id': entity.branch.id}),
     'indexLabel': entity.branchName,
-    'entityTitle': entity.subject|default('N/A'),
+    'entityTitle': entity.subject|default('eltrino.diamantedesk.common.not_available'|trans),
     'hasAvatar': true,
     'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
     }
@@ -177,13 +177,13 @@
 
 {% block content_data %}
     {% set id = 'navbarTicketView' %}
-    {% set dataSubBlocks = [UI.attibuteRow('Subject', entity.subject)] %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Branch', entity.branchName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Status', entity.status.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Priority', entity.priority.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Source', entity.source.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Reporter', entity.reporterFullName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('Assignee', entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
+    {% set dataSubBlocks = [UI.attibuteRow('eltrino.diamantedesk.attributes.subject'|trans, entity.subject)] %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('eltrino.diamantedesk.attributes.branch'|trans, entity.branchName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('eltrino.diamantedesk.attributes.status'|trans, entity.status.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('eltrino.diamantedesk.attributes.priority'|trans, entity.priority.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('eltrino.diamantedesk.attributes.source'|trans, entity.source.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('eltrino.diamantedesk.attributes.reporter'|trans, entity.reporterFullName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('eltrino.diamantedesk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
 
     {% set attachmentListWidget %}
         {{ oro_widget_render({
@@ -195,11 +195,11 @@
     {% set dataBlocks =
     [
     {
-    'title': 'General'|trans,
+    'title': 'eltrino.diamantedesk.common.general'|trans,
     'class': 'active',
     'subblocks': [
     {
-    'title': 'Ticket Details'|trans,
+    'title': 'eltrino.diamantedesk.ticket.details'|trans,
     'data' : dataSubBlocks
     }
     ]
@@ -208,7 +208,7 @@
     %}
 
     {% set dataBlocks = dataBlocks|merge([{
-    'title': 'Description'|trans,
+    'title': 'eltrino.diamantedesk.common.description'|trans,
     'subblocks': [{
     'title': null,
     'data': [entity.description|escape('html')|nl2br]
@@ -217,7 +217,7 @@
     ) %}
 
     {% set dataBlocks = dataBlocks|merge([{
-    'title' : 'Attachments'|trans,
+    'title' : 'eltrino.diamantedesk.attachment.entity_plural_label'|trans,
     'subblocks': [{
     'title' : null,
     'data' : [attachmentListWidget],
@@ -227,7 +227,7 @@
     ) %}
 
     {% set dataBlocks = dataBlocks|merge([{
-    'title' : 'Comments'|trans,
+    'title' : 'eltrino.diamantedesk.comment.entity_plural_label'|trans,
     'subblocks': [{
     'title' : null,
     'data' : [_self.renderComments(entity)],

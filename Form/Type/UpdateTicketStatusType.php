@@ -29,7 +29,7 @@ class UpdateTicketStatusType extends AbstractType
         $builder->add(
             $builder->create('status', 'choice',
                 array(
-                    'label' => 'Status',
+                    'label' => 'eltrino.diamantedesk.attributes.status',
                     'required' => true,
                     'choices' => $statusOptions
                 ))
