@@ -123,12 +123,6 @@ datagrid:
                 label:   Reporter
             priority:
                 label:   Priority
-            assigneeId:
-                label:   AssigneeId
-                renderable: false
-            reporterId:
-                label:   ReporterId
-                renderable: false
             status:
                 label:   Status
             createdAt:
@@ -178,12 +172,6 @@ datagrid:
                 priority:
                     type:      string
                     data_name: i.priority
-                assigneeId:
-                    type:       number
-                    data_name:  assigneeId
-                reporterId:
-                    type:       number
-                    data_name:  reporterId
                 status:
                     type: choice
                     data_name: i.status
