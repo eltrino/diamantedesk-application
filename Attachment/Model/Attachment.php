@@ -14,7 +14,9 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Attachment\Model;
 
-class Attachment
+use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
+
+class Attachment implements Entity
 {
     /**
      * @var integer

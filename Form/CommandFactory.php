@@ -88,8 +88,8 @@ class CommandFactory
         $command = new EditCommentCommand();
         $command->id = null;
         $command->content = null;
-        $command->author = $author;
-        $command->ticket = $ticket;
+        $command->ticket = $ticket->getId();
+        $command->author = $author->getId();
         $command->ticketStatus = $ticket->getStatus();
 
         return $command;

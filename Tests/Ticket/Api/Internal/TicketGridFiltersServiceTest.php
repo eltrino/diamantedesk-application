@@ -30,8 +30,8 @@ class TicketGridFiltersServiceTest extends \PHPUnit_Framework_TestCase
     private $ticketGridFiltersService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\FilterRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Model\FilterRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $filterRepository;
 
@@ -123,4 +123,4 @@ class TicketGridFiltersServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketGridFiltersService->generateGridFilterUrl(self::DUMMY_FILTER_ID);
     }
-} 
+}

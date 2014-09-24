@@ -25,16 +25,19 @@ class EditCommentCommand
      */
     public $content;
 
+    public $files;
+    public $attachmentList;
+    public $attachmentsInput;
+
     /**
      * @Assert\NotBlank
+     * @var int
      */
     public $ticket;
 
     /**
      * @Assert\NotBlank
+     * @var int
      */
     public $author;
-    public $files;
-    public $attachmentList;
-    public $attachmentsInput;
 }

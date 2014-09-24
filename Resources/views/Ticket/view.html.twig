@@ -17,7 +17,7 @@
                     <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action"><i class="icon-edit hide-text">Edit</i></a>
                 {% endif %}
                 {% if resource_granted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
-                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'id': comment.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">Delete</i></a>
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'ticketId': comment.ticket.id, 'commentId': comment.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">Delete</i></a>
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">

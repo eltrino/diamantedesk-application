@@ -21,6 +21,7 @@ use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Type\CommentType;
 use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -137,11 +138,10 @@ class CommentController extends Controller
             $newStatus = $form->get('ticketStatus')->getData();
 
             if (false === ($newStatus == $ticket->getStatus()->getValue())) {
-                $this->get('diamante.ticket.service')
-                    ->updateStatus(
-                        $command->ticket->getId(),
-                        $newStatus
-                    );
+                $ticketCommand = new UpdateStatusCommand();
+                $ticketCommand->ticketId = $command->ticket;
+                $ticketCommand->status = $newStatus;
+                $this->get('diamante.ticket.service')->updateStatus($ticketCommand);
             }
 
             if ($command->id) {
@@ -151,26 +151,26 @@ class CommentController extends Controller
             }
             $response = $this->getSuccessSaveResponse($ticket->getId());
         } catch (\LogicException $e) {
-            $response = array('form' => $formView);
+            $response = array('form' => $formView, 'ticket' => $ticket);
         }
         return $response;
     }
 
     /**
      * @Route(
-     *      "/delete/{id}",
+     *      "/delete/ticket/{ticketId}/comment/{commentId}",
      *      name="diamante_comment_delete",
-     *      requirements={"id"="\d+"}
+     *      requirements={"ticketId"="\d+", "commentId"="\d+"}
      * )
      *
      * @param Comment $comment
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction($ticketId, $commentId)
     {
         try {
             $this->get('diamante.comment.service')
-                ->deleteTicketComment($id);
+                ->deleteTicketComment($commentId);
 
             $this->addSuccessMessage('Comment successfully deleted.');
         } catch (Exception $e) {
@@ -178,9 +178,7 @@ class CommentController extends Controller
         }
 
         return $this->redirect(
-            $this->generateUrl('diamante_ticket_view', array(
-                    'id' => $comment->getTicket()->getId())
-            )
+            $this->generateUrl('diamante_ticket_view', array('id' => $ticketId))
         );
     }
 

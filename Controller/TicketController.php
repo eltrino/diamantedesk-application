@@ -157,6 +157,10 @@ class TicketController extends Controller
         try {
             $this->handle($form);
 
+            $command->branch = $command->branch->getId();
+            $command->reporter = $command->reporter->getId();
+            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+
             $attachments = array();
             foreach ($command->files as $file) {
                 if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
@@ -202,6 +206,9 @@ class TicketController extends Controller
         $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
         try {
             $this->handle($form);
+
+            $command->reporter = $command->reporter->getId();
+            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
             $attachments = array();
             foreach ($command->files as $file) {
@@ -268,6 +275,9 @@ class TicketController extends Controller
         $form = $this->createForm(new AssigneeTicketType(), $command);
         try {
             $this->handle($form);
+
+            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+
             $this->get('diamante.ticket.service')->assignTicket($command);
             $this->addSuccessMessage('Ticket successfully re-assigned.');
             $response = $this->getSuccessSaveResponse($ticket);

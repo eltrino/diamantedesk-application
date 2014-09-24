@@ -185,17 +185,17 @@ class TicketServiceImpl implements TicketService
 
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
-        $branch = $this->branchRepository->get($command->branch->getId());
+        $branch = $this->branchRepository->get($command->branch);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found.');
         }
 
-        $reporter = $this->userService->getUserById($command->reporter->getId());
+        $reporter = $this->userService->getUserById($command->reporter);
         if (is_null($reporter)) {
             throw new \RuntimeException('Reporter loading failed, reporter not found.');
         }
 
-        $assignee = $this->userService->getUserById($command->assignee->getId());
+        $assignee = $this->userService->getUserById($command->assignee);
         if (is_null($assignee)) {
             throw new \RuntimeException('Assignee validation failed, assignee not found.');
         }
@@ -237,8 +237,8 @@ class TicketServiceImpl implements TicketService
         $this->isGranted('EDIT', $ticket);
 
         $reporter = $ticket->getReporter();
-        if ($command->reporter->getId() != $ticket->getReporterId()) {
-            $reporter = $this->userService->getUserById($command->reporter->getId());
+        if ($command->reporter != $ticket->getReporterId()) {
+            $reporter = $this->userService->getUserById($command->reporter);
             if (is_null($reporter)) {
                 throw new \RuntimeException('Reporter loading failed, reporter not found.');
             }
@@ -253,8 +253,8 @@ class TicketServiceImpl implements TicketService
             $command->source
         );
 
-        if ($command->assignee->getId()) {
-            $assignee = $this->userService->getUserById($command->assignee->getId());
+        if ($command->assignee) {
+            $assignee = $this->userService->getUserById($command->assignee);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }
@@ -300,8 +300,8 @@ class TicketServiceImpl implements TicketService
 
         $this->isAssigneeGranted($ticket);
 
-        if ($command->assignee->getId()) {
-            $assignee = $this->userService->getUserById($command->assignee->getId());
+        if ($command->assignee) {
+            $assignee = $this->userService->getUserById($command->assignee);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }

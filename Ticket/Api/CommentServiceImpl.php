@@ -115,9 +115,9 @@ class CommentServiceImpl implements CommentService
     {
         $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment');
 
-        $ticket = $this->loadTicketBy($command->ticket->getId());
+        $ticket = $this->loadTicketBy($command->ticket);
 
-        $author = $this->userService->getUserById($command->author->getId());
+        $author = $this->userService->getUserById($command->author);
 
         $comment = $this->commentFactory->create($command->content, $ticket, $author);
 

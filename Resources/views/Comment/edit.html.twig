@@ -2,8 +2,8 @@
 {% form_theme form with ['OroAddressBundle:Include:fields.html.twig', 'OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
 
 {% set editCommand = form.vars.value %}
-{% oro_title_set({params : {"%ticket.subject%": editCommand.ticket.subject }}) %}
-{% set formAction = editCommand.id ? path('diamante_comment_update', { 'id': editCommand.id }) : path('diamante_comment_create', { 'id': editCommand.ticket.id }) %}
+{% oro_title_set({params : {"%ticket.subject%": ticket.subject }}) %}
+{% set formAction = editCommand.id ? path('diamante_comment_update', { 'id': editCommand.id }) : path('diamante_comment_create', { 'id': ticket.id }) %}
 
 {% block head_script %}
     {{ parent() }}
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': editCommand.ticket.id }), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': ticket.id }), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
     {{ UI.saveAndCloseButton(editCommand.id ? 'Edit' : 'Add') }}
 {% endblock %}
 
@@ -22,8 +22,8 @@
     {% if editCommand.id %}
         {% set breadcrumbs = {
             'entity':      editCommand,
-            'indexPath':   path('diamante_ticket_view', {'id': editCommand.ticket.id}),
-            'indexLabel':  editCommand.ticket.subject,
+            'indexPath':   path('diamante_ticket_view', {'id': ticket.id}),
+            'indexLabel':  ticket.subject,
             'entityTitle': 'Edit Comment'|trans
         } %}
         {{ parent() }}

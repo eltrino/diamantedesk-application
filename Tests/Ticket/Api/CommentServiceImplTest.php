@@ -19,9 +19,9 @@ use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\EltrinoDiamanteDeskBundle;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
+use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
@@ -127,7 +127,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $this->service->postNewCommentForTicket(self::DUMMY_COMMENT_CONTENT, self::DUMMY_TICKET_ID, self::DUMMY_USER_ID);
+        $command = new EditCommentCommand();
+        $command->content  = self::DUMMY_COMMENT_CONTENT;
+        $command->ticket = self::DUMMY_TICKET_ID;
+        $command->author = self::DUMMY_USER_ID;
+
+        $this->service->postNewCommentForTicket($command);
     }
 
     /**
@@ -159,7 +164,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $this->service->postNewCommentForTicket(self::DUMMY_COMMENT_CONTENT, self::DUMMY_TICKET_ID, self::DUMMY_USER_ID);
+        $command = new EditCommentCommand();
+        $command->content  = self::DUMMY_COMMENT_CONTENT;
+        $command->ticket = self::DUMMY_TICKET_ID;
+        $command->author = self::DUMMY_USER_ID;
+
+        $this->service->postNewCommentForTicket($command);
 
         $this->assertCount(1, $ticket->getComments());
         $this->assertEquals($comment, $ticket->getComments()->get(0));
@@ -199,12 +209,13 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $this->service->postNewCommentForTicket(
-            self::DUMMY_COMMENT_CONTENT,
-            self::DUMMY_TICKET_ID,
-            self::DUMMY_USER_ID,
-            $attachmentInputs
-        );
+        $command = new EditCommentCommand();
+        $command->content  = self::DUMMY_COMMENT_CONTENT;
+        $command->ticket = self::DUMMY_TICKET_ID;
+        $command->author = self::DUMMY_USER_ID;
+        $command->attachmentsInput = $attachmentInputs;
+
+        $this->service->postNewCommentForTicket($command);
 
         $this->assertCount(1, $ticket->getComments());
         $this->assertEquals($comment, $ticket->getComments()->get(0));
@@ -220,7 +231,11 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue(null));
 
-        $this->service->updateTicketComment(self::DUMMY_COMMENT_ID, self::DUMMY_COMMENT_CONTENT);
+        $command = new EditCommentCommand();
+        $command->id      = self::DUMMY_COMMENT_ID;
+        $command->content = self::DUMMY_COMMENT_CONTENT;
+
+        $this->service->updateTicketComment($command);
     }
 
     /**
@@ -243,7 +258,11 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
-        $this->service->updateTicketComment(self::DUMMY_COMMENT_ID, $updatedContent);
+        $command = new EditCommentCommand();
+        $command->id      = self::DUMMY_COMMENT_ID;
+        $command->content = $updatedContent;
+
+        $this->service->updateTicketComment($command);
 
         $this->assertEquals($updatedContent, $comment->getContent());
     }
@@ -273,7 +292,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $comment)
             ->will($this->returnValue(true));
 
-        $this->service->updateTicketComment(self::DUMMY_COMMENT_ID, $updatedContent, $filesListDto);
+        $command = new EditCommentCommand();
+        $command->id      = self::DUMMY_COMMENT_ID;
+        $command->content = $updatedContent;
+        $command->attachmentsInput = $filesListDto;
+
+        $this->service->updateTicketComment($command);
         $this->assertEquals($updatedContent, $comment->getContent());
     }
 

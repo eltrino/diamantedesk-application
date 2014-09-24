@@ -51,20 +51,20 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $messageReferenceRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Model\TicketRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $ticketRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $branchRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentRepository
+     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
      */
     private $attachmentRepository;
 
@@ -418,4 +418,4 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         return array(new Attachment(self::DUMMY_FILENAME, self::DUMMY_FILE_CONTENT));
     }
-} 
+}
