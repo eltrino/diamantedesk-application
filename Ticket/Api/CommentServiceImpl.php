@@ -203,14 +203,15 @@ class CommentServiceImpl implements CommentService
     }
 
     public static function create(
-        \Doctrine\ORM\EntityManager $em,
+        Repository $ticketRepository,
+        Repository $commentRepository,
         UserService $userService,
         AttachmentService $attachmentService,
         SecurityFacade $securityFacade
     ) {
         return new CommentServiceImpl(
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Ticket'),
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Comment'),
+            $ticketRepository,
+            $commentRepository,
             new CommentFactory(),
             $userService,
             $attachmentService,

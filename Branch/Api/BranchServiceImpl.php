@@ -177,14 +177,14 @@ class BranchServiceImpl implements BranchService
      * @return BranchServiceImpl
      */
     public static function create(BranchFactory $branchFactory,
-                                    EntityManager $em,
+                                    Repository $branchRepository,
                                     $branchLogoHandler,
                                     $tagManager,
                                     SecurityFacade $securityFacade
     ) {
         return new BranchServiceImpl(
             $branchFactory,
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Branch'),
+            $branchRepository,
             $branchLogoHandler,
             $tagManager,
             $securityFacade

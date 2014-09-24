@@ -20,6 +20,9 @@
 
     <parameters>
         <parameter key="diamante.command_factory.class">Eltrino\DiamanteDeskBundle\Form\CommandFactory</parameter>
+        <!-- repositories start -->
+        <parameter key="diamante.generic.repository.class">Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
+        <!-- repositories end -->
     </parameters>
 
     <services>

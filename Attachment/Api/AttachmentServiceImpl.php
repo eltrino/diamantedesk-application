@@ -115,13 +115,13 @@ class AttachmentServiceImpl implements AttachmentService
     }
 
     public static function create(
-        EntityManager $em,
+        Repository $attachmentRepository,
         AttachmentFactory $attachmentFactory,
         FileStorageService $fileStorageService
     ) {
         return new AttachmentServiceImpl(
             $attachmentFactory,
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Attachment'),
+            $attachmentRepository,
             $fileStorageService
         );
     }

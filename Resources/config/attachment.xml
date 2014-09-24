@@ -40,7 +40,7 @@
 
         <service id="diamante.attachment.service" class="%diamante.attachment.service.class%"
                  factory-class="%diamante.attachment.service.class%" factory-method="create">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="diamante.attachment.repository"/>
             <argument type="service" id="diamante.attachment.factory"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
@@ -49,5 +49,12 @@
             <tag name="liip_imagine.data.loader" loader="diamante_attachment" />
             <argument type="service" id="liip_imagine" />
         </service>
+<!-- repositories start -->
+        <service id="diamante.attachment.repository" class="%diamante.generic.repository.class%"
+                factory-service = "doctrine.orm.entity_manager"
+                factory-method  = "getRepository">
+            <argument type="string">%diamante.attachment.entity.class%</argument>
+        </service>
+<!-- repositories end -->
     </services>
 </container>

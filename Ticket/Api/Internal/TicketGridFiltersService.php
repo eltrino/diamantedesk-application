@@ -74,11 +74,11 @@ class TicketGridFiltersService
         return $concreteFilterUrlGenerator->generateFilterUrlPart();
     }
 
-    public static function create(ContainerInterface $container, EntityManager $em)
+    public static function create(ContainerInterface $container, Repository $filterRepository)
     {
         return new TicketGridFiltersService(
             $container,
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Filter')
+            $filterRepository
         );
     }
 }
