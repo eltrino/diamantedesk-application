@@ -11,16 +11,34 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-define(['marionette'], function(Marionette) {
+define(['marionette', 'views/TaskList'], function(Marionette, TasksView) {
 
-  var app = new Marionette.Application({
+  var App = new Marionette.Application({
     regions : {
       header: '#header',
-      main: '#main',
+      main: '#content',
       footer: '#footer'
     }
   });
 
-  return app;
+  App.on('before:start', function(){});
+
+  App.TasksView = TasksView;
+
+
+  App.on('start', function(){
+
+    require(['entities/task'], function(){
+      var tasks = App.request('task:entities');
+      var TasksView = new App.TasksView({
+        collection: tasks
+      });
+      App.main.show(TasksView);
+    });
+
+  });
+
+
+  return App;
 
 });

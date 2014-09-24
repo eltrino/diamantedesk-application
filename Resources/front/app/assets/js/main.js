@@ -12,11 +12,13 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 require.config({
+  urlArgs: "bust=" + (new Date()).getTime(),  // prevent caching
   paths : {
     jquery : "vendor/jquery/dist/jquery",
     underscore : "vendor/underscore/underscore",
     backbone : "vendor/backbone/backbone",
     marionette : "vendor/marionette/lib/backbone.marionette",
+    tpl: 'vendor/requirejs-tpl/tpl',
     bootstrap : "vendor/bootstrap/js/bootstrap"
   },
   shim : {
@@ -31,7 +33,7 @@ require.config({
       exports : 'Backbone'
     },
     marionette : {
-      deps : ["jquery", "underscore", "backbone"],
+      deps : ["backbone"],
       exports : "Marionette"
     },
     bootstrap : {
@@ -41,7 +43,10 @@ require.config({
 });
 
 
-require(['app'], function(app) {
-  app.start();
-  console.log(app);
+require(['app', 'backbone'], function(App, Backbone) {
+
+  App.start();
+
+  Backbone.history.start();
+
 });
