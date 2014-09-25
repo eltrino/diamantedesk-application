@@ -72,8 +72,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branchRepository;
 
     /**
-     * @var\ Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory
-     * @Mock Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory
+     * @var\ Eltrino\DiamanteDeskBundle\Ticket\Model\TicketFactory
+     * @Mock Eltrino\DiamanteDeskBundle\Ticket\Model\TicketFactory
      */
     private $ticketFactory;
 

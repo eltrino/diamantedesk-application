@@ -12,24 +12,20 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Eltrino\DiamanteDeskBundle\Model\Shared;
 
-namespace Eltrino\DiamanteDeskBundle\Ticket\Api\Factory;
-
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-
-class TicketFactory
+abstract class AbstractEntityFactory
 {
-    public function create($subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
+    /**
+     * @var string
+     */
+    protected $entityClassName;
+
+    /**
+     * @param string $entityClassName
+     */
+    public function __construct($entityClassName)
     {
-        return new Ticket(
-            $subject,
-            $description,
-            $branch,
-            $reporter,
-            $assignee,
-            $source,
-            $priority,
-            $status
-        );
+        $this->entityClassName = $entityClassName;
     }
 }

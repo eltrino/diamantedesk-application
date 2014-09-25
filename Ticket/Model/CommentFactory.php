@@ -12,16 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 
-namespace Eltrino\DiamanteDeskBundle\Ticket\Api\Factory;
+use Eltrino\DiamanteDeskBundle\Model\Shared\AbstractEntityFactory;
 
-use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket;
-
-class CommentFactory
+class CommentFactory extends AbstractEntityFactory
 {
     public function create($content, Ticket $ticket, $author)
     {
-        return new Comment($content, $ticket, $author);
+        return new $this->entityClassName($content, $ticket, $author);
     }
 }

@@ -20,12 +20,14 @@
 
     <parameters>
         <parameter key="diamante.branch.entity.class">Eltrino\DiamanteDeskBundle\Entity\Branch</parameter>
-        <parameter key="diamante.branch.factory.class">Eltrino\DiamanteDeskBundle\Branch\Model\Factory\BranchFactory</parameter>
+        <parameter key="diamante.branch.entity.factory.class">Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory</parameter>
         <parameter key="diamante.branch.service.class">Eltrino\DiamanteDeskBundle\Branch\Api\BranchServiceImpl</parameter>
     </parameters>
 
     <services>
-        <service id="diamante.branch.factory" class="%diamante.branch.factory.class%"/>
+        <service id="diamante.branch.entity.factory" class="%diamante.branch.entity.factory.class%">
+            <argument type="string">%diamante.branch.entity.class%</argument>
+        </service>
 
         <service id="diamante.branch.logo_handler" class="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler"
                  factory-class="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler" factory-method="create">
@@ -34,7 +36,7 @@
         </service>
 
         <service id="diamante.branch.service" class="%diamante.branch.service.class%">
-            <argument type="service" id="diamante.branch.factory"/>
+            <argument type="service" id="diamante.branch.entity.factory"/>
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.branch.logo_handler"/>
             <argument type="service" id="oro_tag.tag.manager"/>

@@ -59,8 +59,8 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $commentRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory
+     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\CommentFactory
+     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Model\CommentFactory
      */
     private $commentFactory;
 

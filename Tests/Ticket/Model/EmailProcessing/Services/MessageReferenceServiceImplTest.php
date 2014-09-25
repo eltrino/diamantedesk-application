@@ -69,20 +69,20 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentRepository;
 
     /**
-     * @var\ Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory
-     * @Mock Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory
+     * @var\ Eltrino\DiamanteDeskBundle\Ticket\Model\TicketFactory
+     * @Mock Eltrino\DiamanteDeskBundle\Ticket\Model\TicketFactory
      */
     private $ticketFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory
+     * @var \Eltrino\DiamanteDeskBundle\Ticket\Model\CommentFactory
+     * @Mock \Eltrino\DiamanteDeskBundle\Ticket\Model\CommentFactory
      */
     private $commentFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory
+     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory
+     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory
      */
     private $attachmentFactory;
 

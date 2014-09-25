@@ -42,8 +42,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branchServiceImpl;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Factory\BranchFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\Factory\BranchFactory
+     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory
+     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory
      */
     private $branchFactory;
 

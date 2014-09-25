@@ -16,15 +16,15 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services;
 
 use Doctrine\ORM\EntityManager;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory;
+use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\MessageReference;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\CommentFactory;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReferenceRepository;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;

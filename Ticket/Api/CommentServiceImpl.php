@@ -19,7 +19,7 @@ use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Form\Command\CreateCommentCommand;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\CommentFactory;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\CommentFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Oro\Bundle\UserBundle\Entity\User;

@@ -12,14 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Model\Factory;
+namespace Eltrino\DiamanteDeskBundle\Branch\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
+use Eltrino\DiamanteDeskBundle\Model\Shared\AbstractEntityFactory;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class BranchFactory
+class BranchFactory extends AbstractEntityFactory
 {
     /**
      * Create Branch
@@ -36,6 +35,6 @@ class BranchFactory
         if ($logo) {
             $logo = new Logo($logo->getFilename());
         }
-        return new Branch($name, $description, $defaultAssignee, $logo, $tags);
+        return new $this->entityClassName($name, $description, $defaultAssignee, $logo, $tags);
     }
 }

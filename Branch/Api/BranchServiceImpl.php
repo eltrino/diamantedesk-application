@@ -17,7 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Api;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Persistence\ObjectManager;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Factory\BranchFactory;
+use Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory;
 use Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;

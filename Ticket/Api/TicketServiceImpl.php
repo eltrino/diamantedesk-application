@@ -24,7 +24,7 @@ use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\AttachmentService;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Factory\TicketFactory;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\UserService;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
 use Oro\Bundle\SecurityBundle\SecurityFacade;

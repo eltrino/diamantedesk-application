@@ -21,6 +21,8 @@
     <parameters>
         <parameter key="diamante.ticket.entity.class">Eltrino\DiamanteDeskBundle\Entity\Ticket</parameter>
         <parameter key="diamante.comment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Comment</parameter>
+        <parameter key="diamante.ticket.entity.factory.class">Eltrino\DiamanteDeskBundle\Ticket\Model\TicketFactory</parameter>
+        <parameter key="diamante.comment.entity.factory.class">Eltrino\DiamanteDeskBundle\Ticket\Model\CommentFactory</parameter>
         <parameter key="diamante.ticket.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl</parameter>
         <parameter key="diamante.ticket.internal.attachment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\AttachmentServiceImpl</parameter>
         <parameter key="diamante.ticket.internal.grid_filters_service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\TicketGridFiltersService</parameter>
@@ -68,9 +70,14 @@
             <argument type="service" id="oro_user.manager"/>
         </service>
 
+        <service id="diamante.ticket.entity.factory" class="%diamante.ticket.entity.factory.class%">
+            <argument type="string">%diamante.ticket.entity.class%</argument>
+        </service>
+
         <service id="diamante.ticket.service" class="%diamante.ticket.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.ticket.entity.factory"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
             <argument type="service" id="oro_security.security_facade"/>
@@ -129,9 +136,15 @@
                 >
         </service>
 <!-- filters end-->
+
+        <service id="diamante.comment.entity.factory" class="%diamante.comment.entity.factory.class%">
+            <argument type="string">%diamante.comment.entity.class%</argument>
+        </service>
+
         <service id="diamante.comment.service" class="%diamante.comment.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.comment.repository"/>
+            <argument type="service" id="diamante.comment.entity.factory"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
             <argument type="service" id="oro_security.security_facade"/>

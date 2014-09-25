@@ -12,15 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
 namespace Eltrino\DiamanteDeskBundle\Attachment\Model;
 
-interface AttachmentFactory
+use Eltrino\DiamanteDeskBundle\Model\Shared\AbstractEntityFactory;
+
+class AttachmentFactory extends AbstractEntityFactory
 {
     /**
      * Create Attachment entity
      * @param File $file
-     * @return Attachment
+     * @return \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment
      */
-    public function create(File $file);
+    public function create(File $file)
+    {
+        return new $this->entityClassName($file);
+    }
 }

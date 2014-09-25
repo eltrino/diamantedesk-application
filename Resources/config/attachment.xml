@@ -20,17 +20,19 @@
 
     <parameters>
         <parameter key="diamante.attachment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Attachment</parameter>
+        <parameter key="diamante.attachment.entity.factory.class">Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory</parameter>
         <parameter key="diamante.attachment.directory.name">attachments</parameter>
         <parameter key="diamante.attachment.upload_dir.path">%kernel.root_dir%/%diamante.attachment.directory.name%</parameter>
 
         <parameter key="diamante.attachment.service.class">Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentServiceImpl</parameter>
-        <parameter key="diamante.attachment.factory.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\AttachmentFactory</parameter>
         <parameter key="diamante.attachment.file_storage.service.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileStorage\LocalFileStorageService</parameter>
         <parameter key="diamante.attachment.imagine_data_loader.class">Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
     </parameters>
 
     <services>
-        <service id="diamante.attachment.factory" class="%diamante.attachment.factory.class%"/>
+        <service id="diamante.attachment.entity.factory" class="%diamante.attachment.entity.factory.class%">
+            <argument type="string">%diamante.attachment.entity.class%</argument>
+        </service>
 
         <service id="diamante.attachment.file_storage.service" class="%diamante.attachment.file_storage.service.class%"
                  factory-class="%diamante.attachment.file_storage.service.class%" factory-method="create">
@@ -40,7 +42,7 @@
 
         <service id="diamante.attachment.service" class="%diamante.attachment.service.class%">
             <argument type="service" id="diamante.attachment.repository"/>
-            <argument type="service" id="diamante.attachment.factory"/>
+            <argument type="service" id="diamante.attachment.entity.factory"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
 
