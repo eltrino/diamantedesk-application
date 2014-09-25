@@ -170,28 +170,6 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * @param BranchFactory $branchFactory
-     * @param EntityManager $em
-     * @param $branchLogoHandler
-     * @param $tagManager
-     * @return BranchServiceImpl
-     */
-    public static function create(BranchFactory $branchFactory,
-                                    Repository $branchRepository,
-                                    $branchLogoHandler,
-                                    $tagManager,
-                                    SecurityFacade $securityFacade
-    ) {
-        return new BranchServiceImpl(
-            $branchFactory,
-            $branchRepository,
-            $branchLogoHandler,
-            $tagManager,
-            $securityFacade
-        );
-    }
-
-    /**
      * @param UploadedFile $file
      * @return \Symfony\Component\HttpFoundation\File\File
      */

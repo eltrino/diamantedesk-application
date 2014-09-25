@@ -230,23 +230,4 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $messageReference = new MessageReference($messageId, $ticket);
         $this->messageReferenceRepository->store($messageReference);
     }
-
-    /**
-     * @param EntityManager $em
-     * @param UserService $userService
-     * @return MessageReferenceServiceImpl
-     */
-    public static function create(EntityManager $em, UserService $userService, FileStorageService $fileStorageService) {
-        return new MessageReferenceServiceImpl(
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\MessageReference'),
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Ticket'),
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Branch'),
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Attachment'),
-            new TicketFactory(),
-            new CommentFactory(),
-            new AttachmentFactory(),
-            $userService,
-            $fileStorageService
-        );
-    }
 }

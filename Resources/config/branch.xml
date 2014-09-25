@@ -33,8 +33,7 @@
             <argument type="service" id="filesystem"/>
         </service>
 
-        <service id="diamante.branch.service" class="%diamante.branch.service.class%"
-                 factory-class="%diamante.branch.service.class%" factory-method="create">
+        <service id="diamante.branch.service" class="%diamante.branch.service.class%">
             <argument type="service" id="diamante.branch.factory"/>
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.branch.logo_handler"/>

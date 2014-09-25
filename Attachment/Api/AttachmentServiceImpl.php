@@ -113,16 +113,4 @@ class AttachmentServiceImpl implements AttachmentService
             throw new \RuntimeException('Unable to remove attachment.', 0, $e);
         }
     }
-
-    public static function create(
-        Repository $attachmentRepository,
-        AttachmentFactory $attachmentFactory,
-        FileStorageService $fileStorageService
-    ) {
-        return new AttachmentServiceImpl(
-            $attachmentFactory,
-            $attachmentRepository,
-            $fileStorageService
-        );
-    }
 }

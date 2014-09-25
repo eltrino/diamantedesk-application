@@ -202,23 +202,6 @@ class CommentServiceImpl implements CommentService
         $this->commentRepository->store($comment);
     }
 
-    public static function create(
-        Repository $ticketRepository,
-        Repository $commentRepository,
-        UserService $userService,
-        AttachmentService $attachmentService,
-        SecurityFacade $securityFacade
-    ) {
-        return new CommentServiceImpl(
-            $ticketRepository,
-            $commentRepository,
-            new CommentFactory(),
-            $userService,
-            $attachmentService,
-            $securityFacade
-        );
-    }
-
     /**
      * Verify permissions through Oro Platform security bundle
      *

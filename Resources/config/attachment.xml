@@ -38,8 +38,7 @@
             <argument type="service" id="filesystem"/>
         </service>
 
-        <service id="diamante.attachment.service" class="%diamante.attachment.service.class%"
-                 factory-class="%diamante.attachment.service.class%" factory-method="create">
+        <service id="diamante.attachment.service" class="%diamante.attachment.service.class%">
             <argument type="service" id="diamante.attachment.repository"/>
             <argument type="service" id="diamante.attachment.factory"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>

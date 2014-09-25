@@ -158,22 +158,6 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository->store($ticket);
     }
 
-    public static function create(Repository $ticketRepository,
-                                  Repository $branchRepository,
-                                  AttachmentService $attachmentService,
-                                  UserService $userService,
-                                  SecurityFacade $securityFacade
-    ) {
-        return new TicketServiceImpl(
-            $ticketRepository,
-            $branchRepository,
-            new TicketFactory(),
-            $attachmentService,
-            $userService,
-            $securityFacade
-        );
-    }
-
     /**
      * Create Ticket
      * @param CreateTicketCommand $command

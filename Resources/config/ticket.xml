@@ -51,9 +51,11 @@
             <tag name="email_processing.strategy" />
         </service>
 
-        <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%"
-                 factory-class="%diamante.ticket.email_processing_message_reference.service.class%" factory-method="create">
+        <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.attachment.repository"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
@@ -66,8 +68,7 @@
             <argument type="service" id="oro_user.manager"/>
         </service>
 
-        <service id="diamante.ticket.service" class="%diamante.ticket.service.class%"
-                 factory-class="%diamante.ticket.service.class%" factory-method="create">
+        <service id="diamante.ticket.service" class="%diamante.ticket.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
@@ -76,9 +77,7 @@
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"
-                 class="%diamante.ticket.internal.grid_filters_service.class%"
-                 factory-class="%diamante.ticket.internal.grid_filters_service.class%"
-                 factory-method="create">
+                 class="%diamante.ticket.internal.grid_filters_service.class%">
             <argument type="service" id="service_container"/>
             <argument type="service" id="diamante.filter.repository"/>
         </service>
@@ -130,8 +129,7 @@
                 >
         </service>
 <!-- filters end-->
-        <service id="diamante.comment.service" class="%diamante.comment.service.class%"
-                 factory-class="%diamante.comment.service.class%" factory-method="create">
+        <service id="diamante.comment.service" class="%diamante.comment.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.comment.repository"/>
             <argument type="service" id="diamante.ticket.internal.user.service"/>
