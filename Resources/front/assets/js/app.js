@@ -28,7 +28,7 @@ define(['marionette', 'views/TaskList'], function(Marionette, TasksView) {
 
   App.on('start', function(){
 
-    require(['entities/task'], function(){
+    require(['entities/Task'], function(){
       var tasks = App.request('task:entities');
       var TasksView = new App.TasksView({
         collection: tasks

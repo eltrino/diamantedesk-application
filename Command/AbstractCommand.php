@@ -42,8 +42,8 @@ abstract class AbstractCommand extends ContainerAwareCommand
     {
         $this->filesystem = $this->getContainer()->get('filesystem');
         $kernel = $this->getContainer()->get('kernel');
-        $this->packageDir = $kernel->locateResource('@DiamanteFrontBundle/Resources/front');
-        $this->appDir = $kernel->locateResource('@DiamanteFrontBundle/Resources/front/app');
+        $this->packageDir = $kernel->locateResource('@DiamanteFrontBundle');
+        $this->appDir = $kernel->locateResource('@DiamanteFrontBundle/Resources/front');
         $this->webRoot = $kernel->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'front';
     }
 

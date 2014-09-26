@@ -10,9 +10,7 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests",
-    "app/assets/js/vendor"
+    "Resources/front/assets/js/vendor"
   ],
   "dependencies": {
     "requirejs": "~2.1.14",
