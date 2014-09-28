@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
+namespace Eltrino\DiamanteDeskBundle\Tests\Model\Branch;
 
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
+use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
+use Eltrino\DiamanteDeskBundle\Model\Branch\Logo;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class BranchTest extends \PHPUnit_Framework_TestCase

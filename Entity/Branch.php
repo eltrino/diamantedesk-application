@@ -17,7 +17,6 @@ namespace Eltrino\DiamanteDeskBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
@@ -34,7 +33,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
+class Branch extends \Eltrino\DiamanteDeskBundle\Model\Branch\Branch
 {
     /**
      * @var integer
@@ -75,7 +74,7 @@ class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
     protected $defaultAssignee;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Logo
+     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\Logo
      *
      * @ORM\Column(type="branch_logo")
      */

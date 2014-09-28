@@ -20,8 +20,9 @@
 
     <parameters>
         <parameter key="diamante.branch.entity.class">Eltrino\DiamanteDeskBundle\Entity\Branch</parameter>
-        <parameter key="diamante.branch.entity.factory.class">Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory</parameter>
-        <parameter key="diamante.branch.service.class">Eltrino\DiamanteDeskBundle\Branch\Api\BranchServiceImpl</parameter>
+        <parameter key="diamante.branch.entity.factory.class">Eltrino\DiamanteDeskBundle\Model\Branch\BranchFactory</parameter>
+        <parameter key="diamante.branch.logo.handler.class">Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler</parameter>
+        <parameter key="diamante.branch.service.class">Eltrino\DiamanteDeskBundle\Api\Internal\BranchServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -29,8 +30,8 @@
             <argument type="string">%diamante.branch.entity.class%</argument>
         </service>
 
-        <service id="diamante.branch.logo_handler" class="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler"
-                 factory-class="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler" factory-method="create">
+        <service id="diamante.branch.logo_handler" class="%diamante.branch.logo.handler.class%"
+                 factory-class="%diamante.branch.logo.handler.class%" factory-method="create">
             <argument>%kernel.root_dir%</argument>
             <argument type="service" id="filesystem"/>
         </service>

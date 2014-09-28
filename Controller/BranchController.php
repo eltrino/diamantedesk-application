@@ -17,7 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Controller;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
-use Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\BranchCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;

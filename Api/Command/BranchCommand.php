@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Api\Command;
+namespace Eltrino\DiamanteDeskBundle\Api\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Branch;
+use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -76,7 +76,8 @@ class BranchCommand implements Taggable
         $command->description     = $branch->getDescription();
         $command->defaultAssignee = $branch->getDefaultAssignee();
         $command->tags            = $branch->getTags();
-        $command->logoFile        = $branch->getLogo();
+        $command->logoFile        = null;
+        $command->logo            = $branch->getLogo();
         return $command;
     }
 }

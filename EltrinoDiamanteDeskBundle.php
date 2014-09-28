@@ -22,7 +22,7 @@ class EltrinoDiamanteDeskBundle extends Bundle
     public function boot()
     {
         if (!Type::hasType('branch_logo')) {
-            Type::addType('branch_logo', 'Eltrino\DiamanteDeskBundle\Branch\Infrastructure\Persistence\Doctrine\DBAL\Types\BranchLogoType');
+            Type::addType('branch_logo', 'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\BranchLogoType');
         }
         if (!Type::hasType('priority')) {
             Type::addType(

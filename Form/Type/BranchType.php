@@ -79,7 +79,7 @@ class BranchType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Api\Command\BranchCommand',
                 'intention' => 'branch',
                 'cascade_validation' => true
             )

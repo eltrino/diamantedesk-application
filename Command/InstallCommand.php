@@ -113,7 +113,7 @@ class InstallCommand extends AbstractCommand
     protected function createBranchLogoDirectory()
     {
         $branchLogoDir = realpath($this->kernelRootDir .'/../web')
-            . \Eltrino\DiamanteDeskBundle\Branch\Model\Logo::PATH_TO_LOGO_DIR;
+            . \Eltrino\DiamanteDeskBundle\Model\Branch\Logo::PATH_TO_LOGO_DIR;
 
         $this->createDirectory($branchLogoDir);
     }

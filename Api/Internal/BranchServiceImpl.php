@@ -13,13 +13,13 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Branch\Api;
+namespace Eltrino\DiamanteDeskBundle\Api\Internal;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\Common\Persistence\ObjectManager;
-use Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory;
-use Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
+use Eltrino\DiamanteDeskBundle\Api\BranchService;
+use Eltrino\DiamanteDeskBundle\Api\Command;
+use Eltrino\DiamanteDeskBundle\Model\Branch\BranchFactory;
+use Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler;
+use Eltrino\DiamanteDeskBundle\Model\Branch\Logo;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

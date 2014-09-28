@@ -24,7 +24,6 @@ use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AttachmentCommand;
 
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Form\Command\BranchCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
 use Oro\Bundle\UserBundle\Entity\User;
 

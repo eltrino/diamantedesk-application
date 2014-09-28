@@ -12,12 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Branch\Api;
+namespace Eltrino\DiamanteDeskBundle\Tests\Api\Internal;
 
-use Eltrino\DiamanteDeskBundle\Branch\Api\BranchServiceImpl;
-use Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskBundle\Api\Internal\BranchServiceImpl;
+use Eltrino\DiamanteDeskBundle\Api\Command\BranchCommand;
+use Eltrino\DiamanteDeskBundle\Model\Branch\Logo;
+use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
 use Eltrino\DiamanteDeskBundle\Tests\Stubs\UploadedFileStub;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -42,14 +42,14 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branchServiceImpl;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\BranchFactory
+     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\BranchFactory
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Branch\BranchFactory
      */
     private $branchFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler
+     * @var \Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler
+     * @Mock \Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler
      */
     private $branchLogoHandler;
 
@@ -65,14 +65,14 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $fileMock;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Logo
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\Logo
+     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\Logo
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Branch\Logo
      */
     private $logo;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\Branch
-     * @Mock \Eltrino\DiamanteDeskBundle\Entity\Branch
+     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\Branch
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Branch\Branch
      */
     private $branch;
 
