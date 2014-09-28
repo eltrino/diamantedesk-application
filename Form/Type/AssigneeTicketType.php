@@ -38,7 +38,7 @@ class AssigneeTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AssigneeTicketCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Api\Command\AssigneeTicketCommand',
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )

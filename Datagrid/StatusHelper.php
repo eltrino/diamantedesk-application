@@ -13,7 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 namespace Eltrino\DiamanteDeskBundle\Datagrid;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 
 class StatusHelper
 {
@@ -41,4 +41,4 @@ class StatusHelper
         return STATUS::OPEN;
     }
 
-} 
+}

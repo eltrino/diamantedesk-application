@@ -17,12 +17,12 @@ namespace Eltrino\DiamanteDeskBundle\Controller;
 use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Form\Type\CommentType;
 use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentService;
+use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
+use Eltrino\DiamanteDeskBundle\Api\CommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

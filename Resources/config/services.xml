@@ -19,6 +19,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="diamante.user.service.class">Eltrino\DiamanteDeskBundle\Infrastructure\Shared\Adapter\OroUserService</parameter>
         <parameter key="diamante.command_factory.class">Eltrino\DiamanteDeskBundle\Form\CommandFactory</parameter>
         <!-- repositories start -->
         <parameter key="diamante.generic.repository.class">Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
@@ -26,6 +27,10 @@
     </parameters>
 
     <services>
+
+        <service id="diamante.user.service" class="%diamante.user.service.class%">
+            <argument type="service" id="oro_user.manager"/>
+        </service>
 
         <service id="diamante.datagrid.extension.formatter.assignee_property" class="Eltrino\DiamanteDeskBundle\Datagrid\AssigneePropertyFormatter">
             <argument type="service" id="translator"/>

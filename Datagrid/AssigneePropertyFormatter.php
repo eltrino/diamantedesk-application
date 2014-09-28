@@ -28,7 +28,7 @@ class AssigneePropertyFormatter extends FieldProperty
         $value = parent::getRawValue($record);
 
         if (is_null($value)) {
-            $value = $this->translator->trans(\Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket::UNASSIGNED_LABEL);
+            $value = $this->translator->trans(\Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL);
         }
 
         return $value;

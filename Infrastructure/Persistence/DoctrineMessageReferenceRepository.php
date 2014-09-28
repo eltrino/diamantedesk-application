@@ -14,7 +14,7 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Infrastructure\Persistence;
 
-use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReferenceRepository;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 
 class DoctrineMessageReferenceRepository extends DoctrineGenericRepository implements MessageReferenceRepository
 {

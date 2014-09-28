@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_filter")
  */
-class Filter extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Filter
+class Filter extends \Eltrino\DiamanteDeskBundle\Model\Ticket\Filter
 {
     /**
      * @var int

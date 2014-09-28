@@ -17,7 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 
 class StatusTransformer implements DataTransformerInterface
 {
@@ -72,4 +72,4 @@ class StatusTransformer implements DataTransformerInterface
         }
         return $this->statusOptions;
     }
-} 
+}

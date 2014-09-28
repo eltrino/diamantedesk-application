@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository")
  * @ORM\Table(name="diamante_ticket_message_reference")
  */
-class MessageReference extends \Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference
+class MessageReference extends \Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReference
 {
     /**
      * @var integer

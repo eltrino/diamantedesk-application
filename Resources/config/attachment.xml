@@ -41,8 +41,8 @@
         </service>
 
         <service id="diamante.attachment.service" class="%diamante.attachment.service.class%">
-            <argument type="service" id="diamante.attachment.repository"/>
             <argument type="service" id="diamante.attachment.entity.factory"/>
+            <argument type="service" id="diamante.attachment.repository"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
 

@@ -14,11 +14,11 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
 
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\UserBundle\Entity\User;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 
 class TicketControllerTest extends WebTestCase
 {

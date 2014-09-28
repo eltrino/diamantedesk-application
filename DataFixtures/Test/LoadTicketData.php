@@ -15,8 +15,8 @@
 namespace Eltrino\DiamanteDeskBundle\DataFixtures\Test;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -26,7 +26,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
 
 class LoadTicketData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {

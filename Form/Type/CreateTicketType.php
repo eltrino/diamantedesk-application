@@ -20,7 +20,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
 
 class CreateTicketType extends AbstractType
 {
@@ -139,7 +139,7 @@ class CreateTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand',
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )

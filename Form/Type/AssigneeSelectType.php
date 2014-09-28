@@ -24,7 +24,7 @@ class AssigneeSelectType extends UserSelectType
         $resolver->setDefaults(
             array(
                 'configs' => array(
-                    'placeholder' => \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket::UNASSIGNED_LABEL,
+                    'placeholder' => \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL,
                     'result_template_twig' => 'OroUserBundle:User:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'OroUserBundle:User:Autocomplete/selection.html.twig'
                 ),

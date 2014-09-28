@@ -37,7 +37,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+class Ticket extends \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
 {
     /**
      * @var integer

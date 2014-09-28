@@ -16,15 +16,15 @@ namespace Eltrino\DiamanteDeskBundle\Form;
 
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AssigneeTicketCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\AssigneeTicketCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\UpdateTicketCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
 
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\AttachmentCommand;
 
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class CommandFactory

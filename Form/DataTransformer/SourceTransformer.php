@@ -17,7 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
 
 class SourceTransformer implements DataTransformerInterface
 {

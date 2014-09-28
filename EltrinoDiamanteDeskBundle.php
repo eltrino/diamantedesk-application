@@ -27,7 +27,7 @@ class EltrinoDiamanteDeskBundle extends Bundle
         if (!Type::hasType('priority')) {
             Type::addType(
                 'priority',
-                'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\PriorityType'
+                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketPriorityType'
             );
         }
         if (!Type::hasType('file')) {
@@ -39,13 +39,13 @@ class EltrinoDiamanteDeskBundle extends Bundle
         if (!Type::hasType('status')) {
             Type::addType(
                 'status',
-                'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\StatusType'
+                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketStatusType'
             );
         }
         if (!Type::hasType('source')) {
             Type::addType(
                 'source',
-                'Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\SourceType'
+                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketSourceType'
             );
         }
 

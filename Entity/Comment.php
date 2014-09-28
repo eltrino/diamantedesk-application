@@ -36,7 +36,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Comment extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Comment
+class Comment extends \Eltrino\DiamanteDeskBundle\Model\Ticket\Comment
 {
     /**
      * @var integer

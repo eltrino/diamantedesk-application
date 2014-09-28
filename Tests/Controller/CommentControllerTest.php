@@ -19,7 +19,7 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 
 class CommentControllerTest extends WebTestCase
 {

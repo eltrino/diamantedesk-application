@@ -43,7 +43,7 @@ class AttachmentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AttachmentCommand',
+                'data_class' => 'Eltrino\DiamanteDeskBundle\Api\Command\AttachmentCommand',
                 'intention' => 'attachment',
                 'cascade_validation' => true
             )

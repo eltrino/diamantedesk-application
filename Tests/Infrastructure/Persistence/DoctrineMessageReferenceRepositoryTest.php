@@ -16,12 +16,12 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Persistence;
 
 use Doctrine\DBAL\LockMode;
 use Eltrino\DiamanteDeskBundle\Entity\MessageReference;
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
+use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
 use Oro\Bundle\UserBundle\Entity\User;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository;
 
