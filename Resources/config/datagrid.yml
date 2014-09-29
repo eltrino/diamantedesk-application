@@ -50,10 +50,10 @@ datagrid:
                 acl_resource:  VIEW;Entity:EltrinoDiamanteDeskBundle:Branch
             update:
                 type:          navigate
-                label:         Update
+                label:         Edit
                 icon:          edit
                 link:          update_link
-                acl_resource:  UPDATE;Entity:EltrinoDiamanteDeskBundle:Branch
+                acl_resource:  EDIT;Entity:EltrinoDiamanteDeskBundle:Branch
             delete:
                 type:          delete
                 label:         Delete
