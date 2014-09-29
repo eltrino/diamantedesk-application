@@ -12,16 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Attachment\Api;
+namespace Eltrino\DiamanteDeskBundle\Api\Internal;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\File\FileRemoveHandler;
-use Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\FileUpload\FileUploadHandler;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService;
+use Eltrino\DiamanteDeskBundle\Api\AttachmentService;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
 
 class AttachmentServiceImpl implements AttachmentService
@@ -60,7 +58,7 @@ class AttachmentServiceImpl implements AttachmentService
     public function createAttachments(array $attachmentsInput, AttachmentHolder $attachmentHolder)
     {
         \Assert\that($attachmentsInput)->all()
-            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
+            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput');
         $filenamePrefix = $this->exposeFilenamePrefixFrom($attachmentHolder);
         foreach ($attachmentsInput as $attachmentInput) {
             try {

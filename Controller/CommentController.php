@@ -14,7 +14,7 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Controller;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
+use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;

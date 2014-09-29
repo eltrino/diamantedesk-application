@@ -12,12 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
 namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Ticket\Adapter;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
-use Eltrino\DiamanteDeskBundle\Entity\Attachment;
+use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
 use Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Adapter\AttachmentServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -25,14 +24,14 @@ use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentService
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Api\AttachmentService
+     * @var \Eltrino\DiamanteDeskBundle\Api\AttachmentService
+     * @Mock \Eltrino\DiamanteDeskBundle\Api\AttachmentService
      */
     private $attachmentContextService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder
+     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder
      */
     private $attachmentHolder;
 

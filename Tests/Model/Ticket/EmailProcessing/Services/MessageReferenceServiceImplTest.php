@@ -80,8 +80,8 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $commentFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentFactory
+     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory
      */
     private $attachmentFactory;
 
@@ -92,8 +92,8 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $userService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService
-     * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\Services\FileStorageService
+     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService
+     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService
      */
     private $fileStorage;
 
@@ -240,7 +240,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentFactory->expects($this->once())->method('create')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Attachment\Model\File'),
+                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })
@@ -358,7 +358,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentFactory->expects($this->once())->method('create')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Attachment\Model\File'),
+                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })

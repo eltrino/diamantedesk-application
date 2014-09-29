@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_attachment")
  */
-class Attachment extends \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment
+class Attachment extends \Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment
 {
     /**
      * @var integer

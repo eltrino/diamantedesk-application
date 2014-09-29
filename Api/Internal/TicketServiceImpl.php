@@ -171,7 +171,7 @@ class TicketServiceImpl implements TicketService
         $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket');
 
         \Assert\that($command->attachmentsInput)->nullOr()->all()
-            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
+            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput');
         $branch = $this->branchRepository->get($command->branch);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found.');
@@ -217,7 +217,7 @@ class TicketServiceImpl implements TicketService
     public function updateTicket(Command\UpdateTicketCommand $command)
     {
         \Assert\that($command->attachmentsInput)->nullOr()->all()
-            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput');
+            ->isInstanceOf('Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput');
 
         $ticket = $this->loadTicketBy($command->id);
 

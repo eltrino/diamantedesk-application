@@ -14,9 +14,8 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Adapter;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService;
 
 class AttachmentServiceImpl implements AttachmentService

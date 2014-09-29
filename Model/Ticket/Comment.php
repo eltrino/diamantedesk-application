@@ -16,8 +16,8 @@
 namespace Eltrino\DiamanteDeskBundle\Model\Ticket;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
 use Oro\Bundle\UserBundle\Entity\User;
 

@@ -33,7 +33,7 @@ class EltrinoDiamanteDeskBundle extends Bundle
         if (!Type::hasType('file')) {
             Type::addType(
                 'file',
-                'Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Persistence\Doctrine\DBAL\Types\FileType'
+                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\AttachmentFileType'
             );
         }
         if (!Type::hasType('status')) {

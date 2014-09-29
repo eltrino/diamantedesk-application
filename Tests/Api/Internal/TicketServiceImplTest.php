@@ -15,16 +15,16 @@
 
 namespace Eltrino\DiamanteDeskBundle\Tests\Api\Internal;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
-use Eltrino\DiamanteDeskBundle\Entity\Attachment;
+use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
 use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
 use Eltrino\DiamanteDeskBundle\Api\Command\AssigneeTicketCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\UpdateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DBAL\Types\PriorityType;
+use Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketPriorityType;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;

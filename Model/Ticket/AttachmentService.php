@@ -15,9 +15,8 @@
 
 namespace Eltrino\DiamanteDeskBundle\Model\Ticket;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
 
 interface AttachmentService
 {

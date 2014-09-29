@@ -15,10 +15,10 @@
 namespace Eltrino\DiamanteDeskBundle\Tests\Api\Internal;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
+use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
 use Eltrino\DiamanteDeskBundle\EltrinoDiamanteDeskBundle;
-use Eltrino\DiamanteDeskBundle\Entity\Attachment;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
 use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Comment;
 use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;

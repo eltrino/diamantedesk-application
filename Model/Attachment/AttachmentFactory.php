@@ -12,16 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Attachment\Infrastructure\Imagine\Data\Loader;
-use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
-use Imagine\Image\ImagineInterface;
+namespace Eltrino\DiamanteDeskBundle\Model\Attachment;
 
-class FileSystemAttachmentLoader extends FileSystemLoader
+use Eltrino\DiamanteDeskBundle\Model\Shared\AbstractEntityFactory;
+
+class AttachmentFactory extends AbstractEntityFactory
 {
-    public function __construct(ImagineInterface $imagine)
+    /**
+     * Create Attachment entity
+     * @param File $file
+     * @return \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment
+     */
+    public function create(File $file)
     {
-        $this->imagine = $imagine;
-        $this->formats = array();
-        $this->rootPath = '';
+        return new $this->entityClassName($file);
     }
 }

@@ -18,7 +18,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
+use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AttachmentCommand;
 use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;

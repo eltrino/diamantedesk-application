@@ -12,19 +12,22 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Attachment\Model;
+namespace Eltrino\DiamanteDeskBundle\Model\Attachment\Services;
 
-use Eltrino\DiamanteDeskBundle\Model\Shared\AbstractEntityFactory;
-
-class AttachmentFactory extends AbstractEntityFactory
+interface FileStorageService
 {
     /**
-     * Create Attachment entity
-     * @param File $file
-     * @return \Eltrino\DiamanteDeskBundle\Attachment\Model\Attachment
+     * Upload (create) file
+     * @param string $filename filename path
+     * @param string $content content to be put in file
+     * @return string path to file
      */
-    public function create(File $file)
-    {
-        return new $this->entityClassName($file);
-    }
+    public function upload($filename, $contents);
+
+    /**
+     * Remove given file
+     * @param $filename
+     * @return void
+     */
+    public function remove($filename);
 }

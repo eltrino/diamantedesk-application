@@ -12,14 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Eltrino\DiamanteDeskBundle\Infrastructure\Attachment\Imagine\Data\Loader;
 
-namespace Eltrino\DiamanteDeskBundle\Attachment\Model;
+use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
+use Imagine\Image\ImagineInterface;
 
-interface AttachmentHolder
+class FileSystemAttachmentLoader extends FileSystemLoader
 {
-    /**
-     * @param Attachment $attachment
-     * @return void
-     */
-    public function addAttachment(Attachment $attachment);
+    public function __construct(ImagineInterface $imagine)
+    {
+        $this->imagine = $imagine;
+        $this->formats = array();
+        $this->rootPath = '';
+    }
 }

@@ -12,8 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Attachment\Api\Dto;
-
+namespace Eltrino\DiamanteDeskBundle\Api\Dto;
 
 class AttachmentInput
 {
@@ -63,7 +62,7 @@ class AttachmentInput
 
     public static function createFromUploadedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile)
     {
-        $dto = new AttachmentInput();
+        $dto = new self();
         $dto->setFilename($uploadedFile->getClientOriginalName());
         $content = '';
         $file = $uploadedFile->openFile();
