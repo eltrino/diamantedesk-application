@@ -14,34 +14,23 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services;
 
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
+
 interface MessageReferenceService
 {
     /**
      * Creates Ticket and Message Reference fot it
-     *
-     * @param $messageId
-     * @param $branchId
-     * @param $subject
-     * @param $description
-     * @param $reporterId
-     * @param $assigneeId
-     * @param null $priority
-     * @param null $status
-     * @param array $attachments
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @param CreateTicketFromMessageCommand $command
+     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
-                                 $priority = null, $status = null, array $attachments = null);
+    public function createTicket(CreateTicketFromMessageCommand $command);
 
     /**
      * Creates Comment for Ticket
-     *
-     * @param $content
-     * @param $authorId
-     * @param $messageId
-     * @param array $attachments
+     * @param CreateCommentFromMessageCommand $command
      * @return void
      */
-    public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null);
-}
+    public function createCommentForTicket(CreateCommentFromMessageCommand $command);
+} 

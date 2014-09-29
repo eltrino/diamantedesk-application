@@ -234,7 +234,7 @@ class TicketControllerTest extends WebTestCase
         );
         $viewResponse = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(404, $viewResponse->getStatusCode());
     }
 

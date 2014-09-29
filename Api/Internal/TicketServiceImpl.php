@@ -18,19 +18,16 @@ namespace Eltrino\DiamanteDeskBundle\Api\Internal;
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Api\TicketService;
 use Eltrino\DiamanteDeskBundle\Api\Command;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AssigneeTicketCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateStatusCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\UpdateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\TicketFactory;
 use Eltrino\DiamanteDeskBundle\Model\Shared\UserService;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 
 class TicketServiceImpl implements TicketService
 {
@@ -104,18 +101,17 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Retrieves Ticket Attachment
-     * @param $ticketId
-     * @param $attachmentId
+     * @param RetrieveTicketAttachmentCommand $command
      * @return \Eltrino\DiamanteDeskBundle\Entity\Attachment
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
-    public function getTicketAttachment($ticketId, $attachmentId)
+    public function getTicketAttachment(RetrieveTicketAttachmentCommand $command)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($command->ticketId);
 
         $this->isGranted('VIEW', $ticket);
 
-        $attachment = $ticket->getAttachment($attachmentId);
+        $attachment = $ticket->getAttachment($command->attachmentId);
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
         }
@@ -124,34 +120,32 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Adds Attachments for Ticket
-     * @param array $attachmentsInput array of AttachmentInput DTOs
-     * @param $ticketId
+     * @param AddTicketAttachmentCommand $command
      * @return void
      */
-    public function addAttachmentsForTicket(array $attachmentsInput, $ticketId)
+    public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
-        $this->attachmentService->createAttachmentsForItHolder($attachmentsInput, $ticket);
+        $this->attachmentService->createAttachmentsForItHolder($command->attachments, $ticket);
         $this->ticketRepository->store($ticket);
     }
 
     /**
      * Remove Attachment from Ticket
-     * @param $ticketId
-     * @param $attachmentId
+     * @param RemoveTicketAttachmentCommand $command
      * @return void
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
-    public function removeAttachmentFromTicket($ticketId, $attachmentId)
+    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
-        $attachment = $ticket->getAttachment($attachmentId);
+        $attachment = $ticket->getAttachment($command->attachmentId);
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
         }
@@ -162,7 +156,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Create Ticket
-     * @param CreateTicketCommand $command
+     * @param Command\CreateTicketCommand $command
      * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
@@ -260,7 +254,7 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * @@param UpdateStatusCommand $command
+     * @@param Command\UpdateStatusCommand $command
      * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required ticket
      */
@@ -278,7 +272,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Assign Ticket to specified User
-     * @param AssigneeTicketCommand $command
+     * @param Command\AssigneeTicketCommand $command
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket(Command\AssigneeTicketCommand $command)

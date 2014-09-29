@@ -100,7 +100,7 @@ class InstallCommand extends AbstractCommand
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
-            return;
+            return 255;
         }
 
         $output->writeln('Installed!');

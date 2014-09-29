@@ -14,17 +14,16 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Api;
 
-use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
 
 interface AttachmentService
 {
     /**
      * Create Attachments
-     * @param FilesListDto $filesList
-     * @param AttachmentHolder $attachmentHolder
+     * @oaram CreateAttachmentsCommand $command
      * @return void
      */
-    public function createAttachments(array $attachmentsInput, AttachmentHolder $attachmentHolder);
+    public function createAttachments(CreateAttachmentsCommand $command);
 
     /**
      * Remove Attachment

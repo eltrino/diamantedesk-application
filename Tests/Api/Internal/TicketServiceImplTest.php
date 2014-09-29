@@ -24,13 +24,17 @@ use Eltrino\DiamanteDeskBundle\Api\Command\AssigneeTicketCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\UpdateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketPriorityType;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
 use Eltrino\DiamanteDeskBundle\Api\Internal\TicketServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
+
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
+
 
 class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -426,7 +430,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue(null));
 
-        $this->ticketService->getTicketAttachment(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+        $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+        $retrieveTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
+        $retrieveTicketAttachmentCommand->ticketId     = self::DUMMY_TICKET_ID;
+        $this->ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
     }
 
     /**
@@ -456,7 +463,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('VIEW'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
-        $this->ticketService->getTicketAttachment(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+        $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+        $retrieveTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
+        $retrieveTicketAttachmentCommand->ticketId     = self::DUMMY_TICKET_ID;
+        $this->ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
     }
 
     /**
@@ -476,7 +486,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticket->expects($this->once())->method('getAttachment')->with($this->equalTo(self::DUMMY_ATTACHMENT_ID))
             ->will($this->returnValue($attachment));
-        $this->ticketService->getTicketAttachment(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+
+        $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+        $retrieveTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
+        $retrieveTicketAttachmentCommand->ticketId     = self::DUMMY_TICKET_ID;
+        $this->ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
     }
 
     /**
@@ -486,7 +500,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
-        $this->ticketService->addAttachmentsForTicket($this->attachmentInputs(), self::DUMMY_TICKET_ID);
+        $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
+        $addTicketAttachmentCommand->attachments = $this->attachmentInputs();
+        $addTicketAttachmentCommand->ticketId    = self::DUMMY_TICKET_ID;
+        $this->ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
     }
 
     /**
@@ -517,7 +534,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
-        $this->ticketService->addAttachmentsForTicket($attachmentInputs, self::DUMMY_TICKET_ID);
+        $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
+        $addTicketAttachmentCommand->attachments = $attachmentInputs;
+        $addTicketAttachmentCommand->ticketId    = self::DUMMY_TICKET_ID;
+        $this->ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
     }
 
     /**
@@ -530,7 +550,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue(null));
 
-        $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+        $removeTicketAttachmentCommand = new RemoveTicketAttachmentCommand();
+        $removeTicketAttachmentCommand->ticketId = self::DUMMY_TICKET_ID;
+        $removeTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
+        $this->ticketService->removeAttachmentFromTicket($removeTicketAttachmentCommand);
     }
 
     /**
@@ -560,7 +583,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
-        $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+        $removeTicketAttachmentCommand = new RemoveTicketAttachmentCommand();
+        $removeTicketAttachmentCommand->ticketId = self::DUMMY_TICKET_ID;
+        $removeTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
+        $this->ticketService->removeAttachmentFromTicket($removeTicketAttachmentCommand);
     }
 
     /**
@@ -588,7 +614,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->ticketService->removeAttachmentFromTicket(self::DUMMY_TICKET_ID, self::DUMMY_ATTACHMENT_ID);
+        $removeTicketAttachmentCommand = new RemoveTicketAttachmentCommand();
+        $removeTicketAttachmentCommand->ticketId = self::DUMMY_TICKET_ID;
+        $removeTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
+        $this->ticketService->removeAttachmentFromTicket($removeTicketAttachmentCommand);
     }
 
     /**

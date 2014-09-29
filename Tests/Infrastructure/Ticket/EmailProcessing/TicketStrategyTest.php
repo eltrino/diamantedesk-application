@@ -18,6 +18,8 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Ticket\EmailProcessing
 use Eltrino\EmailProcessingBundle\Model\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,10 +55,18 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $reporterId = 1;
         $assigneeId = 1;
 
+        $createTicketFromMessageCommand = new CreateTicketFromMessageCommand();
+        $createTicketFromMessageCommand->messageId   = $message->getMessageId();
+        $createTicketFromMessageCommand->branchId    = $branchId;
+        $createTicketFromMessageCommand->subject     = $message->getSubject();
+        $createTicketFromMessageCommand->description = $message->getContent();
+        $createTicketFromMessageCommand->reporterId  = $reporterId;
+        $createTicketFromMessageCommand->assigneeId  = $assigneeId;
+
+
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
-            ->with($this->equalTo($message->getMessageId()), $branchId, $message->getSubject(), $message->getContent(),
-                $reporterId, $assigneeId);
+            ->with($this->equalTo($createTicketFromMessageCommand));
 
         $this->ticketStrategy->process($message);
     }
@@ -68,9 +78,14 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $reporterId = 1;
 
+        $createCommentFromMessageCommand = new CreateCommentFromMessageCommand();
+        $createCommentFromMessageCommand->authorId  = $reporterId;
+        $createCommentFromMessageCommand->content   = $message->getContent();
+        $createCommentFromMessageCommand->messageId = $message->getReference();
+
         $this->messageReferenceService->expects($this->once())
             ->method('createCommentForTicket')
-            ->with($this->equalTo($message->getContent()), $reporterId, $message->getReference());
+            ->with($this->equalTo($createCommentFromMessageCommand));
 
         $this->ticketStrategy->process($message);
     }

@@ -29,6 +29,8 @@ use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -306,7 +308,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Comment loading failed, comment not found.
      */
-    public function thtCommentDeleteThrowsExceptionIfCommentDoesNotExists()
+    public function thatCommentDeleteThrowsExceptionIfCommentDoesNotExists()
     {
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue(null));
@@ -354,7 +356,10 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
-        $this->service->removeAttachmentFromComment(self::DUMMY_COMMENT_ID, 1);
+        $removeCommentAttachmentCommand = new RemoveCommentAttachmentCommand();
+        $removeCommentAttachmentCommand->attachmentId = 1;
+        $removeCommentAttachmentCommand->commentId = self::DUMMY_COMMENT_ID;
+        $this->service->removeAttachmentFromComment($removeCommentAttachmentCommand);
     }
 
     /**
@@ -382,7 +387,10 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($this->comment))
             ->will($this->returnValue(true));
 
-        $this->service->removeAttachmentFromComment(self::DUMMY_COMMENT_ID, 1);
+        $removeCommentAttachmentCommand = new RemoveCommentAttachmentCommand();
+        $removeCommentAttachmentCommand->attachmentId = 1;
+        $removeCommentAttachmentCommand->commentId = self::DUMMY_COMMENT_ID;
+        $this->service->removeAttachmentFromComment($removeCommentAttachmentCommand);
     }
 
     private function createBranch()

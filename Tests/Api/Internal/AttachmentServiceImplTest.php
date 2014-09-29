@@ -19,6 +19,7 @@ use Eltrino\DiamanteDeskBundle\Api\Internal\AttachmentServiceImpl;
 use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
 
 class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -95,8 +96,12 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
                 ), $this->equalTo(self::DUMMY_FILE_CONTENT)
             )->will($this->throwException(new \RuntimeException()));
 
+        $createAttachmentsCommand = new CreateAttachmentsCommand();
+        $createAttachmentsCommand->attachments      = $this->attachmentsInputDTOs();
+        $createAttachmentsCommand->attachmentHolder = $this->attachmentHolder;
+
         $this->service
-            ->createAttachments($this->attachmentsInputDTOs(), $this->attachmentHolder);
+            ->createAttachments($createAttachmentsCommand);
     }
 
     /**
@@ -124,7 +129,11 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->attachmentHolder->expects($this->once())->method('addAttachment')->with($this->equalTo($this->attachment));
         $this->attachmentRepository->expects($this->once())->method('store')->with($this->equalTo($this->attachment));
 
-        $this->service->createAttachments($this->attachmentsInputDTOs(), $this->attachmentHolder);
+        $createAttachmentsCommand = new CreateAttachmentsCommand();
+        $createAttachmentsCommand->attachments = $this->attachmentsInputDTOs();
+        $createAttachmentsCommand->attachmentHolder = $this->attachmentHolder;
+
+        $this->service->createAttachments($createAttachmentsCommand);
     }
 
     /**

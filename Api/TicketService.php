@@ -20,6 +20,9 @@ use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\UpdateTicketCommand;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 
 interface TicketService
 {
@@ -32,29 +35,26 @@ interface TicketService
 
     /**
      * Retrieves Ticket Attachment
-     * @param $ticketId
-     * @param $attachmentId
+     * @param RetrieveTicketAttachmentCommand $command
      * @return \Eltrino\DiamanteDeskBundle\Entity\Attachment
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
-    public function getTicketAttachment($ticketId, $attachmentId);
+    public function getTicketAttachment(RetrieveTicketAttachmentCommand $command);
 
     /**
      * Adds Attachments for Ticket
-     * @param array $attachmentsInput array of AttachmentInput DTOs
-     * @param $ticketId
+     * @param AddTicketAttachmentCommand $command
      * @return void
      */
-    public function addAttachmentsForTicket(array $attachmentsInput, $ticketId);
+    public function addAttachmentsForTicket(AddTicketAttachmentCommand $command);
 
     /**
      * Remove Attachment from Ticket
-     * @param $ticketId
-     * @param $attachmentId
+     * @param RemoveTicketAttachmentCommand $command
      * @return void
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
-    public function removeAttachmentFromTicket($ticketId, $attachmentId);
+    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command);
 
     /**
      * Create Ticket

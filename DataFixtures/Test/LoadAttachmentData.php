@@ -23,7 +23,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Eltrino\DiamanteDeskBundle\Entity\Attachment;
-use Eltrino\DiamanteDeskBundle\Attachment\Model\File;
+use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
 
 class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {

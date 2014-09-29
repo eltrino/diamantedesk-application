@@ -16,17 +16,16 @@ namespace Eltrino\DiamanteDeskBundle\Api\Internal;
 
 use Eltrino\DiamanteDeskBundle\Api\CommentService;
 use Eltrino\DiamanteDeskBundle\Api\Command;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Comment;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
-use Eltrino\DiamanteDeskBundle\Form\Command\CreateCommentCommand;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\EditCommentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\CommentFactory;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService;
 use Eltrino\DiamanteDeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 class CommentServiceImpl implements CommentService
 {
@@ -110,7 +109,7 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Post Comment for Ticket
-     * @param EditCommentCommand $command
+     * @param Command\EditCommentCommand $command
      * @return void
      */
     public function postNewCommentForTicket(Command\EditCommentCommand $command)
@@ -134,17 +133,16 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Retrieves Comment Attachment
-     * @param integer $commentId
-     * @param integer $attachmentId
+     * @param RetrieveCommentAttachmentCommand $command
      * @return Attachment
      */
-    public function getCommentAttachment($commentId, $attachmentId)
+    public function getCommentAttachment(RetrieveCommentAttachmentCommand $command)
     {
-        $comment = $this->loadCommentBy($commentId);
+        $comment = $this->loadCommentBy($command->commentId);
 
         $this->isGranted('VIEW', $comment);
 
-        $attachment = $comment->getAttachment($attachmentId);
+        $attachment = $comment->getAttachment($command->attachmentId);
         if (is_null($attachment)) {
             throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
@@ -184,18 +182,17 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Remove Attachment from Comment
-     * @param $commentId
-     * @param $attachmentId
+     * @param RemoveCommentAttachmentCommand $command
      * @return void
      * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
      */
-    public function removeAttachmentFromComment($commentId, $attachmentId)
+    public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command)
     {
-        $comment = $this->loadCommentBy($commentId);
+        $comment = $this->loadCommentBy($command->commentId);
 
         $this->isGranted('EDIT', $comment);
 
-        $attachment = $comment->getAttachment($attachmentId);
+        $attachment = $comment->getAttachment($command->attachmentId);
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }

@@ -17,6 +17,8 @@ namespace Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\EmailProcessing;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
 use Eltrino\EmailProcessingBundle\Model\Message;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
 
 class TicketStrategy implements Strategy
 {
@@ -45,11 +47,24 @@ class TicketStrategy implements Strategy
         $attachments = $message->getAttachments();
 
         if (!$message->getReference()) {
-            $this->messageReferenceServiceImpl->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
-                $message->getContent(), $reporterId, $assigneeId, null, null, $attachments);
+            $createTicketFromMessageCommand = new CreateTicketFromMessageCommand();
+            $createTicketFromMessageCommand->assigneeId  = $assigneeId;
+            $createTicketFromMessageCommand->branchId    = $branchId;
+            $createTicketFromMessageCommand->reporterId  = $reporterId;
+            $createTicketFromMessageCommand->messageId   = $message->getMessageId();
+            $createTicketFromMessageCommand->subject     = $message->getSubject();
+            $createTicketFromMessageCommand->description = $message->getContent();
+            $createTicketFromMessageCommand->attachments = $attachments;
+
+            $this->messageReferenceServiceImpl->createTicket($createTicketFromMessageCommand);
         } else {
-            $this->messageReferenceServiceImpl->createCommentForTicket($message->getContent(), $reporterId,
-                $message->getReference(), $attachments);
+            $createCommentFromMessageCommand = new CreateCommentFromMessageCommand();
+            $createCommentFromMessageCommand->authorId  = $reporterId;
+            $createCommentFromMessageCommand->content   = $message->getContent();
+            $createCommentFromMessageCommand->messageId = $message->getReference();
+            $createCommentFromMessageCommand->attachments = $attachments;
+
+            $this->messageReferenceServiceImpl->createCommentForTicket($createCommentFromMessageCommand);
         }
     }
 }

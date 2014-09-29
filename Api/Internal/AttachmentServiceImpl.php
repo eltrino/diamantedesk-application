@@ -21,6 +21,7 @@ use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
 use Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService;
 use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
 
 class AttachmentServiceImpl implements AttachmentService
 {
@@ -51,16 +52,15 @@ class AttachmentServiceImpl implements AttachmentService
 
     /**
      * Create Attachments
-     * @param FilesListDto $filesList
-     * @param AttachmentHolder $attachmentHolder
+     * @param CreateAttachmentsCommand $command
      * @return void
      */
-    public function createAttachments(array $attachmentsInput, AttachmentHolder $attachmentHolder)
+    public function createAttachments(CreateAttachmentsCommand $command)
     {
-        \Assert\that($attachmentsInput)->all()
+        \Assert\that($command->attachments)->all()
             ->isInstanceOf('Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput');
-        $filenamePrefix = $this->exposeFilenamePrefixFrom($attachmentHolder);
-        foreach ($attachmentsInput as $attachmentInput) {
+        $filenamePrefix = $this->exposeFilenamePrefixFrom($command->attachmentHolder);
+        foreach ($command->attachments as $attachmentInput) {
             try {
                 $path = $this->fileStorageService->upload(
                     $filenamePrefix . '/' . $attachmentInput->getFilename(), $attachmentInput->getContent()
@@ -70,7 +70,7 @@ class AttachmentServiceImpl implements AttachmentService
 
                 $attachment = $this->attachmentFactory->create($file);
 
-                $attachmentHolder->addAttachment($attachment);
+                $command->attachmentHolder->addAttachment($attachment);
                 $this->attachmentRepository->store($attachment);
             } catch (\RuntimeException $e) {
                 /**

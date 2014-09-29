@@ -29,6 +29,9 @@ use Eltrino\DiamanteDeskBundle\Model\Shared\UserService;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
 
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
+
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
     /**
@@ -101,52 +104,42 @@ class MessageReferenceServiceImpl implements MessageReferenceService
 
     /**
      * Creates Ticket and Message Reference fot it
-     *
-     * @param $messageId
-     * @param $branchId
-     * @param $subject
-     * @param $description
-     * @param $reporterId
-     * @param $assigneeId
-     * @param null $priority
-     * @param null $status
-     * @param array $attachments
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @param CreateTicketFromMessageCommand $command
+     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
-             $priority = null, $status = null, array $attachments = null)
+    public function createTicket(CreateTicketFromMessageCommand $command)
     {
-        $branch = $this->branchRepository->get($branchId);
+        $branch = $this->branchRepository->get($command->branchId);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found.');
         }
 
-        $reporter = $this->userService->getUserById($reporterId);
+        $reporter = $this->userService->getUserById($command->reporterId);
         if (is_null($reporter)) {
             throw new \RuntimeException('Reporter loading failed, reporter not found.');
         }
 
-        $assignee = $this->userService->getUserById($assigneeId);
+        $assignee = $this->userService->getUserById($command->assigneeId);
         if (is_null($assignee)) {
             throw new \RuntimeException('Assignee validation failed, assignee not found.');
         }
 
         $ticket = $this->ticketFactory
-            ->create($subject,
-                $description,
+            ->create($command->subject,
+                $command->description,
                 $branch,
                 $reporter,
                 $assignee,
-                $priority,
+                $command->priority,
                 Source::EMAIL,
-                $status);
+                $command->status);
 
-        if ($attachments) {
-            $this->createAttachments($attachments, $ticket);
+        if ($command->attachments) {
+            $this->createAttachments($command->attachments, $ticket);
         }
         $this->ticketRepository->store($ticket);
-        $this->createMessageReference($messageId, $ticket);
+        $this->createMessageReference($command->messageId, $ticket);
 
         return $ticket;
     }
@@ -191,28 +184,24 @@ class MessageReferenceServiceImpl implements MessageReferenceService
 
     /**
      * Creates Comment for Ticket
-     *
-     * @param $content
-     * @param $authorId
-     * @param $messageId
-     * @param array $attachments
+     * @param CreateCommentFromMessageCommand $command
      * @return void
      */
-    public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
+    public function createCommentForTicket(CreateCommentFromMessageCommand $command)
     {
         $ticket = $this->messageReferenceRepository
-            ->getReferenceByMessageId($messageId)
+            ->getReferenceByMessageId($command->messageId)
             ->getTicket();
 
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        $author = $this->userService->getUserById($authorId);
-        $comment = $this->commentFactory->create($content, $ticket, $author);
+        $author = $this->userService->getUserById($command->authorId);
+        $comment = $this->commentFactory->create($command->content, $ticket, $author);
 
-        if ($attachments) {
-            $this->createAttachments($attachments, $comment);
+        if ($command->attachments) {
+            $this->createAttachments($command->attachments, $comment);
         }
 
         $ticket->postNewComment($comment);

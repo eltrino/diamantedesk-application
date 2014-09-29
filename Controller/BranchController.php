@@ -62,10 +62,14 @@ class BranchController extends Controller
      */
     public function viewAction($id)
     {
-        $branch = $this->get('diamante.branch.service')->getBranch($id);
-        return [
-            'entity' => $branch
-        ];
+        try {
+            $branch = $this->get('diamante.branch.service')->getBranch($id);
+            return [
+                'entity' => $branch
+            ];
+        } catch (\Exception $e) {
+            return new Response($e->getMessage(), 404);
+        }
     }
 
     /**
@@ -115,7 +119,7 @@ class BranchController extends Controller
             $this->addErrorMessage('Error occurred when saving the branch. Branch is not saved. Enter all required data and try again');
             return $this->redirect(
                 $this->generateUrl(
-                    'diamante_branch_update',
+                    'diamante_branch_view',
                     array(
                         'id' => $id
                     )

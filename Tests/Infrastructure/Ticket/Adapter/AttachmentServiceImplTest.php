@@ -17,9 +17,9 @@ namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Ticket\Adapter;
 use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
 use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
 use Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Adapter\AttachmentServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
 
 class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,8 +47,12 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $attachmentInputs = array(new AttachmentInput());
 
+        $createAttachmentsCommand = new CreateAttachmentsCommand();
+        $createAttachmentsCommand->attachments = $attachmentInputs;
+        $createAttachmentsCommand->attachmentHolder = $this->attachmentHolder;
+
         $this->attachmentContextService->expects($this->once())->method('createAttachments')
-            ->with($this->equalTo($attachmentInputs), $this->equalTo($this->attachmentHolder));
+            ->with($createAttachmentsCommand);
 
         $adapterAttachmentService = new AttachmentServiceImpl($this->attachmentContextService);
         $adapterAttachmentService->createAttachmentsForItHolder($attachmentInputs, $this->attachmentHolder);

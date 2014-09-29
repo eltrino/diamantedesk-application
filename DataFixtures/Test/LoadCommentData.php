@@ -23,7 +23,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 
 class LoadCommentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface

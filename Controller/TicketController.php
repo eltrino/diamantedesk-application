@@ -20,8 +20,6 @@ use Doctrine\Common\Util\Inflector;
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\AttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\Command\CreateTicketCommand;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
 use Eltrino\DiamanteDeskBundle\Form\Type\AssigneeTicketType;
 use Eltrino\DiamanteDeskBundle\Form\Type\AttachmentType;
@@ -42,6 +40,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 
 /**
  * @Route("tickets")
@@ -88,8 +90,15 @@ class TicketController extends Controller
      */
     public function viewAction($id)
     {
-        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-        return ['entity'  => $ticket];
+        try {
+            $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+
+            return ['entity'  => $ticket];
+        } catch (\Exception $e) {
+            $this->addErrorMessage('Ticket loading failed, ticket not found');
+
+            return new Response($e->getMessage(), 404);
+        }
     }
 
     /**
@@ -248,8 +257,8 @@ class TicketController extends Controller
             return $this->redirect(
                 $this->generateUrl('diamante_ticket_list')
             );
-        } catch (Exception $e) {
-            return new Response($e->getMessage(), 500);
+        } catch (\Exception $e) {
+            return new Response($e->getMessage(), 404);
         }
     }
 
@@ -344,7 +353,10 @@ class TicketController extends Controller
 
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
-            $ticketService->addAttachmentsForTicket($attachments, $ticket->getId());
+            $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
+            $addTicketAttachmentCommand->attachments = $attachments;
+            $addTicketAttachmentCommand->ticketId = $ticket->getId();
+            $ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
 
             $this->get('session')->getFlashBag()->add(
                 'success',
@@ -398,7 +410,10 @@ class TicketController extends Controller
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
-        $ticketService->removeAttachmentFromTicket($ticketId, $attachId);
+        $removeTicketAttachment = new RemoveTicketAttachmentCommand();
+        $removeTicketAttachment->ticketId = $ticketId;
+        $removeTicketAttachment->attachmentId = $attachId;
+        $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
         $this->get('session')->getFlashBag()->add(
             'success',
             $this->get('translator')->trans('Attachment successfully deleted.')
@@ -424,7 +439,10 @@ class TicketController extends Controller
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
-        $attachment = $ticketService->getTicketAttachment($ticketId, $attachId);
+        $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+        $retrieveTicketAttachmentCommand->ticketId = $ticketId;
+        $retrieveTicketAttachmentCommand->attachmentId = $attachId;
+        $attachment = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
 
         $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachments/ticket')
             . '/' . $attachment->getFilename();
@@ -463,7 +481,10 @@ class TicketController extends Controller
             $ticketService = $this->get('diamante.ticket.service');
 
             foreach ($uploadedAttachmentsIds as $attachmentId) {
-                $recentAttachments[] = $ticketService->getTicketAttachment($ticketId, $attachmentId);
+                $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+                $retrieveTicketAttachmentCommand->attachmentId = $attachmentId;
+                $retrieveTicketAttachmentCommand->ticketId = $ticketId;
+                $recentAttachments[] = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
             }
 
             $list = $this->getRecentAttachmentsList($ticketId, $recentAttachments);

@@ -15,8 +15,9 @@
 
 namespace Eltrino\DiamanteDeskBundle\Api;
 
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Comment;
 use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 interface CommentService
 {
@@ -36,11 +37,10 @@ interface CommentService
 
     /**
      * Retrieves Comment Attachment
-     * @param integer $commentId
-     * @param integer $attachmentId
+     * @param RetrieveCommentAttachmentCommand $command
      * @return Attachment
      */
-    public function getCommentAttachment($commentId, $attachmentId);
+    public function getCommentAttachment(RetrieveCommentAttachmentCommand $command);
 
     /**
      * Update Ticket Comment content
@@ -57,10 +57,9 @@ interface CommentService
 
     /**
      * Remove Attachment from Comment
-     * @param $commentId
-     * @param $attachmentId
+     * @param RemoveCommentAttachmentCommand $command
      * @return void
      * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
      */
-    public function removeAttachmentFromComment($commentId, $attachmentId);
+    public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command);
 }

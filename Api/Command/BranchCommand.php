@@ -31,6 +31,7 @@ class BranchCommand implements Taggable
     public $tags;
     public $logoFile;
     public $defaultAssignee;
+    public $logo;
 
     public function __construct()
     {
@@ -79,5 +80,10 @@ class BranchCommand implements Taggable
         $command->logoFile        = null;
         $command->logo            = $branch->getLogo();
         return $command;
+    }
+
+    public function logo()
+    {
+        return $this->logo;
     }
 }

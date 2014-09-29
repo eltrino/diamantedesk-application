@@ -17,6 +17,7 @@ namespace Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Adapter;
 use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
 use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
 use Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService;
+use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
 
 class AttachmentServiceImpl implements AttachmentService
 {
@@ -38,7 +39,10 @@ class AttachmentServiceImpl implements AttachmentService
      */
     public function createAttachmentsForItHolder(array $attachmentsInput, AttachmentHolder $holder)
     {
-        $this->attachmentContextService->createAttachments($attachmentsInput, $holder);
+        $createAttachmentsCommand = new CreateAttachmentsCommand();
+        $createAttachmentsCommand->attachments = $attachmentsInput;
+        $createAttachmentsCommand->attachmentHolder = $holder;
+        $this->attachmentContextService->createAttachments($createAttachmentsCommand);
     }
 
     /**

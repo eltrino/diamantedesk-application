@@ -90,7 +90,7 @@ class BranchControllerTest extends WebTestCase
     {
         $branch          = $this->chooseBranchFromGrid();
         $branchUpdateUrl = $this->getUrl('diamante_branch_update', array('id' => $branch['id']));
-        $crawler          = $this->client->request('GET', $branchUpdateUrl);
+        $crawler         = $this->client->request('GET', $branchUpdateUrl);
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();

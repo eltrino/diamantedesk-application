@@ -14,6 +14,7 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Controller;
 
+use Eltrino\DiamanteDeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
@@ -31,6 +32,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
+
+use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
 
 /**
  * @Route("comment")
@@ -195,10 +199,13 @@ class CommentController extends Controller
     {
         /** @var CommentService $commentService */
         $commentService = $this->get('diamante.comment.service');
-        $attachment = $commentService->getCommentAttachment($commentId, $attachId);
+        $retrieveCommentAttachment = new RetrieveCommentAttachmentCommand();
+        $retrieveCommentAttachment->attachmentId = $attachId;
+        $retrieveCommentAttachment->commentId = $commentId;
+        $attachment = $commentService->getCommentAttachment($retrieveCommentAttachment);
 
         $filename = $attachment->getFilename();
-        $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachment')
+        $filePathname = realpath($this->container->getParameter('kernel.root_dir') . '/attachments/comment')
             . '/' . $attachment->getFilename();
 
         if (!file_exists($filePathname)) {
@@ -231,7 +238,12 @@ class CommentController extends Controller
     {
         /** @var CommentService $commentService */
         $commentService = $this->get('diamante.comment.service');
-        $commentService->removeAttachmentFromComment($commentId, $attachId);
+
+        $removeCommentAttachmentCommand = new RemoveCommentAttachmentCommand();
+        $removeCommentAttachmentCommand->commentId = $commentId;
+        $removeCommentAttachmentCommand->attachmentId = $attachId;
+        $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
+
         $this->get('session')->getFlashBag()->add(
             'success',
             $this->get('translator')->trans('Attachment successfully deleted.')

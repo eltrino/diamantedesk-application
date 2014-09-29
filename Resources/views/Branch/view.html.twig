@@ -73,7 +73,7 @@
     %}
 
     {% set dataBlocks = dataBlocks|merge([{
-        'title': 'Description',
+        'title': 'Description'|trans,
         'subblocks':[{
             'title': null,
             'data': [entity.description|escape('html')|nl2br]}]
