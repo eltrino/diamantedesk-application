@@ -25,8 +25,8 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
 
 class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 {

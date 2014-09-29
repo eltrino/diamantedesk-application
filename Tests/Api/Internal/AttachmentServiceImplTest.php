@@ -18,7 +18,7 @@ use Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Entity\Attachment;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
+use Diamante\DeskBundle\Api\Command\CreateAttachmentsCommand;
 
 class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
 {

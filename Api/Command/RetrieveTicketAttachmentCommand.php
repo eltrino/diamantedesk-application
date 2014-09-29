@@ -1,6 +1,6 @@
 <?php
 
-namespace Eltrino\DiamanteDeskBundle\Api\Command;
+namespace Diamante\DeskBundle\Api\Command;
 
 class RetrieveTicketAttachmentCommand
 {
