@@ -41,31 +41,31 @@ class UpdateCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write($this->translator->trans('eltrino.diamantedesk.commands.clear_cache') . "\n");
+            $output->write("Clearing cache..." . "\n");
             $this->runExistingCommand('cache:clear', $output);
-            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
+            $output->writeln("Done" . "\n");
 
-            $output->write($this->translator->trans('eltrino.diamantedesk.commands.update_db_schema') . "\n");
+            $output->write("Updating DB schema..." . "\n");
             $this->updateDbSchema();
-            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
+            $output->writeln("Done" . "\n");
 
-            $output->write($this->translator->trans('eltrino.diamantedesk.commands.update_navigation') . "\n");
+            $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
-            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
+            $output->writeln("Done" . "\n");
 
-            $output->write($this->translator->trans('eltrino.diamantedesk.commands.assets_install') . "\n");
+            $output->write("Installing assets..." . "\n");
             $this->assetsInstall($output);
             $this->asseticDump($output, array(
                 '--no-debug' => true,
             ));
-            $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.done') . "\n");
+            $output->writeln("Done" . "\n");
 
         } catch (\Exception $e) {
-            $output->writeln($this->translator->trans($e->getMessage()));
+            $output->writeln($e->getMessage());
             return;
         }
 
-        $output->writeln($this->translator->trans('eltrino.diamantedesk.commands.updated') . "\n");
+        $output->writeln("Updated!" . "\n");
     }
 
     /**
