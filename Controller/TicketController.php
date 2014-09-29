@@ -12,27 +12,27 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Controller;
+namespace Diamante\DeskBundle\Controller;
 
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
-use Eltrino\DiamanteDeskBundle\Form\Type\AssigneeTicketType;
-use Eltrino\DiamanteDeskBundle\Form\Type\AttachmentType;
-use Eltrino\DiamanteDeskBundle\Form\Type\CreateTicketType;
-use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
-use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketType;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketService;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Form\CommandFactory;
+use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\AttachmentType;
+use Diamante\DeskBundle\Form\Type\CreateTicketType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketType;
+use Diamante\DeskBundle\Ticket\Api\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -41,9 +41,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 
 /**
  * @Route("tickets")
@@ -107,7 +107,7 @@ class TicketController extends Controller
      *      name="diamante_ticket_status_change",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:widget/info.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:widget/info.html.twig")
      *
      * @param int $id
      * @return array
@@ -145,7 +145,7 @@ class TicketController extends Controller
      *      requirements={"id" = "\d+"},
      *      defaults={"id" = null}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:create.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:create.html.twig")
      *
      * @param int $id
      * @return array
@@ -198,7 +198,7 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:update.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:update.html.twig")
      *
      * @param int $id
      * @return array
@@ -269,7 +269,7 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:assign.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:assign.html.twig")
      *
      * @param int $id
      * @return array
@@ -503,7 +503,7 @@ class TicketController extends Controller
      *      name="diamante_ticket_widget_attachment_list",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:attachment/list.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:attachment/list.html.twig")
      *
      * @param int $id
      * @return array

@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Datagrid;
+namespace Diamante\DeskBundle\Datagrid;
 
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
 use Oro\Bundle\DataGridBundle\Extension\Formatter\Property\FieldProperty;
@@ -28,7 +28,7 @@ class AssigneePropertyFormatter extends FieldProperty
         $value = parent::getRawValue($record);
 
         if (is_null($value)) {
-            $value = $this->translator->trans(\Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL);
+            $value = $this->translator->trans(\Diamante\DeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL);
         }
 
         return $value;

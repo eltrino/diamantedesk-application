@@ -12,16 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Branch;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Branch;
 
-use Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
+use Diamante\DeskBundle\Model\Branch\Branch;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Exception\LogoHandlerLogicException;
-use Eltrino\DiamanteDeskBundle\Tests\Stubs\FileInfoStub;
-use Eltrino\DiamanteDeskBundle\Tests\Stubs\UploadedFileStub;
+use Diamante\DeskBundle\Model\Branch\Exception\LogoHandlerLogicException;
+use Diamante\DeskBundle\Tests\Stubs\FileInfoStub;
+use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 
 class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -78,7 +78,7 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \Eltrino\DiamanteDeskBundle\Model\Branch\Exception\LogoHandlerLogicException
+     * @expectedException \Diamante\DeskBundle\Model\Branch\Exception\LogoHandlerLogicException
      */
     public function thatFileUploadThrowExceptionWhenMimeTypeIsNotPermitted()
     {

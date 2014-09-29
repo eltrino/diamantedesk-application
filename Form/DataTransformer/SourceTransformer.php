@@ -13,11 +13,11 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Form\DataTransformer;
+namespace Diamante\DeskBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Source;
 
 class SourceTransformer implements DataTransformerInterface
 {

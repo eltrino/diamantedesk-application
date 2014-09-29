@@ -13,9 +13,9 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Shared\Adapter;
+namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
-use Eltrino\DiamanteDeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 
 class OroUserService implements UserService

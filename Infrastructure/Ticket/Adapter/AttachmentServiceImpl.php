@@ -12,12 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Adapter;
+namespace Diamante\DeskBundle\Infrastructure\Ticket\Adapter;
 
-use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
+use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Ticket\AttachmentService;
+use Diamante\DeskBundle\Api\Command\CreateAttachmentsCommand;
 
 class AttachmentServiceImpl implements AttachmentService
 {

@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Filters;
+namespace Diamante\DeskBundle\Infrastructure\Ticket\Filters;
 
 use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
 
 class FilterUrlGeneratorFactory
 {

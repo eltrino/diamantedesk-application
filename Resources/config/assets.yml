@@ -1,3 +1,3 @@
 css:
-  'eltrinodiamantedesk':
-      - 'bundles/eltrinodiamantedesk/css/diam.css'
+  'diamantedesk':
+      - 'bundles/diamantedesk/css/diam.css'

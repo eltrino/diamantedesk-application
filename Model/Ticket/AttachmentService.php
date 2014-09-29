@@ -12,11 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Model\Ticket;
 
-namespace Eltrino\DiamanteDeskBundle\Model\Ticket;
-
-use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 
 interface AttachmentService
 {

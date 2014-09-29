@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\DataFixtures\Test;
+namespace Diamante\DeskBundle\DataFixtures\Test;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,8 +22,8 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-use Eltrino\DiamanteDeskBundle\Entity\Attachment;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
+use Diamante\DeskBundle\Entity\Attachment;
+use Diamante\DeskBundle\Attachment\Model\File;
 
 class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -39,7 +39,7 @@ class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterf
     public function getDependencies()
     {
         return [
-            'Eltrino\DiamanteDeskBundle\DataFixtures\Test\LoadTicketData'
+            'Diamante\DeskBundle\DataFixtures\Test\LoadTicketData'
         ];
     }
 
@@ -48,7 +48,7 @@ class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterf
         $this->container = $container;
         /** @var  EntityManager $entityManager */
         $entityManager = $container->get('doctrine.orm.entity_manager');
-        $this->ticketRepository = $entityManager->getRepository('EltrinoDiamanteDeskBundle:Ticket');
+        $this->ticketRepository = $entityManager->getRepository('DiamanteDeskBundle:Ticket');
     }
 
     public function load(ObjectManager $manager)

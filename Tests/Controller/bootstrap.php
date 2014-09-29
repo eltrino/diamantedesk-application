@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
-use Eltrino\DiamanteDeskBundle\Command\FixturesPurgeCommand;
+use Diamante\DeskBundle\Command\FixturesPurgeCommand;
 
 if (!is_file($autoload = realpath(__DIR__ . getenv('CLASS_AUTOLOADER')))) {
     throw new \LogicException('Run "composer install --dev" to create autoloader.');
@@ -60,7 +60,7 @@ if (true === (bool)$autoloadFlag) {
     $application->add($loadCommand);
     $input = new ArrayInput(array(
         'command'               => 'doctrine:fixtures:load',
-        '--fixtures'            => "{$kernelDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/Test",
+        '--fixtures'            => "{$kernelDir}/../src/Eltrino/DeskBundle/DataFixtures/Test",
         '--append'              => true,
         '--no-interaction'      => true
 

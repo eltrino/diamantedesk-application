@@ -13,14 +13,14 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Api\Internal;
+namespace Diamante\DeskBundle\Api\Internal;
 
-use Eltrino\DiamanteDeskBundle\Api\BranchService;
-use Eltrino\DiamanteDeskBundle\Api\Command;
-use Eltrino\DiamanteDeskBundle\Model\Branch\BranchFactory;
-use Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Logo;
-use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Api\BranchService;
+use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Model\Branch\BranchFactory;
+use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
+use Diamante\DeskBundle\Model\Branch\Logo;
+use Diamante\DeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -39,7 +39,7 @@ class BranchServiceImpl implements BranchService
     private $branchFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler
+     * @var \Diamante\DeskBundle\Branch\Infrastructure\BranchLogoHandler
      */
     private $branchLogoHandler;
 
@@ -98,7 +98,7 @@ class BranchServiceImpl implements BranchService
      */
     public function createBranch(Command\BranchCommand $branchCommand)
     {
-        $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch');
+        $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Branch');
 
         $logo = null;
 
@@ -128,7 +128,7 @@ class BranchServiceImpl implements BranchService
      */
     public function updateBranch(Command\BranchCommand $branchCommand)
     {
-        $this->isGranted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Branch');
+        $this->isGranted('EDIT', 'Entity:DiamanteDeskBundle:Branch');
 
         $branch = $this->branchRepository->get($branchCommand->id);
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
@@ -157,7 +157,7 @@ class BranchServiceImpl implements BranchService
      */
     public function deleteBranch($branchId)
     {
-        $this->isGranted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Branch');
+        $this->isGranted('DELETE', 'Entity:DiamanteDeskBundle:Branch');
 
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {

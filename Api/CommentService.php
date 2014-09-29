@@ -13,18 +13,18 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Api;
+namespace Diamante\DeskBundle\Api;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\RemoveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 interface CommentService
 {
     /**
      * Load Comment by given comment id
      * @param int $commentId
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Comment
+     * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
     public function loadComment($commentId);
 

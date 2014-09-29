@@ -19,14 +19,14 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.attachment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Attachment</parameter>
-        <parameter key="diamante.attachment.entity.factory.class">Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory</parameter>
+        <parameter key="diamante.attachment.entity.class">Diamante\DeskBundle\Entity\Attachment</parameter>
+        <parameter key="diamante.attachment.entity.factory.class">Diamante\DeskBundle\Model\Attachment\AttachmentFactory</parameter>
         <parameter key="diamante.attachment.directory.name">attachments</parameter>
         <parameter key="diamante.attachment.upload_dir.path">%kernel.root_dir%/%diamante.attachment.directory.name%</parameter>
 
-        <parameter key="diamante.attachment.service.class">Eltrino\DiamanteDeskBundle\Api\Internal\AttachmentServiceImpl</parameter>
-        <parameter key="diamante.attachment.file_storage.service.class">Eltrino\DiamanteDeskBundle\Infrastructure\Attachment\FileStorage\LocalFileStorageService</parameter>
-        <parameter key="diamante.attachment.imagine_data_loader.class">Eltrino\DiamanteDeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
+        <parameter key="diamante.attachment.service.class">Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl</parameter>
+        <parameter key="diamante.attachment.file_storage.service.class">Diamante\DeskBundle\Infrastructure\Attachment\FileStorage\LocalFileStorageService</parameter>
+        <parameter key="diamante.attachment.imagine_data_loader.class">Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
     </parameters>
 
     <services>

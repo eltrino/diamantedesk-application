@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\EmailProcessing;
+namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
-use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
-use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Eltrino\EmailProcessingBundle\Model\Message;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
+use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
+use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
 
 class TicketStrategy implements Strategy
 {

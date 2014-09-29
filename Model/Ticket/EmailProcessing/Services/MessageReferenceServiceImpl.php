@@ -12,25 +12,23 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services;
+namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
-use Doctrine\ORM\EntityManager;
+use Diamante\DeskBundle\Model\Attachment\AttachmentFactory;
+use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
+use Diamante\DeskBundle\Model\Attachment\File;
+use Diamante\DeskBundle\Model\Attachment\Services\FileStorageService;
+use Diamante\DeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\Ticket\CommentFactory;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\TicketFactory;
+use Diamante\DeskBundle\Model\Ticket\Source;
 
-use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReference;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
-use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\TicketFactory;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\CommentFactory;
-use Eltrino\DiamanteDeskBundle\Model\Shared\UserService;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
-
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -105,7 +103,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     /**
      * Creates Ticket and Message Reference fot it
      * @param CreateTicketFromMessageCommand $command
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @return Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket(CreateTicketFromMessageCommand $command)

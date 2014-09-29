@@ -12,20 +12,23 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Api\Internal;
+namespace Diamante\DeskBundle\Api\Internal;
 
-use Eltrino\DiamanteDeskBundle\Api\CommentService;
-use Eltrino\DiamanteDeskBundle\Api\Command;
-use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
-use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\CommentFactory;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService;
-use Eltrino\DiamanteDeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Api\CommentService;
+use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Model\Ticket\Comment;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Form\Command\CreateCommentCommand;
+use Diamante\DeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Ticket\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Model\Ticket\CommentFactory;
+use Diamante\DeskBundle\Model\Ticket\AttachmentService;
+use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
-use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\RemoveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 class CommentServiceImpl implements CommentService
 {
@@ -78,7 +81,7 @@ class CommentServiceImpl implements CommentService
     /**
      * Load Comment by given comment id
      * @param int $commentId
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Comment
+     * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
     public function loadComment($commentId)
     {
@@ -87,7 +90,7 @@ class CommentServiceImpl implements CommentService
 
     /**
      * @param $commentId
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Comment
+     * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
     private function loadCommentBy($commentId)
     {
@@ -114,7 +117,7 @@ class CommentServiceImpl implements CommentService
      */
     public function postNewCommentForTicket(Command\EditCommentCommand $command)
     {
-        $this->isGranted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment');
+        $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Comment');
 
         $ticket = $this->loadTicketBy($command->ticket);
 

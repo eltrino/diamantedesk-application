@@ -12,18 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
+namespace Diamante\DeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
 
-use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReference;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Source;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Comment;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Comment;
+use Diamante\DeskBundle\Model\Branch\Branch;
 use Oro\Bundle\UserBundle\Entity\User;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
 use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
 use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
@@ -46,80 +46,80 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $messageReferenceService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
+     * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
+     * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
      */
     private $messageReferenceRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $ticketRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $branchRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $attachmentRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\TicketFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\TicketFactory
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketFactory
+     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketFactory
      */
     private $ticketFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\CommentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\CommentFactory
+     * @var \Diamante\DeskBundle\Model\Ticket\CommentFactory
+     * @Mock \Diamante\DeskBundle\Model\Ticket\CommentFactory
      */
     private $commentFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory
+     * @var \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
+     * @Mock \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
      */
     private $attachmentFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\UserService
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\UserService
+     * @var \Diamante\DeskBundle\Model\Shared\UserService
+     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
      */
     private $userService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService
+     * @var \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
      */
     private $fileStorage;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @var \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     private $ticket;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\Comment
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\Comment
+     * @var \Diamante\DeskBundle\Model\Ticket\Comment
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Comment
      */
     private $comment;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReference
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReference
+     * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference
+     * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference
      */
     private $messageReference;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\Attachment
-     * @Mock \Eltrino\DiamanteDeskBundle\Entity\Attachment
+     * @var \Diamante\DeskBundle\Entity\Attachment
+     * @Mock \Diamante\DeskBundle\Entity\Attachment
      */
     private $attachment;
 
@@ -243,7 +243,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentFactory->expects($this->once())->method('create')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Model\Attachment\File'),
+                $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })
@@ -364,7 +364,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentFactory->expects($this->once())->method('create')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Model\Attachment\File'),
+                $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })

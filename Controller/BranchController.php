@@ -12,22 +12,22 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Controller;
+namespace Diamante\DeskBundle\Controller;
 
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\BranchCommand;
+use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
+use Diamante\DeskBundle\Form\CommandFactory;
 
-use Eltrino\DiamanteDeskBundle\Form\Type\BranchType;
+use Diamante\DeskBundle\Form\Type\BranchType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Entity\Branch;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -74,7 +74,7 @@ class BranchController extends Controller
 
     /**
      * @Route("/create", name="diamante_branch_create")
-     * @Template("EltrinoDiamanteDeskBundle:Branch:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Branch:edit.html.twig")
      */
     public function createAction()
     {
@@ -101,7 +101,7 @@ class BranchController extends Controller
      *      name="diamante_branch_update",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Branch:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Branch:edit.html.twig")
      *
      * @param int $id
      * @return array

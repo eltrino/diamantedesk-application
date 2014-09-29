@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Model\Ticket;
+namespace Diamante\DeskBundle\Tests\Model\Ticket;
 
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Priority;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketTest extends \PHPUnit_Framework_TestCase

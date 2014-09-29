@@ -7,16 +7,16 @@
     {% set comments = entity.comments %}
     {% import 'OroUIBundle::macros.html.twig' as UI %}
 
-{% if resource_granted('VIEW', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+{% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Comment') %}
     <ol class="diam-comments unstyled">
         {% for comment in comments %}
             {% set imagePath = '' %}
             <li class="diam-comment">
                 <div class="pull-right">
-                {% if resource_granted('EDIT', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+                {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
                     <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action"><i class="icon-edit hide-text">Edit</i></a>
                 {% endif %}
-                {% if resource_granted('DELETE', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+                {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
                     <a href="#" data-url = "{{ path('diamante_comment_delete', {'ticketId': comment.ticket.id, 'commentId': comment.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">Delete</i></a>
                 {% endif %}
                 </div>
@@ -40,7 +40,7 @@
     </ol>
 {% endif %}
 
-{% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Comment') %}
+{% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
     <p style="text-align: right;">{{ UI.button({
         'path': path('diamante_comment_create', {'id': entity.id}),
         'iClass': 'icon-edit',
@@ -111,7 +111,7 @@
             }
         }) }}
     {% endif %}
-    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
         {{ UI.button({
         'path': path('diamante_ticket_create'),
         'iClass': 'icon-user',

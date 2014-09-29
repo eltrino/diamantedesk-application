@@ -9,13 +9,13 @@
                 {% set attachmentExtension = attachment.file.extension %}
                 {% set attachmentPreviewSrc = attachment.file.Pathname %}
                 {% if attachmentExtension == '' %}
-                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
+                    <img src="{{ asset('bundles/diamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
                 {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
                 attachmentExtension == 'png' or attachmentExtension == 'gif')
                 %}
                     <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt="{{ attachment.filename|escape }}"/>
                 {% else %}
-                    <img src="{{ asset('bundles/eltrinodiamantedesk/img/file.png') }}" alt="{{
+                    <img src="{{ asset('bundles/diamantedesk/img/file.png') }}" alt="{{
                     attachment.filename|escape }}"/>
                     <span class="diam-attachment-label">{{ attachmentExtension }}</span>
                 {% endif %}
@@ -53,7 +53,7 @@
     </ul>
 </div>
 <script type="text/javascript">
-    require(['eltrinodiamantedesk/js/diam.attachments'], function(attachments){
+    require(['diamantedesk/js/diam.attachments'], function(attachments){
         attachments($('#diam-dropzone-file'));
     });
 </script>
@@ -66,7 +66,7 @@
                 <% if( attachment.src) { %>
                 <img src="<%= attachment.src %>" alt="<%= _.escape(attachment.filename) %>"/>
                 <% } else { %>
-                <img src="{{ asset('bundles/eltrinodiamantedesk/img/file.png') }}" alt="<%= _.escape(attachment.filename) %>"/>
+                <img src="{{ asset('bundles/diamantedesk/img/file.png') }}" alt="<%= _.escape(attachment.filename) %>"/>
                 <span class="diam-attachment-label"><%= attachment.ext %></span>
                 <% } %>
             </div>

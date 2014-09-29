@@ -11,10 +11,10 @@
     ],
     "autoload": {
         "psr-0": {
-            "Eltrino\\DiamanteDeskBundle": "."
+            "Diamante\\DeskBundle": "."
         }
     },
-    "target-dir": "Eltrino/DiamanteDeskBundle",
+    "target-dir": "Diamante/DeskBundle",
     "repositories": [
         {
             "type": "git",

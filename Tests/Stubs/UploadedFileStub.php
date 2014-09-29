@@ -1,6 +1,6 @@
 <?php
 
-namespace Eltrino\DiamanteDeskbundle\Tests\Stubs;
+namespace Diamante\DeskBundle\Tests\Stubs;
 
 use \Symfony\Component\HttpFoundation\File\UploadedFile;
 use \Symfony\Component\HttpFoundation\File\File;

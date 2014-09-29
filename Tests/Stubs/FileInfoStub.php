@@ -1,6 +1,6 @@
 <?php
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Stubs;
+namespace Diamante\DeskBundle\Tests\Stubs;
 
 class FileInfoStub extends \SplFileInfo
 {

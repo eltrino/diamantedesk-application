@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Persistence;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
-use Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase

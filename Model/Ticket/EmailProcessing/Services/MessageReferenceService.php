@@ -12,17 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services;
+namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
 
 interface MessageReferenceService
 {
     /**
      * Creates Ticket and Message Reference fot it
      * @param CreateTicketFromMessageCommand $command
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @return Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket(CreateTicketFromMessageCommand $command);
@@ -33,4 +33,4 @@ interface MessageReferenceService
      * @return void
      */
     public function createCommentForTicket(CreateCommentFromMessageCommand $command);
-} 
+}

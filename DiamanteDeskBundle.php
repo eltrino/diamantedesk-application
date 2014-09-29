@@ -12,40 +12,40 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle;
+namespace Diamante\DeskBundle;
 
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class EltrinoDiamanteDeskBundle extends Bundle
+class DiamanteDeskBundle extends Bundle
 {
     public function boot()
     {
         if (!Type::hasType('branch_logo')) {
-            Type::addType('branch_logo', 'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\BranchLogoType');
+            Type::addType('branch_logo', 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\BranchLogoType');
         }
         if (!Type::hasType('priority')) {
             Type::addType(
                 'priority',
-                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketPriorityType'
+                'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketPriorityType'
             );
         }
         if (!Type::hasType('file')) {
             Type::addType(
                 'file',
-                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\AttachmentFileType'
+                'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\AttachmentFileType'
             );
         }
         if (!Type::hasType('status')) {
             Type::addType(
                 'status',
-                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketStatusType'
+                'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketStatusType'
             );
         }
         if (!Type::hasType('source')) {
             Type::addType(
                 'source',
-                'Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketSourceType'
+                'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketSourceType'
             );
         }
 

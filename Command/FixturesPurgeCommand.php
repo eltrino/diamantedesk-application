@@ -1,6 +1,6 @@
 <?php
 
-namespace Eltrino\DiamanteDeskBundle\Command;
+namespace Diamante\DeskBundle\Command;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -85,10 +85,10 @@ class FixturesPurgeCommand extends ContainerAwareCommand
     {
 
         $entitiesMetadata = array(
-            $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Branch::getClassName()),
-            $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Ticket::getClassName()),
-            $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Comment::getClassName()),
-            $this->entityManager->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Attachment::getClassName())
+            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Branch::getClassName()),
+            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Ticket::getClassName()),
+            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Comment::getClassName()),
+            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName())
         );
 
         $toPurge = array();

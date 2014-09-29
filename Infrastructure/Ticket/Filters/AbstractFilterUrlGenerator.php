@@ -13,7 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Filters;
+namespace Diamante\DeskBundle\Infrastructure\Ticket\Filters;
 
 use Oro\Bundle\FilterBundle\Form\Type\Filter\TextFilterType;
 

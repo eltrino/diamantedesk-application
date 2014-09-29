@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Attachment\FileStorage;
+namespace Diamante\DeskBundle\Infrastructure\Attachment\FileStorage;
 
-use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService;
+use Diamante\DeskBundle\Model\Attachment\File;
+use Diamante\DeskBundle\Model\Attachment\Services\FileStorageService;
 use Symfony\Component\Filesystem\Filesystem;
 
 class LocalFileStorageService implements FileStorageService

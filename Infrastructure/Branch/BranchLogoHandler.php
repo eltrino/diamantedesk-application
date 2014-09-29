@@ -12,16 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Branch;
+namespace Diamante\DeskBundle\Infrastructure\Branch;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Exception\LogoHandlerLogicException;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Logo;
+use Diamante\DeskBundle\Model\Branch\Exception\LogoHandlerLogicException;
+use Diamante\DeskBundle\Model\Branch\Logo;
 
 /**
  *
  * Class BranchLogoHandler
- * @package Eltrino\DiamanteDeskBundle\Model
+ * @package Diamante\DeskBundle\Model
  */
 class BranchLogoHandler
 {

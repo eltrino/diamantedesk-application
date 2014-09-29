@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
+namespace Diamante\DiamanteDeskBundle\Tests\Controller;
 
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
+use Diamante\DiamanteDeskBundle\Model\Ticket\Priority;
+use Diamante\DiamanteDeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\UserBundle\Entity\User;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
+use Diamante\DiamanteDeskBundle\Model\Ticket\Status;
 
 class TicketControllerTest extends WebTestCase
 {

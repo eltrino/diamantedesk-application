@@ -12,15 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Entity;
+namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_filter")
  */
-class Filter extends \Eltrino\DiamanteDeskBundle\Model\Ticket\Filter
+class Filter extends \Diamante\DeskBundle\Model\Ticket\Filter
 {
     /**
      * @var int

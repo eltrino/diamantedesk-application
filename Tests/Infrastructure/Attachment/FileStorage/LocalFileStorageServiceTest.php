@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Attachment\FileStorage;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Attachment\FileStorage;
 
-use Eltrino\DiamanteDeskBundle\Infrastructure\Attachment\FileStorage\LocalFileStorageService;
+use Diamante\DeskBundle\Infrastructure\Attachment\FileStorage\LocalFileStorageService;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Tests\Stubs\FileInfoStub;
+use Diamante\DeskBundle\Tests\Stubs\FileInfoStub;
 
 class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
 {

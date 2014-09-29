@@ -12,19 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form;
+namespace Diamante\DeskBundle\Form;
 
-use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Api\Command\AssigneeTicketCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\UpdateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
+use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\AttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AttachmentCommand;
 
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class CommandFactory

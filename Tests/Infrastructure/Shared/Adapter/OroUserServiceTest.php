@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Shared\Adapter;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Shared\Adapter;
 
-use Eltrino\DiamanteDeskBundle\Infrastructure\Shared\Adapter\OroUserService;
+use Diamante\DeskBundle\Infrastructure\Shared\Adapter\OroUserService;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 

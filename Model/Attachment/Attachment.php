@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Model\Attachment;
+namespace Diamante\DeskBundle\Model\Attachment;
 
-use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Entity;
 
 class Attachment implements Entity
 {

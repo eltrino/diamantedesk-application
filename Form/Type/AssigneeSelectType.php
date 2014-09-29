@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
 use Oro\Bundle\UserBundle\Form\Type\UserSelectType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -24,7 +24,7 @@ class AssigneeSelectType extends UserSelectType
         $resolver->setDefaults(
             array(
                 'configs' => array(
-                    'placeholder' => \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL,
+                    'placeholder' => \Diamante\DeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL,
                     'result_template_twig' => 'OroUserBundle:User:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'OroUserBundle:User:Autocomplete/selection.html.twig'
                 ),

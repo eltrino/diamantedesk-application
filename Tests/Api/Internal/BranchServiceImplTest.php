@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Api\Internal;
+namespace Diamante\DeskBundle\Tests\Api\Internal;
 
-use Eltrino\DiamanteDeskBundle\Api\Internal\BranchServiceImpl;
-use Eltrino\DiamanteDeskBundle\Api\Command\BranchCommand;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Logo;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
-use Eltrino\DiamanteDeskBundle\Tests\Stubs\UploadedFileStub;
+use Diamante\DeskBundle\Api\Internal\BranchServiceImpl;
+use Diamante\DeskBundle\Api\Command\BranchCommand;
+use Diamante\DeskBundle\Model\Branch\Logo;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -31,8 +31,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_LOGO_NAME = 'dummy-logo-name.png';
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $branchRepository;
 
@@ -42,14 +42,14 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branchServiceImpl;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\BranchFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Branch\BranchFactory
+     * @var \Diamante\DeskBundle\Model\Branch\BranchFactory
+     * @Mock \Diamante\DeskBundle\Model\Branch\BranchFactory
      */
     private $branchFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler
-     * @Mock \Eltrino\DiamanteDeskBundle\Infrastructure\Branch\BranchLogoHandler
+     * @var \Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler
+     * @Mock \Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler
      */
     private $branchLogoHandler;
 
@@ -60,19 +60,19 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $tagManager;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Tests\Stubs\UploadedFileStub
+     * @var \Diamante\DeskBundle\Tests\Stubs\UploadedFileStub
      */
     private $fileMock;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\Logo
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Branch\Logo
+     * @var \Diamante\DeskBundle\Model\Branch\Logo
+     * @Mock \Diamante\DeskBundle\Model\Branch\Logo
      */
     private $logo;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\Branch
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Branch\Branch
+     * @var \Diamante\DeskBundle\Model\Branch\Branch
+     * @Mock \Diamante\DeskBundle\Model\Branch\Branch
      */
     private $branch;
 
@@ -151,7 +151,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($branchStub));
 
         $this->securityFacade->expects($this->once())->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Branch'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $command = new BranchCommand();
@@ -190,7 +190,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($branch));
 
         $this->securityFacade->expects($this->once())->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Branch'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $command = new BranchCommand();
@@ -222,7 +222,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($this->branch));
 
         $this->securityFacade->expects($this->once())->method('isGranted')
-            ->with($this->equalTo('EDIT'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Branch'))
+            ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $command = new BranchCommand();
@@ -263,7 +263,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->tagManager->expects($this->once())->method('saveTagging')->with($this->equalTo($this->branch));
 
         $this->securityFacade->expects($this->once())->method('isGranted')
-            ->with($this->equalTo('EDIT'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Branch'))
+            ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $command = new BranchCommand();
@@ -289,7 +289,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('DELETE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Branch'))
+            ->with($this->equalTo('DELETE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $this->branchServiceImpl->deleteBranch(self::DUMMY_BRANCH_ID);
@@ -310,7 +310,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('remove')->with($this->equalTo($branch));
 
         $this->securityFacade->expects($this->once())->method('isGranted')
-            ->with($this->equalTo('DELETE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Branch'))
+            ->with($this->equalTo('DELETE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $this->branchServiceImpl->deleteBranch(self::DUMMY_BRANCH_ID);
@@ -338,7 +338,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('DELETE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Branch'))
+            ->with($this->equalTo('DELETE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $this->branchServiceImpl->deleteBranch(self::DUMMY_BRANCH_ID);

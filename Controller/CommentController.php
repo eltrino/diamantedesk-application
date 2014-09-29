@@ -12,18 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Controller;
+namespace Diamante\DeskBundle\Controller;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\RemoveCommentAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Form\Type\CommentType;
-use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
-use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
-use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
-use Eltrino\DiamanteDeskBundle\Api\CommentService;
+use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Form\Type\CommentType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
+use Diamante\DeskBundle\Form\CommandFactory;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
+use Diamante\DeskBundle\Api\CommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,8 +33,8 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
+use DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
 
 /**
  * @Route("comment")
@@ -48,7 +48,7 @@ class CommentController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Comment:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
      * @param Ticket $ticket
      * @return array
@@ -72,7 +72,7 @@ class CommentController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Comment:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
      * @param Comment $comment
      * @return array
@@ -109,7 +109,7 @@ class CommentController extends Controller
      *      name="diamante_comment_widget_attachment_list",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Comment:attachment/list.html.twig")
+     * @Template("DiamanteDeskBundle:Comment:attachment/list.html.twig")
      */
     public function attachmentList($id)
     {

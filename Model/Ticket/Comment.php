@@ -13,12 +13,12 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Model\Ticket;
+namespace Diamante\DeskBundle\Model\Ticket;
 
+use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
+use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class Comment implements Entity, AttachmentHolder

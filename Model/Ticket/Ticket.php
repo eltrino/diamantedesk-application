@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Model\Ticket;
 
-namespace Eltrino\DiamanteDeskBundle\Model\Ticket;
-
+use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder;
-use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class Ticket implements Entity, AttachmentHolder
@@ -41,17 +41,22 @@ class Ticket implements Entity, AttachmentHolder
     protected $description;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\Status
+     * @var Source
+     */
+    protected $source;
+
+    /**
+     * @var Status
      */
     protected $status;
 
     /**
-     * @var int
+     * @var Priority
      */
     protected $priority;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\Branch
+     * @var Branch
      */
     protected $branch;
 

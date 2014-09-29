@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Model\Attachment;
+namespace Diamante\DeskBundle\Tests\Model\Attachment;
 
-use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
+use Diamante\DeskBundle\Model\Attachment\File;
 
 class FileTest extends \PHPUnit_Framework_TestCase
 {

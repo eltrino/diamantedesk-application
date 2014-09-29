@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types;
+namespace Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
 
 class TicketStatusType extends StringType
 {

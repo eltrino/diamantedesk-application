@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Persistence;
+namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Doctrine\ORM\EntityRepository;
-use Eltrino\DiamanteDeskBundle\Model\Shared\Entity;
-use Eltrino\DiamanteDeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Repository;
 
 class DoctrineGenericRepository extends EntityRepository implements Repository
 {

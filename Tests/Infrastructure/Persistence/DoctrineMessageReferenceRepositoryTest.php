@@ -12,18 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Persistence;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
 use Doctrine\DBAL\LockMode;
-use Eltrino\DiamanteDeskBundle\Entity\MessageReference;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Entity\MessageReference;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Source;
 use Oro\Bundle\UserBundle\Entity\User;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository;
 
 class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
 {

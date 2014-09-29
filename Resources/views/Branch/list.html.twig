@@ -5,7 +5,7 @@
 {% set pageTitle = 'Branches'|trans %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Branch') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Branch') %}
         {{
             UI.addButton({
                 'path' : path('diamante_branch_create'),

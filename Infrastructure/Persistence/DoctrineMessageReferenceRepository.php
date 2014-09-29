@@ -12,16 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Persistence;
+namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
-use Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 
 class DoctrineMessageReferenceRepository extends DoctrineGenericRepository implements MessageReferenceRepository
 {
     /**
      * Retrieves Reference by given message id
      * @param string $messageId
-     * @return \Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\MessageReference
+     * @return \Diamante\DeskBundle\Ticket\Model\EmailProcessing\MessageReference
      */
     public function getReferenceByMessageId($messageId)
     {

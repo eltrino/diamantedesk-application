@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Entity;
+namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -22,7 +22,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_branch")
  * @Config(
  *      defaultValues={
@@ -33,7 +33,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Branch extends \Eltrino\DiamanteDeskBundle\Model\Branch\Branch
+class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
 {
     /**
      * @var integer
@@ -74,7 +74,7 @@ class Branch extends \Eltrino\DiamanteDeskBundle\Model\Branch\Branch
     protected $defaultAssignee;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Branch\Logo
+     * @var \Diamante\DeskBundle\Model\Branch\Logo
      *
      * @ORM\Column(type="branch_logo")
      */

@@ -12,21 +12,20 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Api\Internal;
+namespace Diamante\DeskBundle\Tests\Api\Internal;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
-use Eltrino\DiamanteDeskBundle\EltrinoDiamanteDeskBundle;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
-use Eltrino\DiamanteDeskBundle\Api\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Comment;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
-use Eltrino\DiamanteDeskBundle\Api\Internal\CommentServiceImpl;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Model\Attachment\File;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Model\Ticket\Comment;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Api\Internal\CommentServiceImpl;
+use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Priority;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
@@ -49,43 +48,43 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $service;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $ticketRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $commentRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\CommentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\CommentFactory
+     * @var \Diamante\DeskBundle\Model\Ticket\CommentFactory
+     * @Mock \Diamante\DeskBundle\Model\Ticket\CommentFactory
      */
     private $commentFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\UserService
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\UserService
+     * @var \Diamante\DeskBundle\Model\Shared\UserService
+     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
      */
     private $userService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService
+     * @var \Diamante\DeskBundle\Model\Ticket\AttachmentService
+     * @Mock \Diamante\DeskBundle\Model\Ticket\AttachmentService
      */
     private $attachmentService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\Comment
-     * @Mock \Eltrino\DiamanteDeskBundle\Entity\Comment
+     * @var \Diamante\DeskBundle\Entity\Comment
+     * @Mock \Diamante\DeskBundle\Entity\Comment
      */
     private $comment;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @var \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     protected $_dummyTicket;
 
@@ -126,7 +125,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
         $command = new EditCommentCommand();
@@ -163,7 +162,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
         $command = new EditCommentCommand();
@@ -208,7 +207,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Comment'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
         $command = new EditCommentCommand();

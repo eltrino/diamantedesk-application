@@ -12,29 +12,28 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Tests\Api\Internal;
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Api\Internal;
-
-use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\File;
-use Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket;
-use Eltrino\DiamanteDeskBundle\Model\Branch\Branch;
-use Eltrino\DiamanteDeskBundle\Api\Command\AssigneeTicketCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\UpdateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Source;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Status;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
-use Eltrino\DiamanteDeskBundle\Api\Internal\TicketServiceImpl;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Model\Attachment\File;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
+use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
+use Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketPriorityType;
+use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Api\Internal\TicketServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\RemoveTicketAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
-
+use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 
 class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,38 +51,38 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $ticketRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\AttachmentService
+     * @var \Diamante\DeskBundle\Model\Ticket\AttachmentService
+     * @Mock \Diamante\DeskBundle\Model\Ticket\AttachmentService
      */
     private $ticketAttachmentService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\Ticket
-     * @Mock \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @var \Diamante\DeskBundle\Entity\Ticket
+     * @Mock \Diamante\DeskBundle\Entity\Ticket
      */
     private $ticket;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $branchRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\TicketFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\TicketFactory
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketFactory
+     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketFactory
      */
     private $ticketFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\UserService
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\UserService
+     * @var \Diamante\DeskBundle\Model\Shared\UserService
+     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
      */
     private $userService;
 
@@ -157,7 +156,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Ticket'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
         $command = new CreateTicketCommand();
@@ -221,7 +220,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Ticket'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
         $command = new CreateTicketCommand();
@@ -289,7 +288,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:EltrinoDiamanteDeskBundle:Ticket'))
+            ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
         $command = new CreateTicketCommand();

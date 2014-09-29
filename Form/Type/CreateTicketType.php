@@ -12,15 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\PriorityTransformer;
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\SourceTransformer;
+use Diamante\DeskBundle\Form\DataTransformer\PriorityTransformer;
+use Diamante\DeskBundle\Form\DataTransformer\SourceTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
+use Diamante\DeskBundle\Model\Ticket\Priority;
 
 class CreateTicketType extends AbstractType
 {
@@ -31,7 +31,7 @@ class CreateTicketType extends AbstractType
             'entity',
             array(
                 'label' => 'Branch',
-                'class' => 'EltrinoDiamanteDeskBundle:Branch',
+                'class' => 'DiamanteDeskBundle:Branch',
                 'property' => 'name',
                 'empty_value' => 'Choose branch...'
             )
@@ -139,7 +139,7 @@ class CreateTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\CreateTicketCommand',
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )

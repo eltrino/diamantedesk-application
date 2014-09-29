@@ -12,10 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Model\Branch;
+namespace Diamante\DeskBundle\Model\Branch;
 
-use Eltrino\DiamanteDeskBundle\Model\Branch\Logo;
-use Eltrino\DiamanteDeskBundle\Model\Shared\AbstractEntityFactory;
+use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class BranchFactory extends AbstractEntityFactory

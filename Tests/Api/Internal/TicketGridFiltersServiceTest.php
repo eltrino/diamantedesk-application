@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Api\Internal;
+namespace Diamante\DeskBundle\Tests\Api\Internal;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Model\Ticket\Filter;
-use Eltrino\DiamanteDeskBundle\Api\Internal\TicketGridFiltersService;
+use Diamante\DeskBundle\Model\Ticket\Filter;
+use Diamante\DeskBundle\Api\Internal\TicketGridFiltersService;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class TicketGridFiltersServiceTest extends \PHPUnit_Framework_TestCase
@@ -29,8 +29,8 @@ class TicketGridFiltersServiceTest extends \PHPUnit_Framework_TestCase
     private $ticketGridFiltersService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $filterRepository;
 
@@ -41,8 +41,8 @@ class TicketGridFiltersServiceTest extends \PHPUnit_Framework_TestCase
     private $container;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorInterface
-     * @Mock \Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorInterface
+     * @var \Diamante\DeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorInterface
+     * @Mock \Diamante\DeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorInterface
      */
     private $filterUrlGenerator;
 

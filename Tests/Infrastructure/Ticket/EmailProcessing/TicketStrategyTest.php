@@ -12,14 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
-namespace Eltrino\DiamanteDeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
 use Eltrino\EmailProcessingBundle\Model\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketFromMessageCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
+use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
+use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,8 +34,8 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private $ticketStrategy;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl
+     * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl
+     * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl
      */
     private $messageReferenceService;
 

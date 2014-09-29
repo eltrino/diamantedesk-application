@@ -12,12 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Tests\Attachment\Api;
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Attachment\Api;
-
-use Eltrino\DiamanteDeskBundle\Api\Internal\AttachmentServiceImpl;
-use Eltrino\DiamanteDeskBundle\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Entity\Attachment;
+use Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Entity\Attachment;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Eltrino\DiamanteDeskBundle\Api\Command\CreateAttachmentsCommand;
 
@@ -33,38 +32,38 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $service;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentFactory
+     * @var \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
+     * @Mock \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
      */
     private $attachmentFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $attachmentRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\Services\FileStorageService
+     * @var \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
      */
     private $fileStorageService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\File
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\File
+     * @var \Diamante\DeskBundle\Model\Attachment\File
+     * @Mock \Diamante\DeskBundle\Model\Attachment\File
      */
     private $file;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\Attachment
+     * @var \Diamante\DeskBundle\Model\Attachment\Attachment
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Attachment
      */
     private $attachment;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder
-     * @Mock \Eltrino\DiamanteDeskBundle\Model\Attachment\AttachmentHolder
+     * @var \Diamante\DeskBundle\Model\Attachment\AttachmentHolder
+     * @Mock \Diamante\DeskBundle\Model\Attachment\AttachmentHolder
      */
     private $attachmentHolder;
 
@@ -119,7 +118,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentFactory->expects($this->once())->method('create')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('\Eltrino\DiamanteDeskBundle\Model\Attachment\File'),
+                $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
                     return AttachmentServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })

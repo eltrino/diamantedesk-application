@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\DependencyInjection;
+namespace Diamante\DeskBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -27,7 +27,7 @@ use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class EltrinoDiamanteDeskExtension extends Extension implements PrependExtensionInterface
+class DiamanteDeskExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}

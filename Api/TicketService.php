@@ -13,30 +13,30 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Eltrino\DiamanteDeskBundle\Api;
+namespace Diamante\DeskBundle\Api;
 
-use Eltrino\DiamanteDeskBundle\Api\Command\AssigneeTicketCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\CreateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\UpdateStatusCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\UpdateTicketCommand;
+use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
+use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Eltrino\DiamanteDeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 
 interface TicketService
 {
     /**
      * Load Ticket by given ticket id
      * @param int $ticketId
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function loadTicket($ticketId);
 
     /**
      * Retrieves Ticket Attachment
      * @param RetrieveTicketAttachmentCommand $command
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Attachment
+     * @return \Diamante\DeskBundle\Entity\Attachment
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
     public function getTicketAttachment(RetrieveTicketAttachmentCommand $command);
@@ -59,21 +59,21 @@ interface TicketService
     /**
      * Create Ticket
      * @param CreateTicketCommand $command
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket(CreateTicketCommand $command);
 
     /**
      * @param UpdateTicketCommand $command
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
     public function updateTicket(UpdateTicketCommand $command);
 
     /**
      * @param UpdateStatusCommand $command
-     * @return \Eltrino\DiamanteDeskBundle\Model\Ticket\Ticket
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required ticket
      */
     public function updateStatus(UpdateStatusCommand $command);

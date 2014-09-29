@@ -6,7 +6,7 @@
 {% oro_title_set({params : {"%branch.name%": entity.name|default('N/A') }}) %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
         {{ UI.button({
             'path': path('diamante_ticket_create', {'id': entity.id}),
             'iClass': 'icon-user',
