@@ -18,6 +18,11 @@ namespace Eltrino\DiamanteDeskBundle\Ticket\Api;
 use Eltrino\DiamanteDeskBundle\Entity\Comment;
 use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
 
+/**
+ * Interface CommentService
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Api
+ * @codeCoverageIgnore
+ */
 interface CommentService
 {
     /**

@@ -14,6 +14,11 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Branch\Api;
 
+/**
+ * Interface BranchService
+ * @package Eltrino\DiamanteDeskBundle\Branch\Api
+ * @codeCoverageIgnore
+ */
 interface BranchService
 {
     /**

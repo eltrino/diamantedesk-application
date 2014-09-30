@@ -21,6 +21,11 @@ use Eltrino\DiamanteDeskBundle\Entity\Attachment;
 use Eltrino\DiamanteDeskBundle\Entity\Ticket;
 use Eltrino\DiamanteDeskBundle\Ticket\Model\Comment;
 
+/**
+ * Interface AttachmentService
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Api\Internal
+ * @codeCoverageIgnore
+ */
 interface AttachmentService
 {
     /**
