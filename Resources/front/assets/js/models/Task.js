@@ -1,6 +1,6 @@
 define(['app'], function(App){
 
-  App.module("Entities",function(Entities, App, Backbone, Marionette, $, _){
+  App.module("Models",function(Entities, App, Backbone, Marionette, $, _){
 
     var tasks;
 
@@ -27,7 +27,7 @@ define(['app'], function(App){
       }
     };
 
-    App.reqres.setHandler("task:entities", function(){
+    App.reqres.setHandler("task:model", function(){
         return API.getTaskEntities();
     });
 

@@ -11,7 +11,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-define(['marionette', 'views/TaskList'], function(Marionette, TasksView) {
+define(['marionette'], function(Marionette) {
 
   var App = new Marionette.Application({
     regions : {
@@ -23,17 +23,11 @@ define(['marionette', 'views/TaskList'], function(Marionette, TasksView) {
 
   App.on('before:start', function(){});
 
-  App.TasksView = TasksView;
-
 
   App.on('start', function(){
 
-    require(['entities/Task'], function(){
-      var tasks = App.request('task:entities');
-      var TasksView = new App.TasksView({
-        collection: tasks
-      });
-      App.main.show(TasksView);
+    require(['modules/Task/controller/list'], function(){
+      App.Task.List.Controller.listTasks();
     });
 
   });

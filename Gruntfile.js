@@ -17,7 +17,46 @@ module.exports = function(grunt) {
 
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json')
+    pkg: grunt.file.readJSON('package.json'),
+    webRoot: '../../../front',
+    srcRoot: 'Resources/front',
+    lessFolder: '<%= srcRoot %>/assets/less',
+
+    sync: {
+      main: {
+        files: [{
+          expand: true,
+          cwd: '<%= srcRoot %>',
+          src: [ '**/*', '**/.*', '!assets/less/**' ],
+          dest: '<%= webRoot %>',
+        }],
+        //pretend: true, // Don't do any disk operations - just write log
+        //verbose: true, // Display log messages when copying files
+
+        ignoreInDest: "assets/css/**",
+        updateAndDelete: true
+      }
+    },
+
+    less: {
+      main : {
+        files: {
+          '<%= webRoot %>/assets/css/main.css': '<%= lessFolder %>/main.less'
+        }
+      }
+    },
+
+    watch: {
+      main: {
+        files: '<%= srcRoot %>/**',
+        tasks: ['sync']
+      },
+      less : {
+        files: '<%= lessFolder %>/**',
+        tasks: ['less']
+      }
+    }
+
   });
 
   // Default task(s).
