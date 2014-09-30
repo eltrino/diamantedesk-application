@@ -1,2 +1,2 @@
 bundles:
-    - Eltrino\EmailProcessingBundle\EltrinoEmailProcessingBundle
+    - Diamante\EmailProcessingBundle\DiamanteEmailProcessingBundle

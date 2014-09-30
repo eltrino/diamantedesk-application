@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\Mail;
+namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\Mail;
 use Zend\Mail\Message;
 use Zend\Mime\Decode;
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\Mime\ZendMimeMessage;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\Mime\ZendMimeMessage;
 
 class ZendMailMessage extends Message
 {

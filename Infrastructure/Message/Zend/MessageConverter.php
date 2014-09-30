@@ -12,8 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend;
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMessage;
+namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMessage;
 
 class MessageConverter
 {

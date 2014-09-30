@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
+namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
-use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
+use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Zend\Mail\Storage\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -50,7 +50,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \Eltrino\EmailProcessingBundle\Model\MessageProcessingException
+     * @expectedException \Diamante\EmailProcessingBundle\Model\MessageProcessingException
      * @expectsExceptionMessage Dummy_Exception_Message
      */
     public function thatExceptionThrowsWhenFetchingMessages()
@@ -73,7 +73,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
     {
         $messages = $this->messageProvider->fetchMessagesToProcess();
         $this->assertNotEmpty($messages);
-        $this->assertContainsOnlyInstancesOf('\Eltrino\EmailProcessingBundle\Model\Message', $messages);
+        $this->assertContainsOnlyInstancesOf('\Diamante\EmailProcessingBundle\Model\Message', $messages);
         $this->assertCount(2, $messages);
     }
 
@@ -110,7 +110,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $messageProvider = new ImapMessageProvider($this->zendImapStorage);
         $messages = array();
         foreach ($this->messages() as $message) {
-            $messages[] = new \Eltrino\EmailProcessingBundle\Model\Message(
+            $messages[] = new \Diamante\EmailProcessingBundle\Model\Message(
                 $message['unique_id'],
                 self::DUMMY_MESSAGE_ID,
                 self::DUMMY_MESSAGE_SUBJECT,
@@ -150,7 +150,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $messageProvider = new ImapMessageProvider($this->zendImapStorage);
         $messages = array();
         foreach ($this->messages() as $message) {
-            $messages[] = new \Eltrino\EmailProcessingBundle\Model\Message(
+            $messages[] = new \Diamante\EmailProcessingBundle\Model\Message(
                 $message['unique_id'],
                 self::DUMMY_MESSAGE_ID,
                 self::DUMMY_MESSAGE_SUBJECT,

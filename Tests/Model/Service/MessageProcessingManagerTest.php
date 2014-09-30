@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Tests\Model\Service;
+namespace Diamante\EmailProcessingBundle\Tests\Model\Service;
 
-use Eltrino\EmailProcessingBundle\Model\Message;
-use Eltrino\EmailProcessingBundle\Model\Service\MessageProcessingManager;
+use Diamante\EmailProcessingBundle\Model\Message;
+use Diamante\EmailProcessingBundle\Model\Service\MessageProcessingManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
@@ -32,26 +32,26 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
     private $manager;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Message\MessageProvider
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Message\MessageProvider
+     * @var \Diamante\EmailProcessingBundle\Model\Message\MessageProvider
+     * @Mock \Diamante\EmailProcessingBundle\Model\Message\MessageProvider
      */
     private $provider;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Processing\Context
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Processing\Context
+     * @var \Diamante\EmailProcessingBundle\Model\Processing\Context
+     * @Mock \Diamante\EmailProcessingBundle\Model\Processing\Context
      */
     private $context;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Processing\StrategyHolder
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Processing\StrategyHolder
+     * @var \Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder
+     * @Mock \Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder
      */
     private $strategyHolder;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Processing\Strategy
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Processing\Strategy
+     * @var \Diamante\EmailProcessingBundle\Model\Processing\Strategy
+     * @Mock \Diamante\EmailProcessingBundle\Model\Processing\Strategy
      */
     private $strategy;
 
@@ -79,9 +79,9 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
         $this->provider->expects($this->once())->method('fetchMessagesToProcess')->will($this->returnValue($messages));
         $this->strategyHolder->expects($this->once())->method('getStrategies')->will($this->returnValue($strategies));
         $this->context->expects($this->exactly(count($strategies)))->method('setStrategy')
-            ->with($this->isInstanceOf('\Eltrino\EmailProcessingBundle\Model\Processing\Strategy'));
+            ->with($this->isInstanceOf('\Diamante\EmailProcessingBundle\Model\Processing\Strategy'));
         $this->context->expects($this->exactly(count($messages) * count($strategies)))->method('execute')
-            ->with($this->isInstanceOf('Eltrino\EmailProcessingBundle\Model\Message'));
+            ->with($this->isInstanceOf('Diamante\EmailProcessingBundle\Model\Message'));
         $this->provider->expects($this->once())->method('markMessagesAsProcessed')
             ->with($this->logicalAnd(
                     $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY),
@@ -90,7 +90,7 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
                         $result = true;
                         foreach ($other as $message) {
                             $constraint = \PHPUnit_Framework_Assert::isInstanceOf(
-                                'Eltrino\EmailProcessingBundle\Model\Message'
+                                'Diamante\EmailProcessingBundle\Model\Message'
                             );
                             try {
                                 \PHPUnit_Framework_Assert::assertThat($message, $constraint);

@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\DependencyInjection;
+namespace Diamante\EmailProcessingBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class EltrinoEmailProcessingExtension extends Extension
+class DiamanteEmailProcessingExtension extends Extension
 {
     /**
      * {@inheritDoc}

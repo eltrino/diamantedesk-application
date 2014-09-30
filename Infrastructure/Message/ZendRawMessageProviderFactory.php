@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Infrastructure\Message;
+namespace Diamante\EmailProcessingBundle\Infrastructure\Message;
 
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter;
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\RawMessageProvider;
-use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
-use Eltrino\EmailProcessingBundle\Model\Message\MessageProviderFactory;
-use Eltrino\EmailProcessingBundle\Model\MessageProcessingException;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\RawMessageProvider;
+use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
+use Diamante\EmailProcessingBundle\Model\Message\MessageProviderFactory;
+use Diamante\EmailProcessingBundle\Model\MessageProcessingException;
 
 class ZendRawMessageProviderFactory implements MessageProviderFactory
 {

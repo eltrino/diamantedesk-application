@@ -11,10 +11,10 @@
     ],
     "autoload": {
         "psr-0": {
-            "Eltrino\\EmailProcessingBundle": "."
+            "Diamante\\EmailProcessingBundle": "."
         }
     },
-    "target-dir": "Eltrino/EmailProcessingBundle",
+    "target-dir": "Diamante/EmailProcessingBundle",
     "repositories": [
         {
             "type": "git",

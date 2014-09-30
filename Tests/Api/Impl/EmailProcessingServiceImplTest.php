@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Tests\Api\Impl;
+namespace Diamante\EmailProcessingBundle\Tests\Api\Impl;
 
-use Eltrino\EmailProcessingBundle\Api\EmailProcessingService;
-use Eltrino\EmailProcessingBundle\Api\Impl\EmailProcessingServiceImpl;
+use Diamante\EmailProcessingBundle\Api\EmailProcessingService;
+use Diamante\EmailProcessingBundle\Api\Impl\EmailProcessingServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -28,26 +28,26 @@ class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
     private $emailProcessingService;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Service\ManagerInterface
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Service\ManagerInterface
+     * @var \Diamante\EmailProcessingBundle\Model\Service\ManagerInterface
+     * @Mock \Diamante\EmailProcessingBundle\Model\Service\ManagerInterface
      */
     private $manager;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Message\MessageProviderFactory
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Message\MessageProviderFactory
+     * @var \Diamante\EmailProcessingBundle\Model\Message\MessageProviderFactory
+     * @Mock \Diamante\EmailProcessingBundle\Model\Message\MessageProviderFactory
      */
     private $messageProviderFactory;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Message\MessageProvider
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Message\MessageProvider
+     * @var \Diamante\EmailProcessingBundle\Model\Message\MessageProvider
+     * @Mock \Diamante\EmailProcessingBundle\Model\Message\MessageProvider
      */
     private $messageProvider;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @var \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @Mock \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      */
     private $settings;
 
@@ -72,7 +72,7 @@ class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->manager->expects($this->once())->method('handle')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('Eltrino\EmailProcessingBundle\Model\Message\MessageProvider')
+                $this->isInstanceOf('Diamante\EmailProcessingBundle\Model\Message\MessageProvider')
             )
         );
 
@@ -90,7 +90,7 @@ class EmailProcessingServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->manager->expects($this->once())->method('handle')->with(
             $this->logicalAnd(
-                $this->isInstanceOf('Eltrino\EmailProcessingBundle\Model\Message\MessageProvider')
+                $this->isInstanceOf('Diamante\EmailProcessingBundle\Model\Message\MessageProvider')
             )
         );
 
