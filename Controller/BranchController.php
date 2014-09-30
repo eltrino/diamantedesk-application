@@ -18,6 +18,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Util\Inflector;
 
 use Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
 use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
@@ -80,7 +81,7 @@ class BranchController extends Controller
             });
         } catch(\Exception $e) {
             // @todo log original error
-            $this->addErrorMessage('Error occurred when creating the branch. Branch is not created. Enter all required data and try again.');
+            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.create.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
@@ -111,7 +112,7 @@ class BranchController extends Controller
             }, $branch);
         } catch(\Exception $e) {
             // @todo log original error
-            $this->addErrorMessage('Error occurred when saving the branch. Branch is not saved. Enter all required data and try again');
+            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.save.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_update',
@@ -138,12 +139,13 @@ class BranchController extends Controller
             $this->handle($form);
             $branchId = $callback($command);
             if ($command->id) {
-                $this->addSuccessMessage('Branch successfully saved.');
+                $this->addSuccessMessage('eltrino.diamantedesk.branch.messages.save.success');
             } else {
-                $this->addSuccessMessage('Branch successfully created.');
+                $this->addSuccessMessage('eltrino.diamantedesk.branch.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($branchId);
         } catch (\LogicException $e) {
+            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.save.error');
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -164,10 +166,12 @@ class BranchController extends Controller
         try {
             $this->get('diamante.branch.service')
                 ->deleteBranch($id);
+            $this->addSuccessMessage('eltrino.diamantedesk.branch.messages.delete.success');
             return new Response(null, 204, array(
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
+            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.delete.error');
             return new Response($e->getMessage(), 500);
         }
     }
