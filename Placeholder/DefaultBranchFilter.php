@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Placeholder;
+namespace Diamante\DeskBundle\Placeholder;
 
-use Eltrino\DiamanteDeskBundle\Branch\Model\Branch;
-use Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Oro\Bundle\UIBundle\Placeholder\Filter\PlaceholderFilterInterface;
 
 class DefaultBranchFilter implements PlaceholderFilterInterface
@@ -23,7 +23,7 @@ class DefaultBranchFilter implements PlaceholderFilterInterface
     const ATTRIBUTE_NAME = 'default_branch';
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @var \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      */
     private $systemSettings;
 

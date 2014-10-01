@@ -12,9 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Placeholder;
+namespace Diamante\DeskBundle\Tests\Placeholder;
 
-class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
+use Diamante\DeskBundle\Model\Branch\Logo;
+
+class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
 {
     public function __construct($id, $name, $description, Logo $logo = null, $tags = null)
     {

@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Model\Attachment;
 
 /**
  * Interface AttachmentHolder
- * @package Eltrino\DiamanteDeskBundle\Attachment\Model
+ * @package Diamante\DeskBundle\Model\Attachment
  * @codeCoverageIgnore
  */
 interface AttachmentHolder

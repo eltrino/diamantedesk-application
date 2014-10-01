@@ -18,7 +18,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 
 /**
  * Interface BranchService
- * @package Eltrino\DiamanteDeskBundle\Branch\Api
+ * @package Diamante\DeskBundle\Api
  * @codeCoverageIgnore
  */
 interface BranchService

@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Placeholder;
+namespace Diamante\DeskBundle\Tests\Placeholder;
 
-use Eltrino\DiamanteDeskBundle\Placeholder\DefaultBranchFilter;
+use Diamante\DeskBundle\Placeholder\DefaultBranchFilter;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class DefaultBranchFilterTest extends \PHPUnit_Framework_TestCase
@@ -27,8 +27,8 @@ class DefaultBranchFilterTest extends \PHPUnit_Framework_TestCase
     private $filter;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @var \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @Mock \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      */
     private $systemSettings;
 

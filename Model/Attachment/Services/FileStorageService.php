@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Model\Attachment\Services;
 
 /**
  * Interface FileStorageService
- * @package Eltrino\DiamanteDeskBundle\Attachment\Model\Services
+ * @package Diamante\DeskBundle\Model\Attachment\Services
  * @codeCoverageIgnore
  */
 interface FileStorageService

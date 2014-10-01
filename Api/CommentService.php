@@ -22,7 +22,7 @@ use Diamante\DeskBundle\Model\Attachment\Attachment;
 
 /**
  * Interface CommentService
- * @package Eltrino\DiamanteDeskBundle\Ticket\Api
+ * @package Diamante\DeskBundle\Api
  * @codeCoverageIgnore
  */
 interface CommentService

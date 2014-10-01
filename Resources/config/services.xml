@@ -25,7 +25,7 @@
         <parameter key="diamante.generic.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
         <!-- repositories end -->
         <parameter key="diamante.email_processing.form.type.default_branch.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
-        <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\BranchRemoveEventListener</parameter>
+        <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
     </parameters>
 

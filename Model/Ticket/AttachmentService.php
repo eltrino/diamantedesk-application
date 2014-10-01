@@ -19,7 +19,7 @@ use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 
 /**
  * Interface AttachmentService
- * @package Eltrino\DiamanteDeskBundle\Ticket\Api\Internal
+ * @package Diamante\DeskBundle\Model\Ticket
  * @codeCoverageIgnore
  */
 interface AttachmentService

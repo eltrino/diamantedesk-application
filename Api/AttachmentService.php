@@ -18,7 +18,7 @@ use Diamante\DeskBundle\Api\Command\CreateAttachmentsCommand;
 
 /**
  * Interface AttachmentService
- * @package Eltrino\DiamanteDeskBundle\Attachment\Api
+ * @package Diamante\DeskBundle\Api
  * @codeCoverageIgnore
  */
 interface AttachmentService

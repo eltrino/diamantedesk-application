@@ -12,10 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Infrastructure\Persistence\Doctrine;
+namespace Diamante\DeskBundle\Infrastructure\Branch;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings;
+use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BranchRemoveEventListener
@@ -33,7 +33,7 @@ class BranchRemoveEventListener
     public function preRemove(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
-        if ($entity instanceof \Eltrino\DiamanteDeskBundle\Entity\Branch) {
+        if ($entity instanceof \Diamante\DeskBundle\Model\Branch\Branch) {
             $systemSettings = $this->serviceContainer->get('diamante.email_processing.mail_system_settings');
             if ($entity->getId() == $systemSettings->getDefaultBranchId()) {
                 $message = "You are trying to remove default branch."

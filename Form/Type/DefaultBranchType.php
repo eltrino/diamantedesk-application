@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
-use Eltrino\DiamanteDeskBundle\Branch\Api\BranchService;
+use Diamante\DeskBundle\Api\BranchService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
