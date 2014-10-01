@@ -1,11 +1,74 @@
 eltrino:
-    desk:
+    diamantedesk:
         branch:
           entity_label:        Branch
-          entity_plural_label: Branchs
+          entity_plural_label: Branches
+          details:             Branch Details
+
+          actions:
+            add:               Add Branch
+            edit:              Edit Branch
+            remove:            Delete Branch
+
+          messages:
+            create:
+              error:           Error occurred when creating the branch. Branch is not created. Enter all required data and try again.
+              success:         Branch successfully created.
+            save:
+              error:           Error occurred when saving the branch. Branch is not saved. Enter all required data and try again
+              success:         Branch successfully saved.
+            delete:
+              query:           Are you sure you want to delete this branch with ALL its tickets? Please note that it cannot be undone!
+              success:         Branch deleted
+            get:
+              error:           Branch loading failed. Branch not found.
+
+          placeholders:
+            form:              Choose branch...
+
         ticket:
           entity_label:        Ticket
           entity_plural_label: Tickets
+          details:             Ticket Details
+          all:                 All Tickets
+
+          actions:
+            add:               Add Ticket
+            edit:              Edit Ticket
+            remove:            Delete Ticket
+            assign:            Assign
+            create:            Create Ticket
+            change_status:     Change status
+
+          messages:
+            create:
+              error:           Error occured while creating ticket
+              success:         Ticket successfully created.
+            save:
+              error:           Error saving ticket
+              success:         Ticket successfully saved.
+            delete:
+              query:           Are you sure you want to delete this ticket?
+              error:           Error occured while deleting ticket
+              success:         Ticket successfully deleted.
+            reassign:
+              error:           Error occured while re-assiging ticket
+              success:         Ticket successfully re-assigned.
+            change_status:
+              error:           Error occured while trying to change ticket status.
+              success:         Status successfully changed
+            get:
+              error:           Ticket loading failed, ticket not found.
+              attachment:
+                error:         Attachment loading failed. Ticket has no such attachment.
+              branch:
+                error:         Branch loading failed, branch not found.
+              reporter:
+                error:         Reporter loading failed, reporter not found.
+              assignee:
+                error:         Assignee validation failed, assignee not found.
+
+
         comment:
           entity_label:        Comment
           entity_plural_label: Comments

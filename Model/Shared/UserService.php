@@ -16,6 +16,11 @@ namespace Diamante\DeskBundle\Model\Shared;
 
 use Oro\Bundle\UserBundle\Entity\User;
 
+/**
+ * Interface UserService
+ * @package Diamante\DeskBundle\Model\Shared
+ * @codeCoverageIgnore
+ */
 interface UserService
 {
     /**

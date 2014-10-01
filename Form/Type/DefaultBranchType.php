@@ -12,38 +12,39 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Form\Type;
+namespace Eltrino\DiamanteDeskBundle\Form\Type;
 
+use Eltrino\DiamanteDeskBundle\Branch\Api\BranchService;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AssigneeTicketType extends AbstractType
+class DefaultBranchType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var BranchService
+     */
+    private $branchService;
+
+    public function __construct(BranchService $branchService)
     {
-        $builder->add(
-            'assignee',
-            'diamante_assignee_select',
-            array(
-                'label'    => 'eltrino.diamantedesk.attributes.assignee',
-                'required' => false
-            )
-        );
+        $this->branchService = $branchService;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\AssigneeTicketCommand',
-                'intention' => 'ticket',
-                'cascade_validation' => true
-            )
-        );
+        $choices = array();
+        foreach ($this->branchService->listAllBranches() as $branch) {
+            $choices[$branch->getId()] = $branch->getName();
+        }
+        $resolver->setDefaults(array(
+            'choices' => $choices
+        ));
+    }
+
+    public function getParent()
+    {
+        return 'choice';
     }
 
     /**
@@ -53,6 +54,6 @@ class AssigneeTicketType extends AbstractType
      */
     public function getName()
     {
-        return 'diamante_ticket_form_assignee';
+        return 'diamante_email_processing_default_branch';
     }
 }

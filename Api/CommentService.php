@@ -20,6 +20,11 @@ use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 
+/**
+ * Interface CommentService
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Api
+ * @codeCoverageIgnore
+ */
 interface CommentService
 {
     /**

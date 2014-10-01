@@ -54,7 +54,7 @@ class AttachmentFileType extends StringType
             return '';
         }
         if (false === ($value instanceof File)) {
-            throw new \RuntimeException("Value should be a File type.");
+            throw new \RuntimeException('eltrino.diamantedesk.file.messages.type.error');
         }
         /** @var $value File */
         return parent::convertToDatabaseValue($value->getPathname(), $platform);

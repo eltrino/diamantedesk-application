@@ -14,8 +14,8 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': ticket.id }), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
-    {{ UI.saveAndCloseButton(editCommand.id ? 'Edit' : 'Add') }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': ticket.id }), 'title' : 'eltrino.diamantedesk.ui.cancel'|trans, 'label' : 'eltrino.diamantedesk.ui.cancel'|trans}) }}
+    {{ UI.saveAndCloseButton(editCommand.id ? 'eltrino.diamantedesk.ui.edit'|trans : 'eltrino.diamantedesk.ui.add'|trans) }}
 {% endblock %}
 
 {% block pageHeader %}
@@ -24,11 +24,11 @@
             'entity':      editCommand,
             'indexPath':   path('diamante_ticket_view', {'id': ticket.id}),
             'indexLabel':  ticket.subject,
-            'entityTitle': 'Edit Comment'|trans
+            'entityTitle': 'eltrino.diamantedesk.comment.actions.edit'|trans
         } %}
         {{ parent() }}
     {% else %}
-        {% set title = 'Add Comment'|trans %}
+        {% set title = 'eltrino.diamantedesk.comment.actions.add'|trans %}
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
@@ -44,11 +44,11 @@
         {% endif %}
     {% endset %}
     {% set dataBlocks = [{
-        'title': 'General'|trans,
+        'title': 'eltrino.diamantedesk.common.general'|trans,
         'class': 'active',
         'subblocks': [
             {
-                'title': 'Comment'|trans,
+                'title': 'eltrino.diamantedesk.comment.entity_label'|trans,
                 'data': [
                     form_row(form.content),
                     form_row(form.ticketStatus),

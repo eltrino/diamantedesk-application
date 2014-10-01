@@ -149,12 +149,13 @@ class CommentController extends Controller
             }
 
             if ($command->id) {
-                $this->addSuccessMessage('Comment successfully saved.');
+                $this->addSuccessMessage('eltrino.diamantedesk.comment.messages.save.success');
             } else {
-                $this->addSuccessMessage('Comment successfully created.');
+                $this->addSuccessMessage('eltrino.diamantedesk.comment.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($ticket->getId());
         } catch (\LogicException $e) {
+            $this->addErrorMessage('eltrino.diamantedesk.comment.messages.create.error');
             $response = array('form' => $formView, 'ticket' => $ticket);
         }
         return $response;
@@ -176,9 +177,10 @@ class CommentController extends Controller
             $this->get('diamante.comment.service')
                 ->deleteTicketComment($commentId);
 
-            $this->addSuccessMessage('Comment successfully deleted.');
+            $this->addSuccessMessage('eltrino.diamantedesk.comment.messages.delete.success');
         } catch (Exception $e) {
-            $this->addErrorMessage($e->getMessage());
+            //TODO: Log original error
+            $this->addErrorMessage('eltrino.diamantedesk.comment.messages.delete.error');
         }
 
         return $this->redirect(
@@ -209,6 +211,7 @@ class CommentController extends Controller
             . '/' . $attachment->getFilename();
 
         if (!file_exists($filePathname)) {
+            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }
 
@@ -242,16 +245,20 @@ class CommentController extends Controller
         $removeCommentAttachmentCommand = new RemoveCommentAttachmentCommand();
         $removeCommentAttachmentCommand->commentId = $commentId;
         $removeCommentAttachmentCommand->attachmentId = $attachId;
-        $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
 
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans('Attachment successfully deleted.')
-        );
+        try {
+            $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
+            $this->addSuccessMessage('eltrino.diamantedesk.attachment.messages.delete.success');
+        } catch (Exception $e) {
+            //TODO: Log original error
+            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.delete.error');
+        }
+
         $response = $this->redirect($this->generateUrl(
             'diamante_comment_update',
             array('id' => $commentId)
         ));
+
         return $response;
     }
 

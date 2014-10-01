@@ -16,6 +16,11 @@ namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing;
 
 use Diamante\DeskBundle\Model\Shared\Repository;
 
+/**
+ * Interface MessageReferenceRepository
+ * @package Diamante\DeskBundle\Model\Ticket\EmailProcessing
+ * @codeCoverageIgnore
+ */
 interface MessageReferenceRepository extends Repository
 {
     /**

@@ -12,13 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Shared;
+namespace Eltrino\DiamanteDeskBundle\Tests\Placeholder;
 
-/**
- * Interface Entity
- * @package Diamante\DeskBundle\Model\Shared
- * @codeCoverageIgnore
- */
-interface Entity
+class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
 {
+    public function __construct($id, $name, $description, Logo $logo = null, $tags = null)
+    {
+        parent::__construct($name, $description, $logo, $tags);
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

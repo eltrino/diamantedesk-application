@@ -29,7 +29,7 @@ class CommentType extends AbstractType
         $builder->add(
             $builder->create('ticketStatus', 'choice',
                 array(
-                    'label' => 'Ticket status',
+                    'label' => 'eltrino.diamantedesk.comment.ticket_status',
                     'required' => true,
                     'choices' => $statusOptions
                 ))
@@ -40,7 +40,7 @@ class CommentType extends AbstractType
             'content',
             'textarea',
             array(
-                'label' => 'Content',
+                'label' => 'eltrino.diamantedesk.comment.content',
                 'required' => true,
             )
         );
@@ -49,7 +49,7 @@ class CommentType extends AbstractType
             'files',
             'file',
             array(
-                'label'    => 'Attachments',
+                'label'    => 'eltrino.diamantedesk.attachment.entity_plural_label',
                 'required' => false,
                 'attr' => array(
                     'multiple' => 'multiple'

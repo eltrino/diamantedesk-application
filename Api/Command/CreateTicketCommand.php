@@ -50,9 +50,6 @@ class CreateTicketCommand
      */
     public $reporter;
 
-    /**
-     * @Assert\NotBlank
-     */
     public $assignee;
 
     /**

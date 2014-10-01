@@ -17,6 +17,11 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 
+/**
+ * Interface AttachmentService
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Api\Internal
+ * @codeCoverageIgnore
+ */
 interface AttachmentService
 {
     /**

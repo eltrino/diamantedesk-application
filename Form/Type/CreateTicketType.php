@@ -29,7 +29,7 @@ class CreateTicketType extends AbstractType
             'branch',
             'entity',
             array(
-                'label' => 'Branch',
+                'label' => 'eltrino.diamantedesk.attributes.branch',
                 'class' => 'DiamanteDeskBundle:Branch',
                 'property' => 'name',
                 'empty_value' => 'Choose branch...'
@@ -40,7 +40,7 @@ class CreateTicketType extends AbstractType
             'subject',
             'text',
             array(
-                'label' => 'Subject',
+                'label' => 'eltrino.diamantedesk.attributes.subject',
                 'required' => true,
             )
         );
@@ -49,7 +49,7 @@ class CreateTicketType extends AbstractType
             'description',
             'textarea',
             array(
-                'label' => 'Description',
+                'label' => 'eltrino.diamantedesk.common.description',
                 'required' => true,
                 'attr'  => array(
                     'class' => 'diam-ticket-description'
@@ -63,7 +63,7 @@ class CreateTicketType extends AbstractType
         $builder->add(
             $builder->create('status', 'choice',
                 array(
-                    'label' => 'Status',
+                    'label' => 'eltrino.diamantedesk.attributes.status',
                     'required' => true,
                     'choices' => $statusOptions
                 ))
@@ -74,7 +74,7 @@ class CreateTicketType extends AbstractType
             'files',
             'file',
             array(
-                'label' => 'File',
+                'label' => 'eltrino.diamantedesk.attachment.file',
                 'required' => true,
                 'attr' => array(
                     'multiple' => 'multiple'
@@ -90,7 +90,7 @@ class CreateTicketType extends AbstractType
                 'priority',
                 'choice',
                 array(
-                    'label'    => 'Priority',
+                    'label'    => 'eltrino.diamantedesk.attributes.priority',
                     'required' => true,
                     'choices'  => $priorities,
                 )
@@ -106,7 +106,7 @@ class CreateTicketType extends AbstractType
                 'source',
                 'choice',
                 array(
-                    'label'    => 'Source',
+                    'label'    => 'eltrino.diamantedesk.attributes.source',
                     'required' => true,
                     'choices'  => $sources,
                 )
@@ -118,6 +118,7 @@ class CreateTicketType extends AbstractType
             'reporter',
             'oro_user_select',
             array(
+                'label'    => 'eltrino.diamantedesk.attributes.reporter',
                 'required' => true
             )
         );
@@ -126,6 +127,7 @@ class CreateTicketType extends AbstractType
             'assignee',
             'diamante_assignee_select',
             array(
+                'label'    => 'eltrino.diamantedesk.attributes.assignee',
                 'required' => false
             )
         );
@@ -138,9 +140,9 @@ class CreateTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\CreateTicketCommand',
-                'intention' => 'ticket',
-                'cascade_validation' => true
+                'data_class'         => 'Diamante\DeskBundle\Api\Command\CreateTicketCommand',
+                'intention'          => 'ticket',
+                'cascade_validation' => true,
             )
         );
     }
