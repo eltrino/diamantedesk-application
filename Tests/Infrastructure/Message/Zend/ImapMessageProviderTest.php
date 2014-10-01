@@ -16,6 +16,11 @@ namespace Eltrino\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
 use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
 use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
+use Zend\Mail\AddressList;
+use Zend\Mail\Header\From;
+use Zend\Mail\Header\MessageId;
+use Zend\Mail\Header\To;
+use Zend\Mail\Headers;
 use Zend\Mail\Storage\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -26,6 +31,8 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
     const DUMMY_MESSAGE_ID        = 'dummy_message_id';
     const DUMMY_MESSAGE_SUBJECT   = 'dummy_message_subject';
     const DUMMY_MESSAGE_CONTENT   = 'dummy_message_content';
+    const DUMMY_MESSAGE_FROM      = 'dummy_message_from';
+    const DUMMY_MESSAGE_TO        = 'dummy_message_to';
     const DUMMY_MESSAGE_REFERENCE = 'dummy_message_reference';
 
     /**
@@ -115,6 +122,8 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
                 self::DUMMY_MESSAGE_ID,
                 self::DUMMY_MESSAGE_SUBJECT,
                 self::DUMMY_MESSAGE_CONTENT,
+                self::DUMMY_MESSAGE_FROM,
+                self::DUMMY_MESSAGE_TO,
                 self::DUMMY_MESSAGE_REFERENCE
             );
         }
@@ -155,6 +164,8 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
                 self::DUMMY_MESSAGE_ID,
                 self::DUMMY_MESSAGE_SUBJECT,
                 self::DUMMY_MESSAGE_CONTENT,
+                self::DUMMY_MESSAGE_FROM,
+                self::DUMMY_MESSAGE_TO,
                 self::DUMMY_MESSAGE_REFERENCE
             );
         }
@@ -170,18 +181,40 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
             1 => array(
                 'unique_id' => 'u1',
                 'size' => 1,
-                'message' => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT'))
+                'message' => new Message(array('headers' => $this->headers(), 'content' => 'DUMMY_CONTENT'))
             ),
             2 => array(
                 'unique_id' => 'u2',
                 'size' => 3,
-                'message' => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT'))
+                'message' => new Message(array('headers' => $this->headers(), 'content' => 'DUMMY_CONTENT'))
             ),
             3 => array(
                 'unique_id' => 'u3',
                 'size' => 5,
-                'message' => new Message(array('headers' => array(), 'content' => 'DUMMY_CONTENT'))
+                'message' => new Message(array('headers' => $this->headers(), 'content' => 'DUMMY_CONTENT'))
             )
         );
+    }
+
+    private function headers()
+    {
+        $headers = new Headers();
+
+        $messageId = new MessageId();
+        $messageId->setId('testId');
+        $headers->addHeader($messageId);
+
+        $addressList = new AddressList();
+        $addressList->add('test@gmail.com');
+
+        $from = new From();
+        $from->setAddressList($addressList);
+        $headers->addHeader($from);
+
+        $to = new To();
+        $to->setAddressList($addressList);
+        $headers->addHeader($to);
+
+        return $headers;
     }
 }

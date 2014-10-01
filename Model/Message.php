@@ -44,6 +44,16 @@ class Message
     private $subject;
 
     /**
+     * @var string
+     */
+    private $from;
+
+    /**
+     * @var string
+     */
+    private $to;
+
+    /**
      * @var array
      */
     private $attachments;
@@ -53,15 +63,19 @@ class Message
      * @param $messageId
      * @param $subject
      * @param $content
-     * @param array $attachments
+     * @param $from
+     * @param $to
      * @param null $reference
+     * @param array $attachments
      */
-    public function __construct($uniqueId, $messageId, $subject, $content, $reference = null, array $attachments = null)
+    public function __construct($uniqueId, $messageId, $subject, $content, $from, $to, $reference = null, array $attachments = null)
     {
         $this->uniqueId    = $uniqueId;
         $this->messageId   = $messageId;
         $this->subject     = $subject;
         $this->content     = $content;
+        $this->from        = $from;
+        $this->to          = $to;
         $this->reference   = $reference;
         $this->attachments = $attachments;
     }
@@ -96,6 +110,16 @@ class Message
     public function getSubject()
     {
         return $this->subject;
+    }
+
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    public function getTo()
+    {
+        return $this->to;
     }
 
     /**

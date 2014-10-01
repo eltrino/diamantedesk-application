@@ -58,17 +58,18 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
                 $imapMessage = $this->zendImapStorage->getMessage(
                     $this->zendImapStorage->getNumberByUniqueId($uniqueMessageId)
                 );
-
                 $headers            = $imapMessage->getHeaders();
 
                 $messageId          = $this->processMessageId($headers);
                 $messageSubject     = $this->processSubject($headers);
                 $messageContent     = $this->processContent($imapMessage);
+                $messageFrom        = $this->processFrom($headers);
+                $messageTo          = $this->processTo($headers);
                 $messageReference   = $this->processMessageReference($headers);
                 $messageAttachments = $this->processAttachments($imapMessage);
 
                 $messages[] = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
-                    $messageReference, $messageAttachments);
+                    $messageFrom, $messageTo, $messageReference, $messageAttachments);
             }
         } catch (\Exception $e) {
             throw new MessageProcessingException($e->getMessage());
