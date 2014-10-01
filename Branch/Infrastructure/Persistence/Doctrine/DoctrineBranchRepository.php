@@ -40,6 +40,7 @@ class DoctrineBranchRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * Store Branch
+     *
      * @param Branch $branch
      * @return void
      */

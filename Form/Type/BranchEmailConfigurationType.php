@@ -18,7 +18,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class BranchType extends AbstractType
+class BranchEmailConfigurationType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -27,56 +27,23 @@ class BranchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'name',
+            'supportAddress',
             'text',
             array(
-                'label'    => 'Name',
-                'required' => true,
+                'label'    => 'Support Address',
+                'required' => false,
+                'tooltip'  => 'gmail.com, int.go.com'
             )
         );
 
         $builder->add(
-            'description',
-            'textarea',
+            'customerDomains',
+            'text',
             array(
-                'label'    => 'Description',
+                'label'    => 'Customer Domains',
                 'required' => false,
             )
         );
-
-        $builder->add(
-            'logoFile',
-            'file',
-            array(
-                'label'    => 'Image',
-                'required' => false,
-                'tooltip' => '"JPEG" and "PNG" image formats are supported only.'
-            )
-        );
-
-        $builder->add(
-            'defaultAssignee',
-            'diamante_assignee_select',
-            array(
-                'required' => false
-            )
-        );
-
-        // tags
-        $builder->add(
-            'tags',
-            'oro_tag_select',
-            array(
-                'label' => 'oro.tag.entity_plural_label'
-            )
-        );
-
-        // Branch Email Configuration
-        $builder->add(
-            'branch_email_configuration',
-            new BranchEmailConfigurationType()
-        );
-
     }
 
     /**
@@ -86,9 +53,9 @@ class BranchType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand',
-                'intention' => 'branch',
-                'cascade_validation' => true
+            'data_class' => 'Eltrino\DiamanteDeskBundle\Branch\Api\Command\EmailProcessing\BranchEmailConfigurationCommand',
+            'intention' => 'branch_email_configuration',
+            'cascade_validation' => true
             )
         );
     }
@@ -100,6 +67,6 @@ class BranchType extends AbstractType
      */
     public function getName()
     {
-        return 'diamante_branch_form';
+        return 'diamante_branch_email_configuration_form';
     }
-}
+} 

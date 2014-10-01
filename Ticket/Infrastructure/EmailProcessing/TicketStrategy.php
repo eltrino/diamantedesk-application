@@ -14,23 +14,41 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\EmailProcessing;
 
-use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services\MessageReferenceServiceImpl;
+use Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services\MessageReferenceService;
+use Eltrino\DiamanteDeskBundle\Branch\Api\EmailProcessing\BranchEmailConfigurationService;
 use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
 use Eltrino\EmailProcessingBundle\Model\Message;
+use Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings;
 
 class TicketStrategy implements Strategy
 {
     /**
-     * @var MessageReferenceServiceImpl
+     * @var MessageReferenceService
      */
-    private $messageReferenceServiceImpl;
+    private $messageReferenceService;
 
     /**
-     * @param MessageReferenceServiceImpl $messageReferenceServiceImpl
+     * @var BranchEmailConfigurationService
      */
-    public function __construct(MessageReferenceServiceImpl $messageReferenceServiceImpl)
+    private $branchEmailConfigurationService;
+
+    /**
+     * @var SystemSettings
+     */
+    private $emailProcessingSettings;
+
+    /**
+     * @param MessageReferenceService $messageReferenceService
+     * @param BranchEmailConfigurationService $branchEmailConfigurationService
+     * @param SystemSettings $settings
+     */
+    public function __construct(MessageReferenceService $messageReferenceService,
+                                BranchEmailConfigurationService $branchEmailConfigurationService,
+                                SystemSettings $settings)
     {
-        $this->messageReferenceServiceImpl = $messageReferenceServiceImpl;
+        $this->messageReferenceService         = $messageReferenceService;
+        $this->branchEmailConfigurationService = $branchEmailConfigurationService;
+        $this->emailProcessingSettings         = $settings;
     }
 
     /**
@@ -38,18 +56,41 @@ class TicketStrategy implements Strategy
      */
     public function process(Message $message)
     {
-        $branchId   = 1;
         $reporterId = 1;
         $assigneeId = 1;
 
         $attachments = $message->getAttachments();
 
         if (!$message->getReference()) {
-            $this->messageReferenceServiceImpl->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
+            $branchId = $this->getAppropriateBranch($message->getFrom(), $message->getTo());
+            $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
                 $message->getContent(), $reporterId, $assigneeId, null, null, $attachments);
         } else {
-            $this->messageReferenceServiceImpl->createCommentForTicket($message->getContent(), $reporterId,
+            $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporterId,
                 $message->getReference(), $attachments);
         }
+    }
+
+    /**
+     * @param $from
+     * @param $to
+     * @return int
+     */
+    private function getAppropriateBranch($from, $to)
+    {
+        $branchId = null;
+        preg_match('/@(.*)/', $from, $output);
+
+        if (isset($output[1])) {
+            $customerDomain = $output[1];
+
+            $branchId = $this->branchEmailConfigurationService
+                ->getConfigurationBySupportAddressAndCustomerDomain($to, $customerDomain);
+        }
+        if (!$branchId) {
+            $branchId = $this->emailProcessingSettings->getDefaultBranchId();
+        }
+
+        return $branchId;
     }
 }

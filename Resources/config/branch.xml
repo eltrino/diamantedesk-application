@@ -20,12 +20,17 @@
 
     <parameters>
         <parameter key="diamante.branch.entity.class">Eltrino\DiamanteDeskBundle\Entity\Branch</parameter>
+        <parameter key="diamante.branch_email_configuration.entity.class">Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration</parameter>
         <parameter key="diamante.branch.factory.class">Eltrino\DiamanteDeskBundle\Branch\Model\Factory\BranchFactory</parameter>
         <parameter key="diamante.branch.service.class">Eltrino\DiamanteDeskBundle\Branch\Api\BranchServiceImpl</parameter>
+        <parameter key="diamante.branch_email_configuration.factory.class">Eltrino\DiamanteDeskBundle\Branch\Model\Factory\EmailProcessing\BranchEmailConfigurationFactory</parameter>
+        <parameter key="diamante.branch_email_configuration.service.class">Eltrino\DiamanteDeskBundle\Branch\Api\EmailProcessing\BranchEmailConfigurationServiceImpl</parameter>
     </parameters>
 
     <services>
         <service id="diamante.branch.factory" class="%diamante.branch.factory.class%"/>
+
+        <service id="diamante.branch_email_configuration.factory" class="%diamante.branch_email_configuration.factory.class%"/>
 
         <service id="diamante.branch.logo_handler" class="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler"
                  factory-class="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\BranchLogoHandler" factory-method="create">
@@ -40,6 +45,12 @@
             <argument type="service" id="diamante.branch.logo_handler"/>
             <argument type="service" id="oro_tag.tag.manager"/>
             <argument type="service" id="oro_security.security_facade"/>
+        </service>
+
+        <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%"
+                 factory-class="%diamante.branch_email_configuration.service.class%" factory-method="create">
+            <argument type="service" id="diamante.branch_email_configuration.factory"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
 
         <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">

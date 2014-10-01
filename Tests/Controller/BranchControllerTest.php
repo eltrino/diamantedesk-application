@@ -62,6 +62,9 @@ class BranchControllerTest extends WebTestCase
         $form['diamante_branch_form[description]'] = 'Test Description';
         $form['diamante_branch_form[logoFile]']    = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
 
+        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
+        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
+
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
@@ -98,6 +101,10 @@ class BranchControllerTest extends WebTestCase
         $form['diamante_branch_form[name]'] = $branch['name'];
         $form['diamante_branch_form[description]'] = 'Branch Description Changed';
         $form['diamante_branch_form[logoFile]'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+
+        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
+        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
+
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);

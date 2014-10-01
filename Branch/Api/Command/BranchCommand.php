@@ -16,6 +16,7 @@ namespace Eltrino\DiamanteDeskBundle\Branch\Api\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Branch;
+use Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfiguration;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -32,9 +33,30 @@ class BranchCommand implements Taggable
     public $logoFile;
     public $defaultAssignee;
 
+    /**
+     * @var BranchEmailConfiguration
+     */
+    public $branchEmailConfiguration;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+    }
+
+    /**
+     * @return BranchEmailConfiguration
+     */
+    public function getBranchEmailConfiguration()
+    {
+        return $this->branchEmailConfiguration;
+    }
+
+    /**
+     * @param $branchEmailConfiguration
+     */
+    public function setBranchEmailConfiguration($branchEmailConfiguration)
+    {
+        $this->branchEmailConfiguration = $branchEmailConfiguration;
     }
 
     /**
@@ -70,13 +92,13 @@ class BranchCommand implements Taggable
 
     public static function fromBranch(Branch $branch)
     {
-        $command                  = new self();
-        $command->id              = $branch->getId();
-        $command->name            = $branch->getName();
-        $command->description     = $branch->getDescription();
-        $command->defaultAssignee = $branch->getDefaultAssignee();
-        $command->tags            = $branch->getTags();
-        $command->logo            = $branch->getLogo();
+        $command                     = new self();
+        $command->id                 = $branch->getId();
+        $command->name               = $branch->getName();
+        $command->description        = $branch->getDescription();
+        $command->defaultAssignee    = $branch->getDefaultAssignee();
+        $command->tags               = $branch->getTags();
+        $command->logo               = $branch->getLogo();
         return $command;
     }
 }

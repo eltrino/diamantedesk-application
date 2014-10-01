@@ -66,6 +66,19 @@
         }]
     ) %}
 
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'Email Configuration'|trans,
+        'subblocks': [
+            {
+                'title':null,
+                'data': [
+                    form_row(form.branch_email_configuration.supportAddress),
+                    form_row(form.branch_email_configuration.customerDomains)
+                ]
+            }]
+        }]
+    ) %}
+
     {% set data = {
         'formErrors': form_errors(form)? form_errors(form) : null,
         'dataBlocks': dataBlocks,

@@ -80,6 +80,18 @@
         }]
     ) %}
 
+    {% if branchEmailConfiguration %}
+        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', branchEmailConfiguration.supportAddress)] %}
+        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains)]) %}
+
+        {% set dataBlocks = dataBlocks|merge([{
+            'title': 'Email Configuration',
+            'subblocks':[{
+                'data': EmailConfDataSubBlocks
+            }]
+        }]) %}
+    {% endif %}
+
     {% set dataBlocks = dataBlocks|merge([{
         'title' : 'Tickets'|trans,
         'subblocks': [
