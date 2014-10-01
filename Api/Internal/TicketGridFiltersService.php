@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
-use Doctrine\ORM\EntityManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,7 +32,7 @@ class TicketGridFiltersService
 
     /**
      * @param ContainerInterface $container
-     * @param FilterRepository $filterRepository
+     * @param Repository $filterRepository
      */
     public function __construct(ContainerInterface $container, Repository $filterRepository)
     {
@@ -55,6 +54,9 @@ class TicketGridFiltersService
      */
     public function generateGridFilterUrl($filterId)
     {
+        /**
+         * @var $filter \Diamante\DeskBundle\Model\Ticket\Filter
+         */
         $filter = $this->filterRepository->get($filterId);
 
         if (!$filter) {

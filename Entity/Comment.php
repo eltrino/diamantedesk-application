@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
@@ -73,7 +72,7 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     protected $author;
 
     /**
-     * @var ArrayCollection
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Attachment")
      * @ORM\JoinTable(name="diamante_comment_attachments",

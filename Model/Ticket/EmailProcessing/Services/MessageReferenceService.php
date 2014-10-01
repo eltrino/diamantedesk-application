@@ -22,7 +22,7 @@ interface MessageReferenceService
     /**
      * Creates Ticket and Message Reference fot it
      * @param CreateTicketFromMessageCommand $command
-     * @return Diamante\DeskBundle\Model\Ticket\Ticket
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket(CreateTicketFromMessageCommand $command);

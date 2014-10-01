@@ -16,8 +16,6 @@ namespace Diamante\DeskBundle\DataFixtures\Test;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Diamante\DeskBundle\Model\File;
-
 use Diamante\DeskBundle\Entity\Branch;
 
 class LoadBranchData extends AbstractFixture

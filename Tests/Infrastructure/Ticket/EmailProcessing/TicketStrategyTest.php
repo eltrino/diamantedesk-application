@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
-use Eltrino\EmailProcessingBundle\Model\Message;
+use Diamante\EmailProcessingBundle\Model\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
 use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;

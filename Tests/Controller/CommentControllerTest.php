@@ -19,7 +19,8 @@
 namespace Diamante\DiamanteDeskBundle\Tests\Controller;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Diamante\DiamanteDeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Symfony\Component\DomCrawler\Form;
 
 class CommentControllerTest extends WebTestCase
 {

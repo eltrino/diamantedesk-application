@@ -20,11 +20,10 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\Status;
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
 use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
 use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
 
@@ -245,6 +244,9 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->logicalAnd(
                 $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
+                    /**
+                     * @var $other \Diamante\DeskBundle\Model\Attachment\File
+                     */
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })
             )
@@ -366,6 +368,9 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->logicalAnd(
                 $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
+                    /**
+                     * @var $other \Diamante\DeskBundle\Model\Attachment\File
+                     */
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })
             )

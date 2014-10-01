@@ -51,6 +51,9 @@ class FilterUrlGeneratorFactory
      */
     private function getCurrentUserId()
     {
+        /**
+         * @var $token \Symfony\Component\Security\Core\Authentication\Token\TokenInterface
+         */
         $token = $this->container->get('security.context')->getToken();
         return $token ? $token->getUser()->getId() : null;
     }

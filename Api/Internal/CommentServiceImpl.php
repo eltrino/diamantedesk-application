@@ -16,19 +16,15 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\CommentService;
 use Diamante\DeskBundle\Api\Command;
-use Diamante\DeskBundle\Model\Ticket\Comment;
-use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Form\Command\CreateCommentCommand;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Diamante\DeskBundle\Ticket\Api\Command\EditCommentCommand;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Ticket\AttachmentService;
 use Diamante\DeskBundle\Model\Shared\UserService;
-use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
 
 class CommentServiceImpl implements CommentService
 {
@@ -48,7 +44,7 @@ class CommentServiceImpl implements CommentService
     private $commentFactory;
 
     /**
-     * @var Internal\UserService
+     * @var UserService
      */
     private $userService;
 
@@ -119,6 +115,9 @@ class CommentServiceImpl implements CommentService
     {
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Comment');
 
+        /**
+         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
+         */
         $ticket = $this->loadTicketBy($command->ticket);
 
         $author = $this->userService->getUserById($command->author);
@@ -154,7 +153,7 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Update Ticket Comment content
-     * @param EditCommentCommand $command
+     * @param Command\EditCommentCommand $command
      * @return void
      */
     public function updateTicketComment(Command\EditCommentCommand $command)

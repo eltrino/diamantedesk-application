@@ -20,7 +20,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
-use Diamante\DeskBundle\Model\Ticket\Priority;
 
 class CreateTicketType extends AbstractType
 {

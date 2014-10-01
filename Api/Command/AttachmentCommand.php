@@ -16,6 +16,13 @@ namespace Diamante\DeskBundle\Api\Command;
 
 class AttachmentCommand
 {
+    /**
+     * @var int
+     */
     public $ticketId;
+
+    /**
+     * @var array
+     */
     public $files;
 }

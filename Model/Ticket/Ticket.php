@@ -96,6 +96,7 @@ class Ticket implements Entity, AttachmentHolder
      * @param $branch
      * @param $reporter
      * @param $assignee
+     * @param $source
      * @param null $priority
      * @param null $status
      */
@@ -236,6 +237,14 @@ class Ticket implements Entity, AttachmentHolder
 
     /** LEGACY CODE START */
 
+    /**
+     * @param $subject
+     * @param $description
+     * @param User $reporter
+     * @param $priority
+     * @param $status
+     * @param $source
+     */
     public function update($subject, $description, User $reporter, $priority, $status, $source)
     {
         $this->subject = $subject;
@@ -246,11 +255,17 @@ class Ticket implements Entity, AttachmentHolder
         $this->source = new Source($source);
     }
 
+    /**
+     * @param $status
+     */
     public function updateStatus($status)
     {
         $this->status = new Status($status);
     }
 
+    /**
+     * @param User $newAssignee
+     */
     public function assign(User $newAssignee)
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
@@ -301,6 +316,9 @@ class Ticket implements Entity, AttachmentHolder
     public function getAttachment($attachmentId)
     {
         $attachment = $this->attachments->filter(function($elm) use ($attachmentId) {
+            /**
+             * @var $elm Attachment
+             */
             return $elm->getId() == $attachmentId;
         })->first();
         return $attachment;

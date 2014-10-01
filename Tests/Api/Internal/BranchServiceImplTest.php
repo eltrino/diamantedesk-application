@@ -19,10 +19,8 @@ use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
-use Oro\Bundle\TagBundle\Entity\TagManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 {

@@ -33,10 +33,10 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
     /** @var ContainerInterface */
     private $container;
 
-    /** @var UserRepository */
+    /** @var EntityRepository */
     private $userRepository;
 
-    /** @var BranchRepository */
+    /** @var EntityRepository */
     private $branchRepository;
 
     /**

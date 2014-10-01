@@ -19,7 +19,7 @@ interface FileStorageService
     /**
      * Upload (create) file
      * @param string $filename filename path
-     * @param string $content content to be put in file
+     * @param string $contents content to be put in file
      * @return string path to file
      */
     public function upload($filename, $contents);

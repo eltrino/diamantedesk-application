@@ -20,7 +20,7 @@ interface AttachmentService
 {
     /**
      * Create Attachments
-     * @oaram CreateAttachmentsCommand $command
+     * @param CreateAttachmentsCommand $command
      * @return void
      */
     public function createAttachments(CreateAttachmentsCommand $command);

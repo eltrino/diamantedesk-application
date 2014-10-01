@@ -26,7 +26,6 @@ use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Ticket\Source;
-
 use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
 
@@ -151,6 +150,9 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $filenamePrefix = $this->exposeFilenamePrefixFrom($attachmentHolder);
 
         foreach ($attachments as $attachment) {
+            /**
+             * @var $attachment \Diamante\DeskBundle\Model\Attachment\File
+             */
             try {
                 $path = $this->fileStorageService->upload($filenamePrefix . '/' . $attachment->getName(), $attachment->getContent());
 

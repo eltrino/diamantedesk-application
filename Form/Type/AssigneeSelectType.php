@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Form\Type;
 
 use Oro\Bundle\UserBundle\Form\Type\UserSelectType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 
 class AssigneeSelectType extends UserSelectType
 {
@@ -24,7 +25,7 @@ class AssigneeSelectType extends UserSelectType
         $resolver->setDefaults(
             array(
                 'configs' => array(
-                    'placeholder' => \Diamante\DeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL,
+                    'placeholder' => Ticket::UNASSIGNED_LABEL,
                     'result_template_twig' => 'OroUserBundle:User:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'OroUserBundle:User:Autocomplete/selection.html.twig'
                 ),

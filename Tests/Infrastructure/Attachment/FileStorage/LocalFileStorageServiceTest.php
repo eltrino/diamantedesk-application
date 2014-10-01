@@ -40,11 +40,6 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $fs;
 
-    /**
-     * @var
-     */
-    private $tempDir;
-
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -66,7 +61,7 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $this->fileInfo->isDir());
         $this->assertEquals(false, $this->fileInfo->isWritable());
 
-        $justUploadedFile = $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
+        $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
     }
 
     /**
@@ -81,7 +76,7 @@ class LocalFileStorageServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(true, $this->fileInfo->isDir());
         $this->assertEquals(false, $this->fileInfo->isWritable());
-        $justUploadedFile = $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
+        $this->localFileStorageService->upload(self::DUMMY_FILENAME, self::DUMMY_CONTENT);
     }
 
     /**

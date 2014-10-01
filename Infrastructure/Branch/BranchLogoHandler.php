@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Branch;
 use Symfony\Component\Filesystem\Filesystem;
 use Diamante\DeskBundle\Model\Branch\Exception\LogoHandlerLogicException;
 use Diamante\DeskBundle\Model\Branch\Logo;
-
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  *
  * Class BranchLogoHandler
@@ -50,12 +50,12 @@ class BranchLogoHandler
 
     /**
      * Upload (move) file to branch logos directory
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $logo
+     * @param UploadedFile $logo
      * @param null|string $targetFilename
      * @return \Symfony\Component\HttpFoundation\File\File
      * @throws LogoHandlerLogicException
      */
-    public function upload(\Symfony\Component\HttpFoundation\File\UploadedFile $logo, $targetFilename = null)
+    public function upload(UploadedFile $logo, $targetFilename = null)
     {
         if (!in_array($logo->getMimeType(), $this->permittedMimeTypes)) {
             throw new LogoHandlerLogicException(sprintf('"%s" file type is not permitted. Use images for logo and try again.', $logo->getMimeType()));

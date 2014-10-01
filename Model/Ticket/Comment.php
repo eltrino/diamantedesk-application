@@ -148,6 +148,9 @@ class Comment implements Entity, AttachmentHolder
     public function getAttachment($attachmentId)
     {
         $attachment = $this->attachments->filter(function($elm) use ($attachmentId) {
+            /**
+             * @var $elm Attachment
+             */
             return $elm->getId() == $attachmentId;
         })->first();
         return $attachment;

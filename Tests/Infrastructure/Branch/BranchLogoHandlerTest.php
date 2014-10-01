@@ -15,11 +15,7 @@
 namespace Diamante\DeskBundle\Tests\Infrastructure\Branch;
 
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
-use Diamante\DeskBundle\Model\Branch\Branch;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Diamante\DeskBundle\Model\Branch\Exception\LogoHandlerLogicException;
 use Diamante\DeskBundle\Tests\Stubs\FileInfoStub;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 
@@ -52,11 +48,6 @@ class BranchLogoHandlerTest extends \PHPUnit_Framework_TestCase
      * @var BranchLogoHandler
      */
     private $handler;
-
-    /**
-     * @var string
-     */
-    private $uploadDir;
 
     /**
      * @var string

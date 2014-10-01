@@ -16,6 +16,12 @@ namespace Diamante\DeskBundle\Api\Command;
 
 class UpdateStatusCommand
 {
+    /**
+     * @var int
+     */
     public $ticketId;
+    /**
+     * @var string
+     */
     public $status;
 }

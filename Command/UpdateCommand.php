@@ -15,10 +15,8 @@
 namespace Diamante\DeskBundle\Command;
 
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
 
 class UpdateCommand extends AbstractCommand
 {
@@ -74,6 +72,9 @@ class UpdateCommand extends AbstractCommand
      */
     protected function updateDbSchema()
     {
+        /**
+         * @var $em \Doctrine\ORM\EntityManager
+         */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $schemaTool = new SchemaTool($em);
         $entitiesMetadata = array(

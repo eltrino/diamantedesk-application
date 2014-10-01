@@ -21,7 +21,7 @@ class DoctrineMessageReferenceRepository extends DoctrineGenericRepository imple
     /**
      * Retrieves Reference by given message id
      * @param string $messageId
-     * @return \Diamante\DeskBundle\Ticket\Model\EmailProcessing\MessageReference
+     * @return \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference
      */
     public function getReferenceByMessageId($messageId)
     {

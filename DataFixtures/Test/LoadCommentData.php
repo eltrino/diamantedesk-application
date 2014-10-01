@@ -31,10 +31,10 @@ class LoadCommentData extends AbstractFixture implements ContainerAwareInterface
     /** @var ContainerInterface */
     private $container;
 
-    /** @var UserRepository */
+    /** @var EntityRepository */
     private $userRepository;
 
-    /** @var TicketRepository */
+    /** @var EntityRepository */
     private $ticketRepository;
 
     /**

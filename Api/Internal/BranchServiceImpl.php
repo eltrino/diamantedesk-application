@@ -25,6 +25,7 @@ use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
+use Diamante\DeskBundle\Model\Branch\Branch;
 
 class BranchServiceImpl implements BranchService
 {
@@ -39,7 +40,7 @@ class BranchServiceImpl implements BranchService
     private $branchFactory;
 
     /**
-     * @var \Diamante\DeskBundle\Branch\Infrastructure\BranchLogoHandler
+     * @var \Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler
      */
     private $branchLogoHandler;
 
@@ -130,6 +131,9 @@ class BranchServiceImpl implements BranchService
     {
         $this->isGranted('EDIT', 'Entity:DiamanteDeskBundle:Branch');
 
+        /**
+         * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
+         */
         $branch = $this->branchRepository->get($branchCommand->id);
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
         $file = null;

@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\Api;
 use Diamante\DeskBundle\Api\Command\EditCommentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
 
 interface CommentService
 {

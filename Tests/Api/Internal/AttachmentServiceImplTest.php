@@ -67,12 +67,6 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $attachmentHolder;
 
-    /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
-     */
-    private $uploadedFile;
-
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -120,6 +114,9 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->logicalAnd(
                 $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
+                    /**
+                     * @var $other \Diamante\DeskBundle\Model\Attachment\File
+                     */
                     return AttachmentServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })
             )
@@ -187,7 +184,7 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return FilesListDto
+     * @return array
      */
     private function attachmentsInputDTOs()
     {

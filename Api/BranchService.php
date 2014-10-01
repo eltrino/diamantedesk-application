@@ -14,6 +14,8 @@
  */
 namespace Diamante\DeskBundle\Api;
 
+use Diamante\DeskBundle\Model\Branch\Branch;
+
 interface BranchService
 {
     /**

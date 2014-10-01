@@ -15,8 +15,8 @@
 namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
-use Eltrino\EmailProcessingBundle\Model\Message;
-use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
+use Diamante\EmailProcessingBundle\Model\Message;
+use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
 use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
 

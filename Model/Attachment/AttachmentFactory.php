@@ -21,7 +21,7 @@ class AttachmentFactory extends AbstractEntityFactory
     /**
      * Create Attachment entity
      * @param File $file
-     * @return \Diamante\DeskBundle\Attachment\Model\Attachment
+     * @return \Diamante\DeskBundle\Model\Attachment\Attachment
      */
     public function create(File $file)
     {

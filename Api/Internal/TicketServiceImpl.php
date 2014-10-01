@@ -15,20 +15,17 @@
 
 namespace Diamante\DeskBundle\Api\Internal;
 
-use Doctrine\ORM\EntityManager;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
-use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Diamante\DeskBundle\Ticket\Api\Command\AssigneeTicketCommand;
-use Diamante\DeskBundle\Ticket\Api\Command\CreateTicketCommand;
-use Diamante\DeskBundle\Ticket\Api\Command\UpdateStatusCommand;
-use Diamante\DeskBundle\Ticket\Api\Command\UpdateTicketCommand;
+use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
+use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Model\Ticket\AttachmentService;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
-use Diamante\DeskBundle\Model\Ticket\Status;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -58,7 +55,7 @@ class TicketServiceImpl implements TicketService
     private $ticketFactory;
 
     /**
-     * @var Internal\UserService
+     * @var UserService
      */
     private $userService;
 
@@ -162,11 +159,11 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Create Ticket
-     * @param Command\CreateTicketCommand $command
+     * @param CreateTicketCommand $command
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket(Command\CreateTicketCommand $command)
+    public function createTicket(CreateTicketCommand $command)
     {
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Ticket');
 
@@ -214,7 +211,7 @@ class TicketServiceImpl implements TicketService
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
-    public function updateTicket(Command\UpdateTicketCommand $command)
+    public function updateTicket(UpdateTicketCommand $command)
     {
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
@@ -260,11 +257,11 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * @@param Command\UpdateStatusCommand $command
+     * @@param UpdateStatusCommand $command
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function updateStatus(Command\UpdateStatusCommand $command)
+    public function updateStatus(UpdateStatusCommand $command)
     {
         $ticket = $this->loadTicketBy($command->ticketId);
 
@@ -278,10 +275,10 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Assign Ticket to specified User
-     * @param Command\AssigneeTicketCommand $command
+     * @param AssigneeTicketCommand $command
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
-    public function assignTicket(Command\AssigneeTicketCommand $command)
+    public function assignTicket(AssigneeTicketCommand $command)
     {
         $ticket = $this->loadTicketBy($command->id);
 

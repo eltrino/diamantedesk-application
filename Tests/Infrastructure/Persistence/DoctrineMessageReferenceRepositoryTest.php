@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
-use Doctrine\DBAL\LockMode;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;

@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\UserManager;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class OroUserService implements UserService
 {

@@ -32,7 +32,7 @@ class Attachment extends \Diamante\DeskBundle\Model\Attachment\Attachment
     protected $id;
 
     /**
-     * @var File
+     * @var \Symfony\Component\HttpFoundation\File\File
      *
      * @ORM\Column(name="file", type="file")
      */

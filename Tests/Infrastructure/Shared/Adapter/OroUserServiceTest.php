@@ -48,7 +48,7 @@ class OroUserServiceTest extends \PHPUnit_Framework_TestCase
         $this->userManager->expects($this->once())->method('findUserBy')->with($this->equalTo(array('id' => $id)))
             ->will($this->returnValue(null));
 
-        $user = $this->service->getUserById($id);
+        $this->service->getUserById($id);
     }
 
     /**

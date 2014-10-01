@@ -16,7 +16,6 @@
 namespace Diamante\DeskBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 use Diamante\DeskBundle\Model\Ticket\Source;
 
 class SourceTransformer implements DataTransformerInterface

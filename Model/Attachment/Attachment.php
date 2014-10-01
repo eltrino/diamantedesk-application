@@ -39,9 +39,7 @@ class Attachment implements Entity
     protected $updatedAt;
 
     /**
-     * @param Uri $file
-     * @param int $size
-     * @param string $mimeType
+     * @param File $file
      */
     public function __construct(File $file)
     {

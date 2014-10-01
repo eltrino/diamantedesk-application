@@ -22,7 +22,7 @@ use Diamante\DeskBundle\Api\Command\CreateAttachmentsCommand;
 class AttachmentServiceImpl implements AttachmentService
 {
     /**
-     * @var AttachmentService
+     * @var \Diamante\DeskBundle\Api\AttachmentService
      */
     private $attachmentContextService;
 

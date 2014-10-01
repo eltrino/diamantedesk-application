@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -23,15 +22,12 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Diamante\DeskBundle\Entity\Attachment;
-use Diamante\DeskBundle\Attachment\Model\File;
+use Diamante\DeskBundle\Model\Attachment\File;
 
 class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     /** @var ContainerInterface */
     private $container;
-
-    /** @var TicketRepository */
-    private $ticketRepository;
 
     /**
      * {@inheritdoc}
@@ -46,9 +42,6 @@ class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterf
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
-        /** @var  EntityManager $entityManager */
-        $entityManager = $container->get('doctrine.orm.entity_manager');
-        $this->ticketRepository = $entityManager->getRepository('DiamanteDeskBundle:Ticket');
     }
 
     public function load(ObjectManager $manager)

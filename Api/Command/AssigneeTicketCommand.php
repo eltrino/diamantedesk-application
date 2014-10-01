@@ -16,7 +16,13 @@ namespace Diamante\DeskBundle\Api\Command;
 
 class AssigneeTicketCommand
 {
+    /**
+     * @var int
+     */
     public $id;
 
+    /**
+     * @var int
+     */
     public $assignee;
 }

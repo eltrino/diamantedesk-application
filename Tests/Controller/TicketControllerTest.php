@@ -14,11 +14,11 @@
  */
 namespace Diamante\DiamanteDeskBundle\Tests\Controller;
 
-use Diamante\DiamanteDeskBundle\Model\Ticket\Priority;
-use Diamante\DiamanteDeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Bundle\UserBundle\Entity\User;
-use Diamante\DiamanteDeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Symfony\Component\DomCrawler\Form;
 
 class TicketControllerTest extends WebTestCase
 {

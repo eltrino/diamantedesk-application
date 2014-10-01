@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Datagrid;
 
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
 use Oro\Bundle\DataGridBundle\Extension\Formatter\Property\FieldProperty;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 
 class AssigneePropertyFormatter extends FieldProperty
 {
@@ -28,7 +29,7 @@ class AssigneePropertyFormatter extends FieldProperty
         $value = parent::getRawValue($record);
 
         if (is_null($value)) {
-            $value = $this->translator->trans(\Diamante\DeskBundle\Model\Ticket\Ticket::UNASSIGNED_LABEL);
+            $value = $this->translator->trans(Ticket::UNASSIGNED_LABEL);
         }
 
         return $value;

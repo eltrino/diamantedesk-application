@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
-use Doctrine\ORM\EntityManager;
 use Diamante\DeskBundle\Api\AttachmentService;
 use Diamante\DeskBundle\Model\Attachment\AttachmentFactory;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
@@ -61,6 +60,9 @@ class AttachmentServiceImpl implements AttachmentService
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
         $filenamePrefix = $this->exposeFilenamePrefixFrom($command->attachmentHolder);
         foreach ($command->attachments as $attachmentInput) {
+            /**
+             * @var $attachmentInput \Diamante\DeskBundle\Api\Dto\AttachmentInput
+             */
             try {
                 $path = $this->fileStorageService->upload(
                     $filenamePrefix . '/' . $attachmentInput->getFilename(), $attachmentInput->getContent()
@@ -100,6 +102,9 @@ class AttachmentServiceImpl implements AttachmentService
      */
     public function removeAttachment($attachmentId)
     {
+        /**
+         * @var $attachment \Diamante\DeskBundle\Model\Attachment\Attachment
+         */
         $attachment = $this->attachmentRepository->get($attachmentId);
         if (is_null($attachment)) {
             throw new \RuntimeException('Attachment loading failed, attachment not found.');

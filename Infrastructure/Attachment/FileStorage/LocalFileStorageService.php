@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Attachment\FileStorage;
 
-use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Services\FileStorageService;
 use Symfony\Component\Filesystem\Filesystem;
 

@@ -15,11 +15,8 @@
 namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
@@ -66,7 +63,7 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
     /**
      * Branch default assignee
      *
-     * @var User
+     * @var \Oro\Bundle\UserBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="default_assignee_id", referencedColumnName="id", onDelete="SET NULL")

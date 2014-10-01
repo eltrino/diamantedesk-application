@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\Adapter;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
-use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Infrastructure\Ticket\Adapter\AttachmentServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Api\Command\CreateAttachmentsCommand;
