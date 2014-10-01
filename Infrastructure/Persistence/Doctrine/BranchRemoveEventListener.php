@@ -15,7 +15,6 @@
 namespace Diamante\EmailProcessingBundle\Infrastructure\Persistence\Doctrine;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BranchRemoveEventListener

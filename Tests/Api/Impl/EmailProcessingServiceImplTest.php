@@ -14,7 +14,6 @@
  */
 namespace Diamante\EmailProcessingBundle\Tests\Api\Impl;
 
-use Diamante\EmailProcessingBundle\Api\EmailProcessingService;
 use Diamante\EmailProcessingBundle\Api\Impl\EmailProcessingServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 

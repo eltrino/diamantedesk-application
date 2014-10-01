@@ -94,7 +94,7 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
                             );
                             try {
                                 \PHPUnit_Framework_Assert::assertThat($message, $constraint);
-                            } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+                            } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
                                 $result = false;
                             }
                         }

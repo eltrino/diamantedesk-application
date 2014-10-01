@@ -15,7 +15,6 @@
 namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
-use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Zend\Mail\Storage\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 

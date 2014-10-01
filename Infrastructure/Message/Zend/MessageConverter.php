@@ -18,7 +18,7 @@ use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMess
 class MessageConverter
 {
     /**
-     * @return Message
+     * @return ZendMailMessage
      */
     public function fromRawMessage($rawMessage)
     {

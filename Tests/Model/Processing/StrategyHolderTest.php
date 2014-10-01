@@ -15,7 +15,6 @@
 namespace Diamante\EnailProcessingBundle\Tests\Model\Processing;
 
 use Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder;
-use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class StrategyHolderTest extends \PHPUnit_Framework_TestCase

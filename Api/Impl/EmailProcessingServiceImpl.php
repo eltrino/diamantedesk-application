@@ -15,11 +15,9 @@
 namespace Diamante\EmailProcessingBundle\Api\Impl;
 
 use Diamante\EmailProcessingBundle\Api\EmailProcessingService;
-use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProviderFactory;
-use Diamante\EmailProcessingBundle\Model\Processing\Context;
 use Diamante\EmailProcessingBundle\Model\Service\ManagerInterface;
 
 class EmailProcessingServiceImpl implements EmailProcessingService
