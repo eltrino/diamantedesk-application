@@ -16,17 +16,18 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\Adapter;
 
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
-use Diamante\DeskBundle\Model\Ticket\AttachmentService;
+use Diamante\DeskBundle\Api\AttachmentService;
 use Diamante\DeskBundle\Api\Command\CreateAttachmentsCommand;
+use Diamante\DeskBundle\Model\Ticket\AttachmentService as TicketAttachmentService;
 
-class AttachmentServiceImpl implements AttachmentService
+class AttachmentServiceImpl implements TicketAttachmentService
 {
     /**
      * @var \Diamante\DeskBundle\Api\AttachmentService
      */
     private $attachmentContextService;
 
-    public function __construct($attachmentContextService)
+    public function __construct(AttachmentService $attachmentContextService)
     {
         $this->attachmentContextService = $attachmentContextService;
     }
