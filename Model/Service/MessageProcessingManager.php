@@ -48,7 +48,7 @@ class MessageProcessingManager implements ManagerInterface
                 try {
                     $this->processingContext->execute($message);
                     if (false === isset($messagesToMove[$message->getUniqueId()])) {
-                        //$messagesToMove[$message->getUniqueId()] = $message;
+                        $messagesToMove[$message->getUniqueId()] = $message;
                     }
                 } catch (\Exception $e) {
                 }
