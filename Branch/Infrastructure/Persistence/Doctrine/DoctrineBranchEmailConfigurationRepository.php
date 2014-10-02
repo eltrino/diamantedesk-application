@@ -61,10 +61,13 @@ class DoctrineBranchEmailConfigurationRepository extends \Doctrine\ORM\EntityRep
         $result = $this->getEntityManager()->createNativeQuery("
             SELECT j.branch_id as branch_id,
                (j.support_address = :supportAddress AND
-                 j.customer_domains REGEXP :customerDomainRegExp) +
-               (j.support_address = :supportAddress or
-                 j.customer_domains REGEXP :customerDomainRegExp) AS criteria
-             FROM diamante_branch_email_configuration j ORDER BY criteria DESC LIMIT 1
+                 j.customer_domains REGEXP :customerDomainRegExp) * 3 +
+               (j.support_address = :supportAddress AND
+                 j.customer_domains = '') * 2 +
+               (j.support_address = '' AND
+                 j.customer_domains REGEXP :customerDomainRegExp) * 1
+            AS criteria
+            FROM diamante_branch_email_configuration j ORDER BY criteria DESC LIMIT 1
         ", $rsm)
             ->setParameter('supportAddress', $supportAddress)
             ->setParameter('customerDomainRegExp', $customerDomainRegExp)
