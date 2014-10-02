@@ -70,40 +70,42 @@ class InstallCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write('Creating Branch logo directory...');
+            $output->write("Creating Branch logo directory..." . "\n");
             $this->createBranchLogoDirectory();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Creating attachments directory...');
+            $output->write("Creating attachments directory..." . "\n");
             $this->createAttachmentsDirectory();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Installing DB schema...');
+            $output->write("Installing DB schema..." . "\n");
             $this->updateDbSchema();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
             $this->loadData($output);
 
-            $output->write('Updating navigation...');
+            $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Loading migration data');
+            $output->write("Loading migration data" . "\n");
             $this->loadDataFixtures($output);
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
+            $output->write("Installing assets..." . "\n");
             $this->assetsInstall($output);
 
             $this->asseticDump($output, array(
                 '--no-debug' => true,
             ));
+            $output->writeln("Done" . "\n");
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
         }
 
-        $output->writeln('Installed!');
+        $output->writeln("Installed!" . "\n");
         return 0;
     }
 

@@ -14,40 +14,37 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Form\Type;
 
+use Eltrino\DiamanteDeskBundle\Branch\Api\BranchService;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AttachmentType extends AbstractType
+class DefaultBranchType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var BranchService
+     */
+    private $branchService;
+
+    public function __construct(BranchService $branchService)
     {
-        $builder->add(
-            'files',
-            'file',
-            array(
-                'label' => 'eltrino.diamantedesk.attachment.file',
-                'required' => true,
-                'attr' => array(
-//                    "accept" => "image/*",
-                    'multiple' => 'multiple'
-                )
-            )
-        );
+        $this->branchService = $branchService;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand',
-                'intention' => 'attachment',
-                'cascade_validation' => true
-            )
-        );
+        $choices = array();
+        foreach ($this->branchService->listAllBranches() as $branch) {
+            $choices[$branch->getId()] = $branch->getName();
+        }
+        $resolver->setDefaults(array(
+            'choices' => $choices
+        ));
+    }
+
+    public function getParent()
+    {
+        return 'choice';
     }
 
     /**
@@ -57,6 +54,6 @@ class AttachmentType extends AbstractType
      */
     public function getName()
     {
-        return 'diamante_attachment_form';
+        return 'diamante_email_processing_default_branch';
     }
 }

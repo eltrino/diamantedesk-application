@@ -30,7 +30,7 @@ class BranchType extends AbstractType
             'name',
             'text',
             array(
-                'label'    => 'Name',
+                'label'    => 'eltrino.diamantedesk.attributes.name',
                 'required' => true,
             )
         );
@@ -39,7 +39,7 @@ class BranchType extends AbstractType
             'description',
             'textarea',
             array(
-                'label'    => 'Description',
+                'label'    => 'eltrino.diamantedesk.common.description',
                 'required' => false,
             )
         );
@@ -48,7 +48,7 @@ class BranchType extends AbstractType
             'logoFile',
             'file',
             array(
-                'label'    => 'Image',
+                'label'    => 'eltrino.diamantedesk.attachment.image',
                 'required' => false,
                 'tooltip' => '"JPEG" and "PNG" image formats are supported only.'
             )
@@ -58,6 +58,7 @@ class BranchType extends AbstractType
             'defaultAssignee',
             'diamante_assignee_select',
             array(
+                'label'    => 'eltrino.diamantedesk.attributes.assignee',
                 'required' => false
             )
         );

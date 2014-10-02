@@ -15,6 +15,11 @@
 
 namespace Eltrino\DiamanteDeskBundle\Ticket\Api\Internal;
 
+/**
+ * Interface UserService
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Api\Internal
+ * @codeCoverageIgnore
+ */
 interface UserService
 {
     public function getUserById($id);

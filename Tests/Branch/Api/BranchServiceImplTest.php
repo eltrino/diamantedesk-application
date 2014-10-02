@@ -18,13 +18,17 @@ use Eltrino\DiamanteDeskBundle\Branch\Api\BranchServiceImpl;
 use Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand;
 use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
 use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Eltrino\DiamanteDeskBundle\Tests\Stubs\UploadedFileStub;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_BRANCH_ID = 1;
+    const DUMMY_LOGO_PATH = 'uploads/branch/logo';
+    const DUMMY_LOGO_NAME = 'dummy-logo-name.png';
 
     /**
      * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
@@ -56,8 +60,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $tagManager;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @var \Eltrino\DiamanteDeskBundle\Tests\Stubs\UploadedFileStub
      */
     private $fileMock;
 
@@ -168,8 +171,13 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $defaultAssignee = new User();
         $tags = array();
         $branch = new Branch($name, $description, null, new Logo('dummy'));
+        $this->fileMock = new UploadedFileStub(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
 
-        $this->branchLogoHandler->expects($this->once())->method('upload')->with($this->equalTo($this->fileMock));
+        $this->branchLogoHandler
+            ->expects($this->once())
+            ->method('upload')
+            ->with($this->equalTo($this->fileMock))
+            ->will($this->returnValue($this->fileMock));
 
         $this->branchFactory->expects($this->once())->method('create')
             ->with(
@@ -229,13 +237,14 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function updateBranchWithAllValues()
     {
+        $this->fileMock = new UploadedFileStub(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
+        $uploadedFile = $this->fileMock->move(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
+
         $this->branchRepository->expects($this->once())->method('get')->will($this->returnValue($this->branch));
         $this->branch->expects($this->exactly(2))->method('getLogo')->will($this->returnValue($this->logo));
         $this->branchLogoHandler->expects($this->once())->method('remove')->with($this->equalTo($this->logo));
         $this->branchLogoHandler->expects($this->once())->method('upload')->with($this->equalTo($this->fileMock))
-            ->will($this->returnValue($this->fileMock));
-
-        $this->logo->expects($this->once())->method('getFilename');
+            ->will($this->returnValue($uploadedFile));
 
         $name = 'DUMMY_NAME_UPDT';
         $description = 'DUMMY_DESC_UPDT';
@@ -244,7 +253,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branch->expects($this->once())->method('update')->with(
             $this->equalTo($name), $this->equalTo($description), $this->equalTo($defaultAssignee),
-            $this->equalTo($this->fileMock)
+            $this->equalTo(new Logo($uploadedFile->getFilename()))
         );
 
         $this->branch->expects($this->once())->method('setTags')->with($this->equalTo($tags));

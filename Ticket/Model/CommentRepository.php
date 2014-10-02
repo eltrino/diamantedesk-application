@@ -14,6 +14,11 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Model;
 
+/**
+ * Interface CommentRepository
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Model
+ * @codeCoverageIgnore
+ */
 interface CommentRepository
 {
     /**

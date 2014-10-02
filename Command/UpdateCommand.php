@@ -41,31 +41,31 @@ class UpdateCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write("Clearing cache... \n");
+            $output->write("Clearing cache..." . "\n");
             $this->runExistingCommand('cache:clear', $output);
-            $output->write('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write("Updating DB schema... \n");
+            $output->write("Updating DB schema..." . "\n");
             $this->updateDbSchema();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write("Updating navigation... \n");
+            $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Installing assets...');
+            $output->write("Installing assets..." . "\n");
             $this->assetsInstall($output);
             $this->asseticDump($output, array(
                 '--no-debug' => true,
             ));
-            $output->write('Done');
+            $output->writeln("Done" . "\n");
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
         }
 
-        $output->writeln('Updated!');
+        $output->writeln("Updated!" . "\n");
     }
 
     /**

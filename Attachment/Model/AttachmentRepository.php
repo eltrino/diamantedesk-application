@@ -15,6 +15,11 @@
 
 namespace Eltrino\DiamanteDeskBundle\Attachment\Model;
 
+/**
+ * Interface AttachmentRepository
+ * @package Eltrino\DiamanteDeskBundle\Attachment\Model
+ * @codeCoverageIgnore
+ */
 interface AttachmentRepository
 {
     /**

@@ -12,19 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Eltrino\DiamanteDeskBundle\Tests\Placeholder;
 
-namespace Eltrino\DiamanteDeskBundle\Attachment\Model;
-
-/**
- * Interface AttachmentHolder
- * @package Eltrino\DiamanteDeskBundle\Attachment\Model
- * @codeCoverageIgnore
- */
-interface AttachmentHolder
+class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
 {
-    /**
-     * @param Attachment $attachment
-     * @return void
-     */
-    public function addAttachment(Attachment $attachment);
+    public function __construct($id, $name, $description, Logo $logo = null, $tags = null)
+    {
+        parent::__construct($name, $description, $logo, $tags);
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

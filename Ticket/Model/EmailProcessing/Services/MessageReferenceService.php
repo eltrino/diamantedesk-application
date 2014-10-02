@@ -14,6 +14,11 @@
  */
 namespace Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services;
 
+/**
+ * Interface MessageReferenceService
+ * @package Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services
+ * @codeCoverageIgnore
+ */
 interface MessageReferenceService
 {
     /**

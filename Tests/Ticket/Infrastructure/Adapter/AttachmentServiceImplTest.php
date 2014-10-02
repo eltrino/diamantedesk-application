@@ -31,12 +31,6 @@ class AttachmentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentContextService;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-     * @Mock \Symfony\Component\HttpFoundation\File\UploadedFile
-     */
-    private $uploadedFile;
-
-    /**
      * @var \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder
      * @Mock \Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder
      */

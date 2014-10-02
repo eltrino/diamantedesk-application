@@ -17,6 +17,11 @@ namespace Eltrino\DiamanteDeskBundle\Attachment\Api;
 use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\FilesListDto;
 use Eltrino\DiamanteDeskBundle\Attachment\Model\AttachmentHolder;
 
+/**
+ * Interface AttachmentService
+ * @package Eltrino\DiamanteDeskBundle\Attachment\Api
+ * @codeCoverageIgnore
+ */
 interface AttachmentService
 {
     /**
