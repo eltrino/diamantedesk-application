@@ -33,6 +33,26 @@ abstract class AbstractMessageProvider
     }
 
     /**
+     * @param $headers
+     * @return string
+     */
+    public function processFrom($headers)
+    {
+        $messageFrom = $headers->get('from')->getAddressList()->key();
+        return $messageFrom;
+    }
+
+    /**
+     * @param $headers
+     * @return string
+     */
+    public function processTo($headers)
+    {
+        $messageTo = $headers->get('to')->getAddressList()->key();
+        return $messageTo;
+    }
+
+    /**
      * Retrieves Message Reference
      *
      * @param \Zend\Mail\Headers $headers

@@ -17,6 +17,11 @@ namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\RawMessageProvider;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMessage;
+use Zend\Mail\AddressList;
+use Zend\Mail\Header\From;
+use Zend\Mail\Header\MessageId;
+use Zend\Mail\Header\To;
+use Zend\Mail\Headers;
 
 class RawMessageProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,13 +49,38 @@ class RawMessageProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function thatMessagesAreFetched()
     {
+        $zendMailMessage = new ZendMailMessage();
+        $zendMailMessage->setHeaders($this->headers());
+
         $this->converter->expects($this->once())->method('fromRawMessage')
             ->with($this->equalTo(self::DUMMY_RAW_MESSAGE))
-            ->will($this->returnValue(new ZendMailMessage()));
+            ->will($this->returnValue($zendMailMessage));
 
         $messages = $this->messageProvider->fetchMessagesToProcess();
 
         $this->assertNotEmpty($messages);
         $this->assertContainsOnlyInstancesOf('\Diamante\EmailProcessingBundle\Model\Message', $messages);
+    }
+
+    private function headers()
+    {
+        $headers = new Headers();
+
+        $messageId = new MessageId();
+        $messageId->setId('testId');
+        $headers->addHeader($messageId);
+
+        $addressList = new AddressList();
+        $addressList->add('test@gmail.com');
+
+        $from = new From();
+        $from->setAddressList($addressList);
+        $headers->addHeader($from);
+
+        $to = new To();
+        $to->setAddressList($addressList);
+        $headers->addHeader($to);
+
+        return $headers;
     }
 }

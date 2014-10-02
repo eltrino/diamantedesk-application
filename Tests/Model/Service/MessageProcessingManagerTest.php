@@ -24,6 +24,8 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
     const DUMMY_MESSAGE_ID        = 'dummy_message_id';
     const DUMMY_MESSAGE_SUBJECT   = 'dummy_message_subject';
     const DUMMY_MESSAGE_CONTENT   = 'dummy_message_content';
+    const DUMMY_MESSAGE_FROM      = 'dummy_message_from';
+    const DUMMY_MESSAGE_TO        = 'dummy_message_to';
     const DUMMY_MESSAGE_REFERENCE = 'dummy_message_reference';
 
     /**
@@ -72,6 +74,8 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_MESSAGE_ID,
             self::DUMMY_MESSAGE_SUBJECT,
             self::DUMMY_MESSAGE_CONTENT,
+            self::DUMMY_MESSAGE_FROM,
+            self::DUMMY_MESSAGE_TO,
             self::DUMMY_MESSAGE_REFERENCE)
         );
         $strategies = array($this->strategy);
