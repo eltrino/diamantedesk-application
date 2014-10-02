@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,9 +34,30 @@ class BranchCommand implements Taggable
     public $defaultAssignee;
     public $logo;
 
+    /**
+     * @var BranchEmailConfiguration
+     */
+    public $branchEmailConfiguration;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+    }
+
+    /**
+     * @return BranchEmailConfiguration
+     */
+    public function getBranchEmailConfiguration()
+    {
+        return $this->branchEmailConfiguration;
+    }
+
+    /**
+     * @param $branchEmailConfiguration
+     */
+    public function setBranchEmailConfiguration($branchEmailConfiguration)
+    {
+        $this->branchEmailConfiguration = $branchEmailConfiguration;
     }
 
     /**
@@ -80,10 +102,5 @@ class BranchCommand implements Taggable
         $command->logoFile        = null;
         $command->logo            = $branch->getLogo();
         return $command;
-    }
-
-    public function logo()
-    {
-        return $this->logo;
     }
 }
