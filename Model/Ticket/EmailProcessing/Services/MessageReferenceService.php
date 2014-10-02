@@ -21,16 +21,30 @@ interface MessageReferenceService
 {
     /**
      * Creates Ticket and Message Reference fot it
-     * @param CreateTicketFromMessageCommand $command
+     *
+     * @param $messageId
+     * @param $branchId
+     * @param $subject
+     * @param $description
+     * @param $reporterId
+     * @param $assigneeId
+     * @param null $priority
+     * @param null $status
+     * @param array $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket(CreateTicketFromMessageCommand $command);
+    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
+                                 $priority = null, $status = null, array $attachments = null);
 
     /**
      * Creates Comment for Ticket
-     * @param CreateCommentFromMessageCommand $command
+     *
+     * @param $content
+     * @param $authorId
+     * @param $messageId
+     * @param array $attachments
      * @return void
      */
-    public function createCommentForTicket(CreateCommentFromMessageCommand $command);
+    public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null);
 }

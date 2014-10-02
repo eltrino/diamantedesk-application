@@ -12,18 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing;
+namespace Diamante\DeskBundle\Model\Branch\EmailProcessing;
 
-interface BranchEmailConfigurationRepository
+use Diamante\DeskBundle\Model\Shared\Repository;
+
+/**
+ * Interface BranchEmailConfigurationRepository
+ * @package Diamante\DeskBundle\Model\Branch\EmailProcessing
+ * @codeCoverageIgnore
+ */
+interface BranchEmailConfigurationRepository extends Repository
 {
-    /**
-     * Retrieves BranchEmailConfiguration by given id
-     *
-     * @param $id
-     * @return BranchEmailConfiguration
-     */
-    public function get($id);
-
     /**
      * Retrieves BranchEmailConfiguration by Branch Id
      *
@@ -41,11 +40,4 @@ interface BranchEmailConfigurationRepository
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getBySupportAddressAndCustomerDomainCriteria($supportAddress, $customerDomain);
-
-    /**
-     * Store BranchEmailConfiguration
-     * @param BranchEmailConfiguration $branchEmailConfiguration
-     * @return void
-     */
-    public function store(BranchEmailConfiguration $branchEmailConfiguration);
 }

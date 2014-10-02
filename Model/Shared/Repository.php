@@ -14,6 +14,11 @@
  */
 namespace Diamante\DeskBundle\Model\Shared;
 
+/**
+ * Interface Repository
+ * @package Diamante\DeskBundle\Model\Shared
+ * @codeCoverageIgnore
+ */
 interface Repository
 {
     /**

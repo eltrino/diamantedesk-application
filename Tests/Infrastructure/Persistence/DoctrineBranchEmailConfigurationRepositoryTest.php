@@ -12,14 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
-namespace Eltrino\DiamanteDeskBundle\Tests\Branch\Infrastructure\Persistence\Doctrine;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
 use Doctrine\DBAL\LockMode;
-use Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration;
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
+use Diamante\DeskBundle\Model\Branch\Branch;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\DiamanteDeskBundle\Branch\Infrastructure\Persistence\Doctrine\DoctrineBranchEmailConfigurationRepository;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository;
 
 class DoctrineBranchEmailConfigurationRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -65,18 +64,6 @@ class DoctrineBranchEmailConfigurationRepositoryTest extends \PHPUnit_Framework_
     /**
      * @test
      */
-    public function thatBranchEmailConfigurationStores()
-    {
-        $branchEmailConfiguration = $this->getBranchEmailConfiguartion();
-        $this->em->expects($this->once())->method('persist')->with($this->equalTo($branchEmailConfiguration));
-        $this->em->expects($this->once())->method('flush');
-
-        $this->repository->store($branchEmailConfiguration);
-    }
-
-    /**
-     * @test
-     */
     public function thatBranchEmailConfigurationRetrievesByBranchId()
     {
         $branchId = 1;
@@ -114,4 +101,4 @@ class DoctrineBranchEmailConfigurationRepositoryTest extends \PHPUnit_Framework_
 
         return $branchEmailConfiguration;
     }
-} 
+}

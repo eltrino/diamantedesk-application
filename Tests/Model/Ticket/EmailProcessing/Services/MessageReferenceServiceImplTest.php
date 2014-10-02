@@ -24,8 +24,6 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
-use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
-use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
 
 class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -186,15 +184,14 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('store')
             ->with($this->equalTo($messageReference));
 
-        $createTicketFromMessageCommand = new CreateTicketFromMessageCommand();
-        $createTicketFromMessageCommand->messageId   = self::DUMMY_MESSAGE_ID;
-        $createTicketFromMessageCommand->branchId    = $branchId;
-        $createTicketFromMessageCommand->subject     = self::DUMMY_TICKET_SUBJECT;
-        $createTicketFromMessageCommand->description = self::DUMMY_TICKET_DESCRIPTION;
-        $createTicketFromMessageCommand->reporterId  = $reporterId;
-        $createTicketFromMessageCommand->assigneeId  = $assigneeId;
-
-        $this->messageReferenceService->createTicket($createTicketFromMessageCommand);
+        $this->messageReferenceService->createTicket(
+            self::DUMMY_MESSAGE_ID,
+            $branchId,
+            self::DUMMY_TICKET_SUBJECT,
+            self::DUMMY_TICKET_DESCRIPTION,
+            $reporterId,
+            $assigneeId
+        );
     }
 
     /**
@@ -244,9 +241,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->logicalAnd(
                 $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
-                    /**
-                     * @var $other \Diamante\DeskBundle\Model\Attachment\File
-                     */
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })
             )
@@ -265,17 +259,17 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('store')
             ->with($this->equalTo($messageReference));
 
-        $createTicketFromMessageCommand = new CreateTicketFromMessageCommand();
-        $createTicketFromMessageCommand->messageId   = self::DUMMY_MESSAGE_ID;
-        $createTicketFromMessageCommand->branchId    = $branchId;
-        $createTicketFromMessageCommand->subject     = self::DUMMY_TICKET_SUBJECT;
-        $createTicketFromMessageCommand->description = self::DUMMY_TICKET_DESCRIPTION;
-        $createTicketFromMessageCommand->reporterId  = $reporterId;
-        $createTicketFromMessageCommand->assigneeId  = $assigneeId;
-        $createTicketFromMessageCommand->attachments = $this->attachments();
-
-
-        $this->messageReferenceService->createTicket($createTicketFromMessageCommand);
+        $this->messageReferenceService->createTicket(
+            self::DUMMY_MESSAGE_ID,
+            $branchId,
+            self::DUMMY_TICKET_SUBJECT,
+            self::DUMMY_TICKET_DESCRIPTION,
+            $reporterId,
+            $assigneeId,
+            null,
+            null,
+            $this->attachments()
+        );
     }
 
     /**
@@ -314,12 +308,9 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('store')
             ->with($this->equalTo($ticket));
 
-        $createCommentFromMessageCommand = new CreateCommentFromMessageCommand();
-        $createCommentFromMessageCommand->content   = self::DUMMY_COMMENT_CONTENT;
-        $createCommentFromMessageCommand->authorId  = $authorId;
-        $createCommentFromMessageCommand->messageId = self::DUMMY_MESSAGE_ID;
-
-        $this->messageReferenceService->createCommentForTicket($createCommentFromMessageCommand);
+        $this->messageReferenceService->createCommentForTicket(
+            self::DUMMY_COMMENT_CONTENT, $authorId, self::DUMMY_MESSAGE_ID
+        );
 
         $this->assertCount(1, $ticket->getComments());
         $this->assertEquals($this->comment, $ticket->getComments()->get(0));
@@ -368,9 +359,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->logicalAnd(
                 $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
                 $this->callback(function($other) {
-                    /**
-                     * @var $other \Diamante\DeskBundle\Model\Attachment\File
-                     */
                     return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
                 })
             )
@@ -382,14 +370,9 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('store')
             ->with($this->equalTo($ticket));
 
-        $createCommentFromMessageCommand = new CreateCommentFromMessageCommand();
-        $createCommentFromMessageCommand->content     = self::DUMMY_COMMENT_CONTENT;
-        $createCommentFromMessageCommand->authorId    = $authorId;
-        $createCommentFromMessageCommand->messageId   = self::DUMMY_MESSAGE_ID;
-        $createCommentFromMessageCommand->attachments = $this->attachments();
-
-
-        $this->messageReferenceService->createCommentForTicket($createCommentFromMessageCommand);
+        $this->messageReferenceService->createCommentForTicket(
+            self::DUMMY_COMMENT_CONTENT, $authorId, self::DUMMY_MESSAGE_ID, $this->attachments()
+        );
 
         $this->assertCount(1, $ticket->getComments());
         $this->assertEquals($this->comment, $ticket->getComments()->get(0));

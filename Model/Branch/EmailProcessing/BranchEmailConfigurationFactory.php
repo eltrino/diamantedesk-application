@@ -12,11 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Model\Branch\EmailProcessing;
 
-namespace Eltrino\DiamanteDeskBundle\Branch\Model\Factory\EmailProcessing;
-
-use Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Branch;
+use Diamante\DeskBundle\Model\Branch\Branch;
 
 class BranchEmailConfigurationFactory
 {
@@ -30,4 +28,4 @@ class BranchEmailConfigurationFactory
     {
         return new BranchEmailConfiguration($branch, $customerDomains, $supportAddress);
     }
-} 
+}

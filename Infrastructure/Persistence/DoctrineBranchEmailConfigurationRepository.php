@@ -12,25 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Infrastructure\Persistence\Doctrine;
+namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfiguration;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 
-class DoctrineBranchEmailConfigurationRepository extends \Doctrine\ORM\EntityRepository
-    implements \Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfigurationRepository
+class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericRepository
+    implements BranchEmailConfigurationRepository
 {
-    /**
-     * Retrieves BranchEmailConfiguration by given id
-     * @param $id
-     * @return BranchEmailConfiguration
-     */
-    public function get($id)
-    {
-        return $this->find($id);
-    }
-
     /**
      * Retrieves BranchEmailConfiguration by Branch Id
      *
@@ -79,15 +70,4 @@ class DoctrineBranchEmailConfigurationRepository extends \Doctrine\ORM\EntityRep
             return 0;
         }
     }
-
-    /**
-     * Store BranchEmailConfiguration
-     * @param BranchEmailConfiguration $branchEmailConfiguration
-     * @return void
-     */
-    public function store(BranchEmailConfiguration $branchEmailConfiguration)
-    {
-        $this->getEntityManager()->persist($branchEmailConfiguration);
-        $this->getEntityManager()->flush();
-    }
-} 
+}

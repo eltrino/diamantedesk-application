@@ -12,11 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Tests\Model\Branch\EmailProcessing;
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Entity;
-
-use Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration;
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
+use Diamante\DeskBundle\Model\Branch\Branch;
 
 class BranchEmailConfigurationTest extends \PHPUnit_Framework_TestCase
 {
@@ -56,4 +55,4 @@ class BranchEmailConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('New Support Address', $branchEmailConfiguration->getSupportAddress());
     }
 
-} 
+}

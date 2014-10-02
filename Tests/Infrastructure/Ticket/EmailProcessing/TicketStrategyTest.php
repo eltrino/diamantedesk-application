@@ -40,20 +40,20 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private $ticketStrategy;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl
-     * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl
+     * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService
+     * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService
      */
     private $messageReferenceService;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Api\EmailProcessing\BranchEmailConfigurationService
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Api\EmailProcessing\BranchEmailConfigurationService
+     * @var \Diamante\DeskBundle\Api\BranchEmailConfigurationService
+     * @Mock \Diamante\DeskBundle\Api\BranchEmailConfigurationService
      */
     private $branchEmailConfigurationService;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @var \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @Mock \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      */
     private $emailProcessingSettings;
 
@@ -89,17 +89,11 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('getDefaultBranchId')
             ->will($this->returnValue(self::DEFAULT_BRANCH_ID));
 
-        $createTicketFromMessageCommand = new CreateTicketFromMessageCommand();
-        $createTicketFromMessageCommand->messageId   = $message->getMessageId();
-        $createTicketFromMessageCommand->branchId    = $branchId;
-        $createTicketFromMessageCommand->subject     = $message->getSubject();
-        $createTicketFromMessageCommand->description = $message->getContent();
-        $createTicketFromMessageCommand->reporterId  = $reporterId;
-        $createTicketFromMessageCommand->assigneeId  = $assigneeId;
 
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
-            ->with($this->equalTo($createTicketFromMessageCommand));
+            ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
+                $reporterId, $assigneeId);
 
         $this->ticketStrategy->process($message);
     }
@@ -139,14 +133,9 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $reporterId = 1;
 
-        $createCommentFromMessageCommand = new CreateCommentFromMessageCommand();
-        $createCommentFromMessageCommand->authorId  = $reporterId;
-        $createCommentFromMessageCommand->content   = $message->getContent();
-        $createCommentFromMessageCommand->messageId = $message->getReference();
-
         $this->messageReferenceService->expects($this->once())
             ->method('createCommentForTicket')
-            ->with($this->equalTo($createCommentFromMessageCommand));
+            ->with($this->equalTo($message->getContent()), $reporterId, $message->getReference());
 
         $this->ticketStrategy->process($message);
     }

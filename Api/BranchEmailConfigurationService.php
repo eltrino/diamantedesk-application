@@ -12,11 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Api\EmailProcessing;
+namespace Diamante\DeskBundle\Api;
 
-use Eltrino\DiamanteDeskBundle\Branch\Api\Command\EmailProcessing\BranchEmailConfigurationCommand;
-use Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfiguration;
+use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 
+/**
+ * Interface BranchEmailConfigurationService
+ * @package Diamante\DeskBundle\Api
+ * @codeCoverageIgnore
+ */
 interface BranchEmailConfigurationService
 {
     /**
@@ -38,15 +43,15 @@ interface BranchEmailConfigurationService
 
     /**
      * Create BranchEmailConfiguration
-     * @param BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
      * @return int
      */
-    public function createBranchEmailConfiguration(BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
+    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
 
     /**
      * Update BranchEmailConfiguration
-     * @param BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
      * @return int
      */
-    public function updateBranchEmailConfiguration(BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
-} 
+    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
+}

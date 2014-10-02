@@ -12,10 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Api\Command\EmailProcessing;
+namespace Diamante\DeskBundle\Api\Command;
 
-use Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfiguration;
-use Symfony\Component\Validator\Constraints as Assert;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 
 class BranchEmailConfigurationCommand
 {
@@ -34,4 +33,4 @@ class BranchEmailConfigurationCommand
 
         return $command;
     }
-} 
+}

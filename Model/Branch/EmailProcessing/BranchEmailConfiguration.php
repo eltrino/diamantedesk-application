@@ -12,12 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing;
+namespace Diamante\DeskBundle\Model\Branch\EmailProcessing;
 
+use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Branch;
+use Diamante\DeskBundle\Model\Branch\Branch;
 
-class BranchEmailConfiguration
+class BranchEmailConfiguration implements Entity
 {
     /**
      * @var integer
@@ -25,7 +26,7 @@ class BranchEmailConfiguration
     protected $id;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\Branch
+     * @var Branch
      */
     protected $branch;
 

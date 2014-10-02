@@ -12,13 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Tests\Api\Internal;
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Branch\Api\EmailProcessing;
-
-use Eltrino\DiamanteDeskBundle\Branch\Api\Command\EmailProcessing\BranchEmailConfigurationCommand;
-use Eltrino\DiamanteDeskBundle\Branch\Api\EmailProcessing\BranchEmailConfigurationServiceImpl;
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration;
+use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
+use Diamante\DeskBundle\Api\Internal\BranchEmailConfigurationServiceImpl;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -29,20 +28,20 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
     const DUMMY_CUSTOMER_DOMAINS = 'gmail.com, yahoo.com';
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfigurationRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfigurationRepository
+     * @var \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository
+     * @Mock \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository
      */
     private $branchEmailConfigurationRepository;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Factory\EmailProcessing\BranchEmailConfigurationFactory
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\Factory\EmailProcessing\BranchEmailConfigurationFactory
+     * @var \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory
+     * @Mock \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory
      */
     private $branchEmailConfigurationFactory;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
-     * @Mock \Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
     private $branchRepository;
 
@@ -52,14 +51,14 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
     private $branchEmailConfigurationServiceImpl;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\Branch
-     * @Mock \Eltrino\DiamanteDeskBundle\Entity\Branch
+     * @var \Diamante\DeskBundle\Model\Branch\Branch
+     * @Mock \Diamante\DeskBundle\Model\Branch\Branch
      */
     private $branch;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration
-     * @Mock \Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration
+     * @var \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration
+     * @Mock \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration
      */
     private $branchEmailConfiguration;
 
@@ -203,4 +202,4 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
 
         $this->branchEmailConfigurationServiceImpl->updateBranchEmailConfiguration($command);
     }
-} 
+}

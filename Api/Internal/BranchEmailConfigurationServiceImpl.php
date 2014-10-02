@@ -12,15 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+namespace Diamante\DeskBundle\Api\Internal;
 
-namespace Eltrino\DiamanteDeskBundle\Branch\Api\EmailProcessing;
-
+use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
+use Diamante\DeskBundle\Model\Shared\Repository;
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Factory\EmailProcessing\BranchEmailConfigurationFactory;
-use Eltrino\DiamanteDeskBundle\Branch\Model\BranchRepository;
-use Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfigurationRepository;
-use Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration;
-use Eltrino\DiamanteDeskBundle\Branch\Api\Command\EmailProcessing\BranchEmailConfigurationCommand;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository;
+use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
+use Diamante\DeskBundle\Api\Command;
 
 class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationService
 {
@@ -30,7 +30,7 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
     private $branchEmailConfigurationRepository;
 
     /**
-     * @var BranchRepository
+     * @var Repository
      */
     private $branchRepository;
 
@@ -42,7 +42,7 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
     public function __construct(
         BranchEmailConfigurationFactory $branchEmailConfigurationFactory,
         BranchEmailConfigurationRepository $branchEmailConfigurationRepository,
-        BranchRepository $branchRepository
+        Repository $branchRepository
     ) {
         $this->branchEmailConfigurationFactory    = $branchEmailConfigurationFactory;
         $this->branchEmailConfigurationRepository = $branchEmailConfigurationRepository;
@@ -79,10 +79,10 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
 
     /**
      * Create BranchEmailConfiguration
-     * @param BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
      * @return int
      */
-    public function createBranchEmailConfiguration(BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
+    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
     {
         $branch = $this->branchRepository->get($branchEmailConfigurationCommand->branch);
 
@@ -101,10 +101,10 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
     /**
      * Update BranchEmailConfiguration
      *
-     * @param BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
      * @return int
      */
-    public function updateBranchEmailConfiguration(BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
+    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
     {
         if ($this->getConfigurationByBranchId($branchEmailConfigurationCommand->branch))
         {
@@ -125,21 +125,4 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
         $this->branchEmailConfigurationRepository->store($branchEmailConfiguration);
         return $branchEmailConfiguration->getId();
     }
-
-    /**
-     * @param BranchEmailConfigurationFactory $branchEmailConfigurationFactory
-     * @param EntityManager $em
-     * @return BranchEmailConfigurationServiceImpl
-     */
-    public static function create(
-        BranchEmailConfigurationFactory $branchEmailConfigurationFactory,
-        EntityManager $em
-    )
-    {
-        return new BranchEmailConfigurationServiceImpl(
-            $branchEmailConfigurationFactory,
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\BranchEmailConfiguration'),
-            $em->getRepository('Eltrino\DiamanteDeskBundle\Entity\Branch')
-        );
-    }
-} 
+}

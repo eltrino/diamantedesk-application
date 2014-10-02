@@ -12,15 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Entity;
+namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\Persistence\Doctrine\DoctrineBranchEmailConfigurationRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository")
  * @ORM\Table(name="diamante_branch_email_configuration")
  */
-class BranchEmailConfiguration extends \Eltrino\DiamanteDeskBundle\Branch\Model\EmailProcessing\BranchEmailConfiguration
+class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration
 {
     /**
      * @var integer
