@@ -26,7 +26,7 @@ class AssigneeTicketType extends AbstractType
             'assignee',
             'diamante_assignee_select',
             array(
-                'label'    => 'eltrino.diamantedesk.attributes.assignee',
+                'label'    => 'diamante.desk.attributes.assignee',
                 'required' => false
             )
         );

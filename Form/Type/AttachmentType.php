@@ -26,7 +26,7 @@ class AttachmentType extends AbstractType
             'files',
             'file',
             array(
-                'label' => 'eltrino.diamantedesk.attachment.file',
+                'label' => 'diamante.desk.attachment.file',
                 'required' => true,
                 'attr' => array(
 //                    "accept" => "image/*",

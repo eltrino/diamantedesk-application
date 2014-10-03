@@ -1,5 +1,5 @@
-eltrino:
-    diamantedesk:
+diamante:
+    desk:
         branch:
           entity_label:        Branch
           entity_plural_label: Branches

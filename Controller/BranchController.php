@@ -92,7 +92,7 @@ class BranchController extends Controller
             });
         } catch(\Exception $e) {
             // @todo log original error
-            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.create.error');
+            $this->addErrorMessage('diamante.desk.branch.messages.create.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
@@ -154,7 +154,7 @@ class BranchController extends Controller
             }, $branch);
         } catch(\Exception $e) {
             // @todo log original error
-            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.save.error');
+            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_view',
@@ -181,13 +181,13 @@ class BranchController extends Controller
             $this->handle($form);
             $branchId = $callback($command);
             if ($command->id) {
-                $this->addSuccessMessage('eltrino.diamantedesk.branch.messages.save.success');
+                $this->addSuccessMessage('diamante.desk.branch.messages.save.success');
             } else {
-                $this->addSuccessMessage('eltrino.diamantedesk.branch.messages.create.success');
+                $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($branchId);
         } catch (\LogicException $e) {
-            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.save.error');
+            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -208,12 +208,12 @@ class BranchController extends Controller
         try {
             $this->get('diamante.branch.service')
                 ->deleteBranch($id);
-            $this->addSuccessMessage('eltrino.diamantedesk.branch.messages.delete.success');
+            $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
             return new Response(null, 204, array(
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
         } catch (\Exception $e) {
-            $this->addErrorMessage('eltrino.diamantedesk.branch.messages.delete.error');
+            $this->addErrorMessage('diamante.desk.branch.messages.delete.error');
             return new Response($e->getMessage(), 500);
         }
     }

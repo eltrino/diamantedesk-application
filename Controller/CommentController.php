@@ -149,13 +149,13 @@ class CommentController extends Controller
             }
 
             if ($command->id) {
-                $this->addSuccessMessage('eltrino.diamantedesk.comment.messages.save.success');
+                $this->addSuccessMessage('diamante.desk.comment.messages.save.success');
             } else {
-                $this->addSuccessMessage('eltrino.diamantedesk.comment.messages.create.success');
+                $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($ticket->getId());
         } catch (\LogicException $e) {
-            $this->addErrorMessage('eltrino.diamantedesk.comment.messages.create.error');
+            $this->addErrorMessage('diamante.desk.comment.messages.create.error');
             $response = array('form' => $formView, 'ticket' => $ticket);
         }
         return $response;
@@ -177,10 +177,10 @@ class CommentController extends Controller
             $this->get('diamante.comment.service')
                 ->deleteTicketComment($commentId);
 
-            $this->addSuccessMessage('eltrino.diamantedesk.comment.messages.delete.success');
+            $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
         } catch (Exception $e) {
             //TODO: Log original error
-            $this->addErrorMessage('eltrino.diamantedesk.comment.messages.delete.error');
+            $this->addErrorMessage('diamante.desk.comment.messages.delete.error');
         }
 
         return $this->redirect(
@@ -211,7 +211,7 @@ class CommentController extends Controller
             . '/' . $attachment->getFilename();
 
         if (!file_exists($filePathname)) {
-            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.get.error');
+            $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }
 
@@ -248,10 +248,10 @@ class CommentController extends Controller
 
         try {
             $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
-            $this->addSuccessMessage('eltrino.diamantedesk.attachment.messages.delete.success');
+            $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
         } catch (Exception $e) {
             //TODO: Log original error
-            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.delete.error');
+            $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
         }
 
         $response = $this->redirect($this->generateUrl(

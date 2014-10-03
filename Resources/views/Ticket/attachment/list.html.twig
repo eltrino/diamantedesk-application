@@ -22,8 +22,8 @@
                 </div>
                 <figcaption>
                     <span class="pull-right">
-                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="{{ 'eltrino.diamantedesk.attachment.download'|trans }}">{{ 'eltrino.diamantedesk.attachment.download'|trans }}</i></a>
-                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="{{ 'eltrino.diamantedesk.attachment.remove'|trans }}">{{ 'eltrino.diamantedesk.attachment.remove'|trans }}</i></a>
+                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="{{ 'diamante.desk.attachment.download'|trans }}">{{ 'diamante.desk.attachment.download'|trans }}</i></a>
+                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="{{ 'diamante.desk.attachment.remove'|trans }}">{{ 'diamante.desk.attachment.remove'|trans }}</i></a>
                     </span>
                     <strong>{{ attachment.filename|escape }}</strong>
                 </figcaption>
@@ -37,7 +37,7 @@
                       action="{{ path('diamante_ticket_create_attach_post', {'id': ticket.id}) }}"
                       data-update="{{ path('diamante_ticket_attachment_latest', {'ticketId': ticket.id}) }}"
                       method="post" enctype="multipart/form-data">
-                    <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> {{ 'eltrino.diamantedesk.attachment.placeholders.dropzone'|trans }}</label>
+                    <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> {{ 'diamante.desk.attachment.placeholders.dropzone'|trans }}</label>
                     <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>
                     <input type="hidden" name="diamante_attachment_form[_token]" value="{{ csrf_token('attachment') }}" />
                     <input id="diam-dropzone-file" type="file" name="diamante_attachment_form[files][]" multiple />
@@ -72,8 +72,8 @@
             </div>
             <figcaption>
                 <span class="pull-right">
-                    <a class="no-hash" href="<%= attachment.url %>"><i class="icon-download-alt hide-text" title="{{ 'eltrino.diamantedesk.attachment.actions.download'|trans }}">{{ 'eltrino.diamantedesk.attachment.actions.download'|trans }}</i></a>
-                    <a href="<%= attachment.delete %>"><i class="icon-trash hide-text" title="{{ 'eltrino.diamantedesk.attachment.actions.remove'|trans }}">{{ 'eltrino.diamantedesk.attachment.actions.remove'|trans }}</i></a>
+                    <a class="no-hash" href="<%= attachment.url %>"><i class="icon-download-alt hide-text" title="{{ 'diamante.desk.attachment.actions.download'|trans }}">{{ 'diamante.desk.attachment.actions.download'|trans }}</i></a>
+                    <a href="<%= attachment.delete %>"><i class="icon-trash hide-text" title="{{ 'diamante.desk.attachment.actions.remove'|trans }}">{{ 'diamante.desk.attachment.actions.remove'|trans }}</i></a>
                 </span>
                 <strong><%= _.escape(attachment.filename) %></strong>
             </figcaption>

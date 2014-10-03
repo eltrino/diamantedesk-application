@@ -2,15 +2,15 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% set gridName = 'diamante-branch-grid' %}
 
-{% set pageTitle = 'eltrino.diamantedesk.branch.entity_plural_label'|trans %}
+{% set pageTitle = 'diamante.desk.branch.entity_plural_label'|trans %}
 
 {% block navButtons %}
     {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Branch') %}
         {{
             UI.addButton({
                 'path' : path('diamante_branch_create'),
-                'title' : 'eltrino.diamantedesk.ui.create'|trans,
-                'label' : 'eltrino.diamantedesk.ui.create'|trans
+                'title' : 'diamante.desk.ui.create'|trans,
+                'label' : 'diamante.desk.ui.create'|trans
             })
         }}
     {% endif %}
