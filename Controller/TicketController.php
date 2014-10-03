@@ -14,10 +14,6 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Doctrine\Common\Util\ClassUtils;
-use Doctrine\Common\Util\Inflector;
-
-use Doctrine\ORM\EntityManager;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Form\CommandFactory;
@@ -41,9 +37,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RetrieveAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
-use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveAttachmentCommand;
+use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 
 /**
  * @Route("tickets")
@@ -415,9 +412,8 @@ class TicketController extends Controller
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
-
-        $removeTicketAttachment = new RemoveTicketAttachmentCommand();
-        $removeTicketAttachment->ticketId = $ticketId;
+        $removeTicketAttachment = new RemoveAttachmentCommand();
+        $removeTicketAttachment->entityId     = $ticketId;
         $removeTicketAttachment->attachmentId = $attachId;
 
         try {
@@ -448,28 +444,19 @@ class TicketController extends Controller
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
-        $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
-        $retrieveTicketAttachmentCommand->ticketId = $ticketId;
+        $retrieveTicketAttachmentCommand = new RetrieveAttachmentCommand();
+        $retrieveTicketAttachmentCommand->entityId = $ticketId;
         $retrieveTicketAttachmentCommand->attachmentId = $attachId;
-        $attachment = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
+        try {
+            $attachment = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
+            $attachmentDto = AttachmentDto::createFromAttachment($attachment);
+            $response = $this->getFileDownloadResponse($attachmentDto);
 
-        $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachments/ticket')
-            . '/' . $attachment->getFilename();
-
-        if (!file_exists($filePathname)) {
+            return $response;
+        } catch (\Exeception $e) {
             $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }
-
-        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($filePathname);
-        $response->trustXSendfileTypeHeader();
-        $response->setContentDisposition(
-            \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $attachment->getFilename(),
-            iconv('UTF-8', 'ASCII//TRANSLIT', $attachment->getFilename())
-        );
-
-        return $response;
     }
 
     /**
@@ -491,9 +478,9 @@ class TicketController extends Controller
             $ticketService = $this->get('diamante.ticket.service');
 
             foreach ($uploadedAttachmentsIds as $attachmentId) {
-                $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+                $retrieveTicketAttachmentCommand = new RetrieveAttachmentCommand();
                 $retrieveTicketAttachmentCommand->attachmentId = $attachmentId;
-                $retrieveTicketAttachmentCommand->ticketId = $ticketId;
+                $retrieveTicketAttachmentCommand->entityId = $ticketId;
                 $recentAttachments[] = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
             }
 
@@ -659,5 +646,18 @@ class TicketController extends Controller
         }
 
         return $diff;
+    }
+
+    private function getFileDownloadResponse(AttachmentDto $attachmentDto)
+    {
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($attachmentDto->getFilePath());
+        $response->trustXSendfileTypeHeader();
+        $response->setContentDisposition(
+            \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $attachmentDto->getFileName(),
+            iconv('UTF-8', 'ASCII//TRANSLIT', $attachmentDto->getFileName())
+        );
+
+        return $response;
     }
 }
