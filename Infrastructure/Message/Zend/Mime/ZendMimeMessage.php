@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\Mime;
+namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\Mime;
 use Zend\Mime\Mime;
 use Zend\Mime\Message;
 use Zend\Mime\Exception;

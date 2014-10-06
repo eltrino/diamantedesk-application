@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Model\Service;
+namespace Diamante\EmailProcessingBundle\Model\Service;
 
-use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
-use Eltrino\EmailProcessingBundle\Model\Processing\Context;
-use Eltrino\EmailProcessingBundle\Model\Processing\StrategyHolder;
+use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
+use Diamante\EmailProcessingBundle\Model\Processing\Context;
+use Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder;
 
 class MessageProcessingManager implements ManagerInterface
 {

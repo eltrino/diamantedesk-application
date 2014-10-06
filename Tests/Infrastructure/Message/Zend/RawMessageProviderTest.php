@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
+namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\RawMessageProvider;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\RawMessageProvider;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMessage;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\Mail\ZendMailMessage;
 use Zend\Mail\AddressList;
 use Zend\Mail\Header\From;
 use Zend\Mail\Header\MessageId;
@@ -33,8 +33,8 @@ class RawMessageProviderTest extends \PHPUnit_Framework_TestCase
     private $messageProvider;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter
-     * @Mock \Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter
+     * @var \Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter
+     * @Mock \Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter
      */
     private $converter;
 
@@ -59,7 +59,7 @@ class RawMessageProviderTest extends \PHPUnit_Framework_TestCase
         $messages = $this->messageProvider->fetchMessagesToProcess();
 
         $this->assertNotEmpty($messages);
-        $this->assertContainsOnlyInstancesOf('\Eltrino\EmailProcessingBundle\Model\Message', $messages);
+        $this->assertContainsOnlyInstancesOf('\Diamante\EmailProcessingBundle\Model\Message', $messages);
     }
 
     private function headers()

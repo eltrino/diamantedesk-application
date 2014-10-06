@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle;
+namespace Diamante\EmailProcessingBundle;
 
-use Eltrino\EmailProcessingBundle\DependencyInjection\Compiler\EmailProcessingStrategyPass;
+use Diamante\EmailProcessingBundle\DependencyInjection\Compiler\EmailProcessingStrategyPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class EltrinoEmailProcessingBundle extends Bundle
+class DiamanteEmailProcessingBundle extends Bundle
 {
     /**
      * @see Symfony\Component\HttpKernel\Bundle\Bundle::build()

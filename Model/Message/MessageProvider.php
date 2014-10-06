@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Model\Message;
+namespace Diamante\EmailProcessingBundle\Model\Message;
 
-use Eltrino\EmailProcessingBundle\Model\MessageProcessingException;
+use Diamante\EmailProcessingBundle\Model\MessageProcessingException;
 
 interface MessageProvider
 {

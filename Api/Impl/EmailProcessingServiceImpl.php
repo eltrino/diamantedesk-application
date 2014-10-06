@@ -12,15 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Api\Impl;
+namespace Diamante\EmailProcessingBundle\Api\Impl;
 
-use Eltrino\EmailProcessingBundle\Api\EmailProcessingService;
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend\MessageConverter;
-use Eltrino\EmailProcessingBundle\Model\Mail\SystemSettings;
-use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
-use Eltrino\EmailProcessingBundle\Model\Message\MessageProviderFactory;
-use Eltrino\EmailProcessingBundle\Model\Processing\Context;
-use Eltrino\EmailProcessingBundle\Model\Service\ManagerInterface;
+use Diamante\EmailProcessingBundle\Api\EmailProcessingService;
+use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
+use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
+use Diamante\EmailProcessingBundle\Model\Message\MessageProviderFactory;
+use Diamante\EmailProcessingBundle\Model\Service\ManagerInterface;
 
 class EmailProcessingServiceImpl implements EmailProcessingService
 {

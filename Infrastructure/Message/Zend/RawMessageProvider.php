@@ -12,12 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EmailProcessingBundle\Infrastructure\Message\Zend;
+namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
 
-use Eltrino\EmailProcessingBundle\Model\Message;
-use Eltrino\EmailProcessingBundle\Model\Message\MessageProvider;
-use Eltrino\EmailProcessingBundle\Model\MessageProcessingException;
-use Eltrino\EmailProcessingBundle\Infrastructure\Message\Attachment;
+use Diamante\EmailProcessingBundle\Model\Message;
+use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
+use Diamante\EmailProcessingBundle\Model\MessageProcessingException;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
 use Zend\Mime;
 
 class RawMessageProvider extends AbstractMessageProvider implements MessageProvider

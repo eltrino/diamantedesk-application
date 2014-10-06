@@ -12,10 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\EnailProcessingBundle\Tests\Model\Processing;
+namespace Diamante\EnailProcessingBundle\Tests\Model\Processing;
 
-use Eltrino\EmailProcessingBundle\Model\Processing\StrategyHolder;
-use Eltrino\EmailProcessingBundle\Model\Processing\Strategy;
+use Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class StrategyHolderTest extends \PHPUnit_Framework_TestCase
@@ -26,8 +25,8 @@ class StrategyHolderTest extends \PHPUnit_Framework_TestCase
     private $strategyHolder;
 
     /**
-     * @var \Eltrino\EmailProcessingBundle\Model\Processing\Strategy
-     * @Mock \Eltrino\EmailProcessingBundle\Model\Processing\Strategy
+     * @var \Diamante\EmailProcessingBundle\Model\Processing\Strategy
+     * @Mock \Diamante\EmailProcessingBundle\Model\Processing\Strategy
      */
     private $strategy;
 
