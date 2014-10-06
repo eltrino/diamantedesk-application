@@ -82,6 +82,7 @@
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="event_dispatcher"/>
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"

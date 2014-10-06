@@ -14,10 +14,24 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-class TicketWasUpdated extends AbstractDomainEvent
+use Diamante\DeskBundle\Model\Shared\DomainEvent;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\EventDispatcher\Event;
+
+abstract class AbstractDomainEvent extends Event implements DomainEvent
 {
-    public function getEventName()
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    private $changes;
+
+    public function __construct(ArrayCollection $changes)
     {
-        return 'Ticket was updated';
+        $this->changes = $changes;
+    }
+
+    public function getChanges()
+    {
+        return $this->changes;
     }
 } 

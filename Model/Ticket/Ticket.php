@@ -290,7 +290,13 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 
         foreach($newValues as $key => $value) {
             if ($oldValues[$key] !== $newValues[$key]) {
-                $changes[] = array($key => $oldValues[$key] . '->' . $newValues[$key]);
+                $changes[] =
+                    array(
+                        $key => array(
+                            'oldValue' => $oldValues[$key],
+                            'newValue' => $newValues[$key],
+                        )
+                    );
             }
         }
 

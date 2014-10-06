@@ -31,6 +31,7 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class TicketServiceImpl implements TicketService
 {
@@ -64,12 +65,18 @@ class TicketServiceImpl implements TicketService
      */
     private $securityFacade;
 
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
     public function __construct(Repository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketFactory $ticketFactory,
                                 AttachmentService $attachmentService,
                                 UserService $userService,
-                                SecurityFacade $securityFacade
+                                SecurityFacade $securityFacade,
+                                EventDispatcher $dispatcher
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
@@ -77,6 +84,7 @@ class TicketServiceImpl implements TicketService
         $this->userService = $userService;
         $this->attachmentService = $attachmentService;
         $this->securityFacade = $securityFacade;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -251,9 +259,14 @@ class TicketServiceImpl implements TicketService
             $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $ticket);
         }
 
-        $this->ticketRepository->store($ticket);
+        //$this->ticketRepository->store($ticket);
 
         $changes = $ticket->getRecordedEvents();
+        //$dispatcher->addSubscriber() ....
+
+        foreach ($changes as $change) {
+            $this->dispatcher->dispatch($change->getEventName, $change);
+        }
 
         return $ticket;
     }
