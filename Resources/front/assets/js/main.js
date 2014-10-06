@@ -43,10 +43,8 @@ require.config({
 });
 
 
-require(['app', 'backbone'], function(App, Backbone) {
+require(['app'], function(App) {
 
   App.start();
-
-  Backbone.history.start();
 
 });

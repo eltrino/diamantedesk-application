@@ -11,7 +11,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-define(['marionette'], function(Marionette) {
+define(['marionette','backbone'], function(Marionette, Backbone) {
 
   var App = new Marionette.Application({
     regions : {
@@ -26,8 +26,16 @@ define(['marionette'], function(Marionette) {
 
   App.on('start', function(){
 
-    require(['modules/Task/controller/list'], function(){
-      App.Task.List.Controller.listTasks();
+    require(['modules/Task/routers/task'], function(){
+
+      Backbone.history.start();
+
+      if(Backbone.history.fragment === ""){
+        Backbone.history.navigate("tasks");
+        require(['modules/Task/controllers/list'], function(){
+          App.Task.List.Controller.listTasks();
+        });
+      }
     });
 
   });
