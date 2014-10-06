@@ -259,7 +259,7 @@ class TicketServiceImpl implements TicketService
             $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $ticket);
         }
 
-        //$this->ticketRepository->store($ticket);
+        $this->ticketRepository->store($ticket);
 
         $changes = $ticket->getRecordedEvents();
         //$dispatcher->addSubscriber() ....
