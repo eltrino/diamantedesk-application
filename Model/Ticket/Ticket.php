@@ -17,11 +17,13 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Ticket implements Entity, AttachmentHolder
+class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
@@ -247,12 +249,56 @@ class Ticket implements Entity, AttachmentHolder
      */
     public function update($subject, $description, User $reporter, $priority, $status, $source)
     {
+        $newValues = array(
+            'subject'     => $subject,
+            'description' => $description,
+            'reporter'    => $reporter->getId(),
+            'priority'    => $priority,
+            'status'      => $status,
+            'source'      => $source
+        );
+
+        $changes = $this->computeChanges($newValues);
+        if ($changes) {
+            $this->raise(new TicketWasUpdated($changes));
+        }
+
         $this->subject = $subject;
         $this->description = $description;
         $this->reporter = $reporter;
         $this->status = new Status($status);
         $this->priority = new Priority($priority);
         $this->source = new Source($source);
+    }
+
+    /**
+     * @param array $newValues
+     * @return array|null
+     */
+    private function computeChanges(array $newValues)
+    {
+        $oldValues = array(
+            'subject'     => $this->getSubject(),
+            'description' => $this->getDescription(),
+            'reporter'    => $this->getReporter()->getId(),
+            'priority'    => $this->getPriority()->getValue(),
+            'status'      => $this->getStatus()->getValue(),
+            'source'      => $this->getSource()->getValue()
+        );
+
+        $changes = new ArrayCollection();
+
+        foreach($newValues as $key => $value) {
+            if ($oldValues[$key] !== $newValues[$key]) {
+                $changes[] = array($key => $oldValues[$key] . '->' . $newValues[$key]);
+            }
+        }
+
+        if(empty($changes)) {
+            return null;
+        }
+
+        return $changes;
     }
 
     /**

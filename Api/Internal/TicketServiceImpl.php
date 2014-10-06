@@ -253,6 +253,8 @@ class TicketServiceImpl implements TicketService
 
         $this->ticketRepository->store($ticket);
 
+        $changes = $ticket->getRecordedEvents();
+
         return $ticket;
     }
 
