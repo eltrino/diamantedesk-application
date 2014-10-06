@@ -30,8 +30,16 @@ abstract class AbstractDomainEvent extends Event implements DomainEvent
         $this->changes = $changes;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getChanges()
     {
         return $this->changes;
     }
+
+    /**
+     * @return string
+     */
+    abstract function getEventName();
 } 

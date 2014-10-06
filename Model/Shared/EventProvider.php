@@ -21,5 +21,8 @@ interface EventProvider
      */
     public function getRecordedEvents();
 
+    /**
+     * @param DomainEvent $event
+     */
     public function raise(DomainEvent $event);
 } 

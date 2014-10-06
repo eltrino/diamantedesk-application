@@ -12,17 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Shared;
+namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-interface DomainEvent
+class CommentWasUpdated extends AbstractDomainEvent
 {
-    /**
-     * @return ArrayCollection
-     */
-    public function getChanges();
-
     /**
      * @return string
      */
-    public function getEventName();
+    public function getEventName()
+    {
+        return 'Comment was updated';
+    }
 } 

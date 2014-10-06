@@ -16,6 +16,9 @@ namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
 class TicketWasUpdated extends AbstractDomainEvent
 {
+    /**
+     * @return string
+     */
     public function getEventName()
     {
         return 'Ticket was updated';

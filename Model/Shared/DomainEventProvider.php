@@ -17,13 +17,22 @@ namespace Diamante\DeskBundle\Model\Shared;
 
 class DomainEventProvider implements EventProvider
 {
+    /**
+     * @var array
+     */
     private $recorderEvents;
 
+    /**
+     * @return array
+     */
     public function getRecordedEvents()
     {
         return $this->recorderEvents;
     }
 
+    /**
+     * @param DomainEvent $event
+     */
     public function raise(DomainEvent $event)
     {
         $this->recorderEvents[] = $event;

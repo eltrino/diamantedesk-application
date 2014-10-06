@@ -262,6 +262,7 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository->store($ticket);
 
         $changes = $ticket->getRecordedEvents();
+
         //$dispatcher->addSubscriber() ....
 
         foreach ($changes as $change) {

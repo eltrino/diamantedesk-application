@@ -20,8 +20,9 @@ use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 
-class Comment implements Entity, AttachmentHolder
+class Comment extends DomainEventProvider implements Entity, AttachmentHolder
 {
     /**
      * @var integer
@@ -123,7 +124,45 @@ class Comment implements Entity, AttachmentHolder
      */
     public function updateContent($content)
     {
+        $newValues = array('content' => $content);
+        $changes = $this->computeChanges($newValues);
+
+        if ($changes) {
+            $this->raise(new CommentWasUpdated($changes));
+        }
+
         $this->content = $content;
+    }
+
+    /**
+     * @param array $newValues
+     * @return array|null
+     */
+    private function computeChanges(array $newValues)
+    {
+        $oldValues = array(
+            'content' => $this->getSubject(),
+        );
+
+        $changes = new ArrayCollection();
+
+        foreach($newValues as $key => $value) {
+            if ($oldValues[$key] !== $newValues[$key]) {
+                $changes[] =
+                    array(
+                        $key => array(
+                            'oldValue' => $oldValues[$key],
+                            'newValue' => $newValues[$key],
+                        )
+                    );
+            }
+        }
+
+        if(empty($changes)) {
+            return null;
+        }
+
+        return $changes;
     }
 
     /**
