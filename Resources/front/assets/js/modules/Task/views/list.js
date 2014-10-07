@@ -4,7 +4,7 @@ define(['app',
 
   App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 
-    List.Item = Marionette.ItemView.extend({
+    List.ItemView = Marionette.ItemView.extend({
       tagName: "tr",
       template: taskTemplate,
 
@@ -19,13 +19,13 @@ define(['app',
       }
     });
 
-    List.Items = Marionette.CompositeView.extend({
+    List.CompositeView = Marionette.CompositeView.extend({
       tagName: "table",
       template: listTemplate,
       id: "task-list",
       className: "table table-hover table-bordered",
       childViewContainer: "tbody",
-      childView: List.Item
+      childView: List.ItemView
     });
 
   });
