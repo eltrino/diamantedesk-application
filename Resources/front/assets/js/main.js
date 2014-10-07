@@ -39,12 +39,6 @@ require.config({
     bootstrap : {
       deps : ["jquery"]
     }
-  }
-});
-
-
-require(['app'], function(App) {
-
-  App.start();
-
+  },
+  deps : ["app"]
 });

@@ -21,6 +21,17 @@ define(['marionette','backbone'], function(Marionette, Backbone) {
     }
   });
 
+
+  App.navigate = function(route, options){
+    Backbone.history.navigate(route, options || {})
+  };
+
+  App.getCurrentRoute = function(){
+    return Backbone.history.fragment;
+  };
+
+
+
   App.on('before:start', function(){});
 
 
@@ -29,17 +40,16 @@ define(['marionette','backbone'], function(Marionette, Backbone) {
     require(['modules/Task/routers/task'], function(){
 
       Backbone.history.start();
-
-      if(Backbone.history.fragment === ""){
-        Backbone.history.navigate("tasks");
-        require(['modules/Task/controllers/list'], function(){
-          App.Task.List.Controller.listTasks();
-        });
+      if(App.getCurrentRoute() == ""){
+        App.trigger('task:list');
       }
+
     });
 
   });
 
+
+  App.start();
 
   return App;
 

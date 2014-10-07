@@ -6,14 +6,14 @@ define(['app'], function(App, Task){
 
       listTasks: function(){
         require(['modules/Task/models/task', 'modules/Task/views/list'], function(){
-          var task = App.request("task:model");
+          var tasksList = App.request("task:model");
           var taskListView = new List.Items({
-            collection: task
+            collection: tasksList
           });
 
           taskListView.on("childview:task:show", function(childView, model){
             require(['modules/Task/controllers/show'], function(){
-              App.Task.Show.Controller.showTask(model);
+              App.trigger('task:show', model.get('id'));
             });
           });
 
