@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Model\Shared;
 interface DomainEvent
 {
     /**
-     * @return ArrayCollection
+     * @return array
      */
     public function getChanges();
 

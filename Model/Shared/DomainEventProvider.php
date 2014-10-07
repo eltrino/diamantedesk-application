@@ -20,14 +20,16 @@ class DomainEventProvider implements EventProvider
     /**
      * @var array
      */
-    private $recorderEvents;
+    private $recorderEvents = array();
 
     /**
      * @return array
      */
     public function getRecordedEvents()
     {
-        return $this->recorderEvents;
+        $events = $this->recorderEvents;
+        $this->recorderEvents = array();
+        return $events;
     }
 
     /**
