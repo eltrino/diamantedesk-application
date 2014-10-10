@@ -12,13 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\DataFixtures\Test;
+namespace Diamante\DeskBundle\DataFixtures\Test;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Eltrino\DiamanteDeskBundle\Model\File;
-
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Entity\Branch;
 
 class LoadBranchData extends AbstractFixture
 {

@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,7 +26,7 @@ class AssigneeTicketType extends AbstractType
             'assignee',
             'diamante_assignee_select',
             array(
-                'label'    => 'eltrino.diamantedesk.attributes.assignee',
+                'label'    => 'diamante.desk.attributes.assignee',
                 'required' => false
             )
         );
@@ -39,7 +39,7 @@ class AssigneeTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\AssigneeTicketCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\AssigneeTicketCommand',
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )

@@ -19,39 +19,47 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.ticket.entity.class">Eltrino\DiamanteDeskBundle\Entity\Ticket</parameter>
-        <parameter key="diamante.comment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Comment</parameter>
-        <parameter key="diamante.ticket.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\TicketServiceImpl</parameter>
-        <parameter key="diamante.ticket.internal.attachment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\AttachmentServiceImpl</parameter>
-        <parameter key="diamante.ticket.internal.grid_filters_service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\Internal\TicketGridFiltersService</parameter>
+        <parameter key="diamante.ticket.entity.class">Diamante\DeskBundle\Entity\Ticket</parameter>
+        <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
+        <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
+        <parameter key="diamante.comment.entity.factory.class">Diamante\DeskBundle\Model\Ticket\CommentFactory</parameter>
+        <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
+        <parameter key="diamante.ticket.internal.attachment.service.class">Diamante\DeskBundle\Infrastructure\Ticket\Adapter\AttachmentServiceImpl</parameter>
+        <parameter key="diamante.ticket.internal.grid_filters_service.class">Diamante\DeskBundle\Api\Internal\TicketGridFiltersService</parameter>
 <!-- filters -->
-        <parameter key="diamante.ticket.filter_url_generator_factory.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\FilterUrlGeneratorFactory</parameter>
-        <parameter key="diamante.ticket.all_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\AllTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_new_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyNewTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_open_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyOpenTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_reported_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyReportedTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_reported_new_tickets_filter_url_generator.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Filters\MyReportedNewTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.filter.entity.class">Diamante\DeskBundle\Entity\Filter</parameter>
+        <parameter key="diamante.ticket.filter_url_generator_factory.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorFactory</parameter>
+        <parameter key="diamante.ticket.all_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\AllTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_new_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyNewTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_open_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyOpenTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_reported_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyReportedTicketsFilterUrlGenerator</parameter>
+        <parameter key="diamante.ticket.my_reported_new_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyReportedNewTicketsFilterUrlGenerator</parameter>
 <!-- filters end-->
-        <parameter key="diamante.ticket.internal.user.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Adapter\OroUserService</parameter>
-        <parameter key="diamante.comment.service.class">Eltrino\DiamanteDeskBundle\Ticket\Api\CommentServiceImpl</parameter>
-        <parameter key="diamante.ticket.datagrid_status_helper.class">Eltrino\DiamanteDeskBundle\Datagrid\StatusHelper</parameter>
 
-        <parameter key="diamante.ticket.email_processing.strategy.service.class">Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\EmailProcessing\TicketStrategy</parameter>
+        <parameter key="diamante.comment.service.class">Diamante\DeskBundle\Api\Internal\CommentServiceImpl</parameter>
+        <parameter key="diamante.ticket.datagrid_status_helper.class">Diamante\DeskBundle\Datagrid\StatusHelper</parameter>
 
-        <parameter key="diamante.ticket.email_processing_message_reference.service.class">Eltrino\DiamanteDeskBundle\Ticket\Model\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
+        <parameter key="diamante.ticket.email_processing.strategy.service.class">Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy</parameter>
+        <parameter key="diamante.ticket.email_processing_message_reference.entity.class">Diamante\DeskBundle\Entity\MessageReference</parameter>
+        <parameter key="diamante.ticket.email_processing_message_reference.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository</parameter>
+        <parameter key="diamante.ticket.email_processing_message_reference.service.class">Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
     </parameters>
 
     <services>
         <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.service"/>
+            <argument type="service" id="diamante.branch_email_configuration.service"/>
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="email_processing.strategy" />
         </service>
 
-        <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%"
-                 factory-class="%diamante.ticket.email_processing_message_reference.service.class%" factory-method="create">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="diamante.ticket.internal.user.service"/>
+        <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%">
+            <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.attachment.repository"/>
+            <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
 
@@ -59,24 +67,27 @@
             <argument type="service" id="diamante.attachment.service"/>
         </service>
 
-        <service id="diamante.ticket.internal.user.service" class="%diamante.ticket.internal.user.service.class%">
+        <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>
         </service>
 
-        <service id="diamante.ticket.service" class="%diamante.ticket.service.class%"
-                 factory-class="%diamante.ticket.service.class%" factory-method="create">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
+        <service id="diamante.ticket.entity.factory" class="%diamante.ticket.entity.factory.class%">
+            <argument type="string">%diamante.ticket.entity.class%</argument>
+        </service>
+
+        <service id="diamante.ticket.service" class="%diamante.ticket.service.class%">
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.ticket.entity.factory"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
-            <argument type="service" id="diamante.ticket.internal.user.service"/>
+            <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="oro_security.security_facade"/>
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"
-                 class="%diamante.ticket.internal.grid_filters_service.class%"
-                 factory-class="%diamante.ticket.internal.grid_filters_service.class%"
-                 factory-method="create">
+                 class="%diamante.ticket.internal.grid_filters_service.class%">
             <argument type="service" id="service_container"/>
-            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="diamante.filter.repository"/>
         </service>
 
 <!-- filters -->
@@ -126,19 +137,46 @@
                 >
         </service>
 <!-- filters end-->
-        <service id="diamante.comment.service" class="%diamante.comment.service.class%"
-                 factory-class="%diamante.comment.service.class%" factory-method="create">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="diamante.ticket.internal.user.service"/>
+
+        <service id="diamante.comment.entity.factory" class="%diamante.comment.entity.factory.class%">
+            <argument type="string">%diamante.comment.entity.class%</argument>
+        </service>
+
+        <service id="diamante.comment.service" class="%diamante.comment.service.class%">
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.comment.repository"/>
+            <argument type="service" id="diamante.comment.entity.factory"/>
+            <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
             <argument type="service" id="oro_security.security_facade"/>
         </service>
 
-        <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%" />
+        <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>
 
-        <service id="diamante.form.type.assignee_select" class="Eltrino\DiamanteDeskBundle\Form\Type\AssigneeSelectType">
+        <service id="diamante.form.type.assignee_select" class="Diamante\DeskBundle\Form\Type\AssigneeSelectType">
             <tag name="form.type" alias="diamante_assignee_select"/>
         </service>
-
+<!-- repositories start -->
+        <service id="diamante.ticket.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket.entity.class%</argument>
+        </service>
+        <service id="diamante.comment.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.comment.entity.class%</argument>
+        </service>
+        <service id="diamante.filter.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.filter.entity.class%</argument>
+        </service>
+        <service id="diamante.ticket.email_processing_message_reference.repository" class="%diamante.ticket.email_processing_message_reference.repository.class%"
+                factory-service = "doctrine.orm.entity_manager"
+                factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket.email_processing_message_reference.entity.class%</argument>
+        </service>
+<!-- repositories end -->
     </services>
 </container>

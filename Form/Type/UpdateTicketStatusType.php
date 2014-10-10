@@ -12,12 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
+use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
 
 class UpdateTicketStatusType extends AbstractType
 {
@@ -29,7 +29,7 @@ class UpdateTicketStatusType extends AbstractType
         $builder->add(
             $builder->create('status', 'choice',
                 array(
-                    'label' => 'eltrino.diamantedesk.attributes.status',
+                    'label' => 'diamante.desk.attributes.status',
                     'required' => true,
                     'choices' => $statusOptions
                 ))
@@ -44,7 +44,7 @@ class UpdateTicketStatusType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\UpdateStatusCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\UpdateStatusCommand',
                 'intention' => 'ticket_status',
                 'cascade_validation' => true
             )

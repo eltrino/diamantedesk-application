@@ -12,12 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
+use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
 
 class CommentType extends AbstractType
 {
@@ -29,7 +29,7 @@ class CommentType extends AbstractType
         $builder->add(
             $builder->create('ticketStatus', 'choice',
                 array(
-                    'label' => 'eltrino.diamantedesk.comment.ticket_status',
+                    'label' => 'diamante.desk.comment.ticket_status',
                     'required' => true,
                     'choices' => $statusOptions
                 ))
@@ -40,7 +40,7 @@ class CommentType extends AbstractType
             'content',
             'textarea',
             array(
-                'label' => 'eltrino.diamantedesk.comment.content',
+                'label' => 'diamante.desk.comment.content',
                 'required' => true,
             )
         );
@@ -49,7 +49,7 @@ class CommentType extends AbstractType
             'files',
             'file',
             array(
-                'label'    => 'eltrino.diamantedesk.attachment.entity_plural_label',
+                'label'    => 'diamante.desk.attachment.entity_plural_label',
                 'required' => false,
                 'attr' => array(
                     'multiple' => 'multiple'
@@ -65,7 +65,7 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\EditCommentCommand',
                 'intention' => 'comment',
                 'cascade_validation' => true
             )

@@ -16,10 +16,11 @@
  * @todo finish up this test
  */
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
+namespace Diamante\DiamanteDeskBundle\Tests\Controller;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Symfony\Component\DomCrawler\Form;
 
 class CommentControllerTest extends WebTestCase
 {

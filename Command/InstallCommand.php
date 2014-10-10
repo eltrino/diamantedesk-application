@@ -12,12 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Command;
+namespace Diamante\DeskBundle\Command;
 
-use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -102,7 +98,7 @@ class InstallCommand extends AbstractCommand
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
-            return;
+            return 255;
         }
 
         $output->writeln("Installed!" . "\n");
@@ -115,7 +111,7 @@ class InstallCommand extends AbstractCommand
     protected function createBranchLogoDirectory()
     {
         $branchLogoDir = realpath($this->kernelRootDir .'/../web')
-            . \Eltrino\DiamanteDeskBundle\Branch\Model\Logo::PATH_TO_LOGO_DIR;
+            . \Diamante\DeskBundle\Model\Branch\Logo::PATH_TO_LOGO_DIR;
 
         $this->createDirectory($branchLogoDir);
     }
@@ -163,7 +159,7 @@ class InstallCommand extends AbstractCommand
 
         $this->runExistingCommand('doctrine:fixtures:load', $output,
             array(
-                '--fixtures'       => "{$kernelRootDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/ORM",
+                '--fixtures'       => "{$kernelRootDir}/../src/Eltrino/DeskBundle/DataFixtures/ORM",
                 '--append'         => true,
                 '--no-interaction' => true,
             )

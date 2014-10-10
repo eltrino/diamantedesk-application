@@ -1,2 +1,2 @@
-{% set logoImgSrc = record.getValue('logo') ? record.getValue('logo').getPathname() : 'bundles/eltrinodiamantedesk/img/branch-placeholder.png' %}
+{% set logoImgSrc = record.getValue('logo') ? record.getValue('logo').getPathname() : 'bundles/diamantedesk/img/branch-placeholder.png' %}
 <img src="{{ asset(logoImgSrc | imagine_filter('avatar_med')) }}"/>

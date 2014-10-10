@@ -12,15 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\PriorityTransformer;
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\SourceTransformer;
+use Diamante\DeskBundle\Form\DataTransformer\PriorityTransformer;
+use Diamante\DeskBundle\Form\DataTransformer\SourceTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Eltrino\DiamanteDeskBundle\Form\DataTransformer\StatusTransformer;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
+use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
 
 class CreateTicketType extends AbstractType
 {
@@ -30,8 +29,8 @@ class CreateTicketType extends AbstractType
             'branch',
             'entity',
             array(
-                'label' => 'eltrino.diamantedesk.attributes.branch',
-                'class' => 'EltrinoDiamanteDeskBundle:Branch',
+                'label' => 'diamante.desk.attributes.branch',
+                'class' => 'DiamanteDeskBundle:Branch',
                 'property' => 'name',
                 'empty_value' => 'Choose branch...'
             )
@@ -41,7 +40,7 @@ class CreateTicketType extends AbstractType
             'subject',
             'text',
             array(
-                'label' => 'eltrino.diamantedesk.attributes.subject',
+                'label' => 'diamante.desk.attributes.subject',
                 'required' => true,
             )
         );
@@ -50,7 +49,7 @@ class CreateTicketType extends AbstractType
             'description',
             'textarea',
             array(
-                'label' => 'eltrino.diamantedesk.common.description',
+                'label' => 'diamante.desk.common.description',
                 'required' => true,
                 'attr'  => array(
                     'class' => 'diam-ticket-description'
@@ -64,7 +63,7 @@ class CreateTicketType extends AbstractType
         $builder->add(
             $builder->create('status', 'choice',
                 array(
-                    'label' => 'eltrino.diamantedesk.attributes.status',
+                    'label' => 'diamante.desk.attributes.status',
                     'required' => true,
                     'choices' => $statusOptions
                 ))
@@ -75,7 +74,7 @@ class CreateTicketType extends AbstractType
             'files',
             'file',
             array(
-                'label' => 'eltrino.diamantedesk.attachment.file',
+                'label' => 'diamante.desk.attachment.file',
                 'required' => true,
                 'attr' => array(
                     'multiple' => 'multiple'
@@ -91,7 +90,7 @@ class CreateTicketType extends AbstractType
                 'priority',
                 'choice',
                 array(
-                    'label'    => 'eltrino.diamantedesk.attributes.priority',
+                    'label'    => 'diamante.desk.attributes.priority',
                     'required' => true,
                     'choices'  => $priorities,
                 )
@@ -107,7 +106,7 @@ class CreateTicketType extends AbstractType
                 'source',
                 'choice',
                 array(
-                    'label'    => 'eltrino.diamantedesk.attributes.source',
+                    'label'    => 'diamante.desk.attributes.source',
                     'required' => true,
                     'choices'  => $sources,
                 )
@@ -119,7 +118,7 @@ class CreateTicketType extends AbstractType
             'reporter',
             'oro_user_select',
             array(
-                'label'    => 'eltrino.diamantedesk.attributes.reporter',
+                'label'    => 'diamante.desk.attributes.reporter',
                 'required' => true
             )
         );
@@ -128,7 +127,7 @@ class CreateTicketType extends AbstractType
             'assignee',
             'diamante_assignee_select',
             array(
-                'label'    => 'eltrino.diamantedesk.attributes.assignee',
+                'label'    => 'diamante.desk.attributes.assignee',
                 'required' => false
             )
         );
@@ -141,7 +140,7 @@ class CreateTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand',
+                'data_class'         => 'Diamante\DeskBundle\Api\Command\CreateTicketCommand',
                 'intention'          => 'ticket',
                 'cascade_validation' => true,
             )

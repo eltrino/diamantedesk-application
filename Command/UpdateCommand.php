@@ -12,13 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Command;
+namespace Diamante\DeskBundle\Command;
 
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
 
 class UpdateCommand extends AbstractCommand
 {
@@ -74,14 +72,17 @@ class UpdateCommand extends AbstractCommand
      */
     protected function updateDbSchema()
     {
+        /**
+         * @var $em \Doctrine\ORM\EntityManager
+         */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $schemaTool = new SchemaTool($em);
         $entitiesMetadata = array(
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Branch::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Ticket::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Comment::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Filter::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Attachment::getClassName())
+            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Branch::getClassName()),
+            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Ticket::getClassName()),
+            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Comment::getClassName()),
+            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Filter::getClassName()),
+            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName())
         );
 
         $sql = $schemaTool->getUpdateSchemaSql($entitiesMetadata);

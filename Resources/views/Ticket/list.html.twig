@@ -1,12 +1,12 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-{% set pageTitle = 'eltrino.diamantedesk.ticket.all'|trans %}
+{% set pageTitle = 'diamante.desk.ticket.all'|trans %}
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
         {{ UI.addButton({
         'path' : path('diamante_ticket_create'),
-        'title' : 'eltrino.diamantedesk.ticket.actions.create'|trans,
-        'label' : 'eltrino.diamantedesk.ticket.actions.create'|trans
+        'title' : 'diamante.desk.ticket.actions.create'|trans,
+        'label' : 'diamante.desk.ticket.actions.create'|trans
         }) }}
     {% endif %}
 {% endblock %}
@@ -22,7 +22,7 @@
                     <table class="grid table-hover table table-bordered table-condensed">
                         <thead>
                         <tr>
-                            <th>{{ 'eltrino.diamantedesk.common.filters'|trans }}:</th>
+                            <th>{{ 'diamante.desk.common.filters'|trans }}:</th>
                         </tr>
                         </thead>
                         <tbody>

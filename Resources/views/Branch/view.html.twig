@@ -3,23 +3,23 @@
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 
-{% oro_title_set({params : {"%branch.name%": entity.name|default('eltrino.diamantedesk.common.not_available'|trans) }}) %}
+{% oro_title_set({params : {"%branch.name%": entity.name|default('diamante.desk.common.not_available'|trans) }}) %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:EltrinoDiamanteDeskBundle:Ticket') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
         {{ UI.button({
             'path': path('diamante_ticket_create', {'id': entity.id}),
-            'iCss': 'icon-plus',
-            'title': 'eltrino.diamantedesk.ticket.actions.add'|trans,
-            'label': 'eltrino.diamantedesk.ticket.actions.add'|trans
+            'iClass': 'icon-user',
+            'title': 'diamante.desk.ticket.actions.add'|trans,
+            'label': 'diamante.desk.ticket.actions.add'|trans
         }) }}
     {% endif %}
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
             'path': path('diamante_branch_update', {'id': entity.id}),
-            'iCss': 'icon-edit',
-            'title': 'eltrino.diamantedesk.branch.actions.edit'|trans,
-            'label': 'eltrino.diamantedesk.ui.edit'|trans
+            'iClass': 'icon-edit',
+            'title': 'diamante.desk.branch.actions.edit'|trans,
+            'label': 'diamante.desk.ui.edit'|trans
         }) }}
     {% endif %}
 
@@ -30,10 +30,10 @@
             'aCss': 'no-hash remove-button',
             'dataId': entity.id,
             'id': 'btn-remove-account',
-            'dataMessage': 'eltrino.diamantedesk.branch.messages.delete.query'|trans,
-            'successMessage': 'eltrino.diamantedesk.branch.messages.delete.success'|trans,
-            'title': 'eltrino.diamantedesk.branch.actions.remove'|trans,
-            'label': 'eltrino.diamantedesk.ui.delete'|trans
+            'dataMessage': 'diamante.desk.branch.messages.delete.query'|trans,
+            'successMessage': 'diamante.desk.branch.messages.delete.success'|trans,
+            'title': 'diamante.desk.branch.actions.remove'|trans,
+            'label': 'diamante.desk.ui.delete'|trans
             })
         }}
     {% endif %}
@@ -43,8 +43,8 @@
     {% set breadcrumbs = {
             'entity': entity,
             'indexPath': path('diamante_branch_list'),
-            'indexLabel': 'eltrino.diamantedesk.branch.entity_plural_label'|trans,
-            'entityTitle': entity.name|default('eltrino.diamantedesk.common.not_available'|trans),
+            'indexLabel': 'diamante.desk.branch.entity_plural_label'|trans,
+            'entityTitle': entity.name|default('diamante.desk.common.not_available'|trans),
             'hasAvatar': true,
             'imagePath': entity.logo ? entity.logo.pathname : null
         }
@@ -55,33 +55,45 @@
 {% block content_data %}
     {% set id = 'branchUpdate' %}
 
-    {% set dataSubBlocks = [UI.attibuteRow('eltrino.diamantedesk.forms.name'|trans, entity.name)] %}
+    {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.forms.name'|trans, entity.name)] %}
 
-    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssigneeFullName : 'eltrino.diamantedesk.common.not_defined'|trans %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('eltrino.diamantedesk.forms.default_assignee'|trans, defaultAssigneeFullName)]) %}
+    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssigneeFullName : 'diamante.desk.common.not_defined'|trans %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.default_assignee'|trans, defaultAssigneeFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
     {% set dataBlocks =
         [{
-            'title': 'eltrino.diamantedesk.common.general'|trans,
+            'title': 'diamante.desk.common.general'|trans,
             'class': 'active',
             'subblocks': [{
-                'title': 'eltrino.diamantedesk.branch.details'|trans,
+                'title': 'diamante.desk.branch.details'|trans,
                 'data' : dataSubBlocks
             }]
         }]
     %}
 
     {% set dataBlocks = dataBlocks|merge([{
-        'title': 'eltrino.diamantedesk.common.description',
+        'title': 'diamante.desk.common.description',
         'subblocks':[{
             'title': null,
             'data': [entity.description|escape('html')|nl2br]}]
         }]
     ) %}
 
+    {% if branchEmailConfiguration %}
+        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', branchEmailConfiguration.supportAddress)] %}
+        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains)]) %}
+
+        {% set dataBlocks = dataBlocks|merge([{
+            'title': 'Email Configuration',
+            'subblocks':[{
+                'data': EmailConfDataSubBlocks
+            }]
+        }]) %}
+    {% endif %}
+
     {% set dataBlocks = dataBlocks|merge([{
-        'title' : 'eltrino.diamantedesk.ticket.entity_plural_label'|trans,
+        'title' : 'diamante.desk.ticket.entity_plural_label'|trans,
         'subblocks': [
             {
                 'title' : null,

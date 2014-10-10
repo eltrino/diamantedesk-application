@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': form.vars.value.id }), 'title' : 'eltrino.diamantedesk.ui.cancel'|trans, 'label' : 'eltrino.diamantedesk.ui.cancel'|trans}) }}
-    {{ UI.buttonType({'type': 'submit', 'class': 'btn-success', 'label': 'eltrino.diamantedesk.ui.save'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': form.vars.value.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.buttonType({'type': 'submit', 'class': 'btn-success', 'label': 'diamante.desk.ui.save'|trans}) }}
 {% endblock %}
 
 {% block pageHeader %}
@@ -19,8 +19,8 @@
         {% set breadcrumbs = {
             'entity':      form.vars.value,
             'indexPath':   path('diamante_ticket_list'),
-            'indexLabel': 'eltrino.diamantedesk.ticket.entity_plural_label'|trans,
-            'entityTitle': form.vars.value.subject|default('eltrino.diamantedesk.common.not_available'|trans)
+            'indexLabel': 'diamante.desk.ticket.entity_plural_label'|trans,
+            'entityTitle': form.vars.value.subject|default('diamante.desk.common.not_available'|trans)
         }
         %}
         {{ parent() }}
@@ -33,11 +33,11 @@
     {% set id = 'account-profile' %}
 
     {% set dataBlocks = [{
-        'title': 'eltrino.diamantedesk.common.general'|trans,
+        'title': 'diamante.desk.common.general'|trans,
         'class': 'active',
         'subblocks': [
             {
-                'title': 'eltrino.diamantedesk.ticket.actions.assign'|trans,
+                'title': 'diamante.desk.ticket.actions.assign'|trans,
                 'data': [
                     form_row(form.assignee)
                 ]

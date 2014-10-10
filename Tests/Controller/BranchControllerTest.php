@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
+namespace Diamante\DeskBundle\Tests\Controller;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\TestFrameworkBundle\Test\Client;
@@ -62,6 +62,9 @@ class BranchControllerTest extends WebTestCase
         $form['diamante_branch_form[description]'] = 'Test Description';
         $form['diamante_branch_form[logoFile]']    = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
 
+        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
+        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
+
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
@@ -90,7 +93,7 @@ class BranchControllerTest extends WebTestCase
     {
         $branch          = $this->chooseBranchFromGrid();
         $branchUpdateUrl = $this->getUrl('diamante_branch_update', array('id' => $branch['id']));
-        $crawler          = $this->client->request('GET', $branchUpdateUrl);
+        $crawler         = $this->client->request('GET', $branchUpdateUrl);
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
@@ -98,6 +101,10 @@ class BranchControllerTest extends WebTestCase
         $form['diamante_branch_form[name]'] = $branch['name'];
         $form['diamante_branch_form[description]'] = 'Branch Description Changed';
         $form['diamante_branch_form[logoFile]'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+
+        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
+        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
+
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);

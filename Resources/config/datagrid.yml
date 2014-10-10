@@ -37,7 +37,7 @@ datagrid:
                 label: Logo
                 type: twig
                 frontend_type: html
-                template: EltrinoDiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
+                template: DiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
             name:
                 label: Branch Name
         actions:
@@ -47,19 +47,19 @@ datagrid:
                 icon:          eye-open
                 link:          view_link
                 rowAction:     true
-                acl_resource:  VIEW;Entity:EltrinoDiamanteDeskBundle:Branch
+                acl_resource:  VIEW;Entity:DiamanteDeskBundle:Branch
             update:
                 type:          navigate
                 label:         Edit
                 icon:          edit
                 link:          update_link
-                acl_resource:  EDIT;Entity:EltrinoDiamanteDeskBundle:Branch
+                acl_resource:  UPDATE;Entity:DiamanteDeskBundle:Branch
             delete:
                 type:          delete
                 label:         Delete
                 icon:          trash
                 link:          delete_link
-                acl_resource:  DELETE;Entity:EltrinoDiamanteDeskBundle:Branch
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
         options:
             entityHint: branches
 
@@ -91,7 +91,7 @@ datagrid:
                     - i.createdAt
                     - i.updatedAt
                 from:
-                    - { table: EltrinoDiamanteDeskBundle:Ticket, alias: i }
+                    - { table: DiamanteDeskBundle:Ticket, alias: i }
                 join:
                     left:
                         - { join: i.branch, alias: branch }
@@ -161,7 +161,7 @@ datagrid:
                     data_name: i.branch
                     options:
                         field_options:
-                            class: EltrinoDiamanteDeskBundle:Branch
+                            class: DiamanteDeskBundle:Branch
                             property: name
                 assigneeFullName:
                     type:      string
@@ -192,19 +192,19 @@ datagrid:
                 icon:          eye-open
                 link:          view_link
                 rowAction:     true
-                acl_resource:  VIEW;Entity:EltrinoDiamanteDeskBundle:Ticket
+                acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket
             update:
                 type:          navigate
                 label:         Update
                 icon:          edit
                 link:          update_link
-                acl_resource:  EDIT;Entity:EltrinoDiamanteDeskBundle:Ticket
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
             delete:
                 type:          delete
                 label:         Delete
                 icon:          trash
                 link:          delete_link
-                acl_resource:  DELETE;Entity:EltrinoDiamanteDeskBundle:Ticket
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
         options:
             entityHint: tickets
 

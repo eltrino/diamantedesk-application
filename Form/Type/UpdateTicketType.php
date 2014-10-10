@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -32,7 +32,7 @@ class UpdateTicketType extends CreateTicketType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\UpdateTicketCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\UpdateTicketCommand',
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )

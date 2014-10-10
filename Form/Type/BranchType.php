@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,7 +30,7 @@ class BranchType extends AbstractType
             'name',
             'text',
             array(
-                'label'    => 'eltrino.diamantedesk.attributes.name',
+                'label'    => 'diamante.desk.attributes.name',
                 'required' => true,
             )
         );
@@ -39,7 +39,7 @@ class BranchType extends AbstractType
             'description',
             'textarea',
             array(
-                'label'    => 'eltrino.diamantedesk.common.description',
+                'label'    => 'diamante.desk.common.description',
                 'required' => false,
             )
         );
@@ -48,7 +48,7 @@ class BranchType extends AbstractType
             'logoFile',
             'file',
             array(
-                'label'    => 'eltrino.diamantedesk.attachment.image',
+                'label'    => 'diamante.desk.attachment.image',
                 'required' => false,
                 'tooltip' => '"JPEG" and "PNG" image formats are supported only.'
             )
@@ -58,7 +58,7 @@ class BranchType extends AbstractType
             'defaultAssignee',
             'diamante_assignee_select',
             array(
-                'label'    => 'eltrino.diamantedesk.attributes.assignee',
+                'label'    => 'diamante.desk.attributes.assignee',
                 'required' => false
             )
         );
@@ -71,6 +71,13 @@ class BranchType extends AbstractType
                 'label' => 'oro.tag.entity_plural_label'
             )
         );
+
+        // Branch Email Configuration
+        $builder->add(
+            'branch_email_configuration',
+            new BranchEmailConfigurationType()
+        );
+
     }
 
     /**
@@ -80,7 +87,7 @@ class BranchType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Branch\Api\Command\BranchCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\BranchCommand',
                 'intention' => 'branch',
                 'cascade_validation' => true
             )

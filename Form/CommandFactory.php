@@ -12,20 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form;
+namespace Diamante\DeskBundle\Form;
 
-use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Form\Command\AssigneeTicketCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\CreateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\UpdateTicketCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\UpdateStatusCommand;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
+use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 
-use Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AttachmentCommand;
 
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
-use Eltrino\DiamanteDeskBundle\Form\Command\BranchCommand;
+use Diamante\DeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class CommandFactory
@@ -88,8 +87,8 @@ class CommandFactory
         $command = new EditCommentCommand();
         $command->id = null;
         $command->content = null;
-        $command->author = $author;
-        $command->ticket = $ticket;
+        $command->ticket = $ticket->getId();
+        $command->author = $author->getId();
         $command->ticketStatus = $ticket->getStatus();
 
         return $command;
@@ -105,8 +104,8 @@ class CommandFactory
         $command = new EditCommentCommand();
         $command->id = $comment->getId();
         $command->content = $comment->getContent();
-        $command->author = $comment->getAuthor();
-        $command->ticket = $comment->getTicket();
+        $command->author = $comment->getAuthor()->getId();
+        $command->ticket = $comment->getTicket()->getId();
         $command->attachmentList = $comment->getAttachments();
         $command->ticketStatus = $comment->getTicket()->getStatus();
 

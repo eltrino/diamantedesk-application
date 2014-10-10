@@ -12,11 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\DataFixtures\Test;
+namespace Diamante\DeskBundle\DataFixtures\Test;
 
 use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -25,18 +25,18 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Priority;
 
 class LoadTicketData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     /** @var ContainerInterface */
     private $container;
 
-    /** @var UserRepository */
+    /** @var EntityRepository */
     private $userRepository;
 
-    /** @var BranchRepository */
+    /** @var EntityRepository */
     private $branchRepository;
 
     /**
@@ -45,7 +45,7 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
     public function getDependencies()
     {
         return [
-            'Eltrino\DiamanteDeskBundle\DataFixtures\Test\LoadBranchData'
+            'Diamante\DeskBundle\DataFixtures\Test\LoadBranchData'
         ];
     }
 
@@ -55,7 +55,7 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
         /** @var  EntityManager $entityManager */
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $this->userRepository = $entityManager->getRepository('OroUserBundle:User');
-        $this->branchRepository = $entityManager->getRepository('EltrinoDiamanteDeskBundle:Branch');
+        $this->branchRepository = $entityManager->getRepository('DiamanteDeskBundle:Branch');
     }
 
     public function load(ObjectManager $manager)

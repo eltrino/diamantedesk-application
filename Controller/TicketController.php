@@ -12,34 +12,35 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Controller;
+namespace Diamante\DeskBundle\Controller;
 
-use Doctrine\Common\Util\ClassUtils;
-use Doctrine\Common\Util\Inflector;
-
-use Doctrine\ORM\EntityManager;
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand;
-use Eltrino\DiamanteDeskBundle\Form\Command\CreateticketCommand;
-use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
-use Eltrino\DiamanteDeskBundle\Form\Type\AssigneeTicketType;
-use Eltrino\DiamanteDeskBundle\Form\Type\AttachmentType;
-use Eltrino\DiamanteDeskBundle\Form\Type\CreateTicketType;
-use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
-use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketType;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\TicketService;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Form\CommandFactory;
+use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\AttachmentType;
+use Diamante\DeskBundle\Form\Type\CreateTicketType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketType;
+use Diamante\DeskBundle\Ticket\Api\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Eltrino\DiamanteDeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+
+use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 
 /**
  * @Route("tickets")
@@ -54,6 +55,8 @@ class TicketController extends Controller
      *      defaults={"_format" = "html"}
      * )
      * @Template
+     *
+     * @return array
      */
     public function listAction()
     {
@@ -78,10 +81,21 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      * @Template
+     *
+     * @param int $id
+     * @return array
      */
-    public function viewAction(Ticket $ticket)
+    public function viewAction($id)
     {
-        return ['entity'  => $ticket];
+        try {
+            $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+
+            return ['entity'  => $ticket];
+        } catch (\Exception $e) {
+            $this->addErrorMessage('Ticket loading failed, ticket not found');
+
+            return new Response($e->getMessage(), 404);
+        }
     }
 
     /**
@@ -90,10 +104,14 @@ class TicketController extends Controller
      *      name="diamante_ticket_status_change",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:widget/info.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:widget/info.html.twig")
+     *
+     * @param int $id
+     * @return array
      */
-    public function changeStatusAction(Ticket $ticket)
+    public function changeStatusAction($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
 
         $command = $this->get('diamante.command_factory')
@@ -104,15 +122,11 @@ class TicketController extends Controller
         if (false === $redirect) {
             try {
                 $this->handle($form);
-                $this->get('diamante.ticket.service')
-                    ->updateStatus(
-                        $command->ticketId,
-                        $command->status
-                    );
-                $this->addSuccessMessage('eltrino.diamantedesk.ticket.actions.change_status.success');
+                $this->get('diamante.ticket.service')->updateStatus($command);
+                $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
                 $response = array('saved' => true);
             } catch (\LogicException $e) {
-                $this->addErrorMessage('eltrino.diamantedesk.ticket.actions.change_status.error');
+                $this->addErrorMessage('diamante.desk.ticket.messages.change_status.error');
                 $response = array('form' => $form->createView());
             }
         } else {
@@ -129,13 +143,17 @@ class TicketController extends Controller
      *      requirements={"id" = "\d+"},
      *      defaults={"id" = null}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:create.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:create.html.twig")
      *
-     * @param Branch $branch
+     * @param int $id
      * @return array
      */
-    public function createAction(Branch $branch = null)
+    public function createAction($id = null)
     {
+        $branch = null;
+        if ($id) {
+            $branch = $this->get('diamante.branch.service')->getBranch($id);
+        }
         $command = $this->get('diamante.command_factory')
             ->createCreateTicketCommand($branch, $this->getUser());
 
@@ -146,37 +164,31 @@ class TicketController extends Controller
         try {
             $this->handle($form);
 
+            $command->branch = $command->branch->getId();
+            $command->reporter = $command->reporter->getId();
+            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+
             $attachments = array();
             foreach ($command->files as $file) {
                 if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
                     array_push($attachments, AttachmentInput::createFromUploadedFile($file));
                 }
             }
+            $command->attachmentsInput = $attachments;
 
-            $ticket = $this->get('diamante.ticket.service')
-                ->createTicket(
-                    $command->branch->getId(),
-                    $command->subject,
-                    $command->description,
-                    $command->reporter->getId(),
-                    $command->assignee->getId(),
-                    $command->priority,
-                    $command->source,
-                    $command->status,
-                    $attachments
-                );
+            $ticket = $this->get('diamante.ticket.service')->createTicket($command);
 
-            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.create.success');
+            $this->addSuccessMessage('diamante.desk.ticket.messages.create.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.create.error');
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $formView);
         } catch (\Exception $e) {
             //TODO: Log original exception
-            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.create.error');
+            $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
             $response = array('form' => $formView);
         }
-        return $response;
+         return $response;
     }
 
     /**
@@ -186,13 +198,14 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:update.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:update.html.twig")
      *
-     * @param Ticket $ticket
+     * @param int $id
      * @return array
      */
-    public function updateAction(Ticket $ticket)
+    public function updateAction($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
             ->createUpdateTicketCommand($ticket);
 
@@ -203,33 +216,26 @@ class TicketController extends Controller
         try {
             $this->handle($form);
 
+            $command->reporter = $command->reporter->getId();
+            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+
             $attachments = array();
             foreach ($command->files as $file) {
                 if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
                     array_push($attachments, AttachmentInput::createFromUploadedFile($file));
                 }
             }
+            $command->attachmentsInput = $attachments;
 
-            $ticket = $this->get('diamante.ticket.service')
-                ->updateTicket(
-                    $command->id,
-                    $command->subject,
-                    $command->description,
-                    $command->reporter->getId(),
-                    $command->assignee ? $command->assignee->getId() : null,
-                    $command->priority,
-                    $command->source,
-                    $command->status,
-                    $attachments
-                );
-            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.save.success');
+            $ticket = $this->get('diamante.ticket.service')->updateTicket($command);
+            $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.save.error');
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $formView);
         } catch (\Exception $e) {
             //TODO: Log original error
-            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.save.error');
+            $this->addErrorMessage('diamante.desk.ticket.messages.save.error');
             $response = array('form' => $formView);
         }
         return $response;
@@ -242,23 +248,20 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @param Ticket $ticket
+     * @param int $id
      * @return Response
      */
-    public function deleteAction(Ticket $ticket)
+    public function deleteAction($id)
     {
         try {
-            $this->get('diamante.ticket.service')
-                ->deleteTicket($ticket->getId());
-
-            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.delete.success');
-
+            $this->get('diamante.ticket.service')->deleteTicket($id);
+            $this->addSuccessMessage('diamante.desk.ticket.messages.delete.success');
             return $this->redirect(
                 $this->generateUrl('diamante_ticket_list')
             );
         } catch (Exception $e) {
             //TODO: Log original error
-            return new Response($this->get('translator')->trans('eltrino.diamantedesk.ticket.messages.delete.error'), 500);
+            return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
     }
 
@@ -269,13 +272,14 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:assign.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:assign.html.twig")
      *
-     * @param Ticket $ticket
+     * @param int $id
      * @return array
      */
-    public function assignAction(Ticket $ticket)
+    public function assignAction($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
             ->createAssigneeTicketCommand($ticket);
 
@@ -283,16 +287,15 @@ class TicketController extends Controller
         $form = $this->createForm(new AssigneeTicketType(), $command);
         try {
             $this->handle($form);
-            $ticket = $this->get('diamante.ticket.service')
-                ->assignTicket(
-                    $command->id,
-                    $command->assignee ? $command->assignee->getId() : null
-                );
-            $this->addSuccessMessage('eltrino.diamantedesk.ticket.messages.reassign.success');
+
+            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+
+            $this->get('diamante.ticket.service')->assignTicket($command);
+            $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
             //TODO: Log original exception
-            $this->addErrorMessage('eltrino.diamantedesk.ticket.messages.reassign.error');
+            $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -304,14 +307,14 @@ class TicketController extends Controller
      *      name="diamante_ticket_create_attach",
      *      requirements={"id"="\d+"}
      * )
-     *
-     * @param Ticket $ticket
      * @Template
      *
+     * @param int $id
      * @return array
      */
-    public function attachAction(Ticket $ticket)
+    public function attachAction($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $commandFactory = new CommandFactory();
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
@@ -325,14 +328,14 @@ class TicketController extends Controller
      *      name="diamante_ticket_create_attach_post",
      *      requirements={"id"="\d+"}
      * )
-     *
-     * @param Ticket $ticket
      * @Template
      *
+     * @param int $id
      * @return Response
      */
-    public function attachPostAction(Ticket $ticket)
+    public function attachPostAction($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $response = null;
         $session = $this->get('session');
         $commandFactory = new CommandFactory();
@@ -354,9 +357,12 @@ class TicketController extends Controller
 
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
-            $ticketService->addAttachmentsForTicket($attachments, $ticket->getId());
+            $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
+            $addTicketAttachmentCommand->attachments = $attachments;
+            $addTicketAttachmentCommand->ticketId = $ticket->getId();
+            $ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
 
-            $this->addSuccessMessage('eltrino.diamantedesk.attachment.messages.create.success');
+            $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');
             if ($this->getRequest()->request->get('diam-dropzone')) {
                 $response = new Response();
                 try {
@@ -384,7 +390,7 @@ class TicketController extends Controller
                 );
             }
         } catch (Exception $e) {
-            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.create.error');
+            $this->addErrorMessage('diamante.desk.attachment.messages.create.error');
             $response = array('form' => $formView);
         }
         return $response;
@@ -396,22 +402,25 @@ class TicketController extends Controller
      *      name="diamante_ticket_attachment_remove",
      *      requirements={"ticketId"="\d+", "attachId"="\d+"}
      * )
-     *
-     * @param integer $ticketId
-     * @param integer $attachId
      * @Template
      *
-     * @return Response
+     * @param int $ticketId
+     * @param int $attachId
+     * @return RedirectResponse
      */
     public function removeAttachmentAction($ticketId, $attachId)
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
+        $removeTicketAttachment = new RemoveTicketAttachmentCommand();
+        $removeTicketAttachment->ticketId     = $ticketId;
+        $removeTicketAttachment->attachmentId = $attachId;
+
         try {
-            $ticketService->removeAttachmentFromTicket($ticketId, $attachId);
-            $this->addSuccessMessage('eltrino.diamantedesk.attachment.messages.delete.success');
+            $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
+            $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
         } catch (\Exception $e) {
-            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.delete.error');
+            $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
         }
 
         $response = $this->redirect($this->generateUrl(
@@ -427,32 +436,27 @@ class TicketController extends Controller
      *      name="diamante_ticket_attachment_download",
      *      requirements={"ticketId"="\d+", "attachId"="\d+"}
      * )
-     * @return Reponse
+     *
+     * @return BinaryFileResponse
      * @todo refactor download logic
      */
     public function downloadAttachmentAction($ticketId, $attachId)
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
-        $attachment = $ticketService->getTicketAttachment($ticketId, $attachId);
+        $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+        $retrieveTicketAttachmentCommand->ticketId = $ticketId;
+        $retrieveTicketAttachmentCommand->attachmentId = $attachId;
+        try {
+            $attachment = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
+            $attachmentDto = AttachmentDto::createFromAttachment($attachment);
+            $response = $this->getFileDownloadResponse($attachmentDto);
 
-        $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachments/ticket')
-            . '/' . $attachment->getFilename();
-
-        if (!file_exists($filePathname)) {
-            $this->addErrorMessage('eltrino.diamantedesk.attachment.messages.get.error');
+            return $response;
+        } catch (\Exeception $e) {
+            $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }
-
-        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($filePathname);
-        $response->trustXSendfileTypeHeader();
-        $response->setContentDisposition(
-            \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $attachment->getFilename(),
-            iconv('UTF-8', 'ASCII//TRANSLIT', $attachment->getFilename())
-        );
-
-        return $response;
     }
 
     /**
@@ -461,8 +465,9 @@ class TicketController extends Controller
      *      name="diamante_ticket_attachment_latest",
      *      requirements={"ticketId"="\d+"}
      * )
+     *
      * @param int $ticketId
-     * @return Response
+     * @return JsonResponse
      */
     public function getRecentlyUploadedAttachmentsAction($ticketId)
     {
@@ -473,7 +478,10 @@ class TicketController extends Controller
             $ticketService = $this->get('diamante.ticket.service');
 
             foreach ($uploadedAttachmentsIds as $attachmentId) {
-                $recentAttachments[] = $ticketService->getTicketAttachment($ticketId, $attachmentId);
+                $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
+                $retrieveTicketAttachmentCommand->attachmentId = $attachmentId;
+                $retrieveTicketAttachmentCommand->ticketId = $ticketId;
+                $recentAttachments[] = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
             }
 
             $list = $this->getRecentAttachmentsList($ticketId, $recentAttachments);
@@ -492,10 +500,14 @@ class TicketController extends Controller
      *      name="diamante_ticket_widget_attachment_list",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Ticket:attachment/list.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:attachment/list.html.twig")
+     *
+     * @param int $id
+     * @return array
      */
-    public function attachmentList(Ticket $ticket)
+    public function attachmentList($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         return [
             'ticket' => $ticket,
             'attachments' => $ticket->getAttachments()
@@ -634,5 +646,18 @@ class TicketController extends Controller
         }
 
         return $diff;
+    }
+
+    private function getFileDownloadResponse(AttachmentDto $attachmentDto)
+    {
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($attachmentDto->getFilePath());
+        $response->trustXSendfileTypeHeader();
+        $response->setContentDisposition(
+            \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $attachmentDto->getFileName(),
+            iconv('UTF-8', 'ASCII//TRANSLIT', $attachmentDto->getFileName())
+        );
+
+        return $response;
     }
 }

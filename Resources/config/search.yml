@@ -1,4 +1,4 @@
-Eltrino\DiamanteDeskBundle\Entity\Branch:
+Diamante\DeskBundle\Entity\Branch:
     alias: diamante_branch
     label: Branch
 
@@ -7,7 +7,7 @@ Eltrino\DiamanteDeskBundle\Entity\Branch:
         name: diamante_branch_view
         parameters:
             id: id
-    search_template: EltrinoDiamanteDeskBundle:Branch:searchResult.html.twig
+    search_template: DiamanteDeskBundle:Branch:searchResult.html.twig
     entity_icon_class: icon-home
     fields:
         -

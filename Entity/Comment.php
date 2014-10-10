@@ -12,15 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Entity;
+namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineCommentRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_comment")
  * @Config(
  *      defaultValues={
@@ -36,7 +35,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Comment extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Comment
+class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
 {
     /**
      * @var integer
@@ -73,7 +72,7 @@ class Comment extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Comment
     protected $author;
 
     /**
-     * @var ArrayCollection
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Attachment")
      * @ORM\JoinTable(name="diamante_comment_attachments",
