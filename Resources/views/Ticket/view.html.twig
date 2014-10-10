@@ -43,7 +43,7 @@
 {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
     <p style="text-align: right;">{{ UI.button({
         'path': path('diamante_comment_create', {'id': entity.id}),
-        'iClass': 'icon-edit',
+        'iCss': 'icon-edit',
         'title': 'diamante.desk.comment.entity_label'|trans,
         'label': 'diamante.desk.comment.entity_label'|trans
         })
@@ -114,7 +114,7 @@
     {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
         {{ UI.button({
         'path': path('diamante_ticket_create'),
-        'iClass': 'icon-user',
+        'iCss': 'icon-plus',
         'title': 'diamante.desk.ticket.actions.create'|trans,
         'label': 'diamante.desk.ticket.actions.create'|trans
         }) }}
@@ -123,7 +123,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_update', {'id': entity.id}),
-        'iClass': 'icon-edit',
+        'iCss': 'icon-edit',
         'title': 'diamante.desk.ticket.actions.edit'|trans,
         'label': 'diamante.desk.ui.edit'|trans
         }) }}
@@ -132,7 +132,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_assign', {'id': entity.id}),
-        'iClass': 'icon-edit',
+        'iCss': 'icon-user',
         'title': 'diamante.desk.ticket.actions.assign'|trans,
         'label': 'diamante.desk.ticket.actions.assign'|trans
         }) }}
@@ -141,7 +141,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
         'path': path('diamante_ticket_create_attach', {'id': entity.id}),
-        'iClass': 'icon-edit',
+        'iCss': 'icon-file',
         'title': 'diamante.desk.attachment.actions.attach'|trans,
         'label': 'diamante.desk.attachment.actions.attach'|trans
         }) }}
