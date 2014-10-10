@@ -6,7 +6,7 @@ define(['app'], function(App, Task){
 
       listTasks: function(){
         require(['modules/Task/models/task', 'modules/Task/views/list'], function(){
-          var tasksList = App.request("task:model");
+          var tasksList = App.request("task:collection");
           var taskListView = new List.CompositeView({
             collection: tasksList
           });

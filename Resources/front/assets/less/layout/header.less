@@ -1,0 +1,43 @@
+#header {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top:0;
+  z-index: @zindex-navbar-fixed;
+  .translate3d(0, 0, 0);
+
+  @media (min-width: @grid-float-breakpoint) {
+    border-radius: 0;
+  }
+
+  .container {
+    background: #f5f5f5;
+    padding: 0 @main-gutter;
+    min-height: @header-height;
+  }
+
+  .logo {
+    height: 62px;
+    margin: 34px 0 28px;
+    display: block;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .profile .btn-link {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .quick-access {
+    clear: right;
+    margin: 10px 0 0;
+    .form-group {
+      display: inline-block;
+      margin: 0;
+      vertical-align: top;
+    }
+  }
+}
