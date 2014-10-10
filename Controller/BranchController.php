@@ -106,7 +106,7 @@ class BranchController extends Controller
      * @param $command
      * @param $branchId
      */
-    private function createBranchEmailConfiguration($command, $branchId)
+    private function createBranchEmailConfiguration(BranchCommand $command, $branchId)
     {
         $branchEmailConfigurationCommand = $command->getBranchEmailConfiguration();
         $branchEmailConfigurationCommand->branch = $branchId;
@@ -117,7 +117,7 @@ class BranchController extends Controller
      * @param $command
      * @param $branchId
      */
-    private function updateBranchEmailConfiguration($command, $branchId)
+    private function updateBranchEmailConfiguration(BranchCommand $command, $branchId)
     {
         $branchEmailConfigurationCommand = $command->getBranchEmailConfiguration();
         $branchEmailConfigurationCommand->branch = $branchId;

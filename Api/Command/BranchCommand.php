@@ -16,26 +16,51 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
+use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BranchCommand implements Taggable
 {
+
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $id;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $name;
+
+    /**
+     * @Assert\Type(type="string")
+     */
     public $description;
+
+    /**
+     * @Assert\Type(type="array")
+     */
     public $tags;
+
+    /**
+     * @Assert\Type(type="object")
+     */
     public $logoFile;
+
+    /**
+     * @Assert\Type(type="object")
+     */
     public $defaultAssignee;
+
+    /**
+     * @Assert\Type(type="object")
+     */
     public $logo;
 
     /**
-     * @var BranchEmailConfiguration
+     * @var BranchEmailConfigurationCommand
      */
     public $branchEmailConfiguration;
 
@@ -45,7 +70,7 @@ class BranchCommand implements Taggable
     }
 
     /**
-     * @return BranchEmailConfiguration
+     * @return BranchEmailConfigurationCommand
      */
     public function getBranchEmailConfiguration()
     {
@@ -53,7 +78,7 @@ class BranchCommand implements Taggable
     }
 
     /**
-     * @param $branchEmailConfiguration
+     * @param $branchEmailConfigurationCommand
      */
     public function setBranchEmailConfiguration($branchEmailConfiguration)
     {

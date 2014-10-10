@@ -14,15 +14,22 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class CreateAttachmentsCommand
 {
     /**
      * @var array
+     * @Assert\NotNull()
+     * @Assert\Type(type="array")
      */
     public $attachments;
 
     /**
      * @var \Diamante\DeskBundle\Model\Attachment\AttachmentHolder
+     *
+     * @Assert\NotNull()
+     * @Assert\Type(type="object")
      */
     public $attachmentHolder;
 }

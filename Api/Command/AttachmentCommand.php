@@ -14,15 +14,21 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class AttachmentCommand
 {
     /**
      * @var int
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
      */
     public $ticketId;
 
     /**
      * @var array
+     * @Assert\NotNull()
+     * @Assert\Type(type="array")
      */
     public $files;
 }

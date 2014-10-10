@@ -18,25 +18,39 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class EditCommentCommand
 {
+    /**
+     * @Assert\Type(type="integer")
+     */
     public $id;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $content;
 
+    /**
+     * @Assert\Type(type="array")
+     */
     public $files;
+
+    /**
+     * @Assert\Type(type="object")
+     */
     public $attachmentList;
+
     public $attachmentsInput;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="int")
      * @var int
      */
     public $ticket;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="int")
      * @var int
      */
     public $author;

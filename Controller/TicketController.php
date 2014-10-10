@@ -123,10 +123,10 @@ class TicketController extends Controller
             try {
                 $this->handle($form);
                 $this->get('diamante.ticket.service')->updateStatus($command);
-                $this->addSuccessMessage('diamante.desk.ticket.actions.change_status.success');
+                $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
                 $response = array('saved' => true);
             } catch (\LogicException $e) {
-                $this->addErrorMessage('diamante.desk.ticket.actions.change_status.error');
+                $this->addErrorMessage('diamante.desk.ticket.messages.change_status.error');
                 $response = array('form' => $form->createView());
             }
         } else {
@@ -181,14 +181,14 @@ class TicketController extends Controller
             $this->addSuccessMessage('diamante.desk.ticket.messages.create.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $formView);
         } catch (\Exception $e) {
             //TODO: Log original exception
             $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
             $response = array('form' => $formView);
         }
-        return $response;
+         return $response;
     }
 
     /**
@@ -231,7 +231,7 @@ class TicketController extends Controller
             $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (\LogicException $e) {
-            $this->addErrorMessage('diamante.desk.ticket.messages.save.error');
+            $this->addErrorMessage($e->getMessage());
             $response = array('form' => $formView);
         } catch (\Exception $e) {
             //TODO: Log original error
@@ -412,8 +412,8 @@ class TicketController extends Controller
     {
         /** @var TicketService $ticketService */
         $ticketService = $this->get('diamante.ticket.service');
-        $removeTicketAttachment = new RemoveAttachmentCommand();
-        $removeTicketAttachment->entityId     = $ticketId;
+        $removeTicketAttachment = new RemoveTicketAttachmentCommand();
+        $removeTicketAttachment->ticketId     = $ticketId;
         $removeTicketAttachment->attachmentId = $attachId;
 
         try {

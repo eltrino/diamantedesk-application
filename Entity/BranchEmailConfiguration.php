@@ -34,7 +34,7 @@ class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailPr
     /**
      * @var Branch
      *
-     * @ORM\OneToOne(targetEntity="Branch")
+     * @ORM\OneToOne(targetEntity="\Diamante\DeskBundle\Entity\Branch")
      * @ORM\JoinColumn(name="branch_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $branch;

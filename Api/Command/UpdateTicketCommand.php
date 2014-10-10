@@ -19,44 +19,53 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UpdateTicketCommand
 {
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
      */
     public $id;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $subject;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $description;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
      */
     public $status;
 
     /**
-     * @var array
+     * @Assert\Type(type="array")
      */
     public $files;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="object")
      */
     public $reporter;
 
+    /**
+     * @Assert\Type(type="object")
+     */
     public $assignee;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
      */
     public $priority;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @assert\Type(type="string")
      */
     public $source;
 
