@@ -159,7 +159,7 @@ class InstallCommand extends AbstractCommand
 
         $this->runExistingCommand('doctrine:fixtures:load', $output,
             array(
-                '--fixtures'       => "{$kernelRootDir}/../src/Eltrino/DeskBundle/DataFixtures/ORM",
+                '--fixtures'       => "{$kernelRootDir}/../src/Diamante/DeskBundle/DataFixtures/ORM",
                 '--append'         => true,
                 '--no-interaction' => true,
             )
