@@ -11,8 +11,8 @@ define(['app'], function(App, Task){
             collection: tasksList
           });
 
-          taskListView.on("childview:task:show", function(childView, model){
-            App.trigger('task:show', model.get('id'));
+          taskListView.on("childview:task:view", function(childView, model){
+            App.trigger('task:view', model.get('id'));
           });
 
           App.main.show(taskListView);

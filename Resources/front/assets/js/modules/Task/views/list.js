@@ -9,13 +9,13 @@ define(['app',
       template: taskTemplate,
 
       events : {
-        'click' : "showClicked"
+        'click' : "viewClicked"
       },
 
-      showClicked: function(e){
+      viewClicked: function(e){
         e.preventDefault();
         e.stopPropagation();
-        this.trigger("task:show", this.model);
+        this.trigger("task:view", this.model);
       }
     });
 

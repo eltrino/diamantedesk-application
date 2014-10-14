@@ -3,7 +3,7 @@ define(['app'],function(App){
     Task.Router = Marionette.AppRouter.extend({
       appRoutes: {
         "tasks" : "listTasks",
-        "tasks/:id" : "showTask"
+        "tasks/:id" : "viewTask"
       }
     });
 
@@ -13,9 +13,9 @@ define(['app'],function(App){
           App.Task.List.Controller.listTasks();
         });
       },
-      showTask: function(id){
-        require(['modules/Task/controllers/show'], function(){
-          App.Task.Show.Controller.showTask(id);
+      viewTask: function(id){
+        require(['modules/Task/controllers/view'], function(){
+          App.Task.View.Controller.viewTask(id);
         });
       }
     };
@@ -25,9 +25,9 @@ define(['app'],function(App){
       API.listTasks();
     });
 
-    App.on('task:show', function(id){
+    App.on('task:view', function(id){
       App.navigate("tasks/" + id);
-      API.showTask(id);
+      API.viewTask(id);
     });
 
     App.addInitializer(function(){
