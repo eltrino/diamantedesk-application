@@ -1,7 +1,7 @@
 {
-    "name": "eltrino/diamantedesk-email-processing-bundle",
-    "description": "Diamante Desk Email Processing Bundle",
-    "homepage": "https://github.com/eltrino/EltrinoEmailProcessingBundle",
+    "name": "diamante/email-processing-bundle",
+    "description": "DiamanteDesk Email Processing Bundle",
+    "homepage": "https://github.com/eltrino/DiamanteEmailProcessingBundle",
     "license": "OSL-3.0",
     "authors": [
         {
@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/eltrino/EltrinoEmailProcessingBundle.git"
+            "url": "https://github.com/eltrino/DiamanteEmailProcessingBundle.git"
         }
     ],
     "require": {
@@ -36,5 +36,8 @@
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
+    },
+    "replace": {
+        "eltrino/diamantedesk-email-processing-bundle": "1.*"
     }
 }
