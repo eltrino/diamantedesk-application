@@ -26,7 +26,7 @@
         "oro/platform": "1.2.*",
         "oro/crm": "1.2.*",
         "beberlei/assert": "2.*",
-        "eltrino/diamantedesk-email-processing-bundle": "*"
+        "diamante/email-processing-bundle": "*"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"
