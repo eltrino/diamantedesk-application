@@ -9,7 +9,7 @@
     {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
         {{ UI.button({
             'path': path('diamante_ticket_create', {'id': entity.id}),
-            'iCss': 'icon-user',
+            'iCss': 'icon-plus',
             'title': 'diamante.desk.ticket.actions.add'|trans,
             'label': 'diamante.desk.ticket.actions.add'|trans
         }) }}

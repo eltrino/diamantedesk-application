@@ -14,18 +14,18 @@
  */
 namespace Diamante\DeskBundle\Model\Branch\EmailProcessing;
 
-use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 
-class BranchEmailConfigurationFactory
+class BranchEmailConfigurationFactory extends AbstractEntityFactory
 {
     /**
-     * @param Branch $branch
+     * @param $branch
      * @param $customerDomains
      * @param $supportAddress
      * @return BranchEmailConfiguration
      */
-    public function create(Branch $branch, $customerDomains, $supportAddress)
+    public function create($branch, $customerDomains, $supportAddress)
     {
-        return new BranchEmailConfiguration($branch, $customerDomains, $supportAddress);
+        return new $this->entityClassName($branch, $customerDomains, $supportAddress);
     }
 }

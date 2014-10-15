@@ -41,14 +41,14 @@ class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailPr
 
     /**
      * @var []
-     * @ORM\Column(name="customer_domains", type="text")
+     * @ORM\Column(name="customer_domains", type="text", nullable=true)
      */
     protected $customerDomains;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="support_address", type="text")
+     * @ORM\Column(name="support_address", type="text", nullable=true)
      */
     protected $supportAddress;
 
