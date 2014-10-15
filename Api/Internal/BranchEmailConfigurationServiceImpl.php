@@ -16,7 +16,6 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Doctrine\ORM\EntityManager;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
@@ -81,10 +80,15 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
      * Create BranchEmailConfiguration
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
      * @return int
+     * @throws \RuntimeException if unable to load required branch
      */
     public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
     {
         $branch = $this->branchRepository->get($branchEmailConfigurationCommand->branch);
+
+        if (is_null($branch)) {
+            throw new \RuntimeException('Branch Email Configuration loading failed, branch not found.');
+        }
 
         $branchEmailConfiguration = $this->branchEmailConfigurationFactory
             ->create(

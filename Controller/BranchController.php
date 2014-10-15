@@ -187,7 +187,7 @@ class BranchController extends Controller
             }
             $response = $this->getSuccessSaveResponse($branchId);
         } catch (\LogicException $e) {
-            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
+            //$this->addErrorMessage('diamante.desk.branch.messages.save.error');
             $response = array('form' => $form->createView());
         }
         return $response;

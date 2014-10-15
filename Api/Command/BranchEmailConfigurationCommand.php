@@ -33,6 +33,7 @@ class BranchEmailConfigurationCommand
      * @Assert\Type(type="string")
      */
     public $customerDomains;
+
     /**
      * @Assert\Type(type="string")
      */
