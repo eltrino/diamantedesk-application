@@ -1,12 +1,12 @@
 define(['app',
-  'tpl!modules/Task/templates/item.ejs',
-  'tpl!modules/Task/templates/list.ejs'], function(App, taskTemplate, listTemplate){
+  'tpl!modules/Task/templates/list-item.ejs',
+  'tpl!modules/Task/templates/list.ejs'], function(App, listItemTemplate, listTemplate){
 
   App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 
     List.ItemView = Marionette.ItemView.extend({
       tagName: "tr",
-      template: taskTemplate,
+      template: listItemTemplate,
 
       events : {
         'click' : "viewClicked"

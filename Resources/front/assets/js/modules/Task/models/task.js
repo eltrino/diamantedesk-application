@@ -11,23 +11,24 @@ define(['app'], function(App){
     });
 
     var initialize = function(){
-      tasks = new Models.TaskCollection([
-        { id: 1, created_at : "10-Jun-2014", subject : "Description #1", priority : "Hight", status : "Assigned"},
-        { id: 2, created_at : "10-Jun-2014", subject : "Description #2", priority : "Hight", status : "Assigned"},
-        { id: 3, created_at : "10-Jun-2014", subject : "Description #3", priority : "Hight", status : "Assigned"},
-        { id: 4, created_at : "10-Jun-2014", subject : "Description #4", priority : "Hight", status : "Assigned"},
-        { id: 5, created_at : "10-Jun-2014", subject : "Description #5", priority : "Hight", status : "Assigned"},
-        { id: 6, created_at : "10-Jun-2014", subject : "Description #6", priority : "Hight", status : "Assigned"},
-        { id: 7, created_at : "10-Jun-2014", subject : "Description #7", priority : "Hight", status : "Assigned"}
-      ]);
+      // Temporary
+      return $.get('assets/js/modules/Task/models/tasks.json', function(json){
+        tasks = new Models.TaskCollection(json);
+      });
+
     };
 
     var API = {
       getTaskEntities: function(){
+        var defer = $.Deferred();
         if(tasks === undefined){
-          initialize();
+          initialize().done(function(){
+            defer.resolve(tasks)
+          });
+        } else {
+          defer.resolve(tasks)
         }
-        return tasks;
+        return defer.promise();
       }
     };
 

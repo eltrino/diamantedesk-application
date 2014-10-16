@@ -15,9 +15,10 @@ define(['marionette','backbone'], function(Marionette, Backbone) {
 
   var App = new Marionette.Application({
     regions : {
-      header: '#header',
-      main: '#content',
-      footer: '#footer'
+      HeaderRegion: '#header',
+      MainRegion: '#content',
+      FooterRegion: '#footer',
+      DialogRegion: '#dialog'
     }
   });
 

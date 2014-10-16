@@ -1,4 +1,4 @@
-define(['app'], function(App, Task){
+define(['app'], function(App){
 
   App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -6,16 +6,20 @@ define(['app'], function(App, Task){
 
       listTasks: function(){
         require(['modules/Task/models/task', 'modules/Task/views/list'], function(){
-          var tasksList = App.request("task:collection");
-          var taskListView = new List.CompositeView({
-            collection: tasksList
-          });
+          var fetching = App.request("task:collection");
 
-          taskListView.on("childview:task:view", function(childView, model){
-            App.trigger('task:view', model.get('id'));
-          });
+          $.when(fetching).done(function(collection){
+            var taskListView = new List.CompositeView({
+              collection: collection
+            });
 
-          App.main.show(taskListView);
+            taskListView.on("childview:task:view", function(childView, model){
+              App.trigger('task:view', model.get('id'));
+            });
+
+            App.MainRegion.show(taskListView);
+
+          })
 
         });
       }

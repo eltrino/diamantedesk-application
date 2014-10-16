@@ -1,6 +1,6 @@
 define(['app'],function(App){
-  App.module('Task', function(Task, App, Backbone, Marionette, $, _){
-    Task.Router = Marionette.AppRouter.extend({
+  App.module('Task.Routers', function(Routers, App, Backbone, Marionette, $, _){
+    Routers = Marionette.AppRouter.extend({
       appRoutes: {
         "tasks" : "listTasks",
         "tasks/:id" : "viewTask"
@@ -31,7 +31,7 @@ define(['app'],function(App){
     });
 
     App.addInitializer(function(){
-      new Task.Router({
+      new Routers({
         controller: API
       });
     })
