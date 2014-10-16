@@ -25,7 +25,7 @@
         <parameter key="diamante.branch.logo.handler.class">Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler</parameter>
         <parameter key="diamante.branch.service.class">Diamante\DeskBundle\Api\Internal\BranchServiceImpl</parameter>
         <parameter key="diamante.branch_email_configuration.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository</parameter>
-        <parameter key="diamante.branch_email_configuration.factory.class">Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory</parameter>
+        <parameter key="diamante.branch_email_configuration.entity.factory.class">Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory</parameter>
         <parameter key="diamante.branch_email_configuration.service.class">Diamante\DeskBundle\Api\Internal\BranchEmailConfigurationServiceImpl</parameter>
     </parameters>
 
@@ -34,7 +34,9 @@
             <argument type="string">%diamante.branch.entity.class%</argument>
         </service>
 
-        <service id="diamante.branch_email_configuration.factory" class="%diamante.branch_email_configuration.factory.class%"/>
+        <service id="diamante.branch_email_configuration.entity.factory" class="%diamante.branch_email_configuration.entity.factory.class%">
+            <argument type="string">%diamante.branch_email_configuration.entity.class%</argument>
+        </service>
 
         <service id="diamante.branch.logo_handler" class="%diamante.branch.logo.handler.class%"
                  factory-class="%diamante.branch.logo.handler.class%" factory-method="create">
@@ -51,7 +53,7 @@
         </service>
 
         <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%">
-            <argument type="service" id="diamante.branch_email_configuration.factory"/>
+            <argument type="service" id="diamante.branch_email_configuration.entity.factory"/>
             <argument type="service" id="diamante.branch_email_configuration.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
         </service>

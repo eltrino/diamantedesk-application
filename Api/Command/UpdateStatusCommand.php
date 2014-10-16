@@ -14,13 +14,20 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class UpdateStatusCommand
 {
     /**
+     * @Assert\NotNull()
+     * @Assert\Type(type="int")
      * @var int
      */
     public $ticketId;
+
     /**
+     * @Assert\NotNull()
+     * @Assert\Type(type="object")
      * @var string
      */
     public $status;

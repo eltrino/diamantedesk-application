@@ -14,15 +14,21 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class AssigneeTicketCommand
 {
     /**
      * @var int
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
      */
     public $id;
 
     /**
-     * @var int
+     * @var \Oro\Bundle\UserBundle\Entity\User
+     * @Assert\NotNull()
+     * @Assert\Type(type="object")
      */
     public $assignee;
 }

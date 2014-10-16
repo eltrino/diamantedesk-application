@@ -109,7 +109,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param null $priority
      * @param null $status
      * @param array $attachments
-     * @return \Eltrino\DiamanteDeskBundle\Entity\Ticket
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,

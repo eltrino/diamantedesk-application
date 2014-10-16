@@ -18,25 +18,32 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateTicketCommand
 {
+    /**
+     * @var int|null
+     */
     public $id;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="object")
      */
     public $branch;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $subject;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $description;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $status;
 
@@ -46,19 +53,26 @@ class CreateTicketCommand
     public $files;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="object")
      */
     public $reporter;
 
+    /**
+     * @Assert\NotNull()
+     * @Assert\Type(type="object")
+     */
     public $assignee;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
      */
     public $priority;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
      */
     public $source;
 

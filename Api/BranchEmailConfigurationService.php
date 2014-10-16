@@ -45,6 +45,7 @@ interface BranchEmailConfigurationService
      * Create BranchEmailConfiguration
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
      * @return int
+     * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
 

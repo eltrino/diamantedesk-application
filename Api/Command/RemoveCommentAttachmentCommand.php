@@ -14,14 +14,20 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class RemoveCommentAttachmentCommand
 {
     /**
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
      * @var int
      */
     public $commentId;
 
     /**
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
      * @var int
      */
     public $attachmentId;

@@ -33,8 +33,8 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 
-use DiamanteDeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
-use DiamanteDeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 
 /**
  * @Route("comment")

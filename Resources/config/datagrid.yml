@@ -44,13 +44,13 @@ datagrid:
             view:
                 type:          navigate
                 label:         View
-                icon:          user
+                icon:          eye-open
                 link:          view_link
                 rowAction:     true
                 acl_resource:  VIEW;Entity:DiamanteDeskBundle:Branch
             update:
                 type:          navigate
-                label:         Update
+                label:         Edit
                 icon:          edit
                 link:          update_link
                 acl_resource:  UPDATE;Entity:DiamanteDeskBundle:Branch
@@ -117,18 +117,12 @@ datagrid:
             branchName:
                 label:   Branch
             assigneeFullName:
-                label:   Assignee,
+                label:   Assignee
                 type:    assignee
             reporterFullName:
                 label:   Reporter
             priority:
                 label:   Priority
-            assigneeId:
-                label:   AssigneeId
-                renderable: false
-            reporterId:
-                label:   ReporterId
-                renderable: false
             status:
                 label:   Status
             createdAt:
@@ -178,12 +172,6 @@ datagrid:
                 priority:
                     type:      string
                     data_name: i.priority
-                assigneeId:
-                    type:       number
-                    data_name:  assigneeId
-                reporterId:
-                    type:       number
-                    data_name:  reporterId
                 status:
                     type: choice
                     data_name: i.status
@@ -201,7 +189,7 @@ datagrid:
             view:
                 type:          navigate
                 label:         View
-                icon:          user
+                icon:          eye-open
                 link:          view_link
                 rowAction:     true
                 acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket
@@ -249,7 +237,7 @@ datagrid:
             view:
                 type:          navigate
                 label:         View
-                icon:          user
+                icon:          eye-open
                 link:          view_link
                 rowAction:     true
             delete:

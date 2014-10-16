@@ -34,21 +34,21 @@ class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailPr
     /**
      * @var Branch
      *
-     * @ORM\OneToOne(targetEntity="Branch")
+     * @ORM\OneToOne(targetEntity="\Diamante\DeskBundle\Entity\Branch")
      * @ORM\JoinColumn(name="branch_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $branch;
 
     /**
      * @var []
-     * @ORM\Column(name="customer_domains", type="text")
+     * @ORM\Column(name="customer_domains", type="text", nullable=true)
      */
     protected $customerDomains;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="support_address", type="text")
+     * @ORM\Column(name="support_address", type="text", nullable=true)
      */
     protected $supportAddress;
 

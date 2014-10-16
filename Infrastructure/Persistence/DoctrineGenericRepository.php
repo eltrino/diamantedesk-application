@@ -38,8 +38,8 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
     }
 
     /**
-     * Store Branch
-     * @param Branch $branch
+     * Store Entity
+     * @param Entity $entity
      * @return void
      */
     public function store(Entity $entity)

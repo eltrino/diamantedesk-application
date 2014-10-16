@@ -59,6 +59,9 @@
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.attachment.repository"/>
+            <argument type="service" id="diamante.ticket.entity.factory"/>
+            <argument type="service" id="diamante.comment.entity.factory"/>
+            <argument type="service" id="diamante.attachment.entity.factory"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>

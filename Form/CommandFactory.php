@@ -104,8 +104,8 @@ class CommandFactory
         $command = new EditCommentCommand();
         $command->id = $comment->getId();
         $command->content = $comment->getContent();
-        $command->author = $comment->getAuthor();
-        $command->ticket = $comment->getTicket();
+        $command->author = $comment->getAuthor()->getId();
+        $command->ticket = $comment->getTicket()->getId();
         $command->attachmentList = $comment->getAttachments();
         $command->ticketStatus = $comment->getTicket()->getStatus();
 

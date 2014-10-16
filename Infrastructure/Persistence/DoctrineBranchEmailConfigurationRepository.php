@@ -45,7 +45,7 @@ class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericReposito
     {
         $customerDomainRegExp = "[[:<:]]" . $customerDomain . "[[:>:]]";
         $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('EltrinoDiamanteDeskBundle:BranchEmailConfiguration', 'j');
+        $rsm->addEntityResult('DiamanteDeskBundle:BranchEmailConfiguration', 'j');
         $rsm->addScalarResult('branch_id', 'branch_id');
         $rsm->addScalarResult('criteria', 'criteria');
 
