@@ -12,15 +12,23 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
+namespace Diamante\DeskBundle\EventListener;
 
-class TicketWasUpdated extends AbstractDomainEvent
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
+
+class TicketSubscriber extends AbstractSubscriber
 {
-    /**
-     * @return string
-     */
-    public function getEventName()
+    public static function getSubscribedEvents()
     {
-        return 'ticketWasUpdated';
+        return array(
+           'ticketWasUpdated' => 'onTicketWasUpdated'
+        );
+    }
+
+    public function onTicketWasUpdated(TicketWasUpdated $event)
+    {
+        foreach ($this->notifiers as $notifier) {
+            $notifier->notify($event);
+        }
     }
 } 

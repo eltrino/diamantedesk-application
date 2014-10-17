@@ -14,8 +14,10 @@
  */
 namespace Diamante\DeskBundle;
 
+use Akeneo\Bundle\BatchBundle\DependencyInjection\Compiler\RegisterNotifiersPass;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DiamanteDeskBundle extends Bundle
 {
@@ -54,5 +56,14 @@ class DiamanteDeskBundle extends Bundle
 
         $conn->getDatabasePlatform()
             ->registerDoctrineTypeMapping('FILE', 'string');
+    }
+
+    /**
+     * @see Symfony\Component\HttpKernel\Bundle\Bundle::build()
+     * @param ContainerBuilder $container
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterNotifiersPass());
     }
 }

@@ -12,33 +12,32 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
+namespace Diamante\DeskBundle\EventListener;
 
-use Diamante\DeskBundle\Model\Shared\DomainEvent;
-use Symfony\Component\EventDispatcher\Event;
+use Diamante\DeskBundle\Infrastructure\Ticket\Notification\Notifier;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-abstract class AbstractDomainEvent extends Event implements DomainEvent
+abstract class AbstractSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var array
-     */
-    private $changes;
+    protected $notifiers = array();
 
-    public function __construct($changes)
+    /**
+     * Register a notifier
+     *
+     * @param Notifier $notifier
+     */
+    public function registerNotifier(Notifier $notifier)
     {
-        $this->changes = $changes;
+        $this->notifiers[] = $notifier;
     }
 
     /**
+     * Get the registered notifiers
+     *
      * @return array
      */
-    public function getChanges()
+    public function getNotifiers()
     {
-        return $this->changes;
+        return $this->notifiers;
     }
-
-    /**
-     * @return string
-     */
-    abstract function getEventName();
 } 

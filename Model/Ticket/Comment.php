@@ -144,7 +144,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
             'content' => $this->getSubject(),
         );
 
-        $changes = new ArrayCollection();
+        $changes = array();
 
         foreach($newValues as $key => $value) {
             if ($oldValues[$key] !== $newValues[$key]) {

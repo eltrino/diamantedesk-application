@@ -286,7 +286,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
             'source'      => $this->getSource()->getValue()
         );
 
-        $changes = new ArrayCollection();
+        $changes = array();
 
         foreach($newValues as $key => $value) {
             if ($oldValues[$key] !== $newValues[$key]) {

@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\EventListener\TicketSubscriber;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -85,6 +86,9 @@ class TicketServiceImpl implements TicketService
         $this->attachmentService = $attachmentService;
         $this->securityFacade = $securityFacade;
         $this->dispatcher = $dispatcher;
+
+        $ticketSubscriber = new TicketSubscriber();
+        $this->dispatcher->addSubscriber($ticketSubscriber);
     }
 
     /**
@@ -261,12 +265,10 @@ class TicketServiceImpl implements TicketService
 
         $this->ticketRepository->store($ticket);
 
-        $changes = $ticket->getRecordedEvents();
+        $events = $ticket->getRecordedEvents();
 
-        //$dispatcher->addSubscriber() ....
-
-        foreach ($changes as $change) {
-            $this->dispatcher->dispatch($change->getEventName, $change);
+        foreach ($events as $event) {
+            $this->dispatcher->dispatch($event->getEventName(), $event);
         }
 
         return $ticket;
