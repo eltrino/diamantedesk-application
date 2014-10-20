@@ -41,6 +41,8 @@ use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentDto;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("tickets")
@@ -119,18 +121,22 @@ class TicketController extends Controller
 
         $form = $this->createForm(new UpdateTicketStatusType(), $command);
 
-        if (false === $redirect) {
-            try {
-                $this->handle($form);
-                $this->get('diamante.ticket.service')->updateStatus($command);
-                $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
-                $response = array('saved' => true);
-            } catch (\LogicException $e) {
-                $this->addErrorMessage('diamante.desk.ticket.messages.change_status.error');
+        try {
+            if (false === $redirect) {
+                try {
+                    $this->handle($form);
+                    $this->get('diamante.ticket.service')->updateStatus($command);
+                    $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
+                    $response = array('saved' => true);
+
+                } catch (\Exception $e) {
+                    $this->addErrorMessage('diamante.desk.ticket.messages.change_status.error');
+                    $response = array('form' => $form->createView());
+                }
+            } else {
                 $response = array('form' => $form->createView());
             }
-        } else {
-            $response = array('form' => $form->createView());
+        } catch (MethodNotAllowedException $e) {
         }
 
         return $response;
@@ -180,11 +186,8 @@ class TicketController extends Controller
 
             $this->addSuccessMessage('diamante.desk.ticket.messages.create.success');
             $response = $this->getSuccessSaveResponse($ticket);
-        } catch (\LogicException $e) {
-            $this->addErrorMessage($e->getMessage());
-            $response = array('form' => $formView);
+        } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
-            //TODO: Log original exception
             $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
             $response = array('form' => $formView);
         }
@@ -208,12 +211,12 @@ class TicketController extends Controller
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
             ->createUpdateTicketCommand($ticket);
-
         $response = null;
         $form = $this->createForm(new UpdateTicketType(), $command);
-        $formView = $form->createView();
-        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
+
         try {
+            $formView = $form->createView();
+            $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
             $this->handle($form);
 
             $command->reporter = $command->reporter->getId();
@@ -230,8 +233,7 @@ class TicketController extends Controller
             $ticket = $this->get('diamante.ticket.service')->updateTicket($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
             $response = $this->getSuccessSaveResponse($ticket);
-        } catch (\LogicException $e) {
-            $this->addErrorMessage($e->getMessage());
+        } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView);
         } catch (\Exception $e) {
             //TODO: Log original error
@@ -259,8 +261,8 @@ class TicketController extends Controller
             return $this->redirect(
                 $this->generateUrl('diamante_ticket_list')
             );
-        } catch (Exception $e) {
-            //TODO: Log original error
+        } catch (\Exception $e) {
+            echo $e->getMessage();
             return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
     }
@@ -293,8 +295,8 @@ class TicketController extends Controller
             $this->get('diamante.ticket.service')->assignTicket($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
             $response = $this->getSuccessSaveResponse($ticket);
-        } catch (\LogicException $e) {
-            //TODO: Log original exception
+        } catch (MethodNotAllowedException $e) {
+        } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
             $response = array('form' => $form->createView());
         }
@@ -389,6 +391,8 @@ class TicketController extends Controller
                     )
                 );
             }
+        } catch (MethodNotAllowedException $e) {
+            $response = array('form' => $formView);
         } catch (Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.create.error');
             $response = array('form' => $formView);
@@ -516,19 +520,19 @@ class TicketController extends Controller
 
     /**
      * @param Form $form
-     * @throws \LogicException
-     * @throws \RuntimeException
+     * @throws MethodNotAllowedException
+     * @throws ValidatorException
      */
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be posted only by "POST" method.');
+            throw new MethodNotAllowedException(array('POST'),'Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form object validation failed, form is invalid.');
+            throw new ValidatorException('Form object validation failed, form is invalid.');
         }
     }
 

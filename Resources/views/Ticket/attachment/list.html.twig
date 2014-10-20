@@ -22,8 +22,8 @@
                 </div>
                 <figcaption>
                     <span class="pull-right">
-                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="{{ 'diamante.desk.attachment.download'|trans }}">{{ 'diamante.desk.attachment.download'|trans }}</i></a>
-                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="{{ 'diamante.desk.attachment.remove'|trans }}">{{ 'diamante.desk.attachment.remove'|trans }}</i></a>
+                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="{{ 'diamante.desk.attachment.actions.download'|trans }}">{{ 'diamante.desk.attachment.actions.download'|trans }}</i></a>
+                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="{{ 'diamante.desk.attachment.actions.remove'|trans }}">{{ 'diamante.desk.attachment.actions.remove'|trans }}</i></a>
                     </span>
                     <strong>{{ attachment.filename|escape }}</strong>
                 </figcaption>
