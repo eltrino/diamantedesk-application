@@ -34,6 +34,8 @@ use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("branches")
@@ -90,6 +92,8 @@ class BranchController extends Controller
                 $this->createBranchEmailConfiguration($command, $branchId);
                 return $branchId;
             });
+        } catch (MethodNotAllowedException $e) {
+
         } catch(\Exception $e) {
             // @todo log original error
             $this->addErrorMessage('diamante.desk.branch.messages.create.error');
@@ -152,6 +156,8 @@ class BranchController extends Controller
                 $this->updateBranchEmailConfiguration($command, $branchId);
                 return $branchId;
             }, $branch);
+        } catch (MethodNotAllowedException $e) {
+            echo $e->getMessage();
         } catch(\Exception $e) {
             // @todo log original error
             $this->addErrorMessage('diamante.desk.branch.messages.save.error');
@@ -186,8 +192,10 @@ class BranchController extends Controller
                 $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($branchId);
-        } catch (\LogicException $e) {
-            //$this->addErrorMessage('diamante.desk.branch.messages.save.error');
+        } catch (MethodNotAllowedException $e) {
+            $response = array('form' => $form->createView());
+        } catch (\Exception $e) {
+            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -212,6 +220,7 @@ class BranchController extends Controller
             return new Response(null, 204, array(
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
+        } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.branch.messages.delete.error');
             return new Response($e->getMessage(), 500);
@@ -220,19 +229,19 @@ class BranchController extends Controller
 
     /**
      * @param Form $form
-     * @throws \LogicException
-     * @throws \RuntimeException
+     * @throws MethodNotAllowedException
+     * @throws ValidatorException
      */
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be posted only by "POST" method.');
+            throw new MethodNotAllowedException(array('POST'), 'Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form object validation failed, form is invalid.');
+            throw new ValidatorException('Form object validation failed, form is invalid.');
         }
     }
 

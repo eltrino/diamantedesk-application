@@ -27,7 +27,7 @@ class UpdateStatusCommand
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="object")
+     * @Assert\Type(type="string")
      * @var string
      */
     public $status;

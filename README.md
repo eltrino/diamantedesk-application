@@ -18,7 +18,7 @@ Installation
 Add as dependency in composer
 
 ```bash
-composer require eltrino/diamante-desk-bundle:dev-master
+composer require diamante/desk-bundle:dev-master
 ```
 
 In addition you will need to run DiamanteDesk internal command to install
