@@ -12,11 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Infrastructure\Ticket\Notification;
+namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-use Diamante\DeskBundle\Model\Shared\DomainEvent;
-
-interface Notifier
+class TicketWasCreated extends AbstractDomainEvent
 {
-    public function notify(DomainEvent $event);
+    /**
+     * @return string
+     */
+    public function getEventName()
+    {
+        return 'ticketWasCreated';
+    }
 } 

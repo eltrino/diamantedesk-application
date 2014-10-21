@@ -22,7 +22,8 @@
         <!-- subscribers start-->
         <parameter key="diamante.ticket_subscriber.class">Diamante\DeskBundle\EventListener\TicketSubscriber</parameter>
         <!-- subscribers end -->
-        <parameter key="diamante.ticket_mail_notifier.class">Diamante\DeskBundle\Infrastructure\Ticket\Notification\MailNotifier</parameter>
+        <parameter key="diamante.ticket_was_updated_mail_notifier.class">Diamante\DeskBundle\Infrastructure\Ticket\Notification\TicketWasUpdatedMailNotifier</parameter>
+        <parameter key="diamante.ticket_was_created_mail_notifier.class">Diamante\DeskBundle\Infrastructure\Ticket\Notification\TicketWasCreatedMailNotifier</parameter>
     </parameters>
 
     <services>
@@ -31,8 +32,17 @@
             <tag name="kernel.event_subscriber" />
         </service>
         <!-- subscribers end -->
-        <service id="diamante.ticket_mail_notifier.class" class="%diamante.ticket_mail_notifier.class%">
-            <tag name="diamante.mail_notifier" />
+        <service id="diamante.ticket_was_updated_mail_notifier.class" class="%diamante.ticket_was_updated_mail_notifier.class%">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="mailer"/>
+            <argument>%mailer_user%</argument>
+            <tag name="diamante.ticket_updated_mail_notifier" />
+        </service>
+        <service id="diamante.ticket_was_created_mail_notifier.class" class="%diamante.ticket_was_created_mail_notifier.class%">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="mailer"/>
+            <argument>%mailer_user%</argument>
+            <tag name="diamante.ticket_created_mail_notifier" />
         </service>
     </services>
 </container>

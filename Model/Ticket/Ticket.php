@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -108,6 +109,10 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->description = $description;
         $this->branch = $branch;
 
+        $priority = new Priority($priority);
+        $status   = new Status($status);
+        $source   = new Source($source);
+
         if (null == $priority) {
             $priority = Priority::PRIORITY_MEDIUM;
         }
@@ -120,15 +125,30 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
             $status = Source::PHONE;
         }
 
-        $this->status = new Status($status);
-        $this->priority = new Priority($priority);
+        $changes = array(
+            'branch'      => $branch->getName(),
+            'subject'     => $subject,
+            'description' => $description,
+            'reporter'    => $reporter->getEmail(),
+            'assignee'    => $assignee->getEmail(),
+            'priority'    => $priority->getLabel(),
+            'status'      => $status->getLabel(),
+            'source'      => $source->getLabel()
+        );
+
+        if ($changes) {
+            $this->raise(new TicketWasCreated($changes));
+        }
+
+        $this->status = $status;
+        $this->priority = $priority;
         $this->reporter = $reporter;
         $this->assignee = $assignee;
         $this->comments  = new ArrayCollection();
         $this->attachments = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
-        $this->source = new Source($source);
+        $this->source = $source;
     }
 
     /**
@@ -249,13 +269,17 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      */
     public function update($subject, $description, User $reporter, $priority, $status, $source)
     {
+        $priority = new Priority($priority);
+        $status   = new Status($status);
+        $source   = new Source($source);
+
         $newValues = array(
             'subject'     => $subject,
             'description' => $description,
             'reporter'    => $reporter->getId(),
-            'priority'    => $priority,
-            'status'      => $status,
-            'source'      => $source
+            'priority'    => $priority->getLabel(),
+            'status'      => $status->getLabel(),
+            'source'      => $source->getLabel()
         );
 
         $changes = $this->computeChanges($newValues);
@@ -263,12 +287,12 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
             $this->raise(new TicketWasUpdated($changes));
         }
 
-        $this->subject = $subject;
+        $this->subject     = $subject;
         $this->description = $description;
-        $this->reporter = $reporter;
-        $this->status = new Status($status);
-        $this->priority = new Priority($priority);
-        $this->source = new Source($source);
+        $this->reporter    = $reporter;
+        $this->status      = $status;
+        $this->priority    = $priority;
+        $this->source      = $source;
     }
 
     /**
@@ -281,21 +305,19 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
             'subject'     => $this->getSubject(),
             'description' => $this->getDescription(),
             'reporter'    => $this->getReporter()->getId(),
-            'priority'    => $this->getPriority()->getValue(),
-            'status'      => $this->getStatus()->getValue(),
-            'source'      => $this->getSource()->getValue()
+            'priority'    => $this->getPriority()->getLabel(),
+            'status'      => $this->getStatus()->getLabel(),
+            'source'      => $this->getSource()->getLabel()
         );
 
         $changes = array();
 
         foreach($newValues as $key => $value) {
             if ($oldValues[$key] !== $newValues[$key]) {
-                $changes[] =
+                $changes[$key] =
                     array(
-                        $key => array(
-                            'oldValue' => $oldValues[$key],
-                            'newValue' => $newValues[$key],
-                        )
+                        'oldValue' => $oldValues[$key],
+                        'newValue' => $newValues[$key],
                     );
             }
         }

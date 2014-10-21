@@ -14,21 +14,64 @@
  */
 namespace Diamante\DeskBundle\EventListener;
 
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
+use Diamante\DeskBundle\Infrastructure\Ticket\Notification\Notifier;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class TicketSubscriber extends AbstractSubscriber
+class TicketSubscriber implements EventSubscriberInterface
 {
+    private $ticketWasUpdatedNotifiers = array();
+    private $ticketWasCreatedNotifiers = array();
+
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return array(
-           'ticketWasUpdated' => 'onTicketWasUpdated'
+           'ticketWasUpdated' => 'onTicketWasUpdated',
+           'ticketWasCreated' => 'onTicketWasCreated'
         );
     }
 
+    /**
+     * @param TicketWasUpdated $event
+     */
     public function onTicketWasUpdated(TicketWasUpdated $event)
     {
-        foreach ($this->notifiers as $notifier) {
+        foreach ($this->ticketWasUpdatedNotifiers as $notifier) {
             $notifier->notify($event);
         }
+    }
+
+    /**
+     * @param TicketWasCreated $event
+     */
+    public function onTicketWasCreated(TicketWasCreated $event)
+    {
+        foreach ($this->ticketWasCreatedNotifiers as $notifier) {
+            $notifier->notify($event);
+        }
+    }
+
+    /**
+     * Register a notifier
+     *
+     * @param Notifier $notifier
+     */
+    public function registerTicketWasUpdatedNotifiers(Notifier $notifier)
+    {
+        $this->ticketWasUpdatedNotifiers[] = $notifier;
+    }
+
+    /**
+     * Register a notifier
+     *
+     * @param Notifier $notifier
+     */
+    public function registerTicketWasCreatedNotifiers(Notifier $notifier)
+    {
+        $this->ticketWasCreatedNotifiers[] = $notifier;
     }
 } 

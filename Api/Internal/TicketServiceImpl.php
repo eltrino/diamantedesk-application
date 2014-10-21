@@ -213,6 +213,8 @@ class TicketServiceImpl implements TicketService
 
         $this->ticketRepository->store($ticket);
 
+        $this->dispatchTicketEvents($ticket);
+
         return $ticket;
     }
 
@@ -265,11 +267,7 @@ class TicketServiceImpl implements TicketService
 
         $this->ticketRepository->store($ticket);
 
-        $events = $ticket->getRecordedEvents();
-
-        foreach ($events as $event) {
-            $this->dispatcher->dispatch($event->getEventName(), $event);
-        }
+        $this->dispatchTicketEvents($ticket);
 
         return $ticket;
     }
@@ -354,6 +352,20 @@ class TicketServiceImpl implements TicketService
     {
         if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $this->securityFacade->getLoggedUserId()) {
             $this->isGranted('EDIT', $entity);
+        }
+    }
+
+    /**
+     * Dispatches events
+     *
+     * @param Ticket $ticket
+     */
+    private function dispatchTicketEvents(Ticket $ticket)
+    {
+        $events = $ticket->getRecordedEvents();
+
+        foreach ($events as $event) {
+            $this->dispatcher->dispatch($event->getEventName(), $event);
         }
     }
 }

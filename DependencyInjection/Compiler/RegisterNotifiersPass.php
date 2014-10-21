@@ -26,13 +26,20 @@ class RegisterNotifiersPass implements CompilerPassInterface
             return;
         }
 
-        $taggedServiceHolder = $container->getDefinition('diamante.ticket_subscriber');
+        $definition = $container->getDefinition('diamante.ticket_subscriber');
 
-        $taggedStrategyServices = $container->findTaggedServiceIds(
-            'diamante.mail_notifier');
+        $services = $container->findTaggedServiceIds(
+            'diamante.ticket_updated_mail_notifier');
 
-        foreach ($taggedStrategyServices as $id => $attributes) {
-            $taggedServiceHolder->addMethodCall('registerNotifier', array(new Reference($id)));
+        foreach ($services as $id => $attributes) {
+            $definition->addMethodCall('registerTicketWasUpdatedNotifiers', array(new Reference($id)));
+        }
+
+        $services = $container->findTaggedServiceIds(
+            'diamante.ticket_created_mail_notifier');
+
+        foreach ($services as $id => $attributes) {
+            $definition->addMethodCall('registerTicketWasCreatedNotifiers', array(new Reference($id)));
         }
     }
 }

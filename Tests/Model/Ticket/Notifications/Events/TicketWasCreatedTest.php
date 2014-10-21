@@ -12,12 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Infrastructure\Ticket\Notification;
+namespace Diamante\DeskBundle\Tests\Model\Ticket\Notifications\Events;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 
-class MailNotifier implements Notifier
+class TicketWasCreatedTest
 {
-    public function notify()
+    public function testGetEventName()
     {
-        $t = 1;
+        $changes = array();
+        $ticketWasCreated = new TicketWasCreated($changes);
+        $this->assertEquals('ticketWasCreated', $ticketWasCreated->getEventName());
     }
 } 
