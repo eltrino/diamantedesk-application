@@ -187,6 +187,7 @@ class TicketController extends Controller
             $this->addSuccessMessage('diamante.desk.ticket.messages.create.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (MethodNotAllowedException $e) {
+            $response = array('form' => $formView);
         } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
             $response = array('form' => $formView);

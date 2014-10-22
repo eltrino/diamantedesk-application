@@ -147,10 +147,9 @@ class Branch implements Entity, Taggable
      * @param $description
      * @param null|User $defaultAssignee
      * @param null|Logo $logo
-     * @param null|array $tags
      * @return void
      */
-    public function update($name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
+    public function update($name, $description, User $defaultAssignee = null, Logo $logo = null)
     {
         $this->name = $name;
         $this->description = $description;
@@ -159,7 +158,6 @@ class Branch implements Entity, Taggable
             $this->logo = $logo;
         }
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
-        $this->tags = $tags;
     }
 
     /**
