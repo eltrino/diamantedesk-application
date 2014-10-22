@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('eltrino_email_processing');
+        $rootNode = $treeBuilder->root('diamante_email_processing');
 
         SettingsBuilder::append(
             $rootNode,
