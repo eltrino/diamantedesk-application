@@ -14,10 +14,10 @@
             <li class="diam-comment">
                 <div class="pull-right">
                 {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
+                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
                 {% endif %}
                 {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketId': entity.id}) }}" class="delete-item-confirmation action"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketId': entity.id}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
