@@ -7,6 +7,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-sync": "^0.2.0",
     "load-grunt-tasks": "^0.6.0",
-    "requirejs": "^2.1.14"
+    "requirejs": "^2.1.14",
+    "grunt-string-replace": "^1.0.0"
   }
 }

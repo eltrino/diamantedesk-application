@@ -16,6 +16,7 @@
     "requirejs": "~2.1.14",
     "marionette": "~2.1.0",
     "bootstrap": "~3.2.0",
-    "requirejs-tpl": "*"
+    "requirejs-tpl": "*",
+    "fontawesome": "~4.2.0"
   }
 }

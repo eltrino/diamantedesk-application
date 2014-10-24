@@ -28,7 +28,7 @@ module.exports = function(grunt) {
           expand: true,
           cwd: '<%= srcRoot %>',
           src: [ '**/*', '**/.*', '!assets/less/**' ],
-          dest: '<%= webRoot %>',
+          dest: '<%= webRoot %>'
         }],
         //pretend: true, // Don't do any disk operations - just write log
         //verbose: true, // Display log messages when copying files

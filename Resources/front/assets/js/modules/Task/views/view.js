@@ -9,6 +9,7 @@ define(['app',
     });
 
     View.ItemView = Marionette.ItemView.extend({
+      className: 'ticket-view',
       template: taskViewTemplate,
 
       events : {

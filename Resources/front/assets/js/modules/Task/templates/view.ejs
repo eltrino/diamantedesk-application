@@ -1,10 +1,57 @@
-<h1><%= subject %></h1>
-<p><small>Ceated at: <%= created_at %></small></p>
-<h2>Ticket Description</h2>
-<p><%= description %></p>
 <p>
-    <a class="btn btn-default js-task-list" href="#tasks">
-        <span class="glyphicon glyphicon-chevron-left"></span>
+    <a class="btn btn-link js-task-list" href="#tasks">
+        <span class="fa fa-chevron-left"></span>
         Back
     </a>
 </p>
+<h1><%= subject %></h1>
+<small class="ticket-id">Ticket ID: <%= shortcode %>-<%= id %></small>
+<div class="row">
+    <div class="col-md-8">
+        <div class="ticket-actions pull-right">
+            <button class="btn btn-primary">Edit Ticket</button>
+            <button class="btn btn-primary">Join Ticket</button>
+            <div class="btn-group">
+                <div class="btn btn-primary">6</div>
+                <button class="btn btn-primary">Vote</button>
+            </div>
+        </div>
+        <div class="ticket-meta">
+            <div class="row">
+                <span class="col-xs-4"><%= created_at %></span>
+                <span class="col-xs-4"><%= priority %></span>
+                <span class="col-xs-4"><%= status %></span>
+            </div>
+        </div>
+        <h2>Ticket Description</h2>
+        <p><%= description %></p>
+        <h2>Comments</h2>
+        <textarea class="form-control" name="" id="" rows="4"></textarea>
+        <button class="btn btn-primary">Add Comment</button>
+    </div>
+    <div class="col-md-4 ticket-aside">
+        <div class="group">
+            <div class="block">
+                <button type="button" class="btn btn-primary btn-lg btn-block">Resolve Ticket</button>
+            </div>
+            <div class="block">
+                <h2>File Attachments</h2>
+            </div>
+            <div class="block">
+                <h2>People</h2>
+                <ul class="list-unstyled">
+                    <li><a href="#">Tony Anderson</a></li>
+                </ul>
+                <button type="button" class="btn btn-primary btn-sm">Add Collaborator</button>
+            </div>
+        </div>
+        <div class="group">
+            <div class="block">
+                <h2>Submited by</h2>
+                <ul class="list-unstyled">
+                    <li><a href="#">Tony Soprano</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
