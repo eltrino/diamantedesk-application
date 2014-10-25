@@ -61,12 +61,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branchRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\Repository
-     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
-     */
-    private $attachmentRepository;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketFactory
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketFactory
      */
@@ -79,22 +73,16 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $commentFactory;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
-     * @Mock \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
-     */
-    private $attachmentFactory;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Shared\UserService
      * @Mock \Diamante\DeskBundle\Model\Shared\UserService
      */
     private $userService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
-     * @Mock \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
+     * @var \Diamante\DeskBundle\Model\Attachment\Manager
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Manager
      */
-    private $fileStorage;
+    private $attachmentManager;
 
     /**
      * @var \Diamante\DeskBundle\Model\Ticket\Ticket
@@ -128,12 +116,10 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->messageReferenceRepository,
             $this->ticketRepository,
             $this->branchRepository,
-            $this->attachmentRepository,
             $this->ticketFactory,
             $this->commentFactory,
-            $this->attachmentFactory,
             $this->userService,
-            $this->fileStorage
+            $this->attachmentManager
         );
     }
 
@@ -170,9 +156,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
                 $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
             )->will($this->returnValue($this->ticket));
-
-        $this->fileStorage->expects($this->exactly(0))
-            ->method('upload');
 
         $this->ticketRepository->expects($this->once())
             ->method('store')
@@ -228,26 +211,12 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
             )->will($this->returnValue($this->ticket));
 
-        $fileRealPath = 'dummy/file/real/path/' . self::DUMMY_FILENAME;
-
-        $this->fileStorage->expects($this->once())->method('upload')->with(
-            $this->logicalAnd(
-                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
-                $this->stringContains(self::DUMMY_FILENAME)
-            ), $this->equalTo(self::DUMMY_FILE_CONTENT)
-        )->will($this->returnValue($fileRealPath));
-
-        $this->attachmentFactory->expects($this->once())->method('create')->with(
-            $this->logicalAnd(
-                $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
-                $this->callback(function($other) {
-                    return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
-                })
-            )
-        )->will($this->returnValue($this->attachment));
-
-        $this->ticket->expects($this->once())->method('addAttachment')->with($this->equalTo($this->attachment));
-        $this->attachmentRepository->expects($this->once())->method('store')->with($this->equalTo($this->attachment));
+        $this->attachmentManager->expects($this->once())->method('createNewAttachment')
+            ->with(
+                $this->equalTo(self::DUMMY_FILENAME),
+                $this->equalTo(self::DUMMY_FILE_CONTENT),
+                $this->equalTo($this->ticket)
+            );
 
         $this->ticketRepository->expects($this->once())
             ->method('store')
@@ -302,9 +271,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->equalTo($author)
         )->will($this->returnValue($this->comment));
 
-        $this->fileStorage->expects($this->exactly(0))
-            ->method('upload');
-
         $this->ticketRepository->expects($this->once())->method('store')
             ->with($this->equalTo($ticket));
 
@@ -346,26 +312,12 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->equalTo($author)
         )->will($this->returnValue($this->comment));
 
-        $fileRealPath = 'dummy/file/real/path/' . self::DUMMY_FILENAME;
-
-        $this->fileStorage->expects($this->once())->method('upload')->with(
-            $this->logicalAnd(
-                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
-                $this->stringContains(self::DUMMY_FILENAME)
-            ), $this->equalTo(self::DUMMY_FILE_CONTENT)
-        )->will($this->returnValue($fileRealPath));
-
-        $this->attachmentFactory->expects($this->once())->method('create')->with(
-            $this->logicalAnd(
-                $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
-                $this->callback(function($other) {
-                    return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
-                })
-            )
-        )->will($this->returnValue($this->attachment));
-
-        $this->comment->expects($this->once())->method('addAttachment')->with($this->equalTo($this->attachment));
-        $this->attachmentRepository->expects($this->once())->method('store')->with($this->equalTo($this->attachment));
+        $this->attachmentManager->expects($this->once())->method('createNewAttachment')
+            ->with(
+                $this->equalTo(self::DUMMY_FILENAME),
+                $this->equalTo(self::DUMMY_FILE_CONTENT),
+                $this->equalTo($this->comment)
+            );
 
         $this->ticketRepository->expects($this->once())->method('store')
             ->with($this->equalTo($ticket));

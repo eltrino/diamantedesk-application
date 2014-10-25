@@ -27,6 +27,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Api\Internal\TicketServiceImpl;
+use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 
@@ -56,10 +57,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Ticket\AttachmentService
-     * @Mock \Diamante\DeskBundle\Model\Ticket\AttachmentService
+     * @var \Diamante\DeskBundle\Model\Attachment\Manager
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Manager
      */
-    private $ticketAttachmentService;
+    private $attachmentManager;
 
     /**
      * @var \Diamante\DeskBundle\Entity\Ticket
@@ -99,7 +100,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->ticketRepository,
             $this->branchRepository,
             $this->ticketFactory,
-            $this->ticketAttachmentService,
+            $this->attachmentManager,
             $this->userService,
             $this->securityFacade
         );
@@ -148,9 +149,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         )->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
-
-        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder');
-            //->with($this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY), $this->equalTo($ticket));
 
         $this->securityFacade
             ->expects($this->once())
@@ -213,8 +211,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         )->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
-
-        $this->ticketAttachmentService->expects($this->exactly(0))->method('createAttachmentsForItHolder');
 
         $this->securityFacade
             ->expects($this->once())
@@ -279,8 +275,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $attachmentInputs = $this->attachmentInputs();
 
-        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
+        $this->attachmentManager->expects($this->exactly(count($attachmentInputs)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($ticket)
+            );
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
@@ -393,8 +394,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $attachmentInputs = $this->attachmentInputs();
 
-        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
+        $this->attachmentManager->expects($this->exactly(count($attachmentInputs)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($ticket)
+            );
 
         $this->securityFacade
             ->expects($this->once())
@@ -522,8 +528,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $attachmentInputs = $this->attachmentInputs();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
-        $this->ticketAttachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($attachmentInputs), $this->equalTo($ticket));
+        $this->attachmentManager->expects($this->exactly(count($attachmentInputs)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($ticket)
+            );
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
         $this->securityFacade
@@ -592,7 +603,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovesFromTicket()
     {
-        $attachment = $this->attachment();
+        $attachment = new Attachment(new File('some/path/file.ext'));
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
@@ -601,8 +612,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticket->expects($this->once())->method('removeAttachment')->with($this->equalTo($attachment));
 
-        $this->ticketAttachmentService->expects($this->once())->method('removeAttachmentFromItHolder')
-            ->with($this->equalTo($attachment));
+        $this->attachmentManager->expects($this->once())->method('deleteAttachment')->with($this->equalTo($attachment));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
@@ -854,15 +864,31 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteTicket()
     {
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($this->ticket));
+        $ticket = new Ticket(
+            self::DUMMY_TICKET_SUBJECT,
+            self::DUMMY_TICKET_DESCRIPTION,
+            $this->createBranch(),
+            $this->createReporter(),
+            $this->createAssignee(),
+            Source::PHONE,
+            Priority::DEFAULT_PRIORITY,
+            Status::CLOSED
+        );
+        $ticket->addAttachment($this->attachment());
 
-        $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($ticket));
+
+        $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($ticket));
+
+        $this->attachmentManager->expects($this->exactly(count($ticket->getAttachments())))
+            ->method('deleteAttachment')
+            ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
+            ->with($this->equalTo('DELETE'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
