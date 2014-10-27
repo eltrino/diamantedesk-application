@@ -112,6 +112,10 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
             $messageContent = $imapMessage->getContent();
         }
 
+        if ($imapMessage->getHeaders()->get('contenttransferencoding')->getTransferEncoding() == 'base64') {
+            $messageContent = base64_decode($messageContent);
+        }
+
         return $messageContent;
     }
 

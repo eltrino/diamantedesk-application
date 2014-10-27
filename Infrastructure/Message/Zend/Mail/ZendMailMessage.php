@@ -37,6 +37,12 @@ class ZendMailMessage extends Message
                 $content = ZendMimeMessage::createFromMessage($content, $boundary);
             }
         }
+
+        if ($headers->has('content-transfer-encoding')) {
+            if ($headers->get('contenttransferencoding')->getTransferEncoding() == 'base64') {
+                $content = base64_decode($content);
+            }
+        }
         $message->setHeaders($headers);
         $message->setBody($content);
         return $message;
