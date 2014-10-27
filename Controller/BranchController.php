@@ -157,7 +157,14 @@ class BranchController extends Controller
                 return $branchId;
             }, $branch);
         } catch (MethodNotAllowedException $e) {
-            echo $e->getMessage();
+            return $this->redirect(
+                $this->generateUrl(
+                    'diamante_branch_view',
+                    array(
+                        'id' => $id
+                    )
+                )
+            );
         } catch(\Exception $e) {
             // @todo log original error
             $this->addErrorMessage('diamante.desk.branch.messages.save.error');

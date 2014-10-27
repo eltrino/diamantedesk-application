@@ -28,7 +28,7 @@ class BranchEmailConfigurationType extends AbstractType
     {
         $builder->add(
             'supportAddress',
-            'text',
+            'email',
             array(
                 'label'    => 'Support Address',
                 'required' => false,
