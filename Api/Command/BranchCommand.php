@@ -104,6 +104,8 @@ class BranchCommand implements Taggable
     public function setTags($tags)
     {
         $this->tags = $tags;
+
+        return $this;
     }
 
     /**
