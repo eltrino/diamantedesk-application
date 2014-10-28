@@ -91,6 +91,18 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $securityFacade;
 
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @var \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
+     * @Mock \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
+     */
+    private $processManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -101,7 +113,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->ticketFactory,
             $this->ticketAttachmentService,
             $this->userService,
-            $this->securityFacade
+            $this->securityFacade,
+            $this->dispatcher,
+            $this->processManager
         );
     }
 
@@ -612,6 +626,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
+
         $removeTicketAttachmentCommand = new RemoveTicketAttachmentCommand();
         $removeTicketAttachmentCommand->ticketId = self::DUMMY_TICKET_ID;
         $removeTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
@@ -662,6 +681,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('isGranted');
 
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
+
         $command = new UpdateStatusCommand();
         $command->ticketId = self::DUMMY_TICKET_ID;
         $command->status = $status;
@@ -693,6 +717,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $command = new UpdateStatusCommand();
         $command->ticketId = self::DUMMY_TICKET_ID;
@@ -760,6 +789,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('isGranted');
 
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
+
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
         $command->assignee = $assigneeId;
@@ -793,6 +827,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
@@ -864,6 +903,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
     }

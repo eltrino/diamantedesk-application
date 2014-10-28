@@ -25,6 +25,7 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CommentServiceImpl implements CommentService
 {
@@ -58,13 +59,19 @@ class CommentServiceImpl implements CommentService
      */
     private $securityFacade;
 
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
     public function __construct(
         Repository $ticketRepository,
         Repository $commentRepository,
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentService $attachmentService,
-        SecurityFacade $securityFacade
+        SecurityFacade $securityFacade,
+        EventDispatcher $dispatcher
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
@@ -72,6 +79,7 @@ class CommentServiceImpl implements CommentService
         $this->userService = $userService;
         $this->attachmentService = $attachmentService;
         $this->securityFacade = $securityFacade;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -167,6 +175,14 @@ class CommentServiceImpl implements CommentService
             $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $comment);
         }
         $this->commentRepository->store($comment);
+
+        $changes = $comment->getRecordedEvents();
+
+        //$dispatcher->addSubscriber() ....
+
+        foreach ($changes as $change) {
+            $this->dispatcher->dispatch($change->getEventName, $change);
+        }
     }
 
     /**
