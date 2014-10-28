@@ -6,6 +6,6 @@ placeholders:
 items:
     default_branch_notification:
         template: DiamanteDeskBundle::defaultBranchNotification.html.twig
-        applicable: @diamante.branch.service->isDefaultForEmailProcessing($entity$)
+        applicable: @diamante.branch.placeholder->isDefault($entity$)
         data:
           default_branch: [entity]

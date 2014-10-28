@@ -1,0 +1,49 @@
+<?php
+/*
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ *
+ * Licensed under the Open Software License (OSL 3.0).
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://opensource.org/licenses/osl-3.0.php
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@eltrino.com so we can send you a copy immediately.
+ */
+
+namespace Diamante\DeskBundle\Placeholder;
+
+use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
+use Diamante\DeskBundle\Entity\Branch;
+
+class DefaultBranchPlaceholder
+{
+    /**
+     * @var SystemSettings
+     */
+    protected $systemSettings;
+
+    public function __construct(
+        SystemSettings $systemSettings
+    )
+    {
+        $this->systemSettings = $systemSettings;
+    }
+
+    /**
+     * @param Branch $branch
+     * @return bool
+     */
+    public function isDefault(Branch $branch)
+    {
+        $defaultBranchId = $this->systemSettings->getDefaultBranchId();
+
+        if (!$defaultBranchId || is_null($branch->getId())) {
+            return false;
+        }
+
+        return $defaultBranchId == $branch->getId();
+    }
+}

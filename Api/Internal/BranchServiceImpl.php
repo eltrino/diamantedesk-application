@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
 class BranchServiceImpl implements BranchService
 {
@@ -60,15 +59,13 @@ class BranchServiceImpl implements BranchService
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
-        SecurityFacade $securityFacade,
-        ConfigManager $configManager
+        SecurityFacade $securityFacade
     ) {
         $this->branchFactory     = $branchFactory;
         $this->branchRepository  = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
         $this->tagManager        = $tagManager;
         $this->securityFacade    = $securityFacade;
-        $this->configManager     = $configManager;
     }
 
     /**
@@ -203,21 +200,5 @@ class BranchServiceImpl implements BranchService
         if (!$this->securityFacade->isGranted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
-    }
-
-    /**
-     * Determine if branch is used as a default for Email Processing
-     * @param Branch $branch
-     * @return bool
-     */
-    public function isDefaultForEmailProcessing(Branch $branch)
-    {
-        $defaultBranchId = $this->configManager->get('diamante_email_processing.default_branch');
-
-        if (!$defaultBranchId || is_null($branch->getId())) {
-            return false;
-        }
-
-        return $defaultBranchId == $branch->getId();
     }
 }
