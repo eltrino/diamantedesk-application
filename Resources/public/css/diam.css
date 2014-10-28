@@ -1,4 +1,4 @@
-.diam-attachments {
+  .diam-attachments {
     position: relative;
 }
 .diam-attachment {
@@ -245,4 +245,10 @@
     0% { background: rgba(238, 238, 238, 1); }
     50% { background: rgba(238, 238, 238, .1); }
     100% { background: rgba(238, 238, 238, 1); }
+}
+
+#diam-default-branch-message {
+    padding: 5px;
+    text-align: center;
+    font-weight: 700;
 }

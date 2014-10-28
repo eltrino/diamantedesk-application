@@ -50,6 +50,7 @@
             <argument type="service" id="diamante.branch.logo_handler"/>
             <argument type="service" id="oro_tag.tag.manager"/>
             <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="oro_config.global"/>
         </service>
 
         <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%">
