@@ -93,7 +93,6 @@ class BranchController extends Controller
                 return $branchId;
             });
         } catch (MethodNotAllowedException $e) {
-
         } catch(\Exception $e) {
             // @todo log original error
             $this->addErrorMessage('diamante.desk.branch.messages.create.error');

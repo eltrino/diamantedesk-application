@@ -50,7 +50,7 @@ class BranchType extends AbstractType
             array(
                 'label'    => 'diamante.desk.attachment.image',
                 'required' => false,
-                'tooltip' => '"JPEG" and "PNG" image formats are supported only.'
+                'tooltip'  => '"JPEG" and "PNG" image formats are supported only.'
             )
         );
 
