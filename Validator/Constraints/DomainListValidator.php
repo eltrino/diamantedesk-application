@@ -15,6 +15,9 @@ class DomainListValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        if (empty($value) || null === $value) {
+            return;
+        }
         $domains = explode(',', $value);
 
         foreach ($domains as $domain)
