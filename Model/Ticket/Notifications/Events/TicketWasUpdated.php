@@ -14,8 +14,50 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-class TicketWasUpdated extends AbstractDomainEvent
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Source;
+
+class TicketWasUpdated extends AbstractTicketEvent
 {
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var string
+     */
+    private $reporterEmail;
+
+    /**
+     * @var Priority
+     */
+    private $priority;
+
+    /**
+     * @var Status
+     */
+    private $status;
+
+    /**
+     * @var Source
+     */
+    private $source;
+
+    public function __construct($id, $subject, $description, $reporterEmail,
+                                Priority $priority, Status $status, Source $source, $recipientsList)
+    {
+        $this->ticketId       = $id;
+        $this->subject        = $subject;
+        $this->description    = $description;
+        $this->reporterEmail  = $reporterEmail;
+        $this->priority       = $priority;
+        $this->status         = $status;
+        $this->source         = $source;
+        $this->recipientsList = $recipientsList;
+    }
+
     /**
      * @return string
      */
@@ -23,4 +65,44 @@ class TicketWasUpdated extends AbstractDomainEvent
     {
         return 'ticketWasUpdated';
     }
-} 
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return Priority
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReporterEmail()
+    {
+        return $this->reporterEmail;
+    }
+
+    /**
+     * @return Source
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * @return Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+}

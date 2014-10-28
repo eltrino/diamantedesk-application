@@ -14,31 +14,20 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-use Diamante\DeskBundle\Model\Shared\DomainEvent;
-use Symfony\Component\EventDispatcher\Event;
-
-abstract class AbstractDomainEvent extends Event implements DomainEvent
+class TicketWasDeleted extends AbstractTicketEvent
 {
-    /**
-     * @var array
-     */
-    private $changes;
-
-    public function __construct($changes)
+    public function __construct($id, $subject, $recipientsList)
     {
-        $this->changes = $changes;
-    }
-
-    /**
-     * @return array
-     */
-    public function getChanges()
-    {
-        return $this->changes;
+        $this->ticketId       = $id;
+        $this->subject        = $subject;
+        $this->recipientsList = $recipientsList;
     }
 
     /**
      * @return string
      */
-    abstract function getEventName();
+    public function getEventName()
+    {
+        return 'ticketWasDeleted';
+    }
 } 

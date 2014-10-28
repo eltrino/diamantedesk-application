@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle;
 
-use Akeneo\Bundle\BatchBundle\DependencyInjection\Compiler\RegisterNotifiersPass;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -64,6 +63,6 @@ class DiamanteDeskBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterNotifiersPass());
+        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterSubscribersPass());
     }
 }

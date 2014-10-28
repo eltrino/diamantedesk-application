@@ -86,6 +86,7 @@
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="diamante.mail_ticket_process_manager"/>
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"

@@ -17,9 +17,9 @@ namespace Diamante\DeskBundle\Model\Shared;
 interface DomainEvent
 {
     /**
-     * @return array
+     * @return string
      */
-    public function getChanges();
+    public function getAggregateId();
 
     /**
      * @return string

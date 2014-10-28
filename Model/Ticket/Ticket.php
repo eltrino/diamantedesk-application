@@ -19,7 +19,13 @@ use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToTicket;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasDeletedFromTicket;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketAssigneeWasChanged;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketStatusWasChanged;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -105,14 +111,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      */
     public function __construct($subject, $description, $branch, $reporter, $assignee, $source, $priority = null, $status = null)
     {
-        $this->subject = $subject;
-        $this->description = $description;
-        $this->branch = $branch;
-
-        $priority = new Priority($priority);
-        $status   = new Status($status);
-        $source   = new Source($source);
-
         if (null == $priority) {
             $priority = Priority::PRIORITY_MEDIUM;
         }
@@ -125,21 +123,13 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
             $status = Source::PHONE;
         }
 
-        $changes = array(
-            'branch'      => $branch->getName(),
-            'subject'     => $subject,
-            'description' => $description,
-            'reporter'    => $reporter->getEmail(),
-            'assignee'    => $assignee->getEmail(),
-            'priority'    => $priority->getLabel(),
-            'status'      => $status->getLabel(),
-            'source'      => $source->getLabel()
-        );
+        $priority = new Priority($priority);
+        $status   = new Status($status);
+        $source   = new Source($source);
 
-        if ($changes) {
-            $this->raise(new TicketWasCreated($changes));
-        }
-
+        $this->subject = $subject;
+        $this->description = $description;
+        $this->branch = $branch;
         $this->status = $status;
         $this->priority = $priority;
         $this->reporter = $reporter;
@@ -149,6 +139,9 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
+
+        $this->raise(new TicketWasCreated($this->id, $branch->getName(), $subject, $description,
+            $reporter->getEmail(), $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
     }
 
     /**
@@ -255,6 +248,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
+        //$this->raise(new CommentWasAddedToTicket($this->id, $this->subject, $this->getRecipientsList(),
+          //  $comment->getContent()));
     }
 
     /** LEGACY CODE START */
@@ -273,18 +268,12 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $status   = new Status($status);
         $source   = new Source($source);
 
-        $newValues = array(
-            'subject'     => $subject,
-            'description' => $description,
-            'reporter'    => $reporter->getId(),
-            'priority'    => $priority->getLabel(),
-            'status'      => $status->getLabel(),
-            'source'      => $source->getLabel()
-        );
+        if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter
+            || $this->priority->getValue() !== $priority->getValue() || $this->status->getValue() !== $status->getValue()
+            || $this->source->getValue() !== $source->getValue()) {
 
-        $changes = $this->computeChanges($newValues);
-        if ($changes) {
-            $this->raise(new TicketWasUpdated($changes));
+            $this->raise(new TicketWasUpdated($this->id, $subject, $description, $reporter->getEmail(),
+                $priority, $status, $source, $this->getRecipientsList()));
         }
 
         $this->subject     = $subject;
@@ -296,37 +285,22 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
-     * @param array $newValues
-     * @return array|null
+     * @return array
      */
-    private function computeChanges(array $newValues)
+    private function getRecipientsList()
     {
-        $oldValues = array(
-            'subject'     => $this->getSubject(),
-            'description' => $this->getDescription(),
-            'reporter'    => $this->getReporter()->getId(),
-            'priority'    => $this->getPriority()->getLabel(),
-            'status'      => $this->getStatus()->getLabel(),
-            'source'      => $this->getSource()->getLabel()
-        );
-
-        $changes = array();
-
-        foreach($newValues as $key => $value) {
-            if ($oldValues[$key] !== $newValues[$key]) {
-                $changes[$key] =
-                    array(
-                        'oldValue' => $oldValues[$key],
-                        'newValue' => $newValues[$key],
-                    );
-            }
+        if ($this->getAssignee()) {
+            $recipientsList = array(
+                $this->getReporter()->getEmail(),
+                $this->getAssignee()->getEmail(),
+            );
+        } else {
+            $recipientsList = array(
+                $this->getReporter()->getEmail()
+            );
         }
 
-        if(empty($changes)) {
-            return null;
-        }
-
-        return $changes;
+        return $recipientsList;
     }
 
     /**
@@ -334,7 +308,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      */
     public function updateStatus($status)
     {
-        $this->status = new Status($status);
+        $status = new Status($status);
+
+        if ($this->status !== $status) {
+            $this->raise(new TicketStatusWasChanged($this->id, $this->subject,
+                $status, $this->getRecipientsList()));
+        }
+
+        $this->status = $status;
     }
 
     /**
@@ -344,12 +325,15 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
             $this->assignee = $newAssignee;
+            $this->raise(new TicketAssigneeWasChanged($this->id, $this->subject, $newAssignee->getEmail(),
+                $this->getRecipientsList()));
         }
     }
 
     public function unassign()
     {
         $this->assignee = null;
+        $this->raise(new TicketWasUnassigned($this->id, $this->subject, $this->getRecipientsList()));
     }
 
     /** LEGACY CODE END */
@@ -363,14 +347,24 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         return $this->comments;
     }
 
+    /**
+     * @param Attachment $attachment
+     */
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
+        $this->raise(new AttachmentWasAddedToTicket($this->id, $this->subject, $attachment->getFilename(),
+            $this->getRecipientsList()));
     }
 
+    /**
+     * @param Attachment $attachment
+     */
     public function removeAttachment(Attachment $attachment)
     {
         $this->attachments->remove($attachment->getId());
+        $this->raise(new AttachmentWasDeletedFromTicket($this->id, $this->subject, $attachment->getFilename(),
+            $this->getRecipientsList()));
     }
 
     /**
@@ -412,5 +406,10 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getSource()
     {
         return $this->source;
+    }
+
+    public function delete()
+    {
+        $this->raise(new TicketWasDeleted($this->id, $this->subject, $this->getRecipientsList()));
     }
 }

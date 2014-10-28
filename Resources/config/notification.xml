@@ -20,29 +20,42 @@
 
     <parameters>
         <!-- subscribers start-->
-        <parameter key="diamante.ticket_subscriber.class">Diamante\DeskBundle\EventListener\TicketSubscriber</parameter>
+        <parameter key="diamante.abstract_mail_subscriber.class">Diamante\DeskBundle\EventListener\Mail\AbstractMailSubscriber</parameter>
+        <parameter key="diamante.mail_ticket_process_manager.class">Diamante\DeskBundle\EventListener\Mail\TicketProcessManager</parameter>
+        <parameter key="diamante.mail_ticket_was_deleted_subscriber.class">Diamante\DeskBundle\EventListener\Mail\TicketWasDeletedSubscriber</parameter>
+        <parameter key="diamante.mail_attachment_was_deleted_from_ticket_subscriber.class">Diamante\DeskBundle\EventListener\Mail\AttachmentWasDeletedFromTicketSubscriber</parameter>
         <!-- subscribers end -->
-        <parameter key="diamante.ticket_was_updated_mail_notifier.class">Diamante\DeskBundle\Infrastructure\Ticket\Notification\TicketWasUpdatedMailNotifier</parameter>
-        <parameter key="diamante.ticket_was_created_mail_notifier.class">Diamante\DeskBundle\Infrastructure\Ticket\Notification\TicketWasCreatedMailNotifier</parameter>
     </parameters>
 
     <services>
         <!-- subscribers start -->
-        <service id="diamante.ticket_subscriber" class="%diamante.ticket_subscriber.class%">
-            <tag name="kernel.event_subscriber" />
+        <service id="diamante.abstract_mail_subscriber" abstract="true">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="mailer"/>
+            <argument type="service" id="oro_security.security_facade"/>
+            <argument>%mailer_user%</argument>
+        </service>
+
+        <service
+            id="diamante.mail_ticket_process_manager"
+            class="%diamante.mail_ticket_process_manager.class%"
+            parent="diamante.abstract_mail_subscriber">
+                <tag name="diamante.notification_subscriber" />
+        </service>
+
+        <service
+                id="diamante.mail_ticket_was_deleted_subscriber"
+                class="%diamante.mail_ticket_was_deleted_subscriber.class%"
+                parent="diamante.abstract_mail_subscriber">
+            <tag name="diamante.notification_subscriber" />
+        </service>
+
+        <service
+                id="diamante.mail_attachment_was_deleted_from_ticket_subscriber"
+                class="%diamante.mail_attachment_was_deleted_from_ticket_subscriber.class%"
+                parent="diamante.abstract_mail_subscriber">
+            <tag name="diamante.notification_subscriber" />
         </service>
         <!-- subscribers end -->
-        <service id="diamante.ticket_was_updated_mail_notifier.class" class="%diamante.ticket_was_updated_mail_notifier.class%">
-            <argument type="service" id="twig"/>
-            <argument type="service" id="mailer"/>
-            <argument>%mailer_user%</argument>
-            <tag name="diamante.ticket_updated_mail_notifier" />
-        </service>
-        <service id="diamante.ticket_was_created_mail_notifier.class" class="%diamante.ticket_was_created_mail_notifier.class%">
-            <argument type="service" id="twig"/>
-            <argument type="service" id="mailer"/>
-            <argument>%mailer_user%</argument>
-            <tag name="diamante.ticket_created_mail_notifier" />
-        </service>
     </services>
 </container>

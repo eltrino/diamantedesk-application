@@ -14,12 +14,12 @@
  */
 namespace Diamante\DeskBundle\Tests\Model\Ticket\Notifications\Events;
 
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 
-class TicketWasCreatedTest extends \PHPUnit_Framework_TestCase
+class TicketWasUpdatedTest extends \PHPUnit_Framework_TestCase
 {
     const ID = 'id';
     const TICKET_SUBJECT = 'Subject';
@@ -27,19 +27,17 @@ class TicketWasCreatedTest extends \PHPUnit_Framework_TestCase
 
     public function testGetEventName()
     {
-        $ticketWasCreated = new TicketWasCreated(
+        $ticketWasUpdated = new TicketWasUpdated(
             self::ID,
-            'branchName',
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
-            'reporter@example.com',
-            'assignee@example.com',
+            'test@example.com',
             new Priority(Priority::DEFAULT_PRIORITY),
             new Status(Status::OPEN),
             new Source(Source::PHONE),
             array()
         );
 
-        $this->assertEquals('ticketWasCreated', $ticketWasCreated->getEventName());
+        $this->assertEquals('ticketWasUpdated', $ticketWasUpdated->getEventName());
     }
 } 
