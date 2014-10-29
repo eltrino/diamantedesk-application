@@ -65,7 +65,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             new User(),
             new User(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            Priority::PRIORITY_MEDIUM,
             Status::OPEN
         );
 

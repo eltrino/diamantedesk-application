@@ -39,6 +39,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_TICKET_DESCRIPTION  = 'Description';
     const DUMMY_FILENAME        = 'dummy-filename.ext';
     const DUMMY_FILE_CONTENT    = 'DUMMY_CONTENT';
+    const DEFAULT_PRIORITY      = 'medium';
 
     /**
      * @var CommentServiceImpl
@@ -105,7 +106,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            self::DEFAULT_PRIORITY,
             Status::CLOSED
         );
     }

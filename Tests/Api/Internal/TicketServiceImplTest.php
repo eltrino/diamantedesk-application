@@ -43,7 +43,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_FILENAME      = 'dummy_filename.ext';
     const DUMMY_FILE_CONTENT  = 'DUMMY_CONTENT';
     const DUMMY_STATUS        = 'dummy';
-
+    const DEFAULT_PRIORITY    = 'medium';
     /**
      * @var TicketServiceImpl
      */
@@ -127,7 +127,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
-        $priority = Priority::DEFAULT_PRIORITY;
+        $priority = self::DEFAULT_PRIORITY;
         $source = Source::PHONE;
 
         $ticket = new Ticket(
@@ -192,7 +192,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::IN_PROGRESS;
-        $priority = Priority::DEFAULT_PRIORITY;
+        $priority = self::DEFAULT_PRIORITY;
         $source = Source::PHONE;
 
         $ticket = new Ticket(
@@ -257,7 +257,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
-        $priority = Priority::DEFAULT_PRIORITY;
+        $priority = self::DEFAULT_PRIORITY;
         $source = Source::PHONE;
 
         $ticket = new Ticket(
@@ -330,7 +330,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee,
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            self::DEFAULT_PRIORITY,
             Status::NEW_ONE
         );
 
@@ -349,7 +349,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
         $command->reporter = $reporterId;
         $command->assignee = $assigneeId;
-        $command->priority = Priority::DEFAULT_PRIORITY;
+        $command->priority = self::DEFAULT_PRIORITY;
         $command->source = Source::PHONE;
         $command->status = $newStatus;
 
@@ -384,7 +384,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee,
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            self::DEFAULT_PRIORITY,
             Status::NEW_ONE
         );
 
@@ -408,7 +408,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
         $command->reporter = $reporterId;
         $command->assignee = $assigneeId;
-        $command->priority = Priority::DEFAULT_PRIORITY;
+        $command->priority = self::DEFAULT_PRIORITY;
         $command->source = Source::PHONE;
         $command->status = $newStatus;
         $command->attachmentsInput = $attachmentInputs;
@@ -448,7 +448,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            self::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());
@@ -516,7 +516,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            self::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $attachmentInputs = $this->attachmentInputs();
@@ -568,7 +568,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            self::DEFAULT_PRIORITY,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());
