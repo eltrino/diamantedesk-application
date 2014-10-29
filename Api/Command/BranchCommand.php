@@ -57,9 +57,7 @@ class BranchCommand implements Taggable
     public $defaultAssignee;
 
     /**
-     * @Assert\File(
-     *              mimeTypes={"image/jpeg","image/png"}
-     * )
+     * @Assert\Type(type="object")
      */
     public $logo;
 
