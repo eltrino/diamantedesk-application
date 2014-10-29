@@ -169,7 +169,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
         $this->ticketWasUpdatedEvent
             ->expects($this->once())
             ->method('getPriority')
-            ->will($this->returnValue(new Priority(Priority::DEFAULT_PRIORITY)));
+            ->will($this->returnValue(new Priority(Priority::PRIORITY_LOW)));
 
         $this->ticketWasUpdatedEvent
             ->expects($this->once())
@@ -223,7 +223,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
         $this->ticketWasCreatedEvent
             ->expects($this->once())
             ->method('getPriority')
-            ->will($this->returnValue(new Priority(Priority::DEFAULT_PRIORITY)));
+            ->will($this->returnValue(new Priority(Priority::PRIORITY_LOW)));
 
         $this->ticketWasCreatedEvent
             ->expects($this->once())
@@ -241,7 +241,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
     public function testOnAttachmentWasAddedToTicket()
     {
         $this->attachmentWasAddedToTicketEvent
-            ->expects($this->any())
+            ->expects($this->atLeastOnce())
             ->method('getEventName');
 
         $this->attachmentWasAddedToTicketEvent
@@ -260,7 +260,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
     public function testOnTicketStatusWasChanged()
     {
         $this->ticketStatusWasChangedEvent
-            ->expects($this->any())
+            ->expects($this->atLeastOnce())
             ->method('getEventName');
 
         $this->ticketStatusWasChangedEvent
@@ -279,7 +279,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
     public function testOnTicketAssigneeWasChanged()
     {
         $this->ticketAssigneeWasChangedEvent
-            ->expects($this->any())
+            ->expects($this->atLeastOnce())
             ->method('getEventName');
 
         $this->ticketAssigneeWasChangedEvent
@@ -298,7 +298,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
     public function testOnTicketWasUnassigned()
     {
         $this->ticketWasUnassignedEvent
-            ->expects($this->any())
+            ->expects($this->atLeastOnce())
             ->method('getEventName');
 
         $this->ticketWasUnassignedEvent

@@ -24,6 +24,8 @@
         <parameter key="diamante.mail_ticket_process_manager.class">Diamante\DeskBundle\EventListener\Mail\TicketProcessManager</parameter>
         <parameter key="diamante.mail_ticket_was_deleted_subscriber.class">Diamante\DeskBundle\EventListener\Mail\TicketWasDeletedSubscriber</parameter>
         <parameter key="diamante.mail_attachment_was_deleted_from_ticket_subscriber.class">Diamante\DeskBundle\EventListener\Mail\AttachmentWasDeletedFromTicketSubscriber</parameter>
+        <parameter key="diamante.mail_comment_process_manager.class">Diamante\DeskBundle\EventListener\Mail\CommentProcessManager</parameter>
+        <parameter key="diamante.mail_comment_was_deleted_subscriber.class">Diamante\DeskBundle\EventListener\Mail\CommentWasDeletedSubscriber</parameter>
         <!-- subscribers end -->
     </parameters>
 
@@ -53,6 +55,20 @@
         <service
                 id="diamante.mail_attachment_was_deleted_from_ticket_subscriber"
                 class="%diamante.mail_attachment_was_deleted_from_ticket_subscriber.class%"
+                parent="diamante.abstract_mail_subscriber">
+            <tag name="diamante.notification_subscriber" />
+        </service>
+
+        <service
+                id="diamante.mail_comment_process_manager"
+                class="%diamante.mail_comment_process_manager.class%"
+                parent="diamante.abstract_mail_subscriber">
+            <tag name="diamante.notification_subscriber" />
+        </service>
+
+        <service
+                id="diamante.mail_comment_was_deleted_subscriber"
+                class="%diamante.mail_comment_was_deleted_subscriber.class%"
                 parent="diamante.abstract_mail_subscriber">
             <tag name="diamante.notification_subscriber" />
         </service>

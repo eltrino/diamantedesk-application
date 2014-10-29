@@ -34,7 +34,7 @@ class TicketWasCreatedTest extends \PHPUnit_Framework_TestCase
             self::TICKET_DESCRIPTION,
             'reporter@example.com',
             'assignee@example.com',
-            new Priority(Priority::DEFAULT_PRIORITY),
+            new Priority(Priority::PRIORITY_LOW),
             new Status(Status::OPEN),
             new Source(Source::PHONE),
             array()

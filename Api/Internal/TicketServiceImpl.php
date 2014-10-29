@@ -331,9 +331,9 @@ class TicketServiceImpl implements TicketService
     public function deleteTicket($ticketId)
     {
         $ticket = $this->loadTicketBy($ticketId);
-        $ticket->delete();
-
         $this->isGranted('DELETE', $ticket);
+
+        $ticket->delete();
 
         $this->ticketRepository->remove($ticket);
         $this->dispatchEvents($ticket);

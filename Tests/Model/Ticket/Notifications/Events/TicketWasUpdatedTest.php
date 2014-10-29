@@ -32,7 +32,7 @@ class TicketWasUpdatedTest extends \PHPUnit_Framework_TestCase
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             'test@example.com',
-            new Priority(Priority::DEFAULT_PRIORITY),
+            new Priority(Priority::PRIORITY_LOW),
             new Status(Status::OPEN),
             new Source(Source::PHONE),
             array()

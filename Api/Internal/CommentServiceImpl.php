@@ -25,7 +25,10 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Diamante\DeskBundle\EventListener\Mail\CommentProcessManager;
+use \Diamante\DeskBundle\Model\Ticket\Comment;
 
 class CommentServiceImpl implements CommentService
 {
@@ -64,6 +67,11 @@ class CommentServiceImpl implements CommentService
      */
     private $dispatcher;
 
+    /**
+     * @var CommentProcessManager
+     */
+    private $processManager;
+
     public function __construct(
         Repository $ticketRepository,
         Repository $commentRepository,
@@ -71,7 +79,8 @@ class CommentServiceImpl implements CommentService
         UserService $userService,
         AttachmentService $attachmentService,
         SecurityFacade $securityFacade,
-        EventDispatcher $dispatcher
+        EventDispatcher $dispatcher,
+        CommentProcessManager $processManager
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
@@ -80,6 +89,7 @@ class CommentServiceImpl implements CommentService
         $this->attachmentService = $attachmentService;
         $this->securityFacade = $securityFacade;
         $this->dispatcher = $dispatcher;
+        $this->processManager = $processManager;
     }
 
     /**
@@ -136,9 +146,12 @@ class CommentServiceImpl implements CommentService
             $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $comment);
         }
 
+        $ticket->updateStatus($command->ticketStatus);
         $ticket->postNewComment($comment);
 
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchEvents($comment, $ticket);
     }
 
     /**
@@ -171,18 +184,23 @@ class CommentServiceImpl implements CommentService
         $this->isGranted('EDIT', $comment);
 
         $comment->updateContent($command->content);
+
         if ($command->attachmentsInput) {
             $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $comment);
         }
         $this->commentRepository->store($comment);
 
-        $changes = $comment->getRecordedEvents();
+        /**
+         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
+         */
+        $ticket = $this->loadTicketBy($command->ticket);
 
-        //$dispatcher->addSubscriber() ....
-
-        foreach ($changes as $change) {
-            $this->dispatcher->dispatch($change->getEventName, $change);
+        if ($command->ticketStatus !== $ticket->getStatus()->getValue()) {
+            $ticket->updateStatus($command->ticketStatus);
+            $this->ticketRepository->store($ticket);
         }
+
+        $this->dispatchEvents($comment, $ticket);
     }
 
     /**
@@ -192,10 +210,12 @@ class CommentServiceImpl implements CommentService
     public function deleteTicketComment($commentId)
     {
         $comment = $this->loadCommentBy($commentId);
-
         $this->isGranted('DELETE', $comment);
 
+        $comment->delete();
+
         $this->commentRepository->remove($comment);
+        $this->dispatchEvents($comment);
     }
 
     /**
@@ -230,6 +250,27 @@ class CommentServiceImpl implements CommentService
     {
         if (!$this->securityFacade->isGranted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
+        }
+    }
+
+    /**
+     * @param Comment $comment
+     * @param Ticket $ticket
+     */
+    private function dispatchEvents(Comment $comment, Ticket $ticket = null)
+    {
+        foreach ($comment->getRecordedEvents() as $event) {
+            $this->dispatcher->dispatch($event->getEventName(), $event);
+        }
+
+        if ($ticket) {
+            foreach ($ticket->getRecordedEvents() as $event) {
+                $this->dispatcher->dispatch($event->getEventName(), $event);
+            }
+        }
+
+        if (count($this->processManager->getEventsHistory())) {
+            $this->processManager->process();
         }
     }
 }

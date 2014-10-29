@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToTicket;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasDeletedFromTicket;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasAddedToTicket;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketAssigneeWasChanged;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketStatusWasChanged;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
@@ -248,8 +249,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
-        //$this->raise(new CommentWasAddedToTicket($this->id, $this->subject, $this->getRecipientsList(),
-          //  $comment->getContent()));
+        $this->raise(new CommentWasAddedToTicket($this->id, $this->subject, $this->getRecipientsList(),
+            $comment->getContent()));
     }
 
     /** LEGACY CODE START */
@@ -287,7 +288,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     /**
      * @return array
      */
-    private function getRecipientsList()
+    public function getRecipientsList()
     {
         if ($this->getAssignee()) {
             $recipientsList = array(
@@ -310,7 +311,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     {
         $status = new Status($status);
 
-        if ($this->status !== $status) {
+        if ($this->status->getValue() !== $status->getValue()) {
             $this->raise(new TicketStatusWasChanged($this->id, $this->subject,
                 $status, $this->getRecipientsList()));
         }

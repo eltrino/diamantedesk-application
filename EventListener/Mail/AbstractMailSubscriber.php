@@ -86,6 +86,9 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param array $recipientsList
+     */
     public function setRecipientsList(array $recipientsList)
     {
         $this->recipientsList = $recipientsList;

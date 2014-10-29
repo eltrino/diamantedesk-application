@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-class CommentWasUpdated extends AbstractTicketEvent
+class CommentWasAddedToTicket extends AbstractTicketEvent
 {
     /**
      * @var string
@@ -34,7 +34,7 @@ class CommentWasUpdated extends AbstractTicketEvent
      */
     public function getEventName()
     {
-        return 'commentWasUpdated';
+        return 'commentWasAddedToTicket';
     }
 
     /**

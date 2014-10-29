@@ -14,15 +14,15 @@
  */
 namespace Diamante\DeskBundle\Tests\EventListener\Mail;
 
-use Diamante\DeskBundle\EventListener\Mail\TicketWasDeletedSubscriber;
+use Diamante\DeskBundle\EventListener\Mail\CommentWasDeletedSubscriber;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
-class TicketWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
+class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var TicketWasDeletedSubscriber
+     * @var CommentWasDeletedSubscriber
      */
-    private $ticketWasDeletedSubscriber;
+    private $commentWasDeletedSubscriber;
 
     /**
      * @var \Twig_Environment
@@ -54,10 +54,10 @@ class TicketWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
     private $securityFacade;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted
-     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted
      */
-    private $ticketWasDeletedEvent;
+    private $commentWasDeletedEvent;
 
     /**
      * @var array
@@ -79,7 +79,7 @@ class TicketWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->senderEmail = 'no-reply@example.com';
 
-        $this->ticketWasDeletedSubscriber = new TicketWasDeletedSubscriber(
+        $this->commentWasDeletedSubscriber = new CommentWasDeletedSubscriber(
             $this->twig,
             $this->mailer,
             $this->securityFacade,
@@ -89,30 +89,35 @@ class TicketWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAnEventSubscriber()
     {
-        $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventSubscriberInterface', $this->ticketWasDeletedSubscriber);
+        $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventSubscriberInterface', $this->commentWasDeletedSubscriber);
     }
 
     public function testGetSubscribedEvents()
     {
         $this->assertEquals(
             array(
-                'ticketWasDeleted' => 'onTicketWasDeleted',
+                'commentWasDeleted' => 'onCommentWasDeleted',
             ),
-            $this->ticketWasDeletedSubscriber->getSubscribedEvents()
+            $this->commentWasDeletedSubscriber->getSubscribedEvents()
         );
     }
 
-    public function testOnTicketWasDeleted()
+    public function testOnCommentWasDeleted()
     {
-        $this->ticketWasDeletedEvent
+        $this->commentWasDeletedEvent
             ->expects($this->atLeastOnce())
             ->method('getSubject')
             ->will($this->returnValue('Subject'));
 
-        $this->ticketWasDeletedEvent
+        $this->commentWasDeletedEvent
             ->expects($this->any())
             ->method('getRecipientsList')
             ->will($this->returnValue($this->recipientsList));
+
+        $this->commentWasDeletedEvent
+            ->expects($this->atLeastOnce())
+            ->method('getCommentContent')
+            ->will($this->returnValue('Comment Content'));
 
         $this->securityFacade
             ->expects($this->exactly(2))
@@ -132,13 +137,14 @@ class TicketWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
         $userFullName = 'firstName' . ' ' . 'lastName';
 
         $options = array(
-            'user'        => $userFullName,
-            'header'      => 'Ticket was deleted'
+            'comment' => 'Comment Content',
+            'user'    => $userFullName,
+            'header'  => 'Comment was deleted'
         );
 
         $templates = array(
-            'txt'  => 'DiamanteDeskBundle:Ticket/notification/mails/delete:notification.txt.twig',
-            'html' => 'DiamanteDeskBundle:Ticket/notification/mails/delete:notification.html.twig'
+            'txt'  => 'DiamanteDeskBundle:Comment/notification/mails/delete:notification.txt.twig',
+            'html' => 'DiamanteDeskBundle:Comment/notification/mails/delete:notification.html.twig'
         );
 
         $this->twig
@@ -182,6 +188,6 @@ class TicketWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
             ->method('send')
             ->with($this->message);
 
-        $this->ticketWasDeletedSubscriber->onTicketWasDeleted($this->ticketWasDeletedEvent);
+        $this->commentWasDeletedSubscriber->onCommentWasDeleted($this->commentWasDeletedEvent);
     }
 } 

@@ -14,19 +14,25 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-class CommentWasUpdated extends AbstractTicketEvent
+class AttachmentWasAddedToComment extends AbstractTicketEvent
 {
+    /**
+     * @var string
+     */
+    private $attachmentName;
+
     /**
      * @var string
      */
     private $commentContent;
 
-    public function __construct($id, $subject, $recipientsList, $commentContent)
+    public function __construct($id, $subject, $recipientsList, $commentContent, $attachmentName)
     {
         $this->ticketId       = $id;
         $this->subject        = $subject;
         $this->recipientsList = $recipientsList;
         $this->commentContent = $commentContent;
+        $this->attachmentName = $attachmentName;
     }
 
     /**
@@ -34,7 +40,15 @@ class CommentWasUpdated extends AbstractTicketEvent
      */
     public function getEventName()
     {
-        return 'commentWasUpdated';
+        return 'attachmentWasAddedToComment';
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttachmentName()
+    {
+        return $this->attachmentName;
     }
 
     /**

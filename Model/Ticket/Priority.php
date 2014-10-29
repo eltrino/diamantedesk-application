@@ -16,8 +16,6 @@ namespace Diamante\DeskBundle\Model\Ticket;
 
 class Priority
 {
-    const DEFAULT_PRIORITY = 1;
-
     const PRIORITY_LOW = 'low';
     const PRIORITY_MEDIUM = 'medium';
     const PRIORITY_HIGH = 'high';

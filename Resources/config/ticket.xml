@@ -155,6 +155,7 @@
             <argument type="service" id="diamante.ticket.internal.attachment.service"/>
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="diamante.mail_comment_process_manager"/>
         </service>
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>

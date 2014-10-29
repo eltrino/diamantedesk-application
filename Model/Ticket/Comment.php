@@ -18,6 +18,9 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToComment;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
@@ -124,45 +127,11 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
      */
     public function updateContent($content)
     {
-        $newValues = array('content' => $content);
-        $changes = $this->computeChanges($newValues);
-
-        if ($changes) {
-            $this->raise(new CommentWasUpdated($changes));
+        if ($this->content !== $content) {
+            $this->raise(new CommentWasUpdated($this->ticket->getId(), $this->ticket->getSubject(),
+                $this->ticket->getRecipientsList(), $content));
         }
-
         $this->content = $content;
-    }
-
-    /**
-     * @param array $newValues
-     * @return array|null
-     */
-    private function computeChanges(array $newValues)
-    {
-        $oldValues = array(
-            'content' => $this->getSubject(),
-        );
-
-        $changes = array();
-
-        foreach($newValues as $key => $value) {
-            if ($oldValues[$key] !== $newValues[$key]) {
-                $changes[] =
-                    array(
-                        $key => array(
-                            'oldValue' => $oldValues[$key],
-                            'newValue' => $newValues[$key],
-                        )
-                    );
-            }
-        }
-
-        if(empty($changes)) {
-            return null;
-        }
-
-        return $changes;
     }
 
     /**
@@ -172,6 +141,8 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
+        $this->raise(new AttachmentWasAddedToComment($this->ticket->getId(), $this->ticket->getSubject(),
+            $this->ticket->getRecipientsList(), $this->content, $attachment->getFilename()));
     }
 
     public function getAttachments()
@@ -198,5 +169,11 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     public function removeAttachment(Attachment $attachment)
     {
         $this->attachments->remove($attachment->getId());
+    }
+
+    public function delete()
+    {
+        $this->raise(new CommentWasDeleted($this->ticket->getId(), $this->ticket->getSubject(),
+            $this->ticket->getRecipientsList(), $this->content));
     }
 }
