@@ -60,12 +60,13 @@ class BranchServiceImpl implements BranchService
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
         SecurityFacade $securityFacade
-    ) {
-        $this->branchFactory     = $branchFactory;
-        $this->branchRepository  = $branchRepository;
+    )
+    {
+        $this->branchFactory = $branchFactory;
+        $this->branchRepository = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
-        $this->tagManager        = $tagManager;
-        $this->securityFacade    = $securityFacade;
+        $this->tagManager = $tagManager;
+        $this->securityFacade = $securityFacade;
     }
 
     /**
@@ -176,7 +177,7 @@ class BranchServiceImpl implements BranchService
      *
      * @param Command\UpdatePropertiesCommand $command
      */
-    public function updateSinglePropertis(Command\UpdatePropertiesCommand $command)
+    public function updateSingleProperties(Command\UpdatePropertiesCommand $command)
     {
         $this->isGranted('EDIT', 'Entity:DiamanteDeskBundle:Branch');
 
