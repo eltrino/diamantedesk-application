@@ -389,7 +389,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function thatAttachmentRemovesComment()
+    public function thatAttachmentRemovesFromComment()
     {
         $attachment = new Attachment(new File('filename.ext'));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))

@@ -52,7 +52,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
         $form['diamante_ticket_form[status]']      = 'open';
-        $form['diamante_ticket_form[priority]']    = Priority::DEFAULT_PRIORITY;
+        $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_MEDIUM;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
@@ -225,6 +225,8 @@ class TicketControllerTest extends WebTestCase
     {
         $ticket        = $this->chooseTicketFromGrid();
         $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('id' => $ticket['id']));
+        $this->client->followRedirects(false);
+
         $crawler       = $this->client->request('GET', $ticketDeleteUrl);
         $response      = $this->client->getResponse();
 

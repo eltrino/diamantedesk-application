@@ -80,7 +80,7 @@ class CommentControllerTest extends WebTestCase
         $crawler = $this->client->click($link);
 
         /** @var Form $form */
-        $form = $crawler->selectButton('Edit')->form();
+        $form = $crawler->selectButton('Save')->form();
         $form['diamante_comment_form[content]'] = 'Updated comment';
         $this->client->followRedirects(true);
 
@@ -100,7 +100,7 @@ class CommentControllerTest extends WebTestCase
         $crawler = $this->client->click($link);
 
         /** @var Form $form */
-        $form = $crawler->selectButton('Edit')->form();
+        $form = $crawler->selectButton('Save')->form();
         $form['diamante_comment_form[content]'] = 'Changed ticket status wile updating comment';
         $form['diamante_comment_form[ticketStatus]'] = Status::ON_HOLD;
         $this->client->followRedirects(true);

@@ -247,7 +247,11 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $name = 'DUMMY_NAME_UPDT';
         $description = 'DUMMY_DESC_UPDT';
         $defaultAssignee = new User();
-        $tags = array();
+        $tags = array(
+            'autocomplete' => array(),
+            'all'          => array(),
+            'owner'        => array()
+        );
 
         $this->branch->expects($this->once())->method('update')->with(
             $this->equalTo($name), $this->equalTo($description), $this->equalTo($defaultAssignee),

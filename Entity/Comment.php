@@ -100,4 +100,9 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     {
         return __CLASS__;
     }
+
+    public function getOwner()
+    {
+        return $this->author;
+    }
 }
