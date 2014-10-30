@@ -92,6 +92,18 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $securityFacade;
 
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @var \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
+     * @Mock \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
+     */
+    private $processManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -102,7 +114,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->ticketFactory,
             $this->attachmentManager,
             $this->userService,
-            $this->securityFacade
+            $this->securityFacade,
+            $this->dispatcher,
+            $this->processManager
         );
     }
 
@@ -128,7 +142,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
-        $priority = Priority::DEFAULT_PRIORITY;
+        $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
 
         $ticket = new Ticket(
@@ -190,7 +204,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::IN_PROGRESS;
-        $priority = Priority::DEFAULT_PRIORITY;
+        $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
 
         $ticket = new Ticket(
@@ -253,7 +267,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
-        $priority = Priority::DEFAULT_PRIORITY;
+        $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
 
         $ticket = new Ticket(
@@ -331,7 +345,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee,
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            Priority::PRIORITY_LOW,
             Status::NEW_ONE
         );
 
@@ -350,7 +364,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
         $command->reporter = $reporterId;
         $command->assignee = $assigneeId;
-        $command->priority = Priority::DEFAULT_PRIORITY;
+        $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
         $command->status = $newStatus;
 
@@ -385,7 +399,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee,
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            Priority::PRIORITY_LOW,
             Status::NEW_ONE
         );
 
@@ -414,7 +428,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
         $command->reporter = $reporterId;
         $command->assignee = $assigneeId;
-        $command->priority = Priority::DEFAULT_PRIORITY;
+        $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
         $command->status = $newStatus;
         $command->attachmentsInput = $attachmentInputs;
@@ -454,7 +468,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            Priority::PRIORITY_LOW,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());
@@ -522,7 +536,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            Priority::PRIORITY_LOW,
             Status::CLOSED
         );
         $attachmentInputs = $this->attachmentInputs();
@@ -579,7 +593,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
+            Priority::PRIORITY_LOW,
             Status::CLOSED
         );
         $ticket->addAttachment($this->attachment());
@@ -621,6 +635,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $removeTicketAttachmentCommand = new RemoveTicketAttachmentCommand();
         $removeTicketAttachmentCommand->ticketId = self::DUMMY_TICKET_ID;
@@ -672,6 +691,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('isGranted');
 
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
+
         $command = new UpdateStatusCommand();
         $command->ticketId = self::DUMMY_TICKET_ID;
         $command->status = $status;
@@ -703,6 +727,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $command = new UpdateStatusCommand();
         $command->ticketId = self::DUMMY_TICKET_ID;
@@ -770,6 +799,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('isGranted');
 
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
+
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
         $command->assignee = $assigneeId;
@@ -803,6 +837,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
@@ -890,6 +929,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isGranted')
             ->with($this->equalTo('DELETE'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
     }

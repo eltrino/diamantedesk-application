@@ -65,39 +65,4 @@ class UpdateCommand extends AbstractCommand
 
         $output->writeln("Updated!" . "\n");
     }
-
-    /**
-     * Updates DB Schema. Changes from Diamante only will be applied for current schema. Other bundles updating skips
-     * @throws \Exception if there are no changes in entities
-     */
-    protected function updateDbSchema()
-    {
-        /**
-         * @var $em \Doctrine\ORM\EntityManager
-         */
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $schemaTool = new SchemaTool($em);
-        $entitiesMetadata = array(
-            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Branch::getClassName()),
-            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Ticket::getClassName()),
-            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Comment::getClassName()),
-            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Filter::getClassName()),
-            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName())
-        );
-
-        $sql = $schemaTool->getUpdateSchemaSql($entitiesMetadata);
-        $sql2 = $schemaTool->getUpdateSchemaSql(array());
-
-        $toUpdate = array_diff($sql, $sql2);
-
-        if (empty($toUpdate)) {
-            throw new \Exception('No new updates found. DiamanteDesk is up to date!');
-        }
-
-        $conn = $em->getConnection();
-
-        foreach ($toUpdate as $sql) {
-            $conn->executeQuery($sql);
-        }
-    }
 }

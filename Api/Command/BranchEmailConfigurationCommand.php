@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
+use Diamante\DeskBundle\Validator\Constraints as CustomAssert;
 
 class BranchEmailConfigurationCommand
 {
@@ -30,12 +31,12 @@ class BranchEmailConfigurationCommand
     public $branch;
 
     /**
-     * @Assert\Type(type="string")
+     * @CustomAssert\DomainList()
      */
     public $customerDomains;
 
     /**
-     * @Assert\Type(type="string")
+     * @Assert\Email()
      */
     public $supportAddress;
 

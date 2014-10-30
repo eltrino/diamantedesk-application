@@ -89,6 +89,8 @@ class BranchServiceImpl implements BranchService
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed. Branch not found.');
         }
+
+        $this->tagManager->loadTagging($branch);
         return $branch;
     }
 
@@ -146,9 +148,13 @@ class BranchServiceImpl implements BranchService
         }
 
         $branch->update($branchCommand->name, $branchCommand->description, $branchCommand->defaultAssignee, $file);
-        $branch->setTags($branchCommand->tags);
-
         $this->branchRepository->store($branch);
+
+        //TODO: Refactor tag manipulations.
+        $this->tagManager->deleteTaggingByParams($branch->getTags(), get_class($branch), $branch->getId());
+        $tags = $branchCommand->tags;
+        $tags['owner'] = $tags['all'];
+        $branch->setTags($tags);
         $this->tagManager->saveTagging($branch);
 
         return $branch->getId();

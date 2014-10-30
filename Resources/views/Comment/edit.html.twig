@@ -15,7 +15,7 @@
 
 {% block navButtons %}
     {{ UI.button({'path' : path('diamante_ticket_view', { 'id': ticket.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
-    {{ UI.saveAndCloseButton(editCommand.id ? 'diamante.desk.ui.edit'|trans : 'diamante.desk.ui.add'|trans) }}
+    {{ UI.saveAndCloseButton(editCommand.id ? 'diamante.desk.ui.save'|trans : 'diamante.desk.ui.add'|trans) }}
 {% endblock %}
 
 {% block pageHeader %}

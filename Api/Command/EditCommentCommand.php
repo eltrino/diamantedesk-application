@@ -54,4 +54,10 @@ class EditCommentCommand
      * @var int
      */
     public $author;
+
+    /**
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
+     */
+    public $ticketStatus;
 }

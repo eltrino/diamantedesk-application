@@ -59,7 +59,7 @@ class UpdateTicketCommand
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="integer")
+     * @Assert\Type(type="string")
      */
     public $priority;
 

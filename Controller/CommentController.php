@@ -35,6 +35,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("comment")
@@ -139,22 +141,15 @@ class CommentController extends Controller
             $this->handle($form);
             $callback($command);
 
-            $newStatus = $form->get('ticketStatus')->getData();
-
-            if (false === ($newStatus == $ticket->getStatus()->getValue())) {
-                $ticketCommand = new UpdateStatusCommand();
-                $ticketCommand->ticketId = $command->ticket;
-                $ticketCommand->status = $newStatus;
-                $this->get('diamante.ticket.service')->updateStatus($ticketCommand);
-            }
-
             if ($command->id) {
                 $this->addSuccessMessage('diamante.desk.comment.messages.save.success');
             } else {
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($ticket->getId());
-        } catch (\LogicException $e) {
+        } catch (MethodNotAllowedException $e) {
+            $response = array('form' => $formView, 'ticket' => $ticket);
+        } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.comment.messages.create.error');
             $response = array('form' => $formView, 'ticket' => $ticket);
         }
@@ -270,13 +265,13 @@ class CommentController extends Controller
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be posted only by "POST" method.');
+            throw new MethodNotAllowedException(array('POST'),'Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form object validation failed, form is invalid.');
+            throw new ValidatorException('Form object validation failed, form is invalid.');
         }
     }
 

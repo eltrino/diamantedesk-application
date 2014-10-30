@@ -53,7 +53,7 @@ datagrid:
                 label:         Edit
                 icon:          edit
                 link:          update_link
-                acl_resource:  UPDATE;Entity:DiamanteDeskBundle:Branch
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Branch
             delete:
                 type:          delete
                 label:         Delete
@@ -72,7 +72,7 @@ datagrid:
                         - i.branch = :branch
         filters:
             default:
-                status: { value: ['@diamante.ticket.datagrid_status_helper->getOpenStatus'] }
+                status: { value: '' }
 
     diamante-ticket-grid:
         source:

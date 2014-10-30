@@ -45,7 +45,9 @@ class BranchCommand implements Taggable
     public $tags;
 
     /**
-     * @Assert\Type(type="object")
+     * @Assert\File(
+     *              mimeTypes={"image/jpeg","image/png"}
+     * )
      */
     public $logoFile;
 
@@ -104,6 +106,8 @@ class BranchCommand implements Taggable
     public function setTags($tags)
     {
         $this->tags = $tags;
+
+        return $this;
     }
 
     /**

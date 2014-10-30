@@ -71,7 +71,7 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
                 $reporter,
                 $assignee,
                 Source::PHONE,
-                Priority::DEFAULT_PRIORITY,
+                Priority::PRIORITY_MEDIUM,
                 Status::OPEN
             );
 

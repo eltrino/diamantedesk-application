@@ -16,11 +16,9 @@ namespace Diamante\DeskBundle\Model\Ticket;
 
 class Priority
 {
-    const DEFAULT_PRIORITY = 1;
-
-    const PRIORITY_LOW = 0;
-    const PRIORITY_MEDIUM = 1;
-    const PRIORITY_HIGH = 2;
+    const PRIORITY_LOW = 'low';
+    const PRIORITY_MEDIUM = 'medium';
+    const PRIORITY_HIGH = 'high';
 
     const PRIORITY_LOW_LABEL = 'Low';
     const PRIORITY_MEDIUM_LABEL = 'Medium';
@@ -33,7 +31,7 @@ class Priority
     public function __construct($priority = null)
     {
         if (is_null($priority)) {
-            $priority = self::DEFAULT_PRIORITY;
+            $priority = self::PRIORITY_MEDIUM;
         }
 
         static::initValueLabelsMap();
@@ -42,7 +40,7 @@ class Priority
             throw new \InvalidArgumentException("Priority doesn't exist.");
         }
 
-        $this->priority = (int) $priority;
+        $this->priority = $priority;
     }
 
     /**

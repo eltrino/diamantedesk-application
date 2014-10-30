@@ -73,7 +73,7 @@
     %}
 
     {% set dataBlocks = dataBlocks|merge([{
-        'title': 'diamante.desk.common.description',
+        'title': 'diamante.desk.common.description'|trans,
         'subblocks':[{
             'title': null,
             'data': [entity.description|escape('html')|nl2br]}]

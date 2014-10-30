@@ -15,10 +15,10 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\SmallIntType;
+use Doctrine\DBAL\Types\StringType;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 
-class TicketPriorityType extends SmallIntType
+class TicketPriorityType extends StringType
 {
     const PRIORITY_TYPE = 'priority';
 
