@@ -70,6 +70,9 @@ class BranchServiceImpl implements BranchService
 
     /**
      * Retrieves list of all Branches
+     *
+     * @api {get} /branches
+     *
      * @return Branch[]
      */
     public function listAllBranches()
@@ -80,6 +83,9 @@ class BranchServiceImpl implements BranchService
 
     /**
      * Retrieves Branch by id
+     *
+     * @api {get} /branches/{id} Request Branch information
+     *
      * @param $id
      * @return Branch
      */
@@ -96,6 +102,9 @@ class BranchServiceImpl implements BranchService
 
     /**
      * Create Branch
+     *
+     * @api {post} /branches Request Branch information
+     *
      * @param Command\BranchCommand $branchCommand
      * @return int
      */
@@ -161,7 +170,33 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
+     * Update certain properties of the branch
+     *
+     * @api {put} /branches/{id} Request Branch information
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updateSinglePropertis(Command\UpdatePropertiesCommand $command)
+    {
+        $this->isGranted('EDIT', 'Entity:DiamanteDeskBundle:Branch');
+
+        /**
+         * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
+         */
+        $branch = $this->branchRepository->get($command->id);
+
+        foreach ($command->properties as $name => $value) {
+            $branch->updateProperty($name, $value);
+        }
+
+        $this->branchRepository->store($branch);
+    }
+
+    /**
      * Delete Branch
+     *
+     * @api {delete} /branches/{id} Request Branch information
+     *
      * @param int $branchId
      * @return void
      */

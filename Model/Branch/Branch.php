@@ -193,4 +193,20 @@ class Branch implements Entity, Taggable
 
         return $this;
     }
+
+    /**
+     * Update single property of the branch
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function updateProperty($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        } else {
+            throw new \DomainException(sprintf('Branch does not have "%s" property.', $name));
+        }
+    }
 }

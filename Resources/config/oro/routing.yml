@@ -2,3 +2,8 @@ diamante_desk_bundle:
     resource:     "@DiamanteDeskBundle/Controller"
     type:         annotation
     prefix:       /desk
+
+diamante_desk_api_bundle:
+    resource:     "@DiamanteDeskBundle/Controller/ApiController.php"
+    type:         annotation
+    prefix:       /api/rest/latest
