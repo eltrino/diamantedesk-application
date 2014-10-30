@@ -14,10 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
-use Diamante\DeskBundle\Model\Attachment\AttachmentFactory;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Attachment\File;
-use Diamante\DeskBundle\Model\Attachment\Services\FileStorageService;
+use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
@@ -45,11 +44,6 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $branchRepository;
 
     /**
-     * @var Repository
-     */
-    private $attachmentRepository;
-
-    /**
      * @var TicketFactory
      */
     private $ticketFactory;
@@ -60,41 +54,32 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $commentFactory;
 
     /**
-     * @var AttachmentFactory
-     */
-    private $attachmentFactory;
-
-    /**
      * @var UserService
      */
     private $userService;
 
     /**
-     * @var FileStorageService
+     * @var AttachmentManager
      */
-    private $fileStorageService;
+    private $attachmentManager;
 
     public function __construct(
         MessageReferenceRepository $messageReferenceRepository,
         Repository $ticketRepository,
         Repository $branchRepository,
-        Repository $attachmentRepository,
         TicketFactory $ticketFactory,
         CommentFactory $commentFactory,
-        AttachmentFactory $attachmentFactory,
         UserService $userService,
-        FileStorageService $fileStorageService
+        AttachmentManager $attachmentManager
     )
     {
         $this->messageReferenceRepository = $messageReferenceRepository;
         $this->ticketRepository           = $ticketRepository;
         $this->branchRepository           = $branchRepository;
-        $this->attachmentRepository       = $attachmentRepository;
         $this->ticketFactory              = $ticketFactory;
         $this->commentFactory             = $commentFactory;
-        $this->attachmentFactory          = $attachmentFactory;
         $this->userService                = $userService;
-        $this->fileStorageService         = $fileStorageService;
+        $this->attachmentManager          = $attachmentManager;
     }
 
     /**
@@ -155,39 +140,10 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     private function createAttachments(array $attachments, AttachmentHolder $attachmentHolder)
     {
-        $filenamePrefix = $this->exposeFilenamePrefixFrom($attachmentHolder);
-
         foreach ($attachments as $attachment) {
-            /**
-             * @var $attachment \Diamante\DeskBundle\Model\Attachment\File
-             */
-            try {
-                $path = $this->fileStorageService->upload($filenamePrefix . '/' . $attachment->getName(), $attachment->getContent());
-
-                $file = new File($path);
-
-                $ticketAttachment = $this->attachmentFactory->create($file);
-
-                $attachmentHolder->addAttachment($ticketAttachment);
-                $this->attachmentRepository->store($ticketAttachment);
-            } catch (\RuntimeException $e) {
-                /**
-                 * @todo logging
-                 */
-                throw $e;
-            }
+            $this->attachmentManager
+                ->createNewAttachment($attachment->getName(), $attachment->getContent(), $attachmentHolder);
         }
-    }
-
-    /**
-     * @param AttachmentHolder $attachmentHolder
-     * @return string
-     */
-    private function exposeFilenamePrefixFrom(AttachmentHolder $attachmentHolder)
-    {
-        $parts = explode("\\", get_class($attachmentHolder));
-        $prefix = strtolower(array_pop($parts));
-        return $prefix;
     }
 
     /**
