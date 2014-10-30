@@ -13,7 +13,7 @@
  */
 define(['marionette','backbone'], function(Marionette, Backbone) {
 
-  var App = new Marionette.Application({
+  window.App = new Marionette.Application({
     regions : {
       HeaderRegion: '#header',
       MainRegion: '#content',
@@ -31,27 +31,12 @@ define(['marionette','backbone'], function(Marionette, Backbone) {
     return Backbone.history.fragment;
   };
 
-
-
   App.on('before:start', function(){});
 
+  App.on('start', function(){});
 
-  App.on('start', function(){
-
-    require(['modules/Task/routers/task'], function(){
-
-      Backbone.history.start();
-      if(App.getCurrentRoute() == ""){
-        App.trigger('task:list');
-      }
-
-    });
-
+  require(['modules/Header/loader','modules/Task/loader'], function(){
+    App.start();
   });
-
-
-  App.start();
-
-  return App;
 
 });

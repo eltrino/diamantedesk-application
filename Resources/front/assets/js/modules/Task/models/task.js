@@ -1,6 +1,6 @@
-define(['app'], function(App){
+define(function(){
 
-  return App.module("Task.Models",function(Models, App, Backbone, Marionette, $, _){
+  App.module("Task.Models",function(Models, App, Backbone, Marionette, $, _){
 
     var tasks;
 
@@ -33,11 +33,10 @@ define(['app'], function(App){
     };
 
     App.reqres.setHandler("task:collection", function(){
-        return API.getTaskEntities();
+      return API.getTaskEntities();
     });
 
   });
-
 
 });
 

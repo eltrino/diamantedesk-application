@@ -1,4 +1,4 @@
-define(['app', 'modules/Task/views/list'], function(App, Task){
+define(function(){
 
   App.module('Task.View', function(View, App, Backbone, Marionette, $, _){
 

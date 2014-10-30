@@ -1,4 +1,4 @@
-define(['app'], function(App){
+define(function(){
 
   App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 

@@ -39,6 +39,7 @@
     "id": 5,
     "created_at": "10-Jun-2014",
     "subject": "Review current baseline issue",
+    "shortcode" : "XAS",
     "priority": "Hight",
     "status": "Assigned",
     "description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab asperiores cum dolor doloremque eaque earum enim error in maiores molestias nam non possimus quos repellat, sunt tempora unde voluptas voluptate."
@@ -56,6 +57,7 @@
     "id": 7,
     "created_at": "10-Jun-2014",
     "subject": "Review current baseline issue",
+    "shortcode" : "XAS",
     "priority": "Hight",
     "status": "Assigned",
     "description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab asperiores cum dolor doloremque eaque earum enim error in maiores molestias nam non possimus quos repellat, sunt tempora unde voluptas voluptate."
