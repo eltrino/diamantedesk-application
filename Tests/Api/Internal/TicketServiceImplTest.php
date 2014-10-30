@@ -903,31 +903,22 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteTicket()
     {
-        $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
-            $this->createBranch(),
-            $this->createReporter(),
-            $this->createAssignee(),
-            Source::PHONE,
-            Priority::DEFAULT_PRIORITY,
-            Status::CLOSED
-        );
-        $ticket->addAttachment($this->attachment());
+        $this->ticket->expects($this->any())->method('getAttachments')
+            ->will($this->returnValue(array($this->attachment())));
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($ticket));
+            ->will($this->returnValue($this->ticket));
 
-        $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($ticket));
+        $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
 
-        $this->attachmentManager->expects($this->exactly(count($ticket->getAttachments())))
+        $this->attachmentManager->expects($this->exactly(count($this->ticket->getAttachments())))
             ->method('deleteAttachment')
             ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
-            ->with($this->equalTo('DELETE'), $this->equalTo($ticket))
+            ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
         $this->ticket
