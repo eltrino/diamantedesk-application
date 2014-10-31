@@ -56,4 +56,11 @@ interface BranchService
      * @return void
      */
     public function deleteBranch($branchId);
+
+    /**
+     * Update certain properties of the branch
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updateProperties(Command\UpdatePropertiesCommand $command);
 }

@@ -177,7 +177,7 @@ class BranchServiceImpl implements BranchService
      *
      * @param Command\UpdatePropertiesCommand $command
      */
-    public function updateSingleProperties(Command\UpdatePropertiesCommand $command)
+    public function updateProperties(Command\UpdatePropertiesCommand $command)
     {
         $this->isGranted('EDIT', 'Entity:DiamanteDeskBundle:Branch');
 

@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Internal\BranchServiceImpl;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Model\Branch\Logo;
@@ -344,5 +345,30 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $this->branchServiceImpl->deleteBranch(self::DUMMY_BRANCH_ID);
+    }
+
+    public function testUpdateProperties()
+    {
+        $this->branchRepository->expects($this->once())->method('get')->will($this->returnValue($this->branch));
+
+        $name = 'DUMMY_NAME_UPDT';
+        $description = 'DUMMY_DESC_UPDT';
+
+        $this->branch->expects($this->exactly(2))->method('updateProperty');
+
+        $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($this->branch));
+
+        $this->securityFacade->expects($this->once())->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
+
+        $command = new UpdatePropertiesCommand();
+        $command->id = 1;
+        $command->properties = [
+            ['name' => 'name', 'value' => $name],
+            ['name' => 'description', 'value' => $description]
+        ];
+
+        $this->branchServiceImpl->updateProperties($command);
     }
 }
