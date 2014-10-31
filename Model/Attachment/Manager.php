@@ -12,30 +12,23 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket;
+namespace Diamante\DeskBundle\Model\Attachment;
 
-use Diamante\DeskBundle\Model\Attachment\Attachment;
-use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
-
-/**
- * Interface AttachmentService
- * @package Diamante\DeskBundle\Model\Ticket
- * @codeCoverageIgnore
- */
-interface AttachmentService
+interface Manager
 {
     /**
-     * Creates Attachments for Holder
-     * @param array $attachmentsInput array of AttachmentInput DTOs
+     * Create new attachment and assign it to the attachment holder
+     * @param string $filename
+     * @param string $content
      * @param AttachmentHolder $holder
-     * @return void
+     * @return int
      */
-    public function createAttachmentsForItHolder(array $attachmentsInput, AttachmentHolder $holder);
+    public function createNewAttachment($filename, $content, AttachmentHolder $holder);
 
     /**
-     * Removes Attachment
+     * Delete attachment
      * @param Attachment $attachment
      * @return void
      */
-    public function removeAttachmentFromItHolder(Attachment $attachment);
+    public function deleteAttachment(Attachment $attachment);
 }

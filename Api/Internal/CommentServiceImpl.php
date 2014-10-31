@@ -16,9 +16,9 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\CommentService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
-use Diamante\DeskBundle\Model\Ticket\AttachmentService;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
@@ -53,9 +53,9 @@ class CommentServiceImpl implements CommentService
     private $userService;
 
     /**
-     * @var AttachmentService
+     * @var Manager
      */
-    private $attachmentService;
+    private $attachmentManager;
 
     /**
      * @var \Oro\Bundle\SecurityBundle\SecurityFacade
@@ -77,7 +77,7 @@ class CommentServiceImpl implements CommentService
         Repository $commentRepository,
         CommentFactory $commentFactory,
         UserService $userService,
-        AttachmentService $attachmentService,
+        AttachmentManager $attachmentManager,
         SecurityFacade $securityFacade,
         EventDispatcher $dispatcher,
         CommentProcessManager $processManager
@@ -86,7 +86,7 @@ class CommentServiceImpl implements CommentService
         $this->commentRepository = $commentRepository;
         $this->commentFactory = $commentFactory;
         $this->userService = $userService;
-        $this->attachmentService = $attachmentService;
+        $this->attachmentManager = $attachmentManager;
         $this->securityFacade = $securityFacade;
         $this->dispatcher = $dispatcher;
         $this->processManager = $processManager;
@@ -133,6 +133,9 @@ class CommentServiceImpl implements CommentService
     {
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Comment');
 
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
+            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+
         /**
          * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
          */
@@ -143,7 +146,9 @@ class CommentServiceImpl implements CommentService
         $comment = $this->commentFactory->create($command->content, $ticket, $author);
 
         if ($command->attachmentsInput) {
-            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $comment);
+            foreach ($command->attachmentsInput as $each) {
+                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
+            }
         }
 
         $ticket->updateStatus($command->ticketStatus);
@@ -183,10 +188,15 @@ class CommentServiceImpl implements CommentService
 
         $this->isGranted('EDIT', $comment);
 
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
+            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+
         $comment->updateContent($command->content);
 
         if ($command->attachmentsInput) {
-            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $comment);
+            foreach ($command->attachmentsInput as $each) {
+                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
+            }
         }
         $this->commentRepository->store($comment);
 
@@ -215,6 +225,9 @@ class CommentServiceImpl implements CommentService
         $comment->delete();
 
         $this->commentRepository->remove($comment);
+        foreach ($comment->getAttachments() as $attachment) {
+            $this->attachmentManager->deleteAttachment($attachment);
+        }
         $this->dispatchEvents($comment);
     }
 
@@ -234,7 +247,7 @@ class CommentServiceImpl implements CommentService
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
-        $this->attachmentService->removeAttachmentFromItHolder($attachment);
+        $this->attachmentManager->deleteAttachment($attachment);
         $comment->removeAttachment($attachment);
         $this->commentRepository->store($comment);
     }

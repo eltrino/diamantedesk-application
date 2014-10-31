@@ -65,4 +65,9 @@ class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailPr
      * @ORM\Column(name="updated_at", type="datetime")
      */
     protected $updatedAt;
+
+    public static function getClassName()
+    {
+        return __CLASS__;
+    }
 }

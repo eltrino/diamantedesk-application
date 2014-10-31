@@ -24,7 +24,6 @@
         <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
         <parameter key="diamante.comment.entity.factory.class">Diamante\DeskBundle\Model\Ticket\CommentFactory</parameter>
         <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
-        <parameter key="diamante.ticket.internal.attachment.service.class">Diamante\DeskBundle\Infrastructure\Ticket\Adapter\AttachmentServiceImpl</parameter>
         <parameter key="diamante.ticket.internal.grid_filters_service.class">Diamante\DeskBundle\Api\Internal\TicketGridFiltersService</parameter>
 <!-- filters -->
         <parameter key="diamante.filter.entity.class">Diamante\DeskBundle\Entity\Filter</parameter>
@@ -58,16 +57,10 @@
             <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
-            <argument type="service" id="diamante.attachment.repository"/>
             <argument type="service" id="diamante.ticket.entity.factory"/>
             <argument type="service" id="diamante.comment.entity.factory"/>
-            <argument type="service" id="diamante.attachment.entity.factory"/>
             <argument type="service" id="diamante.user.service"/>
-            <argument type="service" id="diamante.attachment.file_storage.service"/>
-        </service>
-
-        <service id="diamante.ticket.internal.attachment.service" class="%diamante.ticket.internal.attachment.service.class%">
-            <argument type="service" id="diamante.attachment.service"/>
+            <argument type="service" id="diamante.attachment.manager"/>
         </service>
 
         <service id="diamante.user.service" class="%diamante.user.service.class%">
@@ -82,7 +75,7 @@
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.ticket.entity.factory"/>
-            <argument type="service" id="diamante.ticket.internal.attachment.service"/>
+            <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="event_dispatcher"/>
@@ -152,7 +145,7 @@
             <argument type="service" id="diamante.comment.repository"/>
             <argument type="service" id="diamante.comment.entity.factory"/>
             <argument type="service" id="diamante.user.service"/>
-            <argument type="service" id="diamante.ticket.internal.attachment.service"/>
+            <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.mail_comment_process_manager"/>

@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
@@ -70,10 +71,10 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $userService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Ticket\AttachmentService
-     * @Mock \Diamante\DeskBundle\Model\Ticket\AttachmentService
+     * @var \Diamante\DeskBundle\Model\Attachment\Manager
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Manager
      */
-    private $attachmentService;
+    private $attachmentManager;
 
     /**
      * @var \Diamante\DeskBundle\Entity\Comment
@@ -108,8 +109,8 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
         $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
-            $this->commentFactory, $this->userService, $this->attachmentService,
-            $this->securityFacade, $this->dispatcher, $this->processManager);
+            $this->commentFactory, $this->userService, $this->attachmentManager, $this->securityFacade,
+            $this->dispatcher, $this->processManager);
 
         $this->_dummyTicket = new Ticket(
             self::DUMMY_TICKET_SUBJECT,
@@ -213,8 +214,13 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $attachmentInputs = $this->attachmentInputs();
 
-        $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($attachmentInputs), $this->equalTo($comment));
+        $this->attachmentManager->expects($this->exactly(count($attachmentInputs)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($comment)
+            );
 
         $this->securityFacade
             ->expects($this->once())
@@ -303,8 +309,13 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $filesListDto = $this->attachmentInputs();
 
-        $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($filesListDto), $this->equalTo($comment));
+        $this->attachmentManager->expects($this->exactly(count($filesListDto)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($comment)
+            );
 
         $ticket  = $this->_dummyTicket;
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
@@ -346,12 +357,18 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentDeletes()
     {
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
+        $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
 
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
         $this->commentRepository->expects($this->once())->method('remove')
             ->with($this->equalTo($comment));
+
+        $this->attachmentManager->expects($this->exactly(count($comment->getAttachments())))
+            ->method('deleteAttachment')
+            ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
         $this->securityFacade
             ->expects($this->once())
@@ -391,7 +408,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovesFromComment()
     {
-        $attachment = new Attachment(new File('filename.ext'));
+        $attachment = new Attachment(new File('some/path/file.ext'));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($this->comment));
 
@@ -400,7 +417,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->comment->expects($this->once())->method('removeAttachment')->with($this->equalTo($attachment));
 
-        $this->attachmentService->expects($this->once())->method('removeAttachmentFromItHolder')
+        $this->attachmentManager->expects($this->once())->method('deleteAttachment')
             ->with($this->equalTo($attachment));
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($this->comment));
