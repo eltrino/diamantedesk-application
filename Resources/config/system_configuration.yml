@@ -1,0 +1,28 @@
+oro_system_configuration:
+  groups:
+    diamante_desk_notification:
+      title: 'Notifications'
+      icon: icon-bullhorn
+
+    diamante_desk_notification_general_group:
+      title: 'Email Notifications'
+
+  fields:
+    diamante_desk.notifications:
+      type: choice
+      options:
+        label: 'Enable email notifications'
+        choices:
+          - No
+          - Yes
+  tree:
+    system_configuration:
+      platform:
+        children:
+          diamante_desk_setup:
+            children:
+              diamante_desk_notification:
+                children:
+                  diamante_desk_notification_general_group:
+                    children:
+                      - diamante_desk.notifications
