@@ -35,6 +35,7 @@
             <argument type="service" id="twig"/>
             <argument type="service" id="mailer"/>
             <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="oro_config.global"/>
             <argument>%mailer_user%</argument>
         </service>
 

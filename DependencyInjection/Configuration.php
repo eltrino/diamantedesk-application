@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
         SettingsBuilder::append(
             $rootNode,
             array(
-                'notifications' => array('value' => false, 'type' => 'boolean'),
+                'email_notification' => array('value' => false, 'type' => 'boolean'),
             )
         );
 

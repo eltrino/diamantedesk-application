@@ -1,28 +1,33 @@
 oro_system_configuration:
-  groups:
-    diamante_desk_notification:
-      title: 'Notifications'
-      icon: icon-bullhorn
+    groups:
+        diamante_desk_setup: ~
 
-    diamante_desk_notification_general_group:
-      title: 'Email Notifications'
+        diamante_desk_notifications:
+            title: 'Notifications'
+            icon: icon-bullhorn
 
-  fields:
-    diamante_desk.notifications:
-      type: choice
-      options:
-        label: 'Enable email notifications'
-        choices:
-          - No
-          - Yes
-  tree:
-    system_configuration:
-      platform:
-        children:
-          diamante_desk_setup:
-            children:
-              diamante_desk_notification:
+        diamante_desk_email_notifications_group:
+            title: 'Email Notifications'
+
+    fields:
+        diamante_desk.email_notification:
+            type: choice
+            priority: 85
+            options:
+                label: 'Enable Email Notifications'
+                choices:
+                    - No
+                    - Yes
+
+    tree:
+        system_configuration:
+            platform:
                 children:
-                  diamante_desk_notification_general_group:
-                    children:
-                      - diamante_desk.notifications
+                    diamante_desk_setup:
+                        children:
+                            diamante_desk_notifications:
+                                children:
+                                    diamante_desk_email_notifications_group:
+                                        priority: 300
+                                        children:
+                                            - diamante_desk.email_notification
