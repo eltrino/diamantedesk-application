@@ -19,7 +19,7 @@ require.config({
     backbone : "vendor/backbone/backbone",
     marionette : "vendor/marionette/lib/backbone.marionette",
     tpl: 'vendor/requirejs-tpl/tpl',
-    bootstrap : "vendor/bootstrap/js/bootstrap"
+    bootstrap : "vendor/bootstrap/dist/js/bootstrap"
   },
   shim : {
     jquery : {

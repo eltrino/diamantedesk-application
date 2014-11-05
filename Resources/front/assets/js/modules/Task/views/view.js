@@ -13,10 +13,10 @@ define([
       template: taskViewTemplate,
 
       events : {
-        "click .js-task-list" : "listTasksHandler"
+        "click .js-task-list" : "listTasks"
       },
 
-      listTasksHandler : function(e){
+      listTasks : function(e){
         e.preventDefault();
         App.trigger('task:list');
       }

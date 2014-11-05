@@ -4,7 +4,15 @@ define(function(){
 
     var tasks;
 
-    Models.TaskModel = Backbone.Model.extend({});
+    Models.TaskModel = Backbone.Model.extend({
+
+      defaults: {
+        subject : '',
+        description: '',
+        priority: 'normal'
+      }
+
+    });
 
     Models.TaskCollection = Backbone.Collection.extend({
       model: Models.TaskModel

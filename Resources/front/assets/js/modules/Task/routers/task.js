@@ -4,8 +4,8 @@ define(function(){
     Routers = Marionette.AppRouter.extend({
       appRoutes: {
         "tasks" : "listTasks",
-        "tasks/:id" : "viewTask",
-        "tasks/create" : "createTask"
+        "tasks/create" : "createTask",
+        "tasks/:id" : "viewTask"
       }
     });
 
@@ -21,7 +21,9 @@ define(function(){
         });
       },
       createTask: function(){
-        console.log('Create');
+        require(['modules/Task/controllers/create'], function(){
+          App.Task.Create.Controller.createTask();
+        });
       }
     };
 

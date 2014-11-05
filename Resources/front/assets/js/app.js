@@ -11,7 +11,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-define(['marionette','backbone'], function(Marionette, Backbone) {
+define(['marionette','backbone','bootstrap'], function(Marionette, Backbone) {
 
   window.App = new Marionette.Application({
     regions : {
