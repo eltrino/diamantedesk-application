@@ -165,13 +165,17 @@ datagrid:
                             property: name
                 assigneeFullName:
                     type:      string
-                    data_name: assignee
+                    data_name: assigneeFullName
                 reporterFullName:
                     type:      string
-                    data_name: reporter
+                    data_name: reporterFullName
                 priority:
-                    type:      string
+                    type:      choice
                     data_name: i.priority
+                    options:
+                      field_options:
+                        multiple: true
+                        choices: @diamante.ticket.datagrid_priority_helper->getTicketPriorities
                 status:
                     type: choice
                     data_name: i.status
