@@ -1,0 +1,3 @@
+bundles:
+    - Diamante\ApiBundle\DiamanteApiBundle
+
