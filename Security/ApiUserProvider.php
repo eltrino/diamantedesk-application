@@ -40,7 +40,6 @@ class ApiUserProvider implements UserProviderInterface
      */
     public function refreshUser(SecurityUserInterface $user)
     {
-        $t = 1;
         if (!$user instanceof ApiUser) {
             throw new UnsupportedUserException(
                 sprintf('Instances of "%s" are not supported.', get_class($user))
@@ -55,7 +54,6 @@ class ApiUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        $t = 1;
         return $class === 'Diamante\ApiBundle\Model\ApiUser\ApiUser';
     }
 }
