@@ -13,12 +13,18 @@ define([
       template: taskViewTemplate,
 
       events : {
-        "click .js-task-list" : "listTasks"
+        "click .js-task-list" : "listTasks",
+        "click .js-edit-ticket" : "editTicket"
       },
 
       listTasks : function(e){
         e.preventDefault();
         App.trigger('task:list');
+      },
+
+      editTicket : function(e){
+        e.preventDefault();
+        this.trigger('task:edit', this.model);
       }
     });
 

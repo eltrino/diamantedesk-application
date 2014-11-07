@@ -22,7 +22,6 @@ define([
     List.CompositeView = Marionette.CompositeView.extend({
       tagName: "table",
       template: listTemplate,
-      id: "task-list",
       className: "table table-hover table-bordered",
       childViewContainer: "tbody",
       childView: List.ItemView

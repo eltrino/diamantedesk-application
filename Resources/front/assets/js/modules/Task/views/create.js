@@ -14,6 +14,7 @@ define(['tpl!modules/Task/templates/create.ejs'], function(createTemplate){
       beforeShowModal: function(){
         $('body').addClass('blured');
       },
+
       hideModal: function(){
         $('body').removeClass('blured');
         this.trigger('modal:closed');

@@ -2,27 +2,27 @@ define(function(){
 
   App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 
-    List.Controller = {
+    List.TaskController = function(){
 
-      listTasks: function(){
-        require(['modules/Task/models/task', 'modules/Task/views/list'], function(){
-          var fetching = App.request("task:collection");
+      require(['modules/Task/models/task', 'modules/Task/views/list'], function(){
 
-          $.when(fetching).done(function(collection){
-            var taskListView = new List.CompositeView({
-              collection: collection
-            });
+        var fetching = App.request("task:collection");
 
-            taskListView.on("childview:task:view", function(childView, model){
-              App.trigger('task:view', model.get('id'));
-            });
+        $.when(fetching).done(function(collection){
 
-            App.MainRegion.show(taskListView);
+          var taskListView = new List.CompositeView({
+            collection: collection
+          });
 
-          })
+          taskListView.on("childview:task:view", function(childView, model){
+            App.trigger('task:view', model.get('id'));
+          });
 
-        });
-      }
+          App.MainRegion.show(taskListView);
+
+        })
+
+      });
 
     }
 
