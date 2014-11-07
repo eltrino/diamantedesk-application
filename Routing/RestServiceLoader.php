@@ -37,18 +37,14 @@ class RestServiceLoader extends Loader
         $class = get_class($service);
 
         $reflection = new \ReflectionClass($class);
-        foreach ($reflection->getMethods() as $reflectionMethod) {
+        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
             if (preg_match(
                 '/@api\s\{(get|post|put|delete)\}\s([^\s]+)\s.*/',
                 $reflectionMethod->getDocComment(),
                 $matches
             )
             ) {
-                if ($matches[1] == 'ANY') {
-                    $methods = [];
-                } else {
-                    $methods = [$matches[1]];
-                }
+                $methods = [$matches[1]];
 
                 $defaults = [
                     '_controller' => 'DiamanteApiBundle:Index:index',
