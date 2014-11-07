@@ -19,13 +19,26 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="diamante.api.user.entity.class">Diamante\ApiBundle\Entity\ApiUser</parameter>
         <parameter key="diamante.api.routing.rest_service_loader.class">Diamante\ApiBundle\Routing\RestServiceLoader</parameter>
+        <parameter key="diamante.api.user.security.provider.class">Diamante\ApiBundle\Security\ApiUserProvider</parameter>
+        <parameter key="diamante.api.user.repository.class">Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository</parameter>
     </parameters>
 
     <services>
         <service id="diamante.api.routing.rest_service_loader" class="%diamante.api.routing.rest_service_loader.class%">
             <argument type="service" id="service_container"/>
             <tag name="routing.loader" />
+        </service>
+
+        <service id="diamante.api.user.security.provider" class="%diamante.api.user.security.provider.class%">
+            <argument type="service" id="diamante.api.user.repository" />
+        </service>
+
+        <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.api.user.entity.class%</argument>
         </service>
     </services>
 </container>
