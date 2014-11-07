@@ -36,8 +36,12 @@ class DefaultBranchPlaceholder
      * @param Branch $branch
      * @return bool
      */
-    public function isDefault(Branch $branch)
+    public function isDefault($branch)
     {
+        if (!$branch instanceof Branch) {
+            return false;
+        }
+
         $defaultBranchId = $this->systemSettings->getDefaultBranchId();
 
         if (!$defaultBranchId || is_null($branch->getId())) {
