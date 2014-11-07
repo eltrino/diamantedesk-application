@@ -3,7 +3,11 @@ diamante_desk_bundle:
     type:         annotation
     prefix:       /desk
 
-diamante_desk_api_bundle:
-    resource:     "@DiamanteDeskBundle/Controller/ApiController.php"
-    type:         annotation
-    prefix:       /api/rest/latest
+diamante_desk_api_branch:
+    resource:     diamante.branch.service
+    type:         rest_service
+    prefix:       /api/rest/{version}/desk/
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest
