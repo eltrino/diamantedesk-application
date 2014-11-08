@@ -167,6 +167,7 @@ diamante:
           default_assignee:    Default Assignee
           logoFile:            Logo
           tags:                Tags
+          key:                 Key
 
         attributes:
           name:                Name
@@ -177,3 +178,4 @@ diamante:
           source:              Source
           reporter:            Reporter
           assignee:            Assignee
+          key:                 Key

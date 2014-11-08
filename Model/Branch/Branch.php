@@ -21,6 +21,8 @@ use Oro\Bundle\UserBundle\Entity\User;
 
 class Branch implements Entity, Taggable
 {
+    const TICKET_COUNTER_START_VALUE = 0;
+
     /**
      * @var integer
      */
@@ -35,6 +37,17 @@ class Branch implements Entity, Taggable
      * @var string
      */
     protected $description;
+
+    /**
+     * Branch key. Immutable value - generated only once when new Branch created
+     * @var string
+     */
+    protected $key;
+
+    /**
+     * @var int
+     */
+    protected $ticketCounter;
 
     /**
      * @var User
@@ -65,11 +78,30 @@ class Branch implements Entity, Taggable
     {
         $this->name = $name;
         $this->description = $description;
+        $this->ticketCounter = self::TICKET_COUNTER_START_VALUE;
         $this->defaultAssignee = $defaultAssignee;
         $this->logo = $logo;
         $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
+
+        $this->generateKey();
+    }
+
+    /**
+     * Generate Branch key from its name if Branch is new.
+     * @return void
+     */
+    private function generateKey()
+    {
+        if (is_null($this->id) && is_null($this->key)) {
+            $key = '';
+            $parts = explode(' ', $this->name);
+            foreach ($parts as $part) {
+                $key .= strtoupper(substr($part, 0, 1));
+            }
+            $this->key = $key;
+        }
     }
 
     /**
@@ -94,6 +126,22 @@ class Branch implements Entity, Taggable
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTicketCounter()
+    {
+        return $this->ticketCounter;
     }
 
     /**

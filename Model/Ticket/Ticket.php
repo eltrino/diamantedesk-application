@@ -41,6 +41,16 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $id;
 
     /**
+     * @var int
+     */
+    protected $number;
+
+    /**
+     * @var TicketKey
+     */
+    protected $key;
+
+    /**
      * @var string
      */
     protected $subject;
@@ -101,16 +111,17 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $updatedAt;
 
     /**
+     * @param TicketNumberSequence $numberSequence
      * @param $subject
      * @param $description
-     * @param $branch
-     * @param $reporter
-     * @param $assignee
+     * @param Branch $branch
+     * @param User $reporter
+     * @param User $assignee
      * @param $source
      * @param null $priority
      * @param null $status
      */
-    public function __construct($subject, $description, $branch, $reporter, $assignee, $source, $priority = null, $status = null)
+    public function __construct($subject, $description, Branch $branch, User $reporter, User $assignee, $source, $priority = null, $status = null)
     {
         if (null == $priority) {
             $priority = Priority::PRIORITY_MEDIUM;
@@ -151,6 +162,34 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
+    /**
+     * @return TicketKey
+     */
+    public function getKey()
+    {
+        $this->initializeKey();
+        return $this->key;
+    }
+
+    /**
+     * Initialize TicketKey
+     * @return void
+     */
+    private function initializeKey()
+    {
+        if ($this->number && is_null($this->key)) {
+            $this->key = new TicketKey($this->branch->getKey(), $this->getNumber());
+        }
     }
 
     /**

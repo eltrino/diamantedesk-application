@@ -38,6 +38,7 @@ use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_TICKET_ID     = 1;
+    const DUMMY_TICKET_KEY    = 'DT-1';
     const DUMMY_ATTACHMENT_ID = 1;
     const DUMMY_TICKET_SUBJECT      = 'Subject';
     const DUMMY_TICKET_DESCRIPTION  = 'Description';
@@ -51,8 +52,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\Repository
-     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketRepository
      */
     private $ticketRepository;
 
@@ -118,6 +119,33 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher,
             $this->processManager
         );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testLoadTicketByKeyThrowsExceptionIfTicketDoesNotExist()
+    {
+        $key = 'TK-1';
+
+        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')
+            ->with('TK', 1)
+            ->will($this->returnValue(null));
+
+        $this->ticketService->loadTicketByKey($key);
+    }
+
+    public function testLoadTicketByKey()
+    {
+        $key = 'TK-1';
+        $ticket = $this->ticket;
+
+        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')
+            ->with('TK', 1)
+            ->will($this->returnValue($ticket));
+
+        $this->ticketService->loadTicketByKey($key);
     }
 
     /**
@@ -906,7 +934,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->any())->method('getAttachments')
             ->will($this->returnValue(array($this->attachment())));
 
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')->with('DT', 1)
             ->will($this->returnValue($this->ticket));
 
         $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
@@ -926,7 +954,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getRecordedEvents')
             ->will($this->returnValue(array()));
 
-        $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+        $this->ticketService->deleteTicket(self::DUMMY_TICKET_KEY);
     }
 
     /**
@@ -935,9 +963,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteTicketWhenTicketDoesNotExist()
     {
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')->with('DT', 1)
             ->will($this->returnValue(null));
 
-        $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+        $this->ticketService->deleteTicket(self::DUMMY_TICKET_KEY);
     }
 }

@@ -77,16 +77,18 @@ class BranchControllerTest extends WebTestCase
 
     public function testView()
     {
-        $branch          = $this->chooseBranchFromGrid();
+        $branch        = $this->chooseBranchFromGrid();
         $branchViewUrl = $this->getUrl('diamante_branch_view', array('id' => $branch['id']));
-        $crawler        = $this->client->request('GET', $branchViewUrl);
-        $response       = $this->client->getResponse();
+        $crawler       = $this->client->request('GET', $branchViewUrl);
+        $response      = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'text/html; charset=UTF-8'));
         $this->assertTrue($crawler->filter('html:contains("Branch Details")')->count() >= 1);
 
         $this->assertTrue($crawler->filter('html:contains("Tickets")')->count() == 1);
+
+        $this->assertTrue($crawler->filter('html:contains("Key")')->count() == 1);
     }
 
     public function testUpdate()

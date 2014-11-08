@@ -21,6 +21,7 @@
     <parameters>
         <parameter key="diamante.ticket.entity.class">Diamante\DeskBundle\Entity\Ticket</parameter>
         <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
+        <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
         <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
         <parameter key="diamante.comment.entity.factory.class">Diamante\DeskBundle\Model\Ticket\CommentFactory</parameter>
         <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
@@ -157,7 +158,7 @@
             <tag name="form.type" alias="diamante_assignee_select"/>
         </service>
 <!-- repositories start -->
-        <service id="diamante.ticket.repository" class="%diamante.generic.repository.class%"
+        <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">
             <argument type="string">%diamante.ticket.entity.class%</argument>

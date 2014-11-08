@@ -20,7 +20,7 @@ use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository")
  * @ORM\Table(name="diamante_ticket")
  * @Config(
  *      defaultValues={
@@ -46,6 +46,13 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true, options={"default":0})
+     */
+    protected $number;
 
     /**
      * @var string

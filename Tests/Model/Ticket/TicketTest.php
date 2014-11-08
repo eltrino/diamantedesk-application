@@ -26,7 +26,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     const TICKET_SUBJECT      = 'Subject';
     const TICKET_DESCRIPTION  = 'Description';
 
-    public function testCreateWhenStatusIsNotNull()
+    public function testCreates()
     {
         $branch = $this->createBranch();
         $reporter = $this->createReporter();
@@ -49,11 +49,19 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($reporter, $ticket->getReporter());
         $this->assertEquals($assignee, $ticket->getAssignee());
         $this->assertEquals(Source::PHONE, $ticket->getSource()->getValue());
+
+        $this->assertNull($ticket->getNumber());
+        $this->assertNull($ticket->getKey());
+    }
+
+    public function testTicketKeyInitialization()
+    {
+        $this->markTestIncomplete('Need to be done');
     }
 
     public function testCreateWhenStatusIsNull()
     {
-        $branch = $this->createBranch();
+        $branch = new Branch('DUMMY NAME', 'DUMYY_DESC');
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
