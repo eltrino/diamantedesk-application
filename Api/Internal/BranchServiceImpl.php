@@ -185,6 +185,9 @@ class BranchServiceImpl implements BranchService
          * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
          */
         $branch = $this->branchRepository->get($command->id);
+        if (is_null($branch)) {
+            throw new \RuntimeException('Branch loading failed, branch not found. ');
+        }
 
         foreach ($command->properties as $name => $value) {
             $branch->updateProperty($name, $value);
