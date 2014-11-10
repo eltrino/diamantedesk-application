@@ -141,15 +141,6 @@ class CommentController extends Controller
             $this->handle($form);
             $callback($command);
 
-            $newStatus = $form->get('ticketStatus')->getData();
-
-            if (false === ($newStatus == $ticket->getStatus()->getValue())) {
-                $ticketCommand = new UpdateStatusCommand();
-                $ticketCommand->ticketId = $command->ticket;
-                $ticketCommand->status = $newStatus;
-                $this->get('diamante.ticket.service')->updateStatus($ticketCommand);
-            }
-
             if ($command->id) {
                 $this->addSuccessMessage('diamante.desk.comment.messages.save.success');
             } else {

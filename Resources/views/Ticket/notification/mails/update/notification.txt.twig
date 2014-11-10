@@ -1,0 +1,15 @@
+{{ header }} by {{ user }}
+
+{% for key, value in changes %}
+   - {{ key }}: {{ value }}
+{% endfor %}
+
+{% if attachments %}
+    Attachments:
+    {% for key, value in attachments %}
+        - {{ value }}
+    {% endfor %}
+{% endif %}
+
+- DiamanteDesk
+

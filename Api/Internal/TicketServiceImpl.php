@@ -12,18 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
+use Diamante\DeskBundle\EventListener\Mail\TicketProcessManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
-use Diamante\DeskBundle\Model\Ticket\AttachmentService;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -31,6 +31,7 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class TicketServiceImpl implements TicketService
 {
@@ -45,9 +46,9 @@ class TicketServiceImpl implements TicketService
     private $branchRepository;
 
     /**
-     * @var AttachmentService
+     * @var AttachmentManager
      */
-    private $attachmentService;
+    private $attachmentManager;
 
     /**
      * @var TicketFactory
@@ -64,19 +65,33 @@ class TicketServiceImpl implements TicketService
      */
     private $securityFacade;
 
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @var TicketProcessManager
+     */
+    private $processManager;
+
     public function __construct(Repository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketFactory $ticketFactory,
-                                AttachmentService $attachmentService,
+                                AttachmentManager $attachmentManager,
                                 UserService $userService,
-                                SecurityFacade $securityFacade
+                                SecurityFacade $securityFacade,
+                                EventDispatcher $dispatcher,
+                                TicketProcessManager $processManager
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
         $this->ticketFactory = $ticketFactory;
         $this->userService = $userService;
-        $this->attachmentService = $attachmentService;
+        $this->attachmentManager = $attachmentManager;
         $this->securityFacade = $securityFacade;
+        $this->dispatcher = $dispatcher;
+        $this->processManager = $processManager;
     }
 
     /**
@@ -128,12 +143,22 @@ class TicketServiceImpl implements TicketService
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
+        \Assert\that($command->attachments)->nullOr()->all()
+            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+
         $ticket = $this->loadTicketBy($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
-        $this->attachmentService->createAttachmentsForItHolder($command->attachments, $ticket);
+        if (is_array($command->attachments) && false === empty($command->attachments)) {
+            foreach ($command->attachments as $each) {
+                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
+            }
+        }
+
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchEvents($ticket);
     }
 
     /**
@@ -152,9 +177,11 @@ class TicketServiceImpl implements TicketService
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
         }
-        $this->attachmentService->removeAttachmentFromItHolder($attachment);
+        $this->attachmentManager->deleteAttachment($attachment);
         $ticket->removeAttachment($attachment);
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchEvents($ticket);
     }
 
     /**
@@ -196,10 +223,13 @@ class TicketServiceImpl implements TicketService
             );
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
-            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $ticket);
+            foreach ($command->attachmentsInput as $each) {
+                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
+            }
         }
 
         $this->ticketRepository->store($ticket);
+        $this->dispatchEvents($ticket);
 
         return $ticket;
     }
@@ -248,10 +278,13 @@ class TicketServiceImpl implements TicketService
         }
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
-            $this->attachmentService->createAttachmentsForItHolder($command->attachmentsInput, $ticket);
+            foreach ($command->attachmentsInput as $each) {
+                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
+            }
         }
 
         $this->ticketRepository->store($ticket);
+        $this->dispatchEvents($ticket);
 
         return $ticket;
     }
@@ -269,6 +302,8 @@ class TicketServiceImpl implements TicketService
 
         $ticket->updateStatus($command->status);
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchEvents($ticket);
 
         return $ticket;
     }
@@ -295,6 +330,8 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchEvents($ticket);
     }
 
     /**
@@ -306,10 +343,14 @@ class TicketServiceImpl implements TicketService
     public function deleteTicket($ticketId)
     {
         $ticket = $this->loadTicketBy($ticketId);
-
         $this->isGranted('DELETE', $ticket);
-
+        $attachments = $ticket->getAttachments();
+        $ticket->delete();
         $this->ticketRepository->remove($ticket);
+        foreach ($attachments as $attachment) {
+            $this->attachmentManager->deleteAttachment($attachment);
+        }
+        $this->dispatchEvents($ticket);
     }
 
     /**
@@ -336,6 +377,22 @@ class TicketServiceImpl implements TicketService
     {
         if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $this->securityFacade->getLoggedUserId()) {
             $this->isGranted('EDIT', $entity);
+        }
+    }
+
+    /**
+     * Dispatches events
+     *
+     * @param Ticket $ticket
+     */
+    private function dispatchEvents(Ticket $ticket)
+    {
+        foreach ($ticket->getRecordedEvents() as $event) {
+            $this->dispatcher->dispatch($event->getEventName(), $event);
+        }
+
+        if (count($this->processManager->getEventsHistory())) {
+            $this->processManager->process();
         }
     }
 }

@@ -16,8 +16,6 @@ namespace Diamante\DeskBundle\Model\Ticket;
 
 class Priority
 {
-    //const DEFAULT_PRIORITY = 'medium';
-
     const PRIORITY_LOW = 'low';
     const PRIORITY_MEDIUM = 'medium';
     const PRIORITY_HIGH = 'high';
@@ -32,9 +30,9 @@ class Priority
 
     public function __construct($priority = null)
     {
-//        if (is_null($priority)) {
-//            $priority = self::DEFAULT_PRIORITY;
-//        }
+        if (is_null($priority)) {
+            $priority = self::PRIORITY_MEDIUM;
+        }
 
         static::initValueLabelsMap();
 

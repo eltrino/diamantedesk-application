@@ -17,11 +17,21 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToTicket;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasDeletedFromTicket;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasAddedToTicket;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketAssigneeWasChanged;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketStatusWasChanged;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Ticket implements Entity, AttachmentHolder
+class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
@@ -102,10 +112,6 @@ class Ticket implements Entity, AttachmentHolder
      */
     public function __construct($subject, $description, $branch, $reporter, $assignee, $source, $priority = null, $status = null)
     {
-        $this->subject = $subject;
-        $this->description = $description;
-        $this->branch = $branch;
-
         if (null == $priority) {
             $priority = Priority::PRIORITY_MEDIUM;
         }
@@ -118,15 +124,25 @@ class Ticket implements Entity, AttachmentHolder
             $status = Source::PHONE;
         }
 
-        $this->status = new Status($status);
-        $this->priority = new Priority($priority);
+        $priority = new Priority($priority);
+        $status   = new Status($status);
+        $source   = new Source($source);
+
+        $this->subject = $subject;
+        $this->description = $description;
+        $this->branch = $branch;
+        $this->status = $status;
+        $this->priority = $priority;
         $this->reporter = $reporter;
         $this->assignee = $assignee;
         $this->comments  = new ArrayCollection();
         $this->attachments = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
-        $this->source = new Source($source);
+        $this->source = $source;
+
+        $this->raise(new TicketWasCreated($this->id, $branch->getName(), $subject, $description,
+            $reporter->getEmail(), $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
     }
 
     /**
@@ -233,6 +249,8 @@ class Ticket implements Entity, AttachmentHolder
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
+        $this->raise(new CommentWasAddedToTicket($this->id, $this->subject, $this->getRecipientsList(),
+            $comment->getContent()));
     }
 
     /** LEGACY CODE START */
@@ -247,12 +265,43 @@ class Ticket implements Entity, AttachmentHolder
      */
     public function update($subject, $description, User $reporter, $priority, $status, $source)
     {
-        $this->subject = $subject;
+        $priority = new Priority($priority);
+        $status   = new Status($status);
+        $source   = new Source($source);
+
+        if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter
+            || $this->priority->getValue() !== $priority->getValue() || $this->status->getValue() !== $status->getValue()
+            || $this->source->getValue() !== $source->getValue()) {
+
+            $this->raise(new TicketWasUpdated($this->id, $subject, $description, $reporter->getEmail(),
+                $priority, $status, $source, $this->getRecipientsList()));
+        }
+
+        $this->subject     = $subject;
         $this->description = $description;
-        $this->reporter = $reporter;
-        $this->status = new Status($status);
-        $this->priority = new Priority($priority);
-        $this->source = new Source($source);
+        $this->reporter    = $reporter;
+        $this->status      = $status;
+        $this->priority    = $priority;
+        $this->source      = $source;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRecipientsList()
+    {
+        if ($this->getAssignee()) {
+            $recipientsList = array(
+                $this->getReporter()->getEmail(),
+                $this->getAssignee()->getEmail(),
+            );
+        } else {
+            $recipientsList = array(
+                $this->getReporter()->getEmail()
+            );
+        }
+
+        return $recipientsList;
     }
 
     /**
@@ -260,7 +309,14 @@ class Ticket implements Entity, AttachmentHolder
      */
     public function updateStatus($status)
     {
-        $this->status = new Status($status);
+        $status = new Status($status);
+
+        if ($this->status->getValue() !== $status->getValue()) {
+            $this->raise(new TicketStatusWasChanged($this->id, $this->subject,
+                $status, $this->getRecipientsList()));
+        }
+
+        $this->status = $status;
     }
 
     /**
@@ -270,12 +326,15 @@ class Ticket implements Entity, AttachmentHolder
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
             $this->assignee = $newAssignee;
+            $this->raise(new TicketAssigneeWasChanged($this->id, $this->subject, $newAssignee->getEmail(),
+                $this->getRecipientsList()));
         }
     }
 
     public function unassign()
     {
         $this->assignee = null;
+        $this->raise(new TicketWasUnassigned($this->id, $this->subject, $this->getRecipientsList()));
     }
 
     /** LEGACY CODE END */
@@ -289,14 +348,24 @@ class Ticket implements Entity, AttachmentHolder
         return $this->comments;
     }
 
+    /**
+     * @param Attachment $attachment
+     */
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
+        $this->raise(new AttachmentWasAddedToTicket($this->id, $this->subject, $attachment->getFilename(),
+            $this->getRecipientsList()));
     }
 
+    /**
+     * @param Attachment $attachment
+     */
     public function removeAttachment(Attachment $attachment)
     {
         $this->attachments->remove($attachment->getId());
+        $this->raise(new AttachmentWasDeletedFromTicket($this->id, $this->subject, $attachment->getFilename(),
+            $this->getRecipientsList()));
     }
 
     /**
@@ -338,5 +407,10 @@ class Ticket implements Entity, AttachmentHolder
     public function getSource()
     {
         return $this->source;
+    }
+
+    public function delete()
+    {
+        $this->raise(new TicketWasDeleted($this->id, $this->subject, $this->getRecipientsList()));
     }
 }

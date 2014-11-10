@@ -18,10 +18,14 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToComment;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 
-class Comment implements Entity, AttachmentHolder
+class Comment extends DomainEventProvider implements Entity, AttachmentHolder
 {
     /**
      * @var integer
@@ -123,6 +127,10 @@ class Comment implements Entity, AttachmentHolder
      */
     public function updateContent($content)
     {
+        if ($this->content !== $content) {
+            $this->raise(new CommentWasUpdated($this->ticket->getId(), $this->ticket->getSubject(),
+                $this->ticket->getRecipientsList(), $content));
+        }
         $this->content = $content;
     }
 
@@ -133,6 +141,8 @@ class Comment implements Entity, AttachmentHolder
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
+        $this->raise(new AttachmentWasAddedToComment($this->ticket->getId(), $this->ticket->getSubject(),
+            $this->ticket->getRecipientsList(), $this->content, $attachment->getFilename()));
     }
 
     public function getAttachments()
@@ -159,5 +169,11 @@ class Comment implements Entity, AttachmentHolder
     public function removeAttachment(Attachment $attachment)
     {
         $this->attachments->remove($attachment->getId());
+    }
+
+    public function delete()
+    {
+        $this->raise(new CommentWasDeleted($this->ticket->getId(), $this->ticket->getSubject(),
+            $this->ticket->getRecipientsList(), $this->content));
     }
 }

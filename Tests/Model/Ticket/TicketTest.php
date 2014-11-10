@@ -38,7 +38,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee,
             Source::PHONE,
-            Priority::PRIORITY_MEDIUM,
+            Priority::PRIORITY_LOW,
             Status::OPEN
         );
 
@@ -63,7 +63,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $reporter,
             $assignee,
             Source::PHONE,
-            Priority::PRIORITY_MEDIUM,
+            Priority::PRIORITY_LOW,
             Status::NEW_ONE
         );
 
@@ -84,7 +84,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $ticket->update('New Subject',
             'New Description',
             $newReporter,
-            Priority::PRIORITY_MEDIUM,
+            Priority::PRIORITY_LOW,
             Status::CLOSED,
             Source::PHONE
         );
@@ -116,7 +116,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createReporter(),
             $this->createAssignee(),
             Source::PHONE,
-            Priority::PRIORITY_MEDIUM,
+            Priority::PRIORITY_LOW,
             Status::OPEN
         );
 
