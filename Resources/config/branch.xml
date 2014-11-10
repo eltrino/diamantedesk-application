@@ -27,6 +27,7 @@
         <parameter key="diamante.branch_email_configuration.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository</parameter>
         <parameter key="diamante.branch_email_configuration.entity.factory.class">Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory</parameter>
         <parameter key="diamante.branch_email_configuration.service.class">Diamante\DeskBundle\Api\Internal\BranchEmailConfigurationServiceImpl</parameter>
+        <parameter key="diamante.branch.placeholder.class">Diamante\DeskBundle\Placeholder\DefaultBranchPlaceholder</parameter>
     </parameters>
 
     <services>
@@ -62,6 +63,10 @@
             <argument type="string">branch</argument>
             <argument type="constant">false</argument>
             <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-branch-tickets-grid" method="onBuildAfter"/>
+        </service>
+
+        <service id="diamante.branch.placeholder" class="%diamante.branch.placeholder.class%">
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
         </service>
 <!-- repositories start -->
         <service id="diamante.branch.repository" class="%diamante.generic.repository.class%"
