@@ -47,10 +47,9 @@ class RestServiceLoader extends Loader
                 $methods = [$matches[1]];
 
                 $defaults = [
-                    '_controller' => 'DiamanteApiBundle:Index:index',
+                    '_controller' => $resource . ':' . $reflectionMethod->getName(),
                     '_format' => 'json',
-                    '_service_id' => $resource,
-                    '_service_method' => $reflectionMethod->getName()
+                    '_diamante_api' => true
                 ];
 
                 $requirements = [

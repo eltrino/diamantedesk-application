@@ -1,4 +1,17 @@
 <?php
+/*
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ *
+ * Licensed under the Open Software License (OSL 3.0).
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://opensource.org/licenses/osl-3.0.php
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@eltrino.com so we can send you a copy immediately.
+ */
 
 namespace Diamante\ApiBundle\Tests;
 
@@ -16,9 +29,8 @@ class RestServiceLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, $collection->count());
 
         $this->assertEquals('GET', $collection->get('fixture_service_get_entity')->getRequirement('_method'));
-        $this->assertEquals('fixture.service', $collection->get('fixture_service_get_entity')->getDefault('_service_id'));
-        $this->assertEquals('getEntity', $collection->get('fixture_service_get_entity')->getDefault('_service_method'));
-        $this->assertEquals('DiamanteApiBundle:Index:index', $collection->get('fixture_service_get_entity')->getDefault('_controller'));
+        $this->assertEquals('fixture.service:getEntity', $collection->get('fixture_service_get_entity')->getDefault('_controller'));
+        $this->assertTrue($collection->get('fixture_service_get_entity')->getDefault('_diamante_api'));
 
         $this->assertEquals('PUT', $collection->get('fixture_service_put_entity')->getRequirement('_method'));
         $this->assertEquals('POST', $collection->get('fixture_service_post_entity')->getRequirement('_method'));
