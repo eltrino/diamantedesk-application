@@ -15,35 +15,54 @@
 
 namespace Diamante\ApiBundle\Tests\Fixtures;
 
+use Diamante\ApiBundle\Annotation\ApiDoc;
+
 class Service
 {
     /**
-     * @api {get} /resources
+     * @ApiDoc(
+     *  uri="/entities",
+     *  method="GET"
+     * )
      */
     private function getList(){}
 
     /**
-     * @api {get} /resources/{id}
+     * @ApiDoc(
+     *  uri="/entities/{id}.{_format}",
+     *  method="GET"
+     * )
      */
     public function getEntity(){}
 
     /**
-     * @api {put} /resources/{id}
+     * @ApiDoc(
+     *  uri="/entities/{id}.{_format}",
+     *  method="PUT"
+     * )
      */
     public function putEntity(){}
 
     /**
-     * @api {post} /resources
+     * @ApiDoc(
+     *  uri="/entities.{_format}",
+     *  method="POST"
+     * )
      */
     public function postEntity(){}
 
     /**
-     * @api {delete} /resources/{id}
+     * @ApiDoc(
+     *  uri="/entities/{id}.{_format}",
+     *  method="DELETE"
+     * )
      */
     public function deleteEntity(){}
 
     /**
-     * @api {get} /resources/{id}/subresources
+     * @ApiDoc(
+     *  uri="/entities/{id}/parts.{_format}"
+     * )
      */
-    public function getSubEntity(){}
+    public function getParts(){}
 }

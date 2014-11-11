@@ -23,7 +23,8 @@
     ],
     "require": {
         "php": ">=5.4.4",
-        "oro/platform": "1.2.*"
+        "oro/platform": "1.2.*",
+        "nelmio/api-doc-bundle": "*"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"

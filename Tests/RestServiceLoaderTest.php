@@ -17,14 +17,41 @@ namespace Diamante\ApiBundle\Tests;
 
 use Diamante\ApiBundle\Routing\RestServiceLoader;
 use Diamante\ApiBundle\Tests\Fixtures\Service;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class RestServiceLoaderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @Mock \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var \Doctrine\Common\Annotations\AnnotationReader
+     */
+    private $reader;
+
+    /** @var  \Diamante\ApiBundle\Routing\RestServiceLoader */
+    private $loader;
+
+    protected function setUp()
+    {
+        // force loading for annotation
+        class_exists('Diamante\ApiBundle\Annotation\ApiDoc');
+
+        MockAnnotations::init($this);
+        $this->reader = new AnnotationReader();
+        $this->loader = new RestServiceLoader($this->container, $this->reader);
+    }
+
     public function testAnnotatedMethods()
     {
+        $this->container->expects($this->once())->method('get')->with($this->equalTo('fixture.service'))
+            ->will($this->returnValue(new Service()));
 
-        $loader = $this->getLoader();
-        $collection = $loader->load('fixture.service', 'rest_service');
+        $collection = $this->loader->load('fixture.service', 'rest_service');
 
         $this->assertEquals(5, $collection->count());
 
@@ -35,18 +62,6 @@ class RestServiceLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('PUT', $collection->get('fixture_service_put_entity')->getRequirement('_method'));
         $this->assertEquals('POST', $collection->get('fixture_service_post_entity')->getRequirement('_method'));
         $this->assertEquals('DELETE', $collection->get('fixture_service_delete_entity')->getRequirement('_method'));
-        $this->assertEquals('GET', $collection->get('fixture_service_get_sub_entity')->getRequirement('_method'));
-    }
-
-    private function getLoader()
-    {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $container->expects($this->once())->method('get')->with($this->equalTo('fixture.service'))
-            ->will($this->returnValue(new Service()));
-
-        return new RestServiceLoader($container);
+        $this->assertEquals('ANY', $collection->get('fixture_service_get_parts')->getRequirement('_method'));
     }
 }

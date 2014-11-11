@@ -34,6 +34,7 @@ class HandleException
     {
         $request = $event->getRequest();
 
+        // @todo change to interface
         if (!$request->attributes->has('_diamante_api')) {
             return;
         }

@@ -19,14 +19,18 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Doctrine\Common\Annotations\Reader;
+use Diamante\ApiBundle\Annotation\ApiDoc;
 
 class RestServiceLoader extends Loader
 {
     private $container;
+    private $reader;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Reader $reader)
     {
         $this->container = $container;
+        $this->reader = $reader;
     }
 
     public function load($resource, $type = null)
@@ -38,27 +42,18 @@ class RestServiceLoader extends Loader
 
         $reflection = new \ReflectionClass($class);
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
-            if (preg_match(
-                '/@api\s\{(get|post|put|delete)\}\s([^\s]+)\s.*/',
-                $reflectionMethod->getDocComment(),
-                $matches
-            )
-            ) {
-                $methods = [$matches[1]];
+            $annotation = $this->reader->getMethodAnnotation($reflectionMethod, 'Diamante\\ApiBundle\\Annotation\\ApiDoc');
+            if ($annotation) {
+                $methods = [$annotation->getMethod()];
 
                 $defaults = [
                     '_controller' => $resource . ':' . $reflectionMethod->getName(),
-                    '_format' => 'json',
                     '_diamante_api' => true
-                ];
-
-                $requirements = [
-                    '_format' => 'json|xml'
                 ];
 
                 $collection->add(
                     $this->routeId($resource, $reflectionMethod->getName()),
-                    new Route($matches[2] . '.{_format}', $defaults, $requirements, [], '', [], $methods)
+                    new Route($annotation->getUri(), $defaults, [], [], '', [], $methods)
                 );
             }
         }
