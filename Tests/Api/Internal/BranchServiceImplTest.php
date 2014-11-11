@@ -16,10 +16,12 @@ namespace Diamante\DeskBundle\Tests\Api\Internal;
 
 use Diamante\DeskBundle\Api\Internal\BranchServiceImpl;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -79,6 +81,25 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
      */
     private $securityFacade;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @var \Doctrine\ORM\UnitOfWork
+     * @Mock \Doctrine\ORM\UnitOfWork
+     */
+    private $unitOfWork;
+
+
+    /**
+     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
+     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
+     */
+    private $entityPersister;
 
     protected function setUp()
     {
@@ -345,4 +366,108 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branchServiceImpl->deleteBranch(self::DUMMY_BRANCH_ID);
     }
+
+    /**
+     * @test
+     */
+    public function testBranchesFiltered()
+    {
+        $branches = array(new Branch('DUMMY_NAME_1', "DUMMY_DESC"), new Branch("DUMMY_NAME_2","DUMMY_DESC"));
+
+        $this->branchRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Branch'));
+
+        $this->em
+            ->expects($this->atLeastOnce())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($this->unitOfWork));
+
+        $this->unitOfWork
+            ->expects($this->atLeastOnce())
+            ->method('getEntityPersister')
+            ->with($this->equalTo('Diamante\DeskBundle\Entity\Branch'))
+            ->will($this->returnValue($this->entityPersister));
+
+        $this->entityPersister
+            ->expects($this->atLeastOnce())
+            ->method('loadAll')
+            ->will($this->returnValue($branches));
+
+        $this->branchServiceImpl = new BranchServiceImpl(
+            $this->branchFactory,
+            $this->branchRepository,
+            $this->branchLogoHandler,
+            $this->tagManager,
+            $this->securityFacade
+        );
+
+        $filtered = $this->branchServiceImpl->filterBranches($this->getCorrectFilteringParams());
+
+        $this->assertEquals(1, count($filtered));
+
+        $filteredBranch = $filtered[0];
+        $comparativeBranch = $branches[0];
+
+        $this->assertEquals($comparativeBranch, $filteredBranch);
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     * @expectedExceptionMessage Invalid filtering constraint 'nonExistentFilteringConstraint' used. Should be one of these: andX, orX, eq, neq, gt, gte, lt, lte, isNull, in, notIn, contains
+     */
+    public function testExceptionThrownIfUsingIncorrectFilteringConstraint()
+    {
+        $branches = array(new Branch('DUMMY_NAME_1', "DUMMY_DESC"), new Branch("DUMMY_NAME_2","DUMMY_DESC"));
+
+        $this->branchRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Branch'));
+
+        $this->em
+            ->expects($this->atLeastOnce())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($this->unitOfWork));
+
+        $this->unitOfWork
+            ->expects($this->atLeastOnce())
+            ->method('getEntityPersister')
+            ->with($this->equalTo('Diamante\DeskBundle\Entity\Branch'))
+            ->will($this->returnValue($this->entityPersister));
+
+        $this->entityPersister
+            ->expects($this->atLeastOnce())
+            ->method('loadAll')
+            ->will($this->returnValue($branches));
+
+        $this->branchServiceImpl = new BranchServiceImpl(
+            $this->branchFactory,
+            $this->branchRepository,
+            $this->branchLogoHandler,
+            $this->tagManager,
+            $this->securityFacade
+        );
+
+        $this->branchServiceImpl->filterBranches($this->getIncorrectFilteringParams());
+    }
+
+    protected function getCorrectFilteringParams()
+    {
+        return array(
+            array(
+                'name',
+                'eq',
+                'DUMMY_NAME_1'
+            )
+        );
+    }
+
+    protected function getIncorrectFilteringParams()
+    {
+        return array(
+            array(
+                'name',
+                'nonExistentFilteringConstraint',
+                'DUMMY_NAME_1'
+            )
+        );
+    }
+
 }

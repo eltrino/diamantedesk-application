@@ -35,6 +35,9 @@ use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
+
 class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_TICKET_ID     = 1;
@@ -103,6 +106,26 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      * @Mock \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
      */
     private $processManager;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @var \Doctrine\ORM\UnitOfWork
+     * @Mock \Doctrine\ORM\UnitOfWork
+     */
+    private $unitOfWork;
+
+
+    /**
+     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
+     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
+     */
+    private $entityPersister;
+
 
     protected function setUp()
     {
@@ -939,5 +962,156 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(null));
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function testTicketsFiltered()
+    {
+        $tickets = array(
+            $ticket = new Ticket(
+                "DUMMY_SUBJECT_1",
+                self::DUMMY_TICKET_DESCRIPTION,
+                $this->createBranch(),
+                $this->createReporter(),
+                $this->createAssignee(),
+                Source::PHONE,
+                Priority::PRIORITY_LOW,
+                Status::CLOSED
+            ),
+            $ticket = new Ticket(
+                "DUMMY_SUBJECT_2",
+                self::DUMMY_TICKET_DESCRIPTION,
+                $this->createBranch(),
+                $this->createReporter(),
+                $this->createAssignee(),
+                Source::PHONE,
+                Priority::PRIORITY_LOW,
+                Status::CLOSED
+            )
+        );
+
+        $this->ticketRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Ticket'));
+
+        $this->em
+            ->expects($this->atLeastOnce())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($this->unitOfWork));
+
+        $this->unitOfWork
+            ->expects($this->atLeastOnce())
+            ->method('getEntityPersister')
+            ->with($this->equalTo('Diamante\DeskBundle\Entity\Ticket'))
+            ->will($this->returnValue($this->entityPersister));
+
+        $this->entityPersister
+            ->expects($this->atLeastOnce())
+            ->method('loadAll')
+            ->will($this->returnValue($tickets));
+
+        $this->ticketService = new TicketServiceImpl(
+            $this->ticketRepository,
+            $this->branchRepository,
+            $this->ticketFactory,
+            $this->attachmentManager,
+            $this->userService,
+            $this->securityFacade,
+            $this->dispatcher,
+            $this->processManager
+        );
+
+        $filtered = $this->ticketService->filterTickets($this->getCorrectFilteringParams());
+
+        $this->assertEquals(1, count($filtered));
+
+        $filteredTicket = $filtered[0];
+        $comparativeTicket = $tickets[0];
+
+        $this->assertEquals($comparativeTicket, $filteredTicket);
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     * @expectedExceptionMessage Invalid filtering constraint 'nonExistentFilteringConstraint' used. Should be one of these: andX, orX, eq, neq, gt, gte, lt, lte, isNull, in, notIn, contains
+     */
+    public function testExceptionThrownIfUsingIncorrectFilteringConstraint()
+    {
+        $tickets = array(
+            $ticket = new Ticket(
+                "DUMMY_SUBJECT_1",
+                self::DUMMY_TICKET_DESCRIPTION,
+                $this->createBranch(),
+                $this->createReporter(),
+                $this->createAssignee(),
+                Source::PHONE,
+                Priority::PRIORITY_LOW,
+                Status::CLOSED
+            ),
+            $ticket = new Ticket(
+                "DUMMY_SUBJECT_2",
+                self::DUMMY_TICKET_DESCRIPTION,
+                $this->createBranch(),
+                $this->createReporter(),
+                $this->createAssignee(),
+                Source::PHONE,
+                Priority::PRIORITY_LOW,
+                Status::CLOSED
+            )
+        );
+
+        $this->ticketRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Ticket'));
+
+        $this->em
+            ->expects($this->atLeastOnce())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($this->unitOfWork));
+
+        $this->unitOfWork
+            ->expects($this->atLeastOnce())
+            ->method('getEntityPersister')
+            ->with($this->equalTo('Diamante\DeskBundle\Entity\Ticket'))
+            ->will($this->returnValue($this->entityPersister));
+
+        $this->entityPersister
+            ->expects($this->atLeastOnce())
+            ->method('loadAll')
+            ->will($this->returnValue($tickets));
+
+        $this->ticketService = new TicketServiceImpl(
+            $this->ticketRepository,
+            $this->branchRepository,
+            $this->ticketFactory,
+            $this->attachmentManager,
+            $this->userService,
+            $this->securityFacade,
+            $this->dispatcher,
+            $this->processManager
+        );
+
+        $this->ticketService->filterTickets($this->getIncorrectFilteringParams());
+    }
+
+    protected function getCorrectFilteringParams()
+    {
+        return array(
+            array(
+                'subject',
+                'eq',
+                'DUMMY_SUBJECT_1'
+            )
+        );
+    }
+
+    protected function getIncorrectFilteringParams()
+    {
+        return array(
+            array(
+                'subject',
+                'nonExistentFilteringConstraint',
+                'DUMMY_SUBJECT_1'
+            )
+        );
     }
 }
