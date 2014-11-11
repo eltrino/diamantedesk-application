@@ -198,9 +198,9 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Reporter loading failed, reporter not found.');
         }
 
-        $assignee = $this->userService->getUserById($command->assignee);
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee validation failed, assignee not found.');
+        $assignee = null;
+        if (!is_null($command->assignee)) {
+            $assignee = $this->userService->getUserById($command->assignee);
         }
 
         $ticket = $this->ticketFactory

@@ -141,8 +141,12 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
 
+        $assigneeEmail = null;
+        if(!is_null($assignee)) {
+            $assigneeEmail = $assignee->getEmail();
+        }
         $this->raise(new TicketWasCreated($this->id, $branch->getName(), $subject, $description,
-            $reporter->getEmail(), $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
+            $reporter->getEmail(), $assigneeEmail, $priority, $status, $source, $this->getRecipientsList()));
     }
 
     /**
