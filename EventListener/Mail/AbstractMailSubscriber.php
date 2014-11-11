@@ -109,6 +109,7 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
      */
     protected function sendMessage(array $options, array $templates)
     {
+        return ;
         $txtBody = $this->twig->render($templates['txt'],
             $options);
 

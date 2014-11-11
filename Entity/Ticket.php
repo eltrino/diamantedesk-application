@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Entity;
 
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -22,6 +23,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository")
  * @ORM\Table(name="diamante_ticket")
+ * @ORM\EntityListeners({"Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener"})
  * @Config(
  *      defaultValues={
  *          "ownership"={
@@ -48,11 +50,11 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     protected $id;
 
     /**
-     * @var int
+     * @var TicketSequenceNumber
      *
-     * @ORM\Column(type="integer", nullable=true, options={"default":0})
+     * @ORM\Column(name="number", type="ticket_sequence_number")
      */
-    protected $number;
+    protected $sequenceNumber;
 
     /**
      * @var string

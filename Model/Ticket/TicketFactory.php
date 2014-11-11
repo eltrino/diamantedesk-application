@@ -18,10 +18,10 @@ use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 
 class TicketFactory extends AbstractEntityFactory
 {
-    public function create($subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
+    public function create(TicketSequenceNumber $number, $subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
     {
         return new $this->entityClassName(
-            $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
+            $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
         );
     }
 }

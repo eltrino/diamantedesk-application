@@ -41,9 +41,9 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $id;
 
     /**
-     * @var int
+     * @var TicketSequenceNumber
      */
-    protected $number;
+    protected $sequenceNumber;
 
     /**
      * @var TicketKey
@@ -111,7 +111,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $updatedAt;
 
     /**
-     * @param TicketNumberSequence $numberSequence
+     * @param TicketSequenceNumber $number
      * @param $subject
      * @param $description
      * @param Branch $branch
@@ -121,8 +121,10 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param null $priority
      * @param null $status
      */
-    public function __construct($subject, $description, Branch $branch, User $reporter, User $assignee, $source, $priority = null, $status = null)
+    public function __construct(TicketSequenceNumber $number, $subject, $description, Branch $branch, User $reporter, User $assignee, $source, $priority = null, $status = null)
     {
+        $this->sequenceNumber = $number;
+
         if (null == $priority) {
             $priority = Priority::PRIORITY_MEDIUM;
         }
@@ -165,11 +167,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
-     * @return int
+     * @return TicketSequenceNumber
      */
-    public function getNumber()
+    public function getSequenceNumber()
     {
-        return $this->number;
+        return $this->sequenceNumber;
     }
 
     /**
@@ -187,8 +189,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      */
     private function initializeKey()
     {
-        if ($this->number && is_null($this->key)) {
-            $this->key = new TicketKey($this->branch->getKey(), $this->getNumber());
+        if ($this->sequenceNumber->getValue() && is_null($this->key)) {
+            $this->key = new TicketKey($this->branch->getKey(), $this->sequenceNumber->getValue());
         }
     }
 

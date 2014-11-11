@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -113,6 +114,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher, $this->processManager);
 
         $this->_dummyTicket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),

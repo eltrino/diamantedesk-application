@@ -37,7 +37,6 @@ class BranchTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('DUMMY_DESC', $branch->getDescription());
         $this->assertEquals($defaultAssignee, $branch->getDefaultAssignee());
         $this->assertEquals($logo, $branch->getLogo());
-        $this->assertEquals(Branch::TICKET_COUNTER_START_VALUE, $branch->getTicketCounter());
     }
 
     public function testKeyGenerationOfNewBranch()
@@ -65,7 +64,6 @@ class BranchTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('New Description', $branch->getDescription());
         $this->assertEquals($newDefaultAssignee, $branch->getDefaultAssignee());
         $this->assertEquals($newLogo, $branch->getLogo());
-        $this->assertEquals(Branch::TICKET_COUNTER_START_VALUE, $branch->getTicketCounter());
     }
 
 }

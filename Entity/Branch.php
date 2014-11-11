@@ -68,13 +68,6 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
     protected $key;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="ticket_counter", type="integer", nullable=false, options={"default":0})
-     */
-    protected $ticketCounter;
-
-    /**
      * Branch default assignee
      *
      * @var \Oro\Bundle\UserBundle\Entity\User

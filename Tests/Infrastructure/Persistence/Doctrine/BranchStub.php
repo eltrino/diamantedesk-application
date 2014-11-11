@@ -12,35 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence\Doctrine;
 
 use Diamante\DeskBundle\Model\Branch\Branch;
 
-class TicketNumberSequence
+class BranchStub extends Branch
 {
-    /**
-     * @var Branch
-     */
-    private $branch;
-
-    /**
-     * @var int
-     */
-    private $number;
-
-    public function __construct(Branch $branch)
+    public function setId($id)
     {
-        $this->branch = $branch;
+        $this->id = $id;
     }
-
-    public function getNumber()
-    {
-        return $this->number;
-    }
-
-    public function requestNextNumber()
-    {
-        $this->number++;
-        return $this->number;
-    }
-}
+} 

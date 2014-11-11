@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class CommentTest extends \PHPUnit_Framework_TestCase
@@ -59,6 +60,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
     private function createTicket()
     {
         $ticket = new Ticket(
+            new TicketSequenceNumber(12),
             TicketTest::TICKET_SUBJECT,
             TicketTest::TICKET_DESCRIPTION,
             new Branch('DUMMY_NAME', 'DUMMY_DESC'),

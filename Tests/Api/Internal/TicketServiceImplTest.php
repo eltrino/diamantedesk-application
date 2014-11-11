@@ -27,6 +27,8 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Api\Internal\TicketServiceImpl;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -129,8 +131,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $key = 'TK-1';
 
-        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')
-            ->with('TK', 1)
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')
+            ->with(new TicketKey('TK', 1))
             ->will($this->returnValue(null));
 
         $this->ticketService->loadTicketByKey($key);
@@ -141,8 +143,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $key = 'TK-1';
         $ticket = $this->ticket;
 
-        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')
-            ->with('TK', 1)
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')
+            ->with(new TicketKey('TK', 1))
             ->will($this->returnValue($ticket));
 
         $this->ticketService->loadTicketByKey($key);
@@ -172,8 +174,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $status = Status::NEW_ONE;
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
+        $number = new TicketSequenceNumber(null);
 
         $ticket = new Ticket(
+            $number,
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $branch,
@@ -185,7 +189,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->ticketFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
+            $number, $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
             $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee),
             $this->equalTo($priority), $this->equalTo($source)
         )->will($this->returnValue($ticket));
@@ -234,8 +238,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $status = Status::IN_PROGRESS;
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
+        $number = new TicketSequenceNumber(null);
 
         $ticket = new Ticket(
+            $number,
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $branch,
@@ -247,7 +253,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->ticketFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
+            $number, $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
             $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee),
             $this->equalTo($priority), $this->equalTo($source)
         )->will($this->returnValue($ticket));
@@ -297,8 +303,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $status = Status::NEW_ONE;
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
+        $number = new TicketSequenceNumber(null);
 
         $ticket = new Ticket(
+            $number,
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $branch,
@@ -310,7 +318,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->ticketFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
+            $number, $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
             $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee),
             $this->equalTo($priority), $this->equalTo($source)
         )->will($this->returnValue($ticket));
@@ -367,6 +375,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $branch,
@@ -421,6 +430,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $branch,
@@ -490,6 +500,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
         $ticket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
@@ -558,6 +569,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentsAddsForTicket()
     {
         $ticket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
@@ -615,6 +627,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {
         $ticket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
@@ -934,7 +947,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->any())->method('getAttachments')
             ->will($this->returnValue(array($this->attachment())));
 
-        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')->with('DT', 1)
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')
+            ->with(new TicketKey('DT', 1))
             ->will($this->returnValue($this->ticket));
 
         $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
@@ -963,7 +977,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteTicketWhenTicketDoesNotExist()
     {
-        $this->ticketRepository->expects($this->once())->method('getByBranchKeyAndTicketNumber')->with('DT', 1)
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')->with(new TicketKey('DT', 1))
             ->will($this->returnValue(null));
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_KEY);

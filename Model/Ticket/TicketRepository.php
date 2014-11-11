@@ -19,10 +19,9 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 interface TicketRepository extends Repository
 {
     /**
-     * Find Ticket by given Branch key and Ticket number
-     * @param string $branchKey
-     * @param int $ticketNumber
+     * Find Ticket by given TicketKey
+     * @param TicketKey $key
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    public function getByBranchKeyAndTicketNumber($branchKey, $ticketNumber);
+    public function getByTicketKey(TicketKey $key);
 } 

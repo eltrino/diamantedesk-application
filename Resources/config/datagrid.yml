@@ -80,7 +80,7 @@ datagrid:
             query:
                 select:
                     - i.id
-                    - CONCAT(branch.key, CONCAT('-', i.number)) as key
+                    - CONCAT(branch.key, CONCAT('-', i.sequenceNumber)) as key
                     - i.subject
                     - i.priority
                     - i.status

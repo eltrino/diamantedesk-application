@@ -27,6 +27,7 @@ use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
@@ -115,7 +116,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticketKey = TicketKey::from($key);
         $ticket = $this->ticketRepository
-            ->getByBranchKeyAndTicketNumber($ticketKey->getBranchKey(), $ticketKey->getTicketNumber());
+            ->getByTicketKey($ticketKey);
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
@@ -230,7 +231,7 @@ class TicketServiceImpl implements TicketService
         }
 
         $ticket = $this->ticketFactory
-            ->create($command->subject,
+            ->create(new TicketSequenceNumber(null), $command->subject,
                 $command->description,
                 $branch,
                 $reporter,

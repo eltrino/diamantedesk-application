@@ -18,8 +18,54 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 
 class TicketKeyTest extends \PHPUnit_Framework_TestCase
 {
+    public function testThatCreates()
+    {
+        $key = new TicketKey('DD', 12);
+        $this->assertEquals('DD', $key->getBranchKey());
+        $this->assertEquals(12, $key->getTicketSequenceNumber());
+    }
+
+    /**
+     * @dataProvider branchKeyProvider
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Branch key should be a not empty string.
+     */
+    public function testBranchKeyValidationDuringCreation($branchKey, $ticketSequenceNumber)
+    {
+        new TicketKey($branchKey, $ticketSequenceNumber);
+    }
+
+    public function branchKeyProvider()
+    {
+        return array(
+            array(12, 12),
+            array('', 12),
+            array(array(), 12)
+        );
+    }
+
+    /**
+     * @dataProvider ticketSequenceNumberProvider
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Ticket number should be an integer value grater than 0.
+     */
+    public function testTicketSequenceNumberValidationDuringCreation($branchKey, $ticketSequenceNumber)
+    {
+        new TicketKey($branchKey, $ticketSequenceNumber);
+    }
+
+    public function ticketSequenceNumberProvider()
+    {
+        return array(
+            array('DD', 0),
+            array('DD', array()),
+            array('DD', 2.5)
+        );
+    }
+
     public function testTheFormatsCorrect()
     {
-        $this->markTestIncomplete('Need to be done');
+        $key = new TicketKey('DD', 12);
+        $this->assertEquals('DD-12', (string) $key);
     }
-} 
+}

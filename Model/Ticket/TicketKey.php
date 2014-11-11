@@ -26,12 +26,30 @@ class TicketKey
     /**
      * @var int
      */
-    private $ticketNumber;
+    private $ticketSequenceNumber;
 
-    public function __construct($branchKey, $ticketNumber)
+    public function __construct($branchKey, $ticketSequenceNumber)
     {
+        $this->validate($branchKey, $ticketSequenceNumber);
         $this->branchKey = $branchKey;
-        $this->ticketNumber = $ticketNumber;
+        $this->ticketSequenceNumber = $ticketSequenceNumber;
+    }
+
+    /**
+     * @param string $branchKey
+     * @param integer $ticketSequenceNumber
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function validate($branchKey, $ticketSequenceNumber)
+    {
+        if (false === is_string($branchKey) || empty($branchKey)) {
+            throw new \InvalidArgumentException('Branch key should be a not empty string.');
+        }
+
+        if (false === is_int($ticketSequenceNumber) || $ticketSequenceNumber < 1) {
+            throw new \InvalidArgumentException('Ticket number should be an integer value grater than 0.');
+        }
     }
 
     /**
@@ -45,9 +63,9 @@ class TicketKey
     /**
      * @return int
      */
-    public function getTicketNumber()
+    public function getTicketSequenceNumber()
     {
-        return $this->ticketNumber;
+        return $this->ticketSequenceNumber;
     }
 
     /**
@@ -56,12 +74,12 @@ class TicketKey
      */
     public function __toString()
     {
-        return sprintf("%s-%d", $this->branchKey, $this->ticketNumber);
+        return sprintf("%s-%d", $this->branchKey, $this->ticketSequenceNumber);
     }
 
     public static function create(Branch $branch, Ticket $ticket)
     {
-        return new TicketKey($branch->getKey(), $ticket->getNumber());
+        return new TicketKey($branch->getKey(), $ticket->getSequenceNumber()->getValue());
     }
 
     public static function from($ticketKey)
@@ -70,6 +88,6 @@ class TicketKey
         if ($dividerPosition < 1) {
             throw new \LogicException('Ticket key string has wrong format.');
         }
-        return new TicketKey(substr($ticketKey, 0, $dividerPosition), substr($ticketKey, $dividerPosition + 1));
+        return new TicketKey(substr($ticketKey, 0, $dividerPosition), (int) substr($ticketKey, $dividerPosition + 1));
     }
 } 

@@ -21,8 +21,6 @@ use Oro\Bundle\UserBundle\Entity\User;
 
 class Branch implements Entity, Taggable
 {
-    const TICKET_COUNTER_START_VALUE = 0;
-
     /**
      * @var integer
      */
@@ -43,11 +41,6 @@ class Branch implements Entity, Taggable
      * @var string
      */
     protected $key;
-
-    /**
-     * @var int
-     */
-    protected $ticketCounter;
 
     /**
      * @var User
@@ -78,7 +71,6 @@ class Branch implements Entity, Taggable
     {
         $this->name = $name;
         $this->description = $description;
-        $this->ticketCounter = self::TICKET_COUNTER_START_VALUE;
         $this->defaultAssignee = $defaultAssignee;
         $this->logo = $logo;
         $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
@@ -134,14 +126,6 @@ class Branch implements Entity, Taggable
     public function getKey()
     {
         return $this->key;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTicketCounter()
-    {
-        return $this->ticketCounter;
     }
 
     /**
