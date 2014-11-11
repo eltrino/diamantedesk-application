@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\ApiBundle\Annotation\ApiDoc;
 
 class BranchServiceImpl implements BranchService
 {
@@ -72,7 +73,17 @@ class BranchServiceImpl implements BranchService
     /**
      * Retrieves list of all Branches
      *
-     * @api {get} /branches
+     * @ApiDoc(
+     *  description="Returns all branches",
+     *  uri="/branches.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list branches",
+     *      404="Returned when the branch is not found"
+     *  }
+     * )
      *
      * @return Branch[]
      */
@@ -85,7 +96,25 @@ class BranchServiceImpl implements BranchService
     /**
      * Retrieves Branch by id
      *
-     * @api {get} /branches/{id} Request Branch information
+     * @ApiDoc(
+     *  description="Returns a branch",
+     *  uri="/branches/{id}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Branch Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see branch",
+     *      404="Returned when the branch is not found"
+     *  }
+     * )
      *
      * @param $id
      * @return Branch
@@ -104,7 +133,16 @@ class BranchServiceImpl implements BranchService
     /**
      * Create Branch
      *
-     * @api {post} /branches Request Branch information
+     * @ApiDoc(
+     *  description="Create branch",
+     *  uri="/branches.{_format}",
+     *  method="POST",
+     *  resource=true,
+     *  statusCodes={
+     *      201="Returned when successful",
+     *      403="Returned when the user is not authorized to create branch"
+     *  }
+     * )
      *
      * @param Command\BranchCommand $branchCommand
      * @return int
@@ -136,6 +174,7 @@ class BranchServiceImpl implements BranchService
 
     /**
      * Update Branch
+     *
      * @param Command\BranchCommand $branchCommand
      * @return int
      */
@@ -171,9 +210,27 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * Update certain properties of the branch
+     * Update certain properties of the Branch
      *
-     * @api {put} /branches/{id} Request Branch information
+     * @ApiDoc(
+     *  description="Update branch",
+     *  uri="/branches/{id}.{_format}",
+     *  method="PUT",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Branch Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to update branch",
+     *      404="Returned when the branch is not found"
+     *  }
+     * )
      *
      * @param Command\UpdatePropertiesCommand $command
      */
@@ -199,7 +256,25 @@ class BranchServiceImpl implements BranchService
     /**
      * Delete Branch
      *
-     * @api {delete} /branches/{id} Request Branch information
+     * @ApiDoc(
+     *  description="Delete branch",
+     *  uri="/branches/{id}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Branch Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to see branch",
+     *      404="Returned when the branch is not found"
+     *  }
+     * )
      *
      * @param int $branchId
      * @return void

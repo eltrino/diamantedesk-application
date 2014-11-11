@@ -4,10 +4,14 @@ diamante_desk_bundle:
     prefix:       /desk
 
 diamante_desk_api_branch:
+# @todo alias for service
     resource:     diamante.branch.service
+# @todo rename diamante_rest_service
     type:         rest_service
     prefix:       /api/rest/{version}/desk/
     requirements:
         version:  latest|v1
+        _format:  xml|json
     defaults:
         version:  latest
+        _format:  json
