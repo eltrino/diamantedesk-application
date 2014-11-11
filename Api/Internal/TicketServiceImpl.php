@@ -354,6 +354,27 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
+     * @param array $conditions
+     * @return \Diamante\DeskBundle\Model\Shared\Entity[]
+     * @throws \Exception
+     */
+    public function filterTickets(array $conditions = array())
+    {
+        if (empty($conditions)) {
+            $filteredTickets = $this->ticketRepository->getAll();
+        } else {
+            try {
+                $filteredTickets = $this->ticketRepository->filter($conditions);
+            } catch (\Exception $e) {
+                //TODO: Logging
+                throw $e;
+            }
+        }
+
+        return $filteredTickets;
+    }
+
+    /**
      * Verify permissions through Oro Platform security bundle
      *
      * @param $operation

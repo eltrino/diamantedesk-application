@@ -179,6 +179,17 @@ class BranchServiceImpl implements BranchService
         $this->branchRepository->remove($branch);
     }
 
+    public function filterBranches(array $conditions = array())
+    {
+        if (empty($conditions)) {
+            $filteredBranches = $this->branchRepository->getAll();
+        } else {
+            $filteredBranches = $this->branchRepository->filter($conditions);
+        }
+
+        return $filteredBranches;
+    }
+
     /**
      * @param UploadedFile $file
      * @return \Symfony\Component\HttpFoundation\File\File

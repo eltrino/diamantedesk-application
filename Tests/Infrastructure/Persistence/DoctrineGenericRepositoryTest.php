@@ -155,4 +155,102 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->repository->remove($entity);
     }
+
+    /**
+     * @test
+     */
+    public function thatFilters()
+    {
+        $a = new EntityStub();
+        $b = new EntityStub();
+        $a->name = "DUMMY_NAME";
+        $b->name = "NOT_DUMMY_NAME";
+
+        $entities = array($a, $b);
+
+        $this
+            ->em
+            ->expects($this->atLeastOnce())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($this->unitOfWork))
+        ;
+        $this
+            ->unitOfWork
+            ->expects($this->atLeastOnce())
+            ->method('getEntityPersister')
+            ->with($this->equalTo(self::CLASS_NAME))
+            ->will($this->returnValue($this->entityPersister))
+        ;
+        $this
+            ->entityPersister
+            ->expects($this->atLeastOnce())
+            ->method('loadAll')
+            ->with(
+                $this->equalTo(array()), $this->equalTo(null),
+                $this->equalTo(null), $this->equalTo(null)
+            )
+            ->will($this->returnValue($entities))
+        ;
+
+        $filtered = $this->repository->filter($this->getCorrectFilteringConditions());
+
+        $this->assertEquals(1, count($filtered));
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function thatThrowsExceptionIfUsingDisallowedFilteringConstraint()
+    {
+        $entities = array(new EntityStub(), new EntityStub());
+
+        $this
+            ->em
+            ->expects($this->once())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($this->unitOfWork))
+        ;
+        $this
+            ->unitOfWork
+            ->expects($this->once())
+            ->method('getEntityPersister')
+            ->with($this->equalTo(self::CLASS_NAME))
+            ->will($this->returnValue($this->entityPersister))
+        ;
+        $this
+            ->entityPersister
+            ->expects($this->once())
+            ->method('loadAll')
+            ->with(
+                $this->equalTo(array()), $this->equalTo(null),
+                $this->equalTo(null), $this->equalTo(null)
+            )
+            ->will($this->returnValue($entities))
+        ;
+
+        $this->repository->filter($this->getIncorrectFilteringConditions());
+    }
+
+    protected function getCorrectFilteringConditions()
+    {
+        return array(
+            array(
+                'name',
+                'eq',
+                'DUMMY_NAME'
+            )
+        );
+    }
+
+    protected function getIncorrectFilteringConditions()
+    {
+        return array(
+            array(
+                'name',
+                'nonExistingFilteringMethod',
+                'DUMMY_NAME'
+            )
+        );
+    }
 }

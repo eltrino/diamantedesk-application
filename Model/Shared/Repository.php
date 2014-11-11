@@ -43,4 +43,10 @@ interface Repository
      * @return void
      */
     public function remove(Entity $entity);
+
+    /**
+     * @param array $conditions
+     * @return Entity[]
+     */
+    public function filter(array $conditions);
 }

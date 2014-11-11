@@ -253,6 +253,27 @@ class CommentServiceImpl implements CommentService
     }
 
     /**
+     * @param array $conditions
+     * @return \Diamante\DeskBundle\Model\Shared\Entity[]
+     * @throws \Exception
+     */
+    public function filterComments(array $conditions = array())
+    {
+        if (empty($conditions)) {
+            $filteredComments = $this->commentRepository->getAll();
+        } else {
+            try {
+                $filteredComments = $this->commentRepository->filter($conditions);
+            } catch (\Exception $e) {
+                //TODO:Logging
+                throw $e;
+            }
+        }
+
+        return $filteredComments;
+    }
+
+    /**
      * Verify permissions through Oro Platform security bundle
      *
      * @param $operation

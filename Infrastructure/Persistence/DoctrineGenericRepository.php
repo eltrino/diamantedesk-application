@@ -17,6 +17,8 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 use Doctrine\ORM\EntityRepository;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class DoctrineGenericRepository extends EntityRepository implements Repository
 {
@@ -56,5 +58,50 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
     {
         $this->_em->remove($entity);
         $this->_em->flush();
+    }
+
+    /**
+     * @param array $conditions
+     * @return ArrayCollection|null
+     * @throws \Exception
+     */
+    public function filter(array $conditions)
+    {
+        $collection = new ArrayCollection($this->getAll());
+
+        $criteria = Criteria::create();
+        $allowedConstraints = $this->getAllowedFilteringConstraints();
+
+        foreach ($conditions as $rule) {
+            list($field, $constraint, $value) = $rule;
+
+            if (!in_array($constraint, $allowedConstraints)) {
+                throw new \Exception(
+                    sprintf("Invalid filtering constraint '%s' used. Should be one of these: %s", $constraint, join(', ', $allowedConstraints))
+                );
+            }
+
+            if (empty($criteria->getWhereExpression())) {
+                $criteria->where(Criteria::expr()->$constraint($field, $value));
+            } else {
+                $criteria->andWhere(Criteria::expr()->$constraint($field, $value));
+            }
+        }
+
+        $criteria->setFirstResult(0);
+
+        $result = $collection->matching($criteria);
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAllowedFilteringConstraints()
+    {
+        return array(
+            'andX', 'orX', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'isNull', 'in', 'notIn', 'contains'
+        );
     }
 }

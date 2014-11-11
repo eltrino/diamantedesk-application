@@ -56,4 +56,11 @@ interface BranchService
      * @return void
      */
     public function deleteBranch($branchId);
+
+    /**
+     * Filter Branches applying conditions
+     * @param array $conditions
+     * @return mixed
+     */
+    public function filterBranches(array $conditions);
 }

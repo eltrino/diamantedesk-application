@@ -91,4 +91,11 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket(AssigneeTicketCommand $command);
+
+    /**
+     * Filter all tickets applying constraints provided in array
+     * @param array $conditions
+     * @return mixed
+     */
+    public function filterTickets(array $conditions);
 }
