@@ -46,7 +46,8 @@ class BranchCommand implements Taggable
 
     /**
      * @Assert\File(
-     *              mimeTypes={"image/jpeg","image/png"}
+     *              mimeTypes={"image/jpeg","image/png"},
+     *              mimeTypesMessage="'JPEG' and 'PNG' image formats are supported only"
      * )
      */
     public $logoFile;

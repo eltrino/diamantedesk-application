@@ -263,7 +263,6 @@ class TicketController extends Controller
                 $this->generateUrl('diamante_ticket_list')
             );
         } catch (\Exception $e) {
-            echo $e->getMessage();
             return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
     }
