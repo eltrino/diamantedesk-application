@@ -14,6 +14,11 @@
 define(['marionette','backbone','bootstrap'], function(Marionette, Backbone) {
 
   window.App = new Marionette.Application({
+
+    baseUrl : (function(){
+      return document.querySelector("script[data-main]").src.split('/assets/js')[0];
+    })(),
+
     regions : {
       HeaderRegion: '#header',
       MainRegion: '#content',

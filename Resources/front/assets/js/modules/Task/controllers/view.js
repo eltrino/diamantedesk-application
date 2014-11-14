@@ -6,27 +6,18 @@ define(function(){
 
       require(['modules/Task/models/task', 'modules/Task/views/view'], function(){
 
-        var fetching = App.request("task:collection");
+        var model = App.request("task:model", id);
 
-        $.when(fetching).done(function(collection){
-
-          var model = collection.get(id),
-              taskView;
-
-          if(model !== undefined){
-            taskView = new View.ItemView({
-              model : model
-            });
-          } else {
-            taskView = new View.MissingView();
-          }
-
-          taskView.on("task:edit", function(model){
-            App.trigger('task:edit', model.get('id'));
+        model.on('sync', function(){
+          var taskView = new View.ItemView({
+            model : model
           });
-
           App.MainRegion.show(taskView);
+        });
 
+        model.on('error', function(){
+          var missingView = new View.MissingView();
+          App.MainRegion.show(missingView);
         });
 
       });

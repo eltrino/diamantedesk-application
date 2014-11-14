@@ -6,21 +6,17 @@ define(function(){
 
       require(['modules/Task/models/task', 'modules/Task/views/list'], function(){
 
-        var fetching = App.request("task:collection");
+        var collection = App.request("task:collection");
 
-        $.when(fetching).done(function(collection){
+        var taskListView = new List.CompositeView({
+          collection: collection
+        });
 
-          var taskListView = new List.CompositeView({
-            collection: collection
-          });
+        taskListView.on("childview:task:view", function(childView, model){
+          App.trigger('task:view', model.get('id'));
+        });
 
-          taskListView.on("childview:task:view", function(childView, model){
-            App.trigger('task:view', model.get('id'));
-          });
-
-          App.MainRegion.show(taskListView);
-
-        })
+        App.MainRegion.show(taskListView);
 
       });
 

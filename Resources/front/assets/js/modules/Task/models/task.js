@@ -2,9 +2,9 @@ define(function(){
 
   App.module("Task.Models",function(Models, App, Backbone, Marionette, $, _){
 
-    var tasks;
-
     Models.TaskModel = Backbone.Model.extend({
+
+      urlRoot: App.baseUrl + '/tasks',
 
       defaults: {
         subject : '',
@@ -15,33 +15,29 @@ define(function(){
     });
 
     Models.TaskCollection = Backbone.Collection.extend({
+      url: App.baseUrl+ '/tasks',
       model: Models.TaskModel
     });
 
-    var initialize = function(){
-      // Temporary
-      return $.get('assets/js/modules/Task/models/tasks.json', function(json){
-        tasks = new Models.TaskCollection(json);
-      });
-
-    };
-
     var API = {
-      getTaskEntities: function(){
-        var defer = $.Deferred();
-        if(tasks === undefined){
-          initialize().done(function(){
-            defer.resolve(tasks)
-          });
-        } else {
-          defer.resolve(tasks)
-        }
-        return defer.promise();
+      getTaskCollection: function() {
+        var tasks = new Models.TaskCollection();
+        tasks.fetch();
+        return tasks;
+      },
+      getTaskModel: function(id) {
+        var task = new Models.TaskModel({id:id});
+        task.fetch();
+        return task;
       }
     };
 
     App.reqres.setHandler("task:collection", function(){
-      return API.getTaskEntities();
+      return API.getTaskCollection();
+    });
+
+    App.reqres.setHandler("task:model", function(id){
+      return API.getTaskModel(id);
     });
 
   });

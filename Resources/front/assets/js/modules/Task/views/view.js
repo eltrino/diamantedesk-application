@@ -24,7 +24,7 @@ define([
 
       editTicket : function(e){
         e.preventDefault();
-        this.trigger('task:edit', this.model);
+        App.trigger('task:edit', this.model.get('id'));
       }
     });
 

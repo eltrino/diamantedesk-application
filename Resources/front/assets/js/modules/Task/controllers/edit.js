@@ -6,38 +6,29 @@ define(function(){
 
       require(['modules/Task/models/task', 'modules/Task/views/create'], function(){
 
-        var fetching = App.request("task:collection");
+        var model = App.request("task:model", id);
 
-        $.when(fetching).done(function(collection){
+        model.on('sync', function(){
+          var taskEditView = new App.Task.Create.ItemView({
+            model : model
+          });
 
-          var model = collection.get(id),
-              taskEditView;
+          taskEditView.on('show', function(){
+            this.$el.modal();
+          });
 
-          if(model === undefined){
+          taskEditView.on('modal:closed', function(){
+            Backbone.history.history.back();
+            this.destroy();
+          });
 
-            taskEditView = new App.Task.View.MissingView();
-            App.MainRegion.show(taskEditView);
-
-          } else {
-
-            taskEditView = new App.Task.Create.ItemView({
-              model : model
-            });
-
-            taskEditView.on('show', function(){
-              this.$el.modal();
-            });
-
-            taskEditView.on('modal:closed', function(){
-              Backbone.history.history.back();
-              this.destroy();
-            });
-
-            App.DialogRegion.show(taskEditView);
-          }
-
+          App.DialogRegion.show(taskEditView);
         });
 
+        model.on('error', function(){
+          var taskMissingView = new App.Task.View.MissingView();
+          App.MainRegion.show(taskMissingView);
+        });
 
       });
 

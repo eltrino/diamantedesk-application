@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: '<%= srcRoot %>',
-          src: [ '**/*', '**/.*', '!assets/less/**' ],
+          src: [ '**/*', '**/.*','.htaccess', '!assets/less/**' ],
           dest: '<%= webRoot %>'
         }],
         //pretend: true, // Don't do any disk operations - just write log
@@ -60,6 +60,6 @@ module.exports = function(grunt) {
   });
 
   // Default task(s).
-  grunt.registerTask('default');
+  grunt.registerTask('default', ['sync', 'less']);
 
 };
