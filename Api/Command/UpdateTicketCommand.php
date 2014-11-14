@@ -25,13 +25,17 @@ class UpdateTicketCommand
     public $id;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
      */
     public $subject;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
      */
     public $description;
@@ -47,7 +51,9 @@ class UpdateTicketCommand
     public $files;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="object")
      */
     public $reporter;
