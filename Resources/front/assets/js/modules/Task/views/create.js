@@ -1,24 +1,15 @@
-define(['tpl!modules/Task/templates/create.ejs'], function(createTemplate){
+define([
+  'tpl!modules/Task/templates/form.ejs',
+  'modules/Common/views/modal'], function(createTemplate){
 
   App.module('Task.Create', function(Create, App, Backbone, Marionette, $, _){
 
     Create.ItemView = Marionette.ItemView.extend({
-      className: 'modal fade',
-      template: createTemplate,
+      template: createTemplate
+    });
 
-      events: {
-        'show.bs.modal': "beforeShowModal",
-        'hidden.bs.modal': "hideModal"
-      },
-
-      beforeShowModal: function(){
-        $('body').addClass('blured');
-      },
-
-      hideModal: function(){
-        $('body').removeClass('blured');
-        this.trigger('modal:closed');
-      }
+    Create.ModalView = App.Common.Modal.CompositeView.extend({
+      childView: Create.ItemView
     });
 
   });

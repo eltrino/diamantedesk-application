@@ -6,21 +6,22 @@ define(function(){
 
       require(['modules/Task/models/task', 'modules/Task/views/create'], function(){
 
-        var newTask = new App.Task.Models.TaskModel(),
-            taskCreateView = new Create.ItemView({
-              model : newTask
+        var newTask = new App.Task.Models.TaskCollection([{}]),
+            modalCreateView = new Create.ModalView({
+              model: new Backbone.Model({title: 'Add New Ticket'}),
+              collection : newTask
             });
 
-        taskCreateView.on('show', function(){
+        modalCreateView.on('show', function(){
           this.$el.modal();
         });
 
-        taskCreateView.on('modal:closed', function(){
+        modalCreateView.on('modal:closed', function(){
           Backbone.history.history.back();
           this.destroy();
         });
 
-        App.DialogRegion.show(taskCreateView);
+        App.DialogRegion.show(modalCreateView);
 
       });
 

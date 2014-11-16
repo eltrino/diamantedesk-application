@@ -1,0 +1,29 @@
+<form action="/" role="form">
+    <div class="form-group">
+        <label for="subject">Ticket Subject</label>
+        <input type="text"
+               class="form-control"
+               id="subject"
+               name="subject"
+               placeholder="Short summary of your ticket"
+               value="<%= subject %>">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control"
+                  id="description"
+                  name="description"
+                  rows="3"
+                  placeholder="Type in detailed description of your ticket"><%= description %></textarea>
+    </div>
+    <div class="form-group">
+        <label for="priority">Priority</label>
+        <select class="form-control"
+                id="priority"
+                name="priority">
+            <option value="low"<% if (priority == 'low') { %> selected<% } %>>Low</option>
+            <option value="normal"<% if (priority == 'normal') { %> selected<% } %>>Normal</option>
+            <option value="high"<% if (priority == 'high') { %> selected<% } %>>High</option>
+        </select>
+    </div>
+</form>

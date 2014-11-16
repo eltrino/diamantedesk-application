@@ -4,14 +4,16 @@ define(function(){
 
     Edit.TaskController = function(id){
 
-      require(['modules/Task/models/task', 'modules/Task/views/create'], function(){
+      require(['modules/Task/models/task', 'modules/Task/views/edit'], function(){
 
         var model = App.request("task:model", id);
 
         model.on('sync', function(){
-          var taskEditView = new App.Task.Create.ItemView({
-            model : model
-          });
+          var editTask = new App.Task.Models.TaskCollection([model]),
+              taskEditView = new Edit.ModalView({
+                model: new Backbone.Model({title: 'Edit Ticket ' + model.get('shortcode') + "-" + model.id}),
+                collection : editTask
+              });
 
           taskEditView.on('show', function(){
             this.$el.modal();
