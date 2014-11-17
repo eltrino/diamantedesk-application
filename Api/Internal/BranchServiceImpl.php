@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\UserService;
 
 class BranchServiceImpl implements BranchService
 {
@@ -54,18 +55,25 @@ class BranchServiceImpl implements BranchService
      */
     private $securityFacade;
 
+    /**
+     * @var UserService
+     */
+    private $userService;
+
     public function __construct(
         BranchFactory $branchFactory,
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
-        SecurityFacade $securityFacade
+        SecurityFacade $securityFacade,
+        UserService $userService
     ) {
         $this->branchFactory     = $branchFactory;
         $this->branchRepository  = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
         $this->tagManager        = $tagManager;
         $this->securityFacade    = $securityFacade;
+        $this->userService       = $userService;
     }
 
     /**
@@ -109,11 +117,17 @@ class BranchServiceImpl implements BranchService
             $logo = $this->handleLogoUpload($branchCommand->logoFile);
         }
 
+        if ($branchCommand->defaultAssignee) {
+            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+        } else {
+            $assignee = null;
+        }
+
         $branch = $this->branchFactory
             ->create(
                 $branchCommand->name,
                 $branchCommand->description,
-                $branchCommand->defaultAssignee,
+                $assignee,
                 $logo,
                 $branchCommand->tags
             );
@@ -137,6 +151,13 @@ class BranchServiceImpl implements BranchService
          * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
          */
         $branch = $this->branchRepository->get($branchCommand->id);
+
+        if ($branchCommand->defaultAssignee) {
+            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+        } else {
+            $assignee = null;
+        }
+
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
         $file = null;
         if ($branchCommand->logoFile) {
@@ -147,7 +168,7 @@ class BranchServiceImpl implements BranchService
             $file = new Logo($logo->getFilename());
         }
 
-        $branch->update($branchCommand->name, $branchCommand->description, $branchCommand->defaultAssignee, $file);
+        $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
         $this->branchRepository->store($branch);
 
         //TODO: Refactor tag manipulations.

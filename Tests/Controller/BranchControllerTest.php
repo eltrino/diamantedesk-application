@@ -58,10 +58,10 @@ class BranchControllerTest extends WebTestCase
         $form = $crawler->selectButton('Save and Close')->form();
 
         $branchName = md5(time());
-        $form['diamante_branch_form[name]']        = $branchName;
-        $form['diamante_branch_form[description]'] = 'Test Description';
-        $form['diamante_branch_form[logoFile]']    = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
-
+        $form['diamante_branch_form[name]']             = $branchName;
+        $form['diamante_branch_form[description]']      = 'Test Description';
+        $form['diamante_branch_form[logoFile]']         = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_branch_form[defaultAssignee]']  = 1;
         $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
         $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
 
@@ -98,10 +98,10 @@ class BranchControllerTest extends WebTestCase
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
 
-        $form['diamante_branch_form[name]'] = $branch['name'];
-        $form['diamante_branch_form[description]'] = 'Branch Description Changed';
-        $form['diamante_branch_form[logoFile]'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
-
+        $form['diamante_branch_form[name]']             = $branch['name'];
+        $form['diamante_branch_form[description]']      = 'Branch Description Changed';
+        $form['diamante_branch_form[logoFile]']         = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_branch_form[defaultAssignee]']  = 2;
         $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
         $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
 

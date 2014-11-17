@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\Shared\UserService;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,6 +81,12 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $securityFacade;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Shared\UserService
+     * @Mock Diamante\DeskBundle\Model\Shared\UserService
+     */
+    private $userService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -89,7 +96,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->branchRepository,
             $this->branchLogoHandler,
             $this->tagManager,
-            $this->securityFacade
+            $this->securityFacade,
+            $this->userService
         );
     }
 
@@ -170,6 +178,11 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $tags = array();
         $branch = new Branch($name, $description, null, new Logo('dummy'));
         $this->fileMock = new UploadedFileStub(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
+
+        $this->userService
+            ->expects($this->once())
+            ->method('getUserById')
+            ->will($this->returnValue($defaultAssignee));
 
         $this->branchLogoHandler
             ->expects($this->once())
@@ -267,6 +280,11 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->securityFacade->expects($this->once())->method('isGranted')
             ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
+
+        $this->userService
+            ->expects($this->once())
+            ->method('getUserById')
+            ->will($this->returnValue($defaultAssignee));
 
         $command = new BranchCommand();
         $command->name = $name;

@@ -191,6 +191,9 @@ class BranchController extends Controller
         $form = $this->createForm(new BranchType(), $command);
         try {
             $this->handle($form);
+            if ($command->defaultAssignee) {
+                $command->defaultAssignee = $command->defaultAssignee->getId();
+            }
             $branchId = $callback($command);
             if ($command->id) {
                 $this->addSuccessMessage('diamante.desk.branch.messages.save.success');
