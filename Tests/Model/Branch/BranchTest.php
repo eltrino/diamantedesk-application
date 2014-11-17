@@ -31,20 +31,20 @@ class BranchTest extends \PHPUnit_Framework_TestCase
     {
         $defaultAssignee = new User();
         $logo = new Logo('file.dummy');
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
 
+        $this->assertEquals('DUMM', $branch->getKey());
         $this->assertEquals('DUMMY_NAME', $branch->getName());
         $this->assertEquals('DUMMY_DESC', $branch->getDescription());
         $this->assertEquals($defaultAssignee, $branch->getDefaultAssignee());
         $this->assertEquals($logo, $branch->getLogo());
     }
 
-    public function testKeyGenerationOfNewBranch()
+    public function testThatBranchKeyConvertsToUpperCase()
     {
-        $branch = new Branch('DUMMY NAME', 'DUMMY_DESC');
+        $branch = new Branch('dumm', 'DUMMY_NAME', 'DUMMY_DESC');
 
-        $this->assertNotEquals('dn', $branch->getKey());
-        $this->assertEquals('DN', $branch->getKey());
+        $this->assertEquals('DUMM', $branch->getKey());
     }
 
     /**
@@ -54,7 +54,7 @@ class BranchTest extends \PHPUnit_Framework_TestCase
     {
         $defaultAssignee = new User();
         $logo = new Logo('file.dummy');
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
 
         $newDefaultAssignee = new User();
         $newLogo = new Logo('new_file.dummy');

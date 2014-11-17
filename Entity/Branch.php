@@ -21,6 +21,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_branch")
+ * @ORM\EntityListeners({"Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\BranchListener"})
  * @Config(
  *      defaultValues={
  *          "security"={
@@ -63,7 +64,7 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
     /**
      * @var string
      *
-     * @ORM\Column(name="branch_key", type="string", length=255, nullable=false)
+     * @ORM\Column(name="branch_key", type="string", length=255, nullable=false, unique=true)
      */
     protected $key;
 

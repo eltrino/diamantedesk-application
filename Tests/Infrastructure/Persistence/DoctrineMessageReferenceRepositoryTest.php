@@ -101,7 +101,7 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
             new TicketSequenceNumber(null),
             'Subject',
             'Description',
-            new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
+            new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESCR'),
             new User(),
             new User(),
             Source::PHONE,

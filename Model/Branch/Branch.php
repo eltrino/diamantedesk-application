@@ -67,8 +67,12 @@ class Branch implements Entity, Taggable
      */
     protected $updatedAt;
 
-    public function __construct($name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
+    public function __construct($key, $name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
     {
+        if (strtoupper($key) != $key) {
+            $key = strtoupper($key);
+        }
+        $this->key = $key;
         $this->name = $name;
         $this->description = $description;
         $this->defaultAssignee = $defaultAssignee;
@@ -76,24 +80,6 @@ class Branch implements Entity, Taggable
         $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
-
-        $this->generateKey();
-    }
-
-    /**
-     * Generate Branch key from its name if Branch is new.
-     * @return void
-     */
-    private function generateKey()
-    {
-        if (is_null($this->id) && is_null($this->key)) {
-            $key = '';
-            $parts = explode(' ', $this->name);
-            foreach ($parts as $part) {
-                $key .= strtoupper(substr($part, 0, 1));
-            }
-            $this->key = $key;
-        }
     }
 
     /**

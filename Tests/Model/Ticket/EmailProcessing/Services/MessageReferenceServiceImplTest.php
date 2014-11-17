@@ -335,7 +335,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMMY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
     }
 
     private function createReporter()

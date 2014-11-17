@@ -59,7 +59,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     public function testTicketKeyInitialization()
     {
         $ticketSequenceNumberValue = 12;
-        $branch = new Branch('DUMMY BRANCH', 'DUMYY_DESC');
+        $branch = new Branch('DB', 'DUMMY BRANCH', 'DUMYY_DESC');
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
@@ -79,7 +79,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateWhenStatusIsNull()
     {
-        $branch = new Branch('DUMMY NAME', 'DUMYY_DESC');
+        $branch = new Branch('DN', 'DUMMY NAME', 'DUMYY_DESC');
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
@@ -153,7 +153,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMYY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMYY_DESC');
     }
 
     private function createReporter()

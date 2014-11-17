@@ -53,7 +53,7 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
         $branchId = 1;
         $lastTicketSequenceNumberValue = 9;
         $ticketSequenceNumberFieldName = 'number';
-        $branch = new BranchStub('Dummy Branch', 'Desc');
+        $branch = new BranchStub('DB', 'Dummy Branch', 'Desc');
         $branch->setId($branchId);
         $ticket = new Ticket(new TicketSequenceNumber(null), 'Subject', 'Description', $branch, new User(), new User(), Source::WEB);
         $event = new LifecycleEventArgs($ticket, $this->objectManager);

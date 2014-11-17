@@ -59,7 +59,7 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
         $dql = "SELECT t FROM DiamanteDeskBundle:Ticket t, DiamanteDeskBundle:Branch b
                 WHERE b.id = t.branch AND b.key = :branchKey AND t.sequenceNumber = :ticketSequenceNumber";
 
-        $branch = new Branch('Dumy Branch', 'Description');
+        $branch = new Branch('DB', 'Dummy Branch', 'Description');
         $ticket = new Ticket(
             new TicketSequenceNumber($ticketSequenceNumber),
             'Subject',

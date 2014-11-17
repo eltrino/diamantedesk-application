@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Controller;
 
+use Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\TestFrameworkBundle\Test\Client;
 use Symfony\Component\DomCrawler\Form;
@@ -48,8 +49,12 @@ class BranchControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("Branches")')->count() == 1);
     }
 
+    /**
+     * Branch key is not defined
+     */
     public function testCreate()
     {
+        $generator = new DefaultBranchKeyGenerator();
         $crawler = $this->client->request(
             'GET', $this->getUrl('diamante_branch_create')
         );
@@ -73,6 +78,33 @@ class BranchControllerTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains("Branch successfully created.", $crawler->html());
         $this->assertTrue($crawler->filter('html:contains("Dproject.png")')->count() == 0);
+        $this->assertTrue($crawler->filter('html:contains("' . $generator->generate($branchName) . '")')->count() == 1);
+    }
+
+    public function testCreateWhenKeyDefinedAndIsUnique()
+    {
+        $generator = new DefaultBranchKeyGenerator();
+        $crawler = $this->client->request(
+            'GET', $this->getUrl('diamante_branch_create')
+        );
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Save and Close')->form();
+
+        $branchName = md5(time());
+        $branchKey = $generator->generate($branchName) . 'ABC';
+        $form['diamante_branch_form[name]']       = $branchName;
+        $form['diamante_branch_form[key]']        = $branchKey;
+        $form['diamante_branch_form[description]'] = 'Test Description';
+
+        $this->client->followRedirects(true);
+
+        $crawler  = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Branch successfully created.", $crawler->html());
+        $this->assertTrue($crawler->filter('html:contains("' . $branchKey . '")')->count() == 1);
     }
 
     public function testView()

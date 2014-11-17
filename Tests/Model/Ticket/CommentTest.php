@@ -63,7 +63,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             new TicketSequenceNumber(12),
             TicketTest::TICKET_SUBJECT,
             TicketTest::TICKET_DESCRIPTION,
-            new Branch('DUMMY_NAME', 'DUMMY_DESC'),
+            new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC'),
             new User(),
             new User(),
             Source::PHONE,
