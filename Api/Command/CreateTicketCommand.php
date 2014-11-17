@@ -24,19 +24,25 @@ class CreateTicketCommand
     public $id;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="object")
      */
     public $branch;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
      */
     public $subject;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
      */
     public $description;
@@ -53,7 +59,9 @@ class CreateTicketCommand
     public $files;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="object")
      */
     public $reporter;

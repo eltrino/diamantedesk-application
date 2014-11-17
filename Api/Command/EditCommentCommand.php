@@ -24,7 +24,9 @@ class EditCommentCommand
     public $id;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
      */
     public $content;
