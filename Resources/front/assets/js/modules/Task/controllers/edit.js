@@ -9,22 +9,23 @@ define(function(){
         var model = App.request("task:model", id);
 
         model.on('sync', function(){
-          var editTask = new App.Task.Models.TaskCollection([model]),
-              taskEditView = new Edit.ModalView({
+          var editTaskView = new Edit.ItemView({
+                model: model
+              }),
+              modalEditView = new Edit.ModalView({
                 model: new Backbone.Model({title: 'Edit Ticket ' + model.get('shortcode') + "-" + model.id}),
-                collection : editTask
               });
 
-          taskEditView.on('show', function(){
+          modalEditView.on('show', function(){
             this.$el.modal();
           });
 
-          taskEditView.on('modal:closed', function(){
+          modalEditView.on('modal:closed', function(){
             Backbone.history.history.back();
-            this.destroy();
           });
 
-          App.DialogRegion.show(taskEditView);
+          App.DialogRegion.show(modalEditView);
+          modalEditView.ModalBody.show(editTaskView);
         });
 
         model.on('error', function(){

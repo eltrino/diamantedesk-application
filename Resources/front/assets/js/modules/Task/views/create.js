@@ -8,9 +8,7 @@ define([
       template: createTemplate
     });
 
-    Create.ModalView = App.Common.Modal.CompositeView.extend({
-      childView: Create.ItemView
-    });
+    Create.ModalView = App.Common.Modal.LayoutView.extend();
 
   });
 
