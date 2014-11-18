@@ -6,9 +6,9 @@ define(function(){
 
       require(['modules/Task/models/task', 'modules/Task/views/create'], function(){
 
-        var newTask = new App.Task.Models.TaskModel(),
+        var newTaskModel = new App.Task.Models.TaskModel(),
             newTaskView = new Create.ItemView({
-              model: newTask
+              model: newTaskModel
             }),
             modalCreateView = new Create.ModalView({
               title: 'Add New Ticket'
@@ -20,6 +20,10 @@ define(function(){
 
         modalCreateView.on('modal:closed', function(){
           Backbone.history.history.back();
+        });
+
+        modalEditView.on('modal:submit', function(data){
+          newTaskModel.save(data);
         });
 
         App.DialogRegion.show(modalCreateView);
