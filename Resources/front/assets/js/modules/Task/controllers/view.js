@@ -6,19 +6,19 @@ define(function(){
 
       require(['modules/Task/models/task', 'modules/Task/views/view'], function(){
 
-        var model = App.request("task:model", id);
+        App.request("task:model", id).done(function(taskModel){
 
-        model.on('sync', function(){
           var taskView = new View.ItemView({
-            model : model
+            model : taskModel
           });
           App.MainRegion.show(taskView);
-        });
 
-        model.on('error', function(){
+        }).fail(function(){
+
           var missingView = new View.MissingView();
           App.MainRegion.show(missingView);
-        });
+
+        })
 
       });
 

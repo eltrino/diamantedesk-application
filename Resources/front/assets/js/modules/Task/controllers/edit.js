@@ -4,16 +4,18 @@ define(function(){
 
     Edit.TaskController = function(id){
 
-      require(['modules/Task/models/task', 'modules/Task/views/edit'], function(){
+      require([
+        'modules/Task/models/task',
+        'modules/Task/views/view',
+        'modules/Task/views/edit'], function(){
 
-        var model = App.request("task:model", id);
+        App.request("task:model", id).done(function(editTaskModel){
 
-        model.on('sync', function(){
           var editTaskView = new Edit.ItemView({
-                model: model
+                model: editTaskModel
               }),
               modalEditView = new Edit.ModalView({
-                title: 'Edit Ticket ' + model.get('shortcode') + "-" + model.id
+                title: 'Edit Ticket ' + editTaskModel.get('shortcode') + "-" + editTaskModel.id
               });
 
           modalEditView.on('show', function(){
@@ -25,19 +27,17 @@ define(function(){
           });
 
           modalEditView.on('modal:submit', function(data){
-            model.save(data);
+            editTaskModel.save(data);
           });
 
           App.DialogRegion.show(modalEditView);
           modalEditView.ModalBody.show(editTaskView);
 
-        });
-
-
-
-        model.on('error', function(){
+        }).fail(function(){
+          console.log(App.Task.View);
           var taskMissingView = new App.Task.View.MissingView();
           App.MainRegion.show(taskMissingView);
+
         });
 
       });

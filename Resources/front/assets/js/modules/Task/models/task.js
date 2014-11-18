@@ -21,14 +21,27 @@ define(function(){
 
     var API = {
       getTaskCollection: function() {
-        var tasks = new Models.TaskCollection();
-        tasks.fetch();
-        return tasks;
+        var tasks = new Models.TaskCollection(),
+            defer = $.Deferred();
+        tasks.fetch({
+          success: function(data){
+            defer.resolve(data);
+          }
+        });
+        return defer.promise();
       },
       getTaskModel: function(id) {
         var task = new Models.TaskModel({id:id});
-        task.fetch();
-        return task;
+            defer = $.Deferred();
+        task.fetch({
+          success: function(data){
+            defer.resolve(data);
+          },
+          error: function(){
+            defer.reject();
+          }
+        });
+        return defer.promise();
       }
     };
 
