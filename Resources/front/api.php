@@ -28,6 +28,9 @@ if($path[0] == 'tasks') {
                 }
                 echo $task;
                 break;
+            case 'PUT' :
+                echo file_get_contents("php://input");
+                break;
         }
     }
 

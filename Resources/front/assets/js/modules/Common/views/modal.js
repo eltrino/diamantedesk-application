@@ -6,13 +6,25 @@ define(['tpl!modules/Common/templates/modal.ejs'], function(modalTemplate){
       className: 'modal fade',
       template: modalTemplate,
 
+      initialize: function(options){
+        var options = options || {};
+        this.title = options.title || "Modal Window";
+      },
+
+      serializeData: function(){
+        return {
+          title: this.title
+        }
+      },
+
       regions : {
         ModalBody : 'div.modal-body'
       },
 
       events: {
         'show.bs.modal': "beforeShowModal",
-        'hidden.bs.modal': "hideModal"
+        'hidden.bs.modal': "hideModal",
+        'click .js-save-btn': "submitModal"
       },
 
       beforeShowModal: function(){
@@ -23,7 +35,12 @@ define(['tpl!modules/Common/templates/modal.ejs'], function(modalTemplate){
         $('body').removeClass('blured');
         this.trigger('modal:closed');
         this.destroy();
+      },
+
+      submitModal: function(){
+        this.trigger('modal:submit');
       }
+
     });
 
   });

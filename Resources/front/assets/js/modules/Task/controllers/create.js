@@ -11,7 +11,7 @@ define(function(){
               model: newTask
             }),
             modalCreateView = new Create.ModalView({
-              model: new Backbone.Model({title: 'Add New Ticket'})
+              title: 'Add New Ticket'
             });
 
         modalCreateView.on('show', function(){

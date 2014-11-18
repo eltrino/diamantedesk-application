@@ -13,7 +13,7 @@ define(function(){
                 model: model
               }),
               modalEditView = new Edit.ModalView({
-                model: new Backbone.Model({title: 'Edit Ticket ' + model.get('shortcode') + "-" + model.id}),
+                title: 'Edit Ticket ' + model.get('shortcode') + "-" + model.id
               });
 
           modalEditView.on('show', function(){
@@ -24,9 +24,16 @@ define(function(){
             Backbone.history.history.back();
           });
 
+          modalEditView.on('modal:submit', function(data){
+            model.save(data);
+          });
+
           App.DialogRegion.show(modalEditView);
           modalEditView.ModalBody.show(editTaskView);
+
         });
+
+
 
         model.on('error', function(){
           var taskMissingView = new App.Task.View.MissingView();
