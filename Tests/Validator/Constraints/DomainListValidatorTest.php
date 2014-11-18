@@ -13,31 +13,14 @@ class DomainListValidatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @var \Symfony\Component\Validator\ExecutionContext
+     * @Mock \Symfony\Component\Validator\ExecutionContext
      */
     private $context;
 
-    /**
-     * @var \Symfony\Component\Validator\DefaultTranslator
-     * @Mock \Symfony\Component\Validator\DefaultTranslator
-     */
-    private $defaultTranslator;
-
-    /**
-     * @var \Symfony\Component\Validator\ValidationVisitor
-     * @Mock \Symfony\Component\Validator\ValidationVisitor
-     */
-    private $globalContext;
-
-    /**
-     * @var \Symfony\Component\Validator\ConstraintViolationList
-     * @Mock \Symfony\Component\Validator\ConstraintViolationList
-     */
-    private $constraintViolationList;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->context = new ExecutionContext($this->globalContext, $this->defaultTranslator);
     }
 
     /**
@@ -51,9 +34,11 @@ class DomainListValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new DomainListValidator();
         $validator->initialize($this->context);
 
-        $validator->validate($value, $constraint);
+        $this->context
+            ->expects($this->never())
+            ->method('addViolation');
 
-        $this->assertNull($this->context->getViolations());
+        $validator->validate($value, $constraint);
     }
 
     /**
@@ -67,20 +52,11 @@ class DomainListValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new DomainListValidator();
         $validator->initialize($this->context);
 
-        $violation = new ConstraintViolation(null, $constraint->message, array('%domain%' => 'eltrino.c'), null,'',null);
-
-        $this->globalContext
-            ->expects($this->atLeastOnce())
-            ->method('getViolations')
-            ->will($this->returnValue($this->constraintViolationList));
-
-        $this->constraintViolationList
-            ->expects($this->atLeastOnce())
-            ->method('add')
-            ->with($violation);
+        $this->context
+            ->expects($this->once())
+            ->method('addViolation')
+            ->with($this->equalTo($constraint->message), $this->equalTo(array("%domain%" => 'eltrino.c')));
 
         $validator->validate($value, $constraint);
-
-        $this->assertEquals($this->constraintViolationList, $this->context->getViolations());
     }
 }
