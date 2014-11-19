@@ -23,18 +23,23 @@ define(function(){
           });
 
           modalEditView.on('modal:closed', function(){
-            Backbone.history.history.back();
+            App.trigger('task:view', editTaskModel.get('id'));
           });
 
           modalEditView.on('modal:submit', function(data){
-            editTaskModel.save(data);
+            editTaskModel.save(data, {
+              success : function(resultModel){
+                App.trigger('task:view', resultModel.get('id'));
+                modalEditView.$el.modal('hide');
+              }
+            });
           });
 
           App.DialogRegion.show(modalEditView);
           modalEditView.ModalBody.show(editTaskView);
 
         }).fail(function(){
-          console.log(App.Task.View);
+
           var taskMissingView = new App.Task.View.MissingView();
           App.MainRegion.show(taskMissingView);
 

@@ -6,7 +6,8 @@ define(function(){
 
       require(['modules/Task/models/task', 'modules/Task/views/create'], function(){
 
-        var newTaskModel = new App.Task.Models.TaskModel(),
+        var isSuccess = false;
+            newTaskModel = new App.Task.Models.TaskModel(),
             newTaskView = new Create.ItemView({
               model: newTaskModel
             }),
@@ -19,11 +20,19 @@ define(function(){
         });
 
         modalCreateView.on('modal:closed', function(){
-          Backbone.history.history.back();
+          if(!isSuccess){
+            Backbone.history.history.back();
+          }
         });
 
-        modalEditView.on('modal:submit', function(data){
-          newTaskModel.save(data);
+        modalCreateView.on('modal:submit', function(data){
+          newTaskModel.save(data, {
+            success : function(resultModel){
+              isSuccess = true;
+              App.trigger('task:view', resultModel.get('id'));
+              modalCreateView.$el.modal('hide');
+            }
+          });
         });
 
         App.DialogRegion.show(modalCreateView);

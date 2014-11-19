@@ -13,8 +13,8 @@ define(function(){
             collection: taskCollection
           });
 
-          taskListView.on("childview:task:view", function(childView, model){
-            App.trigger('task:view', model.get('id'));
+          taskListView.on("childview:task:view", function(childView, taskModel){
+            App.trigger('task:view', taskModel.get('id'));
           });
 
           App.MainRegion.show(taskListView);
