@@ -1,6 +1,6 @@
 define(['tpl!modules/Common/templates/modal.ejs'], function(modalTemplate){
 
-  App.module('Common.Modal', function(Modal, App, Backbone, Marionette, $, _){
+  return App.module('Common.Modal', function(Modal, App, Backbone, Marionette, $, _){
 
     Modal.LayoutView = Marionette.LayoutView.extend({
       className: 'modal fade',

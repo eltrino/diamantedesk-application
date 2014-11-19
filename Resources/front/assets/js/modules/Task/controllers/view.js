@@ -1,6 +1,6 @@
 define(function(){
 
-  App.module('Task.View', function(View, App, Backbone, Marionette, $, _){
+  return App.module('Task.View', function(View, App, Backbone, Marionette, $, _){
 
     View.TaskController = function(id){
 

@@ -1,14 +1,19 @@
 define([
   'tpl!modules/Task/templates/form.ejs',
-  'modules/Common/views/modal'], function(createTemplate){
+  'tpl!modules/Task/templates/missing-view.ejs',
+  'modules/Common/views/modal'], function(createTemplate, missingTaskViewTemplate, Modal){
 
-  App.module('Task.Edit', function(Edit, App, Backbone, Marionette, $, _){
+  return App.module('Task.Edit', function(Edit, App, Backbone, Marionette, $, _){
+
+    Edit.MissingView = Marionette.ItemView.extend({
+      template: missingTaskViewTemplate
+    });
 
     Edit.ItemView = Marionette.ItemView.extend({
       template: createTemplate
     });
 
-    Edit.ModalView = App.Common.Modal.LayoutView.extend({
+    Edit.ModalView = Modal.LayoutView.extend({
       submitModal: function(){
         var arr = this.$('form').serializeArray(), i = arr.length, data = {};
         for(;i--;) {

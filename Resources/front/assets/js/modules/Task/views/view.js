@@ -2,7 +2,7 @@ define([
   'tpl!modules/Task/templates/view.ejs',
   'tpl!modules/Task/templates/missing-view.ejs'], function(taskViewTemplate, missingTaskViewTemplate){
 
-  App.module('Task.View', function(View, App, Backbone, Marionette, $, _){
+  return App.module('Task.View', function(View, App, Backbone, Marionette, $, _){
 
     View.MissingView = Marionette.ItemView.extend({
       template: missingTaskViewTemplate

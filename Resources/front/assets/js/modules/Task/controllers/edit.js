@@ -1,13 +1,12 @@
 define(function(){
 
-  App.module('Task.Edit', function(Edit, App, Backbone, Marionette, $, _){
+  return App.module('Task.Edit', function(Edit, App, Backbone, Marionette, $, _){
 
     Edit.TaskController = function(id){
 
       require([
         'modules/Task/models/task',
-        'modules/Task/views/view',
-        'modules/Task/views/edit'], function(){
+        'modules/Task/views/edit'], function(Models, EditView){
 
         App.request("task:model", id).done(function(editTaskModel){
 
@@ -40,7 +39,7 @@ define(function(){
 
         }).fail(function(){
 
-          var taskMissingView = new App.Task.View.MissingView();
+          var taskMissingView = new Edit.MissingView();
           App.MainRegion.show(taskMissingView);
 
         });

@@ -1,6 +1,6 @@
 define(function(){
 
-  App.module("Task.Models",function(Models, App, Backbone, Marionette, $, _){
+  return App.module("Task.Models",function(Models, App, Backbone, Marionette, $, _){
 
     Models.TaskModel = Backbone.Model.extend({
 

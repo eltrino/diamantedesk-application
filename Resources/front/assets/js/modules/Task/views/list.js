@@ -2,7 +2,7 @@ define([
   'tpl!modules/Task/templates/list-item.ejs',
   'tpl!modules/Task/templates/list.ejs'], function(listItemTemplate, listTemplate){
 
-  App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
+  return App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 
     List.ItemView = Marionette.ItemView.extend({
       tagName: "tr",

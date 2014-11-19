@@ -1,6 +1,6 @@
 define(function(){
 
-  App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
+  return App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 
     List.TaskController = function(){
 

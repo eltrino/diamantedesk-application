@@ -1,6 +1,6 @@
 define(function(){
 
-  App.module('Task.Routers', function(Routers, App, Backbone, Marionette, $, _){
+  return App.module('Task.Routers', function(Routers, App, Backbone, Marionette, $, _){
 
     Routers = Marionette.AppRouter.extend({
       appRoutes: {
@@ -13,23 +13,23 @@ define(function(){
 
     var API = {
       listTasks: function(){
-        require(['modules/Task/controllers/list'], function(){
-          App.Task.List.TaskController();
+        require(['modules/Task/controllers/list'], function(List){
+          List.TaskController();
         });
       },
       viewTask: function(id){
-        require(['modules/Task/controllers/view'], function(){
-          App.Task.View.TaskController(id);
+        require(['modules/Task/controllers/view'], function(View){
+          View.TaskController(id);
         });
       },
       createTask: function(){
-        require(['modules/Task/controllers/create'], function(){
-          App.Task.Create.TaskController();
+        require(['modules/Task/controllers/create'], function(Create){
+          Create.TaskController();
         });
       },
       editTask: function(id){
-        require(['modules/Task/controllers/edit'], function(){
-          App.Task.Edit.TaskController(id);
+        require(['modules/Task/controllers/edit'], function(Edit){
+          Edit.TaskController(id);
         });
       }
     };

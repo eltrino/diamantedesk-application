@@ -1,13 +1,13 @@
 define(function(){
 
-  App.module('Task.Create', function(Create, App, Backbone, Marionette, $, _){
+  return App.module('Task.Create', function(Create, App, Backbone, Marionette, $, _){
 
     Create.TaskController = function(){
 
-      require(['modules/Task/models/task', 'modules/Task/views/create'], function(){
+      require(['modules/Task/models/task', 'modules/Task/views/create'], function(Models, CreateView){
 
-        var isSuccess = false;
-            newTaskModel = new App.Task.Models.TaskModel(),
+        var isSuccess = false,
+            newTaskModel = new Models.TaskModel(),
             newTaskView = new Create.ItemView({
               model: newTaskModel
             }),
