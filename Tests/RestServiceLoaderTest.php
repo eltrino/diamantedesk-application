@@ -51,7 +51,7 @@ class RestServiceLoaderTest extends \PHPUnit_Framework_TestCase
         $this->container->expects($this->once())->method('get')->with($this->equalTo('fixture.service'))
             ->will($this->returnValue(new Service()));
 
-        $collection = $this->loader->load('fixture.service', 'rest_service');
+        $collection = $this->loader->load('fixture.service', 'diamante_rest_service');
 
         $this->assertEquals(5, $collection->count());
 

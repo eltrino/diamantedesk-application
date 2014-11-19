@@ -39,7 +39,7 @@ class ApiDoc extends \Nelmio\ApiDocBundle\Annotation\ApiDoc
         if (isset($data['uri'])) {
             $this->uri = $data['uri'];
         } else {
-            // @todo throw LogicException
+            throw new \LogicException('@ApiDoc annotation should contain required parameter "uri".');
         }
     }
 

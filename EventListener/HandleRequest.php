@@ -15,6 +15,7 @@
 
 namespace Diamante\ApiBundle\EventListener;
 
+use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Validator\Validator;
 
@@ -32,20 +33,11 @@ class HandleRequest
     {
         $request = $event->getRequest();
 
-        if (!$request->attributes->has('_diamante_api')) {
+        if (!$request->attributes->has('_diamante_rest_service')) {
             return;
         }
 
-        $controller = $event->getController();
-
-        if (is_array($controller)) {
-            $reflection = new \ReflectionMethod($controller[0], $controller[1]);
-        } elseif (is_object($controller) && !$controller instanceof \Closure) {
-            $reflection = new \ReflectionObject($controller);
-            $reflection = $reflection->getMethod('__invoke');
-        } else {
-            $reflection = new \ReflectionFunction($controller);
-        }
+        $reflection = $this->getReflectionMethod($event->getController());
 
         $parameters = $reflection->getParameters();
         if (count($parameters) == 1 && $parameters[0]->getClass()) {
@@ -66,6 +58,7 @@ class HandleRequest
                     }
                     $command->$name = $value;
                 }
+                // @todo handle files
             }
 
             $errors = $this->validator->validate($command);
@@ -78,4 +71,16 @@ class HandleRequest
             $event->getRequest()->attributes->set($parameters[0]->getName(), $command);
         }
     }
-} 
+
+    private function getReflectionMethod($controller)
+    {
+        if (is_array($controller)) {
+            return new \ReflectionMethod($controller[0], $controller[1]);
+        } elseif (is_object($controller) && !$controller instanceof \Closure) {
+            $reflection = new \ReflectionObject($controller);
+            return $reflection->getMethod('__invoke');
+        } else {
+            return false;
+        }
+    }
+}

@@ -33,13 +33,14 @@ class HandleView
     {
         $request = $event->getRequest();
 
-        if (!$request->attributes->has('_diamante_api')) {
+        if (!$request->attributes->has('_diamante_rest_service')) {
             return;
         }
 
         $data = $event->getControllerResult();
         $responseMethod = 'prepare' . ucfirst(strtolower($request->getMethod())) . 'Response';
-        $event->setResponse($this->$responseMethod($data, $request->getRequestFormat()));
+        $response = call_user_func_array([$this, $responseMethod], [$data, $request->getRequestFormat()]);
+        $event->setResponse($response);
     }
 
     protected function prepareGetResponse($data, $format)
@@ -52,9 +53,9 @@ class HandleView
         return new Response('', 200);
     }
 
-    protected function preparePostResponse($data, $format)
+    protected function preparePostResponse()
     {
-        return new Response($this->serializer->serialize($data, $format), 201);
+        return new Response('', 201);
     }
 
     protected function prepareDeleteResponse()

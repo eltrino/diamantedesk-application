@@ -19,6 +19,7 @@ use JMS\Serializer\Serializer;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 
 class HandleException
 {
@@ -34,8 +35,7 @@ class HandleException
     {
         $request = $event->getRequest();
 
-        // @todo change to interface
-        if (!$request->attributes->has('_diamante_api')) {
+        if (!$request->attributes->has('_diamante_rest_service')) {
             return;
         }
 

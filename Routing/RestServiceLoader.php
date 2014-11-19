@@ -48,7 +48,7 @@ class RestServiceLoader extends Loader
 
                 $defaults = [
                     '_controller' => $resource . ':' . $reflectionMethod->getName(),
-                    '_diamante_api' => true
+                    '_diamante_rest_service' => true
                 ];
 
                 $collection->add(
@@ -63,7 +63,7 @@ class RestServiceLoader extends Loader
 
     public function supports($resource, $type = null)
     {
-        return $type === 'rest_service';
+        return $type === 'diamante_rest_service';
     }
 
     private function routeId($serviceId, $serviceMethod)
