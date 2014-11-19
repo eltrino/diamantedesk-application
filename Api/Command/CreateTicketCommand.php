@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Diamante\DeskBundle\Validator\Constraints\Entity;
 
 class CreateTicketCommand
 {
@@ -25,7 +26,7 @@ class CreateTicketCommand
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="object")
+     * @Entity()
      */
     public $branch;
 
@@ -54,13 +55,13 @@ class CreateTicketCommand
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="object")
+     * @Entity()
      */
     public $reporter;
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="object")
+     * @Entity()
      */
     public $assignee;
 

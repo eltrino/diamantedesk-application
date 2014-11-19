@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
@@ -96,12 +97,36 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Load Ticket by given ticket id
+     *
+     * @ApiDoc(
+     *  description="Returns a ticket",
+     *  uri="/tickets/{id}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
      * @param int $ticketId
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function loadTicket($ticketId)
     {
-        return $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($ticketId);
+        $this->isGranted('VIEW', $ticket);
+
+        return $ticket;
     }
 
     /**
@@ -186,6 +211,18 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Create Ticket
+     *
+     * @ApiDoc(
+     *  description="Create ticket",
+     *  uri="/tickets.{_format}",
+     *  method="POST",
+     *  resource=true,
+     *  statusCodes={
+     *      201="Returned when successful",
+     *      403="Returned when the user is not authorized to create ticket"
+     *  }
+     * )
+     *
      * @param CreateTicketCommand $command
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
@@ -336,6 +373,27 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Delete Ticket
+     *
+     * @ApiDoc(
+     *  description="Delete ticket",
+     *  uri="/tickets/{id}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
      * @param $ticketId
      * @return null
      * @throws \RuntimeException if unable to load required ticket
@@ -394,5 +452,70 @@ class TicketServiceImpl implements TicketService
         if (count($this->processManager->getEventsHistory())) {
             $this->processManager->process();
         }
+    }
+
+    /**
+     * Update certain properties of the Ticket
+     *
+     * @ApiDoc(
+     *  description="Update ticket",
+     *  uri="/tickets/{id}.{_format}",
+     *  method="PUT",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Branch Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to update ticket",
+     *      404="Returned when the branch is not found"
+     *  }
+     * )
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updateProperties(Command\UpdatePropertiesCommand $command)
+    {
+        /**
+         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
+         */
+        $ticket = $this->loadTicketBy($command->id);
+
+        $this->isGranted('EDIT', $ticket);
+
+        foreach ($command->properties as $name => $value) {
+            $ticket->updateProperty($name, $value);
+        }
+
+        $this->ticketRepository->store($ticket);
+    }
+
+    /**
+     * Retrieves list of all Tickets
+     *
+     * @ApiDoc(
+     *  description="Returns all tickets",
+     *  uri="/tickets.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list tickets"
+     *  }
+     * )
+     *
+     * @return Ticket[]
+     */
+    public function listAllTickets()
+    {
+        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Ticket');
+
+        $tickets = $this->ticketRepository->getAll();
+        return $tickets;
     }
 }

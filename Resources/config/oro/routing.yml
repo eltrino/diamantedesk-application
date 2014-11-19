@@ -6,8 +6,19 @@ diamante_desk_bundle:
 diamante_desk_api_branch:
 # @todo alias for service
     resource:     diamante.branch.service
-# @todo rename diamante_rest_service
-    type:         rest_service
+    type:         diamante_rest_service
+    prefix:       /api/rest/{version}/desk/
+    requirements:
+        version:  latest|v1
+        _format:  xml|json
+    defaults:
+        version:  latest
+        _format:  json
+
+diamante_desk_api_ticket:
+# @todo alias for service
+    resource:     diamante.ticket.service
+    type:         diamante_rest_service
     prefix:       /api/rest/{version}/desk/
     requirements:
         version:  latest|v1

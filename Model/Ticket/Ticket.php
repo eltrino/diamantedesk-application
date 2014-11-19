@@ -413,4 +413,20 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     {
         $this->raise(new TicketWasDeleted($this->id, $this->subject, $this->getRecipientsList()));
     }
+
+    /**
+     * Update single property of the ticket
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function updateProperty($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        } else {
+            throw new \DomainException(sprintf('Ticket does not have "%s" property.', $name));
+        }
+    }
 }

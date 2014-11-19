@@ -91,4 +91,18 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket(AssigneeTicketCommand $command);
+
+    /**
+     * Update certain properties of the ticket
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updateProperties(Command\UpdatePropertiesCommand $command);
+
+    /**
+     * Retrieves list of all Tickets
+     * @return Ticket[]
+     */
+    public function listAllTickets();
+
 }

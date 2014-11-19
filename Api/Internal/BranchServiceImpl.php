@@ -15,6 +15,7 @@
 
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
@@ -26,7 +27,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\ApiBundle\Annotation\ApiDoc;
 
 class BranchServiceImpl implements BranchService
 {
@@ -80,8 +80,7 @@ class BranchServiceImpl implements BranchService
      *  resource=true,
      *  statusCodes={
      *      200="Returned when successful",
-     *      403="Returned when the user is not authorized to list branches",
-     *      404="Returned when the branch is not found"
+     *      403="Returned when the user is not authorized to list branches"
      *  }
      * )
      *
@@ -89,6 +88,7 @@ class BranchServiceImpl implements BranchService
      */
     public function listAllBranches()
     {
+        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
         $branches = $this->branchRepository->getAll();
         return $branches;
     }
@@ -121,6 +121,7 @@ class BranchServiceImpl implements BranchService
      */
     public function getBranch($id)
     {
+        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
         $branch = $this->branchRepository->get($id);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed. Branch not found.');
@@ -271,7 +272,7 @@ class BranchServiceImpl implements BranchService
      *  },
      *  statusCodes={
      *      204="Returned when successful",
-     *      403="Returned when the user is not authorized to see branch",
+     *      403="Returned when the user is not authorized to delete branch",
      *      404="Returned when the branch is not found"
      *  }
      * )

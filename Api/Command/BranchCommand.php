@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
+use Diamante\DeskBundle\Validator\Constraints\Entity;
 
 class BranchCommand implements Taggable
 {
@@ -52,7 +53,7 @@ class BranchCommand implements Taggable
     public $logoFile;
 
     /**
-     * @Assert\Type(type="object")
+     * @Entity()
      */
     public $defaultAssignee;
 
