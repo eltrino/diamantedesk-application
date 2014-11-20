@@ -14,12 +14,23 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
+use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketFactory extends AbstractEntityFactory
 {
-    public function create(TicketSequenceNumber $number, $subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
-    {
+    public function create(
+        TicketSequenceNumber $number,
+        $subject,
+        $description,
+        Branch $branch,
+        User $reporter,
+        User $assignee,
+        Priority $priority,
+        Source $source,
+        Status $status
+    ) {
         return new $this->entityClassName(
             $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
         );

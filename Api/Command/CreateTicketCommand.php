@@ -77,7 +77,7 @@ class CreateTicketCommand
     public $source;
 
     /**
-     * @var \Diamante\DeskBundle\Api\Dto\AttachmentInput
+     * @var \Diamante\DeskBundle\Api\Dto\AttachmentInput[]
      */
     public $attachmentsInput;
 }

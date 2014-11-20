@@ -66,9 +66,9 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC'),
             new User(),
             new User(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::OPEN
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::OPEN)
         );
 
         return $ticket;

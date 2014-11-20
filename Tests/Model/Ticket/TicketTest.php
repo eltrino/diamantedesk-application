@@ -39,9 +39,9 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::OPEN
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::OPEN)
         );
 
         $this->assertEquals('Subject', $ticket->getSubject());
@@ -69,9 +69,9 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::OPEN
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::OPEN)
         );
 
         $this->assertEquals($branch->getKey() . '-' . $ticketSequenceNumberValue, (string) $ticket->getKey());
@@ -89,9 +89,9 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $branch,
             $reporter,
             $assignee,
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::NEW_ONE
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::NEW_ONE)
         );
 
         $this->assertEquals('Subject', $ticket->getSubject());
@@ -143,9 +143,9 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::OPEN
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::OPEN)
         );
 
         return $ticket;

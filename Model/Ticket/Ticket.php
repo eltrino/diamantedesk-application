@@ -117,30 +117,13 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param Branch $branch
      * @param User $reporter
      * @param User $assignee
-     * @param $source
-     * @param null $priority
-     * @param null $status
+     * @param Source $source
+     * @param Priority $priority
+     * @param Status $status
      */
-    public function __construct(TicketSequenceNumber $number, $subject, $description, Branch $branch, User $reporter, User $assignee, $source, $priority = null, $status = null)
+    public function __construct(TicketSequenceNumber $number, $subject, $description, Branch $branch, User $reporter, User $assignee, Source $source, Priority $priority, Status $status)
     {
         $this->sequenceNumber = $number;
-
-        if (null == $priority) {
-            $priority = Priority::PRIORITY_MEDIUM;
-        }
-
-        if (null == $status) {
-            $status = Status::NEW_ONE;
-        }
-
-        if (null == $source) {
-            $status = Source::PHONE;
-        }
-
-        $priority = new Priority($priority);
-        $status   = new Status($status);
-        $source   = new Source($source);
-
         $this->subject = $subject;
         $this->description = $description;
         $this->branch = $branch;

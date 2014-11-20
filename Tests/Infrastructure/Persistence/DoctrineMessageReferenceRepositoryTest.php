@@ -104,9 +104,9 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
             new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESCR'),
             new User(),
             new User(),
-            Source::PHONE,
-            Priority::PRIORITY_MEDIUM,
-            Status::OPEN
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_MEDIUM),
+            new Status(Status::OPEN)
         );
 
         return new MessageReference(

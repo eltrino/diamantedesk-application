@@ -24,10 +24,9 @@ use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
-use Diamante\DeskBundle\Model\Ticket\TicketFactory;
+use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
-use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
@@ -54,9 +53,9 @@ class TicketServiceImpl implements TicketService
     private $attachmentManager;
 
     /**
-     * @var TicketFactory
+     * @var TicketBuilder
      */
-    private $ticketFactory;
+    private $ticketBuilder;
 
     /**
      * @var UserService
@@ -80,7 +79,7 @@ class TicketServiceImpl implements TicketService
 
     public function __construct(TicketRepository $ticketRepository,
                                 Repository $branchRepository,
-                                TicketFactory $ticketFactory,
+                                TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
                                 UserService $userService,
                                 SecurityFacade $securityFacade,
@@ -89,7 +88,7 @@ class TicketServiceImpl implements TicketService
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
-        $this->ticketFactory = $ticketFactory;
+        $this->ticketBuilder = $ticketBuilder;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
         $this->securityFacade = $securityFacade;
@@ -215,31 +214,18 @@ class TicketServiceImpl implements TicketService
 
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
-        $branch = $this->branchRepository->get($command->branch);
-        if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed, branch not found.');
-        }
 
-        $reporter = $this->userService->getUserById($command->reporter);
-        if (is_null($reporter)) {
-            throw new \RuntimeException('Reporter loading failed, reporter not found.');
-        }
+        $this->ticketBuilder
+            ->setSubject($command->subject)
+            ->setDescription($command->description)
+            ->setBranchId($command->branch)
+            ->setReporterId($command->reporter)
+            ->setAssigneeId($command->assignee)
+            ->setPriority($command->priority)
+            ->setSource($command->source)
+            ->setStatus($command->status);
 
-        $assignee = $this->userService->getUserById($command->assignee);
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee validation failed, assignee not found.');
-        }
-
-        $ticket = $this->ticketFactory
-            ->create(new TicketSequenceNumber(null), $command->subject,
-                $command->description,
-                $branch,
-                $reporter,
-                $assignee,
-                $command->priority,
-                $command->source,
-                $command->status
-            );
+               $ticket = $this->ticketBuilder->build();
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {

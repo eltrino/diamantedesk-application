@@ -16,7 +16,9 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
@@ -67,7 +69,9 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             $branch,
             new User(),
             new User(),
-            Source::WEB
+            new Source(Source::WEB),
+            new Priority(Priority::PRIORITY_MEDIUM),
+            new Status(Status::NEW_ONE)
         );
 
         $query = $this->getMockBuilder('\Doctrine\ORM\AbstractQuery')
