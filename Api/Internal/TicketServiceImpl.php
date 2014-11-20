@@ -118,24 +118,24 @@ class TicketServiceImpl implements TicketService
      *  }
      * )
      *
-     * @param int $ticketId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    public function loadTicket($ticketId)
+    public function loadTicket($id)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($id);
         $this->isGranted('VIEW', $ticket);
 
         return $ticket;
     }
 
     /**
-     * @param int $ticketId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    private function loadTicketBy($ticketId)
+    private function loadTicketBy($id)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
+        $ticket = $this->ticketRepository->get($id);
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
@@ -394,13 +394,13 @@ class TicketServiceImpl implements TicketService
      *  }
      * )
      *
-     * @param $ticketId
+     * @param $id
      * @return null
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($ticketId)
+    public function deleteTicket($id)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketBy($id);
         $this->isGranted('DELETE', $ticket);
         $attachments = $ticket->getAttachments();
         $ticket->delete();

@@ -27,10 +27,10 @@ interface TicketService
 {
     /**
      * Load Ticket by given ticket id
-     * @param int $ticketId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    public function loadTicket($ticketId);
+    public function loadTicket($id);
 
     /**
      * Retrieves Ticket Attachment
@@ -79,11 +79,11 @@ interface TicketService
 
     /**
      * Delete Ticket
-     * @param $ticketId
+     * @param $id
      * @return null
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($ticketId);
+    public function deleteTicket($id);
 
     /**
      * Assign Ticket to specified User
