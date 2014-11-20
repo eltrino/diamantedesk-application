@@ -15,6 +15,7 @@
 
 namespace Diamante\ApiBundle\EventListener;
 
+use Diamante\ApiBundle\Routing\PropertiesMapper;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Validator\Validator;
@@ -32,34 +33,38 @@ class HandleRequest
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
+        $controller = $event->getController();
 
-        if (!$request->attributes->has('_diamante_rest_service')) {
+        if (is_array($controller)) {
+            if (!$controller[0] instanceof RestServiceInterface) {
+                return;
+            }
+            $reflection = new \ReflectionMethod($controller[0], $controller[1]);
+        } elseif (is_object($controller) && !$controller instanceof \Closure) {
+            if (!$controller instanceof RestServiceInterface) {
+                return;
+            }
+            $reflection = new \ReflectionObject($controller);
+            $reflection = $reflection->getMethod('__invoke');
+        } else {
             return;
         }
 
-        $reflection = $this->getReflectionMethod($event->getController());
+        $request->attributes->set('_diamante_rest_service', true);
+
+        $commandData = $request->attributes->get('_route_params');
+        $commandData = array_merge($commandData, $request->request->all());
+        // @todo find possible solution to avoid this hardcoded parameter
+        $commandData['properties'] = $request->request->all();
 
         $parameters = $reflection->getParameters();
-        if (count($parameters) == 1 && $parameters[0]->getClass()) {
-            $commandData = $request->attributes->get('_route_params');
-            $commandData = array_merge($commandData, $request->request->all());
-            // @todo find possible solution to avoid this hardcoded parameter
-            $commandData['properties'] = $request->request->all();
 
-            $commandClassName = $parameters[0]->getClass()->name;
-            $command = new $commandClassName;
-            $commandProperties = get_class_vars($commandClassName);
-            foreach ($commandProperties as $name => $value) {
-                if (array_key_exists($name, $commandData)) {
-                    if (is_numeric($commandData[$name])) {
-                        $value = $commandData[$name] * 1;
-                    } else {
-                        $value = $commandData[$name];
-                    }
-                    $command->$name = $value;
-                }
-                // @todo handle files
+        foreach ($parameters as $parameter) {
+            if (!$parameter->getClass()) {
+                continue;
             }
+            $mapper = new PropertiesMapper($parameter->getClass());
+            $command = $mapper->map($commandData);
 
             $errors = $this->validator->validate($command);
 
@@ -68,19 +73,7 @@ class HandleRequest
                 throw new \InvalidArgumentException($errorsString);
             }
 
-            $event->getRequest()->attributes->set($parameters[0]->getName(), $command);
-        }
-    }
-
-    private function getReflectionMethod($controller)
-    {
-        if (is_array($controller)) {
-            return new \ReflectionMethod($controller[0], $controller[1]);
-        } elseif (is_object($controller) && !$controller instanceof \Closure) {
-            $reflection = new \ReflectionObject($controller);
-            return $reflection->getMethod('__invoke');
-        } else {
-            return false;
+            $event->getRequest()->attributes->set($parameter->getName(), $command);
         }
     }
 }

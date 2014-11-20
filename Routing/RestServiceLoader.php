@@ -47,8 +47,7 @@ class RestServiceLoader extends Loader
                 $methods = [$annotation->getMethod()];
 
                 $defaults = [
-                    '_controller' => $resource . ':' . $reflectionMethod->getName(),
-                    '_diamante_rest_service' => true
+                    '_controller' => $resource . ':' . $reflectionMethod->getName()
                 ];
 
                 $collection->add(

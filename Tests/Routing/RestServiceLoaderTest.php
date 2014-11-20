@@ -13,10 +13,10 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\ApiBundle\Tests;
+namespace Diamante\ApiBundle\Tests\Routing;
 
 use Diamante\ApiBundle\Routing\RestServiceLoader;
-use Diamante\ApiBundle\Tests\Fixtures\Service;
+use Diamante\ApiBundle\Tests\Routing\Fixtures\Service;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -57,7 +57,6 @@ class RestServiceLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('GET', $collection->get('fixture_service_get_entity')->getRequirement('_method'));
         $this->assertEquals('fixture.service:getEntity', $collection->get('fixture_service_get_entity')->getDefault('_controller'));
-        $this->assertTrue($collection->get('fixture_service_get_entity')->getDefault('_diamante_api'));
 
         $this->assertEquals('PUT', $collection->get('fixture_service_put_entity')->getRequirement('_method'));
         $this->assertEquals('POST', $collection->get('fixture_service_post_entity')->getRequirement('_method'));

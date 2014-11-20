@@ -13,7 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\ApiBundle\Tests\Fixtures;
+namespace Diamante\ApiBundle\Tests\Routing\Fixtures;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
 
@@ -32,37 +32,42 @@ class Service
      *  uri="/entities/{id}.{_format}",
      *  method="GET"
      * )
+     * @param $id
      */
-    public function getEntity(){}
+    public function getEntity($id){}
 
     /**
      * @ApiDoc(
      *  uri="/entities/{id}.{_format}",
      *  method="PUT"
      * )
+     * @param $id
      */
-    public function putEntity(){}
+    public function putEntity($id){}
 
     /**
      * @ApiDoc(
      *  uri="/entities.{_format}",
      *  method="POST"
      * )
+     * @param $command
      */
-    public function postEntity(){}
+    public function postEntity(Command $command){}
 
     /**
      * @ApiDoc(
      *  uri="/entities/{id}.{_format}",
      *  method="DELETE"
      * )
+     * @param $id
      */
-    public function deleteEntity(){}
+    public function deleteEntity($id){}
 
     /**
      * @ApiDoc(
      *  uri="/entities/{id}/parts.{_format}"
      * )
+     * @param $id
      */
-    public function getParts(){}
+    public function getParts($id){}
 }
