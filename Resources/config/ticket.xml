@@ -59,8 +59,7 @@
         <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
             <argument type="service" id="diamante.ticket.repository"/>
-            <argument type="service" id="diamante.branch.repository"/>
-            <argument type="service" id="diamante.ticket.entity.factory"/>
+            <argument type="service" id="diamante.ticket.builder"/>
             <argument type="service" id="diamante.comment.entity.factory"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.attachment.manager"/>
