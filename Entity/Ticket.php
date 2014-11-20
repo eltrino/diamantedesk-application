@@ -85,9 +85,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
 
     /**
      * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="reporter_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\Column(type="user_type", name="reporter_id")
      */
     protected $reporter;
 

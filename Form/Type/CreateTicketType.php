@@ -116,7 +116,7 @@ class CreateTicketType extends AbstractType
 
         $builder->add(
             'reporter',
-            'oro_user_select',
+            'diamante_reporter_select',
             array(
                 'label'    => 'diamante.desk.attributes.reporter',
                 'required' => true

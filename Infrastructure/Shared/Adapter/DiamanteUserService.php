@@ -12,20 +12,28 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+ 
+/**
+ * Created by PhpStorm.
+ * User: s3nt1nel
+ * Date: 19/11/14
+ * Time: 8:03 PM
+ */
 
 namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
+
+use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository;
-use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\User\User as DiamanteUser;
 
-class OroUserService implements UserService
+class DiamanteUserService
 {
     /**
-     * @var UserManager
-     */
+    * @var UserManager
+    */
     private $oroUserManager;
     private $diamanteApiUserRepository;
 
@@ -39,22 +47,12 @@ class OroUserService implements UserService
     }
 
     /**
-     * Retrieve User entity
-     * @param int $id
-     * @return User
+     * @param DiamanteUser $user
+     * @return User|ApiUser
      */
-    public function getUserById($id)
-    {
-        $user = $this->userManager->findUserBy(array('id' => $id));
-        if (is_null($user)) {
-            throw new \RuntimeException("User doesn't exist.");
-        }
-        return $user;
-    }
-
     public function getByUser(DiamanteUser $user)
     {
-        if ($user->getType() == 'oro') {
+        if ($user->getType() == DiamanteUser::TYPE_ORO) {
             $user = $this->oroUserManager->findUserBy(array('id' => $user->getId()));
         } else {
             $user = $this->diamanteApiUserRepository->get($user->getId());
@@ -62,4 +60,4 @@ class OroUserService implements UserService
 
         return $user;
     }
-}
+} 

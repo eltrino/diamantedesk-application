@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\EventListener\Mail\TicketProcessManager;
+use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -25,7 +26,8 @@ use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Model\Ticket\AttachmentService;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
-use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetailsService;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -56,7 +58,7 @@ class TicketServiceImpl implements TicketService
     private $ticketFactory;
 
     /**
-     * @var UserService
+     * @var DiamanteUserService
      */
     private $userService;
 
@@ -75,23 +77,30 @@ class TicketServiceImpl implements TicketService
      */
     private $processManager;
 
+    /**
+     * @var UserDetailsService
+     */
+    private $userDetailsService;
+
     public function __construct(Repository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketFactory $ticketFactory,
                                 AttachmentService $attachmentService,
-                                UserService $userService,
+                                DiamanteUserService $userService,
                                 SecurityFacade $securityFacade,
                                 EventDispatcher $dispatcher,
-                                TicketProcessManager $processManager
+                                TicketProcessManager $processManager,
+                                UserDetailsService $userDetailsService
     ) {
-        $this->ticketRepository = $ticketRepository;
-        $this->branchRepository = $branchRepository;
-        $this->ticketFactory = $ticketFactory;
-        $this->userService = $userService;
-        $this->attachmentService = $attachmentService;
-        $this->securityFacade = $securityFacade;
-        $this->dispatcher = $dispatcher;
-        $this->processManager = $processManager;
+        $this->ticketRepository     = $ticketRepository;
+        $this->branchRepository     = $branchRepository;
+        $this->ticketFactory        = $ticketFactory;
+        $this->userService          = $userService;
+        $this->attachmentService    = $attachmentService;
+        $this->securityFacade       = $securityFacade;
+        $this->dispatcher           = $dispatcher;
+        $this->processManager       = $processManager;
+        $this->userDetailsService   = $userDetailsService;
     }
 
     /**
@@ -193,12 +202,9 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Branch loading failed, branch not found.');
         }
 
-        $reporter = $this->userService->getUserById($command->reporter);
-        if (is_null($reporter)) {
-            throw new \RuntimeException('Reporter loading failed, reporter not found.');
-        }
+        $reporter = $this->userDetailsService->fetch(User::fromString($command->reporter));
 
-        $assignee = $this->userService->getUserById($command->assignee);
+        $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
         if (is_null($assignee)) {
             throw new \RuntimeException('Assignee validation failed, assignee not found.');
         }
@@ -240,11 +246,14 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
-        $reporter = $ticket->getReporter();
-        if ($command->reporter != $ticket->getReporterId()) {
-            $reporter = $this->userService->getUserById($command->reporter);
-            if (is_null($reporter)) {
-                throw new \RuntimeException('Reporter loading failed, reporter not found.');
+        $ticketReporter = $ticket->getReporter();
+        $commandReporter = User::fromString($command->reporter);
+
+        if ($commandReporter->getId() != $ticketReporter->getId()) {
+            try {
+                $reporter = $this->userDetailsService->fetch($commandReporter);
+            } catch (\RuntimeException $e) {
+                throw $e;
             }
         }
 
@@ -258,7 +267,7 @@ class TicketServiceImpl implements TicketService
         );
 
         if ($command->assignee) {
-            $assignee = $this->userService->getUserById($command->assignee);
+            $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }

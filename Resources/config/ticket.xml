@@ -70,9 +70,9 @@
             <argument type="service" id="diamante.attachment.service"/>
         </service>
 
-        <service id="diamante.user.service" class="%diamante.user.service.class%">
-            <argument type="service" id="oro_user.manager"/>
-        </service>
+        <!--<service id="diamante.user.service" class="%diamante.user.service.class%">-->
+            <!--<argument type="service" id="oro_user.manager"/>-->
+        <!--</service>-->
 
         <service id="diamante.ticket.entity.factory" class="%diamante.ticket.entity.factory.class%">
             <argument type="string">%diamante.ticket.entity.class%</argument>
@@ -87,6 +87,7 @@
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.mail_ticket_process_manager"/>
+            <argument type="service" id="diamante.user.details.service"/>
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"
@@ -162,6 +163,21 @@
 
         <service id="diamante.form.type.assignee_select" class="Diamante\DeskBundle\Form\Type\AssigneeSelectType">
             <tag name="form.type" alias="diamante_assignee_select"/>
+        </service>
+
+        <service id="diamante.form.type.reporter_select" class="Diamante\DeskBundle\Form\Type\ReporterSelectType">
+            <tag name="form.type" alias="diamante_reporter_select"/>
+        </service>
+
+        <service id="diamante.form.type.user_select" class="Diamante\DeskBundle\Form\Type\DiamanteUserSelectType">
+            <tag name="form.type" alias="diamante_user_select"/>
+        </service>
+
+        <service id="diamante.form.type.jqueryselect2_hidden" class="Diamante\DeskBundle\Form\Type\DiamanteJquerySelect2HiddenType">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="oro_form.autocomplete.search_registry"/>
+            <tag name="form.type" alias="diamante_jqueryselect2_hidden"/>
+
         </service>
 <!-- repositories start -->
         <service id="diamante.ticket.repository" class="%diamante.generic.repository.class%"

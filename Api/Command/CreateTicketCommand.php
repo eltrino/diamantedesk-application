@@ -54,7 +54,7 @@ class CreateTicketCommand
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="object")
+     * @Assert\Type(type="string")
      */
     public $reporter;
 

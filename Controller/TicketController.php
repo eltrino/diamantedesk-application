@@ -91,8 +91,9 @@ class TicketController extends Controller
     {
         try {
             $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+            $reporterDetails = $this->get('diamante.user.details.service')->fetch($ticket->getReporter());
 
-            return ['entity'  => $ticket];
+            return ['entity'  => $ticket, 'reporterDetails' => $reporterDetails];
         } catch (\Exception $e) {
             $this->addErrorMessage('Ticket loading failed, ticket not found');
 
