@@ -16,7 +16,9 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence\Doctrine;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -55,7 +57,17 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
         $ticketSequenceNumberFieldName = 'number';
         $branch = new BranchStub('DB', 'Dummy Branch', 'Desc');
         $branch->setId($branchId);
-        $ticket = new Ticket(new TicketSequenceNumber(null), 'Subject', 'Description', $branch, new User(), new User(), Source::WEB);
+        $ticket = new Ticket(
+            new TicketSequenceNumber(null),
+            'Subject',
+            'Description',
+            $branch,
+            new User(),
+            new User(),
+            new Source(Source::WEB),
+            new Priority(Priority::PRIORITY_MEDIUM),
+            new Status(Status::NEW_ONE)
+        );
         $event = new LifecycleEventArgs($ticket, $this->objectManager);
 
         $dqlQueryStr = "SELECT MAX(t.sequenceNumber) FROM DiamanteDeskBundle:Ticket t WHERE t.branch = :branchId";
