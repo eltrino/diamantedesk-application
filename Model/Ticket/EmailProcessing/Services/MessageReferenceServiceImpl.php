@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -116,7 +117,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         }
 
         $ticket = $this->ticketFactory
-            ->create($subject,
+            ->create(new TicketSequenceNumber(null), $subject,
                 $description,
                 $branch,
                 $reporter,

@@ -12,16 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket;
+namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
-use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+use Diamante\DeskBundle\Model\Branch\Branch;
 
-class TicketFactory extends AbstractEntityFactory
+class BranchStub extends Branch
 {
-    public function create(TicketSequenceNumber $number, $subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
+    public function setId($id)
     {
-        return new $this->entityClassName(
-            $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
-        );
+        $this->id = $id;
     }
-}
+} 

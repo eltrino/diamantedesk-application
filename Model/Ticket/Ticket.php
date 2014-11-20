@@ -41,6 +41,16 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $id;
 
     /**
+     * @var TicketSequenceNumber
+     */
+    protected $sequenceNumber;
+
+    /**
+     * @var TicketKey
+     */
+    protected $key;
+
+    /**
      * @var string
      */
     protected $subject;
@@ -101,17 +111,20 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $updatedAt;
 
     /**
+     * @param TicketSequenceNumber $number
      * @param $subject
      * @param $description
-     * @param $branch
-     * @param $reporter
-     * @param $assignee
+     * @param Branch $branch
+     * @param User $reporter
+     * @param User $assignee
      * @param $source
      * @param null $priority
      * @param null $status
      */
-    public function __construct($subject, $description, $branch, $reporter, $assignee, $source, $priority = null, $status = null)
+    public function __construct(TicketSequenceNumber $number, $subject, $description, Branch $branch, User $reporter, User $assignee, $source, $priority = null, $status = null)
     {
+        $this->sequenceNumber = $number;
+
         if (null == $priority) {
             $priority = Priority::PRIORITY_MEDIUM;
         }
@@ -151,6 +164,34 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return TicketSequenceNumber
+     */
+    public function getSequenceNumber()
+    {
+        return $this->sequenceNumber;
+    }
+
+    /**
+     * @return TicketKey
+     */
+    public function getKey()
+    {
+        $this->initializeKey();
+        return $this->key;
+    }
+
+    /**
+     * Initialize TicketKey
+     * @return void
+     */
+    private function initializeKey()
+    {
+        if ($this->sequenceNumber->getValue() && is_null($this->key)) {
+            $this->key = new TicketKey($this->branch->getKey(), $this->sequenceNumber->getValue());
+        }
     }
 
     /**

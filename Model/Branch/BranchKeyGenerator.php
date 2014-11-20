@@ -12,16 +12,15 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket;
+namespace Diamante\DeskBundle\Model\Branch;
 
-use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
-
-class TicketFactory extends AbstractEntityFactory
+interface BranchKeyGenerator
 {
-    public function create(TicketSequenceNumber $number, $subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
-    {
-        return new $this->entityClassName(
-            $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
-        );
-    }
-}
+    /**
+     * Generate Branch key
+     * @param string $name
+     * @return string
+     * @throws \InvalidArgumentException if given $name is invalid
+     */
+    public function generate($name);
+} 

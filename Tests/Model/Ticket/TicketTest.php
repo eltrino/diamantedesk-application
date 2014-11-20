@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketTest extends \PHPUnit_Framework_TestCase
@@ -26,12 +27,13 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     const TICKET_SUBJECT      = 'Subject';
     const TICKET_DESCRIPTION  = 'Description';
 
-    public function testCreateWhenStatusIsNotNull()
+    public function testCreates()
     {
         $branch = $this->createBranch();
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
+            new TicketSequenceNumber(null),
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $branch,
@@ -49,14 +51,39 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($reporter, $ticket->getReporter());
         $this->assertEquals($assignee, $ticket->getAssignee());
         $this->assertEquals(Source::PHONE, $ticket->getSource()->getValue());
+
+        $this->assertNull($ticket->getSequenceNumber()->getValue());
+        $this->assertNull($ticket->getKey());
+    }
+
+    public function testTicketKeyInitialization()
+    {
+        $ticketSequenceNumberValue = 12;
+        $branch = new Branch('DB', 'DUMMY BRANCH', 'DUMYY_DESC');
+        $reporter = $this->createReporter();
+        $assignee = $this->createAssignee();
+        $ticket = new Ticket(
+            new TicketSequenceNumber($ticketSequenceNumberValue),
+            self::TICKET_SUBJECT,
+            self::TICKET_DESCRIPTION,
+            $branch,
+            $reporter,
+            $assignee,
+            Source::PHONE,
+            Priority::PRIORITY_LOW,
+            Status::OPEN
+        );
+
+        $this->assertEquals($branch->getKey() . '-' . $ticketSequenceNumberValue, (string) $ticket->getKey());
     }
 
     public function testCreateWhenStatusIsNull()
     {
-        $branch = $this->createBranch();
+        $branch = new Branch('DN', 'DUMMY NAME', 'DUMYY_DESC');
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
+            new TicketSequenceNumber(null),
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $branch,
@@ -110,6 +137,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     private function createTicket()
     {
         $ticket = new Ticket(
+            new TicketSequenceNumber(null),
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
             $this->createBranch(),
@@ -125,7 +153,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMYY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMYY_DESC');
     }
 
     private function createReporter()

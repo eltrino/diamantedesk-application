@@ -26,6 +26,9 @@ use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -36,7 +39,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class TicketServiceImpl implements TicketService
 {
     /**
-     * @var Repository
+     * @var TicketRepository
      */
     private $ticketRepository;
 
@@ -75,7 +78,7 @@ class TicketServiceImpl implements TicketService
      */
     private $processManager;
 
-    public function __construct(Repository $ticketRepository,
+    public function __construct(TicketRepository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketFactory $ticketFactory,
                                 AttachmentManager $attachmentManager,
@@ -102,6 +105,22 @@ class TicketServiceImpl implements TicketService
     public function loadTicket($ticketId)
     {
         return $this->loadTicketBy($ticketId);
+    }
+
+    /**
+     * Load Ticket by given Ticket Key
+     * @param string $key
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function loadTicketByKey($key)
+    {
+        $ticketKey = TicketKey::from($key);
+        $ticket = $this->ticketRepository
+            ->getByTicketKey($ticketKey);
+        if (is_null($ticket)) {
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
+        return $ticket;
     }
 
     /**
@@ -212,7 +231,7 @@ class TicketServiceImpl implements TicketService
         }
 
         $ticket = $this->ticketFactory
-            ->create($command->subject,
+            ->create(new TicketSequenceNumber(null), $command->subject,
                 $command->description,
                 $branch,
                 $reporter,
@@ -336,13 +355,13 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Delete Ticket
-     * @param $ticketId
-     * @return null
+     * @param string $key
+     * @return void
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($ticketId)
+    public function deleteTicket($key)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketByKey($key);
         $this->isGranted('DELETE', $ticket);
         $attachments = $ticket->getAttachments();
         $ticket->delete();

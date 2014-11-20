@@ -37,6 +37,12 @@ class Branch implements Entity, Taggable
     protected $description;
 
     /**
+     * Branch key. Immutable value - generated only once when new Branch created
+     * @var string
+     */
+    protected $key;
+
+    /**
      * @var User
      */
     protected $defaultAssignee;
@@ -61,8 +67,12 @@ class Branch implements Entity, Taggable
      */
     protected $updatedAt;
 
-    public function __construct($name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
+    public function __construct($key, $name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
     {
+        if (strtoupper($key) != $key) {
+            $key = strtoupper($key);
+        }
+        $this->key = $key;
         $this->name = $name;
         $this->description = $description;
         $this->defaultAssignee = $defaultAssignee;
@@ -94,6 +104,14 @@ class Branch implements Entity, Taggable
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**

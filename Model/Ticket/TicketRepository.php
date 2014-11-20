@@ -14,14 +14,14 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+use Diamante\DeskBundle\Model\Shared\Repository;
 
-class TicketFactory extends AbstractEntityFactory
+interface TicketRepository extends Repository
 {
-    public function create(TicketSequenceNumber $number, $subject, $description, $branch, $reporter, $assignee, $priority, $source, $status)
-    {
-        return new $this->entityClassName(
-            $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
-        );
-    }
-}
+    /**
+     * Find Ticket by given TicketKey
+     * @param TicketKey $key
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function getByTicketKey(TicketKey $key);
+} 

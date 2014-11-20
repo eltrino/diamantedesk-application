@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
@@ -153,6 +154,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketFactory->expects($this->once())
             ->method('create')
             ->with(
+                $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber'),
                 $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
                 $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
             )->will($this->returnValue($this->ticket));
@@ -207,6 +209,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketFactory->expects($this->once())
             ->method('create')
             ->with(
+                $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber'),
                 $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
                 $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
             )->will($this->returnValue($this->ticket));
@@ -332,7 +335,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMMY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
     }
 
     private function createReporter()
@@ -353,6 +356,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private function createDummyTicket()
     {
         return new Ticket(
+            new TicketSequenceNumber(null),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
