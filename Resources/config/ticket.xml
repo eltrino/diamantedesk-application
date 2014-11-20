@@ -82,6 +82,8 @@
             <argument type="service" id="diamante.mail_ticket_process_manager"/>
         </service>
 
+        <service id="diamante.ticket.api.service" alias="diamante.ticket.service" />
+
         <service id="diamante.ticket.internal.grid_filters_service"
                  class="%diamante.ticket.internal.grid_filters_service.class%">
             <argument type="service" id="service_container"/>
@@ -150,6 +152,8 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.mail_comment_process_manager"/>
         </service>
+
+        <service id="diamante.comment.api.service" alias="diamante.comment.service" />
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>
 

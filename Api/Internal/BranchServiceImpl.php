@@ -16,6 +16,7 @@
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
+use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
@@ -28,7 +29,7 @@ use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
 
-class BranchServiceImpl implements BranchService
+class BranchServiceImpl implements BranchService, RestServiceInterface
 {
     /**
      * @var Repository

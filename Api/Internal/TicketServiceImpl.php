@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
+use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
@@ -34,7 +35,7 @@ use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class TicketServiceImpl implements TicketService
+class TicketServiceImpl implements TicketService, RestServiceInterface
 {
     /**
      * @var Repository
