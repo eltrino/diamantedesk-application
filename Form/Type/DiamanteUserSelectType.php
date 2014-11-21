@@ -32,12 +32,11 @@ class DiamanteUserSelectType extends AbstractType
         $resolver->setDefaults(
             array(
                 'configs' => array(
-                    //'entity_class'            => 'Diamante\DeskBundle\Model\User\UserDetails',
                     'placeholder'             => 'oro.user.form.choose_user',
                     'result_template_twig'    => 'OroUserBundle:User:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'OroUserBundle:User:Autocomplete/selection.html.twig'
                 ),
-                'autocomplete_alias' => 'users'
+                'autocomplete_alias' => 'diamante_user'
             )
         );
     }

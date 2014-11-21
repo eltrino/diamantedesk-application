@@ -31,6 +31,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Diamante\DeskBundle\Model\User\UserDetails;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\User\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 {
@@ -105,13 +106,13 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param $subject
      * @param $description
      * @param $branch
-     * @param $reporterDetails
+     * @param $reporter
      * @param $assignee
      * @param $source
      * @param null $priority
      * @param null $status
      */
-    public function __construct($subject, $description, $branch, $reporterDetails, $assignee, $source, $priority = null, $status = null)
+    public function __construct($subject, $description, $branch, $reporter, $assignee, $source, $priority = null, $status = null)
     {
         if (null == $priority) {
             $priority = Priority::PRIORITY_MEDIUM;
@@ -124,8 +125,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         if (null == $source) {
             $status = Source::PHONE;
         }
-
-        $reporter = new User($reporterDetails->getId(), $reporterDetails->getType());
 
         $priority = new Priority($priority);
         $status   = new Status($status);
@@ -145,7 +144,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->source = $source;
 
         $this->raise(new TicketWasCreated($this->id, $branch->getName(), $subject, $description,
-            $reporterDetails->getEmail(), $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
+            $reporter, $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
     }
 
     /**
@@ -256,24 +255,22 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     /**
      * @param $subject
      * @param $description
-     * @param $reporterDetails
+     * @param $reporter
      * @param $priority
      * @param $status
      * @param $source
      */
-    public function update($subject, $description, $reporterDetails, $priority, $status, $source)
+    public function update($subject, $description, $reporter, $priority, $status, $source)
     {
         $priority = new Priority($priority);
         $status   = new Status($status);
         $source   = new Source($source);
 
-        $reporter = new User($reporterDetails->getId(), $reporterDetails->getType());
-
         if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter
             || $this->priority->getValue() !== $priority->getValue() || $this->status->getValue() !== $status->getValue()
             || $this->source->getValue() !== $source->getValue()) {
 
-            $this->raise(new TicketWasUpdated($this->id, $subject, $description, $reporter->getEmail(),
+            $this->raise(new TicketWasUpdated($this->id, $subject, $description, $reporter,
                 $priority, $status, $source, $this->getRecipientsList()));
         }
 
@@ -290,18 +287,18 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      */
     public function getRecipientsList()
     {
-        if ($this->getAssignee()) {
-            $recipientsList = array(
-                $this->getReporter()->getEmail(),
-                $this->getAssignee()->getEmail(),
-            );
-        } else {
-            $recipientsList = array(
-                $this->getReporter()->getEmail()
-            );
-        }
-
-        return $recipientsList;
+//        if ($this->getAssignee()) {
+//            $recipientsList = array(
+//                $this->getReporter()->getEmail(),
+//                $this->getAssignee()->getEmail(),
+//            );
+//        } else {
+//            $recipientsList = array(
+//                $this->getReporter()->getEmail()
+//            );
+//        }
+//
+//        return $recipientsList;
     }
 
     /**
@@ -320,9 +317,9 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
-     * @param User $newAssignee
+     * @param OroUser $newAssignee
      */
-    public function assign(User $newAssignee)
+    public function assign(OroUser $newAssignee)
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
             $this->assignee = $newAssignee;

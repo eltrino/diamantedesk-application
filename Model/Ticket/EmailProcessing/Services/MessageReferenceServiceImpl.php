@@ -26,6 +26,7 @@ use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\User\User;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -104,7 +105,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $branchId
      * @param $subject
      * @param $description
-     * @param $reporterId
+     * @param $reporter
      * @param $assigneeId
      * @param null $priority
      * @param null $status
@@ -112,7 +113,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
+    public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
                                  $priority = null, $status = null, array $attachments = null)
     {
         $branch = $this->branchRepository->get($branchId);
@@ -120,12 +121,11 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             throw new \RuntimeException('Branch loading failed, branch not found.');
         }
 
-        $reporter = $this->userService->getUserById($reporterId);
         if (is_null($reporter)) {
             throw new \RuntimeException('Reporter loading failed, reporter not found.');
         }
 
-        $assignee = $this->userService->getUserById($assigneeId);
+        $assignee = $this->userService->getByUser(new User($assigneeId, User::TYPE_ORO));
         if (is_null($assignee)) {
             throw new \RuntimeException('Assignee validation failed, assignee not found.');
         }
@@ -194,12 +194,12 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * Creates Comment for Ticket
      *
      * @param $content
-     * @param $authorId
+     * @param $author
      * @param $messageId
      * @param array $attachments
      * @return void
      */
-    public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
+    public function createCommentForTicket($content, $author, $messageId, array $attachments = null)
     {
         $ticket = $this->messageReferenceRepository
             ->getReferenceByMessageId($messageId)
@@ -209,7 +209,6 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        $author = $this->userService->getUserById($authorId);
         $comment = $this->commentFactory->create($content, $ticket, $author);
 
         if ($attachments) {

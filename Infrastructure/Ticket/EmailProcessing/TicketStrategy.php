@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
@@ -59,14 +60,16 @@ class TicketStrategy implements Strategy
         $reporterId = 1;
         $assigneeId = 1;
 
+        $reporter = new User($reporterId, User::TYPE_DIAMANTE);
+
         $attachments = $message->getAttachments();
 
         if (!$message->getReference()) {
             $branchId = $this->getAppropriateBranch($message->getFrom(), $message->getTo());
             $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
-                $message->getContent(), $reporterId, $assigneeId, null, null, $attachments);
+                $message->getContent(), $reporter, $assigneeId, null, null, $attachments);
         } else {
-            $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporterId,
+            $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
                 $message->getReference(), $attachments);
         }
     }

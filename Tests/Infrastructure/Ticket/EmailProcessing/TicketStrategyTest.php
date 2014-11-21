@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
@@ -75,6 +76,8 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $reporterId = 1;
         $assigneeId = 1;
 
+        $reporter = $this->getReporter($reporterId);
+
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
 
@@ -93,7 +96,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
             ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
-                $reporterId, $assigneeId);
+                $reporter, $assigneeId);
 
         $this->ticketStrategy->process($message);
     }
@@ -106,6 +109,8 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $reporterId = 1;
         $assigneeId = 1;
+
+        $reporter = $this->getReporter($reporterId);
 
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
@@ -120,7 +125,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
             ->with($this->equalTo($message->getMessageId()), self::DUMMY_BRANCH_ID, $message->getSubject(), $message->getContent(),
-                $reporterId, $assigneeId);
+                $reporter, $assigneeId);
 
         $this->ticketStrategy->process($message);
     }
@@ -132,11 +137,17 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO, self::DUMMY_REFERENCE);
 
         $reporterId = 1;
+        $reporter = $this->getReporter($reporterId);
 
         $this->messageReferenceService->expects($this->once())
             ->method('createCommentForTicket')
-            ->with($this->equalTo($message->getContent()), $reporterId, $message->getReference());
+            ->with($this->equalTo($message->getContent()), $reporter, $message->getReference());
 
         $this->ticketStrategy->process($message);
+    }
+
+    private function getReporter($id)
+    {
+        return new User($id, User::TYPE_DIAMANTE);
     }
 }

@@ -28,7 +28,8 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Api\Internal\TicketServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
@@ -103,6 +104,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $processManager;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetailsServiceImpl
+     * @Mock \Diamante\DeskBundle\Model\User\UserDetailsServiceImpl
+     */
+    private $userDetailsService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -115,7 +122,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->userService,
             $this->securityFacade,
             $this->dispatcher,
-            $this->processManager
+            $this->processManager,
+            $this->userDetailsService
         );
     }
 
@@ -129,15 +137,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
             ->will($this->returnValue($branch));
 
-        $reporterId = 2;
-        $assigneeId = 3;
         $reporter = $this->createReporter();
+        $assigneeId = 2;
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
@@ -176,7 +180,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->branch = $branchId;
         $command->subject = self::DUMMY_TICKET_SUBJECT;
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -194,15 +198,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
             ->will($this->returnValue($branch));
 
-        $reporterId = 2;
-        $assigneeId = 3;
         $reporter = $this->createReporter();
+        $assigneeId = 2;
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue($assignee));
 
         $status = Status::IN_PROGRESS;
@@ -240,7 +240,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->branch = $branchId;
         $command->subject = self::DUMMY_TICKET_SUBJECT;
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -259,15 +259,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
             ->will($this->returnValue($branch));
 
-        $reporterId = 2;
-        $assigneeId = 3;
         $reporter = $this->createReporter();
+        $assigneeId = 2;
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
@@ -308,7 +304,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->branch = $branchId;
         $command->subject = self::DUMMY_TICKET_SUBJECT;
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -323,15 +319,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatTicketUpdatesWithNoAttachments()
     {
-        $reporterId = 2;
-        $assigneeId = 3;
         $reporter = $this->createReporter();
+        $assigneeId = 2;
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue($assignee));
 
         $newStatus = Status::IN_PROGRESS;
@@ -361,7 +353,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->id = self::DUMMY_TICKET_ID;
         $command->subject = self::DUMMY_TICKET_SUBJECT;
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
@@ -377,15 +369,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatTicketUpdatesWithAttachments()
     {
-        $reporterId = 2;
-        $assigneeId = 3;
         $reporter = $this->createReporter();
+        $assigneeId = 2;
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue($assignee));
 
         $newStatus = Status::IN_PROGRESS;
@@ -420,7 +408,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->id = self::DUMMY_TICKET_ID;
         $command->subject = self::DUMMY_TICKET_SUBJECT;
         $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
@@ -737,12 +725,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createReporter()
     {
-        return new User();
+        return new User(1, User::TYPE_ORO);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return new OroUser();
     }
 
     /**
@@ -773,7 +761,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->any())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue($assignee));
 
         $this->ticket->expects($this->any())->method('getAssignee')->will($this->returnValue($assignee));
@@ -801,7 +789,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->assignTicket($command);
     }
 
-    public function testAssignTicketOfTicketAssignedToSomeoneElse()
+    public function testAssignTicketIfTicketAssignedToSomeoneElse()
     {
         $currentUserId = 2;
         $assigneeId = 3;
@@ -810,7 +798,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->any())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue($assignee));
 
         $this->ticket->expects($this->any())->method('getAssigneeId')->will($this->returnValue($assigneeId));
@@ -881,7 +869,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->any())->method('getByUser')->with($this->equalTo($this->getUserOfOROType($assigneeId)))
             ->will($this->returnValue(null));
 
         $command = new AssigneeTicketCommand();
@@ -923,4 +911,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
     }
+
+    private function getUserOfOROType($id)
+    {
+        return new User($id, User::TYPE_ORO);
+    }
+
 }

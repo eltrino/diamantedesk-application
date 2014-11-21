@@ -24,6 +24,7 @@ use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\CommentService;
+use Diamante\DeskBundle\Model\User\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -59,7 +60,7 @@ class CommentController extends Controller
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
-            ->createEditCommentCommandForCreate($ticket, $this->getUser());
+            ->createEditCommentCommandForCreate($ticket, new User($this->getUser()->getId(), User::TYPE_ORO));
         return $this->edit($command, function($command) {
             $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')

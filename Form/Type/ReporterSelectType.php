@@ -36,7 +36,7 @@ class ReporterSelectType extends DiamanteUserSelectType
                     'result_template_twig' => 'OroUserBundle:User:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'OroUserBundle:User:Autocomplete/selection.html.twig'
                 ),
-                'autocomplete_alias' => 'users'
+                'autocomplete_alias' => 'diamante_user'
             )
         );
     }

@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Ticket\AttachmentService;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
@@ -138,7 +139,7 @@ class CommentServiceImpl implements CommentService
          */
         $ticket = $this->loadTicketBy($command->ticket);
 
-        $author = $this->userService->getUserById($command->author);
+        $author = $command->author;
 
         $comment = $this->commentFactory->create($command->content, $ticket, $author);
 

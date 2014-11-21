@@ -25,11 +25,12 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
 use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository;
+use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\User\User as DiamanteUser;
 
-class DiamanteUserService
+class DiamanteUserService implements UserService
 {
     /**
     * @var UserManager

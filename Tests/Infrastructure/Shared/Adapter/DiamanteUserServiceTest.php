@@ -12,23 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Shared;
-
-use Diamante\ApiBundle\Entity\ApiUser;
-use Diamante\DeskBundle\Model\User\User;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
-
+ 
 /**
- * Interface UserService
- * @package Diamante\DeskBundle\Model\Shared
- * @codeCoverageIgnore
+ * Created by PhpStorm.
+ * User: s3nt1nel
+ * Date: 21/11/14
+ * Time: 6:12 PM
  */
-interface UserService
-{
-    /**
-     * Retrieve User entity
-     * @param User $user
-     * @return OroUser|ApiUser
-     */
-    public function getByUser(User $user);
-}
+
+namespace Diamante\DeskBundle\Tests\Infrastructure\Shared\Adapter;
+
+
+class DiamanteUserServiceTest {
+
+} 

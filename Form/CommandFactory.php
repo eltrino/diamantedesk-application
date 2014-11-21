@@ -25,7 +25,7 @@ use Diamante\DeskBundle\Api\Command\AttachmentCommand;
 
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
-use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\User;
 
 class CommandFactory
 {
@@ -88,7 +88,7 @@ class CommandFactory
         $command->id = null;
         $command->content = null;
         $command->ticket = $ticket->getId();
-        $command->author = $author->getId();
+        $command->author = $author;
         $command->ticketStatus = $ticket->getStatus();
 
         return $command;
@@ -104,7 +104,7 @@ class CommandFactory
         $command = new EditCommentCommand();
         $command->id = $comment->getId();
         $command->content = $comment->getContent();
-        $command->author = $comment->getAuthor()->getId();
+        $command->author = $comment->getAuthor();
         $command->ticket = $comment->getTicket()->getId();
         $command->attachmentList = $comment->getAttachments();
         $command->ticketStatus = $comment->getTicket()->getStatus();

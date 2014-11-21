@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\EventListener\Mail\TicketProcessManager;
-use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
+use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -58,7 +58,7 @@ class TicketServiceImpl implements TicketService
     private $ticketFactory;
 
     /**
-     * @var DiamanteUserService
+     * @var UserService
      */
     private $userService;
 
@@ -86,7 +86,7 @@ class TicketServiceImpl implements TicketService
                                 Repository $branchRepository,
                                 TicketFactory $ticketFactory,
                                 AttachmentService $attachmentService,
-                                DiamanteUserService $userService,
+                                UserService $userService,
                                 SecurityFacade $securityFacade,
                                 EventDispatcher $dispatcher,
                                 TicketProcessManager $processManager,
@@ -202,7 +202,7 @@ class TicketServiceImpl implements TicketService
             throw new \RuntimeException('Branch loading failed, branch not found.');
         }
 
-        $reporter = $this->userDetailsService->fetch(User::fromString($command->reporter));
+        $reporter = User::fromString($command->reporter);
 
         $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
         if (is_null($assignee)) {
@@ -250,11 +250,9 @@ class TicketServiceImpl implements TicketService
         $commandReporter = User::fromString($command->reporter);
 
         if ($commandReporter->getId() != $ticketReporter->getId()) {
-            try {
-                $reporter = $this->userDetailsService->fetch($commandReporter);
-            } catch (\RuntimeException $e) {
-                throw $e;
-            }
+            $reporter = $commandReporter;
+        } else {
+            $reporter = $ticketReporter;
         }
 
         $ticket->update(
@@ -317,7 +315,7 @@ class TicketServiceImpl implements TicketService
         $this->isAssigneeGranted($ticket);
 
         if ($command->assignee) {
-            $assignee = $this->userService->getUserById($command->assignee);
+            $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }

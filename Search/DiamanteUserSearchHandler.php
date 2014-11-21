@@ -22,6 +22,7 @@
 
 namespace Diamante\DeskBundle\Search;
 
+use Diamante\DeskBundle\Model\User\UserDetailsService;
 use Oro\Bundle\FormBundle\Autocomplete\SearchHandlerInterface;
 
 class DiamanteUserSearchHandler implements SearchHandlerInterface
@@ -29,10 +30,15 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
     protected $properties;
     protected $entityName;
 
-    public function __construct($entityName, array $properties)
+    public function __construct(
+        $entityName,
+        UserDetailsService  $diamanteUserDetailsService,
+        array $properties
+    )
     {
         $this->properties = $properties;
         $this->entityName = $entityName;
+        $this->userDetailsService = $diamanteUserDetailsService;
     }
 
     /**

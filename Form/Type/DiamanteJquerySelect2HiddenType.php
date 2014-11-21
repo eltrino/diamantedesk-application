@@ -23,6 +23,7 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Diamante\DeskBundle\Form\DataTransformer\EntityToIdTransformer;
+use Diamante\DeskBundle\Form\DataTransformer\UserTransformer;
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\FormBundle\Autocomplete\ConverterInterface;
 use Oro\Bundle\FormBundle\Autocomplete\SearchRegistry;
@@ -48,9 +49,8 @@ class DiamanteJquerySelect2HiddenType extends AbstractType
      */
     protected $searchRegistry;
 
-    public function __construct(EntityManager $entityManager, SearchRegistry $registry)
+    public function __construct(SearchRegistry $registry)
     {
-        $this->entityManager = $entityManager;
         $this->searchRegistry = $registry;
     }
 
@@ -102,7 +102,7 @@ class DiamanteJquerySelect2HiddenType extends AbstractType
                     },
                     'transformer' => function (Options $options, $value) use ($formType) {
                         if (!$value) {
-                            $value = $formType->createDefaultTransformer($options['entity_class']);
+                            $value = $formType->createDefaultTransformer();
                         } elseif (!$value instanceof DataTransformerInterface) {
                             throw new TransformationFailedException(
                                 sprintf(
@@ -187,12 +187,11 @@ class DiamanteJquerySelect2HiddenType extends AbstractType
     }
 
     /**
-     * @param string $entityClass
-     * @return EntityToIdTransformer
+     * @return UserTransformer
      */
-    public function createDefaultTransformer($entityClass)
+    public function createDefaultTransformer()
     {
-        return $value = new EntityToIdTransformer($this->entityManager, $entityClass);
+        return $value = new UserTransformer();
     }
 
     /**

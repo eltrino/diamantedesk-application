@@ -28,6 +28,7 @@
         <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
         <parameter key="diamante.user.details.service.class">Diamante\DeskBundle\Model\User\UserDetailsServiceImpl</parameter>
+        <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\DeskBundle\Search\DiamanteUserSearchHandler</parameter>
     </parameters>
 
     <services>
@@ -68,6 +69,19 @@
             <!--<argument type="service" id="service_container"/>-->
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="oro_ui_placeholder.filter"/>
+        </service>
+
+        <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
+            <argument type="string">Diamante\DeskBundle\Model\User\UserDetails</argument>
+            <argument type="service" id="diamante.user.details.service"/>
+            <argument type="collection">
+                <argument type="string">email</argument>
+                <argument type="string">firstName</argument>
+                <argument type="string">lastName</argument>
+                <argument type="string">fullName</argument>
+                <argument type="string">username</argument>
+            </argument>
+            <tag name="oro_form.autocomplete.search_handler" alias="diamante_user"/>
         </service>
     </services>
 </container>

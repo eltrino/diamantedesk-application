@@ -50,8 +50,8 @@ class EditCommentCommand
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="int")
-     * @var int
+     * @Assert\Type(type="string")
+     * @var string
      */
     public $author;
 
