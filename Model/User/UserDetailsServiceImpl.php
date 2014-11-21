@@ -22,12 +22,12 @@
 
 namespace Diamante\DeskBundle\Model\User;
 
-use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
+use Diamante\DeskBundle\Model\Shared\UserService;
 
 class UserDetailsServiceImpl implements UserDetailsService
 {
 
-    public function __construct(DiamanteUserService $diamanteUserService)
+    public function __construct(UserService $diamanteUserService)
     {
         $this->diamanteUserService = $diamanteUserService;
     }
@@ -49,7 +49,8 @@ class UserDetailsServiceImpl implements UserDetailsService
             $loadedUser->getEmail(),
             $loadedUser->getFirstName(),
             $loadedUser->getLastName(),
-            $user->getType()
+            $user->getType(),
+            $loadedUser->getUsername()
         );
     }
 

@@ -24,7 +24,7 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
 
 use Diamante\ApiBundle\Entity\ApiUser;
-use Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository;
+use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -40,7 +40,7 @@ class DiamanteUserService implements UserService
 
     function __construct(
         UserManager $userManager,
-        DoctrineApiUserRepository $diamanteApiUserRepository
+        ApiUserRepository $diamanteApiUserRepository
     )
     {
         $this->oroUserManager            = $userManager;
@@ -49,6 +49,7 @@ class DiamanteUserService implements UserService
 
     /**
      * @param DiamanteUser $user
+     * @throws \RuntimeException
      * @return User|ApiUser
      */
     public function getByUser(DiamanteUser $user)
@@ -57,6 +58,10 @@ class DiamanteUserService implements UserService
             $user = $this->oroUserManager->findUserBy(array('id' => $user->getId()));
         } else {
             $user = $this->diamanteApiUserRepository->get($user->getId());
+        }
+
+        if (!$user) {
+            throw new \RuntimeException('User loading failed. User not found');
         }
 
         return $user;

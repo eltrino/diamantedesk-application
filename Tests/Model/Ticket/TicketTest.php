@@ -19,7 +19,8 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketTest extends \PHPUnit_Framework_TestCase
 {
@@ -79,7 +80,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $ticket = $this->createTicket();
-        $newReporter = new User();
+        $newReporter = new User(2, User::TYPE_DIAMANTE);
 
         $ticket->update('New Subject',
             'New Description',
@@ -98,7 +99,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     public function testAssign()
     {
-        $newAssignee = new User();
+        $newAssignee = new OroUser();
 
         $ticket = $this->createTicket();
 
@@ -130,11 +131,11 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     private function createReporter()
     {
-        return new User();
+        return new User(1, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return new OroUser();
     }
 }

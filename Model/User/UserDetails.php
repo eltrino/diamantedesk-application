@@ -25,59 +25,44 @@ namespace Diamante\DeskBundle\Model\User;
 
 class UserDetails
 {
+    /**
+     * @var int
+     */
     protected $id;
+
+    /**
+     * @var string
+     */
     protected $type;
+
+    /**
+     * @var string
+     */
     protected $email;
+
+    /**
+     * @var string
+     */
     protected $firstName;
+
+    /**
+     * @var string
+     */
     protected $lastName;
 
-    public function __construct($id, $email, $firstName, $lastName, $type)
+    /**
+     * @var string
+     */
+    protected $username;
+
+    public function __construct($id, $email, $firstName, $lastName, $type, $username)
     {
         $this->id           = $id;
         $this->email        = $email;
         $this->firstName    = $firstName;
         $this->lastName     = $lastName;
         $this->type         = $type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
+        $this->username     = $username;
     }
 
     /**
@@ -87,4 +72,54 @@ class UserDetails
     {
         return $this->firstName . ' ' . $this->lastName;
     }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+
 } 
