@@ -1,7 +1,7 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 {% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
 {% oro_title_set({params : {"%ticket.subject%": form.vars.value.subject }}) %}
-{% set formAction = path('diamante_ticket_update', { 'id': form.vars.value.id }) %}
+{% set formAction = path('diamante_ticket_update', { 'key': form.vars.value.key }) %}
 {% block head_script %}
     {{ parent() }}
     {% block stylesheets %}
@@ -10,9 +10,9 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': form.vars.value.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': form.vars.value.key }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {% set html = UI.saveAndCloseButton() %}
-    {% if form.vars.value.id or resource_granted('orocrm_contact_update') %}
+    {% if form.vars.value.id %}
         {% set html = html ~ UI.saveAndStayButton() %}
     {% endif %}
     {{ UI.dropdownSaveButton({'html': html}) }}
@@ -21,13 +21,13 @@
 {% block pageHeader %}
     {% if form.vars.value.id %}
         {% set breadcrumbs = {
-            'entity':      form.vars.value,
-            'indexPath':   path('diamante_ticket_list'),
-            'indexLabel': 'diamante.desk.ticket.all'|trans,
-            'entityTitle': form.vars.value.subject|default('diamante.desk.common.not_available'|trans),
-            'hasAvatar': true,
-            'imagePath': form.vars.value.branch.logo ? form.vars.value.branch.logo.pathname : null
-        }
+                'entity':      form.vars.value,
+                'indexPath':   path('diamante_branch_view', {'id': branchId}),
+                'indexLabel': branchName|trim,
+                'entityTitle': form.vars.value.key ~ ' ' ~ form.vars.value.subject|default('diamante.desk.common.not_available'|trans),
+                'hasAvatar': true,
+                'imagePath': branchLogoPathname ? branchLogoPathname : null
+            }
         %}
         {{ parent() }}
     {% endif %}

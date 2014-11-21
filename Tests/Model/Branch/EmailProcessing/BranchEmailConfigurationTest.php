@@ -27,7 +27,7 @@ class BranchEmailConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCreate()
     {
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC');
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
 
         $branchEmailConfiguration = new BranchEmailConfiguration(
             $branch, self::DUMMY_CUSTOMER_DOMAINS, self::DUMMY_SUPPORT_ADDRESS
@@ -43,7 +43,7 @@ class BranchEmailConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function thatUpdate()
     {
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC');
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
 
         $branchEmailConfiguration = new BranchEmailConfiguration(
             $branch, self::DUMMY_CUSTOMER_DOMAINS, self::DUMMY_SUPPORT_ADDRESS

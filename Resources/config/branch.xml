@@ -21,6 +21,7 @@
     <parameters>
         <parameter key="diamante.branch.entity.class">Diamante\DeskBundle\Entity\Branch</parameter>
         <parameter key="diamante.branch_email_configuration.entity.class">Diamante\DeskBundle\Entity\BranchEmailConfiguration</parameter>
+        <parameter key="diamante.branch.default_key_generator.class">Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator</parameter>
         <parameter key="diamante.branch.entity.factory.class">Diamante\DeskBundle\Model\Branch\BranchFactory</parameter>
         <parameter key="diamante.branch.logo.handler.class">Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler</parameter>
         <parameter key="diamante.branch.service.class">Diamante\DeskBundle\Api\Internal\BranchServiceImpl</parameter>
@@ -30,8 +31,12 @@
     </parameters>
 
     <services>
+
+        <service id="diamante.branch.default_key_generator" class="%diamante.branch.default_key_generator.class%"/>
+
         <service id="diamante.branch.entity.factory" class="%diamante.branch.entity.factory.class%">
             <argument type="string">%diamante.branch.entity.class%</argument>
+            <argument type="service" id="diamante.branch.default_key_generator"/>
         </service>
 
         <service id="diamante.branch_email_configuration.entity.factory" class="%diamante.branch_email_configuration.entity.factory.class%">

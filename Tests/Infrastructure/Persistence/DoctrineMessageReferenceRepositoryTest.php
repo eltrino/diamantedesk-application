@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -97,14 +98,15 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
     private function getMessageReference()
     {
         $ticket = new Ticket(
+            new TicketSequenceNumber(null),
             'Subject',
             'Description',
-            new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
+            new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESCR'),
             new User(),
             new User(),
-            Source::PHONE,
-            Priority::PRIORITY_MEDIUM,
-            Status::OPEN
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_MEDIUM),
+            new Status(Status::OPEN)
         );
 
         return new MessageReference(
