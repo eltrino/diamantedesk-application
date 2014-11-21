@@ -29,6 +29,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Diamante\DeskBundle\EventListener\Mail\CommentProcessManager;
 use \Diamante\DeskBundle\Model\Ticket\Comment;
+use Diamante\ApiBundle\Annotation\ApiDoc;
 
 class CommentServiceImpl implements CommentService
 {
@@ -94,12 +95,33 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Load Comment by given comment id
-     * @param int $commentId
+     *
+     * @ApiDoc(
+     *  description="Returns a comment",
+     *  uri="/comments/{id}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see comment",
+     *      404="Returned when the comment is not found"
+     *  }
+     * )
+     *
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
-    public function loadComment($commentId)
+    public function loadComment($id)
     {
-        return $this->loadCommentBy($commentId);
+        return $this->loadCommentBy($id);
     }
 
     /**
@@ -115,6 +137,10 @@ class CommentServiceImpl implements CommentService
         return $comment;
     }
 
+    /**
+     * @param int $ticketId
+     * @return Ticket
+     */
     private function loadTicketBy($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
@@ -126,6 +152,18 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Post Comment for Ticket
+     *
+     * @ApiDoc(
+     *  description="Post comment",
+     *  uri="/comments.{_format}",
+     *  method="POST",
+     *  resource=true,
+     *  statusCodes={
+     *      201="Returned when successful",
+     *      403="Returned when the user is not authorized to post comment"
+     *  }
+     * )
+     *
      * @param Command\EditCommentCommand $command
      * @return void
      */
@@ -200,21 +238,79 @@ class CommentServiceImpl implements CommentService
         }
         $this->commentRepository->store($comment);
 
-        /**
-         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
-         */
-        $ticket = $this->loadTicketBy($command->ticket);
-
-        if ($command->ticketStatus !== $ticket->getStatus()->getValue()) {
+        if (false === is_null($command->ticketStatus)) {
+            $ticket = $comment->getTicket();
             $ticket->updateStatus($command->ticketStatus);
-            $this->ticketRepository->store($ticket);
         }
 
         $this->dispatchEvents($comment, $ticket);
     }
 
     /**
+     * Update certain properties of the Comment
+     *
+     * @ApiDoc(
+     *  description="Update comment",
+     *  uri="/comments/{id}.{_format}",
+     *  method="PUT",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to update comment",
+     *      404="Returned when the comment is not found"
+     *  }
+     * )
+     *
+     * @param Command\UpdateCommentCommand $command
+     * @return void
+     */
+    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command)
+    {
+        $comment = $this->loadCommentBy($command->id);
+
+        $this->isGranted('EDIT', $comment);
+
+        $comment->updateContent($command->content);
+
+        if (false === is_null($command->ticketStatus)) {
+            $ticket = $comment->getTicket();
+            $ticket->updateStatus($command->ticketStatus);
+        }
+
+        $this->commentRepository->store($comment);
+    }
+
+    /**
      * Delete Ticket Comment
+     *
+     * @ApiDoc(
+     *  description="Delete comment",
+     *  uri="/comments/{id}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete comment",
+     *      404="Returned when the comment is not found"
+     *  }
+     * )
+     *
      * @param integer $commentId
      */
     public function deleteTicketComment($commentId)
