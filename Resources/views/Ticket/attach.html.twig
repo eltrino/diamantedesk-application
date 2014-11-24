@@ -10,12 +10,12 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': form.vars.value.ticketId }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': ticketKey }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {{ UI.saveAndCloseButton() }}
 {% endblock %}
 
 {% block pageHeader %}
-    {% set title = 'diamante.desk.attachment.add'|trans %}
+    {% set title = 'diamante.desk.attachment.actions.add'|trans %}
     {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
 {% endblock pageHeader %}
 

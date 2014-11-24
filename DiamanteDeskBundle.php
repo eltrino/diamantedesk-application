@@ -49,6 +49,12 @@ class DiamanteDeskBundle extends Bundle
                 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketSourceType'
             );
         }
+        if (!Type::hasType('ticket_sequence_number')) {
+            Type::addType(
+                'ticket_sequence_number',
+                'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketSequenceNumberType'
+            );
+        }
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $conn = $em->getConnection();

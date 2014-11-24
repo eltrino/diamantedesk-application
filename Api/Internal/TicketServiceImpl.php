@@ -24,8 +24,10 @@ use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
-use Diamante\DeskBundle\Model\Ticket\TicketFactory;
+use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -36,7 +38,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class TicketServiceImpl implements TicketService
 {
     /**
-     * @var Repository
+     * @var TicketRepository
      */
     private $ticketRepository;
 
@@ -51,9 +53,9 @@ class TicketServiceImpl implements TicketService
     private $attachmentManager;
 
     /**
-     * @var TicketFactory
+     * @var TicketBuilder
      */
-    private $ticketFactory;
+    private $ticketBuilder;
 
     /**
      * @var UserService
@@ -75,9 +77,9 @@ class TicketServiceImpl implements TicketService
      */
     private $processManager;
 
-    public function __construct(Repository $ticketRepository,
+    public function __construct(TicketRepository $ticketRepository,
                                 Repository $branchRepository,
-                                TicketFactory $ticketFactory,
+                                TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
                                 UserService $userService,
                                 SecurityFacade $securityFacade,
@@ -86,7 +88,7 @@ class TicketServiceImpl implements TicketService
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
-        $this->ticketFactory = $ticketFactory;
+        $this->ticketBuilder = $ticketBuilder;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
         $this->securityFacade = $securityFacade;
@@ -102,6 +104,22 @@ class TicketServiceImpl implements TicketService
     public function loadTicket($ticketId)
     {
         return $this->loadTicketBy($ticketId);
+    }
+
+    /**
+     * Load Ticket by given Ticket Key
+     * @param string $key
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function loadTicketByKey($key)
+    {
+        $ticketKey = TicketKey::from($key);
+        $ticket = $this->ticketRepository
+            ->getByTicketKey($ticketKey);
+        if (is_null($ticket)) {
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
+        return $ticket;
     }
 
     /**
@@ -196,31 +214,18 @@ class TicketServiceImpl implements TicketService
 
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
-        $branch = $this->branchRepository->get($command->branch);
-        if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed, branch not found.');
-        }
 
-        $reporter = $this->userService->getUserById($command->reporter);
-        if (is_null($reporter)) {
-            throw new \RuntimeException('Reporter loading failed, reporter not found.');
-        }
+        $this->ticketBuilder
+            ->setSubject($command->subject)
+            ->setDescription($command->description)
+            ->setBranchId($command->branch)
+            ->setReporterId($command->reporter)
+            ->setAssigneeId($command->assignee)
+            ->setPriority($command->priority)
+            ->setSource($command->source)
+            ->setStatus($command->status);
 
-        $assignee = $this->userService->getUserById($command->assignee);
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee validation failed, assignee not found.');
-        }
-
-        $ticket = $this->ticketFactory
-            ->create($command->subject,
-                $command->description,
-                $branch,
-                $reporter,
-                $assignee,
-                $command->priority,
-                $command->source,
-                $command->status
-            );
+               $ticket = $this->ticketBuilder->build();
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
@@ -336,13 +341,13 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Delete Ticket
-     * @param $ticketId
-     * @return null
+     * @param string $key
+     * @return void
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($ticketId)
+    public function deleteTicket($key)
     {
-        $ticket = $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketByKey($key);
         $this->isGranted('DELETE', $ticket);
         $attachments = $ticket->getAttachments();
         $ticket->delete();
