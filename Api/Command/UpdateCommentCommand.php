@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class EditCommentCommand
+class UpdateCommentCommand
 {
     /**
      * @Assert\Type(type="integer")
@@ -30,27 +30,7 @@ class EditCommentCommand
     public $content;
 
     /**
-     * @Assert\Type(type="array")
-     */
-    public $files;
-
-    /**
-     * @Assert\Type(type="object")
-     */
-    public $attachmentList;
-
-    public $attachmentsInput;
-
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type(type="int")
-     * @var int
-     */
-    public $author;
-
-    /**
-     * @Assert\NotNull()
      * @Assert\Type(type="string")
      */
     public $ticketStatus;
-}
+} 

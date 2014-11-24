@@ -17,23 +17,25 @@ namespace Diamante\DeskBundle\Tests\Validator\Constraints;
 
 use Diamante\DeskBundle\Validator\Constraints\Entity;
 use Diamante\DeskBundle\Validator\Constraints\EntityValidator;
-use Symfony\Component\Validator\Tests\Constraints\AbstractConstraintValidatorTest;
+use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
-class EntityValidatorTest extends AbstractConstraintValidatorTest
+class EntityValidatorTest extends \PHPUnit_Framework_TestCase
 {
-    protected function createValidator()
-    {
-        return new EntityValidator();
-    }
-
     /**
-     * @dataProvider getValidValues
+     * @var \Symfony\Component\Validator\ExecutionContext
+     * @Mock \Symfony\Component\Validator\ExecutionContext
      */
-    public function testNullIsValid($value)
+    private $context;
+
+    /** @var EntityValidator */
+    private $validator;
+
+    protected function setUp()
     {
-        $constraint = new Entity();
-        $this->validator->validate(null, $constraint);
-        $this->assertNoViolation();
+        MockAnnotations::init($this);
+
+        $this->validator = new EntityValidator();
+        $this->validator->initialize($this->context);
     }
 
     /**
@@ -41,9 +43,12 @@ class EntityValidatorTest extends AbstractConstraintValidatorTest
      */
     public function testValidValues($value)
     {
+        $this->context
+            ->expects($this->never())
+            ->method('addViolation');
+
         $constraint = new Entity();
         $this->validator->validate($value, $constraint);
-        $this->assertNoViolation();
     }
 
     /**
@@ -51,15 +56,18 @@ class EntityValidatorTest extends AbstractConstraintValidatorTest
      */
     public function testInvalidValues($value)
     {
+        $this->context
+            ->expects($this->once())
+            ->method('addViolation');
+
         $constraint = new Entity();
         $this->validator->validate($value, $constraint);
-        $this->buildViolation($constraint->message)
-            ->assertRaised();
     }
 
     public static function getValidValues()
     {
         return [
+            [null],
             ['1'],
             [3],
             [new \stdClass()]

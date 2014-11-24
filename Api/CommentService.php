@@ -29,10 +29,10 @@ interface CommentService
 {
     /**
      * Load Comment by given comment id
-     * @param int $commentId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
-    public function loadComment($commentId);
+    public function loadComment($id);
 
     /**
      * Post Comment for Ticket
@@ -54,6 +54,13 @@ interface CommentService
      * @return void
      */
     public function updateTicketComment(EditCommentCommand $command);
+
+    /**
+     * Update certain properties of the Comment
+     * @param Command\UpdateCommentCommand $command
+     * @return void
+     */
+    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command);
 
     /**
      * Delete Ticket Comment

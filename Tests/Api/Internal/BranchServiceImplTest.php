@@ -102,6 +102,10 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $branches = array(new Branch('DUMMY_NAME_1', 'DUMMY_DESC_1'), new Branch('DUMMY_NAME_2', 'DUMMY_DESC_2'));
         $this->branchRepository->expects($this->once())->method('getAll')->will($this->returnValue($branches));
 
+        $this->securityFacade->expects($this->once())->method('isGranted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
+
         $retrievedBranches = $this->branchServiceImpl->listAllBranches();
 
         $this->assertNotNull($retrievedBranches);
@@ -117,6 +121,10 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatRetreivingExceptionsThrowsExceptionIfBranchDoesNotExists()
     {
+        $this->securityFacade->expects($this->once())->method('isGranted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
+
         $this->branchRepository->expects($this->once())->method('get')->will($this->returnValue(null));
         $this->branchServiceImpl->getBranch(100);
     }
@@ -129,6 +137,10 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC');
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_BRANCH_ID))
             ->will($this->returnValue($branch));
+
+        $this->securityFacade->expects($this->once())->method('isGranted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
 
         $retrievedBranch = $this->branchServiceImpl->getBranch(self::DUMMY_BRANCH_ID);
 

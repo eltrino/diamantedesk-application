@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
@@ -939,5 +940,46 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(null));
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+    }
+
+    public function testLoadTicket()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->ticketService->loadTicket(self::DUMMY_TICKET_ID);
+    }
+
+    public function testUpdateProperties()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->will($this->returnValue($this->ticket));
+
+        $subject = 'DUMMY_SUBJECT_UPDT';
+        $description = 'DUMMY_DESC_UPDT';
+        $status = 'closed';
+
+        $this->ticket->expects($this->exactly(3))->method('updateProperty');
+
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->securityFacade->expects($this->once())->method('isGranted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $command = new UpdatePropertiesCommand();
+        $command->id = 1;
+        $command->properties = [
+            ['name' => 'subject', 'value' => $subject],
+            ['name' => 'description', 'value' => $description],
+            ['name' => 'status', 'value' => $status]
+        ];
+
+        $this->ticketService->updateProperties($command);
     }
 }

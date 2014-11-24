@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\UpdateCommentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
@@ -270,10 +271,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $ticket  = $this->_dummyTicket;
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($ticket));
-
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
 
         $this->securityFacade
@@ -285,12 +282,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new EditCommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
         $command->content = $updatedContent;
-        $command->ticket  = self::DUMMY_TICKET_ID;
         $command->ticketStatus = Status::IN_PROGRESS;
 
         $this->service->updateTicketComment($command);
 
         $this->assertEquals($updatedContent, $comment->getContent());
+        $this->assertEquals(Status::IN_PROGRESS, $comment->getTicket()->getStatus()->getValue());
     }
 
     /**
@@ -317,10 +314,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($comment)
             );
 
-        $ticket  = $this->_dummyTicket;
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($ticket));
-
         $this->securityFacade
             ->expects($this->once())
             ->method('isGranted')
@@ -329,13 +322,44 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $command = new EditCommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
-        $command->ticket  = self::DUMMY_TICKET_ID;
         $command->content = $updatedContent;
         $command->ticketStatus = Status::IN_PROGRESS;
         $command->attachmentsInput = $filesListDto;
 
         $this->service->updateTicketComment($command);
         $this->assertEquals($updatedContent, $comment->getContent());
+        $this->assertEquals(Status::IN_PROGRESS, $comment->getTicket()->getStatus()->getValue());
+    }
+
+    /**
+     * @test
+     */
+    public function thatCommentUpdatesV2()
+    {
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+
+        $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
+
+        $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
+            ->will($this->returnValue($comment));
+
+        $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('EDIT'), $comment)
+            ->will($this->returnValue(true));
+
+        $command = new UpdateCommentCommand();
+        $command->id      = self::DUMMY_COMMENT_ID;
+        $command->content = $updatedContent;
+        $command->ticketStatus = Status::IN_PROGRESS;
+
+        $this->service->updateCommentContentAndTicketStatus($command);
+
+        $this->assertEquals($updatedContent, $comment->getContent());
+        $this->assertEquals(Status::IN_PROGRESS, $comment->getTicket()->getStatus()->getValue());
     }
 
     /**
