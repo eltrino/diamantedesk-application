@@ -20,7 +20,7 @@ use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
@@ -59,9 +59,9 @@ class CommentServiceImpl implements CommentService
     private $attachmentManager;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     /**
      * @var EventDispatcher
@@ -79,7 +79,7 @@ class CommentServiceImpl implements CommentService
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentManager $attachmentManager,
-        SecurityFacade $securityFacade,
+        AuthorizationService $authorizationService,
         EventDispatcher $dispatcher,
         CommentProcessManager $processManager
     ) {
@@ -88,7 +88,7 @@ class CommentServiceImpl implements CommentService
         $this->commentFactory = $commentFactory;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
-        $this->securityFacade = $securityFacade;
+        $this->authorizationService = $authorizationService;
         $this->dispatcher = $dispatcher;
         $this->processManager = $processManager;
     }
@@ -357,7 +357,7 @@ class CommentServiceImpl implements CommentService
      */
     private function isGranted($operation, $entity)
     {
-        if (!$this->securityFacade->isGranted($operation, $entity)) {
+        if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
     }

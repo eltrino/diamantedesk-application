@@ -22,8 +22,10 @@ class DiamanteAuthorizationImpl implements AuthorizationImpl
      * @var array
      */
     private $permissionsMap = array(
-        'Diamante\DeskBundle\Entity\Ticket' => array('VIEW', 'EDIT'),
-        'Entity:DiamanteDeskBundle:Ticket'  => array('VIEW', 'CREATE'),
+        'Diamante\DeskBundle\Entity\Ticket'  => array('VIEW', 'EDIT', 'DELETE'),
+        'Entity:DiamanteDeskBundle:Ticket'   => array('VIEW', 'CREATE'),
+        'Entity:DiamanteDeskBundle:Comment'  => array('CREATE'),
+        'Diamante\DeskBundle\Entity\Comment' => array('VIEW', 'EDIT'),
     );
 
     /**

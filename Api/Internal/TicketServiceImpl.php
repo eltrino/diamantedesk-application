@@ -18,7 +18,7 @@ use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
-use Diamante\DeskBundle\Infrastructure\Shared\Authorization\AuthorizationManager;
+use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\EventListener\Mail\TicketProcessManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
@@ -63,9 +63,9 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     private $userService;
 
     /**
-     * @var AuthorizationManager
+     * @var AuthorizationService
      */
-    private $authorizationManager;
+    private $authorizationService;
 
     /**
      * @var EventDispatcher
@@ -82,7 +82,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
                                 TicketFactory $ticketFactory,
                                 AttachmentManager $attachmentManager,
                                 UserService $userService,
-                                AuthorizationManager $authorizationManager,
+                                AuthorizationService $authorizationService,
                                 EventDispatcher $dispatcher,
                                 TicketProcessManager $processManager
     ) {
@@ -91,7 +91,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         $this->ticketFactory = $ticketFactory;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
-        $this->authorizationManager = $authorizationManager;
+        $this->authorizationService = $authorizationService;
         $this->dispatcher = $dispatcher;
         $this->processManager = $processManager;
     }
@@ -413,7 +413,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     }
 
     /**
-     * Verify permissions through Oro Platform security bundle
+     * Verify permissions
      *
      * @param $operation
      * @param $entity
@@ -421,7 +421,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     private function isGranted($operation, $entity)
     {
-        if (!$this->authorizationManager->isActionPermitted($operation, $entity)) {
+        if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
     }
@@ -434,7 +434,8 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     private function isAssigneeGranted(Ticket $entity)
     {
-        if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $this->securityFacade->getLoggedUserId()) {
+        $user = $this->authorizationService->getLoggedUser();
+        if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $user->getId()) {
             $this->isGranted('EDIT', $entity);
         }
     }

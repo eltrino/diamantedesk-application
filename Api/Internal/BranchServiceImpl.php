@@ -25,7 +25,7 @@ use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
 
@@ -52,23 +52,23 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
     private $tagManager;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     public function __construct(
         BranchFactory $branchFactory,
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
-        SecurityFacade $securityFacade
+        AuthorizationService $authorizationService
     )
     {
         $this->branchFactory = $branchFactory;
         $this->branchRepository = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
         $this->tagManager = $tagManager;
-        $this->securityFacade = $securityFacade;
+        $this->authorizationService = $authorizationService;
     }
 
     /**
@@ -313,7 +313,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
      */
     private function isGranted($operation, $entity)
     {
-        if (!$this->securityFacade->isGranted($operation, $entity)) {
+        if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
     }

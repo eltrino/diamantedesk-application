@@ -22,4 +22,11 @@ interface AuthorizationService
      * @return bool
      */
     function isActionPermitted($attributes, $object);
+
+    /**
+     * Gets logged user object or null
+     *
+     * @return mixed
+     */
+    public function getLoggedUser();
 } 

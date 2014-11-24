@@ -89,10 +89,10 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     protected $_dummyTicket;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
-     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
@@ -110,7 +110,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
         $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
-            $this->commentFactory, $this->userService, $this->attachmentManager, $this->securityFacade,
+            $this->commentFactory, $this->userService, $this->attachmentManager, $this->authorizationService,
             $this->dispatcher, $this->processManager);
 
         $this->_dummyTicket = new Ticket(
@@ -135,9 +135,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue(null));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
@@ -172,9 +172,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
@@ -223,9 +223,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($comment)
             );
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
@@ -273,9 +273,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
@@ -314,9 +314,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($comment)
             );
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $comment)
             ->will($this->returnValue(true));
 
@@ -345,9 +345,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $comment)
             ->will($this->returnValue(true));
 
@@ -394,9 +394,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('deleteAttachment')
             ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
@@ -415,9 +415,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
@@ -446,9 +446,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($this->comment));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->comment))
             ->will($this->returnValue(true));
 
