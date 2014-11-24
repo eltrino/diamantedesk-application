@@ -19,25 +19,25 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.oro_user_wrapper.class">Eltrino\DiamanteDeskBundle\Model\OroUserWrapper</parameter>
-        <parameter key="diamante.user_service.class">Eltrino\DiamanteDeskBundle\Services\UserService</parameter>
-        <parameter key="diamante.attachment.entity.class">Eltrino\DiamanteDeskBundle\Entity\Attachment</parameter>
-        <parameter key="diamante.command_factory.class">Eltrino\DiamanteDeskBundle\Form\CommandFactory</parameter>
+        <parameter key="diamante.user.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\OroUserService</parameter>
+        <parameter key="diamante.command_factory.class">Diamante\DeskBundle\Form\CommandFactory</parameter>
+        <!-- repositories start -->
+        <parameter key="diamante.generic.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
+        <!-- repositories end -->
+        <parameter key="diamante.email_processing.form.type.default_branch.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
+        <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
+        <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
     </parameters>
 
     <services>
 
-        <service id="diamante.datagrid.extension.formatter.assignee_property" class="Eltrino\DiamanteDeskBundle\Datagrid\AssigneePropertyFormatter">
-            <argument type="service" id="translator"/>
-            <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
-        </service>
-
-        <service id="diamante.user_wrapper" alias="diamante.oro_user_wrapper"/>
-        <service id="diamante.oro_user_wrapper" class="%diamante.oro_user_wrapper.class%">
+        <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>
         </service>
-        <service id="diamante.user_service" class="%diamante.user_service.class%">
-            <argument type="service" id="diamante.user_wrapper"/>
+
+        <service id="diamante.datagrid.extension.formatter.assignee_property" class="Diamante\DeskBundle\Datagrid\AssigneePropertyFormatter">
+            <argument type="service" id="translator"/>
+            <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
         </service>
 
         <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
@@ -47,5 +47,21 @@
         </service>
 
         <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>
+
+        <service id="diamante.email_processing.form.type.default_branch" class="%diamante.email_processing.form.type.default_branch.class%">
+            <argument type="service" id="diamante.branch.service"/>
+            <tag name="form.type" alias="diamante_email_processing_default_branch"/>
+        </service>
+
+        <service id="diamante.email_processing.branchRemoveEventListener" class="%diamante.email_processing.branchRemoveEventListener.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="preRemove"></tag>
+        </service>
+
+        <service id="diamante.email_processing.placeholder.filter.default_branch" class="%diamante.email_processing.placeholder.filter.default_branch.class%">
+            <!--<argument type="service" id="service_container"/>-->
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
+            <tag name="oro_ui_placeholder.filter"/>
+        </service>
     </services>
 </container>

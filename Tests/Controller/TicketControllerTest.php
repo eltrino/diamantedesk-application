@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
+namespace Diamante\DiamanteDeskBundle\Tests\Controller;
 
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Priority;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Source;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Bundle\UserBundle\Entity\User;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Symfony\Component\DomCrawler\Form;
 
 class TicketControllerTest extends WebTestCase
 {
@@ -52,7 +52,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
         $form['diamante_ticket_form[status]']      = 'open';
-        $form['diamante_ticket_form[priority]']    = Priority::DEFAULT_PRIORITY;
+        $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_MEDIUM;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
         $form['diamante_ticket_form[reporter]']    = 1;
         $form['diamante_ticket_form[assignee]']    = 1;
@@ -127,7 +127,7 @@ class TicketControllerTest extends WebTestCase
     public function testView()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']));
         $crawler     = $this->client->request('GET', $ticketViewUrl);
         $response    = $this->client->getResponse();
 
@@ -152,7 +152,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdate()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -170,7 +170,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdatePriority()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -188,7 +188,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdateSource()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -224,17 +224,19 @@ class TicketControllerTest extends WebTestCase
     public function testDelete()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('id' => $ticket['id']));
+        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('key' => $ticket['key']));
+        $this->client->followRedirects(false);
+
         $crawler       = $this->client->request('GET', $ticketDeleteUrl);
         $response      = $this->client->getResponse();
 
         $this->client->request(
             'GET',
-            $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']))
+            $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']))
         );
         $viewResponse = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(404, $viewResponse->getStatusCode());
     }
 

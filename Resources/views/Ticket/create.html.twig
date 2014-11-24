@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_list'), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_list'), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {{ UI.saveAndStayButton() }}
     {{ UI.saveAndCloseButton() }}
 {% endblock %}
 
 {% block pageHeader %}
-    {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'Ticket'|trans}) %}
+    {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.desk.ticket.entity_label'|trans}) %}
     {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
 {% endblock pageHeader %}
 
@@ -24,11 +24,11 @@
     {% set id = 'ticketDetails' %}
 
     {% set dataBlocks = [{
-        'title': 'General'|trans,
+        'title': 'diamante.desk.common.general'|trans,
         'class': 'active',
         'subblocks': [
             {
-                'title': 'Ticket Details'|trans,
+                'title': 'diamante.desk.ticket.details'|trans,
                 'data': [
                     form_row(form.branch),
                     form_row(form.subject),
@@ -44,7 +44,7 @@
     }] %}
 
     {% set dataBlocks = dataBlocks|merge([{
-        'title' : 'Description'|trans,
+        'title' : 'diamante.desk.common.description'|trans,
         'subblocks': [
             {
                 'title' : null,

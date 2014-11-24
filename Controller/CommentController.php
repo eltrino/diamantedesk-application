@@ -12,16 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Controller;
+namespace Diamante\DeskBundle\Controller;
 
-use Eltrino\DiamanteDeskBundle\Attachment\Api\Dto\AttachmentInput;
-use Eltrino\DiamanteDeskBundle\Entity\Ticket;
-use Eltrino\DiamanteDeskBundle\Entity\Comment;
-use Eltrino\DiamanteDeskBundle\Form\Command\EditCommentCommand;
-use Eltrino\DiamanteDeskBundle\Form\Type\CommentType;
-use Eltrino\DiamanteDeskBundle\Form\Type\UpdateTicketStatusType;
-use Eltrino\DiamanteDeskBundle\Form\CommandFactory;
-use Eltrino\DiamanteDeskBundle\Ticket\Api\CommentService;
+use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Form\Type\CommentType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
+use Diamante\DeskBundle\Form\CommandFactory;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
+use Diamante\DeskBundle\Api\CommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,6 +32,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
+
+use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("comment")
@@ -43,23 +50,20 @@ class CommentController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Comment:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
      * @param Ticket $ticket
      * @return array
      */
-    public function createAction(Ticket $ticket)
+    public function createAction($id)
     {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
             ->createEditCommentCommandForCreate($ticket, $this->getUser());
         return $this->edit($command, function($command) {
+            $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')
-                ->postNewCommentForTicket(
-                    $command->content,
-                    $command->ticket->getId(),
-                    $command->author->getId(),
-                    $this->buildAttachmentsInputDTO($command)
-                );
+                ->postNewCommentForTicket($command);
         }, $ticket);
     }
 
@@ -70,18 +74,19 @@ class CommentController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("EltrinoDiamanteDeskBundle:Comment:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
-     * @param Comment $comment
+     * @param int $id
      * @return array
      */
-    public function updateAction(Comment $comment)
+    public function updateAction($id)
     {
+        $comment = $this->get('diamante.comment.service')->loadComment($id);
         $command = $this->get('diamante.command_factory')
             ->createEditCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
-            $this->get('diamante.comment.service')
-                ->updateTicketComment($comment->getId(), $command->content, $this->buildAttachmentsInputDTO($command));
+            $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
+            $this->get('diamante.comment.service')->updateTicketComment($command);
         }, $comment->getTicket());
     }
 
@@ -106,10 +111,11 @@ class CommentController extends Controller
      *      name="diamante_comment_widget_attachment_list",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("EltrinoDiamanteDeskBundle:Comment:attachment/list.html.twig")
+     * @Template("DiamanteDeskBundle:Comment:attachment/list.html.twig")
      */
-    public function attachmentList(Comment $comment)
+    public function attachmentList($id)
     {
+        $comment = $this->get('diamante.comment.service')->loadComment($id);
         return [
             'comment_id' => $comment->getId(),
             'attachments' => $comment->getAttachments()
@@ -135,53 +141,45 @@ class CommentController extends Controller
             $this->handle($form);
             $callback($command);
 
-            $newStatus = $form->get('ticketStatus')->getData();
-
-            if (false === ($newStatus == $ticket->getStatus()->getValue())) {
-                $this->get('diamante.ticket.service')
-                    ->updateStatus(
-                        $command->ticket->getId(),
-                        $newStatus
-                    );
-            }
-
             if ($command->id) {
-                $this->addSuccessMessage('Comment successfully saved.');
+                $this->addSuccessMessage('diamante.desk.comment.messages.save.success');
             } else {
-                $this->addSuccessMessage('Comment successfully created.');
+                $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse($ticket);
-        } catch (\LogicException $e) {
-            $response = array('form' => $formView);
+            $response = $this->getSuccessSaveResponse((string) $ticket->getKey());
+        } catch (MethodNotAllowedException $e) {
+            $response = array('form' => $formView, 'ticket' => $ticket);
+        } catch (\Exception $e) {
+            $this->addErrorMessage('diamante.desk.comment.messages.create.error');
+            $response = array('form' => $formView, 'ticket' => $ticket);
         }
         return $response;
     }
 
     /**
      * @Route(
-     *      "/delete/{id}",
+     *      "/delete/ticket/{ticketKey}/comment/{commentId}",
      *      name="diamante_comment_delete",
-     *      requirements={"id"="\d+"}
+     *      requirements={"ticketKey"="[A-Z]+-\d+", "commentId"="\d+"}
      * )
      *
-     * @param Comment $comment
+     * @param string $ticketKey
+     * @param int $commentId
      * @return Response
      */
-    public function deleteAction(Comment $comment)
+    public function deleteAction($ticketKey, $commentId)
     {
         try {
-            $this->get('diamante.comment.service')
-                ->deleteTicketComment($comment->getId());
+            $this->get('diamante.comment.service')->deleteTicketComment($commentId);
 
-            $this->addSuccessMessage('Comment successfully deleted.');
+            $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
         } catch (Exception $e) {
-            $this->addErrorMessage($e->getMessage());
+            //TODO: Log original error
+            $this->addErrorMessage('diamante.desk.comment.messages.delete.error');
         }
 
         return $this->redirect(
-            $this->generateUrl('diamante_ticket_view', array(
-                    'id' => $comment->getTicket()->getId())
-            )
+            $this->generateUrl('diamante_ticket_view', array('key' => $ticketKey))
         );
     }
 
@@ -198,13 +196,17 @@ class CommentController extends Controller
     {
         /** @var CommentService $commentService */
         $commentService = $this->get('diamante.comment.service');
-        $attachment = $commentService->getCommentAttachment($commentId, $attachId);
+        $retrieveCommentAttachment = new RetrieveCommentAttachmentCommand();
+        $retrieveCommentAttachment->attachmentId = $attachId;
+        $retrieveCommentAttachment->commentId = $commentId;
+        $attachment = $commentService->getCommentAttachment($retrieveCommentAttachment);
 
         $filename = $attachment->getFilename();
-        $filePathname = realpath($this->container->getParameter('kernel.root_dir').'/attachment')
+        $filePathname = realpath($this->container->getParameter('kernel.root_dir') . '/attachments/comment')
             . '/' . $attachment->getFilename();
 
         if (!file_exists($filePathname)) {
+            $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }
 
@@ -225,24 +227,33 @@ class CommentController extends Controller
      *      name="diamante_ticket_comment_attachment_remove",
      *      requirements={"commentId"="\d+", "attachId"="\d+"}
      * )
+     * @Template
      *
      * @param integer $commentId
      * @param integer $attachId
-     * @Template
      */
     public function removeAttachmentAction($commentId, $attachId)
     {
         /** @var CommentService $commentService */
         $commentService = $this->get('diamante.comment.service');
-        $commentService->removeAttachmentFromComment($commentId, $attachId);
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans('Attachment successfully deleted.')
-        );
+
+        $removeCommentAttachmentCommand = new RemoveCommentAttachmentCommand();
+        $removeCommentAttachmentCommand->commentId = $commentId;
+        $removeCommentAttachmentCommand->attachmentId = $attachId;
+
+        try {
+            $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
+            $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
+        } catch (Exception $e) {
+            //TODO: Log original error
+            $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
+        }
+
         $response = $this->redirect($this->generateUrl(
             'diamante_comment_update',
             array('id' => $commentId)
         ));
+
         return $response;
     }
 
@@ -254,13 +265,13 @@ class CommentController extends Controller
     private function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new \LogicException('Form can be posted only by "POST" method.');
+            throw new MethodNotAllowedException(array('POST'),'Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());
 
         if (false === $form->isValid()) {
-            throw new \RuntimeException('Form object validation failed, form is invalid.');
+            throw new ValidatorException('Form object validation failed, form is invalid.');
         }
     }
 
@@ -287,14 +298,14 @@ class CommentController extends Controller
     }
 
     /**
-     * @param Ticket $ticket
+     * @param string $ticketKey
      * @return array
      */
-    private function getSuccessSaveResponse(Ticket $ticket)
+    private function getSuccessSaveResponse($ticketKey)
     {
         return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_comment_update', 'parameters' => ['id' => $ticket->getId()]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticket->getId()]]
+            ['route' => 'diamante_comment_update', 'parameters' => ['key' => $ticketKey]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['key' => $ticketKey]]
         );
     }
 

@@ -2,8 +2,8 @@
 {% form_theme form with ['OroAddressBundle:Include:fields.html.twig', 'OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
 
 {% set editCommand = form.vars.value %}
-{% oro_title_set({params : {"%ticket.subject%": editCommand.ticket.subject }}) %}
-{% set formAction = editCommand.id ? path('diamante_comment_update', { 'id': editCommand.id }) : path('diamante_comment_create', { 'id': editCommand.ticket.id }) %}
+{% oro_title_set({params : {"%ticket.subject%": ticket.subject }}) %}
+{% set formAction = editCommand.id ? path('diamante_comment_update', { 'id': editCommand.id }) : path('diamante_comment_create', { 'id': ticket.id }) %}
 
 {% block head_script %}
     {{ parent() }}
@@ -14,21 +14,21 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': editCommand.ticket.id }), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
-    {{ UI.saveAndCloseButton(editCommand.id ? 'Edit' : 'Add') }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': ticket.key|trim }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.saveAndCloseButton(editCommand.id ? 'diamante.desk.ui.save'|trans : 'diamante.desk.ui.add'|trans) }}
 {% endblock %}
 
 {% block pageHeader %}
     {% if editCommand.id %}
         {% set breadcrumbs = {
             'entity':      editCommand,
-            'indexPath':   path('diamante_ticket_view', {'id': editCommand.ticket.id}),
-            'indexLabel':  editCommand.ticket.subject,
-            'entityTitle': 'Edit Comment'|trans
+            'indexPath':   path('diamante_ticket_view', {'key': ticket.key|trim}),
+            'indexLabel':  ticket.subject,
+            'entityTitle': 'diamante.desk.comment.actions.edit'|trans
         } %}
         {{ parent() }}
     {% else %}
-        {% set title = 'Add Comment'|trans %}
+        {% set title = 'diamante.desk.comment.actions.add'|trans %}
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
@@ -44,11 +44,11 @@
         {% endif %}
     {% endset %}
     {% set dataBlocks = [{
-        'title': 'General'|trans,
+        'title': 'diamante.desk.common.general'|trans,
         'class': 'active',
         'subblocks': [
             {
-                'title': 'Comment'|trans,
+                'title': 'diamante.desk.comment.entity_label'|trans,
                 'data': [
                     form_row(form.content),
                     form_row(form.ticketStatus),

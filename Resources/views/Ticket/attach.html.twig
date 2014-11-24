@@ -10,12 +10,12 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': form.vars.value.ticketId }), 'title' : 'Cancel'|trans, 'label' : 'Cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': ticketKey }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {{ UI.saveAndCloseButton() }}
 {% endblock %}
 
 {% block pageHeader %}
-    {% set title = 'Add Attachment'|trans %}
+    {% set title = 'diamante.desk.attachment.actions.add'|trans %}
     {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
 {% endblock pageHeader %}
 
@@ -23,11 +23,11 @@
     {% set id = 'ticketAttachment' %}
 
     {% set dataBlocks = [{
-        'title': 'General'|trans,
+        'title': 'diamante.desk.common.general'|trans,
         'class': 'active',
         'subblocks': [
             {
-                'title': 'Attachment'|trans,
+                'title': 'diamante.desk.attachment.entity_label'|trans,
                 'data': [
                     form_row(form.files),
                 ]

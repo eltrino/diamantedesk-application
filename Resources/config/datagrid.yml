@@ -37,29 +37,29 @@ datagrid:
                 label: Logo
                 type: twig
                 frontend_type: html
-                template: EltrinoDiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
+                template: DiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
             name:
                 label: Branch Name
         actions:
             view:
                 type:          navigate
                 label:         View
-                icon:          user
+                icon:          eye-open
                 link:          view_link
                 rowAction:     true
-                acl_resource:  VIEW;Entity:EltrinoDiamanteDeskBundle:Branch
+                acl_resource:  VIEW;Entity:DiamanteDeskBundle:Branch
             update:
                 type:          navigate
-                label:         Update
+                label:         Edit
                 icon:          edit
                 link:          update_link
-                acl_resource:  UPDATE;Entity:EltrinoDiamanteDeskBundle:Branch
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Branch
             delete:
                 type:          delete
                 label:         Delete
                 icon:          trash
                 link:          delete_link
-                acl_resource:  DELETE;Entity:EltrinoDiamanteDeskBundle:Branch
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
         options:
             entityHint: branches
 
@@ -80,6 +80,7 @@ datagrid:
             query:
                 select:
                     - i.id
+                    - CONCAT(branch.key, CONCAT('-', i.sequenceNumber)) as key
                     - i.subject
                     - i.priority
                     - i.status
@@ -91,44 +92,40 @@ datagrid:
                     - i.createdAt
                     - i.updatedAt
                 from:
-                    - { table: EltrinoDiamanteDeskBundle:Ticket, alias: i }
+                    - { table: DiamanteDeskBundle:Ticket, alias: i }
                 join:
                     left:
                         - { join: i.branch, alias: branch }
-                        - { join: i.reporter, alias: reporter }
                         - { join: i.assignee, alias: assignee }
+                        - { join: i.reporter, alias: reporter }
         properties:
             id: ~
             view_link:
                 type:       url
                 route:      diamante_ticket_view
-                params:     [ id ]
+                params:     [ key ]
             update_link:
                 type:       url
                 route:      diamante_ticket_update
-                params:     [ id ]
+                params:     [ key ]
             delete_link:
                 type:       url
                 route:      diamante_ticket_delete
-                params:     [ id ]
+                params:     [ key ]
         columns:
+            key:
+                label:   Key
             subject:
                 label:   Subject
             branchName:
                 label:   Branch
             assigneeFullName:
-                label:   Assignee,
+                label:   Assignee
                 type:    assignee
             reporterFullName:
                 label:   Reporter
             priority:
                 label:   Priority
-            assigneeId:
-                label:   AssigneeId
-                renderable: false
-            reporterId:
-                label:   ReporterId
-                renderable: false
             status:
                 label:   Status
             createdAt:
@@ -139,6 +136,8 @@ datagrid:
                 frontend_type: datetime
         sorters:
             columns:
+                key:
+                  data_name: key
                 subject:
                   data_name: i.subject
                 branchName:
@@ -159,6 +158,9 @@ datagrid:
                 updatedAt: DESC
         filters:
             columns:
+                key:
+                    type:      string
+                    data_name: ticketKey
                 subject:
                     type:      string
                     data_name: i.subject
@@ -167,23 +169,21 @@ datagrid:
                     data_name: i.branch
                     options:
                         field_options:
-                            class: EltrinoDiamanteDeskBundle:Branch
+                            class: DiamanteDeskBundle:Branch
                             property: name
                 assigneeFullName:
                     type:      string
-                    data_name: assignee
+                    data_name: assigneeFullName
                 reporterFullName:
                     type:      string
-                    data_name: reporter
+                    data_name: reporterFullName
                 priority:
-                    type:      string
+                    type:      choice
                     data_name: i.priority
-                assigneeId:
-                    type:       number
-                    data_name:  assigneeId
-                reporterId:
-                    type:       number
-                    data_name:  reporterId
+                    options:
+                      field_options:
+                        multiple: true
+                        choices: @diamante.ticket.datagrid_priority_helper->getTicketPriorities
                 status:
                     type: choice
                     data_name: i.status
@@ -201,22 +201,22 @@ datagrid:
             view:
                 type:          navigate
                 label:         View
-                icon:          user
+                icon:          eye-open
                 link:          view_link
                 rowAction:     true
-                acl_resource:  VIEW;Entity:EltrinoDiamanteDeskBundle:Ticket
+                acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket
             update:
                 type:          navigate
                 label:         Update
                 icon:          edit
                 link:          update_link
-                acl_resource:  EDIT;Entity:EltrinoDiamanteDeskBundle:Ticket
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
             delete:
                 type:          delete
                 label:         Delete
                 icon:          trash
                 link:          delete_link
-                acl_resource:  DELETE;Entity:EltrinoDiamanteDeskBundle:Ticket
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
         options:
             entityHint: tickets
 
@@ -249,7 +249,7 @@ datagrid:
             view:
                 type:          navigate
                 label:         View
-                icon:          user
+                icon:          eye-open
                 link:          view_link
                 rowAction:     true
             delete:

@@ -12,19 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Entity;
+namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Eltrino\DiamanteDeskBundle\Branch\Model\Logo;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Branch\Infrastructure\Persistence\Doctrine\DoctrineBranchRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_branch")
+ * @ORM\EntityListeners({"Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\BranchListener"})
  * @Config(
  *      defaultValues={
  *          "security"={
@@ -34,7 +31,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
+class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
 {
     /**
      * @var integer
@@ -65,9 +62,16 @@ class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
     protected $description;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="branch_key", type="string", length=255, nullable=false, unique=true)
+     */
+    protected $key;
+
+    /**
      * Branch default assignee
      *
-     * @var User
+     * @var \Oro\Bundle\UserBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="default_assignee_id", referencedColumnName="id", onDelete="SET NULL")
@@ -75,7 +79,7 @@ class Branch extends \Eltrino\DiamanteDeskBundle\Branch\Model\Branch
     protected $defaultAssignee;
 
     /**
-     * @var \Eltrino\DiamanteDeskBundle\Branch\Model\Logo
+     * @var \Diamante\DeskBundle\Model\Branch\Logo
      *
      * @ORM\Column(type="branch_logo")
      */

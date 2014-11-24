@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Form\Type;
+namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,7 +26,7 @@ class AttachmentType extends AbstractType
             'files',
             'file',
             array(
-                'label' => 'File',
+                'label' => 'diamante.desk.attachment.file',
                 'required' => true,
                 'attr' => array(
 //                    "accept" => "image/*",
@@ -43,7 +43,7 @@ class AttachmentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Eltrino\DiamanteDeskBundle\Form\Command\AttachmentCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\AttachmentCommand',
                 'intention' => 'attachment',
                 'cascade_validation' => true
             )

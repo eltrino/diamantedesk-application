@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\DependencyInjection;
+namespace Diamante\DeskBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -31,13 +31,17 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('eltrino_diamante_desk')
+        $rootNode = $treeBuilder->root('diamante_desk')
             ->children()
             ->end();
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+
+        SettingsBuilder::append(
+            $rootNode,
+            array(
+                'email_notification' => array('value' => false, 'type' => 'boolean'),
+            )
+        );
 
         return $treeBuilder;
     }

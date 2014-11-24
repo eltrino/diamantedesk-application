@@ -12,13 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Command;
+namespace Diamante\DeskBundle\Command;
 
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
 
 class UpdateCommand extends AbstractCommand
 {
@@ -41,62 +39,30 @@ class UpdateCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write("Clearing cache... \n");
+            $output->write("Clearing cache..." . "\n");
             $this->runExistingCommand('cache:clear', $output);
-            $output->write('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write("Updating DB schema... \n");
+            $output->write("Updating DB schema..." . "\n");
             $this->updateDbSchema();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write("Updating navigation... \n");
+            $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Installing assets...');
+            $output->write("Installing assets..." . "\n");
             $this->assetsInstall($output);
             $this->asseticDump($output, array(
                 '--no-debug' => true,
             ));
-            $output->write('Done');
+            $output->writeln("Done" . "\n");
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
         }
 
-        $output->writeln('Updated!');
-    }
-
-    /**
-     * Updates DB Schema. Changes from Diamante only will be applied for current schema. Other bundles updating skips
-     * @throws \Exception if there are no changes in entities
-     */
-    protected function updateDbSchema()
-    {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $schemaTool = new SchemaTool($em);
-        $entitiesMetadata = array(
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Branch::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Ticket::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Comment::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Filter::getClassName()),
-            $em->getClassMetadata(\Eltrino\DiamanteDeskBundle\Entity\Attachment::getClassName())
-        );
-
-        $sql = $schemaTool->getUpdateSchemaSql($entitiesMetadata);
-        $sql2 = $schemaTool->getUpdateSchemaSql(array());
-
-        $toUpdate = array_diff($sql, $sql2);
-
-        if (empty($toUpdate)) {
-            throw new \Exception('No new updates found. DiamanteDesk is up to date!');
-        }
-
-        $conn = $em->getConnection();
-
-        foreach ($toUpdate as $sql) {
-            $conn->executeQuery($sql);
-        }
+        $output->writeln("Updated!" . "\n");
     }
 }

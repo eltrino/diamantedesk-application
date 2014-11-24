@@ -12,8 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
+namespace Diamante\DeskBundle\Tests\Controller;
 
+use Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\TestFrameworkBundle\Test\Client;
 use Symfony\Component\DomCrawler\Form;
@@ -48,8 +49,12 @@ class BranchControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('html:contains("Branches")')->count() == 1);
     }
 
+    /**
+     * Branch key is not defined
+     */
     public function testCreate()
     {
+        $generator = new DefaultBranchKeyGenerator();
         $crawler = $this->client->request(
             'GET', $this->getUrl('diamante_branch_create')
         );
@@ -58,9 +63,12 @@ class BranchControllerTest extends WebTestCase
         $form = $crawler->selectButton('Save and Close')->form();
 
         $branchName = md5(time());
-        $form['diamante_branch_form[name]']        = $branchName;
-        $form['diamante_branch_form[description]'] = 'Test Description';
-        $form['diamante_branch_form[logoFile]']    = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_branch_form[name]']             = $branchName;
+        $form['diamante_branch_form[description]']      = 'Test Description';
+        $form['diamante_branch_form[logoFile]']         = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_branch_form[defaultAssignee]']  = 1;
+        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
+        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
 
         $this->client->followRedirects(true);
 
@@ -70,34 +78,67 @@ class BranchControllerTest extends WebTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains("Branch successfully created.", $crawler->html());
         $this->assertTrue($crawler->filter('html:contains("Dproject.png")')->count() == 0);
+        $this->assertTrue($crawler->filter('html:contains("' . $generator->generate($branchName) . '")')->count() == 1);
+    }
+
+    public function testCreateWhenKeyDefinedAndIsUnique()
+    {
+        $generator = new DefaultBranchKeyGenerator();
+        $crawler = $this->client->request(
+            'GET', $this->getUrl('diamante_branch_create')
+        );
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Save and Close')->form();
+
+        $branchName = md5(time());
+        $branchKey = $generator->generate($branchName) . 'ABC';
+        $form['diamante_branch_form[name]']       = $branchName;
+        $form['diamante_branch_form[key]']        = $branchKey;
+        $form['diamante_branch_form[description]'] = 'Test Description';
+
+        $this->client->followRedirects(true);
+
+        $crawler  = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Branch successfully created.", $crawler->html());
+        $this->assertTrue($crawler->filter('html:contains("' . $branchKey . '")')->count() == 1);
     }
 
     public function testView()
     {
-        $branch          = $this->chooseBranchFromGrid();
+        $branch        = $this->chooseBranchFromGrid();
         $branchViewUrl = $this->getUrl('diamante_branch_view', array('id' => $branch['id']));
-        $crawler        = $this->client->request('GET', $branchViewUrl);
-        $response       = $this->client->getResponse();
+        $crawler       = $this->client->request('GET', $branchViewUrl);
+        $response      = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'text/html; charset=UTF-8'));
         $this->assertTrue($crawler->filter('html:contains("Branch Details")')->count() >= 1);
 
         $this->assertTrue($crawler->filter('html:contains("Tickets")')->count() == 1);
+
+        $this->assertTrue($crawler->filter('html:contains("Key")')->count() == 1);
     }
 
     public function testUpdate()
     {
         $branch          = $this->chooseBranchFromGrid();
         $branchUpdateUrl = $this->getUrl('diamante_branch_update', array('id' => $branch['id']));
-        $crawler          = $this->client->request('GET', $branchUpdateUrl);
+        $crawler         = $this->client->request('GET', $branchUpdateUrl);
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
 
-        $form['diamante_branch_form[name]'] = $branch['name'];
-        $form['diamante_branch_form[description]'] = 'Branch Description Changed';
-        $form['diamante_branch_form[logoFile]'] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_branch_form[name]']             = $branch['name'];
+        $form['diamante_branch_form[description]']      = 'Branch Description Changed';
+        $form['diamante_branch_form[logoFile]']         = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_branch_form[defaultAssignee]']  = 2;
+        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
+        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
+
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);

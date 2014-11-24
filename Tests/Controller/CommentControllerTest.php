@@ -16,10 +16,11 @@
  * @todo finish up this test
  */
 
-namespace Eltrino\DiamanteDeskBundle\Tests\Controller;
+namespace Diamante\DiamanteDeskBundle\Tests\Controller;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Eltrino\DiamanteDeskBundle\Ticket\Model\Status;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Symfony\Component\DomCrawler\Form;
 
 class CommentControllerTest extends WebTestCase
 {
@@ -73,13 +74,13 @@ class CommentControllerTest extends WebTestCase
     public function testUpdate()
     {
         $ticket = $this->chooseTicket();
-        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']));
         $crawler = $this->client->request('GET', $ticketViewUrl);
         $link = $crawler->filter('.diam-comments a:contains("Edit")')->eq(0)->link();
         $crawler = $this->client->click($link);
 
         /** @var Form $form */
-        $form = $crawler->selectButton('Edit')->form();
+        $form = $crawler->selectButton('Save')->form();
         $form['diamante_comment_form[content]'] = 'Updated comment';
         $this->client->followRedirects(true);
 
@@ -93,13 +94,13 @@ class CommentControllerTest extends WebTestCase
     public function testUpdateCommentAndChangeTicketStatus()
     {
         $ticket = $this->chooseTicket();
-        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']));
         $crawler = $this->client->request('GET', $ticketViewUrl);
         $link = $crawler->filter('.diam-comments a:contains("Edit")')->eq(0)->link();
         $crawler = $this->client->click($link);
 
         /** @var Form $form */
-        $form = $crawler->selectButton('Edit')->form();
+        $form = $crawler->selectButton('Save')->form();
         $form['diamante_comment_form[content]'] = 'Changed ticket status wile updating comment';
         $form['diamante_comment_form[ticketStatus]'] = Status::ON_HOLD;
         $this->client->followRedirects(true);

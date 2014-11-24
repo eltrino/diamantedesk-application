@@ -12,12 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\DataFixtures\ORM;
+namespace Diamante\DeskBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Eltrino\DiamanteDeskBundle\Entity\Filter;
+use Diamante\DeskBundle\Entity\Filter;
 
 class LoadFilterData extends AbstractFixture
 {

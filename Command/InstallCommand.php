@@ -12,12 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Command;
+namespace Diamante\DeskBundle\Command;
 
-use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -70,40 +66,42 @@ class InstallCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write('Creating Branch logo directory...');
+            $output->write("Creating Branch logo directory..." . "\n");
             $this->createBranchLogoDirectory();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Creating attachments directory...');
+            $output->write("Creating attachments directory..." . "\n");
             $this->createAttachmentsDirectory();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Installing DB schema...');
+            $output->write("Installing DB schema..." . "\n");
             $this->updateDbSchema();
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
             $this->loadData($output);
 
-            $output->write('Updating navigation...');
+            $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
-            $output->write('Loading migration data');
+            $output->write("Loading migration data" . "\n");
             $this->loadDataFixtures($output);
-            $output->writeln('Done');
+            $output->writeln("Done" . "\n");
 
+            $output->write("Installing assets..." . "\n");
             $this->assetsInstall($output);
 
             $this->asseticDump($output, array(
                 '--no-debug' => true,
             ));
+            $output->writeln("Done" . "\n");
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
-            return;
+            return 255;
         }
 
-        $output->writeln('Installed!');
+        $output->writeln("Installed!" . "\n");
         return 0;
     }
 
@@ -113,7 +111,7 @@ class InstallCommand extends AbstractCommand
     protected function createBranchLogoDirectory()
     {
         $branchLogoDir = realpath($this->kernelRootDir .'/../web')
-            . \Eltrino\DiamanteDeskBundle\Branch\Model\Logo::PATH_TO_LOGO_DIR;
+            . \Diamante\DeskBundle\Model\Branch\Logo::PATH_TO_LOGO_DIR;
 
         $this->createDirectory($branchLogoDir);
     }
@@ -161,7 +159,7 @@ class InstallCommand extends AbstractCommand
 
         $this->runExistingCommand('doctrine:fixtures:load', $output,
             array(
-                '--fixtures'       => "{$kernelRootDir}/../src/Eltrino/DiamanteDeskBundle/DataFixtures/ORM",
+                '--fixtures'       => "{$kernelRootDir}/../src/Diamante/DeskBundle/DataFixtures/ORM",
                 '--append'         => true,
                 '--no-interaction' => true,
             )

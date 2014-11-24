@@ -12,17 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Eltrino\DiamanteDeskBundle\Entity;
+namespace Diamante\DeskBundle\Entity;
 
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
- * @ORM\Entity(repositoryClass="Eltrino\DiamanteDeskBundle\Ticket\Infrastructure\Persistence\Doctrine\DoctrineTicketRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository")
  * @ORM\Table(name="diamante_ticket")
+ * @ORM\EntityListeners({"Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener"})
  * @Config(
  *      defaultValues={
  *          "ownership"={
@@ -37,7 +38,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
+class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
 {
     /**
      * @var integer
@@ -47,6 +48,13 @@ class Ticket extends \Eltrino\DiamanteDeskBundle\Ticket\Model\Ticket
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var TicketSequenceNumber
+     *
+     * @ORM\Column(name="number", type="ticket_sequence_number")
+     */
+    protected $sequenceNumber;
 
     /**
      * @var string

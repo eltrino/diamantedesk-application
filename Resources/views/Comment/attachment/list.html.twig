@@ -2,7 +2,7 @@
 
 <div class="control-group">
     <label class="control-label required" for="diamante_comment_form_content">
-        Attachments</label>
+        {{ 'diamante.desk.attachment.entity_plural_label'|trans }}</label>
 
     <div class="controls diam-comment-form-attachments">
         {% for attachment in attachments %}
@@ -11,7 +11,7 @@
                     <a class="pull-right delete-item-confirmation action" href="#"
                        data-url = "{{ path('diamante_ticket_comment_attachment_remove', {'commentId': comment_id, 'attachId': attachment.id}) }}"><i
                                 class="icon-trash hide-text"
-                                title="Delete File">Delete File</i></a>
+                                title="{{ 'diamante.desk.attachment.actions.delete_file'|trans }}">{{ 'diamante.desk.attachment.actions.delete_file'|trans }}</i></a>
                     <i class="icon-paper-clip"></i>
                     <a href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment_id, 'attachId': attachment.id}) }}"
                        class="no-hash">
@@ -34,10 +34,10 @@
                         }
 
                         var dialog = new Modal({
-                            content: 'Are you sure you want to delete this attachment?',
-                            okText: __('Ok'),
-                            cancelText: __('Cancel'),
-                            title: __('Delete Confirmation'),
+                            content: '{{ 'diamante.desk.attachment.messages.delete.query'|trans }}',
+                            okText: __('{{ 'diamante.desk.ui.ok'|trans }}'),
+                            cancelText: __('{{ 'diamante.desk.ui.cancel'|trans}}'),
+                            title: __('{{ 'diamante.desk.common.delete_confirmation'|trans }}'),
                             className: 'modal oro-modal-danger'
                         });
 
