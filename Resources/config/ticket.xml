@@ -43,6 +43,8 @@
         <parameter key="diamante.ticket.email_processing_message_reference.entity.class">Diamante\DeskBundle\Entity\MessageReference</parameter>
         <parameter key="diamante.ticket.email_processing_message_reference.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository</parameter>
         <parameter key="diamante.ticket.email_processing_message_reference.service.class">Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
+
+        <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
     </parameters>
 
     <services>
@@ -77,7 +79,7 @@
             <argument type="service" id="diamante.ticket.entity.factory"/>
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.user.service"/>
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.mail_ticket_process_manager"/>
         </service>
@@ -157,7 +159,7 @@
             <tag name="form.type" alias="diamante_assignee_select"/>
         </service>
 <!-- repositories start -->
-        <service id="diamante.ticket.repository" class="%diamante.generic.repository.class%"
+        <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">
             <argument type="string">%diamante.ticket.entity.class%</argument>

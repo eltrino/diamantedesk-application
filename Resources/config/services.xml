@@ -59,7 +59,6 @@
         </service>
 
         <service id="diamante.email_processing.placeholder.filter.default_branch" class="%diamante.email_processing.placeholder.filter.default_branch.class%">
-            <!--<argument type="service" id="service_container"/>-->
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="oro_ui_placeholder.filter"/>
         </service>

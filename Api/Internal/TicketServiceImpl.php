@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Infrastructure\Shared\Authorization\AuthorizationManager;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\EventListener\Mail\TicketProcessManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
@@ -27,7 +28,6 @@ use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
@@ -62,9 +62,9 @@ class TicketServiceImpl implements TicketService
     private $userService;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var AuthorizationManager
      */
-    private $securityFacade;
+    private $authorizationManager;
 
     /**
      * @var EventDispatcher
@@ -81,7 +81,7 @@ class TicketServiceImpl implements TicketService
                                 TicketFactory $ticketFactory,
                                 AttachmentManager $attachmentManager,
                                 UserService $userService,
-                                SecurityFacade $securityFacade,
+                                AuthorizationManager $authorizationManager,
                                 EventDispatcher $dispatcher,
                                 TicketProcessManager $processManager
     ) {
@@ -90,7 +90,7 @@ class TicketServiceImpl implements TicketService
         $this->ticketFactory = $ticketFactory;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
-        $this->securityFacade = $securityFacade;
+        $this->authorizationManager = $authorizationManager;
         $this->dispatcher = $dispatcher;
         $this->processManager = $processManager;
     }
@@ -420,7 +420,7 @@ class TicketServiceImpl implements TicketService
      */
     private function isGranted($operation, $entity)
     {
-        if (!$this->securityFacade->isGranted($operation, $entity)) {
+        if (!$this->authorizationManager->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
     }
