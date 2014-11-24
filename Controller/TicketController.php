@@ -623,6 +623,7 @@ class TicketController extends Controller
                 'id'       => $attachment->getId(),
             );
         }
+        $data["staticFlashMessages"] = $this->get('session')->getFlashBag()->all();
 
         return $data;
     }

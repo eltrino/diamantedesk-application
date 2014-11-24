@@ -51,8 +51,8 @@
     </p>
 {% endif %}
 <script type="text/javascript">
-    require(['jquery', 'oroui/js/modal', 'oronavigation/js/navigation', 'orotranslation/js/translator'],
-            function($, Modal, Navigation, __) {
+    require(['jquery', 'oroui/js/modal', 'oronavigation/js/navigation', 'orotranslation/js/translator', 'diamantedesk/js/diam.ajax.messages'],
+            function($, Modal, Navigation, __, ajaxMessages) {
                 $('.delete-item-confirmation').click(function (e) {
                     e.preventDefault();
                     var url = $(this).data('url');
@@ -78,7 +78,7 @@
                         navigation.setLocation(url);
 
                     });
-                })
+                });
             });
 </script>
 {% endmacro %}

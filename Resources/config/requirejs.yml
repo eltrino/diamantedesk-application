@@ -1,3 +1,5 @@
 config:
     paths:
         'diamante/attachments/draganddrop': 'bundles/diamantedesk/js/diam.attachments.js'
+        'diamante/filters': 'bundles/diamantedesk/js/diam.filters.js'
+        'diamante/ajax.messages': 'bundles/diamantedesk/js/diam.ajax.messages.js'
