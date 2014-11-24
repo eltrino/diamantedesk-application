@@ -20,6 +20,7 @@
             <directory suffix="Test.php">Tests/Attachment</directory>
             <directory suffix="Test.php">Tests/Entity</directory>
             <directory suffix="Test.php">Tests/Ticket</directory>
+            <directory suffix="Test.php">Tests/Validator</directory>
         </testsuite>
     </testsuites>
 
