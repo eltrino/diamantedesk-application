@@ -269,7 +269,7 @@ class TicketController extends Controller
     public function deleteAction($key)
     {
         try {
-            $this->get('diamante.ticket.service')->deleteTicket($key);
+            $this->get('diamante.ticket.service')->deleteTicketByKey($key);
             $this->addSuccessMessage('diamante.desk.ticket.messages.delete.success');
             return $this->redirect(
                 $this->generateUrl('diamante_ticket_list')

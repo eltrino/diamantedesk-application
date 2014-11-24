@@ -99,7 +99,9 @@ class CommentServiceImpl implements CommentService
      */
     public function loadComment($commentId)
     {
-        return $this->loadCommentBy($commentId);
+        $comment = $this->loadCommentBy($commentId);
+        $this->isGranted('VIEW', $comment);
+        return $comment;
     }
 
     /**
@@ -115,6 +117,10 @@ class CommentServiceImpl implements CommentService
         return $comment;
     }
 
+    /**
+     * @param int $ticketId
+     * @return Ticket
+     */
     private function loadTicketBy($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
