@@ -127,7 +127,7 @@ class TicketControllerTest extends WebTestCase
     public function testView()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']));
         $crawler     = $this->client->request('GET', $ticketViewUrl);
         $response    = $this->client->getResponse();
 
@@ -152,7 +152,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdate()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -170,7 +170,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdatePriority()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -188,7 +188,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdateSource()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -224,7 +224,7 @@ class TicketControllerTest extends WebTestCase
     public function testDelete()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('id' => $ticket['id']));
+        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('key' => $ticket['key']));
         $this->client->followRedirects(false);
 
         $crawler       = $this->client->request('GET', $ticketDeleteUrl);
@@ -232,7 +232,7 @@ class TicketControllerTest extends WebTestCase
 
         $this->client->request(
             'GET',
-            $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']))
+            $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']))
         );
         $viewResponse = $this->client->getResponse();
 

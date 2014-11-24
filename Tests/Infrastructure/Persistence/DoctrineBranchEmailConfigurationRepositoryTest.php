@@ -94,7 +94,7 @@ class DoctrineBranchEmailConfigurationRepositoryTest extends \PHPUnit_Framework_
     private function getBranchEmailConfiguartion()
     {
         $branchEmailConfiguration = new BranchEmailConfiguration(
-            new Branch('DUMMY_NAME', 'DUMMY_DESCR'),
+            new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESCR'),
             'customerDomains',
             'supportAddress'
         );

@@ -12,13 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
+use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
@@ -98,6 +98,7 @@ class BranchServiceImpl implements BranchService
      * Create Branch
      * @param Command\BranchCommand $branchCommand
      * @return int
+     * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand)
     {
@@ -113,6 +114,7 @@ class BranchServiceImpl implements BranchService
             ->create(
                 $branchCommand->name,
                 $branchCommand->description,
+                $branchCommand->key,
                 $branchCommand->defaultAssignee,
                 $logo,
                 $branchCommand->tags

@@ -30,6 +30,12 @@ class UpdateTicketCommand
      * )
      * @Assert\Type(type="string")
      */
+    public $key;
+
+    /**
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
+     */
     public $subject;
 
     /**
