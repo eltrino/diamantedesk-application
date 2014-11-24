@@ -54,6 +54,12 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
     private $securityFacade;
 
     /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasDeletedFromTicket
      * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasDeletedFromTicket
      */
@@ -83,6 +89,7 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
             $this->twig,
             $this->mailer,
             $this->securityFacade,
+            $this->configManager,
             $this->senderEmail
         );
     }
@@ -103,8 +110,71 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
         );
     }
 
-    public function testOnAttachmentWasDeletedFromTicket()
+    public function testOnAttachmentWasDeletedFromTicketWhenEmailNotificationIsDisabled()
     {
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(false));
+
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(true));
+
+        $this->attachmentWasDeletedFromTicketEvent
+            ->expects($this->exactly(2))
+            ->method('getAggregateId')
+            ->will($this->returnValue('id'));
+
+        $this->attachmentWasDeletedFromTicketEvent
+            ->expects($this->atLeastOnce())
+            ->method('getSubject')
+            ->will($this->returnValue('Subject'));
+
+        $this->attachmentWasDeletedFromTicketEvent
+            ->expects($this->any())
+            ->method('getAttachmentName')
+            ->will($this->returnValue('attachmentName'));
+
+        $this->attachmentWasDeletedFromTicketEvent
+            ->expects($this->any())
+            ->method('getRecipientsList')
+            ->will($this->returnValue($this->recipientsList));
+
+        $this->securityFacade
+            ->expects($this->exactly(1))
+            ->method('getLoggedUser')
+            ->will($this->returnValue($this->user));
+
+        $this->user
+            ->expects($this->exactly(1))
+            ->method('getFirstName')
+            ->will($this->returnValue('firstName'));
+
+        $this->user
+            ->expects($this->exactly(1))
+            ->method('getLastName')
+            ->will($this->returnValue('lastName'));
+
+        $this->twig
+            ->expects($this->never())
+            ->method('render');
+
+        $this->attachmentWasDeletedFromTicketSubscriber
+            ->onAttachmentWasDeletedFromTicket($this->attachmentWasDeletedFromTicketEvent);
+    }
+
+    public function testOnAttachmentWasDeletedFromTicketWhenEmailNotificationIsEnabled()
+    {
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(true));
+
         $this->attachmentWasDeletedFromTicketEvent
             ->expects($this->exactly(2))
             ->method('getAggregateId')

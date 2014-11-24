@@ -21,6 +21,7 @@
             <directory suffix="Test.php">Tests/Entity</directory>
             <directory suffix="Test.php">Tests/Ticket</directory>
             <directory suffix="Test.php">Tests/Validator</directory>
+            <directory suffix="Test.php">Tests/EventListener</directory>
         </testsuite>
     </testsuites>
 

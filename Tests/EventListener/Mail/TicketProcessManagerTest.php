@@ -57,6 +57,12 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
     private $securityFacade;
 
     /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated
      * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated
      */
@@ -116,6 +122,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             $this->twig,
             $this->mailer,
             $this->securityFacade,
+            $this->configManager,
             $this->senderEmail
         );
     }
@@ -309,8 +316,45 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
         $this->ticketProcessManager->onTicketWasUnassigned($this->ticketWasUnassignedEvent);
     }
 
-    public function testProcess()
+    public function testProcessWhenEmailNotificationIsDisabled()
     {
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(false));
+
+        $this->securityFacade
+            ->expects($this->exactly(1))
+            ->method('getLoggedUser')
+            ->will($this->returnValue($this->user));
+
+        $this->user
+            ->expects($this->exactly(1))
+            ->method('getFirstName')
+            ->will($this->returnValue('firstName'));
+
+        $this->user
+            ->expects($this->exactly(1))
+            ->method('getLastName')
+            ->will($this->returnValue('lastName'));
+
+        $this->twig
+            ->expects($this->never())
+            ->method('render');
+
+        $this->ticketProcessManager->setRecipientsList($this->recipientsList);
+        $this->ticketProcessManager->process();
+    }
+
+    public function testProcessWhenEmailNotificationIsEnabled()
+    {
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(true));
+
         $this->securityFacade
             ->expects($this->exactly(2))
             ->method('getLoggedUser')

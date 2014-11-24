@@ -54,6 +54,12 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
     private $securityFacade;
 
     /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted
      * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted
      */
@@ -83,6 +89,7 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->twig,
             $this->mailer,
             $this->securityFacade,
+            $this->configManager,
             $this->senderEmail
         );
     }
@@ -102,8 +109,59 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testOnCommentWasDeleted()
+    public function testOnCommentWasDeletedWhenEmailNotificationIsDisabled()
     {
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(false));
+
+        $this->commentWasDeletedEvent
+            ->expects($this->atLeastOnce())
+            ->method('getSubject')
+            ->will($this->returnValue('Subject'));
+
+        $this->commentWasDeletedEvent
+            ->expects($this->any())
+            ->method('getRecipientsList')
+            ->will($this->returnValue($this->recipientsList));
+
+        $this->commentWasDeletedEvent
+            ->expects($this->atLeastOnce())
+            ->method('getCommentContent')
+            ->will($this->returnValue('Comment Content'));
+
+        $this->securityFacade
+            ->expects($this->exactly(1))
+            ->method('getLoggedUser')
+            ->will($this->returnValue($this->user));
+
+        $this->user
+            ->expects($this->exactly(1))
+            ->method('getFirstName')
+            ->will($this->returnValue('firstName'));
+
+        $this->user
+            ->expects($this->exactly(1))
+            ->method('getLastName')
+            ->will($this->returnValue('lastName'));
+
+        $this->twig
+            ->expects($this->never())
+            ->method('render');
+
+        $this->commentWasDeletedSubscriber->onCommentWasDeleted($this->commentWasDeletedEvent);
+    }
+
+    public function testOnCommentWasDeletedWhenEmailNotificationIsEnabled()
+    {
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(true));
+
         $this->commentWasDeletedEvent
             ->expects($this->atLeastOnce())
             ->method('getSubject')
