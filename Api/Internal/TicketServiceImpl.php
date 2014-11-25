@@ -134,6 +134,26 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Load Ticket by given Ticket Key
+     *
+     * @ApiDoc(
+     *  description="Returns a ticket by ticket key",
+     *  uri="/tickets/{key}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="key",
+     *          "dataType"="string",
+     *          "description"="Ticket Key"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
      * @param string $key
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
@@ -424,6 +444,26 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Delete Ticket by key
+     *
+     * @ApiDoc(
+     *  description="Delete ticket by key",
+     *  uri="/tickets/{key}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="key",
+     *          "dataType"="string",
+     *          "description"="Ticket Key"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
      * @param string $key
      * @return void
      */
