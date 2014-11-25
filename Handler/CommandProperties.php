@@ -1,8 +1,8 @@
 <?php
 
-namespace Diamante\ApiBundle\Routing;
+namespace Diamante\ApiBundle\Handler;
 
-class PropertiesMapper
+class CommandProperties
 {
     private $class;
 
@@ -29,5 +29,4 @@ class PropertiesMapper
 
         return $this->object;
     }
-
-}
+} 

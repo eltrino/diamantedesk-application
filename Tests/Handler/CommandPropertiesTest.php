@@ -13,11 +13,11 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\ApiBundle\Tests\Routing;
+namespace Diamante\ApiBundle\Tests\Handler;
 
-use Diamante\ApiBundle\Routing\PropertiesMapper;
+use Diamante\ApiBundle\Handler\CommandProperties;
 
-class PropertiesMapperTest extends \PHPUnit_Framework_TestCase
+class CommandPropertiesTest extends \PHPUnit_Framework_TestCase
 {
     public function testMap()
     {
@@ -31,8 +31,8 @@ class PropertiesMapperTest extends \PHPUnit_Framework_TestCase
             'subject' => 'special task'
         ];
 
-        $reflection = new \ReflectionClass('Diamante\ApiBundle\Tests\Routing\Fixtures\Command');
-        $mapper = new PropertiesMapper($reflection);
+        $reflection = new \ReflectionClass('Diamante\ApiBundle\Tests\Handler\Fixtures\Command');
+        $mapper = new CommandProperties($reflection);
         $object = $mapper->map(array_merge($valid, $invalid));
 
         foreach ($valid as $key => $value) {

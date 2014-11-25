@@ -15,6 +15,7 @@
 
 namespace Diamante\ApiBundle\EventListener;
 
+use Diamante\ApiBundle\Handler\MethodParameters;
 use Diamante\ApiBundle\Routing\PropertiesMapper;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -52,28 +53,12 @@ class HandleRequest
 
         $request->attributes->set('_diamante_rest_service', true);
 
-        $commandData = $request->attributes->get('_route_params');
-        $commandData = array_merge($commandData, $request->request->all());
-        // @todo find possible solution to avoid this hardcoded parameter
-        $commandData['properties'] = $request->request->all();
-
-        $parameters = $reflection->getParameters();
-
-        foreach ($parameters as $parameter) {
-            if (!$parameter->getClass()) {
-                continue;
-            }
-            $mapper = new PropertiesMapper($parameter->getClass());
-            $command = $mapper->map($commandData);
-
-            $errors = $this->validator->validate($command);
-
-            if (count($errors) > 0) {
-                $errorsString = (string)$errors;
-                throw new \InvalidArgumentException($errorsString);
-            }
-
-            $event->getRequest()->attributes->set($parameter->getName(), $command);
+        $methodParameters = new MethodParameters($reflection, $this->validator);
+        if ($request->request->count()) {
+            $request->attributes->set('properties', $request->request);
         }
+        $methodParameters->addParameterBag($request->request);
+        $methodParameters->addParameterBag($request->attributes);
+        $methodParameters->putIn($request->attributes);
     }
 }

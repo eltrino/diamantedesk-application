@@ -1,6 +1,6 @@
 <?php
 
-namespace Diamante\ApiBundle\Tests\Routing\Fixtures;
+namespace Diamante\ApiBundle\Tests\Handler\Fixtures;
 
 
 class Command
@@ -10,4 +10,4 @@ class Command
     public $priority;
 
     public $status;
-} 
+}
