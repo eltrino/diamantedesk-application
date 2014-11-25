@@ -97,7 +97,7 @@ class BranchServiceImpl implements BranchService
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed. Branch not found.');
         }
-
+        $this->isGranted('VIEW', $branch);
         $this->tagManager->loadTagging($branch);
         return $branch;
     }

@@ -143,6 +143,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $key = 'TK-1';
         $ticket = $this->ticket;
 
+        $this->securityFacade->expects($this->once())->method('isGranted')
+            ->with('VIEW', $ticket)
+            ->will($this->returnValue(true));
+
         $this->ticketRepository->expects($this->once())->method('getByTicketKey')
             ->with(new TicketKey('TK', 1))
             ->will($this->returnValue($ticket));
@@ -918,7 +922,36 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->assignTicket($command);
     }
 
-    public function testDeleteTicket()
+    public function testDeleteTicketById()
+    {
+        $this->ticket->expects($this->any())->method('getAttachments')
+            ->will($this->returnValue(array($this->attachment())));
+
+        $this->ticketRepository->expects($this->once())->method('get')
+            ->with(self::DUMMY_TICKET_ID)
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
+
+        $this->attachmentManager->expects($this->exactly(count($this->ticket->getAttachments())))
+            ->method('deleteAttachment')
+            ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
+
+        $this->securityFacade
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
+
+        $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+    }
+
+    public function testDeleteTicketByKey()
     {
         $this->ticket->expects($this->any())->method('getAttachments')
             ->will($this->returnValue(array($this->attachment())));
@@ -944,18 +977,30 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getRecordedEvents')
             ->will($this->returnValue(array()));
 
-        $this->ticketService->deleteTicket(self::DUMMY_TICKET_KEY);
+        $this->ticketService->deleteTicketByKey(self::DUMMY_TICKET_KEY);
     }
 
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
-    public function testDeleteTicketWhenTicketDoesNotExist()
+    public function testDeleteTicketByIdWhenTicketDoesNotExist()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with(self::DUMMY_TICKET_ID)
+            ->will($this->returnValue(null));
+
+        $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testDeleteTicketByKeyWhenTicketDoesNotExist()
     {
         $this->ticketRepository->expects($this->once())->method('getByTicketKey')->with(new TicketKey('DT', 1))
             ->will($this->returnValue(null));
 
-        $this->ticketService->deleteTicket(self::DUMMY_TICKET_KEY);
+        $this->ticketService->deleteTicketByKey(self::DUMMY_TICKET_KEY);
     }
 }

@@ -85,12 +85,18 @@ interface TicketService
     public function updateStatus(UpdateStatusCommand $command);
 
     /**
-     * Delete Ticket
+     * Delete Ticket by id
+     * @param int $id
+     * @return void
+     */
+    public function deleteTicket($id);
+
+    /**
+     * Delete Ticket by key
      * @param string $key
      * @return void
-     * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($key);
+    public function deleteTicketByKey($key);
 
     /**
      * Assign Ticket to specified User

@@ -29,6 +29,7 @@ class BranchCommand implements Taggable
     public $id;
 
     /**
+     * @Assert\NotNull()
      * @var string
      */
     public $key;

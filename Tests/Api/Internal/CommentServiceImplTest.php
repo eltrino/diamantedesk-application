@@ -129,6 +129,36 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
+     * @expectedExceptionMessage Comment loading failed, comment not found.
+     */
+    public function thatCommentRetrievesThrowsExceptionWhenNotFound()
+    {
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue(null));
+        $this->service->loadComment(self::DUMMY_COMMENT_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function thatCommentRetrieves()
+    {
+        $ticket  = $this->_dummyTicket;
+        $author  = new User;
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue($comment));
+        $this->securityFacade->expects($this->once())->method('isGranted')->with('VIEW', $comment)
+            ->will($this->returnValue(true));
+
+        $result = $this->service->loadComment(self::DUMMY_COMMENT_ID);
+
+        $this->assertEquals($comment, $result);
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatCommentPostThrowsExceptionWhenTicketDoesNotExists()

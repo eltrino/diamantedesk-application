@@ -140,6 +140,9 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_BRANCH_ID))
             ->will($this->returnValue($branch));
 
+        $this->securityFacade->expects($this->once())->method('isGranted')->with('VIEW', $branch)
+            ->will($this->returnValue(true));
+
         $retrievedBranch = $this->branchServiceImpl->getBranch(self::DUMMY_BRANCH_ID);
 
         $this->assertEquals($branch, $retrievedBranch);

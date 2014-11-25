@@ -103,7 +103,9 @@ class TicketServiceImpl implements TicketService
      */
     public function loadTicket($ticketId)
     {
-        return $this->loadTicketBy($ticketId);
+        $ticket = $this->loadTicketById($ticketId);
+        $this->isGranted('VIEW', $ticket);
+        return $ticket;
     }
 
     /**
@@ -114,6 +116,17 @@ class TicketServiceImpl implements TicketService
     public function loadTicketByKey($key)
     {
         $ticketKey = TicketKey::from($key);
+        $ticket = $this->loadTicketByTicketKey($ticketKey);
+        $this->isGranted('VIEW', $ticket);
+        return $ticket;
+    }
+
+    /**
+     * @param TicketKey $ticketKey
+     * @return Ticket
+     */
+    private function loadTicketByTicketKey(TicketKey $ticketKey)
+    {
         $ticket = $this->ticketRepository
             ->getByTicketKey($ticketKey);
         if (is_null($ticket)) {
@@ -126,7 +139,7 @@ class TicketServiceImpl implements TicketService
      * @param int $ticketId
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    private function loadTicketBy($ticketId)
+    private function loadTicketById($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
@@ -143,7 +156,7 @@ class TicketServiceImpl implements TicketService
      */
     public function getTicketAttachment(RetrieveTicketAttachmentCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('VIEW', $ticket);
 
@@ -164,7 +177,7 @@ class TicketServiceImpl implements TicketService
         \Assert\that($command->attachments)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -187,7 +200,7 @@ class TicketServiceImpl implements TicketService
      */
     public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -251,7 +264,7 @@ class TicketServiceImpl implements TicketService
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
-        $ticket = $this->loadTicketBy($command->id);
+        $ticket = $this->loadTicketById($command->id);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -301,7 +314,7 @@ class TicketServiceImpl implements TicketService
      */
     public function updateStatus(UpdateStatusCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isAssigneeGranted($ticket);
 
@@ -320,7 +333,7 @@ class TicketServiceImpl implements TicketService
      */
     public function assignTicket(AssigneeTicketCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->id);
+        $ticket = $this->loadTicketById($command->id);
 
         $this->isAssigneeGranted($ticket);
 
@@ -340,15 +353,36 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * Delete Ticket
-     * @param string $key
+     * Delete Ticket by id
+     * @param int $id
      * @return void
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($key)
+    public function deleteTicket($id)
     {
-        $ticket = $this->loadTicketByKey($key);
+        $ticket = $this->loadTicketById($id);
         $this->isGranted('DELETE', $ticket);
+        $this->processDeleteTicket($ticket);
+    }
+
+    /**
+     * Delete Ticket by key
+     * @param string $key
+     * @return void
+     */
+    public function deleteTicketByKey($key)
+    {
+        $ticket = $this->loadTicketByTicketKey(TicketKey::from($key));
+        $this->isGranted('DELETE', $ticket);
+        $this->processDeleteTicket($ticket);
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @return void
+     */
+    private function processDeleteTicket(Ticket $ticket)
+    {
         $attachments = $ticket->getAttachments();
         $ticket->delete();
         $this->ticketRepository->remove($ticket);
