@@ -15,25 +15,41 @@
 namespace Diamante\DeskBundle\Model\Branch;
 
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class BranchFactory extends AbstractEntityFactory
 {
     /**
+     * @var BranchKeyGenerator
+     */
+    private $branchKeyGenerator;
+
+    public function __construct($entityClassName, BranchKeyGenerator $branchKeyGenerator)
+    {
+        parent::__construct($entityClassName);
+        $this->branchKeyGenerator = $branchKeyGenerator;
+    }
+
+    /**
      * Create Branch
      *
      * @param string $name
      * @param string $description
+     * @param null|string $key
      * @param null|User $defaultAssignee
      * @param null|\SplFileInfo $logo
-     * @param null|array $tags
+     * @param null|array|ArrayCollection $tags
      * @return Branch
      */
-    public function create($name, $description, User $defaultAssignee = null, \SplFileInfo $logo = null, $tags = null)
+    public function create($name, $description, $key = null, User $defaultAssignee = null, \SplFileInfo $logo = null, $tags = null)
     {
         if ($logo) {
             $logo = new Logo($logo->getFilename());
         }
-        return new $this->entityClassName($name, $description, $defaultAssignee, $logo, $tags);
+        if (is_null($key) || empty($key)) {
+            $key = $this->branchKeyGenerator->generate($name);
+        }
+        return new $this->entityClassName($key, $name, $description, $defaultAssignee, $logo, $tags);
     }
 }

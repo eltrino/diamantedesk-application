@@ -23,8 +23,10 @@ use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -39,14 +41,9 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $ticketRepository;
 
     /**
-     * @var Repository
+     * @var TicketBuilder
      */
-    private $branchRepository;
-
-    /**
-     * @var TicketFactory
-     */
-    private $ticketFactory;
+    private $ticketBuilder;
 
     /**
      * @var CommentFactory
@@ -66,8 +63,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     public function __construct(
         MessageReferenceRepository $messageReferenceRepository,
         Repository $ticketRepository,
-        Repository $branchRepository,
-        TicketFactory $ticketFactory,
+        TicketBuilder $ticketBuilder,
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentManager $attachmentManager
@@ -75,8 +71,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     {
         $this->messageReferenceRepository = $messageReferenceRepository;
         $this->ticketRepository           = $ticketRepository;
-        $this->branchRepository           = $branchRepository;
-        $this->ticketFactory              = $ticketFactory;
+        $this->ticketBuilder              = $ticketBuilder;
         $this->commentFactory             = $commentFactory;
         $this->userService                = $userService;
         $this->attachmentManager          = $attachmentManager;
@@ -91,39 +86,22 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $description
      * @param $reporterId
      * @param $assigneeId
-     * @param null $priority
-     * @param null $status
      * @param array $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
-                                 $priority = null, $status = null, array $attachments = null)
+                                 array $attachments = null)
     {
-        $branch = $this->branchRepository->get($branchId);
-        if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed, branch not found.');
-        }
+        $this->ticketBuilder
+            ->setSubject($subject)
+            ->setDescription($description)
+            ->setBranchId($branchId)
+            ->setReporterId($reporterId)
+            ->setAssigneeId($assigneeId)
+            ->setSource(Source::EMAIL);
 
-        $reporter = $this->userService->getUserById($reporterId);
-        if (is_null($reporter)) {
-            throw new \RuntimeException('Reporter loading failed, reporter not found.');
-        }
-
-        $assignee = $this->userService->getUserById($assigneeId);
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee validation failed, assignee not found.');
-        }
-
-        $ticket = $this->ticketFactory
-            ->create($subject,
-                $description,
-                $branch,
-                $reporter,
-                $assignee,
-                $priority,
-                Source::EMAIL,
-                $status);
+        $ticket = $this->ticketBuilder->build();
 
         if ($attachments) {
             $this->createAttachments($attachments, $ticket);

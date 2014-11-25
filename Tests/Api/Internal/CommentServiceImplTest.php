@@ -26,6 +26,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -114,15 +115,46 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher, $this->processManager);
 
         $this->_dummyTicket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED)
         );
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Comment loading failed, comment not found.
+     */
+    public function thatCommentRetrievesThrowsExceptionWhenNotFound()
+    {
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue(null));
+        $this->service->loadComment(self::DUMMY_COMMENT_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function thatCommentRetrieves()
+    {
+        $ticket  = $this->_dummyTicket;
+        $author  = new User;
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue($comment));
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with('VIEW', $comment)->will($this->returnValue(true));
+
+        $result = $this->service->loadComment(self::DUMMY_COMMENT_ID);
+
+        $this->assertEquals($comment, $result);
     }
 
     /**
@@ -460,7 +492,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMYY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMYY_DESC');
     }
 
     private function createReporter()

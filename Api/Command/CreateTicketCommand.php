@@ -25,19 +25,25 @@ class CreateTicketCommand
     public $id;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Entity()
      */
     public $branch;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
      */
     public $subject;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
      */
     public $description;
@@ -54,7 +60,9 @@ class CreateTicketCommand
     public $files;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Entity()
      */
     public $reporter;
@@ -78,7 +86,7 @@ class CreateTicketCommand
     public $source;
 
     /**
-     * @var \Diamante\DeskBundle\Api\Dto\AttachmentInput
+     * @var \Diamante\DeskBundle\Api\Dto\AttachmentInput[]
      */
     public $attachmentsInput;
 }

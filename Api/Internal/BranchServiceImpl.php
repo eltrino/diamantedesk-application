@@ -12,7 +12,6 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
@@ -21,6 +20,7 @@ use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
+use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\UserService;
 
 class BranchServiceImpl implements BranchService, RestServiceInterface
 {
@@ -56,19 +57,25 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
      */
     private $authorizationService;
 
+    /**
+     * @var UserService
+     */
+    private $userService;
+
     public function __construct(
         BranchFactory $branchFactory,
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
-        AuthorizationService $authorizationService
-    )
-    {
-        $this->branchFactory = $branchFactory;
-        $this->branchRepository = $branchRepository;
+        AuthorizationService $authorizationService,
+        UserService $userService
+    ) {
+        $this->branchFactory     = $branchFactory;
+        $this->branchRepository  = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
-        $this->tagManager = $tagManager;
+        $this->tagManager        = $tagManager;
         $this->authorizationService = $authorizationService;
+        $this->userService       = $userService;
     }
 
     /**
@@ -127,7 +134,6 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed. Branch not found.');
         }
-
         $this->tagManager->loadTagging($branch);
         return $branch;
     }
@@ -148,6 +154,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
      *
      * @param Command\BranchCommand $branchCommand
      * @return int
+     * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand)
     {
@@ -159,11 +166,18 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
             $logo = $this->handleLogoUpload($branchCommand->logoFile);
         }
 
+        if ($branchCommand->defaultAssignee) {
+            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+        } else {
+            $assignee = null;
+        }
+
         $branch = $this->branchFactory
             ->create(
                 $branchCommand->name,
                 $branchCommand->description,
-                $branchCommand->defaultAssignee,
+                $branchCommand->key,
+                $assignee,
                 $logo,
                 $branchCommand->tags
             );
@@ -188,6 +202,13 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
          * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
          */
         $branch = $this->branchRepository->get($branchCommand->id);
+
+        if ($branchCommand->defaultAssignee) {
+            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+        } else {
+            $assignee = null;
+        }
+
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
         $file = null;
         if ($branchCommand->logoFile) {
@@ -198,7 +219,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
             $file = new Logo($logo->getFilename());
         }
 
-        $branch->update($branchCommand->name, $branchCommand->description, $branchCommand->defaultAssignee, $file);
+        $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
         $this->branchRepository->store($branch);
 
         //TODO: Refactor tag manipulations.

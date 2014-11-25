@@ -15,7 +15,7 @@
 namespace Diamante\DeskBundle\Form;
 
 use Diamante\DeskBundle\Entity\Comment;
-use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\EditCommentCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
@@ -48,6 +48,7 @@ class CommandFactory
     {
         $command = new UpdateTicketCommand();
         $command->id = $ticket->getId();
+        $command->key = (string) $ticket->getKey();
         $command->subject = $ticket->getSubject();
         $command->description = $ticket->getDescription();
         $command->reporter = $ticket->getReporter();

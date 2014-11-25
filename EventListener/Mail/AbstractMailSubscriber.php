@@ -116,7 +116,7 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         if ( $emailNotificationsEnabled === false ) {
             return;
         }
-
+        
         $txtBody = $this->twig->render($templates['txt'],
             $options);
 

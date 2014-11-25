@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': ticket.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': ticket.key|trim }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {{ UI.saveAndCloseButton(editCommand.id ? 'diamante.desk.ui.save'|trans : 'diamante.desk.ui.add'|trans) }}
 {% endblock %}
 
@@ -22,7 +22,7 @@
     {% if editCommand.id %}
         {% set breadcrumbs = {
             'entity':      editCommand,
-            'indexPath':   path('diamante_ticket_view', {'id': ticket.id}),
+            'indexPath':   path('diamante_ticket_view', {'key': ticket.key|trim}),
             'indexLabel':  ticket.subject,
             'entityTitle': 'diamante.desk.comment.actions.edit'|trans
         } %}

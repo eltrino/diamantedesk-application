@@ -27,8 +27,11 @@ use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
-use Diamante\DeskBundle\Model\Ticket\TicketFactory;
+use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\DeskBundle\Model\Ticket\TicketRepository;
+use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
@@ -38,7 +41,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class TicketServiceImpl implements TicketService, RestServiceInterface
 {
     /**
-     * @var Repository
+     * @var TicketRepository
      */
     private $ticketRepository;
 
@@ -53,9 +56,9 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     private $attachmentManager;
 
     /**
-     * @var TicketFactory
+     * @var TicketBuilder
      */
-    private $ticketFactory;
+    private $ticketBuilder;
 
     /**
      * @var UserService
@@ -77,9 +80,9 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     private $processManager;
 
-    public function __construct(Repository $ticketRepository,
+    public function __construct(TicketRepository $ticketRepository,
                                 Repository $branchRepository,
-                                TicketFactory $ticketFactory,
+                                TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
                                 UserService $userService,
                                 AuthorizationService $authorizationService,
@@ -88,7 +91,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
-        $this->ticketFactory = $ticketFactory;
+        $this->ticketBuilder = $ticketBuilder;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
         $this->authorizationService = $authorizationService;
@@ -124,9 +127,35 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     public function loadTicket($id)
     {
-        $ticket = $this->loadTicketBy($id);
+        $ticket = $this->loadTicketById($id);
         $this->isGranted('VIEW', $ticket);
+        return $ticket;
+    }
 
+    /**
+     * Load Ticket by given Ticket Key
+     * @param string $key
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function loadTicketByKey($key)
+    {
+        $ticketKey = TicketKey::from($key);
+        $ticket = $this->loadTicketByTicketKey($ticketKey);
+        $this->isGranted('VIEW', $ticket);
+        return $ticket;
+    }
+
+    /**
+     * @param TicketKey $ticketKey
+     * @return Ticket
+     */
+    private function loadTicketByTicketKey(TicketKey $ticketKey)
+    {
+        $ticket = $this->ticketRepository
+            ->getByTicketKey($ticketKey);
+        if (is_null($ticket)) {
+            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+        }
         return $ticket;
     }
 
@@ -134,7 +163,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    private function loadTicketBy($id)
+    private function loadTicketById($id)
     {
         $ticket = $this->ticketRepository->get($id);
         if (is_null($ticket)) {
@@ -151,7 +180,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     public function getTicketAttachment(RetrieveTicketAttachmentCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('VIEW', $ticket);
 
@@ -172,7 +201,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         \Assert\that($command->attachments)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -195,7 +224,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -234,31 +263,18 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
-        $branch = $this->branchRepository->get($command->branch);
-        if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed, branch not found.');
-        }
 
-        $reporter = $this->userService->getUserById($command->reporter);
-        if (is_null($reporter)) {
-            throw new \RuntimeException('Reporter loading failed, reporter not found.');
-        }
+        $this->ticketBuilder
+            ->setSubject($command->subject)
+            ->setDescription($command->description)
+            ->setBranchId($command->branch)
+            ->setReporterId($command->reporter)
+            ->setAssigneeId($command->assignee)
+            ->setPriority($command->priority)
+            ->setSource($command->source)
+            ->setStatus($command->status);
 
-        $assignee = $this->userService->getUserById($command->assignee);
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee validation failed, assignee not found.');
-        }
-
-        $ticket = $this->ticketFactory
-            ->create($command->subject,
-                $command->description,
-                $branch,
-                $reporter,
-                $assignee,
-                $command->priority,
-                $command->source,
-                $command->status
-            );
+               $ticket = $this->ticketBuilder->build();
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
@@ -284,7 +300,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
-        $ticket = $this->loadTicketBy($command->id);
+        $ticket = $this->loadTicketById($command->id);
 
         $this->isGranted('EDIT', $ticket);
 
@@ -334,7 +350,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     public function updateStatus(UpdateStatusCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->ticketId);
+        $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isAssigneeGranted($ticket);
 
@@ -353,7 +369,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     public function assignTicket(AssigneeTicketCommand $command)
     {
-        $ticket = $this->loadTicketBy($command->id);
+        $ticket = $this->loadTicketById($command->id);
 
         $this->isAssigneeGranted($ticket);
 
@@ -373,7 +389,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     }
 
     /**
-     * Delete Ticket
+     * Delete Ticket by id
      *
      * @ApiDoc(
      *  description="Delete ticket",
@@ -401,8 +417,29 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     public function deleteTicket($id)
     {
-        $ticket = $this->loadTicketBy($id);
+        $ticket = $this->loadTicketById($id);
         $this->isGranted('DELETE', $ticket);
+        $this->processDeleteTicket($ticket);
+    }
+
+    /**
+     * Delete Ticket by key
+     * @param string $key
+     * @return void
+     */
+    public function deleteTicketByKey($key)
+    {
+        $ticket = $this->loadTicketByTicketKey(TicketKey::from($key));
+        $this->isGranted('DELETE', $ticket);
+        $this->processDeleteTicket($ticket);
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @return void
+     */
+    private function processDeleteTicket(Ticket $ticket)
+    {
         $attachments = $ticket->getAttachments();
         $ticket->delete();
         $this->ticketRepository->remove($ticket);
@@ -486,7 +523,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         /**
          * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
          */
-        $ticket = $this->loadTicketBy($command->id);
+        $ticket = $this->loadTicketById($command->id);
 
         $this->isGranted('EDIT', $ticket);
 

@@ -31,7 +31,16 @@ class BranchCommand implements Taggable
 
     /**
      * @Assert\NotNull()
+     * @var string
+     */
+    public $key;
+
+    /**
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      * @Assert\Type(type="string")
+     * @Assert\Length(min = 2)
      */
     public $name;
 
@@ -47,7 +56,8 @@ class BranchCommand implements Taggable
 
     /**
      * @Assert\File(
-     *              mimeTypes={"image/jpeg","image/png"}
+     *              mimeTypes={"image/jpeg","image/png"},
+     *              mimeTypesMessage="'JPEG' and 'PNG' image formats are supported only"
      * )
      */
     public $logoFile;

@@ -121,7 +121,9 @@ class CommentServiceImpl implements CommentService
      */
     public function loadComment($id)
     {
-        return $this->loadCommentBy($id);
+        $comment = $this->loadCommentBy($id);
+        $this->isGranted('VIEW', $comment);
+        return $comment;
     }
 
     /**
