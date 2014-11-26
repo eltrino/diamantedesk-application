@@ -16,7 +16,6 @@
 namespace Diamante\ApiBundle\EventListener;
 
 use Diamante\ApiBundle\Handler\MethodParameters;
-use Diamante\ApiBundle\Routing\PropertiesMapper;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Validator\Validator;
