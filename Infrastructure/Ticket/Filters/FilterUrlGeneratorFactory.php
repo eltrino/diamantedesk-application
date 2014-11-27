@@ -26,6 +26,11 @@ class FilterUrlGeneratorFactory
     private $container;
 
     /**
+     * @var \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     */
+    private $token;
+
+    /**
      * @var string
      */
     private $defaultPerPage;
@@ -36,26 +41,29 @@ class FilterUrlGeneratorFactory
     private $userId;
 
     /**
+     * @var string;
+     */
+    private $userFullName;
+
+    /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->token = $this->container->get('security.context')->getToken();
         $this->defaultPerPage = $this->container->get('oro_config.global')
             ->get('oro_data_grid.default_per_page');
-        $this->userId = $this->getCurrentUserId();
+        $this->userFullName = $this->getCurrentUserFullName();
     }
 
     /**
-     * @return User ID
+     * @return User Full Name
      */
-    private function getCurrentUserId()
+    private function getCurrentUserFullName()
     {
-        /**
-         * @var $token \Symfony\Component\Security\Core\Authentication\Token\TokenInterface
-         */
-        $token = $this->container->get('security.context')->getToken();
-        return $token ? $token->getUser()->getId() : null;
+        return $this->token ? $this->token->getUser()->getFirstName() . ' ' . $this->token->getUser()->getLastName()
+            : null;
     }
 
     /**
@@ -63,7 +71,7 @@ class FilterUrlGeneratorFactory
      */
     public function createAllTicketsFilterUrlGenerator()
     {
-        return new AllTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId);
+        return new AllTicketsFilterUrlGenerator($this->defaultPerPage, $this->userFullName);
     }
 
     /**
@@ -71,7 +79,7 @@ class FilterUrlGeneratorFactory
      */
     public function createMyTicketsFilterUrlGenerator()
     {
-        return new MyTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId);
+        return new MyTicketsFilterUrlGenerator($this->defaultPerPage, $this->userFullName);
     }
 
     /**
@@ -79,7 +87,7 @@ class FilterUrlGeneratorFactory
      */
     public function createMyNewTicketsFilterUrlGenerator()
     {
-        return new MyNewTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId, STATUS::NEW_ONE);
+        return new MyNewTicketsFilterUrlGenerator($this->defaultPerPage, $this->userFullName, STATUS::NEW_ONE);
     }
 
     /**
@@ -87,7 +95,7 @@ class FilterUrlGeneratorFactory
      */
     public function createMyOpenTicketsFilterUrlGenerator()
     {
-        return new MyOpenTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId, STATUS::OPEN);
+        return new MyOpenTicketsFilterUrlGenerator($this->defaultPerPage, $this->userFullName, STATUS::OPEN);
     }
 
     /**
@@ -95,7 +103,7 @@ class FilterUrlGeneratorFactory
      */
     public function createMyReportedTicketsFilterUrlGenerator()
     {
-        return new MyReportedTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId);
+        return new MyReportedTicketsFilterUrlGenerator($this->defaultPerPage, $this->userFullName);
     }
 
     /**
@@ -103,6 +111,6 @@ class FilterUrlGeneratorFactory
      */
     public function createMyReportedNewTicketsFilterUrlGenerator()
     {
-        return new MyReportedNewTicketsFilterUrlGenerator($this->defaultPerPage, $this->userId, STATUS::NEW_ONE);
+        return new MyReportedNewTicketsFilterUrlGenerator($this->defaultPerPage, $this->userFullName, STATUS::NEW_ONE);
     }
 }

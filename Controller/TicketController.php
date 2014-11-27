@@ -69,7 +69,7 @@ class TicketController extends Controller
         $baseUri = $this->getRequest()->getBaseUrl() . $this->getRequest()->getPathInfo();
         foreach($filtersList as $filter) {
             $link['name'] =  $filter->getName();
-            $link['url'] = '#url=' . $baseUri . $filtersGenerator->generateGridFilterUrl($filter->getId());
+            $link['url'] = $filtersGenerator->generateGridFilterUrl($filter->getId());
             $linksList[] = $link;
         }
 
