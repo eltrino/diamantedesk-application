@@ -44,7 +44,6 @@
                 'title': 'diamante.desk.ticket.details'|trans,
                 'data': [
                     form_row(form.subject),
-                    form_row(form.description),
                     form_row(form.status),
                     form_row(form.files),
                     form_row(form.priority),
@@ -55,6 +54,18 @@
             }
         ]
     }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title' : 'diamante.desk.common.description'|trans,
+        'subblocks': [
+            {
+                'title' : null,
+                'data' : [
+                    form_row(form.description)
+                ]
+            }]
+        }]
+    ) %}
 
     {% set data = {
         'formErrors': form_errors(form)? form_errors(form) : null,
