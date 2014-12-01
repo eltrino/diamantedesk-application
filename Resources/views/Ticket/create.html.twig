@@ -10,7 +10,11 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_list'), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {% if app.request.get('id') %}
+        {{ UI.button({'path' : path('diamante_branch_view', {'id':app.request.get('id')}), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {% else %}
+        {{ UI.button({'path' : path('diamante_ticket_list'), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {% endif %}
     {{ UI.saveAndStayButton() }}
     {{ UI.saveAndCloseButton() }}
 {% endblock %}

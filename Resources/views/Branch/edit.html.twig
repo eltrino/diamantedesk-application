@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_branch_list'), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_branch_view', { 'id' : form.vars.value.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {% set html = UI.saveAndCloseButton() %}
     {% if form.vars.value.id or resource_granted('orocrm_contact_update') %}
         {% set html = html ~ UI.saveAndStayButton() %}
