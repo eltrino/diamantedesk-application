@@ -9,7 +9,7 @@
 
 {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Comment') %}
     <ol class="diam-comments unstyled">
-        {% for comment in comments %}
+        {% for comment in comments if comment.id  %}
             {% set imagePath = '' %}
             <li class="diam-comment">
                 <div class="pull-right">
@@ -36,6 +36,8 @@
                     </div>
                 {% endif %}
             </li>
+        {% else %}
+            <li>{{ 'diamante.desk.comment.messages.empty'|trans }}</li>
         {% endfor %}
     </ol>
 {% endif %}
