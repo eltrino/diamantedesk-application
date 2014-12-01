@@ -128,7 +128,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     public function updateContent($content)
     {
         if ($this->content !== $content) {
-            $this->raise(new CommentWasUpdated($this->ticket->getId(), $this->ticket->getSubject(),
+            $this->raise(new CommentWasUpdated($this->ticket->getUniqueId(), $this->ticket->getSubject(),
                 $this->ticket->getRecipientsList(), $content));
         }
         $this->content = $content;
@@ -141,7 +141,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
-        $this->raise(new AttachmentWasAddedToComment($this->ticket->getId(), $this->ticket->getSubject(),
+        $this->raise(new AttachmentWasAddedToComment($this->ticket->getUniqueId(), $this->ticket->getSubject(),
             $this->ticket->getRecipientsList(), $this->content, $attachment->getFilename()));
     }
 
@@ -173,7 +173,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
 
     public function delete()
     {
-        $this->raise(new CommentWasDeleted($this->ticket->getId(), $this->ticket->getSubject(),
+        $this->raise(new CommentWasDeleted($this->ticket->getUniqueId(), $this->ticket->getSubject(),
             $this->ticket->getRecipientsList(), $this->content));
     }
 }
