@@ -31,6 +31,7 @@ class UpdateTicketStatusType extends AbstractType
                 array(
                     'label' => 'diamante.desk.attributes.status',
                     'required' => true,
+                    'attr' => array('style' => "width:110px"),
                     'choices' => $statusOptions
                 ))
                 ->addModelTransformer($statusTransformer)
