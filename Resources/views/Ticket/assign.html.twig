@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': form.vars.value.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': ticketKey}), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {{ UI.buttonType({'type': 'submit', 'class': 'btn-success', 'label': 'diamante.desk.ui.save'|trans}) }}
 {% endblock %}
 
@@ -18,9 +18,11 @@
     {% if form.vars.value.id %}
         {% set breadcrumbs = {
             'entity':      form.vars.value,
-            'indexPath':   path('diamante_ticket_list'),
-            'indexLabel': 'diamante.desk.ticket.entity_plural_label'|trans,
-            'entityTitle': form.vars.value.subject|default('diamante.desk.common.not_available'|trans)
+            'indexPath':   path('diamante_branch_view', {'id': branchId}),
+            'indexLabel': branchName|trim,
+            'entityTitle': ticketKey ~ ' ' ~ ticketSubject,
+            'hasAvatar': true,
+            'imagePath': branchLogoPathname ? branchLogoPathname : null
         }
         %}
         {{ parent() }}

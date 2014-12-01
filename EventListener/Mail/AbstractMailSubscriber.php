@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\EventListener\Mail;
 
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AbstractTicketEvent;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Swift_Mailer;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Twig_Environment;
@@ -66,12 +67,14 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         Twig_Environment $twig,
         Swift_Mailer $mailer,
         SecurityFacade $securityFacade,
+        ConfigManager $configManager,
         $senderEmail
     ) {
         $this->twig             = $twig;
         $this->mailer           = $mailer;
         $this->securityFacade   = $securityFacade;
         $this->senderEmail      = $senderEmail;
+        $this->configManager    = $configManager;
     }
 
     /**
@@ -109,6 +112,11 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
      */
     protected function sendMessage(array $options, array $templates)
     {
+        $emailNotificationsEnabled = (bool)$this->configManager->get('diamante_desk.email_notification');
+        if ( $emailNotificationsEnabled === false ) {
+            return;
+        }
+        
         $txtBody = $this->twig->render($templates['txt'],
             $options);
 

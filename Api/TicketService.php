@@ -33,6 +33,13 @@ interface TicketService
     public function loadTicket($ticketId);
 
     /**
+     * Load Ticket by given Ticket Key
+     * @param string $key
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function loadTicketByKey($key);
+
+    /**
      * Retrieves Ticket Attachment
      * @param RetrieveTicketAttachmentCommand $command
      * @return \Diamante\DeskBundle\Entity\Attachment
@@ -78,12 +85,18 @@ interface TicketService
     public function updateStatus(UpdateStatusCommand $command);
 
     /**
-     * Delete Ticket
-     * @param $ticketId
-     * @return null
-     * @throws \RuntimeException if unable to load required ticket
+     * Delete Ticket by id
+     * @param int $id
+     * @return void
      */
-    public function deleteTicket($ticketId);
+    public function deleteTicket($id);
+
+    /**
+     * Delete Ticket by key
+     * @param string $key
+     * @return void
+     */
+    public function deleteTicketByKey($key);
 
     /**
      * Assign Ticket to specified User

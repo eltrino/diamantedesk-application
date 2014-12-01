@@ -14,19 +14,19 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
-use Diamante\DeskBundle\Model\Attachment\AttachmentFactory;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Attachment\File;
-use Diamante\DeskBundle\Model\Attachment\Services\FileStorageService;
+use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Ticket\Source;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -41,19 +41,9 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $ticketRepository;
 
     /**
-     * @var Repository
+     * @var TicketBuilder
      */
-    private $branchRepository;
-
-    /**
-     * @var Repository
-     */
-    private $attachmentRepository;
-
-    /**
-     * @var TicketFactory
-     */
-    private $ticketFactory;
+    private $ticketBuilder;
 
     /**
      * @var CommentFactory
@@ -61,41 +51,30 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $commentFactory;
 
     /**
-     * @var AttachmentFactory
-     */
-    private $attachmentFactory;
-
-    /**
      * @var UserService
      */
     private $userService;
 
     /**
-     * @var FileStorageService
+     * @var AttachmentManager
      */
-    private $fileStorageService;
+    private $attachmentManager;
 
     public function __construct(
         MessageReferenceRepository $messageReferenceRepository,
         Repository $ticketRepository,
-        Repository $branchRepository,
-        Repository $attachmentRepository,
-        TicketFactory $ticketFactory,
+        TicketBuilder $ticketBuilder,
         CommentFactory $commentFactory,
-        AttachmentFactory $attachmentFactory,
         UserService $userService,
-        FileStorageService $fileStorageService
+        AttachmentManager $attachmentManager
     )
     {
         $this->messageReferenceRepository = $messageReferenceRepository;
         $this->ticketRepository           = $ticketRepository;
-        $this->branchRepository           = $branchRepository;
-        $this->attachmentRepository       = $attachmentRepository;
-        $this->ticketFactory              = $ticketFactory;
+        $this->ticketBuilder              = $ticketBuilder;
         $this->commentFactory             = $commentFactory;
-        $this->attachmentFactory          = $attachmentFactory;
         $this->userService                = $userService;
-        $this->fileStorageService         = $fileStorageService;
+        $this->attachmentManager          = $attachmentManager;
     }
 
     /**
@@ -105,40 +84,24 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $branchId
      * @param $subject
      * @param $description
-     * @param $reporter
+     * @param $reporterId
      * @param $assigneeId
-     * @param null $priority
-     * @param null $status
      * @param array $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
-                                 $priority = null, $status = null, array $attachments = null)
+    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
+                                 array $attachments = null)
     {
-        $branch = $this->branchRepository->get($branchId);
-        if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed, branch not found.');
-        }
+        $this->ticketBuilder
+            ->setSubject($subject)
+            ->setDescription($description)
+            ->setBranchId($branchId)
+            ->setReporterId($reporterId)
+            ->setAssigneeId($assigneeId)
+            ->setSource(Source::EMAIL);
 
-        if (is_null($reporter)) {
-            throw new \RuntimeException('Reporter loading failed, reporter not found.');
-        }
-
-        $assignee = $this->userService->getByUser(new User($assigneeId, User::TYPE_ORO));
-        if (is_null($assignee)) {
-            throw new \RuntimeException('Assignee validation failed, assignee not found.');
-        }
-
-        $ticket = $this->ticketFactory
-            ->create($subject,
-                $description,
-                $branch,
-                $reporter,
-                $assignee,
-                $priority,
-                Source::EMAIL,
-                $status);
+        $ticket = $this->ticketBuilder->build();
 
         if ($attachments) {
             $this->createAttachments($attachments, $ticket);
@@ -155,51 +118,22 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     private function createAttachments(array $attachments, AttachmentHolder $attachmentHolder)
     {
-        $filenamePrefix = $this->exposeFilenamePrefixFrom($attachmentHolder);
-
         foreach ($attachments as $attachment) {
-            /**
-             * @var $attachment \Diamante\DeskBundle\Model\Attachment\File
-             */
-            try {
-                $path = $this->fileStorageService->upload($filenamePrefix . '/' . $attachment->getName(), $attachment->getContent());
-
-                $file = new File($path);
-
-                $ticketAttachment = $this->attachmentFactory->create($file);
-
-                $attachmentHolder->addAttachment($ticketAttachment);
-                $this->attachmentRepository->store($ticketAttachment);
-            } catch (\RuntimeException $e) {
-                /**
-                 * @todo logging
-                 */
-                throw $e;
-            }
+            $this->attachmentManager
+                ->createNewAttachment($attachment->getName(), $attachment->getContent(), $attachmentHolder);
         }
-    }
-
-    /**
-     * @param AttachmentHolder $attachmentHolder
-     * @return string
-     */
-    private function exposeFilenamePrefixFrom(AttachmentHolder $attachmentHolder)
-    {
-        $parts = explode("\\", get_class($attachmentHolder));
-        $prefix = strtolower(array_pop($parts));
-        return $prefix;
     }
 
     /**
      * Creates Comment for Ticket
      *
      * @param $content
-     * @param $author
+     * @param $authorId
      * @param $messageId
      * @param array $attachments
      * @return void
      */
-    public function createCommentForTicket($content, $author, $messageId, array $attachments = null)
+    public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
     {
         $ticket = $this->messageReferenceRepository
             ->getReferenceByMessageId($messageId)
@@ -209,6 +143,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
+        $author = $this->userService->getUserById($authorId);
         $comment = $this->commentFactory->create($content, $ticket, $author);
 
         if ($attachments) {

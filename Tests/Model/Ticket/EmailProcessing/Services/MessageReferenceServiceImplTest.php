@@ -17,20 +17,20 @@ namespace Diamante\DeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
+use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
 
 class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_TICKET_ID           = 1;
-    const DUMMY_TICKET_SUBJECT      = 'Subject';
-    const DUMMY_TICKET_DESCRIPTION  = 'Description';
+    const SUBJECT      = 'Subject';
+    const DESCRIPTION  = 'Description';
     const DUMMY_COMMENT_CONTENT     = 'dummy_comment_content';
     const DUMMY_MESSAGE_ID          = 'dummy_message_id';
 
@@ -62,16 +62,16 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branchRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\Repository
-     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
-     */
-    private $attachmentRepository;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketFactory
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketFactory
      */
     private $ticketFactory;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketBuilder
+     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketBuilder
+     */
+    private $ticketBuilder;
 
     /**
      * @var \Diamante\DeskBundle\Model\Ticket\CommentFactory
@@ -80,22 +80,16 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $commentFactory;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
-     * @Mock \Diamante\DeskBundle\Model\Attachment\AttachmentFactory
-     */
-    private $attachmentFactory;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Shared\UserService
      * @Mock \Diamante\DeskBundle\Model\Shared\UserService
      */
     private $userService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
-     * @Mock \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService
+     * @var \Diamante\DeskBundle\Model\Attachment\Manager
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Manager
      */
-    private $fileStorage;
+    private $attachmentManager;
 
     /**
      * @var \Diamante\DeskBundle\Model\Ticket\Ticket
@@ -115,12 +109,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $messageReference;
 
-    /**
-     * @var \Diamante\DeskBundle\Entity\Attachment
-     * @Mock \Diamante\DeskBundle\Entity\Attachment
-     */
-    private $attachment;
-
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -128,13 +116,10 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->messageReferenceService = new MessageReferenceServiceImpl(
             $this->messageReferenceRepository,
             $this->ticketRepository,
-            $this->branchRepository,
-            $this->attachmentRepository,
-            $this->ticketFactory,
+            $this->ticketBuilder,
             $this->commentFactory,
-            $this->attachmentFactory,
             $this->userService,
-            $this->fileStorage
+            $this->attachmentManager
         );
     }
 
@@ -144,48 +129,30 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatTicketCreatesWithNoAttachments()
     {
         $branchId = 1;
-        $branch = $this->createBranch();
-        $this->branchRepository->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo($branchId))
-            ->will($this->returnValue($branch));
-
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter($reporterId);
-        $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->any())
-            ->method('getByUser')
-            ->with($this->equalTo($this->getUserOfOROType($assigneeId)))
-            ->will($this->returnValue($assignee));
+        $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporterId')->with($reporterId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setSource')->with(Source::EMAIL)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($this->ticket));
 
-        $this->ticketFactory->expects($this->once())
-            ->method('create')
-            ->with(
-                $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-                $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
-            )->will($this->returnValue($this->ticket));
-
-        $this->fileStorage->expects($this->exactly(0))
-            ->method('upload');
-
-        $this->ticketRepository->expects($this->once())
-            ->method('store')
-            ->with($this->equalTo($this->ticket));
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
         $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket);
 
-        $this->messageReferenceRepository->expects($this->once())
-            ->method('store')
+        $this->messageReferenceRepository->expects($this->once())->method('store')
             ->with($this->equalTo($messageReference));
 
         $this->messageReferenceService->createTicket(
             self::DUMMY_MESSAGE_ID,
             $branchId,
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
-            $reporter,
+            self::SUBJECT,
+            self::DESCRIPTION,
+            $reporterId,
             $assigneeId
         );
     }
@@ -196,49 +163,23 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatTicketCreatesWithAttachments()
     {
         $branchId = 1;
-        $branch = $this->createBranch();
-        $this->branchRepository->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo($branchId))
-            ->will($this->returnValue($branch));
-
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter($reporterId);
-        $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))
-            ->method('getByUser')
-            ->with($this->equalTo($this->getUserOfOROType($assigneeId)))
-            ->will($this->returnValue($assignee));
+        $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporterId')->with($reporterId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setSource')->with(Source::EMAIL)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($this->ticket));
 
-        $this->ticketFactory->expects($this->once())
-            ->method('create')
+        $this->attachmentManager->expects($this->once())->method('createNewAttachment')
             ->with(
-                $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-                $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee), $this->equalTo(null), $this->equalTo(Source::EMAIL)
-            )->will($this->returnValue($this->ticket));
-
-        $fileRealPath = 'dummy/file/real/path/' . self::DUMMY_FILENAME;
-
-        $this->fileStorage->expects($this->once())->method('upload')->with(
-            $this->logicalAnd(
-                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
-                $this->stringContains(self::DUMMY_FILENAME)
-            ), $this->equalTo(self::DUMMY_FILE_CONTENT)
-        )->will($this->returnValue($fileRealPath));
-
-        $this->attachmentFactory->expects($this->once())->method('create')->with(
-            $this->logicalAnd(
-                $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
-                $this->callback(function($other) {
-                    return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
-                })
-            )
-        )->will($this->returnValue($this->attachment));
-
-        $this->ticket->expects($this->once())->method('addAttachment')->with($this->equalTo($this->attachment));
-        $this->attachmentRepository->expects($this->once())->method('store')->with($this->equalTo($this->attachment));
+                $this->equalTo(self::DUMMY_FILENAME),
+                $this->equalTo(self::DUMMY_FILE_CONTENT),
+                $this->equalTo($this->ticket)
+            );
 
         $this->ticketRepository->expects($this->once())
             ->method('store')
@@ -253,12 +194,10 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->messageReferenceService->createTicket(
             self::DUMMY_MESSAGE_ID,
             $branchId,
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
-            $reporter,
+            self::SUBJECT,
+            self::DESCRIPTION,
+            $reporterId,
             $assigneeId,
-            null,
-            null,
             $this->attachments()
         );
     }
@@ -268,10 +207,10 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentCreatesWithNoAttachments()
     {
+        $author  = $this->createAuthor();
         $authorId = 1;
-        $author  = $this->createAuthor($authorId);
 
-        $ticket = $this->createDummyTicket($authorId);
+        $ticket = $this->createDummyTicket();
 
         $this->messageReferenceRepository->expects($this->once())
             ->method('getReferenceByMessageId')
@@ -282,20 +221,22 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getTicket')
             ->will($this->returnValue($ticket));
 
+        $this->userService->expects($this->once())
+            ->method('getUserById')
+            ->with($this->equalTo($authorId))
+            ->will($this->returnValue($author));
+
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
             $this->equalTo($ticket),
             $this->equalTo($author)
         )->will($this->returnValue($this->comment));
 
-        $this->fileStorage->expects($this->exactly(0))
-            ->method('upload');
-
         $this->ticketRepository->expects($this->once())->method('store')
             ->with($this->equalTo($ticket));
 
         $this->messageReferenceService->createCommentForTicket(
-            self::DUMMY_COMMENT_CONTENT, $author, self::DUMMY_MESSAGE_ID
+            self::DUMMY_COMMENT_CONTENT, $authorId, self::DUMMY_MESSAGE_ID
         );
 
         $this->assertCount(1, $ticket->getComments());
@@ -307,10 +248,10 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentCreatesWithAttachments()
     {
+        $author  = $this->createAuthor();
         $authorId = 1;
 
-        $author  = $this->createAuthor($authorId);
-        $ticket = $this->createDummyTicket($authorId);
+        $ticket = $this->createDummyTicket();
 
         $this->messageReferenceRepository->expects($this->once())
             ->method('getReferenceByMessageId')
@@ -321,38 +262,29 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getTicket')
             ->will($this->returnValue($ticket));
 
+        $this->userService->expects($this->once())
+            ->method('getUserById')
+            ->with($this->equalTo($authorId))
+            ->will($this->returnValue($author));
+
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
             $this->equalTo($ticket),
             $this->equalTo($author)
         )->will($this->returnValue($this->comment));
 
-        $fileRealPath = 'dummy/file/real/path/' . self::DUMMY_FILENAME;
-
-        $this->fileStorage->expects($this->once())->method('upload')->with(
-            $this->logicalAnd(
-                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
-                $this->stringContains(self::DUMMY_FILENAME)
-            ), $this->equalTo(self::DUMMY_FILE_CONTENT)
-        )->will($this->returnValue($fileRealPath));
-
-        $this->attachmentFactory->expects($this->once())->method('create')->with(
-            $this->logicalAnd(
-                $this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\File'),
-                $this->callback(function($other) {
-                    return MessageReferenceServiceImplTest::DUMMY_FILENAME == $other->getFilename();
-                })
-            )
-        )->will($this->returnValue($this->attachment));
-
-        $this->comment->expects($this->once())->method('addAttachment')->with($this->equalTo($this->attachment));
-        $this->attachmentRepository->expects($this->once())->method('store')->with($this->equalTo($this->attachment));
+        $this->attachmentManager->expects($this->once())->method('createNewAttachment')
+            ->with(
+                $this->equalTo(self::DUMMY_FILENAME),
+                $this->equalTo(self::DUMMY_FILE_CONTENT),
+                $this->equalTo($this->comment)
+            );
 
         $this->ticketRepository->expects($this->once())->method('store')
             ->with($this->equalTo($ticket));
 
         $this->messageReferenceService->createCommentForTicket(
-            self::DUMMY_COMMENT_CONTENT, $author, self::DUMMY_MESSAGE_ID, $this->attachments()
+            self::DUMMY_COMMENT_CONTENT, $authorId, self::DUMMY_MESSAGE_ID, $this->attachments()
         );
 
         $this->assertCount(1, $ticket->getComments());
@@ -361,40 +293,36 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMMY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
     }
 
-    private function createReporter($id)
+    private function createReporter()
     {
-        return new User($id, User::TYPE_DIAMANTE);
+        return new User();
     }
 
     private function createAssignee()
     {
-        return new OroUser();
+        return new User();
     }
 
-    private function createAuthor($id)
+    private function createAuthor()
     {
-        return $this->createReporter($id);
+        return new User();
     }
 
-    private function getUserOfOROType($id)
-    {
-        return new User($id, User::TYPE_ORO);
-    }
-
-    private function createDummyTicket($authorId)
+    private function createDummyTicket()
     {
         return new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
+            new TicketSequenceNumber(null),
+            self::SUBJECT,
+            self::DESCRIPTION,
             $this->createBranch(),
-            $this->createReporter($authorId),
+            $this->createReporter(),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_MEDIUM,
-            Status::CLOSED
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_MEDIUM),
+            new Status(Status::CLOSED)
         );
     }
 

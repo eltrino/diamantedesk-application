@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Api;
 
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
 
 /**
  * Interface BranchService
@@ -40,6 +41,7 @@ interface BranchService
      * Create Branch
      * @param Command\BranchCommand $branchCommand
      * @return int
+     * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand);
 

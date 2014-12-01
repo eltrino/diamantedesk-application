@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\Shared\UserService;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,6 +81,12 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $securityFacade;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Shared\UserService
+     * @Mock Diamante\DeskBundle\Model\Shared\UserService
+     */
+    private $userService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -89,7 +96,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->branchRepository,
             $this->branchLogoHandler,
             $this->tagManager,
-            $this->securityFacade
+            $this->securityFacade,
+            $this->userService
         );
     }
 
@@ -98,7 +106,10 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatListsAllBranches()
     {
-        $branches = array(new Branch('DUMMY_NAME_1', 'DUMMY_DESC_1'), new Branch('DUMMY_NAME_2', 'DUMMY_DESC_2'));
+        $branches = array(
+            new Branch('DUMM', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
+            new Branch('DUMMY', 'DUMMY_NAME_2', 'DUMMY_DESC_2')
+        );
         $this->branchRepository->expects($this->once())->method('getAll')->will($this->returnValue($branches));
 
         $retrievedBranches = $this->branchServiceImpl->listAllBranches();
@@ -125,9 +136,12 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatRetirevesBranchById()
     {
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC');
+        $branch = new Branch('DN', 'DUMMY_NAME', 'DUMMY_DESC');
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_BRANCH_ID))
             ->will($this->returnValue($branch));
+
+        $this->securityFacade->expects($this->once())->method('isGranted')->with('VIEW', $branch)
+            ->will($this->returnValue(true));
 
         $retrievedBranch = $this->branchServiceImpl->getBranch(self::DUMMY_BRANCH_ID);
 
@@ -141,7 +155,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'DUMMY_NAME';
         $description = 'DUMMY_DESC';
-        $branchStub = new Branch($name, $description, null, new Logo('dummy'));
+        $branchStub = new Branch('DUMMY', $name, $description, null, new Logo('dummy'));
 
         $this->branchFactory->expects($this->once())->method('create')
             ->with($this->equalTo($name), $this->equalTo($description))->will($this->returnValue($branchStub));
@@ -164,12 +178,18 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function createBranchWithAllValues()
     {
+        $key = 'DB';
         $name = 'DUMMY_NAME';
         $description = 'DUMMY_DESC';
         $defaultAssignee = new User();
         $tags = array();
-        $branch = new Branch($name, $description, null, new Logo('dummy'));
+        $branch = new Branch($key, $name, $description, null, new Logo('dummy'));
         $this->fileMock = new UploadedFileStub(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
+
+        $this->userService
+            ->expects($this->once())
+            ->method('getUserById')
+            ->will($this->returnValue($defaultAssignee));
 
         $this->branchLogoHandler
             ->expects($this->once())
@@ -179,7 +199,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branchFactory->expects($this->once())->method('create')
             ->with(
-                $this->equalTo($name), $this->equalTo($description),
+                $this->equalTo($name), $this->equalTo($description), $key,
                 $this->equalTo($defaultAssignee), $this->equalTo($this->fileMock)
             )->will($this->returnValue($branch));
 
@@ -192,6 +212,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $command = new BranchCommand();
+        $command->key = $key;
         $command->name = $name;
         $command->description = $description;
         $command->defaultAssignee = $defaultAssignee;
@@ -268,6 +289,11 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
+        $this->userService
+            ->expects($this->once())
+            ->method('getUserById')
+            ->will($this->returnValue($defaultAssignee));
+
         $command = new BranchCommand();
         $command->name = $name;
         $command->description = $description;
@@ -302,7 +328,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteBranchWithLogo()
     {
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', null, new Logo('dummy'));
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC', null, new Logo('dummy'));
 
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_BRANCH_ID))
             ->will($this->returnValue($branch));
@@ -323,7 +349,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteBranchWithoutLogo()
     {
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC');
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
 
         $this->branchRepository->expects($this->once())
             ->method('get')

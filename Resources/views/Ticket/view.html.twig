@@ -17,7 +17,7 @@
                     <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
                 {% endif %}
                 {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketId': entity.id}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': entity.key|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
@@ -122,19 +122,19 @@
 
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
-        'path': path('diamante_ticket_update', {'id': entity.id}),
-        'iCss': 'icon-edit',
-        'title': 'diamante.desk.ticket.actions.edit'|trans,
-        'label': 'diamante.desk.ui.edit'|trans
+            'path': path('diamante_ticket_update', {'key': entity.key|trim}),
+            'iCss': 'icon-edit',
+            'title': 'diamante.desk.ticket.actions.edit'|trans,
+            'label': 'diamante.desk.ui.edit'|trans
         }) }}
     {% endif %}
 
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
-        'path': path('diamante_ticket_assign', {'id': entity.id}),
-        'iCss': 'icon-user',
-        'title': 'diamante.desk.ticket.actions.assign'|trans,
-        'label': 'diamante.desk.ticket.actions.assign'|trans
+            'path': path('diamante_ticket_assign', {'id': entity.id}),
+            'iCss': 'icon-user',
+            'title': 'diamante.desk.ticket.actions.assign'|trans,
+            'label': 'diamante.desk.ticket.actions.assign'|trans
         }) }}
     {% endif %}
 
@@ -149,27 +149,27 @@
 
     {% if resource_granted('DELETE', entity) %}
         {{ UI.deleteButton({
-        'dataUrl': path('diamante_ticket_delete', {'id': entity.id}),
-        'dataRedirect': path('diamante_ticket_list'),
-        'aCss': 'no-hash remove-button',
-        'dataId': entity.id,
-        'id': 'btn-remove-account',
-        'dataMessage': 'diamante.desk.ticket.messages.delete.query'|trans,
-        'successMessage': 'diamante.desk.ticket.messages.delete.success'|trans,
-        'title': 'diamante.desk.ticket.actions.remove'|trans,
-        'label': 'diamante.desk.ui.delete'|trans
+            'dataUrl': path('diamante_ticket_delete', {'key': entity.key|trim}),
+            'dataRedirect': path('diamante_ticket_list'),
+            'aCss': 'no-hash remove-button',
+            'dataId': entity.id,
+            'id': 'btn-remove-account',
+            'dataMessage': 'diamante.desk.ticket.messages.delete.query'|trans,
+            'successMessage': 'diamante.desk.ticket.messages.delete.success'|trans,
+            'title': 'diamante.desk.ticket.actions.remove'|trans,
+            'label': 'diamante.desk.ui.delete'|trans
         }) }}
     {% endif %}
 {% endblock navButtons %}
 
 {% block pageHeader %}
     {% set breadcrumbs = {
-    'entity': entity,
-    'indexPath': path('diamante_branch_view', {'id': entity.branch.id}),
-    'indexLabel': entity.branchName,
-    'entityTitle': entity.subject|default('diamante.desk.common.not_available'|trans),
-    'hasAvatar': true,
-    'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
+        'entity': entity,
+        'indexPath': path('diamante_branch_view', {'id': entity.branch.id}),
+        'indexLabel': entity.branchName,
+        'entityTitle': entity.key ~ ' ' ~ entity.subject|default('diamante.desk.common.not_available'|trans),
+        'hasAvatar': true,
+        'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
     }
     %}
     {{ parent() }}

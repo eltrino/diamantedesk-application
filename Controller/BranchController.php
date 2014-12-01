@@ -14,15 +14,11 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Doctrine\Common\Util\ClassUtils;
-use Doctrine\Common\Util\Inflector;
+use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
 
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
-use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Doctrine\ORM\EntityManager;
-use Diamante\DeskBundle\Form\CommandFactory;
 
 use Diamante\DeskBundle\Form\Type\BranchType;
 
@@ -191,6 +187,9 @@ class BranchController extends Controller
         $form = $this->createForm(new BranchType(), $command);
         try {
             $this->handle($form);
+            if ($command->defaultAssignee) {
+                $command->defaultAssignee = $command->defaultAssignee->getId();
+            }
             $branchId = $callback($command);
             if ($command->id) {
                 $this->addSuccessMessage('diamante.desk.branch.messages.save.success');
@@ -198,6 +197,16 @@ class BranchController extends Controller
                 $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($branchId);
+        } catch (DuplicateBranchKeyException $e) {
+            $this->addErrorMessage($e->getMessage());
+            $formView = $form->createView();
+            if (is_null($command->key) || empty($command->key)) {
+                $formView->children['key']->vars = array_replace(
+                    $formView->children['key']->vars,
+                    array('value' => $this->get('diamante.branch.default_key_generator')->generate($command->name))
+                );
+            }
+            $response = array('form' => $formView);
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $form->createView());
         } catch (\Exception $e) {

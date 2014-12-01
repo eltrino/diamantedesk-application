@@ -77,7 +77,7 @@ class CommentController extends Controller
      *
      * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
-     * @param Comment $comment
+     * @param int $id
      * @return array
      */
     public function updateAction($id)
@@ -147,7 +147,7 @@ class CommentController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse($ticket->getId());
+            $response = $this->getSuccessSaveResponse((string) $ticket->getKey());
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView, 'ticket' => $ticket);
         } catch (\Exception $e) {
@@ -159,19 +159,19 @@ class CommentController extends Controller
 
     /**
      * @Route(
-     *      "/delete/ticket/{ticketId}/comment/{commentId}",
+     *      "/delete/ticket/{ticketKey}/comment/{commentId}",
      *      name="diamante_comment_delete",
-     *      requirements={"ticketId"="\d+", "commentId"="\d+"}
+     *      requirements={"ticketKey"="[A-Z]+-\d+", "commentId"="\d+"}
      * )
      *
-     * @param Comment $comment
+     * @param string $ticketKey
+     * @param int $commentId
      * @return Response
      */
-    public function deleteAction($ticketId, $commentId)
+    public function deleteAction($ticketKey, $commentId)
     {
         try {
-            $this->get('diamante.comment.service')
-                ->deleteTicketComment($commentId);
+            $this->get('diamante.comment.service')->deleteTicketComment($commentId);
 
             $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
         } catch (Exception $e) {
@@ -180,7 +180,7 @@ class CommentController extends Controller
         }
 
         return $this->redirect(
-            $this->generateUrl('diamante_ticket_view', array('id' => $ticketId))
+            $this->generateUrl('diamante_ticket_view', array('key' => $ticketKey))
         );
     }
 
@@ -299,14 +299,14 @@ class CommentController extends Controller
     }
 
     /**
-     * @param int $ticketId
+     * @param string $ticketKey
      * @return array
      */
-    private function getSuccessSaveResponse($ticketId)
+    private function getSuccessSaveResponse($ticketKey)
     {
         return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_comment_update', 'parameters' => ['id' => $ticketId]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticketId]]
+            ['route' => 'diamante_comment_update', 'parameters' => ['key' => $ticketKey]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['key' => $ticketKey]]
         );
     }
 

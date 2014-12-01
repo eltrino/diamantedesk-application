@@ -25,9 +25,10 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
+use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -71,10 +72,10 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $userService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Ticket\AttachmentService
-     * @Mock \Diamante\DeskBundle\Model\Ticket\AttachmentService
+     * @var \Diamante\DeskBundle\Model\Attachment\Manager
+     * @Mock \Diamante\DeskBundle\Model\Attachment\Manager
      */
-    private $attachmentService;
+    private $attachmentManager;
 
     /**
      * @var \Diamante\DeskBundle\Entity\Comment
@@ -109,19 +110,50 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
         $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
-            $this->commentFactory, $this->userService, $this->attachmentService,
-            $this->securityFacade, $this->dispatcher, $this->processManager);
+            $this->commentFactory, $this->userService, $this->attachmentManager, $this->securityFacade,
+            $this->dispatcher, $this->processManager);
 
         $this->_dummyTicket = new Ticket(
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED)
         );
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Comment loading failed, comment not found.
+     */
+    public function thatCommentRetrievesThrowsExceptionWhenNotFound()
+    {
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue(null));
+        $this->service->loadComment(self::DUMMY_COMMENT_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function thatCommentRetrieves()
+    {
+        $ticket  = $this->_dummyTicket;
+        $author  = new User;
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue($comment));
+        $this->securityFacade->expects($this->once())->method('isGranted')->with('VIEW', $comment)
+            ->will($this->returnValue(true));
+
+        $result = $this->service->loadComment(self::DUMMY_COMMENT_ID);
+
+        $this->assertEquals($comment, $result);
     }
 
     /**
@@ -143,7 +175,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new EditCommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
-        $command->author = $this->getUserOfOROType();
+        $command->author = self::DUMMY_USER_ID;
 
         $this->service->postNewCommentForTicket($command);
     }
@@ -154,16 +186,19 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentPosts()
     {
         $ticket  = $this->_dummyTicket;
-        $author  = $this->createAssignee();
+        $author  = new User;
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
+        $this->userService->expects($this->once())->method('getUserById')->with($this->equalTo(self::DUMMY_USER_ID))
+            ->will($this->returnValue($author));
+
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
             $this->equalTo($ticket),
-            $this->equalTo($this->getUserOfOROType())
+            $this->equalTo($author)
         )->will($this->returnValue($comment));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
@@ -177,7 +212,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new EditCommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
-        $command->author = $this->getUserOfOROType();
+        $command->author = self::DUMMY_USER_ID;
         $command->ticketStatus = Status::IN_PROGRESS;
 
         $this->service->postNewCommentForTicket($command);
@@ -189,27 +224,35 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function thatCommentPostsWithAttachments()
+    public function thatCommentPostsWithWithAttachments()
     {
         $ticket  = $this->_dummyTicket;
-        $author  = $this->createAssignee();
+        $author  = new User;
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
+        $this->userService->expects($this->once())->method('getUserById')->with($this->equalTo(self::DUMMY_USER_ID))
+            ->will($this->returnValue($author));
+
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
             $this->equalTo($ticket),
-            $this->equalTo($this->getUserOfOROType())
+            $this->equalTo($author)
         )->will($this->returnValue($comment));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
         $attachmentInputs = $this->attachmentInputs();
 
-        $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($attachmentInputs), $this->equalTo($comment));
+        $this->attachmentManager->expects($this->exactly(count($attachmentInputs)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($comment)
+            );
 
         $this->securityFacade
             ->expects($this->once())
@@ -220,7 +263,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new EditCommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
-        $command->author = $this->getUserOfOROType();
+        $command->author = self::DUMMY_USER_ID;
         $command->ticketStatus = Status::IN_PROGRESS;
         $command->attachmentsInput = $attachmentInputs;
 
@@ -252,7 +295,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentUpdates()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->getUserOfOROType());
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
 
         $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
 
@@ -287,7 +330,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentUpdatesWithAttachments()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->getUserOfOROType());
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
 
         $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
 
@@ -298,8 +341,13 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $filesListDto = $this->attachmentInputs();
 
-        $this->attachmentService->expects($this->once())->method('createAttachmentsForItHolder')
-            ->with($this->equalTo($filesListDto), $this->equalTo($comment));
+        $this->attachmentManager->expects($this->exactly(count($filesListDto)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($comment)
+            );
 
         $ticket  = $this->_dummyTicket;
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
@@ -340,13 +388,19 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentDeletes()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->getUserOfOROType());
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
+        $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
 
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
         $this->commentRepository->expects($this->once())->method('remove')
             ->with($this->equalTo($comment));
+
+        $this->attachmentManager->expects($this->exactly(count($comment->getAttachments())))
+            ->method('deleteAttachment')
+            ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
         $this->securityFacade
             ->expects($this->once())
@@ -364,7 +418,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovingThrowsExceptionWhenCommentHasNoAttachment()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->getUserOfOROType());
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
         $comment->addAttachment(new Attachment(new File('filename.ext')));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
@@ -386,7 +440,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovesFromComment()
     {
-        $attachment = new Attachment(new File('filename.ext'));
+        $attachment = new Attachment(new File('some/path/file.ext'));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($this->comment));
 
@@ -395,7 +449,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->comment->expects($this->once())->method('removeAttachment')->with($this->equalTo($attachment));
 
-        $this->attachmentService->expects($this->once())->method('removeAttachmentFromItHolder')
+        $this->attachmentManager->expects($this->once())->method('deleteAttachment')
             ->with($this->equalTo($attachment));
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($this->comment));
@@ -414,22 +468,17 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMYY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMYY_DESC');
     }
 
     private function createReporter()
     {
-        return new User(self::DUMMY_USER_ID, User::TYPE_DIAMANTE);
+        return new User();
     }
 
     private function createAssignee()
     {
-        return new OroUser();
-    }
-
-    private function getUserOfOROType()
-    {
-        return new User(self::DUMMY_USER_ID, User::TYPE_ORO);
+        return new User();
     }
 
     /**

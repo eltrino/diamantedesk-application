@@ -31,7 +31,7 @@ class Priority
     public function __construct($priority = null)
     {
         if (is_null($priority)) {
-            $priority = self::DEFAULT_PRIORITY;
+            $priority = self::PRIORITY_MEDIUM;
         }
 
         static::initValueLabelsMap();

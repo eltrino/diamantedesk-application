@@ -23,8 +23,7 @@
         <parameter key="diamante.attachment.entity.factory.class">Diamante\DeskBundle\Model\Attachment\AttachmentFactory</parameter>
         <parameter key="diamante.attachment.directory.name">attachments</parameter>
         <parameter key="diamante.attachment.upload_dir.path">%kernel.root_dir%/%diamante.attachment.directory.name%</parameter>
-
-        <parameter key="diamante.attachment.service.class">Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl</parameter>
+        <parameter key="diamante.attachment.manager.class">Diamante\DeskBundle\Model\Attachment\ManagerImpl</parameter>
         <parameter key="diamante.attachment.file_storage.service.class">Diamante\DeskBundle\Infrastructure\Attachment\FileStorage\LocalFileStorageService</parameter>
         <parameter key="diamante.attachment.imagine_data_loader.class">Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
     </parameters>
@@ -40,10 +39,10 @@
             <argument type="service" id="filesystem"/>
         </service>
 
-        <service id="diamante.attachment.service" class="%diamante.attachment.service.class%">
+        <service id="diamante.attachment.manager" class="%diamante.attachment.manager.class%">
+            <argument type="service" id="diamante.attachment.file_storage.service"/>
             <argument type="service" id="diamante.attachment.entity.factory"/>
             <argument type="service" id="diamante.attachment.repository"/>
-            <argument type="service" id="diamante.attachment.file_storage.service"/>
         </service>
 
         <service id="diamante.attachment.imagine_data_loader" class="%diamante.attachment.imagine_data_loader.class%">

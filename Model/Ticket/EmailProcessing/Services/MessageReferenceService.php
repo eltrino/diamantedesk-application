@@ -28,14 +28,12 @@ interface MessageReferenceService
      * @param $description
      * @param $reporterId
      * @param $assigneeId
-     * @param null $priority
-     * @param null $status
      * @param array $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
-                                 $priority = null, $status = null, array $attachments = null);
+                                 array $attachments = null);
 
     /**
      * Creates Comment for Ticket
