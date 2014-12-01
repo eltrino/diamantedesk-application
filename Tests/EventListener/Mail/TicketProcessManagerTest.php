@@ -106,6 +106,12 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
         'no-reply.assignee@example.com',
     );
 
+    /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -116,6 +122,7 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             $this->twig,
             $this->mailer,
             $this->securityFacade,
+            $this->configManager,
             $this->senderEmail
         );
     }
@@ -311,6 +318,12 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(true));
+
         $this->securityFacade
             ->expects($this->exactly(2))
             ->method('getLoggedUser')

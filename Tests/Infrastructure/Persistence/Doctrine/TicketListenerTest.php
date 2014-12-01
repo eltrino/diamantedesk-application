@@ -23,7 +23,8 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,13 +58,15 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
         $ticketSequenceNumberFieldName = 'number';
         $branch = new BranchStub('DB', 'Dummy Branch', 'Desc');
         $branch->setId($branchId);
+        $reporter = new User(1, User::TYPE_DIAMANTE);
+
         $ticket = new Ticket(
             new TicketSequenceNumber(null),
             'Subject',
             'Description',
             $branch,
-            new User(),
-            new User(),
+            $reporter,
+            new OroUser(),
             new Source(Source::WEB),
             new Priority(Priority::PRIORITY_MEDIUM),
             new Status(Status::NEW_ONE)

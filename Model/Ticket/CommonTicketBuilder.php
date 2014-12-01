@@ -17,7 +17,8 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Shared\UserService;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class CommonTicketBuilder implements TicketBuilder
 {
@@ -133,12 +134,12 @@ class CommonTicketBuilder implements TicketBuilder
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @return $this
      */
-    public function setReporterId($id)
+    public function setReporter($id)
     {
-        $reporter = $this->userService->getUserById((integer) $id);
+        $reporter = $this->userService->getByUser(User::fromString($id));
         $this->reporter = $reporter;
         return $this;
     }
@@ -149,7 +150,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setAssigneeId($id)
     {
-        $assignee = $this->userService->getUserById((integer) $id);
+        $assignee = $this->userService->getByUser(new User((integer) $id, User::TYPE_ORO));
         $this->assignee = $assignee;
         return $this;
     }

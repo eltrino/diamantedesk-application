@@ -31,7 +31,8 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
@@ -167,13 +168,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
         $number = new TicketSequenceNumber(null);
+        $reporter = $this->createReporter($reporterId);
 
         $ticket = new Ticket(
             $number,
             self::SUBJECT,
             self::DESCRIPTION,
             $this->createBranch(),
-            $this->createReporter(),
+            $reporter,
             $this->createAssignee(),
             new Source($source),
             new Priority($priority),
@@ -183,7 +185,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setReporterId')->with($reporterId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
@@ -202,7 +204,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->branch = $branchId;
         $command->subject = self::SUBJECT;
         $command->description = self::DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -223,13 +225,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
         $number = new TicketSequenceNumber(null);
+        $reporter = $this->createReporter($reporterId);
 
         $ticket = new Ticket(
             $number,
             self::SUBJECT,
             self::DESCRIPTION,
             $this->createBranch(),
-            $this->createReporter(),
+            $reporter,
             $this->createAssignee(),
             new Source($source),
             new Priority($priority),
@@ -239,7 +242,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setReporterId')->with($reporterId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
@@ -258,7 +261,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->branch = $branchId;
         $command->subject = self::SUBJECT;
         $command->description = self::DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -280,13 +283,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
         $number = new TicketSequenceNumber(null);
+        $reporter = $this->createReporter($reporterId);
 
         $ticket = new Ticket(
             $number,
             self::SUBJECT,
             self::DESCRIPTION,
             $this->createBranch(),
-            $this->createReporter(),
+            $reporter,
             $this->createAssignee(),
             new Source($source),
             new Priority($priority),
@@ -296,7 +300,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setReporterId')->with($reporterId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
@@ -325,7 +329,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->branch = $branchId;
         $command->subject = self::SUBJECT;
         $command->description = self::DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -342,13 +346,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter();
+        $reporter = $this->createReporter($reporterId);
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with(new User($assigneeId, User::TYPE_ORO))
             ->will($this->returnValue($assignee));
 
         $newStatus = Status::IN_PROGRESS;
@@ -379,7 +380,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->id = self::DUMMY_TICKET_ID;
         $command->subject = self::SUBJECT;
         $command->description = self::DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
@@ -397,13 +398,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter();
+        $reporter = $this->createReporter($reporterId);
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with(new User($assigneeId, User::TYPE_ORO))
             ->will($this->returnValue($assignee));
 
         $newStatus = Status::IN_PROGRESS;
@@ -444,7 +442,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->id = self::DUMMY_TICKET_ID;
         $command->subject = self::SUBJECT;
         $command->description = self::DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
@@ -479,12 +477,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
+        $reporterId = 1;
         $ticket = new Ticket(
             new TicketSequenceNumber(12),
             self::SUBJECT,
             self::DESCRIPTION,
             $this->createBranch(),
-            $this->createReporter(),
+            $this->createReporter($reporterId),
             $this->createAssignee(),
             new Source(Source::PHONE),
             new Priority(Priority::PRIORITY_LOW),
@@ -766,15 +765,21 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         return new Branch('DUMM', 'DUMMY_NAME', 'DUMYY_DESC');
     }
 
-    private function createReporter()
+    private function createReporter($id = 1)
     {
-        return new User();
+        return new User($id, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return $this->createOroUser();
     }
+
+    private function createOroUser()
+    {
+        return new OroUser();
+    }
+
 
     /**
      * @return Attachment
@@ -804,7 +809,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
             ->will($this->returnValue($assignee));
 
         $this->ticket->expects($this->any())->method('getAssignee')->will($this->returnValue($assignee));
@@ -841,7 +846,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
             ->will($this->returnValue($assignee));
 
         $this->ticket->expects($this->any())->method('getAssigneeId')->will($this->returnValue($assigneeId));
@@ -912,7 +917,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
             ->will($this->returnValue(null));
 
         $command = new AssigneeTicketCommand();

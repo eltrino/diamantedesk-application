@@ -73,6 +73,12 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
      */
     private $user;
 
+    /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -83,6 +89,7 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
             $this->twig,
             $this->mailer,
             $this->securityFacade,
+            $this->configManager,
             $this->senderEmail
         );
     }
@@ -152,6 +159,12 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
             'txt'  => 'DiamanteDeskBundle:Ticket/attachment/notification/mails/delete:notification.txt.twig',
             'html' => 'DiamanteDeskBundle:Ticket/attachment/notification/mails/delete:notification.html.twig'
         );
+
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(true));
 
         $this->twig
             ->expects($this->exactly(2))

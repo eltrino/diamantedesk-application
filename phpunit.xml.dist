@@ -16,6 +16,7 @@
         <testsuite name="DiamanteDesk Test Suite">
             <directory suffix="Test.php">Tests/Api</directory>
             <directory suffix="Test.php">Tests/Infrastructure</directory>
+            <directory suffix="Test.php">Tests/EventListener</directory>
             <directory suffix="Test.php">Tests/Model</directory>
             <directory suffix="Test.php">Tests/Attachment</directory>
             <directory suffix="Test.php">Tests/Entity</directory>

@@ -73,6 +73,12 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $user;
 
+    /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -83,6 +89,7 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->twig,
             $this->mailer,
             $this->securityFacade,
+            $this->configManager,
             $this->senderEmail
         );
     }
@@ -187,6 +194,12 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('send')
             ->with($this->message);
+
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with('diamante_desk.email_notification')
+            ->will($this->returnValue(true));
 
         $this->commentWasDeletedSubscriber->onCommentWasDeleted($this->commentWasDeletedEvent);
     }

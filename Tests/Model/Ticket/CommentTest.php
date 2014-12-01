@@ -21,7 +21,8 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class CommentTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,7 +31,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $ticket = $this->createTicket();
-        $creator = $this->createCreator();
+        $creator = $this->createDiamanteUser();
         $comment = new Comment(self::COMMENT_CONTENT, $ticket, $creator);
 
         $this->assertEquals(self::COMMENT_CONTENT, $comment->getContent());
@@ -51,7 +52,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
         $comment = new Comment(
             self::COMMENT_CONTENT,
             $this->createTicket(),
-            $this->createCreator()
+            $this->createDiamanteUser()
         );
 
         return $comment;
@@ -64,8 +65,8 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             TicketTest::TICKET_SUBJECT,
             TicketTest::TICKET_DESCRIPTION,
             new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC'),
-            new User(),
-            new User(),
+            $this->createDiamanteUser(),
+            new OroUser(),
             new Source(Source::PHONE),
             new Priority(Priority::PRIORITY_LOW),
             new Status(Status::OPEN)
@@ -74,8 +75,8 @@ class CommentTest extends \PHPUnit_Framework_TestCase
         return $ticket;
     }
 
-    private function createCreator()
+    private function createDiamanteUser()
     {
-        return new User();
+        return new User(1, User::TYPE_DIAMANTE);
     }
 }

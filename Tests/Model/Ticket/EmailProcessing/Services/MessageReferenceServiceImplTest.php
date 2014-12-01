@@ -22,7 +22,8 @@ use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
 
@@ -37,6 +38,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_FILENAME      = 'dummy_file.jpg';
     const DUMMY_FILE_CONTENT  = 'DUMMY_CONTENT';
     const DUMMY_ATTACHMENT_ID = 1;
+    const DUMMY_REPORTER_ID   = 1;
 
     /**
      * @var MessageReferenceServiceImpl
@@ -129,13 +131,13 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatTicketCreatesWithNoAttachments()
     {
         $branchId = 1;
-        $reporterId = 2;
         $assigneeId = 3;
 
+        $reporter = $this->createReporter();
         $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setReporterId')->with($reporterId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with(Source::EMAIL)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($this->ticket));
@@ -152,7 +154,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $branchId,
             self::SUBJECT,
             self::DESCRIPTION,
-            $reporterId,
+            (string)$reporter,
             $assigneeId
         );
     }
@@ -163,13 +165,14 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatTicketCreatesWithAttachments()
     {
         $branchId = 1;
-        $reporterId = 2;
         $assigneeId = 3;
+
+        $reporter = $this->createReporter();
 
         $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setReporterId')->with($reporterId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with(Source::EMAIL)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($this->ticket));
@@ -196,7 +199,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $branchId,
             self::SUBJECT,
             self::DESCRIPTION,
-            $reporterId,
+            $reporter,
             $assigneeId,
             $this->attachments()
         );
@@ -208,7 +211,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentCreatesWithNoAttachments()
     {
         $author  = $this->createAuthor();
-        $authorId = 1;
 
         $ticket = $this->createDummyTicket();
 
@@ -221,11 +223,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getTicket')
             ->will($this->returnValue($ticket));
 
-        $this->userService->expects($this->once())
-            ->method('getUserById')
-            ->with($this->equalTo($authorId))
-            ->will($this->returnValue($author));
-
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
             $this->equalTo($ticket),
@@ -236,7 +233,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($ticket));
 
         $this->messageReferenceService->createCommentForTicket(
-            self::DUMMY_COMMENT_CONTENT, $authorId, self::DUMMY_MESSAGE_ID
+            self::DUMMY_COMMENT_CONTENT, (string)$author, self::DUMMY_MESSAGE_ID
         );
 
         $this->assertCount(1, $ticket->getComments());
@@ -249,7 +246,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentCreatesWithAttachments()
     {
         $author  = $this->createAuthor();
-        $authorId = 1;
 
         $ticket = $this->createDummyTicket();
 
@@ -261,11 +257,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->messageReference->expects($this->once())
             ->method('getTicket')
             ->will($this->returnValue($ticket));
-
-        $this->userService->expects($this->once())
-            ->method('getUserById')
-            ->with($this->equalTo($authorId))
-            ->will($this->returnValue($author));
 
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
@@ -284,7 +275,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($ticket));
 
         $this->messageReferenceService->createCommentForTicket(
-            self::DUMMY_COMMENT_CONTENT, $authorId, self::DUMMY_MESSAGE_ID, $this->attachments()
+            self::DUMMY_COMMENT_CONTENT, (string)$author, self::DUMMY_MESSAGE_ID, $this->attachments()
         );
 
         $this->assertCount(1, $ticket->getComments());
@@ -298,17 +289,17 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createReporter()
     {
-        return new User();
+        return new User(self::DUMMY_REPORTER_ID, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return new OroUser();
     }
 
     private function createAuthor()
     {
-        return new User();
+        return $this->createReporter();
     }
 
     private function createDummyTicket()

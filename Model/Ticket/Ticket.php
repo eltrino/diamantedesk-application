@@ -118,12 +118,12 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param $description
      * @param Branch $branch
      * @param User $reporter
-     * @param User $assignee
+     * @param OroUser $assignee
      * @param Source $source
      * @param Priority $priority
      * @param Status $status
      */
-    public function __construct(TicketSequenceNumber $number, $subject, $description, Branch $branch, User $reporter, User $assignee, Source $source, Priority $priority, Status $status)
+    public function __construct(TicketSequenceNumber $number, $subject, $description, Branch $branch, User $reporter, OroUser $assignee, Source $source, Priority $priority, Status $status)
     {
         $this->sequenceNumber = $number;
         $this->subject = $subject;
@@ -140,7 +140,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->source = $source;
 
         $this->raise(new TicketWasCreated($this->id, $branch->getName(), $subject, $description,
-            $reporter, $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
+            $reporter, $assignee, $priority, $status, $source, $this->getRecipientsList()));
     }
 
     /**

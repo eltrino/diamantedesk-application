@@ -27,6 +27,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\User\User;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -84,20 +85,20 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $branchId
      * @param $subject
      * @param $description
-     * @param $reporterId
+     * @param $reporter
      * @param $assigneeId
      * @param array $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
+    public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
                                  array $attachments = null)
     {
         $this->ticketBuilder
             ->setSubject($subject)
             ->setDescription($description)
             ->setBranchId($branchId)
-            ->setReporterId($reporterId)
+            ->setReporter($reporter)
             ->setAssigneeId($assigneeId)
             ->setSource(Source::EMAIL);
 
@@ -143,7 +144,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
-        $author = $this->userService->getUserById($authorId);
+        $author = User::fromString($authorId);
         $comment = $this->commentFactory->create($content, $ticket, $author);
 
         if ($attachments) {
