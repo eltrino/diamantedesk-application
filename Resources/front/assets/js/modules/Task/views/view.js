@@ -1,6 +1,7 @@
 define([
-  'tpl!modules/Task/templates/view.ejs',
-  'tpl!modules/Task/templates/missing-view.ejs'], function(taskViewTemplate, missingTaskViewTemplate){
+  'app',
+  'tpl!../templates/view.ejs',
+  'tpl!../templates/missing-view.ejs'], function(App, taskViewTemplate, missingTaskViewTemplate){
 
   return App.module('Task.View', function(View, App, Backbone, Marionette, $, _){
 

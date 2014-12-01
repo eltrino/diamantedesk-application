@@ -52,24 +52,24 @@ EOD;
     $stmt->execute();
 }
 
-$app->get('/tasks', function() use ($db){
+$app->get('/tasks.json', function() use ($db){
     $stmt = $db->query("SELECT id, subject, priority, status, created_at FROM tasks;");
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 });
 
-$app->get('/tasks/:id', function($id) use ($db){
+$app->get('/tasks/:id.json', function($id) use ($db){
     $stmt = $db->query('SELECT * FROM tasks WHERE id = ? LIMIT 1;');
     $stmt->execute([intval($id)]);
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC)[0]);
 });
 
-$app->put('/tasks/:id', function($id) use ($app, $db){
+$app->put('/tasks/:id.json', function($id) use ($app, $db){
     $row = json_decode($app->request()->getBody());
     insertTask($row, $db, $id);
     echo json_encode($row);
 });
 
-$app->post('/tasks', function() use ($app, $db){
+$app->post('/tasks.json', function() use ($app, $db){
     $row = json_decode($app->request()->getBody());
     insertTask($row, $db);
     $id = $db->lastInsertId();

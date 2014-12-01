@@ -1,24 +1,31 @@
 define(function(){
+
+  var baseurl = document.querySelector("script[data-main]").src.split('/assets/js')[0],
+      apiurl = baseurl.replace('front','web/app_dev.php') + '/api/rest/latest';
+
+  require.config({
+    "packages": [
+      {
+        name: 'SessionManager',
+        location: 'modules/SessionManager',
+        main: 'module'
+      },
+      {
+        name: 'Header',
+        location: 'modules/Header',
+        main: 'module'
+      },
+      {
+        name: 'Task',
+        location: 'modules/Task',
+        main: 'module'
+      }
+    ]
+  });
+
   var Config = {
-
-    modules : {
-      SessionManager : 'modules/SessionManager/module',
-      Task : 'modules/Task/module',
-      Header : 'modules/Header/module'
-    },
-
-    baseUrl : (function(){
-      return document.querySelector("script[data-main]").src.split('/assets/js')[0];
-    })(),
-
-    getModulesUrl : function() {
-      return _.values(this.modules);
-    },
-
-    loadModules : function(fn) {
-      require(this.getModulesUrl(), fn);
-    }
-
+    baseUrl : baseurl,
+    apiUrl : apiurl
   };
 
   return Config;

@@ -11,25 +11,21 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-define(['marionette','backbone','bootstrap'], function(Marionette, Backbone) {
+define(['marionette','backbone','config','bootstrap'], function(Marionette, Backbone) {
 
-  window.App = new Marionette.Application({
-
-    baseUrl : (function(){
-      return document.querySelector("script[data-main]").src.split('/assets/js')[0];
-    })(),
+  var App = new Marionette.Application({
 
     regions : {
       HeaderRegion: '#header',
-      MainRegion: '#content',
+      MainRegion:   '#content',
       FooterRegion: '#footer',
       DialogRegion: '#dialog'
     }
+
   });
 
-
   App.navigate = function(route, options){
-    Backbone.history.navigate(route, options || {})
+    Backbone.history.navigate(route, options || {});
   };
 
   App.getCurrentRoute = function(){
@@ -38,10 +34,12 @@ define(['marionette','backbone','bootstrap'], function(Marionette, Backbone) {
 
   App.on('before:start', function(){});
 
-  App.on('start', function(){});
+  App.on('start', function(){ Backbone.history.start(); });
 
-  require(['modules/Header/loader','modules/Task/loader'], function(){
+  require(['SessionManager','Header', 'Task'], function(){
     App.start();
   });
+
+  return App;
 
 });

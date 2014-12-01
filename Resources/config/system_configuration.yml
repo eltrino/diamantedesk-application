@@ -16,9 +16,9 @@ oro_system_configuration:
         system_configuration:
             platform:
                 children:
-                    diamantedesk_setup:
+                    diamante_desk_setup:
                         children:
-                            diamantedesk_channels:
+                            diamante_desk_channels:
                                 children:
                                     diamantedesk_channels_front_group:
                                         priority: 160

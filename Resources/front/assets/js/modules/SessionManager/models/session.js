@@ -1,47 +1,66 @@
-define(['app'], function(App) {
+define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
 
-  return App.module('SessionManager.Models', function(Models, App, Backbone, Marionette, $, _){
+  return App.module('SessionManager', function(SessionManager, App, Backbone, Marionette, $, _){
 
-    Models.SessionModel = Backbone.Model.extend({
+    var username = "admin";
+    var password = "1044d1dad87d990c3a5be102cafbf89cdff84738";
 
-      urlRoot: '../api/',
+    window.Wsse = Wsse;
+
+    //console.log(Wsse.getPasswordDigest( Wsse.getNonce().nonce, Wsse.getNonce().created, password));
+
+    SessionManager.SessionModel = Backbone.Model.extend({
 
       initialize: function () {
-        $.ajaxPrefilter(function( options, originalOptions, jqXHR) {
-          options.xhrFields = {
-            withCredentials: true
-          };
-        });
+        if(window.localStorage.getItem('authModel')){
+          console.log(window.localStorage.getItem('authModel'));
+        }
+        this.set({ logged_in: true });
+        this.set({ username: username });
+        this.set({ password: password });
+        this.addHeaders();
+      },
+
+      addHeaders: function(){
+        $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+          if(this.get('logged_in')){
+            jqXHR.setRequestHeader('Authorization', 'WSSE profile="UsernameToken"');
+            jqXHR.setRequestHeader('X-WSSE', Wsse.getUsernameToken(this.get('username'), this.get('password')));
+          }
+        }.bind(this));
       },
 
       login: function(creds) {
-        var that = this;
-        this.save(creds, {
-          success: function (model, resp) {
-            if (resp.success == false) {
-              alert(resp.message);
-            }
-            that.unset('password');
-            that.set(resp.data);
-          }
-        });
+        this.set(creds);
+        this.set({ logged_in: true });
+        window.localStorage.setItem('authModel', JSON.stringify(this));
       },
 
       logout: function() {
-        var that = this;
-        this.destroy({
-          success: function (model, resp) {
-            model.clear({silent:true});
-            that.set({logged_in: false});
-          }
-        });
+        this.clear();
+        this.set({ logged_in: false });
+        window.localStorage.removeItem('authModel');
       },
 
-      getAuth: function(callback) {
-        this.fetch({
-          success: callback
-        });
+      getAuth: function() {
+        var defer = $.Deferred();
+        if(this.get('logged_in')){
+          $.get(Config.apiUrl + '/user/filter.json', {username : this.get('username')}, {
+            success: function(){
+              defer.resolve();
+            },
+            error: function(){
+              defer.reject();
+            }
+          });
+        } else {
+          defer.reject();
+        }
+        return defer.promise();
       }
+
     });
+
   });
+
 });

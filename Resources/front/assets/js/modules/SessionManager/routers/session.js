@@ -5,20 +5,16 @@ define(['app'], function(App){
     Routers = Marionette.AppRouter.extend({
       appRoutes: {
         "login" : "login",
-        "logout" : "logout",
-        "register" : "register"
+        "logout" : "logout"
       }
     });
 
     var API = {
       login: function(){
-        console.log('Login');
+
       },
       logout: function(){
-        console.log('Logout');
-      },
-      register: function(){
-        console.log('Register');
+        App.session.logout();
       }
     };
 
@@ -26,7 +22,7 @@ define(['app'], function(App){
       new Routers({
         controller: API
       });
-    })
+    });
 
   });
 

@@ -1,7 +1,8 @@
 define([
-  'tpl!modules/Task/templates/form.ejs',
-  'tpl!modules/Task/templates/missing-view.ejs',
-  'modules/Common/views/modal'], function(createTemplate, missingTaskViewTemplate, Modal){
+  'app',
+  'tpl!../templates/form.ejs',
+  'tpl!../templates/missing-view.ejs',
+  'modules/Common/views/modal'], function(App, createTemplate, missingTaskViewTemplate, Modal){
 
   return App.module('Task.Edit', function(Edit, App, Backbone, Marionette, $, _){
 

@@ -14,30 +14,44 @@
 require.config({
   urlArgs: "bust=" + (new Date()).getTime(),  // prevent caching
   paths : {
-    jquery : "vendor/jquery/dist/jquery",
-    underscore : "vendor/underscore/underscore",
-    backbone : "vendor/backbone/backbone",
-    marionette : "vendor/marionette/lib/backbone.marionette",
-    tpl: 'vendor/requirejs-tpl/tpl',
-    bootstrap : "vendor/bootstrap/dist/js/bootstrap"
+    "jquery" : "vendor/jquery/dist/jquery",
+    "underscore" : "vendor/underscore/underscore",
+    "backbone" : "vendor/backbone/backbone",
+    "marionette" : "vendor/marionette/lib/backbone.marionette",
+    "tpl" : "vendor/requirejs-tpl/tpl",
+    "bootstrap" : "vendor/bootstrap/dist/js/bootstrap",
+    "cryptojs.core" : "vendor/dfm-crypto-js/components/core",
+    "cryptojs.sha1" : "vendor/dfm-crypto-js/components/sha1",
+    "cryptojs.base64" : "vendor/dfm-crypto-js/components/enc-base64"
   },
   shim : {
-    jquery : {
+    "jquery" : {
       exports : "jQuery"
     },
-    underscore : {
+    "underscore" : {
       exports : "_"
     },
-    backbone : {
+    "backbone" : {
       deps : ["jquery", "underscore"],
       exports : 'Backbone'
     },
-    marionette : {
+    "marionette" : {
       deps : ["backbone"],
       exports : "Marionette"
     },
-    bootstrap : {
+    "bootstrap" : {
       deps : ["jquery"]
+    },
+    "cryptojs.core" : {
+      exports: "CryptoJS"
+    },
+    "cryptojs.sha1": {
+      deps: ["cryptojs.core"],
+      exports: "CryptoJS.SHA1"
+    },
+    "cryptojs.base64": {
+      deps: ["cryptojs.core"],
+      exports: "CryptoJS.enc.Base64"
     }
   },
   deps : ["app"]

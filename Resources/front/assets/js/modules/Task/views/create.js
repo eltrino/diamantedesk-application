@@ -1,6 +1,7 @@
 define([
-  'tpl!modules/Task/templates/form.ejs',
-  'modules/Common/views/modal'], function(createTemplate, Modal){
+  'app',
+  'tpl!../templates/form.ejs',
+  'modules/Common/views/modal'], function(App, createTemplate, Modal){
 
   return App.module('Task.Create', function(Create, App, Backbone, Marionette, $, _){
 

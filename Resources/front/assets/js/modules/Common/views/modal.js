@@ -1,4 +1,4 @@
-define(['tpl!modules/Common/templates/modal.ejs'], function(modalTemplate){
+define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
 
   return App.module('Common.Modal', function(Modal, App, Backbone, Marionette, $, _){
 
@@ -14,7 +14,7 @@ define(['tpl!modules/Common/templates/modal.ejs'], function(modalTemplate){
       serializeData: function(){
         return {
           title: this.title
-        }
+        };
       },
 
       regions : {

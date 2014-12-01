@@ -1,6 +1,7 @@
 define([
-  'tpl!modules/Task/templates/list-item.ejs',
-  'tpl!modules/Task/templates/list.ejs'], function(listItemTemplate, listTemplate){
+  'app',
+  'tpl!../templates/list-item.ejs',
+  'tpl!../templates/list.ejs'], function(App, listItemTemplate, listTemplate){
 
   return App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 

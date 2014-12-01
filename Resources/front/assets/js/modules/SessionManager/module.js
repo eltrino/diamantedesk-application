@@ -1,7 +1,13 @@
-define(['app','modules/SessionManager/routers/session'], function(App){
+define([
+  'app',
+  './models/session',
+  './routers/session'], function(App, Model){
 
   App.addInitializer(function(){
-    console.log("Loaded SessionManager");
+    App.session = new Model.SessionModel();
+    App.session.getAuth();
   });
+
+  window.App = App;
 
 });

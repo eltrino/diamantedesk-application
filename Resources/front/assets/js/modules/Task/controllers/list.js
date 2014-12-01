@@ -1,4 +1,4 @@
-define(function(){
+define(['app'], function(App){
 
   return App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -22,7 +22,7 @@ define(function(){
 
       });
 
-    }
+    };
 
   });
 

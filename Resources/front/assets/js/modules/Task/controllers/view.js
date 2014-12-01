@@ -1,4 +1,4 @@
-define(function(){
+define(['app'], function(App){
 
   return App.module('Task.View', function(View, App, Backbone, Marionette, $, _){
 
@@ -18,11 +18,11 @@ define(function(){
           var missingView = new View.MissingView();
           App.MainRegion.show(missingView);
 
-        })
+        });
 
       });
 
-    }
+    };
 
   });
 

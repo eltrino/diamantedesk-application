@@ -1,4 +1,4 @@
-define(function(){
+define(['app'], function(App){
 
   return App.module('Task.Edit', function(Edit, App, Backbone, Marionette, $, _){
 
@@ -46,7 +46,7 @@ define(function(){
 
       });
 
-    }
+    };
 
   });
 
