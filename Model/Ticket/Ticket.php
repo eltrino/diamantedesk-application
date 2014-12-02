@@ -307,6 +307,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->status      = $status;
         $this->priority    = $priority;
         $this->source      = $source;
+        $this->updatedAt   = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 
     /**
