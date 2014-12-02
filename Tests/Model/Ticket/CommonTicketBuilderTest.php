@@ -55,13 +55,10 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
 
         $factory = new TicketFactory('\Diamante\DeskBundle\Model\Ticket\Ticket');
         $this->builder = new CommonTicketBuilder($factory, $this->branchRepository, $this->userService);
-        $reporter = $this->createReporter();
 
         $this->branchRepository->expects($this->once())->method('get')->with(self::BRANCH_ID)
             ->will($this->returnValue($this->createBranch()));
-        $this->userService->expects($this->at(0))->method('getByUser')->with((string)$reporter)
-            ->will($this->returnValue($this->createReporter()));
-        $this->userService->expects($this->at(1))->method('getByUser')->with(new User(self::ASSIGNEE_ID, User::TYPE_ORO))
+        $this->userService->expects($this->once())->method('getByUser')->with(new User(self::ASSIGNEE_ID, User::TYPE_ORO))
             ->will($this->returnValue($this->createAssignee()));
     }
 
