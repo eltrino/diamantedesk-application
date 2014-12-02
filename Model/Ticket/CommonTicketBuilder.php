@@ -139,7 +139,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setReporter($id)
     {
-        $reporter = $this->userService->getByUser(User::fromString($id));
+        $reporter = User::fromString($id);
         $this->reporter = $reporter;
         return $this;
     }
