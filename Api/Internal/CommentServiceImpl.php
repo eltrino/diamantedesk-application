@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\CommentService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
@@ -31,7 +32,7 @@ use Diamante\DeskBundle\EventListener\Mail\CommentProcessManager;
 use \Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\ApiBundle\Annotation\ApiDoc;
 
-class CommentServiceImpl implements CommentService
+class CommentServiceImpl implements CommentService, RestServiceInterface
 {
     /**
      * @var Repository
