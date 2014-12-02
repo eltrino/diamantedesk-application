@@ -1,10 +1,10 @@
 define(['app','config'], function(App, Config){
 
-  return App.module("Task",function(Task, App, Backbone, Marionette, $, _){
+  return App.module("Task", function(Task, App, Backbone, Marionette, $, _){
 
     Task.TaskModel = Backbone.Model.extend({
       url: function(){
-        return Config.baseUrl + '/tasks/'+this.id+'.json'
+        return Config.baseUrl + '/tasks/'+this.id+'.json';
       },
 
       defaults: {
@@ -32,7 +32,7 @@ define(['app','config'], function(App, Config){
         return defer.promise();
       },
       getTaskModel: function(id) {
-        var task = new Task.TaskModel({id:id});
+        var task = new Task.TaskModel({id:id}),
             defer = $.Deferred();
         task.fetch({
           success: function(data){

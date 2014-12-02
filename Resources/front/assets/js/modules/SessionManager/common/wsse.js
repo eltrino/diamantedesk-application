@@ -14,8 +14,6 @@ define(['cryptojs.core', 'cryptojs.sha1', 'cryptojs.base64'], function(CryptoJS)
 
   Wsse.prototype.getPasswordDigest = function(nonce, created, password) {
     var nonce_64 = CryptoJS.enc.Base64.parse(nonce);
-    console.log(nonce);
-    console.log(nonce_64.toString());
     var sha1 = CryptoJS.SHA1(nonce_64
         .concat(CryptoJS.enc.Utf8.parse(created)
         .concat(CryptoJS.enc.Utf8.parse(password))));

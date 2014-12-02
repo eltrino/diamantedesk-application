@@ -4,10 +4,10 @@ define([
   './routers/session'], function(App, Model){
 
   App.addInitializer(function(){
-    App.session = new Model.SessionModel();
-    App.session.getAuth();
+    this.session = new Model.SessionModel();
+    this.session.getAuth().fail(function(){
+      this.trigger('session:login');
+    }.bind(this));
   });
-
-  window.App = App;
 
 });

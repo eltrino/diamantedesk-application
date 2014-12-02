@@ -25,20 +25,31 @@ define(['marionette','backbone','config','bootstrap'], function(Marionette, Back
   });
 
   App.navigate = function(route, options){
-    Backbone.history.navigate(route, options || {});
+    if(Backbone.History.started){
+      Backbone.history.navigate(route, options || {});
+    } else {
+      this.on('history:start', function(){
+        Backbone.history.navigate(route, options || {});
+      });
+    }
   };
 
   App.getCurrentRoute = function(){
     return Backbone.history.fragment;
   };
 
-  App.on('before:start', function(){});
+  App.on('before:start', function(){ });
 
-  App.on('start', function(){ Backbone.history.start(); });
+  App.on('start', function(){
+    Backbone.history.start();
+    this.trigger('history:start');
+  });
 
   require(['SessionManager','Header', 'Task'], function(){
     App.start();
   });
+
+  window.App = App;
 
   return App;
 

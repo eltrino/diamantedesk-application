@@ -5,6 +5,8 @@ define([
 
   return App.module('Header', function(Header, App, Backbone, Marionette, $, _){
 
+    Header.startWithParent = false;
+
     Header.View = Marionette.ItemView.extend({
       template: headerTemplate,
       className: 'container',
@@ -20,7 +22,7 @@ define([
       },
 
       events : {
-        "click .create-ticket .btn" : "createTicketHandler"
+        "click .js-create-ticket" : "createTicketHandler"
       },
 
       createTicketHandler : function(e){

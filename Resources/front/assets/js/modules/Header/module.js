@@ -1,7 +1,17 @@
 define(['app','./views/header'], function(App, HeaderView){
 
-  App.addInitializer(function(){
-    App.HeaderRegion.show(new HeaderView.View());
+  return App.module('Header', function(Header, App, Backbone, Marionette, $, _) {
+
+    Header.startWithParent = false;
+
+    Header.addInitializer(function () {
+      App.HeaderRegion.show(new HeaderView.View());
+    });
+
+    App.on('session:login:success', function(){
+      Header.start();
+    });
+
   });
 
 });
