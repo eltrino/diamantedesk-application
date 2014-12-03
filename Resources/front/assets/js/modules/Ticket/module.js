@@ -13,6 +13,9 @@ define(['app','./routers/ticket'], function(App){
     App.on('session:login:success', function(){
       Ticket.start();
       Backbone.history.loadUrl();
+      if(App.getCurrentRoute() === "login"){
+        App.trigger('ticket:list');
+      }
     });
 
   });

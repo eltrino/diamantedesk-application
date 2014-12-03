@@ -1,7 +1,8 @@
 define([
   'app',
+  'backbone',
   './models/session',
-  './routers/session'], function(App, Model){
+  './routers/session'], function(App, Backbone, Model){
 
   App.addInitializer(function(){
     this.session = new Model.SessionModel();
