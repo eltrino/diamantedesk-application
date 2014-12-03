@@ -160,7 +160,7 @@ datagrid:
             columns:
                 key:
                     type:      string
-                    data_name: ticketKey
+                    data_name: key
                 subject:
                     type:      string
                     data_name: i.subject
