@@ -12,11 +12,12 @@
 {% endblock %}
 
 {% block navButtons %}
-    {% if app.request.get('id') %}
-        {{ UI.button({'path' : path('diamante_branch_view', { 'id' : form.vars.value.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {% if form.vars.value.id %}
+        {% set cancel_url = path('diamante_branch_view', { 'id' : form.vars.value.id }) %}
     {% else %}
-        {{ UI.button({'path' : path('diamante_branch_list'), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+        {% set cancel_url = path('diamante_branch_list') %}
     {% endif %}
+    {{ UI.button({'path' : cancel_url, 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {% set html = UI.saveAndCloseButton() %}
     {% if form.vars.value.id or resource_granted('orocrm_contact_update') %}
         {% set html = html ~ UI.saveAndStayButton() %}
