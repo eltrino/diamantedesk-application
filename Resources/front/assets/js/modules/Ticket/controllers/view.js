@@ -4,7 +4,7 @@ define(['app'], function(App){
 
     View.TicketController = function(id){
 
-      require(['modules/Ticket/models/Ticket', 'modules/Ticket/views/view'], function(){
+      require(['modules/Ticket/models/ticket', 'modules/Ticket/views/view'], function(){
 
         App.request("ticket:model", id).done(function(TicketModel){
 
