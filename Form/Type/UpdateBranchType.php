@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 
-class UpdateBranchType extends BranchType
+class UpdateBranchType extends CreateBranchType
 {
     /**
      * @param FormBuilderInterface $builder

@@ -18,7 +18,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class BranchType extends AbstractType
+class CreateBranchType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder

@@ -20,7 +20,7 @@ use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Diamante\DeskBundle\Form\Type\BranchType;
+use Diamante\DeskBundle\Form\Type\CreateBranchType;
 use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -84,7 +84,7 @@ class BranchController extends Controller
     {
         $command = new BranchCommand();
         try {
-            $form = $this->createForm(new BranchType(), $command);
+            $form = $this->createForm(new CreateBranchType(), $command);
 
             $result = $this->edit($command, $form, function ($command) {
                 $branchId = $this->get('diamante.branch.service')->createBranch($command);
