@@ -4,7 +4,7 @@ define(['app'], function(App){
 
     List.TicketController = function(){
 
-      require(['modules/Ticket/models/Ticket', 'modules/Ticket/views/list'], function(){
+      require(['modules/Ticket/models/ticket', 'modules/Ticket/views/list'], function(){
 
         var request = App.request("ticket:collection");
 
