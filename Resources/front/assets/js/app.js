@@ -11,7 +11,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-define(['marionette','backbone','config','bootstrap'], function(Marionette, Backbone) {
+define([
+  'marionette',
+  'backbone',
+  'config',
+  'bootstrap'], function(Marionette, Backbone) {
 
   var App = new Marionette.Application({
 
@@ -45,7 +49,7 @@ define(['marionette','backbone','config','bootstrap'], function(Marionette, Back
     this.trigger('history:start');
   });
 
-  require(['SessionManager','Header', 'Task'], function(){
+  require(['SessionManager','Header', 'Ticket'], function(){
     App.start();
   });
 

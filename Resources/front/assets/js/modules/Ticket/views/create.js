@@ -3,7 +3,7 @@ define([
   'tpl!../templates/form.ejs',
   'modules/Common/views/modal'], function(App, createTemplate, Modal){
 
-  return App.module('Task.Create', function(Create, App, Backbone, Marionette, $, _){
+  return App.module('Ticket.Create', function(Create, App, Backbone, Marionette, $, _){
 
     Create.ItemView = Marionette.ItemView.extend({
       template: createTemplate

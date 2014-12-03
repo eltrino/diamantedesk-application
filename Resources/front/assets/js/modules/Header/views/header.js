@@ -27,7 +27,7 @@ define([
 
       createTicketHandler : function(e){
         e.preventDefault();
-        App.trigger('task:create');
+        App.trigger('ticket:create');
       }
     });
 

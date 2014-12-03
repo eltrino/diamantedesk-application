@@ -2,12 +2,12 @@ define([
   'app',
   'tpl!../templates/form.ejs',
   'tpl!../templates/missing-view.ejs',
-  'modules/Common/views/modal'], function(App, createTemplate, missingTaskViewTemplate, Modal){
+  'modules/Common/views/modal'], function(App, createTemplate, missingTicketViewTemplate, Modal){
 
-  return App.module('Task.Edit', function(Edit, App, Backbone, Marionette, $, _){
+  return App.module('Ticket.Edit', function(Edit, App, Backbone, Marionette, $, _){
 
     Edit.MissingView = Marionette.ItemView.extend({
-      template: missingTaskViewTemplate
+      template: missingTicketViewTemplate
     });
 
     Edit.ItemView = Marionette.ItemView.extend({

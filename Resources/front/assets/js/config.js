@@ -16,8 +16,8 @@ define(function(){
         main: 'module'
       },
       {
-        name: 'Task',
-        location: 'modules/Task',
+        name: 'Ticket',
+        location: 'modules/Ticket',
         main: 'module'
       }
     ]

@@ -3,7 +3,7 @@ define([
   'tpl!../templates/list-item.ejs',
   'tpl!../templates/list.ejs'], function(App, listItemTemplate, listTemplate){
 
-  return App.module('Task.List', function(List, App, Backbone, Marionette, $, _){
+  return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
     List.ItemView = Marionette.ItemView.extend({
       tagName: "tr",
@@ -16,7 +16,7 @@ define([
       viewClicked: function(e){
         e.preventDefault();
         e.stopPropagation();
-        this.trigger("task:view", this.model);
+        this.trigger("ticket:view", this.model);
       }
     });
 
