@@ -6,7 +6,6 @@ define(['app','config'], function(App, Config){
       url: function(){
         return Config.apiUrl + '/desk/tickets/'+this.id+'.json';
       },
-
       defaults: {
         subject : '',
         description: '',

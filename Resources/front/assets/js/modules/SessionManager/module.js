@@ -8,6 +8,8 @@ define([
     this.session = new Model.SessionModel();
     this.session.getAuth().fail(function(){
       this.trigger('session:login');
+    }.bind(this)).done(function(){
+      this.trigger('session:login:success');
     }.bind(this));
   });
 

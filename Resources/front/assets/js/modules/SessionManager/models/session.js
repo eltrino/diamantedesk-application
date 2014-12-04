@@ -10,7 +10,8 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
 
       initialize: function () {
         if(window.localStorage.getItem('authModel')){
-          this.login(JSON.parse(window.localStorage.getItem('authModel')));
+          this.set(JSON.parse(window.localStorage.getItem('authModel')));
+          this.addHeaders();
         }
       },
 
@@ -27,13 +28,15 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
         this.set(creds);
         this.addHeaders();
         this.getAuth().done(function(){
-          App.trigger('session:login:success');
+          this.trigger('login:success');
           this.set({ logged_in: true });
           window.localStorage.setItem('authModel', JSON.stringify(this));
+          App.trigger('session:login:success');
         }.bind(this)).fail(function(){
-          App.trigger('session:login:fail');
+          this.trigger('login:fail');
           this.clear();
           this.set({ logged_in: false });
+          App.trigger('session:login:fail');
         }.bind(this));
 
       },
@@ -42,6 +45,7 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
         this.clear();
         this.set({ logged_in: false });
         window.localStorage.removeItem('authModel');
+        App.trigger('session:logout:success');
       },
 
       getAuth: function() {
@@ -57,6 +61,8 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
       }
 
     });
+
+
 
   });
 

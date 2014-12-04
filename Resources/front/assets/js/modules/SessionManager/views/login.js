@@ -19,6 +19,11 @@ define([
         };
       },
 
+      modelEvents: {
+        "login:success" : "onLoginSuccess",
+        "login:fail" : "onLoginFail"
+      },
+
       events: {
         "click .js-submit" : "submitForm"
       },
@@ -30,6 +35,14 @@ define([
           data[arr[i].name] = arr[i].value;
         }
         this.trigger('form:submit', data);
+      },
+
+      onLoginSuccess: function(){
+        this.$el.fadeOut();
+      },
+
+      onLoginFail: function(){
+
       },
 
       onShow: function(){

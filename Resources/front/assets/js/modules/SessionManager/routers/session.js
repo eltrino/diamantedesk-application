@@ -11,12 +11,17 @@ define(['app'], function(App){
 
     var API = {
       login: function(){
-        require(['modules/SessionManager/controllers/login'], function(){
-          SessionManager.LoginController();
-        });
+        if(App.session.get('logged_in')){
+          Backbone.history.history.back();
+        } else {
+          require(['modules/SessionManager/controllers/login'], function(){
+            SessionManager.LoginController();
+          });
+        }
       },
       logout: function(){
         App.session.logout();
+        App.trigger('session:login');
       }
     };
 
