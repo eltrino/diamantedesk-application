@@ -28,6 +28,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -138,12 +139,13 @@ class TicketServiceImpl implements TicketService
     /**
      * @param int $ticketId
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @throws TicketNotFoundException if Ticket does not exists
      */
     private function loadTicketById($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+            throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
         return $ticket;
     }
@@ -195,7 +197,7 @@ class TicketServiceImpl implements TicketService
     /**
      * Remove Attachment from Ticket
      * @param RemoveTicketAttachmentCommand $command
-     * @return void
+     * @return string $ticketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
     public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command)
@@ -213,6 +215,7 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository->store($ticket);
 
         $this->dispatchEvents($ticket);
+        return $ticket->getKey();
     }
 
     /**

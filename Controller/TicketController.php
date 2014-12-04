@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
 use Diamante\DeskBundle\Form\Type\AttachmentType;
@@ -448,16 +449,26 @@ class TicketController extends Controller
         $removeTicketAttachment->attachmentId = $attachId;
 
         try {
-            $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
+            $ticketKey = $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
+        } catch (TicketNotFoundException $e) {
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_list'
+            ));
         } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
+            $ticketKey = $ticketService->loadTicket($ticketId)->getKey();
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
         }
 
-        $response = $this->redirect($this->generateUrl(
-            'diamante_ticket_view',
-            array('id' => $ticketId)
-        ));
         return $response;
     }
 
