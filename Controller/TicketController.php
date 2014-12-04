@@ -348,7 +348,7 @@ class TicketController extends Controller
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
         $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
-        return array('form' => $formView, 'ticketKey' => (string) $ticket->getKey());
+        return array('ticket' => $ticket, 'form' => $formView);
     }
 
     /**
