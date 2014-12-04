@@ -14,6 +14,8 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Doctrine\ORM\EntityManager;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -64,15 +66,18 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
         $reporter = $this->userRepository->findOneBy(array('id' => 1));
 
         for ($i = 1; $i <= 10; $i ++) {
+            $branch = $this->branchRepository->findOneBy(array('name' => 'branchName' . $i));
             $ticket = new Ticket(
+                UniqueId::generate(),
+                new TicketSequenceNumber(null),
                 'ticketSubject' . $i,
                 'ticketDescription' . $i,
-                $this->branchRepository->findOneBy(array('name' => 'branchName' . $i)),
+                $branch,
                 $reporter,
                 $assignee,
-                Source::PHONE,
-                Priority::PRIORITY_MEDIUM,
-                Status::OPEN
+                new Source(Source::PHONE),
+                new Priority(Priority::PRIORITY_MEDIUM),
+                new Status(Status::OPEN)
             );
 
             $manager->persist($ticket);

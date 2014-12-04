@@ -37,6 +37,11 @@ class CommonTicketBuilder implements TicketBuilder
     private $userService;
 
     /**
+     * @var UniqueId
+     */
+    private $uniqueId;
+
+    /**
      * @var TicketSequenceNumber
      */
     private $sequenceNumber;
@@ -86,6 +91,16 @@ class CommonTicketBuilder implements TicketBuilder
         $this->factory = $factory;
         $this->branchRepository = $branchRepository;
         $this->userService = $userService;
+    }
+
+    /**
+     * @param UniqueId $uniqueId
+     * @return $this
+     */
+    public function setUniqueId(UniqueId $uniqueId)
+    {
+        $this->uniqueId = $uniqueId;
+        return $this;
     }
 
     /**
@@ -189,6 +204,10 @@ class CommonTicketBuilder implements TicketBuilder
      */
     private function initializeDefaultValues()
     {
+        if (is_null($this->uniqueId)) {
+            $this->uniqueId = UniqueId::generate();
+        }
+
         if (is_null($this->sequenceNumber)) {
             $this->sequenceNumber = new TicketSequenceNumber(null);
         }
@@ -217,7 +236,7 @@ class CommonTicketBuilder implements TicketBuilder
         $ticket = $this
             ->factory
                 ->create(
-                    $this->sequenceNumber, $this->subject, $this->description,
+                    $this->uniqueId, $this->sequenceNumber, $this->subject, $this->description,
                     $this->branch, $this->reporter, $this->assignee,
                     $this->priority, $this->source, $this->status
                 );
@@ -232,6 +251,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     private function clearBuilderValues()
     {
+        $this->uniqueId = null;
         $this->sequenceNumber = null;
         $this->subject = null;
         $this->description = null;

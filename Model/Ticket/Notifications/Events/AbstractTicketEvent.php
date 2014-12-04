@@ -57,4 +57,4 @@ abstract class AbstractTicketEvent extends Event implements DomainEvent
     {
         return $this->ticketId;
     }
-} 
+}

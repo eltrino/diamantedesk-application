@@ -238,7 +238,7 @@ class TicketServiceImpl implements TicketService
             ->setSource($command->source)
             ->setStatus($command->status);
 
-               $ticket = $this->ticketBuilder->build();
+        $ticket = $this->ticketBuilder->build();
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {

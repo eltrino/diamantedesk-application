@@ -18,6 +18,7 @@ use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
@@ -314,6 +315,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private function createDummyTicket()
     {
         return new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(null),
             self::SUBJECT,
             self::DESCRIPTION,
