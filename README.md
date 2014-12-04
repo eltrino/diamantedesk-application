@@ -10,7 +10,7 @@ Installation
 Add as dependency in composer
 
 ```bash
-composer require eltrino/diamantedesk-front-bundle:dev-master
+composer require diamante/front-bundle:dev-master
 ```
 
 In addition you will need to run DiamanteDesk internal command to install
