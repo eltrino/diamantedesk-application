@@ -21,6 +21,7 @@ use Oro\Bundle\UserBundle\Entity\User;
 class TicketFactory extends AbstractEntityFactory
 {
     public function create(
+        UniqueId $uniqueId,
         TicketSequenceNumber $number,
         $subject,
         $description,
@@ -32,7 +33,7 @@ class TicketFactory extends AbstractEntityFactory
         Status $status
     ) {
         return new $this->entityClassName(
-            $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
+            $uniqueId, $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
         );
     }
 }

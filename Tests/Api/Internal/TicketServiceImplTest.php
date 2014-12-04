@@ -29,7 +29,7 @@ use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Api\Internal\TicketServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
-use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 
@@ -169,6 +169,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $number = new TicketSequenceNumber(null);
 
         $ticket = new Ticket(
+            UniqueId::generate(),
             $number,
             self::SUBJECT,
             self::DESCRIPTION,
@@ -225,6 +226,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $number = new TicketSequenceNumber(null);
 
         $ticket = new Ticket(
+            UniqueId::generate(),
             $number,
             self::SUBJECT,
             self::DESCRIPTION,
@@ -282,6 +284,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $number = new TicketSequenceNumber(null);
 
         $ticket = new Ticket(
+            UniqueId::generate(),
             $number,
             self::SUBJECT,
             self::DESCRIPTION,
@@ -355,6 +358,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
+            UniqueId::generate(),
             new TicketSequenceNumber(12),
             self::SUBJECT,
             self::DESCRIPTION,
@@ -410,6 +414,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(12),
             self::SUBJECT,
             self::DESCRIPTION,
@@ -480,6 +485,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(12),
             self::SUBJECT,
             self::DESCRIPTION,
@@ -549,6 +555,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentsAddsForTicket()
     {
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(12),
             self::SUBJECT,
             self::DESCRIPTION,
@@ -607,6 +614,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(12),
             self::SUBJECT,
             self::DESCRIPTION,
