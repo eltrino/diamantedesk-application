@@ -50,6 +50,13 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     protected $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="unique_id", type="ticket_unique_id", nullable=false)
+     */
+    protected $uniqueId;
+
+    /**
      * @var TicketSequenceNumber
      *
      * @ORM\Column(name="number", type="ticket_sequence_number")

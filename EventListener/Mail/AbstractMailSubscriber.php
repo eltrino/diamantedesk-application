@@ -15,6 +15,8 @@
 namespace Diamante\DeskBundle\EventListener\Mail;
 
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AbstractTicketEvent;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Swift_Mailer;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -39,6 +41,11 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
     protected $senderEmail;
 
     /**
+     * @var string
+     */
+    protected $senderHost;
+
+    /**
      * @var \Oro\Bundle\SecurityBundle\SecurityFacade
      */
     protected $securityFacade;
@@ -47,6 +54,11 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
      * @var string
      */
     protected $ticketId;
+
+    /**
+     * @var TicketRepository
+     */
+    protected $ticketRepository;
 
     /**
      * @var array
@@ -68,13 +80,17 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         Swift_Mailer $mailer,
         SecurityFacade $securityFacade,
         ConfigManager $configManager,
-        $senderEmail
+        TicketRepository $ticketRepository,
+        $senderEmail,
+        $senderHost
     ) {
         $this->twig             = $twig;
         $this->mailer           = $mailer;
         $this->securityFacade   = $securityFacade;
         $this->senderEmail      = $senderEmail;
+        $this->senderHost       = $senderHost;
         $this->configManager    = $configManager;
+        $this->ticketRepository = $ticketRepository;
     }
 
     /**
@@ -84,7 +100,7 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
     {
         if (!$this->ticketId) {
             $this->ticketId = $event->getAggregateId();
-            $this->messageSubject = $event->getSubject() . ':' . $event->getAggregateId();
+            $this->messageSubject = $event->getSubject();
             $this->setRecipientsList($event->getRecipientsList());
         }
     }
@@ -116,20 +132,63 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         if ( $emailNotificationsEnabled === false ) {
             return;
         }
-        
+
         $txtBody = $this->twig->render($templates['txt'],
             $options);
 
         $htmlBody = $this->twig->render($templates['html'],
             $options);
 
+        $ticketKey = $this->getTicketKey();
+
+        /** @var \Swift_Message $message */
         $message = $this->mailer->createMessage();
-        $message->setSubject($this->messageSubject);
+        $headers = $message->getHeaders();
+        $listIdHeaderValue = $this->generateInReplyToHeader($ticketKey);
+        if ($listIdHeaderValue) {
+            $headers->addTextHeader('In-Reply-To', $listIdHeaderValue);
+        }
+        $message->setSubject($this->decorateMessageSubject($ticketKey, $this->messageSubject));
         $message->setFrom($this->senderEmail, $this->getUserFullName());
         $message->setTo($this->recipientsList);
         $message->setReplyTo($this->senderEmail);
         $message->setBody($txtBody, 'text/plain');
         $message->addPart($htmlBody, 'text/html');
         $this->mailer->send($message);
+    }
+
+    /**
+     * Generate 'List-Id' header that is unique by ticket
+     * @param TicketKey $ticketKey
+     * @return null|string
+     */
+    protected function generateInReplyToHeader(TicketKey $ticketKey)
+    {
+        if ($ticketKey) {
+            return ' <' . $this->ticketId->getValue() . '.' . $this->senderHost . '>';
+        }
+        return null;
+    }
+
+    /**
+     * @param TicketKey $ticketKey
+     * @param string $subject
+     * @return string|null
+     */
+    protected function decorateMessageSubject(TicketKey $ticketKey, $subject)
+    {
+        if ($ticketKey) {
+            return $ticketKey . ' ' . $subject;
+        }
+        return $subject;
+    }
+
+    /**
+     * @return TicketKey
+     */
+    protected function getTicketKey()
+    {
+        $ticket = $this->ticketRepository->getByUniqueId($this->ticketId);
+        return $ticket->getKey();
     }
 }

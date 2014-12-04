@@ -24,4 +24,10 @@ interface TicketRepository extends Repository
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function getByTicketKey(TicketKey $key);
+
+    /**
+     * @param UniqueId $uniqueId
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function getByUniqueId(UniqueId $uniqueId);
 } 
