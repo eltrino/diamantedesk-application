@@ -33,6 +33,7 @@ class DoctrineApiUserRepository extends DoctrineGenericRepository implements Api
 
     /**
      * Finds a user by email
+     *
      * @param $email
      * @return ApiUser
      */

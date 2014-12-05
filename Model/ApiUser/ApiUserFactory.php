@@ -23,12 +23,14 @@ class ApiUserFactory extends AbstractEntityFactory
      *
      * @param $email
      * @param $username
-     * @param $password
-     * @param $salt
-     * @return mixed
+     * @param null $firstName
+     * @param null $lastName
+     * @param null $password
+     * @param null $salt
+     * @return ApiUser
      */
-    public function create($email, $username, $password = null, $salt = null)
+    public function create($email, $username, $firstName = null, $lastName = null, $password = null, $salt = null)
     {
-        return new $this->entityClassName($email, $username, $password, $salt);
+        return new $this->entityClassName($email, $username, $firstName, $lastName, $password, $salt);
     }
 } 

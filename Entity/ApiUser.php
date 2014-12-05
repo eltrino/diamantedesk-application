@@ -61,6 +61,24 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
     protected $email;
 
     /**
+     * First name
+     *
+     * @var string
+     *
+     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     */
+    protected $firstName;
+
+    /**
+     * Last name
+     *
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
+     */
+    protected $lastName;
+
+    /**
      * Encrypted password. Must be persisted.
      *
      * @var string

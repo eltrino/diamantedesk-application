@@ -46,6 +46,16 @@ class ApiUser implements Entity, UserInterface
     protected $email;
 
     /**
+     * @var string
+     */
+    protected $firstName;
+
+    /**
+     * @var string
+     */
+    protected $lastName;
+
+    /**
      * @var array
      */
     protected $roles = array();
@@ -55,12 +65,14 @@ class ApiUser implements Entity, UserInterface
      */
     protected $salt;
 
-    public function __construct($email, $username, $password = null, $salt = null)
+    public function __construct($email, $username, $firstName = null, $lastName = null, $password = null, $salt = null)
     {
-        $this->email    = $email;
-        $this->username = $username;
-        $this->password = $password;
-        $this->salt     = $salt;
+        $this->email     = $email;
+        $this->username  = $username;
+        $this->firstName = $firstName;
+        $this->lastName  = $lastName;
+        $this->password  = $password;
+        $this->salt      = $salt;
     }
 
     /**
@@ -109,6 +121,22 @@ class ApiUser implements Entity, UserInterface
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
     }
 
     public function getRoles()
