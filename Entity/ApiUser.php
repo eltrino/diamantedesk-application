@@ -47,16 +47,25 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
      *
      * @var string
      *
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
      */
     protected $username;
+
+    /**
+     * Unique email for Api User
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    protected $email;
 
     /**
      * Encrypted password. Must be persisted.
      *
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $password;
 
@@ -65,7 +74,7 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
      *
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $salt;
 }

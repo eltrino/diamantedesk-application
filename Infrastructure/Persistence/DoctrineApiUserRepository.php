@@ -30,4 +30,14 @@ class DoctrineApiUserRepository extends DoctrineGenericRepository implements Api
     {
         return $this->findOneBy(array('username' => $username));
     }
+
+    /**
+     * Finds a user by email
+     * @param $email
+     * @return ApiUser
+     */
+    public function findUserByEmail($email)
+    {
+        return $this->findOneBy(array('email' => $email));
+    }
 }

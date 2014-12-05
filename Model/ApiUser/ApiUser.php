@@ -41,6 +41,11 @@ class ApiUser implements Entity, UserInterface
     protected $username;
 
     /**
+     * @var string
+     */
+    protected $email;
+
+    /**
      * @var array
      */
     protected $roles = array();
@@ -50,12 +55,12 @@ class ApiUser implements Entity, UserInterface
      */
     protected $salt;
 
-    public function __construct($username, $password, $salt, array $roles)
+    public function __construct($email, $username, $password = null, $salt = null)
     {
+        $this->email    = $email;
         $this->username = $username;
         $this->password = $password;
         $this->salt     = $salt;
-        $this->roles    = $roles;
     }
 
     /**
@@ -99,8 +104,13 @@ class ApiUser implements Entity, UserInterface
     }
 
     /**
-     * @return array|\Symfony\Component\Security\Core\Role\Role[]
+     * @return string
      */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
     public function getRoles()
     {
         return $this->roles;
