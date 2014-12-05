@@ -217,6 +217,14 @@ datagrid:
                 icon:          trash
                 link:          delete_link
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
+        mass_actions:
+            delete:
+                type: delete
+                label : Delete
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                icon: trash
         options:
             entityHint: tickets
 
