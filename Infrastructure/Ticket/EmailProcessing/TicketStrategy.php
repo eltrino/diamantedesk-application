@@ -14,12 +14,14 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\ApiBundle\Model\ApiUser\ApiUserFactory;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
+use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
 
 class TicketStrategy implements Strategy
 {
@@ -34,6 +36,16 @@ class TicketStrategy implements Strategy
     private $branchEmailConfigurationService;
 
     /**
+     * @var ApiUserRepository
+     */
+    private $apiUserRepository;
+
+    /**
+     * @var ApiUserFactory
+     */
+    private $apiUserFactory;
+
+    /**
      * @var SystemSettings
      */
     private $emailProcessingSettings;
@@ -41,14 +53,20 @@ class TicketStrategy implements Strategy
     /**
      * @param MessageReferenceService $messageReferenceService
      * @param BranchEmailConfigurationService $branchEmailConfigurationService
+     * @param ApiUserRepository $apiUserRepository
+     * @param ApiUserFactory $apiUserFactory
      * @param SystemSettings $settings
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 BranchEmailConfigurationService $branchEmailConfigurationService,
+                                ApiUserRepository $apiUserRepository,
+                                ApiUserFactory $apiUserFactory,
                                 SystemSettings $settings)
     {
         $this->messageReferenceService         = $messageReferenceService;
         $this->branchEmailConfigurationService = $branchEmailConfigurationService;
+        $this->apiUserRepository               = $apiUserRepository;
+        $this->apiUserFactory                  = $apiUserFactory;
         $this->emailProcessingSettings         = $settings;
     }
 
@@ -57,8 +75,16 @@ class TicketStrategy implements Strategy
      */
     public function process(Message $message)
     {
-        $reporterId = 1;
         $assigneeId = 1;
+
+        $apiUser = $this->apiUserRepository->findUserByEmail($message->getFrom());
+
+        if (is_null($apiUser)) {
+            $apiUser = $this->apiUserFactory->create($message->getFrom(), $message->getFrom());
+            $this->apiUserRepository->store($apiUser);
+        }
+
+        $reporterId = $apiUser->getId();
 
         $reporter = new User($reporterId, User::TYPE_DIAMANTE);
 

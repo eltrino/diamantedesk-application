@@ -22,7 +22,6 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
-
 use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
 use Diamante\DeskBundle\Model\Shared\UserService;
@@ -66,4 +65,4 @@ class DiamanteUserService implements UserService
 
         return $user;
     }
-} 
+}

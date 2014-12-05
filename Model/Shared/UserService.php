@@ -26,7 +26,7 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 interface UserService
 {
     /**
-     * Retrieve User entity
+     * Retrieves User|ApiUser entity
      * @param User $user
      * @return OroUser|ApiUser
      */
