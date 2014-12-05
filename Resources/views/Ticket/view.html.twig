@@ -129,11 +129,30 @@
     {% endif %}
 
     {% if resource_granted('EDIT', entity) %}
-        {{ UI.button({
-            'path': path('diamante_ticket_assign', {'id': entity.id}),
+        {% set assignTitle = 'diamante.desk.ticket.actions.assign'|trans %}
+        {{ UI.clientButton({
+            'dataUrl': path('diamante_ticket_assign', { 'id': entity.id }),
+            'aCss': 'no-hash',
             'iCss': 'icon-user',
-            'title': 'diamante.desk.ticket.actions.assign'|trans,
-            'label': 'diamante.desk.ticket.actions.assign'|trans
+            'dataId': entity.id,
+            'title' : assignTitle,
+            'label' : assignTitle,
+            'widget' : {
+                'type' : 'dialog',
+                'multiple' : true,
+                'reload-grid-name' : '',
+                'options' : {
+                    'alias': 'assignee-dialog',
+                    'dialogOptions' : {
+                        'title' : assignTitle,
+                        'allowMaximize': true,
+                        'allowMinimize': true,
+                        'dblclick': 'maximize',
+                        'maximizedHeightDecreaseBy': 'minimize-bar',
+                        'width': 500
+                    }
+                }
+            }
         }) }}
     {% endif %}
 
