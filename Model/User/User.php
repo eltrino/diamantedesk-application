@@ -64,4 +64,20 @@ class User
     {
         return $this->type . self::DELIMITER . $this->id;
     }
+
+    /**
+     * @return bool
+     */
+    public function isApiUser()
+    {
+        return ($this->type == self::TYPE_DIAMANTE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOroUser()
+    {
+        return ($this->type == self::TYPE_ORO);
+    }
 } 

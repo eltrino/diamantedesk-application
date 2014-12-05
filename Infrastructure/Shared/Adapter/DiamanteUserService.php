@@ -53,7 +53,7 @@ class DiamanteUserService implements UserService
      */
     public function getByUser(DiamanteUser $user)
     {
-        if ($user->getType() == DiamanteUser::TYPE_ORO) {
+        if ($user->isOroUser()) {
             $user = $this->oroUserManager->findUserBy(array('id' => $user->getId()));
         } else {
             $user = $this->diamanteApiUserRepository->get($user->getId());
