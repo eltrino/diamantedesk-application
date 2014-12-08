@@ -89,7 +89,7 @@ class CommandFactory
         $command->id = null;
         $command->content = null;
         $command->ticket = $ticket->getId();
-        $command->author = $author;
+        $command->author = (string)$author;
         $command->ticketStatus = $ticket->getStatus();
 
         return $command;

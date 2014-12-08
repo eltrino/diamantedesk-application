@@ -70,7 +70,7 @@ class UserDetailsServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $userDetails = $this->userDetailsService->fetch($userValueObject);
 
-        $this->assertEquals(1, $userDetails->getId());
+        $this->assertEquals('oro_1', $userDetails->getId());
         $this->assertEquals(User::TYPE_ORO, $userDetails->getType());
         $this->assertEquals('First Last', $userDetails->getFullName());
     }

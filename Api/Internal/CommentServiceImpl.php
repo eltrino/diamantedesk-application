@@ -148,7 +148,7 @@ class CommentServiceImpl implements CommentService
          */
         $ticket = $this->loadTicketBy($command->ticket);
 
-        $author = $command->author;
+        $author = User::fromString($command->author);
 
         $comment = $this->commentFactory->create($command->content, $ticket, $author);
 

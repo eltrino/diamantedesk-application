@@ -33,8 +33,8 @@ class DiamanteUserSelectType extends AbstractType
             array(
                 'configs' => array(
                     'placeholder'             => 'oro.user.form.choose_user',
-                    'result_template_twig'    => 'OroUserBundle:User:Autocomplete/result.html.twig',
-                    'selection_template_twig' => 'OroUserBundle:User:Autocomplete/selection.html.twig'
+                    'result_template_twig'    => 'DiamanteDeskBundle:Search:Autocomplete/result.html.twig',
+                    'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig'
                 ),
                 'autocomplete_alias' => 'diamante_user'
             )

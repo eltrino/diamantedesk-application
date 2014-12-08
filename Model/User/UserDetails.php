@@ -26,7 +26,7 @@ namespace Diamante\DeskBundle\Model\User;
 class UserDetails
 {
     /**
-     * @var int
+     * @var string
      */
     protected $id;
 
@@ -55,13 +55,13 @@ class UserDetails
      */
     protected $username;
 
-    public function __construct($id, $email, $firstName, $lastName, $type, $username)
+    public function __construct($id, $type, $email, $firstName, $lastName, $username)
     {
         $this->id           = $id;
+        $this->type         = $type;
         $this->email        = $email;
         $this->firstName    = $firstName;
         $this->lastName     = $lastName;
-        $this->type         = $type;
         $this->username     = $username;
     }
 
@@ -90,7 +90,7 @@ class UserDetails
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {

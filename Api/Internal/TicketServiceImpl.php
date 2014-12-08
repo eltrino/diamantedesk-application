@@ -272,11 +272,8 @@ class TicketServiceImpl implements TicketService
         $reporter  = $ticket->getReporter();
         $commandReporter = User::fromString($command->reporter);
 
-        if ($commandReporter->getId() != $ticket->getReporterId()) {
-            $reporter = $this->userService->getByUser($commandReporter);
-            if (is_null($reporter)) {
-                throw new \RuntimeException('Reporter loading failed, reporter not found.');
-            }
+        if ((string)$commandReporter !== (string)$reporter) {
+            $reporter = $commandReporter;
         }
 
         $ticket->update(
@@ -305,7 +302,7 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
-        $this->dispatchEvents($ticket);
+        //$this->dispatchEvents($ticket);
 
         return $ticket;
     }

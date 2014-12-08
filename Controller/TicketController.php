@@ -221,7 +221,6 @@ class TicketController extends Controller
             $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
             $this->handle($form);
 
-            $command->reporter = $command->reporter->getId();
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
             $attachments = array();

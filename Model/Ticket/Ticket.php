@@ -311,18 +311,18 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      */
     public function getRecipientsList()
     {
-//        if ($this->getAssignee()) {
-//            $recipientsList = array(
-//                $this->getReporter()->getEmail(),
-//                $this->getAssignee()->getEmail(),
-//            );
-//        } else {
-//            $recipientsList = array(
-//                $this->getReporter()->getEmail()
-//            );
-//        }
-//
-//        return $recipientsList;
+        if ($this->getAssignee()) {
+            $recipientsList = array(
+                $this->getReporter(),
+                $this->getAssignee(),
+            );
+        } else {
+            $recipientsList = array(
+                $this->getReporter()
+            );
+        }
+
+        return $recipientsList;
     }
 
     /**

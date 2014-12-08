@@ -45,11 +45,11 @@ class UserDetailsServiceImpl implements UserDetailsService
         }
 
         return new UserDetails(
-            $loadedUser->getId(),
+            (string)$user,
+            $user->getType(),
             $loadedUser->getEmail(),
             $loadedUser->getFirstName(),
             $loadedUser->getLastName(),
-            $user->getType(),
             $loadedUser->getUsername()
         );
     }

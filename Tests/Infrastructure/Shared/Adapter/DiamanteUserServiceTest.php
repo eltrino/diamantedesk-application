@@ -81,7 +81,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetDiamanteTypeUserByUser()
     {
         $userValueObject = new User(1, User::TYPE_DIAMANTE);
-        $user = new ApiUser(self::DUMMY_NAME, self::DUMMY_PASSWORD, self::DUMMY_SALT, array());
+        $user = new ApiUser(self::DUMMY_NAME, self::DUMMY_PASSWORD, self::DUMMY_SALT, array(), '','','');
 
         $this->diamanteApiUserRepository
             ->expects($this->once())

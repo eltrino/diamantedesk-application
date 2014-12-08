@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
 
-use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
+use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;

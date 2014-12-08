@@ -22,23 +22,34 @@
 
 namespace Diamante\DeskBundle\Search;
 
+use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
 use Oro\Bundle\FormBundle\Autocomplete\SearchHandlerInterface;
+use Oro\Bundle\UserBundle\Autocomplete\UserSearchHandler;
 
 class DiamanteUserSearchHandler implements SearchHandlerInterface
 {
+    const ID_FIELD_NAME = 'id';
+
     protected $properties;
     protected $entityName;
+    protected $diamanteUserRepository;
+    protected $oroUserSearchHandler;
 
     public function __construct(
         $entityName,
         UserDetailsService  $diamanteUserDetailsService,
+        ApiUserRepository   $diamanteUserRepository,
+        UserSearchHandler   $oroUserSearchHandler,
         array $properties
     )
     {
-        $this->properties = $properties;
-        $this->entityName = $entityName;
-        $this->userDetailsService = $diamanteUserDetailsService;
+        $this->properties             = $properties;
+        $this->entityName             = $entityName;
+        $this->userDetailsService     = $diamanteUserDetailsService;
+        $this->diamanteUserRepository = $diamanteUserRepository;
+        $this->oroUserSearchHandler   = $oroUserSearchHandler;
     }
 
     /**
@@ -49,10 +60,10 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
      */
     public function convertItem($item)
     {
-        $convertedItem = array();
-
-        foreach ($this->properties as $property){
-            $convertedItem[$property] = $this->getPropertyValue($property, $item);
+        if ($item instanceof User) {
+            $convertedItem = $this->convertItemFromObject($item);
+        } else {
+            $convertedItem = $item;
         }
 
         return $convertedItem;
@@ -68,7 +79,25 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
      */
     public function search($query, $page, $perPage)
     {
-        // TODO: Implement search() method.
+        $items = array();
+
+        $diamanteUsers = $this->diamanteUserRepository->searchByInput($query, $this->properties);
+        $oroUsers      = $this->oroUserSearchHandler->search($query, $page, $perPage);
+
+        if (!empty($diamanteUsers)) {
+            $convertedDiamanteUsers = $this->convertUsers($diamanteUsers, User::TYPE_DIAMANTE);
+            $items = array_merge($items, $convertedDiamanteUsers);
+        }
+
+        if (!empty($oroUsers['results'])) {
+            $convertedOroUsers = $this->convertUsers($oroUsers['results'], User::TYPE_ORO);
+            $items = array_merge($items, $convertedOroUsers);
+        }
+
+        return array(
+            'results' => $items,
+            'more'    => false
+        );
     }
 
     /**
@@ -92,7 +121,54 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
     }
 
     /**
-     * @param string $name
+     * @param User $item
+     * @return array
+     */
+    protected function convertItemFromObject( User $item)
+    {
+        $converted = array();
+
+        $obj = $this->userDetailsService->fetch($item);
+        $converted[self::ID_FIELD_NAME] = $obj->getId();
+
+        foreach ($this->properties as $property) {
+            $converted[$property] = $this->getPropertyValue($property, $obj);
+        }
+
+        return $converted;
+    }
+
+    /**
+     * @param array $users
+     * @param $type
+     * @return array
+     */
+    protected function convertUsers(array $users, $type)
+    {
+        $result = array();
+
+        foreach ($users as $user) {
+            $converted = array();
+
+            foreach($this->properties as $property) {
+                $converted[$property]  = $this->getPropertyValue($property, $user);
+            }
+
+            $converted['type'] = $type;
+            if (is_array($user)) {
+                $converted[self::ID_FIELD_NAME] = $type . User::DELIMITER . $user[self::ID_FIELD_NAME];
+            } else {
+                $converted[self::ID_FIELD_NAME] = $type . User::DELIMITER . $user->getId();
+            }
+
+            $result[] = $converted;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string       $name
      * @param object|array $item
      * @return mixed
      */
