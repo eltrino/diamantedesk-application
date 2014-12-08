@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository;
@@ -99,6 +100,7 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
     private function getMessageReference()
     {
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(null),
             'Subject',
             'Description',

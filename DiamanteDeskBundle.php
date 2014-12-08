@@ -55,6 +55,12 @@ class DiamanteDeskBundle extends Bundle
                 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketSequenceNumberType'
             );
         }
+        if (!Type::hasType('ticket_unique_id')) {
+            Type::addType(
+                'ticket_unique_id',
+                'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketUniqueIdType'
+            );
+        }
 
         if (!Type::hasType('user_type')) {
             Type::addType(

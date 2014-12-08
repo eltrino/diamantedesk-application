@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Diamante\DeskBundle\Model\User\User;
@@ -64,6 +65,7 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $branch = new Branch('DB', 'Dummy Branch', 'Description');
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber($ticketSequenceNumber),
             'Subject',
             'Description',

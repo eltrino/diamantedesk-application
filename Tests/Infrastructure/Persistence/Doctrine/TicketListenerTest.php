@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
@@ -61,6 +62,7 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
         $reporter = new User(1, User::TYPE_DIAMANTE);
 
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(null),
             'Subject',
             'Description',

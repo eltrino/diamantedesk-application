@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Diamante\DeskBundle\Model\User\User;
 
@@ -61,6 +62,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
     private function createTicket()
     {
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(12),
             TicketTest::TICKET_SUBJECT,
             TicketTest::TICKET_DESCRIPTION,

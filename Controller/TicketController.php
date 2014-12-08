@@ -285,7 +285,7 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("DiamanteDeskBundle:Ticket:assign.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:widget/assignee.html.twig")
      *
      * @param int $id
      * @return array
@@ -293,39 +293,33 @@ class TicketController extends Controller
     public function assignAction($id)
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+        $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
+
         $command = $this->get('diamante.command_factory')
             ->createAssigneeTicketCommand($ticket);
 
-        $response = null;
         $form = $this->createForm(new AssigneeTicketType(), $command);
+
         try {
-            $this->handle($form);
+            if (false === $redirect) {
+                try {
+                    $this->handle($form);
 
-            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+                    $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+                    $this->get('diamante.ticket.service')->assignTicket($command);
+                    $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
+                    $response = array('saved' => true);
 
-            $this->get('diamante.ticket.service')->assignTicket($command);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
-            $response = $this->getSuccessSaveResponse($ticket);
+                } catch (\Exception $e) {
+                    $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
+                    $response = array('form' => $form->createView());
+                }
+            } else {
+                $response = array('form' => $form->createView());
+            }
         } catch (MethodNotAllowedException $e) {
-            $response = array(
-                'form' => $form->createView(),
-                'ticketKey' => (string) $ticket->getKey(),
-                'branchId' => $ticket->getBranch()->getId(),
-                'branchName' => $ticket->getBranch()->getName(),
-                'ticketSubject' => $ticket->getSubject(),
-                'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
-            );
-        } catch (\Exception $e) {
-            $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
-            $response = array(
-                'form' => $form->createView(),
-                'ticketKey' => (string) $ticket->getKey(),
-                'branchId' => $ticket->getBranch()->getId(),
-                'branchName' => $ticket->getBranch()->getName(),
-                'ticketSubject' => $ticket->getSubject(),
-                'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
-            );
         }
+
         return $response;
     }
 

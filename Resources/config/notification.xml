@@ -36,8 +36,10 @@
             <argument type="service" id="mailer"/>
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="oro_config.global"/>
+            <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.user.details.service"></argument>
             <argument>%mailer_user%</argument>
+            <argument>%mailer_host%</argument>
         </service>
 
         <service

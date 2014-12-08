@@ -43,6 +43,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $id;
 
     /**
+     * @var UniqueId
+     */
+    protected $uniqueId;
+
+    /**
      * @var TicketSequenceNumber
      */
     protected $sequenceNumber;
@@ -113,7 +118,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $updatedAt;
 
     /**
-     * @param TicketSequenceNumber $number
+     * @param UniqueId $uniqueId
+     * @param TicketSequenceNumber $sequenceNumber
      * @param $subject
      * @param $description
      * @param Branch $branch
@@ -123,9 +129,19 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param Priority $priority
      * @param Status $status
      */
-    public function __construct(TicketSequenceNumber $number, $subject, $description, Branch $branch, User $reporter, OroUser $assignee, Source $source, Priority $priority, Status $status)
-    {
-        $this->sequenceNumber = $number;
+    public function __construct(
+        UniqueId $uniqueId,
+        TicketSequenceNumber $sequenceNumber,
+        $subject, $description,
+        Branch $branch,
+        User $reporter,
+        OroUser $assignee,
+        Source $source,
+        Priority $priority,
+        Status $status
+    ) {
+        $this->uniqueId = $uniqueId;
+        $this->sequenceNumber = $sequenceNumber;
         $this->subject = $subject;
         $this->description = $description;
         $this->branch = $branch;
@@ -138,8 +154,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
-
-        $this->raise(new TicketWasCreated($this->id, $branch->getName(), $subject, $description,
+        
+        $this->raise(new TicketWasCreated($this->uniqueId, $branch->getName(), $subject, $description,
             $reporter, $assignee, $priority, $status, $source, $this->getRecipientsList()));
     }
 
@@ -149,6 +165,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return UniqueId
+     */
+    public function getUniqueId()
+    {
+        return $this->uniqueId;
     }
 
     /**
@@ -270,7 +294,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
-        $this->raise(new CommentWasAddedToTicket($this->id, $this->subject, $this->getRecipientsList(),
+        $this->raise(new CommentWasAddedToTicket($this->uniqueId, $this->subject, $this->getRecipientsList(),
             $comment->getContent()));
     }
 
@@ -294,7 +318,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
             || $this->priority->getValue() !== $priority->getValue() || $this->status->getValue() !== $status->getValue()
             || $this->source->getValue() !== $source->getValue()) {
 
-            $this->raise(new TicketWasUpdated($this->id, $subject, $description, $reporter,
+            $this->raise(new TicketWasUpdated($this->uniqueId, $subject, $description, $reporter,
                 $priority, $status, $source, $this->getRecipientsList()));
         }
 
@@ -333,7 +357,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $status = new Status($status);
 
         if ($this->status->getValue() !== $status->getValue()) {
-            $this->raise(new TicketStatusWasChanged($this->id, $this->subject,
+            $this->raise(new TicketStatusWasChanged($this->uniqueId, $this->subject,
                 $status, $this->getRecipientsList()));
         }
 
@@ -347,7 +371,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
             $this->assignee = $newAssignee;
-            $this->raise(new TicketAssigneeWasChanged($this->id, $this->subject, $newAssignee->getEmail(),
+            $this->raise(new TicketAssigneeWasChanged($this->uniqueId, $this->subject, $newAssignee->getEmail(),
                 $this->getRecipientsList()));
         }
     }
@@ -355,7 +379,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function unassign()
     {
         $this->assignee = null;
-        $this->raise(new TicketWasUnassigned($this->id, $this->subject, $this->getRecipientsList()));
+        $this->raise(new TicketWasUnassigned($this->uniqueId, $this->subject, $this->getRecipientsList()));
     }
 
     /** LEGACY CODE END */
@@ -375,7 +399,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
-        $this->raise(new AttachmentWasAddedToTicket($this->id, $this->subject, $attachment->getFilename(),
+        $this->raise(new AttachmentWasAddedToTicket($this->uniqueId, $this->subject, $attachment->getFilename(),
             $this->getRecipientsList()));
     }
 
@@ -385,7 +409,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function removeAttachment(Attachment $attachment)
     {
         $this->attachments->remove($attachment->getId());
-        $this->raise(new AttachmentWasDeletedFromTicket($this->id, $this->subject, $attachment->getFilename(),
+        $this->raise(new AttachmentWasDeletedFromTicket($this->uniqueId, $this->subject, $attachment->getFilename(),
             $this->getRecipientsList()));
     }
 
@@ -432,6 +456,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 
     public function delete()
     {
-        $this->raise(new TicketWasDeleted($this->id, $this->subject, $this->getRecipientsList()));
+        $this->raise(new TicketWasDeleted($this->uniqueId, $this->subject, $this->getRecipientsList()));
     }
 }
