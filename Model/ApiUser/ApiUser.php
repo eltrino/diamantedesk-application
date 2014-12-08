@@ -148,4 +148,9 @@ class ApiUser implements Entity, UserInterface
     {
 
     }
+    
+    public function getFullName()
+    {
+        return $this->firstName . ' ' . $this->lastName;
+    }
 }
