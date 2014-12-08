@@ -45,13 +45,13 @@ class TicketWasUpdated extends AbstractTicketEvent
      */
     private $source;
 
-    public function __construct($id, $subject, $description, $reporterEmail,
+    public function __construct($id, $subject, $description, $reporter,
                                 Priority $priority, Status $status, Source $source, $recipientsList)
     {
         $this->ticketId       = $id;
         $this->subject        = $subject;
         $this->description    = $description;
-        $this->reporterEmail  = $reporterEmail;
+        $this->reporter       = $reporter;
         $this->priority       = $priority;
         $this->status         = $status;
         $this->source         = $source;
@@ -85,9 +85,9 @@ class TicketWasUpdated extends AbstractTicketEvent
     /**
      * @return string
      */
-    public function getReporterEmail()
+    public function getReporter()
     {
-        return $this->reporterEmail;
+        return $this->reporter;
     }
 
     /**

@@ -302,7 +302,7 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
-        //$this->dispatchEvents($ticket);
+        $this->dispatchEvents($ticket);
 
         return $ticket;
     }

@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToTicket;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketProcessManager extends AbstractMailSubscriber
 {
@@ -63,9 +64,11 @@ class TicketProcessManager extends AbstractMailSubscriber
         $this->messageHeader = 'Ticket was updated';
         $this->manageEvent($event);
 
+        $reporterDetails = $this->getUserDetails(User::fromString($event->getReporter()));
+
         $this->changeList['Subject']     = $event->getSubject();
         $this->changeList['Description'] = $event->getDescription();
-        $this->changeList['Reporter']    = $event->getReporterEmail();
+        $this->changeList['Reporter']    = $reporterDetails->getEmail();
         $this->changeList['Priority']    = $event->getPriority()->getLabel();
         $this->changeList['Status']      = $event->getStatus()->getLabel();
         $this->changeList['Source']      = $event->getSource()->getLabel();
@@ -81,10 +84,12 @@ class TicketProcessManager extends AbstractMailSubscriber
         $this->messageHeader = 'Ticket was created';
         $this->manageEvent($event);
 
+        $reporterDetails = $this->getUserDetails(User::fromString($event->getReporter()));
+
         $this->changeList['Branch']      = $event->getBranchName();
         $this->changeList['Subject']     = $event->getSubject();
         $this->changeList['Description'] = $event->getDescription();
-        $this->changeList['Reporter']    = $event->getReporterEmail();
+        $this->changeList['Reporter']    = $reporterDetails->getEmail();
         $this->changeList['Assignee']    = $event->getAssigneeEmail();
         $this->changeList['Priority']    = $event->getPriority()->getLabel();
         $this->changeList['Status']      = $event->getStatus()->getLabel();

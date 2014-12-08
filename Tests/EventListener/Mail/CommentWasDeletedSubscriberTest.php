@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Tests\EventListener\Mail;
 
 use Diamante\DeskBundle\EventListener\Mail\CommentWasDeletedSubscriber;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Diamante\DeskBundle\Model\User\User as DiamanteUser;
 
 class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -79,17 +80,36 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $configManager;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     */
+    private $userDetailsService;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetails
+     * @Mock Diamante\DeskBundle\Model\User\UserDetails
+     */
+    private $userDetails;
+
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->senderEmail = 'no-reply@example.com';
 
+        $this->recipientsList = array(
+            new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE),
+            new DiamanteUser(1, DiamanteUser::TYPE_ORO),
+        );
+
         $this->commentWasDeletedSubscriber = new CommentWasDeletedSubscriber(
             $this->twig,
             $this->mailer,
             $this->securityFacade,
             $this->configManager,
+            $this->userDetailsService,
             $this->senderEmail
         );
     }
@@ -131,17 +151,27 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
             ->method('getLoggedUser')
             ->will($this->returnValue($this->user));
 
-        $this->user
-            ->expects($this->exactly(2))
-            ->method('getFirstName')
-            ->will($this->returnValue('firstName'));
+        $this->userDetailsService
+            ->expects($this->any(0))
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
 
-        $this->user
-            ->expects($this->exactly(2))
-            ->method('getLastName')
-            ->will($this->returnValue('lastName'));
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
 
-        $userFullName = 'firstName' . ' ' . 'lastName';
+        $this->userDetails
+            ->expects($this->at(2))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
+        $this->userDetails
+            ->expects($this->any())
+            ->method('getFullName')
+            ->will($this->returnValue('FistName LastName'));
+
+        $userFullName = $this->userDetails->getFullName();
 
         $options = array(
             'comment' => 'Comment Content',
@@ -180,7 +210,10 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->message->expects($this->once())
             ->method('setTo')
-            ->with($this->recipientsList);
+            ->with(array(
+                'no-reply.reporter@example.com',
+                'no-reply.assignee@example.com',
+            ));
 
         $this->message->expects($this->once())
             ->method('setBody')

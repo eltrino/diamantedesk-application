@@ -15,6 +15,9 @@
 namespace Diamante\DeskBundle\EventListener\Mail;
 
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AbstractTicketEvent;
+use Diamante\DeskBundle\Model\User\UserDetailsService;
+use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetails;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Swift_Mailer;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -63,11 +66,17 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
      */
     protected $messageHeader;
 
+    /**
+     * @var UserDetailsService
+     */
+    protected $userDetailsService;
+
     public function __construct(
         Twig_Environment $twig,
         Swift_Mailer $mailer,
         SecurityFacade $securityFacade,
         ConfigManager $configManager,
+        UserDetailsService $userDetailsService,
         $senderEmail
     ) {
         $this->twig             = $twig;
@@ -75,6 +84,7 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         $this->securityFacade   = $securityFacade;
         $this->senderEmail      = $senderEmail;
         $this->configManager    = $configManager;
+        $this->userDetailsService = $userDetailsService;
     }
 
     /**
@@ -85,7 +95,7 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         if (!$this->ticketId) {
             $this->ticketId = $event->getAggregateId();
             $this->messageSubject = $event->getSubject() . ':' . $event->getAggregateId();
-            $this->setRecipientsList($event->getRecipientsList());
+            $this->setRecipientsList($this->processRecipientsList($event->getRecipientsList()));
         }
     }
 
@@ -103,7 +113,15 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
     protected function getUserFullName()
     {
         $user = $this->securityFacade->getLoggedUser();
-        return $user->getFirstName() . ' ' . $user->getLastName();
+
+        if ($user instanceof User) {
+            $userObj = new User($user->getId(), User::TYPE_DIAMANTE);
+        } else {
+            $userObj = new User($user->getId(), User::TYPE_ORO);
+        }
+
+        $userDetails = $this->getUserDetails($userObj);
+        return $userDetails->getFullName();
     }
 
     /**
@@ -131,5 +149,33 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         $message->setBody($txtBody, 'text/plain');
         $message->addPart($htmlBody, 'text/html');
         $this->mailer->send($message);
+    }
+
+    /**
+     * @param User $user
+     * @return UserDetails
+     */
+    protected function getUserDetails(User $user)
+    {
+        $details = $this->userDetailsService->fetch($user);
+
+        return $details;
+    }
+
+    /**
+     * @param array $list
+     * @return array
+     */
+    protected function processRecipientsList(array $list)
+    {
+        $result = array();
+
+        foreach ($list as $user) {
+            $user = User::fromString($user);
+            $details = $this->getUserDetails($user);
+            $result[] = $details->getEmail();
+        }
+
+        return $result;
     }
 }

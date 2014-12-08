@@ -19,9 +19,12 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Diamante\DeskBundle\Model\User\User as DiamanteUser;
 
 class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
 {
+    const DUMMY_USER_ID = 1;
+
     /**
      * @var TicketProcessManager
      */
@@ -99,12 +102,21 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
     private $user;
 
     /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     */
+    private $userDetailsService;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetails
+     * @Mock Diamante\DeskBundle\Model\User\UserDetails
+     */
+    private $userDetails;
+
+    /**
      * @var array
      */
-    private $recipientsList = array(
-        'no-reply.reporter@example.com',
-        'no-reply.assignee@example.com',
-    );
+    private $recipientsList;
 
     /**
      * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
@@ -118,11 +130,17 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->senderEmail = 'no-reply@example.com';
 
+        $this->recipientsList = array(
+            new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE),
+            new DiamanteUser(1, DiamanteUser::TYPE_ORO),
+        );
+
         $this->ticketProcessManager = new TicketProcessManager(
             $this->twig,
             $this->mailer,
             $this->securityFacade,
             $this->configManager,
+            $this->userDetailsService,
             $this->senderEmail
         );
     }
@@ -149,6 +167,8 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnTicketWasUpdated()
     {
+        $reporter = new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE);
+
         $this->ticketWasUpdatedEvent
             ->expects($this->once())
             ->method('getEventName');
@@ -170,8 +190,8 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketWasUpdatedEvent
             ->expects($this->once())
-            ->method('getReporterEmail')
-            ->will($this->returnValue('no-reply.reporter@example.com'));
+            ->method('getReporter')
+            ->will($this->returnValue($reporter));
 
         $this->ticketWasUpdatedEvent
             ->expects($this->once())
@@ -188,11 +208,29 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getSource')
             ->will($this->returnValue(new Source(Source::PHONE)));
 
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
+
         $this->ticketProcessManager->onTicketWasUpdated($this->ticketWasUpdatedEvent);
     }
 
     public function testOnTicketWasCreated()
     {
+        $reporter = new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE);
+
         $this->ticketWasCreatedEvent
             ->expects($this->once())
             ->method('getEventName');
@@ -219,8 +257,8 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketWasCreatedEvent
             ->expects($this->once())
-            ->method('getReporterEmail')
-            ->will($this->returnValue('no-reply.reporter@example.com'));
+            ->method('getReporter')
+            ->will($this->returnValue($reporter));
 
         $this->ticketWasCreatedEvent
             ->expects($this->once())
@@ -242,6 +280,22 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getSource')
             ->will($this->returnValue(new Source(Source::PHONE)));
 
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
+
         $this->ticketProcessManager->onTicketWasCreated($this->ticketWasCreatedEvent);
     }
 
@@ -260,6 +314,21 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getAttachmentName')
             ->will($this->returnValue('attachmentName'));
+
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
 
         $this->ticketProcessManager->onAttachmentWasAddedToTicket($this->attachmentWasAddedToTicketEvent);
     }
@@ -280,6 +349,21 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getStatus')
             ->will($this->returnValue(new Status(Status::OPEN)));
 
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
         $this->ticketProcessManager->onTicketStatusWasChanged($this->ticketStatusWasChangedEvent);
     }
 
@@ -299,6 +383,21 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getAssigneeEmail')
             ->will($this->returnValue('no-reply.assignee@example.com'));
 
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
         $this->ticketProcessManager->onTicketAssigneeWasChanged($this->ticketAssigneeWasChangedEvent);
     }
 
@@ -312,6 +411,21 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getRecipientsList')
             ->will($this->returnValue($this->recipientsList));
+
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
 
         $this->ticketProcessManager->onTicketWasUnassigned($this->ticketWasUnassignedEvent);
     }
@@ -330,16 +444,24 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->user));
 
         $this->user
-            ->expects($this->exactly(2))
-            ->method('getFirstName')
-            ->will($this->returnValue('firstName'));
+            ->expects($this->any())
+            ->method('getId')
+            ->will($this->returnValue(self::DUMMY_USER_ID));
 
-        $this->user
-            ->expects($this->exactly(2))
-            ->method('getLastName')
-            ->will($this->returnValue('lastName'));
+        $userVO = new DiamanteUser($this->user->getId(), DiamanteUser::TYPE_ORO);
 
-        $userFullName = 'firstName' . ' ' . 'lastName';
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->with($this->equalTo($userVO))
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->any())
+            ->method('getFullName')
+            ->will($this->returnValue('FistName LastName'));
+
+        $userFullName = $this->userDetails->getFullName();
 
         $options = array(
             'changes'     => array(),

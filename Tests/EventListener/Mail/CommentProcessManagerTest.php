@@ -17,9 +17,12 @@ namespace Diamante\DeskBundle\Tests\EventListener\Mail;
 use Diamante\DeskBundle\EventListener\Mail\CommentProcessManager;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Diamante\DeskBundle\Model\User\User as DiamanteUser;
 
 class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
 {
+    const DUMMY_USER_ID = 1;
+
     /**
      * @var CommentProcessManager
      */
@@ -81,10 +84,7 @@ class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    private $recipientsList = array(
-        'no-reply.reporter@example.com',
-        'no-reply.assignee@example.com',
-    );
+    private $recipientsList;
 
     /**
      * @var \Oro\Bundle\UserBundle\Entity\User
@@ -98,17 +98,34 @@ class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $configManager;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     */
+    private $userDetailsService;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetails
+     * @Mock Diamante\DeskBundle\Model\User\UserDetails
+     */
+    private $userDetails;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->senderEmail = 'no-reply@example.com';
+        $this->recipientsList = array(
+            new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE),
+            new DiamanteUser(1, DiamanteUser::TYPE_ORO),
+        );
 
         $this->commentProcessManager = new CommentProcessManager(
             $this->twig,
             $this->mailer,
             $this->securityFacade,
             $this->configManager,
+            $this->userDetailsService,
             $this->senderEmail
         );
     }
@@ -147,6 +164,21 @@ class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getCommentContent')
             ->will($this->returnValue('Comment Content'));
 
+        $this->userDetailsService
+            ->expects($this->any(0))
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
         $this->commentProcessManager->onCommentWasAddedToTicket($this->commentWasAddedToTicketEvent);
     }
 
@@ -165,6 +197,21 @@ class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getCommentContent')
             ->will($this->returnValue('Comment Content'));
+
+        $this->userDetailsService
+            ->expects($this->any(0))
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
 
         $this->commentProcessManager->onCommentWasUpdated($this->commentWasUpdatedEvent);
     }
@@ -185,6 +232,21 @@ class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getStatus')
             ->will($this->returnValue(new Status(Status::OPEN)));
 
+        $this->userDetailsService
+            ->expects($this->any(0))
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
         $this->commentProcessManager->onTicketStatusWasChanged($this->ticketStatusWasChangedEvent);
     }
 
@@ -204,6 +266,21 @@ class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getAttachmentName')
             ->will($this->returnValue('attachmentName'));
 
+        $this->userDetailsService
+            ->expects($this->any(0))
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
         $this->commentProcessManager->onAttachmentWasAddedToComment($this->attachmentWasAddedToCommentEvent);
     }
 
@@ -221,16 +298,24 @@ class CommentProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->user));
 
         $this->user
-            ->expects($this->exactly(2))
-            ->method('getFirstName')
-            ->will($this->returnValue('firstName'));
+            ->expects($this->any())
+            ->method('getId')
+            ->will($this->returnValue(self::DUMMY_USER_ID));
 
-        $this->user
-            ->expects($this->exactly(2))
-            ->method('getLastName')
-            ->will($this->returnValue('lastName'));
+        $userVO = new DiamanteUser($this->user->getId(), DiamanteUser::TYPE_ORO);
 
-        $userFullName = 'firstName' . ' ' . 'lastName';
+        $this->userDetailsService
+            ->expects($this->any())
+            ->method('fetch')
+            ->with($this->equalTo($userVO))
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->any())
+            ->method('getFullName')
+            ->will($this->returnValue('FistName LastName'));
+
+        $userFullName = $this->userDetails->getFullName();
 
         $options = array(
             'changes'     => array(),

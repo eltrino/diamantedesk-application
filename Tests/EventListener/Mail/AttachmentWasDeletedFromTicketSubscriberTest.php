@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Tests\EventListener\Mail;
 
 use Diamante\DeskBundle\EventListener\Mail\AttachmentWasDeletedFromTicketSubscriber;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Diamante\DeskBundle\Model\User\User as DiamanteUser;
 
 class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,10 +63,7 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
     /**
      * @var array
      */
-    private $recipientsList = array(
-        'no-reply.reporter@example.com',
-        'no-reply.assignee@example.com',
-    );
+    private $recipientsList;
 
     /**
      * @var \Oro\Bundle\UserBundle\Entity\User
@@ -79,17 +77,35 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
      */
     private $configManager;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     */
+    private $userDetailsService;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetails
+     * @Mock Diamante\DeskBundle\Model\User\UserDetails
+     */
+    private $userDetails;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->senderEmail = 'no-reply@example.com';
 
+        $this->recipientsList = array(
+            new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE),
+            new DiamanteUser(1, DiamanteUser::TYPE_ORO),
+        );
+
         $this->attachmentWasDeletedFromTicketSubscriber = new AttachmentWasDeletedFromTicketSubscriber(
             $this->twig,
             $this->mailer,
             $this->securityFacade,
             $this->configManager,
+            $this->userDetailsService,
             $this->senderEmail
         );
     }
@@ -132,22 +148,32 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
             ->method('getRecipientsList')
             ->will($this->returnValue($this->recipientsList));
 
+        $this->userDetailsService
+            ->expects($this->any(0))
+            ->method('fetch')
+            ->will($this->returnValue($this->userDetails));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(2))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
+        $this->userDetails
+            ->expects($this->any())
+            ->method('getFullName')
+            ->will($this->returnValue('FistName LastName'));
+
         $this->securityFacade
             ->expects($this->exactly(2))
             ->method('getLoggedUser')
             ->will($this->returnValue($this->user));
 
-        $this->user
-            ->expects($this->exactly(2))
-            ->method('getFirstName')
-            ->will($this->returnValue('firstName'));
-
-        $this->user
-            ->expects($this->exactly(2))
-            ->method('getLastName')
-            ->will($this->returnValue('lastName'));
-
-        $userFullName = 'firstName' . ' ' . 'lastName';
+        $userFullName = $this->userDetails->getFullName();
 
         $options = array(
             'attachment' => 'attachmentName',
@@ -192,7 +218,10 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
 
         $this->message->expects($this->once())
             ->method('setTo')
-            ->with($this->recipientsList);
+            ->with(array(
+                'no-reply.reporter@example.com',
+                'no-reply.assignee@example.com',
+            ));
 
         $this->message->expects($this->once())
             ->method('setBody')

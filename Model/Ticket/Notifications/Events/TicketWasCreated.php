@@ -55,7 +55,7 @@ class TicketWasCreated extends AbstractTicketEvent
      */
     private $assigneeEmail;
 
-    public function __construct($id, $branchName, $subject, $description, $reporterEmail, $assigneeEmail,
+    public function __construct($id, $branchName, $subject, $description, $reporter, $assigneeEmail,
                                 Priority $priority, Status $status, Source $source, $recipientsList)
     {
         // @todo implement functionality for generating ticket id before ticket was store at DB
@@ -63,7 +63,7 @@ class TicketWasCreated extends AbstractTicketEvent
         $this->branchName     = $branchName;
         $this->subject        = $subject;
         $this->description    = $description;
-        $this->reporterEmail  = $reporterEmail;
+        $this->reporter       = $reporter;
         $this->assigneeEmail  = $assigneeEmail;
         $this->priority       = $priority;
         $this->status         = $status;
@@ -98,9 +98,9 @@ class TicketWasCreated extends AbstractTicketEvent
     /**
      * @return string
      */
-    public function getReporterEmail()
+    public function getReporter()
     {
-        return $this->reporterEmail;
+        return $this->reporter;
     }
 
     /**
