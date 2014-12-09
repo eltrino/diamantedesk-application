@@ -9,8 +9,9 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
     SessionManager.SessionModel = Backbone.Model.extend({
 
       initialize: function () {
-        if(window.localStorage.getItem('authModel')){
-          this.set(JSON.parse(window.localStorage.getItem('authModel')));
+        var savedData = window.localStorage.getItem('authModel') || window.sessionStorage.getItem('authModel');
+        if(savedData){
+          this.set(JSON.parse(savedData));
           this.addHeaders();
         }
       },
@@ -30,7 +31,11 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
         this.getAuth().done(function(){
           this.trigger('login:success');
           this.set({ logged_in: true });
-          window.localStorage.setItem('authModel', JSON.stringify(this));
+          if(creds.remember){
+            window.localStorage.setItem('authModel', JSON.stringify(this));
+          } else {
+            window.sessionStorage.setItem('authModel', JSON.stringify(this));
+          }
           App.trigger('session:login:success');
         }.bind(this)).fail(function(){
           this.trigger('login:fail');
@@ -45,6 +50,7 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
         this.clear();
         this.set({ logged_in: false });
         window.localStorage.removeItem('authModel');
+        window.sessionStorage.removeItem('authModel');
         App.trigger('session:logout:success');
       },
 

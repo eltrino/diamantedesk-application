@@ -21,9 +21,9 @@
         <select class="form-control"
                 id="priority"
                 name="priority">
-            <option value="low"<% if (priority == 'low') { %> selected<% } %>>Low</option>
-            <option value="normal"<% if (priority == 'normal') { %> selected<% } %>>Normal</option>
-            <option value="high"<% if (priority == 'high') { %> selected<% } %>>High</option>
+            <option value="low"<% if (priority.toLowerCase() == 'low') { %> selected<% } %>>Low</option>
+            <option value="normal"<% if (priority.toLowerCase() == 'medium') { %> selected<% } %>>Medium</option>
+            <option value="high"<% if (priority.toLowerCase() == 'high') { %> selected<% } %>>High</option>
         </select>
     </div>
 </form>

@@ -14,7 +14,7 @@ define(['app'], function(App){
                 model: editTicketModel
               }),
               modalEditView = new Edit.ModalView({
-                title: 'Edit Ticket ' + editTicketModel.get('shortcode') + "-" + editTicketModel.id
+                title: 'Edit Ticket ' + editTicketModel.get('branch').key + "-" + editTicketModel.id
               });
 
           modalEditView.on('show', function(){

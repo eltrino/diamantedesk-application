@@ -1,15 +1,47 @@
-define(['app','config'], function(App, Config){
+define([
+  'app',
+  'config',
+  './priority',
+  './status'], function(App, Config, Attr){
 
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
 
     Ticket.TicketModel = Backbone.Model.extend({
+      baseUrl : Config.apiUrl + '/desk/tickets',
       url: function(){
-        return Config.apiUrl + '/desk/tickets/'+this.id+'.json';
+        if(this.isNew()){
+          return this.baseUrl + '.json';
+        } else {
+          return this.baseUrl + '/' + this.id + '.json';
+        }
+
       },
       defaults: {
         subject : '',
         description: '',
-        priority: 'normal'
+        priority : 'medium'
+      },
+      nestedModels : {
+        priority : Attr.PriorityModel,
+        status : Attr.StatusModel
+      },
+
+      parse: function(response){
+        var EmbeddedClass, embeddedData, key;
+        for(key in this.nestedModels) {
+          if(this.nestedModels.hasOwnProperty(key)){
+            EmbeddedClass = this.nestedModels[key];
+            embeddedData = response[key];
+            response[key] = new EmbeddedClass(embeddedData, {parse:true}).get(key);
+          }
+        }
+        return response;
+      },
+
+      toJSON: function(){
+        var data = _.clone(this.attributes);
+        data.branch_key = data.branch && data.branch.key;
+        return data;
       }
 
     });
