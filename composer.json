@@ -25,7 +25,8 @@
         "php": ">=5.4.4",
         "oro/platform": "1.2.*",
         "nelmio/api-doc-bundle": "*",
-        "friendsofsymfony/rest-bundle": "0.12.*"
+        "friendsofsymfony/rest-bundle": "0.12.*",
+        "jms/serializer-bundle": "*"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"

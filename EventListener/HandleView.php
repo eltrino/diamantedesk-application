@@ -15,13 +15,16 @@
 
 namespace Diamante\ApiBundle\EventListener;
 
+use Diamante\DeskBundle\Model\Shared\Entity;
+use FOS\Rest\Util\Codes;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 class HandleView
 {
-
     private $serializer;
 
     public function __construct(Serializer $serializer)
@@ -38,28 +41,91 @@ class HandleView
         }
 
         $data = $event->getControllerResult();
-        $responseMethod = 'prepare' . ucfirst(strtolower($request->getMethod())) . 'Response';
-        $response = call_user_func_array([$this, $responseMethod], [$data, $request->getRequestFormat()]);
+        $responseMethod = strtolower($request->getMethod());
+        $response = call_user_func_array([$this, $responseMethod], [$data, $request->getRequestFormat(), $request]);
         $event->setResponse($response);
     }
 
-    protected function prepareGetResponse($data, $format)
+    /**
+     * Prepare response for HTTP GET request, with standard HTTP status code and formatted body.
+     *
+     * @param Entity|array $data
+     * @param $format
+     * @return Response
+     */
+    protected function get($data, $format)
     {
-        return new Response($this->serializer->serialize($data, $format), 200);
+        $groups = ['Default'];
+        if (is_array($data)) {
+            $groups[] = 'list';
+        } else {
+            $groups[] = 'entity';
+        }
+
+        return new Response(
+            $this->serializer->serialize(
+                $data,
+                $format,
+                SerializationContext::create()->setGroups($groups)
+            ),
+            Codes::HTTP_OK
+        );
     }
 
-    protected function preparePutResponse()
+    /**
+     * Prepare response for HTTP PUT request, with standard HTTP status code and empty body.
+     *
+     * @return Response
+     */
+    protected function put()
     {
-        return new Response('', 200);
+        return new Response('', Codes::HTTP_OK);
     }
 
-    protected function preparePostResponse()
+    /**
+     * Prepare response for HTTP POST request, with standard HTTP status code, location header and formatted body.
+     *
+     * @param Entity $data
+     * @param $format
+     * @param Request $request
+     * @return Response
+     */
+    protected function post(Entity $data, $format, Request $request)
     {
-        return new Response('', 201);
+        $pathInfo = $this->entityLocation($request->getPathInfo());
+        $location = $request->getUriForPath(sprintf($pathInfo, $data->getId()));
+        $context = SerializationContext::create()->setGroups(['Default', 'entity']);
+
+        return new Response(
+            $this->serializer->serialize($data, $format, $context),
+            Codes::HTTP_CREATED,
+            ['Location' => $location]
+        );
     }
 
-    protected function prepareDeleteResponse()
+    /**
+     * Prepare response for HTTP DELETE request, with standard HTTP status code and empty body.
+     * @return Response
+     */
+    protected function delete()
     {
-        return new Response('', 204);
+        return new Response('', Codes::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Generate uri for Location header.
+     * Uses request uri as template and adds entity identifier to it.
+     *
+     * @param $requestUri
+     * @return string
+     */
+    private function entityLocation($requestUri)
+    {
+        $position = strpos($requestUri, '.');
+        if ($position !== FALSE) {
+            return substr($requestUri, 0 , $position) . '/%d' . substr($requestUri, $position);
+        } else {
+            return $requestUri . '/%d';
+        }
     }
 } 

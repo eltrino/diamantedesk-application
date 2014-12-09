@@ -15,11 +15,11 @@
 
 namespace Diamante\ApiBundle\EventListener;
 
+use FOS\Rest\Util\Codes;
 use JMS\Serializer\Serializer;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 
 class HandleException
 {
@@ -42,11 +42,13 @@ class HandleException
         $exception = $event->getException();
         if ($exception instanceof ForbiddenException) {
             $event->setResponse(new Response(
-                $this->serializer->serialize(['error' => $exception->getMessage()], $request->getRequestFormat()), 403
+                $this->serializer->serialize(['error' => $exception->getMessage()],
+                    $request->getRequestFormat()), Codes::HTTP_FORBIDDEN
             ));
         } else if ($exception instanceof \RuntimeException) {
             $event->setResponse(new Response(
-                $this->serializer->serialize(['error' => $exception->getMessage()], $request->getRequestFormat()),404
+                $this->serializer->serialize(['error' => $exception->getMessage()],
+                    $request->getRequestFormat()), Codes::HTTP_NOT_FOUND
             ));
         }
     }
