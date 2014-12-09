@@ -194,6 +194,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
+     * @return int
+     */
+    public function getBranchId()
+    {
+        return $this->branch->getId();
+    }
+
+    /**
      * @return string
      */
     public function getBranchName()
@@ -218,11 +226,27 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
+     * @return string
+     */
+    public function getStatusValue()
+    {
+        return $this->status->getValue();
+    }
+
+    /**
      * @return Priority
      */
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPriorityValue()
+    {
+        return $this->priority->getValue();
     }
 
     /**
@@ -252,6 +276,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getAssignee()
     {
         return $this->assignee;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAssigneeId()
+    {
+        return $this->assignee->getId();
     }
 
     /**
@@ -431,6 +463,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSourceValue()
+    {
+        return $this->source->getValue();
     }
 
     public function delete()

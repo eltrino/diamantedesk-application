@@ -40,7 +40,7 @@ interface BranchService
     /**
      * Create Branch
      * @param Command\BranchCommand $branchCommand
-     * @return int
+     * @return \Diamante\DeskBundle\Model\Branch\Branch
      * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand);

@@ -18,7 +18,7 @@ use Diamante\DeskBundle\Api\Command\UpdateCommentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
-use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Internal\CommentServiceImpl;
@@ -27,7 +27,6 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
-use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
@@ -173,7 +172,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
         $command->author = self::DUMMY_USER_ID;
@@ -210,7 +209,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
         $command->author = self::DUMMY_USER_ID;
@@ -261,7 +260,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
         $command->author = self::DUMMY_USER_ID;
@@ -284,7 +283,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue(null));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
         $command->content = self::DUMMY_COMMENT_CONTENT;
 
@@ -311,7 +310,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
         $command->content = $updatedContent;
         $command->ticketStatus = Status::IN_PROGRESS;
@@ -352,7 +351,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $comment)
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
         $command->content = $updatedContent;
         $command->ticketStatus = Status::IN_PROGRESS;

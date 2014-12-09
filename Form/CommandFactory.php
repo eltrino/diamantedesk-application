@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Form;
 use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
-use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 
@@ -55,7 +55,6 @@ class CommandFactory
         $command->assignee = $ticket->getAssignee();
         $command->status = $ticket->getStatus();
         $command->priority = $ticket->getPriority();
-        $command->branch = $ticket->getBranch();
 
         return $command;
     }
@@ -81,13 +80,14 @@ class CommandFactory
      * Create comment command for create action
      * @param Ticket $ticket
      * @param User $author
-     * @return EditCommentCommand
+     * @return CommentCommand
      */
-    public function createEditCommentCommandForCreate(Ticket $ticket, User $author)
+    public function createCommentCommandForCreate(Ticket $ticket, User $author)
     {
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id = null;
         $command->content = null;
+        $command->ticket = $ticket->getId();
         $command->author = $author->getId();
         $command->ticketStatus = $ticket->getStatus();
 
@@ -97,11 +97,11 @@ class CommandFactory
     /**
      * Create Comment command for update action
      * @param Comment $comment
-     * @return EditCommentCommand
+     * @return CommentCommand
      */
-    public function createEditCommentCommandForUpdate(Comment $comment)
+    public function createCommentCommandForUpdate(Comment $comment)
     {
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id = $comment->getId();
         $command->content = $comment->getContent();
         $command->author = $comment->getAuthor()->getId();

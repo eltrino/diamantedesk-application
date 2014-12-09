@@ -167,10 +167,10 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
      *  }
      * )
      *
-     * @param Command\EditCommentCommand $command
-     * @return void
+     * @param Command\CommentCommand $command
+     * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
-    public function postNewCommentForTicket(Command\EditCommentCommand $command)
+    public function postNewCommentForTicket(Command\CommentCommand $command)
     {
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Comment');
 
@@ -198,6 +198,8 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         $this->ticketRepository->store($ticket);
 
         $this->dispatchEvents($comment, $ticket);
+
+        return $comment;
     }
 
     /**
@@ -220,10 +222,10 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
 
     /**
      * Update Ticket Comment content
-     * @param Command\EditCommentCommand $command
+     * @param Command\CommentCommand $command
      * @return void
      */
-    public function updateTicketComment(Command\EditCommentCommand $command)
+    public function updateTicketComment(Command\CommentCommand $command)
     {
         $comment = $this->loadCommentBy($command->id);
 

@@ -153,7 +153,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
      * )
      *
      * @param Command\BranchCommand $branchCommand
-     * @return int
+     * @return \Diamante\DeskBundle\Model\Branch\Branch
      * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand)
@@ -185,7 +185,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
         $this->branchRepository->store($branch);
         $this->tagManager->saveTagging($branch);
 
-        return $branch->getId();
+        return $branch;
     }
 
     /**
