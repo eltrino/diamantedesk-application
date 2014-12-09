@@ -11,6 +11,8 @@ Diamante\DeskBundle\Model\Ticket\Ticket:
             exclude: true
         assignee:
             exclude: true
+        description:
+            groups: ["entity"]
         comments:
             groups: ["entity"]
         attachments:
