@@ -85,9 +85,9 @@ datagrid:
                     - i.priority
                     - i.status
                     - assignee.id as assigneeId
-                    - reporter.id as reporterId
+#                    - reporter.id as reporterId
                     - branch.name as branchName
-                    - CONCAT(reporter.firstName, CONCAT(' ', reporter.lastName)) as reporterFullName
+#                    - CONCAT(reporter.firstName, CONCAT(' ', reporter.lastName)) as reporterFullName
                     - CONCAT(assignee.firstName, CONCAT(' ', assignee.lastName)) as assigneeFullName
                     - i.createdAt
                     - i.updatedAt
@@ -97,7 +97,7 @@ datagrid:
                     left:
                         - { join: i.branch, alias: branch }
                         - { join: i.assignee, alias: assignee }
-                        - { join: i.reporter, alias: reporter }
+#                        - { join: i.reporter, alias: reporter }
         properties:
             id: ~
             view_link:
@@ -122,8 +122,8 @@ datagrid:
             assigneeFullName:
                 label:   Assignee
                 type:    assignee
-            reporterFullName:
-                label:   Reporter
+#            reporterFullName:
+#                label:   Reporter
             priority:
                 label:   Priority
             status:
@@ -144,8 +144,8 @@ datagrid:
                   data_name: branchName
                 assigneeFullName:
                   data_name: assigneeFullName
-                reporterFullName:
-                  data_name: reporterFullName
+#                reporterFullName:
+#                  data_name: reporterFullName
                 priority:
                   data_name: i.priority
                 status:
@@ -174,9 +174,9 @@ datagrid:
                 assigneeFullName:
                     type:      string
                     data_name: assigneeFullName
-                reporterFullName:
-                    type:      string
-                    data_name: reporterFullName
+#                reporterFullName:
+#                    type:      string
+#                    data_name: reporterFullName
                 priority:
                     type:      choice
                     data_name: i.priority
