@@ -86,6 +86,15 @@
 {% endmacro %}
 
 {% block navButtons %}
+    <script>
+        require(['oroui/js/mediator', 'oroui/js/widget-manager'],function(mediator, widgetManager) {
+            mediator.on('page:beforeChange', function () {
+                for (var i in widgetManager.widgets) {
+                    widgetManager.widgets[i].remove();
+                }
+            });
+        })
+    </script>
     {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
         {% set changeStatusTitle = 'diamante.desk.ticket.actions.change_status'|trans %}
         {{ UI.clientButton({
@@ -101,6 +110,7 @@
                 'reload-grid-name' : '',
                 'options' : {
                     'alias': 'status-dialog',
+                    'stateEnabled' : false,
                     'dialogOptions' : {
                         'resizable' : false,
                         'title' : changeStatusTitle,
