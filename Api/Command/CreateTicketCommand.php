@@ -66,10 +66,6 @@ class CreateTicketCommand
      */
     public $reporter;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type(type="object")
-     */
     public $assignee;
 
     /**

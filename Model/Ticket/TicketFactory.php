@@ -27,7 +27,7 @@ class TicketFactory extends AbstractEntityFactory
         $description,
         Branch $branch,
         User $reporter,
-        User $assignee,
+        $assignee,
         Priority $priority,
         Source $source,
         Status $status

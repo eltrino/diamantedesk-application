@@ -108,6 +108,32 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Source::PHONE, $ticket->getSource()->getValue());
     }
 
+    public function testCreateWhenAssigneeIsNull()
+    {
+        $branch = $this->createBranch();
+        $reporter = $this->createReporter();
+        $ticket = new Ticket(
+            new UniqueId('unique_id'),
+            new TicketSequenceNumber(null),
+            self::TICKET_SUBJECT,
+            self::TICKET_DESCRIPTION,
+            $branch,
+            $reporter,
+            null,
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::NEW_ONE)
+        );
+
+        $this->assertEquals('Subject', $ticket->getSubject());
+        $this->assertEquals('Description', $ticket->getDescription());
+        $this->assertEquals($branch, $ticket->getBranch());
+        $this->assertEquals('new', $ticket->getStatus()->getValue());
+        $this->assertEquals($reporter, $ticket->getReporter());
+        $this->assertNull($ticket->getAssignee());
+        $this->assertEquals(Source::PHONE, $ticket->getSource()->getValue());
+    }
+
     public function testUpdate()
     {
         $ticket = $this->createTicket();

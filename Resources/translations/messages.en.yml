@@ -25,6 +25,7 @@ diamante:
 
           placeholders:
             form:              Choose branch...
+            default:           Current branch is configured as a default for Email Processing and can't be deleted.
 
         ticket:
           entity_label:        Ticket

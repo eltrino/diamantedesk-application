@@ -122,7 +122,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param $description
      * @param Branch $branch
      * @param User $reporter
-     * @param User $assignee
+     * @param User|null $assignee
      * @param Source $source
      * @param Priority $priority
      * @param Status $status
@@ -133,7 +133,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $subject, $description,
         Branch $branch,
         User $reporter,
-        User $assignee,
+        $assignee,
         Source $source,
         Priority $priority,
         Status $status
@@ -153,8 +153,12 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
 
+        $assigneeEmail = null;
+        if(!is_null($assignee)) {
+            $assigneeEmail = $assignee->getEmail();
+        }
         $this->raise(new TicketWasCreated($this->uniqueId, $branch->getName(), $subject, $description,
-            $reporter->getEmail(), $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
+            $reporter->getEmail(), $assigneeEmail, $priority, $status, $source, $this->getRecipientsList()));
     }
 
     /**
