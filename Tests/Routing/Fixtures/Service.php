@@ -47,6 +47,15 @@ class Service
 
     /**
      * @ApiDoc(
+     *  uri="/entities/{id}.{_format}",
+     *  method={"PUT", "PATCH"}
+     * )
+     * @param $id
+     */
+    public function putAndPatchEntity($id){}
+
+    /**
+     * @ApiDoc(
      *  uri="/entities.{_format}",
      *  method="POST"
      * )

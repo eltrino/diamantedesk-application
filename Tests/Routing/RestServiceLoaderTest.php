@@ -53,12 +53,13 @@ class RestServiceLoaderTest extends \PHPUnit_Framework_TestCase
 
         $collection = $this->loader->load('fixture.service', 'diamante_rest_service');
 
-        $this->assertEquals(5, $collection->count());
+        $this->assertEquals(6, $collection->count());
 
         $this->assertEquals('GET', $collection->get('fixture_service_get_entity')->getRequirement('_method'));
         $this->assertEquals('fixture.service:getEntity', $collection->get('fixture_service_get_entity')->getDefault('_controller'));
 
         $this->assertEquals('PUT', $collection->get('fixture_service_put_entity')->getRequirement('_method'));
+        $this->assertEquals('PUT|PATCH', $collection->get('fixture_service_put_and_patch_entity')->getRequirement('_method'));
         $this->assertEquals('POST', $collection->get('fixture_service_post_entity')->getRequirement('_method'));
         $this->assertEquals('DELETE', $collection->get('fixture_service_delete_entity')->getRequirement('_method'));
         $this->assertEquals('ANY', $collection->get('fixture_service_get_parts')->getRequirement('_method'));

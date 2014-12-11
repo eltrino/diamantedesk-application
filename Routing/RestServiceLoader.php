@@ -44,7 +44,10 @@ class RestServiceLoader extends Loader
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
             $annotation = $this->reader->getMethodAnnotation($reflectionMethod, 'Diamante\\ApiBundle\\Annotation\\ApiDoc');
             if ($annotation) {
-                $methods = [$annotation->getMethod()];
+                $methods = $annotation->getMethod();
+                if (!is_array($methods)) {
+                    $methods = [$methods];
+                }
 
                 $defaults = [
                     '_controller' => $resource . ':' . $reflectionMethod->getName()
