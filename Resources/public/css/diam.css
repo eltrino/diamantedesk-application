@@ -231,6 +231,10 @@
     animation: blink 500ms  step-start 0s 5;
 }
 
+#uniform-diam-dropzone-file {
+  visibility: hidden;
+}
+
 @keyframes blink {
     0% { background: rgba(238, 238, 238, 1); }
     50% { background: rgba(238, 238, 238, .1); }
