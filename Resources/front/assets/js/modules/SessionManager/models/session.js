@@ -1,4 +1,4 @@
-define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
+define(['app', 'User/models/user', '../common/wsse', 'config'], function(App, User, Wsse, Config) {
 
   return App.module('SessionManager', function(SessionManager, App, Backbone, Marionette, $, _){
 
@@ -57,9 +57,11 @@ define(['app', '../common/wsse', 'config'], function(App, Wsse, Config) {
       getAuth: function() {
         var defer = $.Deferred();
         if(this.get('username') && this.get('password')){
-          $.get(Config.apiUrl + '/user/filter.json', { username : this.get('username') })
+
+          App.request("user:model:current")
             .done(function(){defer.resolve();})
             .fail(function(){defer.reject();});
+
         } else {
           defer.reject();
         }

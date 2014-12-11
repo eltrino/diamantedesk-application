@@ -4,7 +4,7 @@ define(['app'], function(App){
 
     Attr.StatusModel = Backbone.Model.extend({
       defaults : {
-        priority: 'new'
+        status: 'new'
       },
       parse : function(attr){
         return { status : attr.value_to_label_map[attr.status] };

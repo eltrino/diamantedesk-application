@@ -26,7 +26,9 @@ define(['app'], function(App){
           });
 
           modalEditView.on('modal:submit', function(data){
-            editTicketModel.save(data, {
+            editTicketModel.set(data);
+            editTicketModel.save(editTicketModel.changedAttributes(),{
+              patch : true,
               success : function(resultModel){
                 App.trigger('ticket:view', resultModel.get('id'));
                 modalEditView.$el.modal('hide');

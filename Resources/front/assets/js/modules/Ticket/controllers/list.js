@@ -13,8 +13,8 @@ define(['app'], function(App){
             collection: TicketCollection
           });
 
-          TicketListView.on("childview:ticket:view", function(childView, TicketModel){
-            App.trigger("ticket:view", TicketModel.get('id'));
+          TicketListView.on("childview:ticket:view", function(childView, ticketModel){
+            App.trigger("ticket:view", ticketModel.get('id'));
           });
 
           App.MainRegion.show(TicketListView);

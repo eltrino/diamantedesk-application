@@ -18,7 +18,7 @@
         </div>
         <div class="ticket-meta">
             <div class="row">
-                <span class="col-xs-4"><%= created_at %></span>
+                <span class="col-xs-4"><%= created %></span>
                 <span class="col-xs-4"><%= priority %></span>
                 <span class="col-xs-4"><%= status %></span>
             </div>
@@ -49,7 +49,7 @@
             <div class="block">
                 <h2>Submited by</h2>
                 <ul class="list-unstyled">
-                    <li><a href="#">Tony Soprano</a></li>
+                    <li><a href="#"><%= reporter.first_name %> <%= reporter.last_name %></a></li>
                 </ul>
             </div>
         </div>

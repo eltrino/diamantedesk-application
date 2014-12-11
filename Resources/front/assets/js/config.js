@@ -4,23 +4,13 @@ define(function(){
       apiurl = baseurl.replace(/\/front$/,'/web/app_dev.php') + '/api/rest/latest';
 
   require.config({
-    "packages": [
-      {
-        name: 'SessionManager',
-        location: 'modules/SessionManager',
-        main: 'module'
-      },
-      {
-        name: 'Header',
-        location: 'modules/Header',
-        main: 'module'
-      },
-      {
-        name: 'Ticket',
-        location: 'modules/Ticket',
-        main: 'module'
-      }
-    ]
+    //"packages": [
+    //  {
+    //    name: 'PackageName',
+    //    location: 'modules/PackageName',
+    //    main: 'module'
+    //  }
+    //]
   });
 
   var Config = {

@@ -7,15 +7,7 @@ define([
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
 
     Ticket.TicketModel = Backbone.Model.extend({
-      baseUrl : Config.apiUrl + '/desk/tickets',
-      url: function(){
-        if(this.isNew()){
-          return this.baseUrl + '.json';
-        } else {
-          return this.baseUrl + '/' + this.id + '.json';
-        }
-
-      },
+      urlRoot : Config.apiUrl + '/desk/tickets',
       defaults: {
         subject : '',
         description: '',
@@ -47,7 +39,7 @@ define([
     });
 
     Ticket.TicketCollection = Backbone.Collection.extend({
-      url: Config.apiUrl+ '/desk/tickets.json',
+      url: Config.apiUrl+ '/desk/tickets',
       model: Ticket.TicketModel
     });
 

@@ -9,6 +9,12 @@ define([
       tagName: "tr",
       template: listItemTemplate,
 
+      templateHelpers: function(){
+        return {
+          created : new Date(this.model.get('created_at')).toLocaleDateString()
+        };
+      },
+
       events : {
         'click' : "viewClicked"
       },

@@ -13,6 +13,12 @@ define([
       className: 'ticket-view',
       template: TicketViewTemplate,
 
+      templateHelpers: function(){
+        return {
+          created : new Date(this.model.get('created_at')).toLocaleDateString()
+        };
+      },
+
       events : {
         "click .js-ticket-list" : "listTickets",
         "click .js-edit-ticket" : "editTicket"

@@ -54,5 +54,30 @@ require.config({
       exports: "CryptoJS.enc.Base64"
     }
   },
+
+
+  "packages": [
+    {
+      name: 'User',
+      location: 'modules/User',
+      main: 'module'
+    },
+    {
+      name: 'SessionManager',
+      location: 'modules/SessionManager',
+      main: 'module'
+    },
+    {
+      name: 'Header',
+      location: 'modules/Header',
+      main: 'module'
+    },
+    {
+      name: 'Ticket',
+      location: 'modules/Ticket',
+      main: 'module'
+    }
+  ],
+
   deps : ["app"]
 });

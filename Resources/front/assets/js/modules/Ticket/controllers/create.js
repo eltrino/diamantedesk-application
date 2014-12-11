@@ -26,13 +26,21 @@ define(['app'], function(App){
         });
 
         modalCreateView.on('modal:submit', function(data){
-          newTicketModel.save(data, {
-            success : function(resultModel){
-              isSuccess = true;
-              App.trigger('Ticket:view', resultModel.get('id'));
-              modalCreateView.$el.modal('hide');
-            }
+          data.branch = 3;
+          data.status = 'open';
+          data.source = 'phone';
+          App.request("user:model:current").done(function(user){
+            data.reporter = user.id;
+            data.assignee = user.id;
+            newTicketModel.save(data, {
+              success : function(resultModel){
+                isSuccess = true;
+                App.trigger('ticket:view', resultModel.get('id'));
+                modalCreateView.$el.modal('hide');
+              }
+            });
           });
+
         });
 
         App.DialogRegion.show(modalCreateView);
