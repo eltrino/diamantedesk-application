@@ -238,7 +238,10 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
      * @ApiDoc(
      *  description="Update branch",
      *  uri="/branches/{id}.{_format}",
-     *  method="PUT",
+     *  method={
+     *      "PUT",
+     *      "PATCH"
+     *  },
      *  resource=true,
      *  requirements={
      *      {

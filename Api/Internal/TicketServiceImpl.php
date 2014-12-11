@@ -539,7 +539,10 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      * @ApiDoc(
      *  description="Update ticket",
      *  uri="/tickets/{id}.{_format}",
-     *  method="PUT",
+     *  method={
+     *      "PUT",
+     *      "PATCH"
+     *  },
      *  resource=true,
      *  requirements={
      *      {

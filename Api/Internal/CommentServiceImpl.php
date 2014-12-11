@@ -257,7 +257,10 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
      * @ApiDoc(
      *  description="Update comment",
      *  uri="/comments/{id}.{_format}",
-     *  method="PUT",
+     *  method={
+     *      "PUT",
+     *      "PATCH"
+     *  },
      *  resource=true,
      *  requirements={
      *      {
