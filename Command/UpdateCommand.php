@@ -17,7 +17,6 @@ namespace Diamante\FrontBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 class UpdateCommand extends AbstractCommand
 {
@@ -31,19 +30,23 @@ class UpdateCommand extends AbstractCommand
                 null,
                 InputOption::VALUE_NONE,
                 'If set, the task will update assets before updating application'
-            )
-        ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('with-assets')) {
-            $output->write("Updating assets dependencies ...");
-            $this->executeProcess('bower install', $output);
-            $output->writeln("Done");
+        if (!$this->filesystem->exists($this->webRoot)) {
+            $output->writeln(sprintf(
+                '<error>Web root folder "%s" does not exists. Please run diamante:front:install in the first place.</error>',
+                $this->webRoot
+            ));
+            return self::RETURN_CODE_WEB_ROOT_EXISTS;
         }
 
-        // @todo configure application
+        if ($input->getOption('with-assets')) {
+            $output->write("Updating assets dependencies ...");
+            $this->executeProcess('bowe1r install', $output);
+        }
 
         $this->syncWebRoot($output);
     }

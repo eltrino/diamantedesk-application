@@ -5,7 +5,8 @@ oro_system_configuration:
 
     fields:
         diamante_front.registration_required:
-            type: choice
+            type: boolean
+            data_type: string
             options:
                 label: 'Registration Requied'
                 choices:

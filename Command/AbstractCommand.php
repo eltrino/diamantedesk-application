@@ -22,6 +22,10 @@ use Symfony\Component\Process\Process;
 
 abstract class AbstractCommand extends ContainerAwareCommand
 {
+    const RETURN_CODE_NO_TOOLS = 1;
+    const RETURN_CODE_WEB_ROOT_EXISTS = 2;
+    const RETURN_CODE_NO_WEB_ROOT = 3;
+
     /**
      * @var Filesystem
      */
@@ -35,7 +39,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
 
     /**
      * Initializes parameters required for installation process
-     * @param InputInterface  $input  An InputInterface instance
+     * @param InputInterface $input An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -44,7 +48,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $kernel = $this->getContainer()->get('kernel');
         $this->packageDir = $kernel->locateResource('@DiamanteFrontBundle');
         $this->appDir = $kernel->locateResource('@DiamanteFrontBundle/Resources/front');
-        $this->webRoot = $kernel->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'front';
+        $this->webRoot = dirname($kernel->getRootDir()) . DIRECTORY_SEPARATOR . 'front';
     }
 
     /**
@@ -55,23 +59,68 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected function syncWebRoot(OutputInterface $output)
     {
         $output->write("Updating web root folder ...");
-        $this->filesystem->mirror($this->appDir, $this->webRoot);
-        $output->writeln("Done");
+        $this->executeProcess([
+            sprintf('grunt less --src=%s --webRoot=%s', $this->appDir, $this->webRoot),
+            sprintf('grunt sync --src=%s --webRoot=%s', $this->appDir, $this->webRoot)
+        ], $output);
     }
 
     /**
-     * @param string $command
+     * Executes one or more commands
+     *
+     * If array passed, those commands will be executed using &&
+     *
+     * @param string|array $command
      * @param OutputInterface $output
+     * @return int
      */
     protected function executeProcess($command, OutputInterface $output)
     {
+        if (is_array($command)) {
+            $command = implode(' && ', $command);
+        }
+
+        // Make new line if there will be command output
+        if ($output->getVerbosity() > 1) {
+            $output->writeln("");
+        }
+
         $process = new Process($command, $this->packageDir);
-        $process->run(function ($type, $buffer) use ($output) {
+
+        $result = $process->run(function ($type, $buffer) use ($output) {
             if (Process::ERR != $type) {
-                $output->write($buffer);
+                if ($output->getVerbosity() > 1) {
+                    $output->write($buffer);
+                }
             } else {
-                $output->write('<error>' . $buffer . '<error>');
+                if ($output->getVerbosity() > 1) {
+                    $output->write('<error>' . $buffer . '<error>');
+                }
             }
         });
+
+        if ($result) {
+            $output->writeln("<error>Failed</error>");
+        } else {
+            $output->writeln("Done");
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check that system command executes successfully
+     *
+     * @param $command
+     * @return boolean
+     */
+    protected function isCommandSuccess($command)
+    {
+        $process = new Process($command);
+        if ($process->run() > 0) {
+            return false;
+        }
+
+        return true;
     }
 }

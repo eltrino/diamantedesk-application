@@ -24,30 +24,44 @@ class InstallCommand extends AbstractCommand
     {
         $this
             ->setName('diamante:front:install')
-            ->setDescription('Install Diamante Front')
+            ->setDescription('Install DiamanteDesk Front')
             ->addOption(
                 'force',
                 null,
                 InputOption::VALUE_NONE,
                 'If set, the task will ignore any checks'
             )
-        ;
+            ->addOption(
+                'with-assets',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, the task will install/update assets. Use this option only if assets were not installed automatically or it is required to update them.'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->filesystem->exists($this->webRoot) && !$input->getOption('force')) {
-            throw new \RuntimeException(sprintf('Web root folder "%s" exists. Use --force option to proceed with this operation.', realpath($this->webRoot)));
+        if (!$this->isCommandSuccess('grunt --version')
+            || !$this->isCommandSuccess('bower --version')
+        ) {
+            $output->writeln('<error>For full functionality of this software, you should install grunt-cli, bower globally using npm.</erroe>');
+            return self::RETURN_CODE_NO_TOOLS;
         }
-        $output->write(sprintf('Making web root folder "%s"...', realpath($this->webRoot)));
+
+        if ($this->filesystem->exists($this->webRoot) && !$input->getOption('force')) {
+            $output->writeln(sprintf(
+                '<error>Web root folder "%s" exists. Please run the operation with --force to execute.</error>',
+                $this->webRoot
+            ));
+            return self::RETURN_CODE_WEB_ROOT_EXISTS;
+        }
+
+        $output->write(sprintf('Making web root folder "%s"...', $this->webRoot));
         $this->filesystem->mkdir($this->webRoot);
         $output->writeln("Done");
 
         $output->write("Installing assets dependencies ...");
         $this->executeProcess('bower install', $output);
-        $output->writeln("Done");
-
-        // @todo configure application
 
         $this->syncWebRoot($output);
     }

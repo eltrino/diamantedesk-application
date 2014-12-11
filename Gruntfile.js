@@ -18,8 +18,8 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    webRoot: '../../../front',
-    srcRoot: 'Resources/front',
+    webRoot: grunt.option('webRoot', '../../../front'),
+    srcRoot: grunt.option('src', 'Resources/front'),
     lessFolder: '<%= srcRoot %>/assets/less',
 
     sync: {
