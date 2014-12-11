@@ -1,8 +1,6 @@
 define([
   'app',
-  'config',
-  './priority',
-  './status'], function(App, Config, Attr){
+  'config'], function(App, Config){
 
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
 
@@ -11,29 +9,9 @@ define([
       defaults: {
         subject : '',
         description: '',
-        priority : 'medium'
-      },
-      nestedModels : {
-        priority : Attr.PriorityModel,
-        status : Attr.StatusModel
-      },
-
-      parse: function(response){
-        var EmbeddedClass, embeddedData, key;
-        for(key in this.nestedModels) {
-          if(this.nestedModels.hasOwnProperty(key)){
-            EmbeddedClass = this.nestedModels[key];
-            embeddedData = response[key];
-            response[key] = new EmbeddedClass(embeddedData, {parse:true}).get(key);
-          }
-        }
-        return response;
-      },
-
-      toJSON: function(){
-        var data = _.clone(this.attributes);
-        data.branch_key = data.branch && data.branch.key;
-        return data;
+        priority : 'medium',
+        status: 'open',
+        source: 'web'
       }
 
     });
