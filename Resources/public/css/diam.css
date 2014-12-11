@@ -123,7 +123,7 @@
 }
 .diam-filter-container > .placeholder > * > .content {
     margin-left: 180px !important;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .diam-filter-container .scrollable-container{
