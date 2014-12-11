@@ -256,3 +256,7 @@
     text-align: center;
     font-weight: 700;
 }
+
+.ui-multiselect-menu.ui-widget {
+    display: none;
+}
