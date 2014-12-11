@@ -5,7 +5,7 @@
 #}
 {% extends 'OroSearchBundle:Search:searchResultItem.html.twig' %}
 
-{% set showImage = true %}
+{% set showImage = false %}
 {% set imagePath = entity.logo ? entity.logo.pathname : null %}
 
 {% set recordUrl = indexer_item.recordUrl %}
