@@ -12,7 +12,12 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_branch_list'), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {% if form.vars.value.id %}
+        {% set cancel_url = path('diamante_branch_view', { 'id' : form.vars.value.id }) %}
+    {% else %}
+        {% set cancel_url = path('diamante_branch_list') %}
+    {% endif %}
+    {{ UI.button({'path' : cancel_url, 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {% set html = UI.saveAndCloseButton() %}
     {% if form.vars.value.id or resource_granted('orocrm_contact_update') %}
         {% set html = html ~ UI.saveAndStayButton() %}
@@ -37,55 +42,3 @@
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
-
-{% block content_data %}
-    {% set id = 'branchEdit' %}
-
-    {% set dataBlocks = [{
-        'title': 'diamante.desk.common.general'|trans,
-        'class': 'active',
-        'subblocks': [
-            {
-                'title': 'diamante.desk.branch.details'|trans,
-                'data': [
-                    form_row(form.name),
-                    form_row(form.key),
-                    form_row(form.defaultAssignee),
-                    form_row(form.logoFile, {'attr': {'accept' : 'image/jpeg, image/png'}}),
-                    form_row(form.tags)
-                ]
-            }
-        ]
-    }] %}
-
-    {% set dataBlocks = dataBlocks|merge([{
-        'title': 'diamante.desk.common.description'|trans,
-        'subblocks': [
-            {
-                'title':null,
-                'data': [
-                    form_row(form.description),
-                ]
-            }]
-        }]
-    ) %}
-
-    {% set dataBlocks = dataBlocks|merge([{
-        'title': 'Email Configuration'|trans,
-        'subblocks': [
-            {
-                'title':null,
-                'data': [
-                    form_row(form.branch_email_configuration.supportAddress),
-                    form_row(form.branch_email_configuration.customerDomains)
-                ]
-            }]
-        }]
-    ) %}
-
-    {% set data = {
-        'formErrors': form_errors(form)? form_errors(form) : null,
-        'dataBlocks': dataBlocks,
-    } %}
-    {{ parent() }}
-{% endblock content_data %}

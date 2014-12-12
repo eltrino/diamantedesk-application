@@ -75,7 +75,7 @@ class CreateTicketType extends AbstractType
             'file',
             array(
                 'label' => 'diamante.desk.attachment.file',
-                'required' => true,
+                'required' => false,
                 'attr' => array(
                     'multiple' => 'multiple'
                 )
