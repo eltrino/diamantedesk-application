@@ -12,6 +12,7 @@ oro_system_configuration:
     fields:
         diamante_desk.email_notification:
             type: choice
+            data_type: boolean
             priority: 85
             options:
                 label: 'Enable Email Notifications'

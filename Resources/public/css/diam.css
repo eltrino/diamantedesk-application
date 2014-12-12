@@ -1,4 +1,4 @@
-.diam-attachments {
+  .diam-attachments {
     position: relative;
 }
 .diam-attachment {
@@ -123,7 +123,7 @@
 }
 .diam-filter-container > .placeholder > * > .content {
     margin-left: 180px !important;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .diam-filter-container .scrollable-container{
@@ -231,6 +231,10 @@
     animation: blink 500ms  step-start 0s 5;
 }
 
+#uniform-diam-dropzone-file {
+  visibility: hidden;
+}
+
 @keyframes blink {
     0% { background: rgba(238, 238, 238, 1); }
     50% { background: rgba(238, 238, 238, .1); }
@@ -245,4 +249,14 @@
     0% { background: rgba(238, 238, 238, 1); }
     50% { background: rgba(238, 238, 238, .1); }
     100% { background: rgba(238, 238, 238, 1); }
+}
+
+#diam-default-branch-message {
+    padding: 5px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.ui-multiselect-menu.ui-widget {
+    display: none;
 }

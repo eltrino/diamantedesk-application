@@ -18,6 +18,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\Schema;
 
 abstract class AbstractCommand extends ContainerAwareCommand
 {
@@ -31,6 +33,9 @@ abstract class AbstractCommand extends ContainerAwareCommand
          * @var $em \Doctrine\ORM\EntityManager
          */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $event = $em->getEventManager();
+        $sm = $em->getConnection()->getSchemaManager();
+        $allMetadata = $em->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($em);
         $entitiesMetadata = array(
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\Branch::getClassName()),
@@ -41,10 +46,19 @@ abstract class AbstractCommand extends ContainerAwareCommand
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\BranchEmailConfiguration::getClassName())
         );
 
-        $sql = $schemaTool->getUpdateSchemaSql($entitiesMetadata);
-        $sql2 = $schemaTool->getUpdateSchemaSql(array());
+        $event->disableListeners();
+        $currentSchema = $sm->createSchema();
+        $schemaFromMetadata = $schemaTool->getSchemaFromMetadata($allMetadata);
+        $entitiesSchema = $schemaTool->getSchemaFromMetadata($entitiesMetadata);
+        $entitiesTables = $entitiesSchema->getTables();
+        $entitiesTableName = array_keys($entitiesTables);
 
-        $toUpdate = array_diff($sql, $sql2);
+        $currentDiamanteSchema = $this->getTargetSchema($currentSchema, $entitiesTableName);
+        $diamanteSchemaFromMetadata = $this->getTargetSchema($schemaFromMetadata, $entitiesTableName);
+
+        $comparator = new Comparator();
+        $diff = $comparator->compare($currentDiamanteSchema, $diamanteSchemaFromMetadata);
+        $toUpdate = $diff->toSql($em->getConnection()->getDatabasePlatform());
 
         if (empty($toUpdate)) {
             throw new \Exception('No new updates found. DiamanteDesk is up to date!');
@@ -55,6 +69,27 @@ abstract class AbstractCommand extends ContainerAwareCommand
         foreach ($toUpdate as $sql) {
             $conn->executeQuery($sql);
         }
+    }
+
+    /**
+     * Return schema with Diamante tables
+     * @param Schema $schema
+     * @param array $entitiesTableName
+     *
+     * @return Schema
+     */
+    protected function getTargetSchema(Schema $schema, array $entitiesTableName)
+    {
+        $allTables = $schema->getTables();
+        $targetTables = array();
+
+        foreach ($allTables as $tableName => $table) {
+            if (in_array($tableName, $entitiesTableName)) {
+                $targetTables[$tableName] = $table;
+            }
+        }
+
+        return new Schema($targetTables);
     }
 
     /**

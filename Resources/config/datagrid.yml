@@ -34,29 +34,29 @@ datagrid:
                     data_name: b.name
         columns:
             logo:
-                label: Logo
+                label: diamante.desk.branch.columns.logo
                 type: twig
                 frontend_type: html
                 template: DiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
             name:
-                label: Branch Name
+                label: diamante.desk.branch.columns.branch_name
         actions:
             view:
                 type:          navigate
-                label:         View
+                label:         diamante.desk.branch.actions.view
                 icon:          eye-open
                 link:          view_link
                 rowAction:     true
                 acl_resource:  VIEW;Entity:DiamanteDeskBundle:Branch
             update:
                 type:          navigate
-                label:         Edit
+                label:         diamante.desk.branch.actions.edit
                 icon:          edit
                 link:          update_link
                 acl_resource:  EDIT;Entity:DiamanteDeskBundle:Branch
             delete:
                 type:          delete
-                label:         Delete
+                label:         diamante.desk.branch.actions.remove
                 icon:          trash
                 link:          delete_link
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
@@ -112,28 +112,32 @@ datagrid:
                 type:       url
                 route:      diamante_ticket_delete
                 params:     [ key ]
+
         columns:
             key:
-                label:   Key
+                label:   diamante.desk.ticket.columns.key
             subject:
-                label:   Subject
+                label:   diamante.desk.ticket.columns.subject
             branchName:
-                label:   Branch
+                label:   diamante.desk.ticket.columns.branch
             assigneeFullName:
-                label:   Assignee
+                label:   diamante.desk.ticket.columns.assignee
                 type:    assignee
 #            reporterFullName:
 #                label:   Reporter
+            reporterFullName:
+                label:   diamante.desk.ticket.columns.reporter
             priority:
-                label:   Priority
+                label:   diamante.desk.ticket.columns.priority
             status:
-                label:   Status
+                label:   diamante.desk.ticket.columns.status
             createdAt:
-                label:   Created
+                label:   diamante.desk.ticket.columns.created
                 frontend_type: datetime
             updatedAt:
-                label:   Updated
+                label:   diamante.desk.ticket.columns.updated
                 frontend_type: datetime
+
         sorters:
             columns:
                 key:
@@ -200,27 +204,27 @@ datagrid:
         actions:
             view:
                 type:          navigate
-                label:         View
+                label:         diamante.desk.ticket.actions.view
                 icon:          eye-open
                 link:          view_link
                 rowAction:     true
                 acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket
             update:
                 type:          navigate
-                label:         Update
+                label:         diamante.desk.ticket.actions.update
                 icon:          edit
                 link:          update_link
                 acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
             delete:
                 type:          delete
-                label:         Delete
+                label:         diamante.desk.ticket.actions.delete
                 icon:          trash
                 link:          delete_link
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
         mass_actions:
             delete:
                 type: delete
-                label : Delete
+                label : diamante.desk.ticket.actions.delete
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
                 entity_name: DiamanteDeskBundle:Ticket
                 data_identifier: i.id

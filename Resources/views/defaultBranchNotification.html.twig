@@ -1,3 +1,11 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 
-<div>The Branch configured as a default for Email Processing and can't be deleted.</div>
+<div id="diam-default-branch-message"><i class="icon-warning-sign"></i> {{ 'diamante.desk.branch.placeholders.default'|trans }}</div>
+
+<script>
+    require(['jquery'], function($){
+        $(document).ready(function(){
+            $('.btn.remove-button').hide();
+        });
+    });
+</script>

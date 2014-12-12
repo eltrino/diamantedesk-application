@@ -29,7 +29,7 @@ class DefaultBranchKeyGenerator implements BranchKeyGenerator
         }
 
         $name = preg_replace('/[^a-zA-Z\s]/', '', $name);
-
+        $name = trim($name);
         $parts = explode(' ', $name);
         if (count($parts) == 1) {
             $length = strlen($name) < 4 ? strlen($name) : 4;
