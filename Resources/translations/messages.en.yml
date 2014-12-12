@@ -5,7 +5,12 @@ diamante:
           entity_plural_label: Branches
           details:             Branch Details
 
+          columns:
+            logo:              Logo
+            branch_name:       Branch Name
+
           actions:
+            view:              View Branch
             add:               Add Branch
             edit:              Edit Branch
             remove:            Delete Branch
@@ -32,10 +37,21 @@ diamante:
           entity_plural_label: Tickets
           details:             Ticket Details
           all:                 All Tickets
+          columns:
+            key:               Key
+            subject:           Subject
+            branch:            Branch
+            assignee:          Assignee
+            reporter:          Reporter
+            priority:          Priority
+            status:            Status
+            created:           Created
+            updated:           Updated
 
           actions:
             add:               Add Ticket
             edit:              Edit Ticket
+            view:              View Ticket
             remove:            Delete Ticket
             assign:            Assign
             create:            Create Ticket
