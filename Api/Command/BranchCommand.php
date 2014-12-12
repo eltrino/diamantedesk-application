@@ -29,11 +29,7 @@ class BranchCommand implements Taggable
     public $id;
 
     /**
-     * @Assert\Regex(
-     *    pattern = "/^[a-zA-Z]{2,3}$/",
-     *    message = "The Key must contain 2 or 3 letters"
-     * )
-     * @var string
+     * @Assert\Type(type="string")
      */
     public $key;
 
