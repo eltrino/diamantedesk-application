@@ -28,7 +28,7 @@ class TicketWasCreated extends AbstractTicketEvent
     /**
      * @var string
      */
-    private $reporterEmail;
+    private $reporter;
 
     /**
      * @var Priority
@@ -53,9 +53,9 @@ class TicketWasCreated extends AbstractTicketEvent
     /**
      * @var string
      */
-    private $assigneeEmail;
+    private $assignee;
 
-    public function __construct($id, $branchName, $subject, $description, $reporter, $assigneeEmail,
+    public function __construct($id, $branchName, $subject, $description, $reporter, $assignee,
                                 Priority $priority, Status $status, Source $source, $recipientsList)
     {
 
@@ -64,7 +64,7 @@ class TicketWasCreated extends AbstractTicketEvent
         $this->subject        = $subject;
         $this->description    = $description;
         $this->reporter       = $reporter;
-        $this->assigneeEmail  = $assigneeEmail;
+        $this->assignee       = $assignee;
         $this->priority       = $priority;
         $this->status         = $status;
         $this->source         = $source;
@@ -108,7 +108,7 @@ class TicketWasCreated extends AbstractTicketEvent
      */
     public function getAssigneeEmail()
     {
-        return $this->assigneeEmail;
+        return $this->assignee->getEmail();
     }
 
     /**

@@ -195,9 +195,13 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
         $result = array();
 
         foreach ($list as $user) {
-            $user = User::fromString($user);
-            $details = $this->getUserDetails($user);
-            $result[] = $details->getEmail();
+            if ($user instanceof User) {
+                $user = User::fromString($user);
+                $details = $this->getUserDetails($user);
+                $result[] = $details->getEmail();
+            } else {
+                $result[] = $user->getEmail();
+            }
         }
 
         return $result;

@@ -273,10 +273,9 @@ class TicketServiceImpl implements TicketService
         $this->isGranted('EDIT', $ticket);
 
         $reporter  = $ticket->getReporter();
-        $commandReporter = User::fromString($command->reporter);
 
-        if ((string)$commandReporter !== (string)$reporter) {
-            $reporter = $commandReporter;
+        if ((string)$command->reporter !== (string)$reporter) {
+            $reporter = $command->reporter;
         }
 
         $ticket->update(
