@@ -92,12 +92,54 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $userDetails;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @Mock Diamante\DeskBundle\Model\Ticket\TicketRepository
+     */
+    private $ticketRepository;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @Mock Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    private $ticket;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\UniqueId
+     * @Mock Diamante\DeskBundle\Model\Ticket\UniqueId
+     */
+    private $uniqueId;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketKey
+     * @Mock Diamante\DeskBundle\Model\Ticket\TicketKey
+     */
+    private $ticketKey;
+
+    /**
+     * @var string
+     */
+    private $senderHost;
+
+    /**
+     * @var string
+     */
+    private $ticketKeyValue;
+
+    /**
+     * @var Swift_Mime_HeaderSet
+     * @Mock Swift_Mime_HeaderSet
+     */
+    private $headers;
+
 
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->senderEmail = 'no-reply@example.com';
+        $this->senderHost     = 'sender@example.com';
+        $this->ticketKeyValue = 'some_value';
 
         $this->recipientsList = array(
             new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE),
@@ -109,8 +151,10 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->mailer,
             $this->securityFacade,
             $this->configManager,
+            $this->ticketRepository,
             $this->userDetailsService,
-            $this->senderEmail
+            $this->senderEmail,
+            $this->senderHost
         );
     }
 
@@ -131,6 +175,11 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testOnCommentWasDeleted()
     {
+        $this->commentWasDeletedEvent
+            ->expects($this->atLeastOnce())
+            ->method('getAggregateId')
+            ->will($this->returnValue($this->uniqueId));
+
         $this->commentWasDeletedEvent
             ->expects($this->atLeastOnce())
             ->method('getSubject')
@@ -227,6 +276,33 @@ class CommentWasDeletedSubscriberTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('send')
             ->with($this->message);
+
+        $this->ticketRepository
+            ->expects($this->once())
+            ->method('getByUniqueId')
+            ->with($this->equalTo($this->uniqueId))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getKey')
+            ->will($this->returnValue($this->ticketKey));
+
+        $this->message
+            ->expects($this->once())
+            ->method('getHeaders')
+            ->will($this->returnValue($this->headers));
+
+        $this->headers
+            ->expects($this->once())
+            ->method('addTextHeader')
+            ->with($this->equalTo('In-Reply-To'), $this->equalTo(' <some_value.' . $this->senderHost . '>'))
+            ->will($this->returnValue(null));
+
+        $this->uniqueId
+            ->expects($this->once())
+            ->method('getValue')
+            ->will($this->returnValue('some_value'));
 
         $this->configManager
             ->expects($this->once())

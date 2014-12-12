@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Tests\EventListener\Mail;
 use Diamante\DeskBundle\EventListener\Mail\AttachmentWasDeletedFromTicketSubscriber;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Model\User\User as DiamanteUser;
+use \Swift_Mime_HeaderSet;
 
 class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -89,11 +90,53 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
      */
     private $userDetails;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @Mock Diamante\DeskBundle\Model\Ticket\TicketRepository
+     */
+    private $ticketRepository;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @Mock Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    private $ticket;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\UniqueId
+     * @Mock Diamante\DeskBundle\Model\Ticket\UniqueId
+     */
+    private $uniqueId;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketKey
+     * @Mock Diamante\DeskBundle\Model\Ticket\TicketKey
+     */
+    private $ticketKey;
+
+    /**
+     * @var string
+     */
+    private $senderHost;
+
+    /**
+     * @var string
+     */
+    private $ticketKeyValue;
+
+    /**
+     * @var Swift_Mime_HeaderSet
+     * @Mock Swift_Mime_HeaderSet
+     */
+    private $headers;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
-        $this->senderEmail = 'no-reply@example.com';
+        $this->senderEmail    = 'no-reply@example.com';
+        $this->senderHost     = 'sender@example.com';
+        $this->ticketKeyValue = 'some_value';
 
         $this->recipientsList = array(
             new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE),
@@ -105,8 +148,10 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
             $this->mailer,
             $this->securityFacade,
             $this->configManager,
+            $this->ticketRepository,
             $this->userDetailsService,
-            $this->senderEmail
+            $this->senderEmail,
+            $this->senderHost
         );
     }
 
@@ -129,9 +174,9 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
     public function testOnAttachmentWasDeletedFromTicket()
     {
         $this->attachmentWasDeletedFromTicketEvent
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('getAggregateId')
-            ->will($this->returnValue('id'));
+            ->will($this->returnValue($this->uniqueId));
 
         $this->attachmentWasDeletedFromTicketEvent
             ->expects($this->atLeastOnce())
@@ -231,6 +276,33 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
             ->method('addPart')
             ->with('<p>test</p>', 'text/html');
 
+        $this->ticketRepository
+            ->expects($this->once())
+            ->method('getByUniqueId')
+            ->with($this->equalTo($this->uniqueId))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getKey')
+            ->will($this->returnValue($this->ticketKey));
+
+        $this->message
+            ->expects($this->once())
+            ->method('getHeaders')
+            ->will($this->returnValue($this->headers));
+
+        $this->headers
+            ->expects($this->once())
+            ->method('addTextHeader')
+            ->with($this->equalTo('In-Reply-To'), $this->equalTo(' <some_value.' . $this->senderHost . '>'))
+            ->will($this->returnValue(null));
+
+        $this->uniqueId
+            ->expects($this->once())
+            ->method('getValue')
+            ->will($this->returnValue('some_value'));
+
         $this->mailer
             ->expects($this->once())
             ->method('send')
@@ -239,4 +311,4 @@ class AttachmentWasDeletedFromTicketSubscriberTest extends \PHPUnit_Framework_Te
         $this->attachmentWasDeletedFromTicketSubscriber
             ->onAttachmentWasDeletedFromTicket($this->attachmentWasDeletedFromTicketEvent);
     }
-} 
+}

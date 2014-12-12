@@ -130,7 +130,7 @@ abstract class AbstractMailSubscriber implements EventSubscriberInterface
     {
         $user = $this->securityFacade->getLoggedUser();
 
-        if ($user instanceof User) {
+        if ($user instanceof User && $user->isApiUser()) {
             $userObj = new User($user->getId(), User::TYPE_DIAMANTE);
         } else {
             $userObj = new User($user->getId(), User::TYPE_ORO);

@@ -124,11 +124,54 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $configManager;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @Mock Diamante\DeskBundle\Model\Ticket\TicketRepository
+     */
+    private $ticketRepository;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @Mock Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    private $ticket;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\UniqueId
+     * @Mock Diamante\DeskBundle\Model\Ticket\UniqueId
+     */
+    private $uniqueId;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketKey
+     * @Mock Diamante\DeskBundle\Model\Ticket\TicketKey
+     */
+    private $ticketKey;
+
+    /**
+     * @var string
+     */
+    private $senderHost;
+
+    /**
+     * @var string
+     */
+    private $ticketKeyValue;
+
+    /**
+     * @var Swift_Mime_HeaderSet
+     * @Mock Swift_Mime_HeaderSet
+     */
+    private $headers;
+
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->senderEmail = 'no-reply@example.com';
+        $this->senderHost     = 'sender@example.com';
+        $this->ticketKeyValue = 'some_value';
 
         $this->recipientsList = array(
             new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE),
@@ -140,8 +183,10 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             $this->mailer,
             $this->securityFacade,
             $this->configManager,
+            $this->ticketRepository,
             $this->userDetailsService,
-            $this->senderEmail
+            $this->senderEmail,
+            $this->senderHost
         );
     }
 
@@ -432,6 +477,25 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
+        $this->ticketStatusWasChangedEvent
+            ->expects($this->once())
+            ->method('getAggregateId')
+            ->will($this->returnValue($this->uniqueId));
+
+        $this->ticketStatusWasChangedEvent
+            ->expects($this->atLeastOnce())
+            ->method('getEventName');
+
+        $this->ticketStatusWasChangedEvent
+            ->expects($this->any())
+            ->method('getRecipientsList')
+            ->will($this->returnValue($this->recipientsList));
+
+        $this->ticketStatusWasChangedEvent
+            ->expects($this->once())
+            ->method('getStatus')
+            ->will($this->returnValue(new Status(Status::OPEN)));
+
         $this->configManager
             ->expects($this->once())
             ->method('get')
@@ -448,12 +512,9 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue(self::DUMMY_USER_ID));
 
-        $userVO = new DiamanteUser($this->user->getId(), DiamanteUser::TYPE_ORO);
-
         $this->userDetailsService
             ->expects($this->any())
             ->method('fetch')
-            ->with($this->equalTo($userVO))
             ->will($this->returnValue($this->userDetails));
 
         $this->userDetails
@@ -461,13 +522,23 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getFullName')
             ->will($this->returnValue('FistName LastName'));
 
+        $this->userDetails
+            ->expects($this->at(0))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.reporter@example.com'));
+
+        $this->userDetails
+            ->expects($this->at(1))
+            ->method('getEmail')
+            ->will($this->returnValue('no-reply.assignee@example.com'));
+
         $userFullName = $this->userDetails->getFullName();
 
         $options = array(
-            'changes'     => array(),
+            'changes'     => array('Status' => 'Open'),
             'attachments' => array(),
             'user'        => $userFullName,
-            'header'      => null
+            'header'      => 'Ticket status was changed'
         );
 
         $templates = array(
@@ -476,16 +547,16 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->twig
-            ->expects($this->exactly(2))
+            ->expects($this->at(0))
             ->method('render')
-            ->will(
-                $this->returnValueMap(
-                    array(
-                        array($templates['txt'], $options, 'test'),
-                        array($templates['html'], $options, '<p>test</p>')
-                    )
-                )
-            );
+            ->with($templates['txt'], $options)
+            ->will($this->returnValue('test'));
+
+        $this->twig
+            ->expects($this->at(1))
+            ->method('render')
+            ->with($templates['html'], $options)
+            ->will($this->returnValue('<p>test</p>'));
 
         $this->mailer
             ->expects($this->once())
@@ -511,11 +582,39 @@ class TicketProcessManagerTest extends \PHPUnit_Framework_TestCase
             ->method('addPart')
             ->with('<p>test</p>', 'text/html');
 
+        $this->ticketRepository
+            ->expects($this->once())
+            ->method('getByUniqueId')
+            ->with($this->equalTo($this->uniqueId))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getKey')
+            ->will($this->returnValue($this->ticketKey));
+
+        $this->message
+            ->expects($this->once())
+            ->method('getHeaders')
+            ->will($this->returnValue($this->headers));
+
+        $this->headers
+            ->expects($this->once())
+            ->method('addTextHeader')
+            ->with($this->equalTo('In-Reply-To'), $this->equalTo(' <some_value.' . $this->senderHost . '>'))
+            ->will($this->returnValue(null));
+
+        $this->uniqueId
+            ->expects($this->once())
+            ->method('getValue')
+            ->will($this->returnValue('some_value'));
+
         $this->mailer
             ->expects($this->once())
             ->method('send')
             ->with($this->message);
 
+        $this->ticketProcessManager->onTicketStatusWasChanged($this->ticketStatusWasChangedEvent);
         $this->ticketProcessManager->setRecipientsList($this->recipientsList);
         $this->ticketProcessManager->process();
     }
