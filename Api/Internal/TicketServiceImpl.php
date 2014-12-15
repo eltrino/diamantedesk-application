@@ -272,7 +272,7 @@ class TicketServiceImpl implements TicketService
         $this->isGranted('EDIT', $ticket);
 
         $reporter = $ticket->getReporter();
-        if ($command->reporter != $ticket->getReporterId()) {
+        if ($command->reporter != $ticket->getOwnerId()) {
             $reporter = $this->userService->getUserById($command->reporter);
             if (is_null($reporter)) {
                 throw new \RuntimeException('Reporter loading failed, reporter not found.');

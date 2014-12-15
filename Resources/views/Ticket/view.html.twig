@@ -204,7 +204,7 @@
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, entity.reporterFullName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, entity.reporter ? entity.reporter|oro_format_name : entity.unassignedLabel|trans)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
 
     {% set attachmentListWidget %}

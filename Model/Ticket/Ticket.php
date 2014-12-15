@@ -325,6 +325,10 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
             || $this->priority->getValue() !== $priority->getValue() || $this->status->getValue() !== $status->getValue()
             || $this->source->getValue() !== $source->getValue()) {
 
+            if(is_null($this->reporter)) {
+                $this->reporter = $reporter;
+            }
+
             $this->raise(new TicketWasUpdated($this->uniqueId, $subject, $description, $reporter->getEmail(),
                 $priority, $status, $source, $this->getRecipientsList()));
         }
