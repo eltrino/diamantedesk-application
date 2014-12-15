@@ -1,13 +1,12 @@
 <div class="widget-content form-horizontal box-content row-fluid">
     {% if saved is defined and saved %}
         <script type="text/javascript">
-            require(['oroui/js/widget-manager', 'oronavigation/js/navigation'],
-                    function(widgetManager, Navigation) {
+            require(['oroui/js/widget-manager', 'oroui/js/mediator'],
+                    function(widgetManager, Mediator) {
                         widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function (widget) {
                             widget.remove();
                         });
-                        navigation = Navigation.getInstance();
-                        navigation.refreshPage();
+                        Mediator.execute('refreshPage');
                     });
         </script>
     {% else %}
