@@ -103,17 +103,13 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
                 $headers = $part->getHeaders();
                 if ($headers->get('contenttype')) {
                     if ($headers->get('contenttype')->getType() == \Zend\Mime\Mime::TYPE_TEXT) {
-                        $messageContent = $part->getContent();
+                        $messageContent = $this->getMessageContentDecoded($part);
                         break;
                     }
                 }
             }
         } else {
-            $messageContent = $imapMessage->getContent();
-        }
-
-        if ($imapMessage->getHeaders()->get('contenttransferencoding')->getTransferEncoding() == 'base64') {
-            $messageContent = base64_decode($messageContent);
+            $messageContent = $this->getMessageContentDecoded($imapMessage);
         }
 
         return $messageContent;
@@ -222,5 +218,23 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
             $this->initialize();
         }
         return $this->folderOfProcessedMessages;
+    }
+
+    /**
+     * @param \Zend\Mail\Storage\Message $message
+     * @return mixed
+     */
+    private function getMessageContentDecoded($message)
+    {
+        $headers = $message->getHeaders();
+        $content = $message->getContent();
+
+        if ($headers->get('contenttransferencoding')->getTransferEncoding() == 'base64') {
+            $decodedContent = base64_decode($content);
+        } else {
+            $decodedContent = $content;
+        }
+
+        return $decodedContent;
     }
 }

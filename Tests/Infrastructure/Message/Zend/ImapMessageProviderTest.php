@@ -17,6 +17,7 @@ namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Zend\Mail\AddressList;
+use Zend\Mail\Header\ContentTransferEncoding;
 use Zend\Mail\Header\From;
 use Zend\Mail\Header\MessageId;
 use Zend\Mail\Header\To;
@@ -214,6 +215,10 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $to = new To();
         $to->setAddressList($addressList);
         $headers->addHeader($to);
+
+        $contentTransferEncoding = new ContentTransferEncoding();
+        $contentTransferEncoding->setTransferEncoding('7bit');
+        $headers->addHeader($contentTransferEncoding);
 
         return $headers;
     }

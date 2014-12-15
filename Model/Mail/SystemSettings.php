@@ -53,7 +53,7 @@ class SystemSettings
      */
     public function __construct(ConfigManager $configManager)
     {
-        $this->defaultBranchId = 1;//(int) $configManager->get('diamante_email_processing.default_branch');
+        $this->defaultBranchId = (int) $configManager->get('diamante_email_processing.default_branch');
         $this->serverAddress   = $configManager->get('diamante_email_processing.mailbox_server_address');
         $this->port            = $configManager->get('diamante_email_processing.mailbox_port');
         $this->sslEnabled      = (bool) $configManager->get('diamante_email_processing.mailbox_ssl');
