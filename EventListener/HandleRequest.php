@@ -54,7 +54,7 @@ class HandleRequest
 
         $methodParameters = new MethodParameters($reflection, $this->validator);
         if ($request->request->count()) {
-            $request->attributes->set('properties', $request->request);
+            $request->attributes->set('properties', $request->request->all());
         }
         $methodParameters->addParameterBag($request->request);
         $methodParameters->addParameterBag($request->attributes);
