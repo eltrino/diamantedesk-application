@@ -116,6 +116,9 @@ datagrid:
         columns:
             key:
                 label:   diamante.desk.ticket.columns.key
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Ticket:Datagrid/Property/key.html.twig
             subject:
                 label:   diamante.desk.ticket.columns.subject
             branchName:
@@ -209,13 +212,13 @@ datagrid:
                 acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket
             update:
                 type:          navigate
-                label:         diamante.desk.ticket.actions.update
+                label:         diamante.desk.ticket.actions.edit
                 icon:          edit
                 link:          update_link
                 acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
             delete:
                 type:          delete
-                label:         diamante.desk.ticket.actions.delete
+                label:         diamante.desk.ticket.actions.remove
                 icon:          trash
                 link:          delete_link
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket

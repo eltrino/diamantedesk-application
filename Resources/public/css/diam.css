@@ -235,6 +235,10 @@
   visibility: hidden;
 }
 
+.key-cell{
+    white-space: nowrap
+}
+
 @keyframes blink {
     0% { background: rgba(238, 238, 238, 1); }
     50% { background: rgba(238, 238, 238, .1); }
