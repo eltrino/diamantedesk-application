@@ -14,21 +14,20 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
 
-class TicketStatusWasChanged extends AbstractTicketEvent
+class TicketStatusWasChanged extends AbstractTicketEvent implements ChangesProviderEvent
 {
     /**
-     * @var Status
+     * @var string
      */
     private $status;
 
-    public function __construct($id, $subject, Status $status, $recipientsList)
+    public function __construct($id, $subject, $status)
     {
-        $this->ticketId          = $id;
-        $this->subject           = $subject;
-        $this->status            = $status;
-        $this->recipientsList    = $recipientsList;
+        $this->ticketId = $id;
+        $this->subject  = $subject;
+        $this->status   = $status;
     }
 
     /**
@@ -40,10 +39,20 @@ class TicketStatusWasChanged extends AbstractTicketEvent
     }
 
     /**
-     * @return Status
+     * @return string
      */
-    public function getStatus()
+    public function getHeaderText()
     {
-        return $this->status;
+        return 'Ticket status was changed';
     }
-} 
+
+    /**
+     * Provide changes of entity of raised event
+     * @param \ArrayAccess $changes
+     * @return void
+     */
+    public function provideChanges(\ArrayAccess $changes)
+    {
+        $changes['Status'] = $this->status;
+    }
+}

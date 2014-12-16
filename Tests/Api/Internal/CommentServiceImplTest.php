@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Api\Command\EditCommentCommand;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Internal\CommentServiceImpl;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -101,17 +102,23 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
-     * @Mock \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
 
     public function setUp()
     {
         MockAnnotations::init($this);
+        $this->notificationDeliveryManager = new NotificationDeliveryManager();
         $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
             $this->commentFactory, $this->userService, $this->attachmentManager, $this->securityFacade,
-            $this->dispatcher, $this->processManager);
+            $this->dispatcher, $this->notificationDeliveryManager, $this->notifier);
 
         $this->_dummyTicket = new Ticket(
             new UniqueId('unique_id'),

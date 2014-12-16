@@ -14,19 +14,20 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-class AttachmentWasAddedToTicket extends AbstractTicketEvent
+use Diamante\DeskBundle\Model\Ticket\Notifications\AttachmentsEvent;
+
+class AttachmentWasAddedToTicket extends AbstractTicketEvent implements AttachmentsEvent
 {
     /**
      * @var string
      */
     private $attachmentName;
 
-    public function __construct($id, $subject, $attachmentName, $recipientsList)
+    public function __construct($id, $subject, $attachmentName)
     {
         $this->ticketId       = $id;
         $this->subject        = $subject;
         $this->attachmentName = $attachmentName;
-        $this->recipientsList = $recipientsList;
     }
 
     /**
@@ -40,8 +41,16 @@ class AttachmentWasAddedToTicket extends AbstractTicketEvent
     /**
      * @return string
      */
-    public function getAttachmentName()
+    public function getHeaderText()
     {
-        return $this->attachmentName;
+        return 'Attachment was added to ticket';
+    }
+
+    /**
+     * @return array of attachments names
+     */
+    public function attachments()
+    {
+        return array($this->attachmentName);
     }
 }

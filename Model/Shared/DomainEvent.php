@@ -25,4 +25,4 @@ interface DomainEvent
      * @return string
      */
     public function getEventName();
-} 
+}

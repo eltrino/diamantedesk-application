@@ -1,6 +1,7 @@
 <h4>
      {{ header }} by {{ user }}
 </h4>
+{% if changes %}
 <p>
     <ul>
         {% for key, value in changes %}
@@ -12,6 +13,7 @@
         {% endfor %}
     </ul>
 </p>
+{% endif %}
 
 {% if attachments %}
 <p>

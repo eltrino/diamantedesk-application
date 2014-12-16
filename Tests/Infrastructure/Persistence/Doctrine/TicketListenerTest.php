@@ -54,8 +54,7 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
     public function testPrePersistHandler()
     {
         $branchId = 1;
-        $lastTicketSequenceNumberValue = 9;
-        $ticketSequenceNumberFieldName = 'number';
+        $ticketSequenceNumberValue = 9;
         $branch = new BranchStub('DB', 'Dummy Branch', 'Desc');
         $branch->setId($branchId);
         $ticket = new Ticket(
@@ -83,22 +82,10 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($query));
         $query->expects($this->once())->method('setParameter')->with('branchId', $branchId)
             ->will($this->returnValue($query));
-        $query->expects($this->once())->method('getSingleScalarResult')->will($this->returnValue($lastTicketSequenceNumberValue));
-
-        $this->objectManager->expects($this->once())->method('getClassMetadata')->with(get_class($ticket))
-            ->will($this->returnValue($this->classMetadata));
-
-        $this->classMetadata->expects($this->once())->method('getFieldName')->with(TicketListener::TICKET_SEQUENCE_NUMBER_FIELD)
-            ->will($this->returnValue($ticketSequenceNumberFieldName));
-        $this->classMetadata->expects($this->once())->method('setFieldValue')
-            ->with($ticket, $ticketSequenceNumberFieldName, $this->logicalAnd(
-                        $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber'),
-                        $this->callback(
-                            function(TicketSequenceNumber $other) use ($lastTicketSequenceNumberValue) {
-                                return $other->getValue() == $lastTicketSequenceNumberValue + 1;
-                            })
-                ));
+        $query->expects($this->once())->method('getSingleScalarResult')->will($this->returnValue($ticketSequenceNumberValue));
 
         $this->listener->prePersistHandler($ticket, $event);
+
+        $this->assertEquals($ticketSequenceNumberValue+1, $ticket->getSequenceNumber()->getValue());
     }
 } 

@@ -153,8 +153,19 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
 
-        $this->raise(new TicketWasCreated($this->uniqueId, $branch->getName(), $subject, $description,
-            $reporter->getEmail(), $assignee->getEmail(), $priority, $status, $source, $this->getRecipientsList()));
+        $this->raise(
+            new TicketWasCreated(
+                (string) $this->uniqueId,
+                $this->branch->getName(),
+                $this->subject,
+                $this->description,
+                $this->getReporterFullName(),
+                $this->getAssigneeFullName(),
+                (string) $this->priority,
+                (string) $this->status,
+                (string) $this->source
+            )
+        );
     }
 
     /**
@@ -273,6 +284,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         return $this->reporter->getFirstName() . ' ' . $this->reporter->getLastName();
     }
 
+    /**
+     * @return string
+     */
+    public function getAssigneeFullName()
+    {
+        return $this->assignee->getFirstName() . ' ' . $this->assignee->getLastName();
+    }
+
     public function getAssignee()
     {
         return $this->assignee;
@@ -297,96 +316,126 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
-        $this->raise(new CommentWasAddedToTicket($this->uniqueId, $this->subject, $this->getRecipientsList(),
-            $comment->getContent()));
+        $this->raise(
+            new CommentWasAddedToTicket(
+                $this->uniqueId, $this->subject, $comment->getContent(),
+                $this->reporter->getId(), $this->assignee->getId()
+            )
+        );
     }
 
     /** LEGACY CODE START */
 
     /**
-     * @param $subject
-     * @param $description
+     * @param string $subject
+     * @param string $description
      * @param User $reporter
-     * @param $priority
-     * @param $status
-     * @param $source
+     * @param Priority $priority
+     * @param Status $status
+     * @param Source $source
+     * @param User|null $assignee
      */
-    public function update($subject, $description, User $reporter, $priority, $status, $source)
-    {
-        $priority = new Priority($priority);
-        $status   = new Status($status);
-        $source   = new Source($source);
-
+    public function update(
+        $subject, $description, User $reporter, Priority $priority,
+        Status $status, Source $source, User $assignee = null
+    ) {
+        $hasChanges = false;
         if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter
-            || $this->priority->getValue() !== $priority->getValue() || $this->status->getValue() !== $status->getValue()
-            || $this->source->getValue() !== $source->getValue()) {
-
-            $this->raise(new TicketWasUpdated($this->uniqueId, $subject, $description, $reporter->getEmail(),
-                $priority, $status, $source, $this->getRecipientsList()));
+            || $this->assignee != $assignee || $this->priority->getValue() !== $priority->getValue()
+            || $this->status->notEquals($status) || $this->source->getValue() !== $source->getValue()
+        ) {
+            $hasChanges = true;
         }
 
         $this->subject     = $subject;
         $this->description = $description;
         $this->reporter    = $reporter;
-        $this->status      = $status;
         $this->priority    = $priority;
         $this->source      = $source;
         $this->updatedAt   = new \DateTime('now', new \DateTimeZone('UTC'));
-    }
 
-    /**
-     * @return array
-     */
-    public function getRecipientsList()
-    {
-        if ($this->getAssignee()) {
-            $recipientsList = array(
-                $this->getReporter()->getEmail(),
-                $this->getAssignee()->getEmail(),
-            );
+        $this->processUpdateStatus($status);
+
+        if (is_null($assignee)) {
+            $this->processUnAssign();
         } else {
-            $recipientsList = array(
-                $this->getReporter()->getEmail()
-            );
+            $this->processAssign($assignee);
         }
 
-        return $recipientsList;
+        if ($hasChanges) {
+            $this->raise(
+                new TicketWasUpdated(
+                    (string) $this->uniqueId, $this->subject, $this->description, $this->getReporterFullName(),
+                    (string) $this->priority, (string) $this->status, (string) $this->source
+                )
+            );
+        }
     }
 
     /**
-     * @param $status
+     * Update ticket status
+     * @param Status $status
+     * @return void
      */
-    public function updateStatus($status)
+    public function updateStatus(Status $status)
     {
-        $status = new Status($status);
-
-        if ($this->status->getValue() !== $status->getValue()) {
-            $this->raise(new TicketStatusWasChanged($this->uniqueId, $this->subject,
-                $status, $this->getRecipientsList()));
+        if ($this->status->notEquals($status)) {
+            $this->processUpdateStatus($status);
+            $this->raise(
+                new TicketStatusWasChanged(
+                    (string) $this->uniqueId, $this->subject, (string) $this->status
+                )
+            );
         }
+    }
 
+    /**
+     * @param Status $status
+     */
+    private function processUpdateStatus(Status $status)
+    {
         $this->status = $status;
     }
 
     /**
+     * Assign new assignee (User) to ticket
      * @param User $newAssignee
+     * @return void
      */
     public function assign(User $newAssignee)
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
-            $this->assignee = $newAssignee;
-            $this->raise(new TicketAssigneeWasChanged($this->uniqueId, $this->subject, $newAssignee->getEmail(),
-                $this->getRecipientsList()));
+            $this->processAssign($newAssignee);
+            $this->raise(new TicketAssigneeWasChanged($this->uniqueId, $this->subject, $this->getAssigneeFullName()));
         }
     }
 
-    public function unassign()
+    /**
+     * @param User $newAssignee
+     * @retur void
+     */
+    private function processAssign(User $newAssignee)
     {
-        $this->assignee = null;
-        $this->raise(new TicketWasUnassigned($this->uniqueId, $this->subject, $this->getRecipientsList()));
+        $this->assignee = $newAssignee;
     }
 
-    /** LEGACY CODE END */
+    /**
+     * Un assign ticket
+     * @return void
+     */
+    public function unAssign()
+    {
+        $this->processUnAssign();
+        $this->raise(new TicketWasUnassigned($this->uniqueId, $this->subject));
+    }
+
+    /**
+     * @return void
+     */
+    private function processUnAssign()
+    {
+        $this->assignee = null;
+    }
 
     /**
      * Retrieves ticket comments
@@ -403,8 +452,17 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
-        $this->raise(new AttachmentWasAddedToTicket($this->uniqueId, $this->subject, $attachment->getFilename(),
-            $this->getRecipientsList()));
+        $event = null;
+        foreach ($this->recorderEvents as $each) {
+            if ($each instanceof TicketWasCreated || $each instanceof TicketWasUpdated) {
+                $event = $each;
+            }
+        }
+        if (is_null($event)) {
+            $this->raise(new AttachmentWasAddedToTicket($this->uniqueId, $this->subject, $attachment->getFilename()));
+        } elseif ($event) {
+            $event->pushAttachment($attachment->getFilename());
+        }
     }
 
     /**
@@ -413,8 +471,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function removeAttachment(Attachment $attachment)
     {
         $this->attachments->remove($attachment->getId());
-        $this->raise(new AttachmentWasDeletedFromTicket($this->uniqueId, $this->subject, $attachment->getFilename(),
-            $this->getRecipientsList()));
+        $this->raise(new AttachmentWasDeletedFromTicket($this->uniqueId, $this->subject, $attachment->getFilename()));
     }
 
     /**
@@ -460,6 +517,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 
     public function delete()
     {
-        $this->raise(new TicketWasDeleted($this->uniqueId, $this->subject, $this->getRecipientsList()));
+        $this->raise(
+            new TicketWasDeleted($this->uniqueId, $this->subject)
+        );
     }
 }

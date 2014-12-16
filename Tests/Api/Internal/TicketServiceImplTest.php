@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Tests\Api\Internal;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -102,14 +103,21 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
-     * @Mock \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
+
+        $this->notificationDeliveryManager = new NotificationDeliveryManager();
 
         $this->ticketService = new TicketServiceImpl(
             $this->ticketRepository,
@@ -119,7 +127,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->userService,
             $this->securityFacade,
             $this->dispatcher,
-            $this->processManager
+            $this->notificationDeliveryManager,
+            $this->notifier
         );
     }
 
@@ -706,7 +715,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticket->expects($this->once())->method('updateStatus')
+            ->with(
+                $this->logicalAnd(
+                    $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\Status'),
+                    $this->attributeEqualTo('status', $status)
+                )
+            );
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
         $this->ticket->expects($this->any())->method('getAssignee')->will($this->returnValue($assignee));
@@ -742,7 +757,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticket->expects($this->once())->method('updateStatus')
+            ->with(
+                $this->logicalAnd(
+                    $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\Status'),
+                    $this->attributeEqualTo('status', $status)
+                )
+            );
         $this->ticket->expects($this->exactly(2))->method('getAssignee')->will($this->returnValue($assignee));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 

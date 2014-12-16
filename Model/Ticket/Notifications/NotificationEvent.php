@@ -12,42 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket;
+namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
-class UniqueId
+use Diamante\DeskBundle\Model\Shared\DomainEvent;
+
+interface NotificationEvent extends DomainEvent
 {
     /**
-     * @var string
+     * @return string
      */
-    private $id;
-
-    /**
-     * @param string $id
-     */
-    public function __construct($id)
-    {
-        $this->id = (string) $id;
-    }
+    public function getHeaderText();
 
     /**
      * @return string
      */
-    public function getValue()
-    {
-        return $this->id;
-    }
-
-    public function __toString()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Generate new Ticket Unique Id
-     * @return UniqueId
-     */
-    public static function generate()
-    {
-        return new UniqueId(md5(uniqid()));
-    }
+    public function getSubject();
 }
