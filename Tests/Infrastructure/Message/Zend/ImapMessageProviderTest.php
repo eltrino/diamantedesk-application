@@ -216,6 +216,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $to->setAddressList($addressList);
         $headers->addHeader($to);
 
+        //@todo fix this;
         $contentTransferEncoding = new ContentTransferEncoding();
         $contentTransferEncoding->setTransferEncoding('7bit');
         $headers->addHeader($contentTransferEncoding);

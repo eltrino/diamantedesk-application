@@ -221,18 +221,20 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
     }
 
     /**
-     * @param \Zend\Mail\Storage\Message $message
+     * @param \Zend\Mail\Storage\Part $part
      * @return mixed
      */
-    private function getMessageContentDecoded($message)
+    private function getMessageContentDecoded($part)
     {
-        $headers = $message->getHeaders();
-        $content = $message->getContent();
+        $headers = $part->getHeaders();
+        $content = $part->getContent();
+        $decodedContent = $content;
 
-        if ($headers->get('contenttransferencoding')->getTransferEncoding() == 'base64') {
-            $decodedContent = base64_decode($content);
-        } else {
-            $decodedContent = $content;
+        if ($headers->has('Content-Transfer-Encoding')) {
+            $encoding = $headers->get('contenttransferencoding')->getFieldValue();
+            if ($encoding == 'base64') {
+                $decodedContent = base64_decode($content);
+            }
         }
 
         return $decodedContent;
