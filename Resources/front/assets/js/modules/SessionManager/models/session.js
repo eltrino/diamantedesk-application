@@ -3,7 +3,15 @@ define(['app', 'User/models/user', '../common/wsse', 'config'], function(App, Us
   return App.module('SessionManager', function(SessionManager, App, Backbone, Marionette, $, _){
 
     var username = "admin";
-    var password = "1044d1dad87d990c3a5be102cafbf89cdff84738";
+    var password = "ff561f86ef7cea426ebd1c0d57ef00f69cebcf2c";
+
+    function getCookie(name) {
+      var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
 
 
     SessionManager.SessionModel = Backbone.Model.extend({

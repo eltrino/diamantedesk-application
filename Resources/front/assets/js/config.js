@@ -1,7 +1,10 @@
 define(function(){
 
-  var baseurl = document.querySelector("script[data-main]").src.split('/assets/js')[0],
-      apiurl = baseurl.replace(/\/front$/,'/web/app.php') + '/api/rest/latest';
+  var dev = window.location.search === '?dev',
+      baseurl = document.querySelector("script[data-main]").src.split('/assets/js')[0],
+      apiurl = dev ? baseurl.replace(/\/front$/,'/web/app_dev.php') : baseurl.replace(/\/front$/,'/web');
+
+  apiurl += '/api/rest/latest';
 
   require.config({
     //"packages": [

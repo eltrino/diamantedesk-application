@@ -26,7 +26,7 @@ define(['app'], function(App){
         });
 
         modalCreateView.on('modal:submit', function(data){
-          data.branch = 3;
+          data.branch = 1;
           data.status = 'open';
           data.source = 'phone';
           App.request("user:model:current").done(function(user){
