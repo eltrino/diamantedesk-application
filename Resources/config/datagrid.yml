@@ -124,9 +124,7 @@ datagrid:
                 label:   diamante.desk.ticket.columns.assignee
                 type:    assignee
 #            reporterFullName:
-#                label:   Reporter
-            reporterFullName:
-                label:   diamante.desk.ticket.columns.reporter
+#                label:   diamante.desk.ticket.columns.reporter
             priority:
                 label:   diamante.desk.ticket.columns.priority
             status:

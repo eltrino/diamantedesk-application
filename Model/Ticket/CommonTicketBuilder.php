@@ -165,8 +165,10 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setAssigneeId($id)
     {
-        $assignee = $this->userService->getByUser(new User((integer) $id, User::TYPE_ORO));
-        $this->assignee = $assignee;
+        if (!empty($id)) {
+            $assignee = $this->userService->getByUser(new User((integer) $id, User::TYPE_ORO));
+            $this->assignee = $assignee;
+        }
         return $this;
     }
 

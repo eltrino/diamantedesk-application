@@ -135,7 +135,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $subject, $description,
         Branch $branch,
         User $reporter,
-        OroUser $assignee,
+        OroUser $assignee = null,
         Source $source,
         Priority $priority,
         Status $status

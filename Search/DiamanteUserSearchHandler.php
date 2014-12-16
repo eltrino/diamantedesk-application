@@ -75,14 +75,15 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
      * @param string $query
      * @param int $page
      * @param int $perPage
+     * @param bool $searchById
      * @return array
      */
-    public function search($query, $page, $perPage)
+    public function search($query, $page, $perPage, $searchById = false)
     {
         $items = array();
 
         $diamanteUsers = $this->diamanteUserRepository->searchByInput($query, $this->properties);
-        $oroUsers      = $this->oroUserSearchHandler->search($query, $page, $perPage);
+        $oroUsers      = $this->oroUserSearchHandler->search($query, $page, $perPage, $searchById);
 
         if (!empty($diamanteUsers)) {
             $convertedDiamanteUsers = $this->convertUsers($diamanteUsers, User::TYPE_DIAMANTE);
