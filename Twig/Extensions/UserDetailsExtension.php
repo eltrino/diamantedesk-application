@@ -22,6 +22,7 @@
 
 namespace Diamante\DeskBundle\Twig\Extensions;
 
+use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
 
@@ -29,10 +30,12 @@ class UserDetailsExtension extends \Twig_Extension
 {
     private $userDetailsService;
 
-    public function __construct(UserDetailsService $userDetailsService)
+    public function __construct(UserDetailsService $userDetailsService, DiamanteUserService $userService)
     {
         $this->userDetailsService = $userDetailsService;
+        $this->userService        = $userService;
     }
+
     /**
      * Returns the name of the extension.
      *
@@ -47,6 +50,7 @@ class UserDetailsExtension extends \Twig_Extension
     {
         return [
             'fetch_user_details' => new \Twig_Function_Method($this, 'fetchUserDetails', array('is_safe' => array('html'))),
+            'fetch_oro_user' => new \Twig_Function_Method($this, 'fetchOroUser', array('is_safe' => array('html'))),
         ];
     }
 
@@ -62,5 +66,16 @@ class UserDetailsExtension extends \Twig_Extension
         }
 
         return $details;
+    }
+
+    public function fetchOroUser(User $user)
+    {
+        $oroUser = $this->userService->getByUser($user);
+
+        if (empty($oroUser)) {
+            throw new \Twig_Error_Runtime('Failed to load user');
+        }
+
+        return $oroUser;
     }
 } 

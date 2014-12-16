@@ -12,8 +12,8 @@
         {% for comment in comments if comment.id  %}
             {% set imagePath = '' %}
             {% set author = fetch_user_details(comment.author) %}
-            {% if author.avatar is defined %}
-                {% set avatar = oro_configured_image_url(comment.author, 'avatar') %}
+            {% if comment.author.isOroUser %}
+                {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
             {% endif %}
             <li class="diam-comment">
                 <div class="pull-right">
@@ -25,7 +25,7 @@
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
-                    <img src="{{ avatar is defined ? avatar : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="test">
+                    <img src="{{ avatar is defined ? avatar : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="{{ author.getFullName }}">
                 </div>
                 <div class="diam-comment-meta">{{ author.getFirstname }} {{ author.getLastname }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
                 <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
