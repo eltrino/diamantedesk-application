@@ -121,6 +121,17 @@ abstract class AbstractCommand extends ContainerAwareCommand
     }
 
     /**
+     * Update oro entity-config
+     *
+     * @param OutputInterface $output
+     */
+    protected function updateEntityConfig(OutputInterface $output)
+    {
+        $this->runExistingCommand('oro:entity-config:update', $output);
+    }
+
+
+    /**
      * Run existing command in system
      * @param string $commandName
      * @param OutputInterface $output
