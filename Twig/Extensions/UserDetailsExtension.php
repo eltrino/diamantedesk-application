@@ -22,7 +22,7 @@
 
 namespace Diamante\DeskBundle\Twig\Extensions;
 
-use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
+use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
 
@@ -30,7 +30,7 @@ class UserDetailsExtension extends \Twig_Extension
 {
     private $userDetailsService;
 
-    public function __construct(UserDetailsService $userDetailsService, DiamanteUserService $userService)
+    public function __construct(UserDetailsService $userDetailsService, UserService $userService)
     {
         $this->userDetailsService = $userDetailsService;
         $this->userService        = $userService;

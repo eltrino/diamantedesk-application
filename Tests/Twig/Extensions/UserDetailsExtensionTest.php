@@ -41,10 +41,16 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private $userDetailsExtension;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Shared\UserService
+     * @Mock Diamante\DeskBundle\Model\Shared\UserService
+     */
+    private $userService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->userDetailsExtension = new UserDetailsExtension($this->userDetailsService);
+        $this->userDetailsExtension = new UserDetailsExtension($this->userDetailsService, $this->userService);
     }
 
     /**
@@ -52,7 +58,7 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFunctions()
     {
-        $expectedFunctions = array('fetch_user_details');
+        $expectedFunctions = array('fetch_user_details', 'fetch_oro_user');
 
         $actualFunctions = $this->userDetailsExtension->getFunctions();
 
@@ -105,6 +111,40 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->userDetailsExtension->fetchUserDetails($user);
     }
+
+    public function testFetchOroUser()
+    {
+        $id = 'oro_1';
+        $user = User::fromString($id);
+
+        $this->userService
+            ->expects($this->once())
+            ->method('getByUser')
+            ->with($this->equalTo($user))
+            ->will($this->returnValue(new \Oro\Bundle\UserBundle\Entity\User()));
+
+        $this->userDetailsExtension->fetchOroUser($user);
+    }
+
+    /**
+     * @test
+     * @expectedException \Twig_Error_Runtime
+     * @expectedExceptionMessage Failed to load user
+     */
+    public function testExceptionIsThrownIfNoOroUserExists()
+    {
+        $id = 'oro_1';
+        $user = User::fromString($id);
+
+        $this->userService
+            ->expects($this->once())
+            ->method('getByUser')
+            ->with($this->equalTo($user))
+            ->will($this->returnValue(null));
+
+        $this->userDetailsExtension->fetchOroUser($user);
+    }
+
 
     protected function createDummyUserDetails()
     {
