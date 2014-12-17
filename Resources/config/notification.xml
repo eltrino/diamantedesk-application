@@ -19,61 +19,34 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <!-- subscribers start-->
-        <parameter key="diamante.abstract_mail_subscriber.class">Diamante\DeskBundle\EventListener\Mail\AbstractMailSubscriber</parameter>
-        <parameter key="diamante.mail_ticket_process_manager.class">Diamante\DeskBundle\EventListener\Mail\TicketProcessManager</parameter>
-        <parameter key="diamante.mail_ticket_was_deleted_subscriber.class">Diamante\DeskBundle\EventListener\Mail\TicketWasDeletedSubscriber</parameter>
-        <parameter key="diamante.mail_attachment_was_deleted_from_ticket_subscriber.class">Diamante\DeskBundle\EventListener\Mail\AttachmentWasDeletedFromTicketSubscriber</parameter>
-        <parameter key="diamante.mail_comment_process_manager.class">Diamante\DeskBundle\EventListener\Mail\CommentProcessManager</parameter>
-        <parameter key="diamante.mail_comment_was_deleted_subscriber.class">Diamante\DeskBundle\EventListener\Mail\CommentWasDeletedSubscriber</parameter>
-        <!-- subscribers end -->
+        <parameter key="diamante.notification.delivery.manger.class">Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager</parameter>
+        <parameter key="diamante.notification.email.notifier.class">Diamante\DeskBundle\Infrastructure\Ticket\Notifications\EmailNotifier</parameter>
+        <parameter key="diamante.notification.template_resolver.class">Diamante\DeskBundle\Infrastructure\Ticket\Notifications\EmailTemplateResolver</parameter>
+        <parameter key="diamante.notification.ticket.subscriber.class">Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber</parameter>
     </parameters>
 
     <services>
-        <!-- subscribers start -->
-        <service id="diamante.abstract_mail_subscriber" abstract="true">
+        <service id="diamante.notification.delivery.manger" class="%diamante.notification.delivery.manger.class%"
+                 factory-class="%diamante.notification.delivery.manger.class%" factory-method="initialize"/>
+
+        <service id="diamante.notification.template_resolver" class="%diamante.notification.template_resolver.class%"/>
+
+        <service id="diamante.notification.email.notifier" class="%diamante.notification.email.notifier.class%">
             <argument type="service" id="twig"/>
             <argument type="service" id="mailer"/>
-            <argument type="service" id="oro_security.security_facade"/>
-            <argument type="service" id="oro_config.global"/>
+            <argument type="service" id="diamante.notification.template_resolver"/>
             <argument type="service" id="diamante.ticket.repository"/>
-            <argument type="service" id="diamante.user.details.service"></argument>
+            <argument type="service" id="diamante.user.service"/>
+            <argument type="service" id="oro_locale.formatter.name"/>
             <argument>%mailer_user%</argument>
             <argument>%mailer_host%</argument>
         </service>
 
-        <service
-            id="diamante.mail_ticket_process_manager"
-            class="%diamante.mail_ticket_process_manager.class%"
-            parent="diamante.abstract_mail_subscriber">
-                <tag name="diamante.notification_subscriber" />
-        </service>
-
-        <service
-                id="diamante.mail_ticket_was_deleted_subscriber"
-                class="%diamante.mail_ticket_was_deleted_subscriber.class%"
-                parent="diamante.abstract_mail_subscriber">
-            <tag name="diamante.notification_subscriber" />
-        </service>
-
-        <service
-                id="diamante.mail_attachment_was_deleted_from_ticket_subscriber"
-                class="%diamante.mail_attachment_was_deleted_from_ticket_subscriber.class%"
-                parent="diamante.abstract_mail_subscriber">
-            <tag name="diamante.notification_subscriber" />
-        </service>
-
-        <service
-                id="diamante.mail_comment_process_manager"
-                class="%diamante.mail_comment_process_manager.class%"
-                parent="diamante.abstract_mail_subscriber">
-            <tag name="diamante.notification_subscriber" />
-        </service>
-
-        <service
-                id="diamante.mail_comment_was_deleted_subscriber"
-                class="%diamante.mail_comment_was_deleted_subscriber.class%"
-                parent="diamante.abstract_mail_subscriber">
+        <!-- subscribers start -->
+        <service id="diamante.notification.ticket.subscriber" class="%diamante.notification.ticket.subscriber.class%">
+            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="diamante.notification.delivery.manger"/>
+            <argument type="service" id="oro_config.global"/>
             <tag name="diamante.notification_subscriber" />
         </service>
         <!-- subscribers end -->

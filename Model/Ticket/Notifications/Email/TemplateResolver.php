@@ -12,29 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
+namespace Diamante\DeskBundle\Model\Ticket\Notifications\Email;
 
-class TicketWasDeleted extends AbstractTicketEvent
+use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+
+interface TemplateResolver
 {
-    public function __construct($id, $subject)
-    {
-        $this->ticketId = $id;
-        $this->subject  = $subject;
-    }
+    const TYPE_HTML = 1;
+    const TYPE_TXT  = 2;
 
     /**
+     * @param Notification $notification
+     * @param int $type
      * @return string
      */
-    public function getEventName()
-    {
-        return 'ticketWasDeleted';
-    }
-
-    /**
-     * @return string
-     */
-    public function getHeaderText()
-    {
-        return 'Ticket was deleted';
-    }
+    public function resolve(Notification $notification, $type = self::TYPE_TXT);
 }

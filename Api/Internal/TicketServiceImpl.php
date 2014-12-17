@@ -17,7 +17,11 @@ namespace Diamante\DeskBundle\Api\Internal;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
-use Diamante\DeskBundle\EventListener\Mail\TicketProcessManager;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -75,9 +79,14 @@ class TicketServiceImpl implements TicketService
     private $dispatcher;
 
     /**
-     * @var TicketProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var Notifier
+     */
+    private $notifier;
 
     public function __construct(TicketRepository $ticketRepository,
                                 Repository $branchRepository,
@@ -86,7 +95,8 @@ class TicketServiceImpl implements TicketService
                                 UserService $userService,
                                 SecurityFacade $securityFacade,
                                 EventDispatcher $dispatcher,
-                                TicketProcessManager $processManager
+                                NotificationDeliveryManager $notificationDeliveryManager,
+                                Notifier $notifier
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
@@ -95,7 +105,8 @@ class TicketServiceImpl implements TicketService
         $this->attachmentManager = $attachmentManager;
         $this->securityFacade = $securityFacade;
         $this->dispatcher = $dispatcher;
-        $this->processManager = $processManager;
+        $this->notificationDeliveryManager = $notificationDeliveryManager;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -272,30 +283,28 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
-        $reporter  = $ticket->getReporter();
+        $reporter = $ticket->getReporter();
+        if ($command->reporter != $ticket->getReporterId()) {
+            $reporter = $this->userService->getUserById($command->reporter);
+        }
 
-        if ((string)$command->reporter !== (string)$reporter) {
-            $reporter = $command->reporter;
+        $assignee = null;
+        if ($command->assignee) {
+            $assignee = $ticket->getAssignee();
+            if ($command->assignee != $ticket->getAssignee()->getId()) {
+                $assignee = $this->userService->getUserById($command->assignee);
+            }
         }
 
         $ticket->update(
             $command->subject,
             $command->description,
             $reporter,
-            $command->priority,
-            $command->status,
-            $command->source
+            new Priority($command->priority),
+            new Status($command->status),
+            new Source($command->source),
+            $assignee
         );
-
-        if ($command->assignee) {
-            $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
-            if (is_null($assignee)) {
-                throw new \RuntimeException('Assignee loading failed, assignee not found.');
-            }
-            $ticket->assign($assignee);
-        } else {
-            $ticket->unassign();
-        }
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
@@ -320,7 +329,7 @@ class TicketServiceImpl implements TicketService
 
         $this->isAssigneeGranted($ticket);
 
-        $ticket->updateStatus($command->status);
+        $ticket->updateStatus(new Status($command->status));
         $this->ticketRepository->store($ticket);
 
         $this->dispatchEvents($ticket);
@@ -346,7 +355,7 @@ class TicketServiceImpl implements TicketService
             }
             $ticket->assign($assignee);
         } else {
-            $ticket->unassign();
+            $ticket->unAssign();
         }
 
         $this->ticketRepository->store($ticket);
@@ -432,8 +441,6 @@ class TicketServiceImpl implements TicketService
             $this->dispatcher->dispatch($event->getEventName(), $event);
         }
 
-        if (count($this->processManager->getEventsHistory())) {
-            $this->processManager->process();
-        }
+        $this->notificationDeliveryManager->deliver($this->notifier);
     }
 }

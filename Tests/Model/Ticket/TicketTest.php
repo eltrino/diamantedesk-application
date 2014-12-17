@@ -144,9 +144,9 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $ticket->update('New Subject',
             'New Description',
             $newReporter,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED,
-            Source::PHONE
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED),
+            new Source(Source::PHONE)
         );
 
         $this->assertEquals('New Subject', $ticket->getSubject());

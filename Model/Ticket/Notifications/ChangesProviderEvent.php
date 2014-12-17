@@ -12,29 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
+namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
-class TicketWasDeleted extends AbstractTicketEvent
+interface ChangesProviderEvent
 {
-    public function __construct($id, $subject)
-    {
-        $this->ticketId = $id;
-        $this->subject  = $subject;
-    }
-
     /**
-     * @return string
+     * Provide changes of entity of raised event
+     * @param \ArrayAccess $changes
+     * @return void
      */
-    public function getEventName()
-    {
-        return 'ticketWasDeleted';
-    }
-
-    /**
-     * @return string
-     */
-    public function getHeaderText()
-    {
-        return 'Ticket was deleted';
-    }
+    public function provideChanges(\ArrayAccess $changes);
 }

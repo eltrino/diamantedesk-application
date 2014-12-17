@@ -20,10 +20,10 @@ class DomainEventProvider implements EventProvider
     /**
      * @var array
      */
-    private $recorderEvents = array();
+    protected $recorderEvents = array();
 
     /**
-     * @return array
+     * @return array|DomainEvent[]
      */
     public function getRecordedEvents()
     {
@@ -39,4 +39,4 @@ class DomainEventProvider implements EventProvider
     {
         $this->recorderEvents[] = $event;
     }
-} 
+}
