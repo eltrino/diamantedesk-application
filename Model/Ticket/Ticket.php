@@ -283,6 +283,9 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      */
     public function getAssigneeId()
     {
+        if (is_null($this->assignee)) {
+            return null;
+        }
         return $this->assignee->getId();
     }
 
