@@ -12,19 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\ApiBundle;
+namespace Diamante\ApiBundle\Security;
 
-use Diamante\ApiBundle\DependencyInjection\Security\Factory\Factory;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Escape\WSSEAuthenticationBundle\Security\Core\Authentication\Provider\Provider;
 
-class DiamanteApiBundle extends Bundle
+class WsseApiProvider extends Provider
 {
-    public function build(ContainerBuilder $container)
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSecret(UserInterface $user)
     {
-        parent::build($container);
-
-        $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new Factory());
+        $t = 1;
     }
-}
+} 

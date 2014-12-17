@@ -64,7 +64,7 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
         $salt   = ''; // do not use real salt here, because API key already encrypted enough
 
         /** @var MessageDigestPasswordEncoder $encoder */
-        $encoder        = $this->getContainer()->get('escape_wsse_authentication.encoder.wsse_secured');
+/*        $encoder        = $this->getContainer()->get('escape_wsse_authentication.encoder.wsse_secured');
         $passwordDigest = $encoder->encodePassword(
             sprintf(
                 '%s%s%s',
@@ -73,7 +73,9 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
                 $user->getPassword()
             ),
             $salt
-        );
+        );*/
+
+        $passwordDigest = base64_encode(sha1(base64_decode($nonce).$created.$user->getPassword(), true));
 
         $output->writeln('<info>To use WSSE authentication add following headers to the request:</info>');
         $output->writeln('Authorization: WSSE profile="UsernameToken"');
