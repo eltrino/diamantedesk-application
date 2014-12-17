@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": ">=5.4.4",
-        "oro/platform": "1.2.*",
+        "oro/platform": "1.4.*",
         "eloquent/composer-npm-bridge": "~2"
     },
     "minimum-stability": "dev",
