@@ -17,7 +17,6 @@ namespace Diamante\ApiBundle\Tests\DependencyInjection\Security\Factory;
 use Diamante\ApiBundle\DependencyInjection\Security\Factory\Factory;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
