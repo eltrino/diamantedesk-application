@@ -22,11 +22,13 @@ use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Internal\CommentServiceImpl;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
@@ -101,19 +103,33 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
-     * @Mock \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
 
     public function setUp()
     {
         MockAnnotations::init($this);
-        $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
-            $this->commentFactory, $this->userService, $this->attachmentManager, $this->authorizationService,
-            $this->dispatcher, $this->processManager);
+        $this->notificationDeliveryManager = new NotificationDeliveryManager();
+        $this->service = new CommentServiceImpl($this->ticketRepository,
+            $this->commentRepository,
+            $this->commentFactory,
+            $this->userService,
+            $this->attachmentManager,
+            $this->authorizationService,
+            $this->dispatcher,
+            $this->notificationDeliveryManager,
+            $this->notifier
+        );
 
         $this->_dummyTicket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
@@ -354,6 +370,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new CommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
         $command->content = $updatedContent;
+        $command->ticket  = self::DUMMY_TICKET_ID;
         $command->ticketStatus = Status::IN_PROGRESS;
         $command->attachmentsInput = $filesListDto;
 

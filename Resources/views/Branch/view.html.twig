@@ -2,6 +2,7 @@
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import 'OroEmailBundle::macros.html.twig' as EA %}
 
 {% oro_title_set({params : {"%branch.name%": entity.name|default('diamante.desk.common.not_available'|trans) }}) %}
 
@@ -82,7 +83,7 @@
     ) %}
 
     {% if branchEmailConfiguration %}
-        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', branchEmailConfiguration.supportAddress)] %}
+        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', EA.email_address_simple(branchEmailConfiguration.supportAddress))] %}
         {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains)]) %}
 
         {% set dataBlocks = dataBlocks|merge([{

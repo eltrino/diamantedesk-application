@@ -94,6 +94,7 @@ diamante:
               error:           Comment loading failed, comment not found.
             get_attach:
               error:           Attachment loading failed. Comment has no such attachment.
+            empty:             There are no comments yet.
 
           placeholders:
             added:             added a comment

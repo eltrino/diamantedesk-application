@@ -22,13 +22,15 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Diamante\DeskBundle\EventListener\Mail\CommentProcessManager;
 use \Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\ApiBundle\Annotation\ApiDoc;
 
@@ -70,9 +72,14 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
     private $dispatcher;
 
     /**
-     * @var CommentProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var Notifier
+     */
+    private $notifier;
 
     public function __construct(
         Repository $ticketRepository,
@@ -82,7 +89,8 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         AttachmentManager $attachmentManager,
         AuthorizationService $authorizationService,
         EventDispatcher $dispatcher,
-        CommentProcessManager $processManager
+        NotificationDeliveryManager $notificationDeliveryManager,
+        Notifier $notifier
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
@@ -91,7 +99,8 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         $this->attachmentManager = $attachmentManager;
         $this->authorizationService = $authorizationService;
         $this->dispatcher = $dispatcher;
-        $this->processManager = $processManager;
+        $this->notificationDeliveryManager = $notificationDeliveryManager;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -192,7 +201,7 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
             }
         }
 
-        $ticket->updateStatus($command->ticketStatus);
+        $ticket->updateStatus(new Status($command->ticketStatus));
         $ticket->postNewComment($comment);
 
         $this->ticketRepository->store($ticket);
@@ -243,9 +252,11 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         }
         $this->commentRepository->store($comment);
 
-        if (false === is_null($command->ticketStatus)) {
-            $ticket = $comment->getTicket();
-            $ticket->updateStatus($command->ticketStatus);
+        $ticket = $comment->getTicket();
+        $newStatus = new Status($command->ticketStatus);
+        if (false === $ticket->getStatus()->equals($newStatus)) {
+            $ticket->updateStatus($newStatus);
+            $this->ticketRepository->store($ticket);
         }
 
         $this->dispatchEvents($comment, $ticket);
@@ -287,13 +298,16 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         $this->isGranted('EDIT', $comment);
 
         $comment->updateContent($command->content);
+        $this->commentRepository->store($comment);
 
-        if (false === is_null($command->ticketStatus)) {
-            $ticket = $comment->getTicket();
-            $ticket->updateStatus($command->ticketStatus);
+        $ticket = $comment->getTicket();
+        $newStatus = new Status($command->ticketStatus);
+        if (false === $ticket->getStatus()->equals($newStatus)) {
+            $ticket->updateStatus($newStatus);
+            $this->ticketRepository->store($ticket);
         }
 
-        $this->commentRepository->store($comment);
+        $this->dispatchEvents($comment, $ticket);
     }
 
     /**
@@ -386,8 +400,6 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
             }
         }
 
-        if (count($this->processManager->getEventsHistory())) {
-            $this->processManager->process();
-        }
+        $this->notificationDeliveryManager->deliver($this->notifier);
     }
 }

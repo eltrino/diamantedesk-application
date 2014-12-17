@@ -209,16 +209,8 @@ class TicketControllerTest extends WebTestCase
         $ticketAssignUrl = $this->getUrl('diamante_ticket_assign', array('id' => $ticket['id']));
         $crawler = $this->client->request('GET', $ticketAssignUrl);
 
-        /** @var Form $form */
-        $form = $crawler->selectButton('Save')->form();
-        $form['diamante_ticket_form_assignee[assignee]'] = 1;
-        $this->client->followRedirects(true);
-
-        $crawler  = $this->client->submit($form);
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket successfully re-assigned.", $crawler->html());
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
     }
 
     public function testDelete()

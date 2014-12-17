@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketTest extends \PHPUnit_Framework_TestCase
@@ -33,6 +34,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(null),
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
@@ -44,6 +46,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             new Status(Status::OPEN)
         );
 
+        $this->assertEquals(new UniqueId('unique_id'), $ticket->getUniqueId());
         $this->assertEquals('Subject', $ticket->getSubject());
         $this->assertEquals('Description', $ticket->getDescription());
         $this->assertEquals($branch, $ticket->getBranch());
@@ -63,6 +66,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber($ticketSequenceNumberValue),
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
@@ -83,6 +87,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $reporter = $this->createReporter();
         $assignee = $this->createAssignee();
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(null),
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,
@@ -111,9 +116,9 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $ticket->update('New Subject',
             'New Description',
             $newReporter,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED,
-            Source::PHONE
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED),
+            new Source(Source::PHONE)
         );
 
         $this->assertEquals('New Subject', $ticket->getSubject());
@@ -137,6 +142,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     private function createTicket()
     {
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
             new TicketSequenceNumber(null),
             self::TICKET_SUBJECT,
             self::TICKET_DESCRIPTION,

@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -38,4 +39,13 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         $ticket = $query->getSingleResult();
         return $ticket;
     }
-} 
+
+    /**
+     * @param UniqueId $uniqueId
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function getByUniqueId(UniqueId $uniqueId)
+    {
+        return $this->findOneBy(array('uniqueId' => $uniqueId));
+    }
+}

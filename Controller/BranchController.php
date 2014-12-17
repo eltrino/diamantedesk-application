@@ -20,7 +20,8 @@ use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Diamante\DeskBundle\Form\Type\BranchType;
+use Diamante\DeskBundle\Form\Type\CreateBranchType;
+use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -77,13 +78,15 @@ class BranchController extends Controller
 
     /**
      * @Route("/create", name="diamante_branch_create")
-     * @Template("DiamanteDeskBundle:Branch:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Branch:create.html.twig")
      */
     public function createAction()
     {
         $command = new BranchCommand();
         try {
-            $result = $this->edit($command, function ($command) {
+            $form = $this->createForm(new CreateBranchType(), $command);
+
+            $result = $this->edit($command, $form, function ($command) {
                 $branch = $this->get('diamante.branch.service')->createBranch($command);
                 $this->createBranchEmailConfiguration($command, $branch->getId());
                 return $branch->getId();
@@ -129,7 +132,7 @@ class BranchController extends Controller
      *      name="diamante_branch_update",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("DiamanteDeskBundle:Branch:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Branch:update.html.twig")
      *
      * @param int $id
      * @return array
@@ -146,7 +149,9 @@ class BranchController extends Controller
         }
 
         try {
-            $result = $this->edit($command, function ($command) use ($branch) {
+            $form = $this->createForm(new UpdateBranchType(), $command);
+
+            $result = $this->edit($command, $form, function ($command) use ($branch) {
                 $branchId = $this->get('diamante.branch.service')->updateBranch($command);
                 $this->updateBranchEmailConfiguration($command, $branchId);
                 return $branchId;
@@ -179,12 +184,12 @@ class BranchController extends Controller
     /**
      * @param BranchCommand $command
      * @param $callback
+     * @param BranchType | UpdateBranchType $form
      * @return array
      */
-    private function edit(BranchCommand $command, $callback)
+    private function edit(BranchCommand $command, $form, $callback)
     {
         $response = null;
-        $form = $this->createForm(new BranchType(), $command);
         try {
             $this->handle($form);
             if ($command->defaultAssignee) {

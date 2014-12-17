@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
 use Diamante\DeskBundle\Form\Type\AttachmentType;
@@ -286,7 +287,7 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("DiamanteDeskBundle:Ticket:assign.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:widget/assignee.html.twig")
      *
      * @param int $id
      * @return array
@@ -294,39 +295,33 @@ class TicketController extends Controller
     public function assignAction($id)
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+        $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
+
         $command = $this->get('diamante.command_factory')
             ->createAssigneeTicketCommand($ticket);
 
-        $response = null;
         $form = $this->createForm(new AssigneeTicketType(), $command);
+
         try {
-            $this->handle($form);
+            if (false === $redirect) {
+                try {
+                    $this->handle($form);
 
-            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+                    $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+                    $this->get('diamante.ticket.service')->assignTicket($command);
+                    $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
+                    $response = array('saved' => true);
 
-            $this->get('diamante.ticket.service')->assignTicket($command);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
-            $response = $this->getSuccessSaveResponse($ticket);
+                } catch (\Exception $e) {
+                    $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
+                    $response = array('form' => $form->createView());
+                }
+            } else {
+                $response = array('form' => $form->createView());
+            }
         } catch (MethodNotAllowedException $e) {
-            $response = array(
-                'form' => $form->createView(),
-                'ticketKey' => (string) $ticket->getKey(),
-                'branchId' => $ticket->getBranch()->getId(),
-                'branchName' => $ticket->getBranch()->getName(),
-                'ticketSubject' => $ticket->getSubject(),
-                'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
-            );
-        } catch (\Exception $e) {
-            $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
-            $response = array(
-                'form' => $form->createView(),
-                'ticketKey' => (string) $ticket->getKey(),
-                'branchId' => $ticket->getBranch()->getId(),
-                'branchName' => $ticket->getBranch()->getName(),
-                'ticketSubject' => $ticket->getSubject(),
-                'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
-            );
         }
+
         return $response;
     }
 
@@ -348,7 +343,7 @@ class TicketController extends Controller
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
         $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
-        return array('form' => $formView, 'ticketKey' => (string) $ticket->getKey());
+        return array('ticket' => $ticket, 'form' => $formView);
     }
 
     /**
@@ -448,16 +443,26 @@ class TicketController extends Controller
         $removeTicketAttachment->attachmentId = $attachId;
 
         try {
-            $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
+            $ticketKey = $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
+        } catch (TicketNotFoundException $e) {
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_list'
+            ));
         } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
+            $ticketKey = $ticketService->loadTicket($ticketId)->getKey();
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
         }
 
-        $response = $this->redirect($this->generateUrl(
-            'diamante_ticket_view',
-            array('id' => $ticketId)
-        ));
         return $response;
     }
 

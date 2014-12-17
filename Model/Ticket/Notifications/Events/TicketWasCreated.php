@@ -14,11 +14,10 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-use Diamante\DeskBundle\Model\Ticket\Priority;
-use Diamante\DeskBundle\Model\Ticket\Status;
-use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Notifications\AttachmentsEvent;
+use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
 
-class TicketWasCreated extends AbstractTicketEvent
+class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEvent, AttachmentsEvent
 {
     /**
      * @var string
@@ -28,20 +27,25 @@ class TicketWasCreated extends AbstractTicketEvent
     /**
      * @var string
      */
-    private $reporterEmail;
+    private $reporterFullName;
 
     /**
-     * @var Priority
+     * @var string
+     */
+    private $assigneeFullName;
+
+    /**
+     * @var string
      */
     private $priority;
 
     /**
-     * @var Status
+     * @var string
      */
     private $status;
 
     /**
-     * @var Source
+     * @var string
      */
     private $source;
 
@@ -51,24 +55,31 @@ class TicketWasCreated extends AbstractTicketEvent
     private $branchName;
 
     /**
-     * @var string
+     * @var array
      */
-    private $assigneeEmail;
+    private $attachments;
 
-    public function __construct($id, $branchName, $subject, $description, $reporterEmail, $assigneeEmail,
-                                Priority $priority, Status $status, Source $source, $recipientsList)
-    {
-        // @todo implement functionality for generating ticket id before ticket was store at DB
-        $this->ticketId       = 'id';
-        $this->branchName     = $branchName;
-        $this->subject        = $subject;
-        $this->description    = $description;
-        $this->reporterEmail  = $reporterEmail;
-        $this->assigneeEmail  = $assigneeEmail;
-        $this->priority       = $priority;
-        $this->status         = $status;
-        $this->source         = $source;
-        $this->recipientsList = $recipientsList;
+    public function __construct(
+        $id,
+        $branchName,
+        $subject,
+        $description,
+        $reporterFullName,
+        $assigneeFullName,
+        $priority,
+        $status,
+        $source
+    ) {
+        $this->ticketId         = $id;
+        $this->branchName       = $branchName;
+        $this->subject          = $subject;
+        $this->description      = $description;
+        $this->reporterFullName = $reporterFullName;
+        $this->assigneeFullName = $assigneeFullName;
+        $this->priority         = $priority;
+        $this->status           = $status;
+        $this->source           = $source;
+        $this->attachments      = array();
     }
 
     /**
@@ -82,56 +93,45 @@ class TicketWasCreated extends AbstractTicketEvent
     /**
      * @return string
      */
-    public function getBranchName()
+    public function getHeaderText()
     {
-        return $this->branchName;
+        return 'Ticket was created';
     }
 
     /**
-     * @return string
+     * Provide changes of entity of raised event
+     * @param \ArrayAccess $changes
+     * @return void
      */
-    public function getDescription()
+    public function provideChanges(\ArrayAccess $changes)
     {
-        return $this->description;
+        $changes['Branch']      = $this->branchName;
+        $changes['Subject']     = $this->subject;
+        $changes['Description'] = $this->description;
+        $changes['Reporter']    = $this->reporterFullName;
+        $changes['Assignee']    = $this->assigneeFullName;
+        $changes['Priority']    = $this->priority;
+        $changes['Status']      = $this->status;
+        $changes['Source']      = $this->source;
     }
 
     /**
-     * @return string
+     * @return array of attachments names
      */
-    public function getReporterEmail()
+    public function attachments()
     {
-        return $this->reporterEmail;
+        return $this->attachments;
     }
 
     /**
-     * @return string
+     * @param string $attachment
+     * @return void
      */
-    public function getAssigneeEmail()
+    public function pushAttachment($attachment)
     {
-        return $this->assigneeEmail;
-    }
-
-    /**
-     * @return Source
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * @return Status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return Priority
-     */
-    public function getPriority()
-    {
-        return $this->priority;
+        if (false === is_string($attachment)) {
+            throw new \InvalidArgumentException('Wrong format of attachment name.');
+        }
+        $this->attachments[] = $attachment;
     }
 }

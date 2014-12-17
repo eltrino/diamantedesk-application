@@ -16,11 +16,18 @@ namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
 class TicketWasUnassigned extends AbstractTicketEvent
 {
-    public function __construct($id, $subject, $recipientsList)
+    public function __construct($id, $subject)
     {
-        $this->ticketId       = $id;
-        $this->subject        = $subject;
-        $this->recipientsList = $recipientsList;
+        $this->ticketId = $id;
+        $this->subject  = $subject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHeaderText()
+    {
+        return 'Ticket was unassigned';
     }
 
     /**
@@ -30,4 +37,4 @@ class TicketWasUnassigned extends AbstractTicketEvent
     {
         return 'ticketWasUnassigned';
     }
-} 
+}
