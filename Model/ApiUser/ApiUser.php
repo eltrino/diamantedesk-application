@@ -41,6 +41,21 @@ class ApiUser implements Entity, UserInterface
     protected $username;
 
     /**
+     * @var string
+     */
+    protected $email;
+
+    /**
+     * @var string
+     */
+    protected $firstName;
+
+    /**
+     * @var string
+     */
+    protected $lastName;
+
+    /**
      * @var array
      */
     protected $roles = array();
@@ -50,12 +65,14 @@ class ApiUser implements Entity, UserInterface
      */
     protected $salt;
 
-    public function __construct($username, $password, $salt, array $roles)
+    public function __construct($email, $username, $firstName = null, $lastName = null, $password = null, $salt = null)
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->salt     = $salt;
-        $this->roles    = $roles;
+        $this->email     = $email;
+        $this->username  = $username;
+        $this->firstName = $firstName;
+        $this->lastName  = $lastName;
+        $this->password  = $password;
+        $this->salt      = $salt;
     }
 
     /**
@@ -99,8 +116,29 @@ class ApiUser implements Entity, UserInterface
     }
 
     /**
-     * @return array|\Symfony\Component\Security\Core\Role\Role[]
+     * @return string
      */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
     public function getRoles()
     {
         return $this->roles;
@@ -109,5 +147,10 @@ class ApiUser implements Entity, UserInterface
     public function eraseCredentials()
     {
 
+    }
+    
+    public function getFullName()
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 }
