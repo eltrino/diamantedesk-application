@@ -27,7 +27,7 @@ class AbstractFilterUrlGenerator
     /**
      * @var string
      */
-    protected $userId;
+    protected $userFullName;
 
     /**
      * @var int
@@ -35,22 +35,32 @@ class AbstractFilterUrlGenerator
     protected $textFiltertype;
 
     /**
-     * @param $userId
+     * @param $userFullName
      * @param $defaultPerPage
      */
-    public function __construct($defaultPerPage, $userId)
+    public function __construct($defaultPerPage, $userFullName)
     {
         $this->defaultPerPage = $defaultPerPage;
-        $this->userId         = $userId;
+        $this->userFullName = $userFullName;
         $this->textFiltertype = TextFilterType::TYPE_EQUAL;
     }
 
     /**
      * @param $string
+     *
      * @return string
      */
     protected function encodeSquareBrackets($string = '')
     {
         return urlencode('[') . $string . urlencode(']');
+    }
+
+    protected function arrayToLink(array $parameters)
+    {
+        $parameters = http_build_query($parameters);
+
+        return
+            '?grid' . $this->encodeSquareBrackets('diamante-ticket-grid') . '='
+            . urlencode($parameters);
     }
 }

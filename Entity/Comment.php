@@ -66,8 +66,7 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="author", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\Column(name="author_id", type="user_type")
      */
     protected $author;
 

@@ -20,8 +20,9 @@ use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\User\User;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -181,14 +182,17 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $key = 'DB';
         $name = 'DUMMY_NAME';
         $description = 'DUMMY_DESC';
-        $defaultAssignee = new User();
+        $assigneeId = 1;
+        $assignee = new User($assigneeId, User::TYPE_ORO);
+        $defaultAssignee = new OroUser();
         $tags = array();
         $branch = new Branch($key, $name, $description, null, new Logo('dummy'));
         $this->fileMock = new UploadedFileStub(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
 
         $this->userService
             ->expects($this->once())
-            ->method('getUserById')
+            ->method('getByUser')
+            ->with($this->equalTo($assignee))
             ->will($this->returnValue($defaultAssignee));
 
         $this->branchLogoHandler
@@ -215,7 +219,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->key = $key;
         $command->name = $name;
         $command->description = $description;
-        $command->defaultAssignee = $defaultAssignee;
+        $command->defaultAssignee = $assigneeId;
         $command->tags = $tags;
         $command->logoFile = $this->fileMock;
 
@@ -267,7 +271,9 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $name = 'DUMMY_NAME_UPDT';
         $description = 'DUMMY_DESC_UPDT';
-        $defaultAssignee = new User();
+        $assigneeId = 1;
+        $assignee = new User($assigneeId, User::TYPE_ORO);
+        $defaultAssignee = new OroUser();
         $tags = array(
             'autocomplete' => array(),
             'all'          => array(),
@@ -291,13 +297,14 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->userService
             ->expects($this->once())
-            ->method('getUserById')
+            ->method('getbyUser')
+            ->with($this->equalTo($assignee))
             ->will($this->returnValue($defaultAssignee));
 
         $command = new BranchCommand();
         $command->name = $name;
         $command->description = $description;
-        $command->defaultAssignee = $defaultAssignee;
+        $command->defaultAssignee = $assigneeId;
         $command->logoFile = $this->fileMock;
         $command->tags = $tags;
 

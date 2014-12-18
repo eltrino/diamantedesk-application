@@ -11,6 +11,10 @@
     <ol class="diam-comments unstyled">
         {% for comment in comments if comment.id  %}
             {% set imagePath = '' %}
+            {% set author = fetch_user_details(comment.author) %}
+            {% if comment.author.isOroUser %}
+                {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
+            {% endif %}
             <li class="diam-comment">
                 <div class="pull-right">
                 {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
@@ -21,9 +25,9 @@
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
-                    <img src="{{ imagePath ? imagePath|imagine_filter('avatar_med') : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="test">
+                    <img src="{{ avatar is defined ? avatar : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="{{ author.getFullName }}">
                 </div>
-                <div class="diam-comment-meta">{{ comment.author.firstname }} {{ comment.author.lastname }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
+                <div class="diam-comment-meta">{{ author.getFirstname }} {{ author.getLastname }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
                 <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
@@ -53,8 +57,8 @@
     </p>
 {% endif %}
 <script type="text/javascript">
-    require(['jquery', 'oroui/js/modal', 'oronavigation/js/navigation', 'orotranslation/js/translator'],
-            function($, Modal, Navigation, __) {
+    require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
+            function($, Modal, Mediator, __) {
                 $('.delete-item-confirmation').click(function (e) {
                     e.preventDefault();
                     var url = $(this).data('url');
@@ -73,19 +77,24 @@
                     });
 
                     dialog.open(function () {
-                        var navigation = Navigation.getInstance();
-                        if (navigation) {
-                            navigation.loadingMask.show();
-                        }
-                        navigation.setLocation(url);
-
+                        Mediator.execute('showLoading');
+                        Mediator.execute('redirectTo', {url: url})
                     });
-                })
+                });
             });
 </script>
 {% endmacro %}
 
 {% block navButtons %}
+    <script>
+        require(['oroui/js/mediator', 'oroui/js/widget-manager'],function(mediator, widgetManager) {
+            mediator.on('page:beforeChange', function () {
+                for (var i in widgetManager.widgets) {
+                    widgetManager.widgets[i].remove();
+                }
+            });
+        })
+    </script>
     {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
         {% set changeStatusTitle = 'diamante.desk.ticket.actions.change_status'|trans %}
         {{ UI.clientButton({
@@ -101,6 +110,7 @@
                 'reload-grid-name' : '',
                 'options' : {
                     'alias': 'status-dialog',
+                    'stateEnabled' : false,
                     'dialogOptions' : {
                         'resizable' : false,
                         'title' : changeStatusTitle,
@@ -143,11 +153,10 @@
                 'reload-grid-name' : '',
                 'options' : {
                     'alias': 'assignee-dialog',
+                    'stateEnabled' : false,
                     'dialogOptions' : {
+                        'resizable' : false,
                         'title' : assignTitle,
-                        'allowMaximize': true,
-                        'allowMinimize': true,
-                        'dblclick': 'maximize',
                         'maximizedHeightDecreaseBy': 'minimize-bar',
                         'width': 500
                     }
@@ -195,12 +204,13 @@
 
 {% block content_data %}
     {% set id = 'navbarTicketView' %}
+    {% set reporter = fetch_user_details(entity.reporter) %}
     {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.branch'|trans, entity.branchName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, entity.reporterFullName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, reporter.getFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
 
     {% set attachmentListWidget %}

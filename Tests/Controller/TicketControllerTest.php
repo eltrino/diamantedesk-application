@@ -213,6 +213,32 @@ class TicketControllerTest extends WebTestCase
         $this->assertEquals("Change", $crawler->selectButton('Change')->html());
     }
 
+    public function testCreateWithoutAssigneeId()
+    {
+        $branch = $this->chooseBranchFromGrid();
+        $crawler = $this->client->request(
+            'GET', $this->getUrl('diamante_ticket_create',  array('id' => $branch['id']))
+        );
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Save and Close')->form();
+
+        $form['diamante_ticket_form[branch]']      = $branch['id'];
+        $form['diamante_ticket_form[subject]']     = 'Test Ticket Without Assignee';
+        $form['diamante_ticket_form[description]'] = 'Test Description';
+        $form['diamante_ticket_form[status]']      = Status::OPEN;
+        $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_LOW;
+        $form['diamante_ticket_form[source]']      = Source::PHONE;
+        $form['diamante_ticket_form[reporter]']    = 1;
+        $this->client->followRedirects(true);
+
+        $crawler  = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Ticket successfully created.", $crawler->html());
+    }
+
     public function testDelete()
     {
         $ticket        = $this->chooseTicketFromGrid();

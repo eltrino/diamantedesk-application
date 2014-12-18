@@ -14,7 +14,8 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\Filters;
 
-class MyReportedNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implements FilterUrlGeneratorInterface
+class MyReportedNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator
+    implements FilterUrlGeneratorInterface
 {
     /**
      * @var string
@@ -23,12 +24,12 @@ class MyReportedNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator 
 
     /**
      * @param $defaultPerPage
-     * @param $userId
+     * @param $userFullName
      * @param $status
      */
-    public function __construct($defaultPerPage, $userId, $status)
+    public function __construct($defaultPerPage, $userFullName, $status)
     {
-        parent::__construct($defaultPerPage, $userId);
+        parent::__construct($defaultPerPage, $userFullName);
         $this->status = $status;
     }
 
@@ -37,12 +38,23 @@ class MyReportedNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator 
      */
     public function generateFilterUrlPart()
     {
-        return '|g/i=1&p='. $this->defaultPerPage .'&' .
-        's' . $this->encodeSquareBrackets('updatedAt') . '=1&' .
-        'f' . $this->encodeSquareBrackets('reporterId') . $this->encodeSquareBrackets('value') . "=$this->userId&" .
-        'f' . $this->encodeSquareBrackets('reporterId') . $this->encodeSquareBrackets('type') . "=$this->textFiltertype&" .
-        'f' . $this->encodeSquareBrackets('status') . $this->encodeSquareBrackets('value') . $this->encodeSquareBrackets() .
-        "=$this->status&" .
-        't=diamante-ticket-grid';
+        $params = [
+            'i' => 1,
+            'p' => $this->defaultPerPage,
+            's' => [
+                'updatedAt' => 1
+            ],
+            'f' => [
+                'reporterFullName' => [
+                    'value' => $this->userFullName,
+                    'type'  => $this->textFiltertype
+                ],
+                'status'           => [
+                    'value' => [$this->status]
+                ]
+            ]
+        ];
+
+        return $this->arrayToLink($params);
     }
 }

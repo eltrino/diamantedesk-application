@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 
 class EmailNotifier implements Notifier
@@ -103,7 +104,7 @@ class EmailNotifier implements Notifier
     {
         $ticket = $this->loadTicket($notification);
 
-        $user = $this->userUservice->getUserById($notification->getAuthor());
+        $user = $this->getUserDependingOnType($notification->getAuthor());
         $userFormattedName = $this->nameFormatter->format($user);
 
         /** @var \Swift_Message $message */
@@ -138,9 +139,18 @@ class EmailNotifier implements Notifier
      */
     private function resolveRecipientsEmails(Ticket $ticket)
     {
-        $reporter = $this->userUservice->getUserById($ticket->getReporter()->getId());
-        $assignee = $this->userUservice->getUserById($ticket->getAssignee()->getId());
-        return array($reporter->getEmail(), $assignee->getEmail());
+        $emails = array();
+        $reporter = $ticket->getReporter();
+        $reporter = $this->userUservice->getByUser($reporter);
+        $assignee = $ticket->getAssignee();
+
+        $emails[] = $reporter->getEmail();
+
+        if ($assignee) {
+            $emails[] = $assignee->getEmail();
+        }
+
+        return $emails;
     }
 
     /**
@@ -171,5 +181,16 @@ class EmailNotifier implements Notifier
         $uniqueId = new UniqueId($notification->getTicketUniqueId());
         $ticket = $this->ticketRepository->getByUniqueId($uniqueId);
         return $ticket;
+    }
+
+    private function getUserDependingOnType($user)
+    {
+        if ($user instanceof User) {
+            if ($user->isApiUser()) {
+                $user = $this->userUservice->getByUser($user);
+            }
+        }
+
+        return $user;
     }
 }

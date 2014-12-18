@@ -21,7 +21,8 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,9 +58,7 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->branchRepository->expects($this->once())->method('get')->with(self::BRANCH_ID)
             ->will($this->returnValue($this->createBranch()));
-        $this->userService->expects($this->at(0))->method('getUserById')->with(self::REPORTER_ID)
-            ->will($this->returnValue($this->createReporter()));
-        $this->userService->expects($this->at(1))->method('getUserById')->with(self::ASSIGNEE_ID)
+        $this->userService->expects($this->once())->method('getByUser')->with(new User(self::ASSIGNEE_ID, User::TYPE_ORO))
             ->will($this->returnValue($this->createAssignee()));
     }
 
@@ -69,7 +68,7 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
             ->setSubject(self::SUBJECT)
             ->setDescription(self::DESCRIPTION)
             ->setBranchId(self::BRANCH_ID)
-            ->setReporterId(self::REPORTER_ID)
+            ->setReporter($this->createReporter())
             ->setAssigneeId(self::ASSIGNEE_ID)
             ->setPriority(Priority::PRIORITY_LOW)
             ->setSource(Source::EMAIL)
@@ -81,7 +80,7 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::SUBJECT, $ticket->getSubject());
         $this->assertEquals(self::DESCRIPTION, $ticket->getDescription());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Branch\Branch', $ticket->getBranch());
-        $this->assertInstanceOf('\Oro\Bundle\UserBundle\Entity\User', $ticket->getReporter());
+        $this->assertInstanceOf('\Diamante\DeskBundle\Model\User\User', $ticket->getReporter());
         $this->assertInstanceOf('\Oro\Bundle\UserBundle\Entity\User', $ticket->getAssignee());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Ticket\Priority', $ticket->getPriority());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Ticket\Status', $ticket->getStatus());
@@ -93,11 +92,14 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildWhenDefaultValuesApplies()
     {
+
+        $reporter = $this->createReporter();
+
         $this->builder
             ->setSubject(self::SUBJECT)
             ->setDescription(self::DESCRIPTION)
             ->setBranchId(self::BRANCH_ID)
-            ->setReporterId(self::REPORTER_ID)
+            ->setReporter((string)$reporter)
             ->setAssigneeId(self::ASSIGNEE_ID);
 
         $ticket = $this->builder->build();
@@ -118,11 +120,11 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
 
     private function createReporter()
     {
-        return new User();
+        return new User(self::REPORTER_ID, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return new OroUser();
     }
 } 

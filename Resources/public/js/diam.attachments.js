@@ -69,6 +69,9 @@ define(['jquery', 'underscore', 'oroui/js/modal'],
             form.reset();
           },
           onDragStart = function(event) {
+            if($.uniform) {
+              $.uniform.restore($file);
+            }
             if ($.inArray('Files', event.originalEvent.dataTransfer.types) > -1) {
               event.stopPropagation();
 

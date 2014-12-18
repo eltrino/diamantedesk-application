@@ -1,11 +1,12 @@
 {#
     Available variables:
-    * entity       - user entity OroCRM\Bundle\AccountBundle\Entity\Account or null
+    * entity - branch entity Diamante\DeskBundle\Model\Branch or null
     * indexer_item - indexer item Oro\Bundle\SearchBundle\Query\Result\Item
 #}
-{% extends 'OroSearchBundle:Search:searchResultItem.html.twig' %}
+{% extends 'DiamanteDeskBundle::searchResult.html.twig' %}
 
 {% set showImage = true %}
+
 {% set imagePath = entity.logo ? entity.logo.pathname : null %}
 
 {% set recordUrl = indexer_item.recordUrl %}

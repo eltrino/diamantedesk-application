@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Tests\Placeholder;
 
 use Diamante\DeskBundle\Model\Branch\Logo;
 
-class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
+class Branch extends \Diamante\DeskBundle\Entity\Branch
 {
     public function __construct($id, $name, $description, Logo $logo = null, $tags = null)
     {

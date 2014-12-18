@@ -23,6 +23,7 @@ use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
@@ -156,7 +157,7 @@ class CommentServiceImpl implements CommentService
          */
         $ticket = $this->loadTicketBy($command->ticket);
 
-        $author = $this->userService->getUserById($command->author);
+        $author = User::fromString($command->author);
 
         $comment = $this->commentFactory->create($command->content, $ticket, $author);
 

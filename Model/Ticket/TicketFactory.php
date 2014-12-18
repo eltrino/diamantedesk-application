@@ -16,7 +16,8 @@ namespace Diamante\DeskBundle\Model\Ticket;
 
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketFactory extends AbstractEntityFactory
 {
@@ -27,7 +28,7 @@ class TicketFactory extends AbstractEntityFactory
         $description,
         Branch $branch,
         User $reporter,
-        User $assignee,
+        OroUser $assignee = null,
         Priority $priority,
         Source $source,
         Status $status

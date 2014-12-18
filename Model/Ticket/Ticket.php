@@ -29,7 +29,8 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 {
@@ -86,7 +87,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $branch;
 
     /**
-     * @var \Oro\Bundle\UserBundle\Entity\User
+     * @var User
      */
     protected $reporter;
 
@@ -122,7 +123,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param $description
      * @param Branch $branch
      * @param User $reporter
-     * @param User $assignee
+     * @param OroUser $assignee
      * @param Source $source
      * @param Priority $priority
      * @param Status $status
@@ -133,7 +134,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $subject, $description,
         Branch $branch,
         User $reporter,
-        User $assignee,
+        OroUser $assignee = null,
         Source $source,
         Priority $priority,
         Status $status
@@ -277,21 +278,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
-     * @return string
+     * @return \Oro\Bundle\UserBundle\Entity\User
      */
-    public function getReporterFullName()
-    {
-        return $this->reporter->getFirstName() . ' ' . $this->reporter->getLastName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getAssigneeFullName()
-    {
-        return $this->assignee->getFirstName() . ' ' . $this->assignee->getLastName();
-    }
-
     public function getAssignee()
     {
         return $this->assignee;
@@ -313,13 +301,32 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         return $this->updatedAt;
     }
 
+    /**
+     * @return null|string
+     */
+    public function getAssigneeFullName()
+    {
+        if (!empty($this->assignee)) {
+            return $this->assignee->getFirstName() . ' ' . $this->assignee->getLastName();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReporterFullName()
+    {
+        return 'Reporter';
+    }
+
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
         $this->raise(
             new CommentWasAddedToTicket(
-                $this->uniqueId, $this->subject, $comment->getContent(),
-                $this->reporter->getId(), $this->assignee->getId()
+                $this->uniqueId, $this->subject, $comment->getContent()
             )
         );
     }
@@ -333,11 +340,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param Priority $priority
      * @param Status $status
      * @param Source $source
-     * @param User|null $assignee
+     * @param OroUser|null $assignee
      */
     public function update(
         $subject, $description, User $reporter, Priority $priority,
-        Status $status, Source $source, User $assignee = null
+        Status $status, Source $source, OroUser $assignee = null
     ) {
         $hasChanges = false;
         if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter
@@ -399,10 +406,10 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 
     /**
      * Assign new assignee (User) to ticket
-     * @param User $newAssignee
+     * @param OroUser $newAssignee
      * @return void
      */
-    public function assign(User $newAssignee)
+    public function assign(OroUser $newAssignee)
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
             $this->processAssign($newAssignee);
@@ -411,10 +418,10 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
-     * @param User $newAssignee
+     * @param OroUser $newAssignee
      * @retur void
      */
-    private function processAssign(User $newAssignee)
+    private function processAssign(OroUser $newAssignee)
     {
         $this->assignee = $newAssignee;
     }

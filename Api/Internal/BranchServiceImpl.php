@@ -27,6 +27,7 @@ use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\User\User;
 
 class BranchServiceImpl implements BranchService
 {
@@ -119,7 +120,7 @@ class BranchServiceImpl implements BranchService
         }
 
         if ($branchCommand->defaultAssignee) {
-            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+            $assignee = $this->userService->getByUser(new User($branchCommand->defaultAssignee, User::TYPE_ORO));
         } else {
             $assignee = null;
         }
@@ -155,7 +156,7 @@ class BranchServiceImpl implements BranchService
         $branch = $this->branchRepository->get($branchCommand->id);
 
         if ($branchCommand->defaultAssignee) {
-            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+            $assignee = $this->userService->getByUser(new User($branchCommand->defaultAssignee, User::TYPE_ORO));
         } else {
             $assignee = null;
         }
