@@ -1,4 +1,4 @@
-  .diam-attachments {
+.diam-attachments {
     position: relative;
 }
 .diam-attachment {
@@ -172,12 +172,13 @@
 }
 .diam-dropzone-active {
     position: absolute;
-    width: 100%;
+    width: auto;
     background: #eee;
     margin: 0;
     top:0;
     bottom: 2em;
     left: 2em;
+    right: 2em;
     opacity: .9;
 }
 .diam-dropzone-active .diam-dropzone-placeholder {
@@ -193,6 +194,9 @@
 }
 .diam-dropzone-active + .diam-attachment-placeholder {
     display: block;
+}
+.diam-attachment-placeholder .diam-dropzone-placeholder {
+    z-index: -1;
 }
 
 .diam-dropzone input {
@@ -229,10 +233,6 @@
     -webkit-animation: blink 500ms step-start 0s 5;
     -moz-animation: blink 500ms  step-start 0s 5;
     animation: blink 500ms  step-start 0s 5;
-}
-
-#uniform-diam-dropzone-file {
-  visibility: hidden;
 }
 
 .key-cell{

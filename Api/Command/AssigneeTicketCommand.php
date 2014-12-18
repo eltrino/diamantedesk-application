@@ -27,9 +27,6 @@ class AssigneeTicketCommand
 
     /**
      * @var \Oro\Bundle\UserBundle\Entity\User
-     * @Assert\NotNull(
-     *              message="This is a required field"
-     * )
      * @Assert\Type(type="object")
      */
     public $assignee;

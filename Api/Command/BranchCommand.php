@@ -29,8 +29,15 @@ class BranchCommand implements Taggable
     public $id;
 
     /**
+     * @Assert\Regex(
+     *    pattern = "/^[a-zA-Z]+$/",
+     *    message = "The Key must contain only letters"
+     * )
      * @Assert\Type(type="string")
+     * @Assert\Length(min = 2)
+     * @var string
      */
+
     public $key;
 
     /**
