@@ -21,8 +21,12 @@
 {% block pageHeader %}
     {% set breadcrumbs = {
         'entity':      editCommand,
-        'indexPath':   path('diamante_ticket_view', {'key': ticket.key|trim}),
-        'indexLabel':  ticket.subject,
+        'indexPath': path('diamante_branch_view', {'id': ticket.branch.id}),
+        'indexLabel': ticket.branchName,
+        'additional': [{
+            'indexPath':   path('diamante_ticket_view', {'key': ticket.key|trim}),
+            'indexLabel':  ticket.key ~ ' ' ~ ticket.subject|default('diamante.desk.common.not_available'|trans)
+        }],
         'entityTitle': (editCommand.id ? 'diamante.desk.comment.actions.edit' : 'diamante.desk.comment.actions.add')|trans
     } %}
     {{ parent() }}
