@@ -284,15 +284,15 @@ class TicketServiceImpl implements TicketService
         $this->isGranted('EDIT', $ticket);
 
         $reporter = $ticket->getReporter();
-        if ($command->reporter != $ticket->getReporterId()) {
-            $reporter = $this->userService->getUserById($command->reporter);
+        if ((string)$command->reporter !== (string)$reporter) {
+            $reporter = $command->reporter;
         }
 
         $assignee = null;
         if ($command->assignee) {
             $assignee = $ticket->getAssignee();
             if ($command->assignee != $ticket->getAssignee()->getId()) {
-                $assignee = $this->userService->getUserById($command->assignee);
+                $assignee = $this->userService->getByUser(new User((int)$command->assignee, User::TYPE_ORO));
             }
         }
 

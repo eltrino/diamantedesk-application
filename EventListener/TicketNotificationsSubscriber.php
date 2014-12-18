@@ -96,7 +96,7 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
         $user = $this->securityFacade->getLoggedUser();
 
         $notification = new Notification(
-            $event->getAggregateId(), $user->getId(), $event->getHeaderText(),
+            $event->getAggregateId(), $user, $event->getHeaderText(),
             $event->getSubject(), $changeList, $attachments
         );
 

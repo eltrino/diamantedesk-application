@@ -76,7 +76,7 @@ class TicketNotificationsSubscriberTest extends \PHPUnit_Framework_TestCase
                 $this->logicalAnd(
                     $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\Notifications\Notification'),
                     $this->attributeEqualTo('ticketUniqueId', $event->getAggregateId()),
-                    $this->attributeEqualTo('author', $user->getId()),
+                    $this->attributeEqualTo('author', $user),
                     $this->attributeEqualTo('headerText', $event->getHeaderText()),
                     $this->attributeEqualTo('subject', $event->getSubject()),
                     $this->attributeEqualTo('attachments', $event->attachments()),

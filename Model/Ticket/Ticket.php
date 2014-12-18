@@ -28,7 +28,6 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
-use Diamante\DeskBundle\Model\User\UserDetails;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
@@ -302,13 +301,32 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         return $this->updatedAt;
     }
 
+    /**
+     * @return null|string
+     */
+    public function getAssigneeFullName()
+    {
+        if (!empty($this->assignee)) {
+            return $this->assignee->getFirstName() . ' ' . $this->assignee->getLastName();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReporterFullName()
+    {
+        return 'Reporter';
+    }
+
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
         $this->raise(
             new CommentWasAddedToTicket(
-                $this->uniqueId, $this->subject, $comment->getContent(),
-                $this->reporter->getId(), $this->assignee->getId()
+                $this->uniqueId, $this->subject, $comment->getContent()
             )
         );
     }
@@ -322,11 +340,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param Priority $priority
      * @param Status $status
      * @param Source $source
-     * @param User|null $assignee
+     * @param OroUser|null $assignee
      */
     public function update(
         $subject, $description, User $reporter, Priority $priority,
-        Status $status, Source $source, User $assignee = null
+        Status $status, Source $source, OroUser $assignee = null
     ) {
         $hasChanges = false;
         if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter

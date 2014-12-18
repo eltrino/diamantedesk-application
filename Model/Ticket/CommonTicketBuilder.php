@@ -68,7 +68,7 @@ class CommonTicketBuilder implements TicketBuilder
     private $reporter;
 
     /**
-     * @var User
+     * @var OroUser
      */
     private $assignee;
 
