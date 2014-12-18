@@ -68,7 +68,6 @@ class CreateTicketCommand
     public $reporter;
 
     /**
-     * @Assert\NotNull()
      * @Entity()
      */
     public $assignee;

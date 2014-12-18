@@ -35,6 +35,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
@@ -302,7 +303,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
             ->setSubject($command->subject)
             ->setDescription($command->description)
             ->setBranchId($command->branch)
-            ->setReporterId($command->reporter)
+            ->setReporter($command->reporter)
             ->setAssigneeId($command->assignee)
             ->setPriority($command->priority)
             ->setSource($command->source)
@@ -339,15 +340,15 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         $this->isGranted('EDIT', $ticket);
 
         $reporter = $ticket->getReporter();
-        if ($command->reporter != $ticket->getReporterId()) {
-            $reporter = $this->userService->getUserById($command->reporter);
+        if ((string)$command->reporter !== (string)$reporter) {
+            $reporter = $command->reporter;
         }
 
         $assignee = null;
         if ($command->assignee) {
             $assignee = $ticket->getAssignee();
             if ($command->assignee != $ticket->getAssignee()->getId()) {
-                $assignee = $this->userService->getUserById($command->assignee);
+                $assignee = $this->userService->getByUser(new User((int)$command->assignee, User::TYPE_ORO));
             }
         }
 
@@ -404,7 +405,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         $this->isAssigneeGranted($ticket);
 
         if ($command->assignee) {
-            $assignee = $this->userService->getUserById($command->assignee);
+            $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found.');
             }

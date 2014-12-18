@@ -29,6 +29,7 @@ use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\User\User;
 
 class BranchServiceImpl implements BranchService, RestServiceInterface
 {
@@ -167,7 +168,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
         }
 
         if ($branchCommand->defaultAssignee) {
-            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+            $assignee = $this->userService->getByUser(new User($branchCommand->defaultAssignee, User::TYPE_ORO));
         } else {
             $assignee = null;
         }
@@ -204,7 +205,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
         $branch = $this->branchRepository->get($branchCommand->id);
 
         if ($branchCommand->defaultAssignee) {
-            $assignee = $this->userService->getUserById($branchCommand->defaultAssignee);
+            $assignee = $this->userService->getByUser(new User($branchCommand->defaultAssignee, User::TYPE_ORO));
         } else {
             $assignee = null;
         }

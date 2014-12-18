@@ -14,11 +14,11 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
-use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
-use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
+use Diamante\ApiBundle\Model\ApiUser\ApiUser;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,6 +52,18 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private $branchEmailConfigurationService;
 
     /**
+     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     */
+    private $apiUserRepository;
+
+    /**
+     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
+     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
+     */
+    private $apiUserFactory;
+
+    /**
      * @var \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      * @Mock \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      */
@@ -63,17 +75,28 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $this->ticketStrategy = new TicketStrategy(
             $this->messageReferenceService,
             $this->branchEmailConfigurationService,
+            $this->apiUserRepository,
+            $this->apiUserFactory,
             $this->emailProcessingSettings
         );
     }
 
-    public function testProcessWhenMessageWithoutReferenceWithDefaultBranch()
+    public function testProcessWhenApiUserExists()
     {
         $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
             self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO);
 
-        $reporterId = 1;
         $assigneeId = 1;
+        $apiUser = $this->getApiUser();
+
+        $this->apiUserRepository->expects($this->once())
+            ->method('findUserByEmail')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_FROM)
+            )->will($this->returnValue($apiUser));
+
+
+        $reporter = $this->getReporter($apiUser->getId());
 
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
@@ -93,11 +116,103 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
             ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
-                $reporterId, $assigneeId);
+                $reporter, $assigneeId);
 
         $this->ticketStrategy->process($message);
     }
 
+    public function testProcessWhenApiUserNotExists()
+    {
+        $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
+            self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO);
+
+        $assigneeId = 1;
+
+        $this->apiUserRepository->expects($this->once())
+            ->method('findUserByEmail')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_FROM)
+            )->will($this->returnValue(null));
+
+        $apiUser = $this->getApiUser();
+
+        $this->apiUserFactory->expects($this->once())
+            ->method('create')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_FROM),
+                $this->equalTo(self::DUMMY_MESSAGE_FROM)
+            )->will($this->returnValue($apiUser));
+
+        $this->apiUserRepository->expects($this->once())
+            ->method('store')
+            ->with(
+                $this->equalTo($apiUser)
+            );
+
+        $reporter = $this->getReporter($apiUser->getId());
+
+        preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
+        $customerDomain = $output[1];
+
+        $this->branchEmailConfigurationService->expects($this->once())
+            ->method('getConfigurationBySupportAddressAndCustomerDomain')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_TO),
+                $this->equalTo($customerDomain)
+            )->will($this->returnValue(null));
+
+        $this->emailProcessingSettings->expects($this->once())
+            ->method('getDefaultBranchId')
+            ->will($this->returnValue(self::DEFAULT_BRANCH_ID));
+
+
+        $this->messageReferenceService->expects($this->once())
+            ->method('createTicket')
+            ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
+                $reporter, $assigneeId);
+
+        $this->ticketStrategy->process($message);
+    }
+
+    public function testProcessWhenMessageWithoutReferenceWithDefaultBranch()
+    {
+        $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
+            self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO);
+
+        $assigneeId = 1;
+        $apiUser = $this->getApiUser();
+
+        $this->apiUserRepository->expects($this->once())
+            ->method('findUserByEmail')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_FROM)
+            )->will($this->returnValue($apiUser));
+
+
+        $reporter = $this->getReporter($apiUser->getId());
+
+        preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
+        $customerDomain = $output[1];
+
+        $this->branchEmailConfigurationService->expects($this->once())
+            ->method('getConfigurationBySupportAddressAndCustomerDomain')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_TO),
+                $this->equalTo($customerDomain)
+            )->will($this->returnValue(null));
+
+        $this->emailProcessingSettings->expects($this->once())
+            ->method('getDefaultBranchId')
+            ->will($this->returnValue(self::DEFAULT_BRANCH_ID));
+
+
+        $this->messageReferenceService->expects($this->once())
+            ->method('createTicket')
+            ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
+                $reporter, $assigneeId);
+
+        $this->ticketStrategy->process($message);
+    }
 
     public function testProcessWhenMessageWithoutReferenceWithoutDefaultBranch()
     {
@@ -106,6 +221,16 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $reporterId = 1;
         $assigneeId = 1;
+        $apiUser = $this->getApiUser();
+
+        $this->apiUserRepository->expects($this->once())
+            ->method('findUserByEmail')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_FROM)
+            )->will($this->returnValue($apiUser));
+
+
+        $reporter = $this->getReporter($apiUser->getId());
 
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
@@ -120,7 +245,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
             ->with($this->equalTo($message->getMessageId()), self::DUMMY_BRANCH_ID, $message->getSubject(), $message->getContent(),
-                $reporterId, $assigneeId);
+                $reporter, $assigneeId);
 
         $this->ticketStrategy->process($message);
     }
@@ -131,12 +256,31 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
             self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO, self::DUMMY_REFERENCE);
 
-        $reporterId = 1;
+        $apiUser = $this->getApiUser();
+
+        $this->apiUserRepository->expects($this->once())
+            ->method('findUserByEmail')
+            ->with(
+                $this->equalTo(self::DUMMY_MESSAGE_FROM)
+            )->will($this->returnValue($apiUser));
+
+
+        $reporter = $this->getReporter($apiUser->getId());
 
         $this->messageReferenceService->expects($this->once())
             ->method('createCommentForTicket')
-            ->with($this->equalTo($message->getContent()), $reporterId, $message->getReference());
+            ->with($this->equalTo($message->getContent()), $reporter, $message->getReference());
 
         $this->ticketStrategy->process($message);
+    }
+
+    private function getReporter($id)
+    {
+        return new User($id, User::TYPE_DIAMANTE);
+    }
+
+    private function getApiUser()
+    {
+        return new ApiUser('test_email', 'test_username', 'salt',  array());
     }
 }

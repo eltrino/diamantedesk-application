@@ -41,10 +41,10 @@ interface TicketBuilder
     public function setBranchId($id);
 
     /**
-     * @param int $id
+     * @param string $id
      * @return $this
      */
-    public function setReporterId($id);
+    public function setReporter($id);
 
     /**
      * @param int $id

@@ -80,6 +80,8 @@ class InstallCommand extends AbstractCommand
 
             $this->loadData($output);
 
+            $this->updateEntityConfig($output);
+
             $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
             $output->writeln("Done" . "\n");
@@ -155,11 +157,11 @@ class InstallCommand extends AbstractCommand
      */
     protected function loadDataFixtures(OutputInterface $output)
     {
-        $kernelRootDir  = $this->getContainer()->getParameter('kernel.root_dir');
+        $bundlePath = $this->getContainer()->get('kernel')->locateResource('@DiamanteDeskBundle');
 
         $this->runExistingCommand('doctrine:fixtures:load', $output,
             array(
-                '--fixtures'       => "{$kernelRootDir}/../src/Diamante/DeskBundle/DataFixtures/ORM",
+                '--fixtures'       => "{$bundlePath}/DataFixtures/ORM",
                 '--append'         => true,
                 '--no-interaction' => true,
             )

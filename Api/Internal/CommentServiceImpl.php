@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\CommentService;
 use Diamante\DeskBundle\Api\Command;
@@ -25,14 +26,14 @@ use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Status;
-use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Comment;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use \Diamante\DeskBundle\Model\Ticket\Comment;
-use Diamante\ApiBundle\Annotation\ApiDoc;
 
 class CommentServiceImpl implements CommentService, RestServiceInterface
 {
@@ -191,7 +192,7 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
          */
         $ticket = $this->loadTicketBy($command->ticket);
 
-        $author = $this->userService->getUserById($command->author);
+        $author = User::fromString($command->author);
 
         $comment = $this->commentFactory->create($command->content, $ticket, $author);
 

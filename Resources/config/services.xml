@@ -19,7 +19,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.user.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\OroUserService</parameter>
+        <parameter key="diamante.user.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService</parameter>
         <parameter key="diamante.command_factory.class">Diamante\DeskBundle\Form\CommandFactory</parameter>
         <!-- repositories start -->
         <parameter key="diamante.generic.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
@@ -27,12 +27,20 @@
         <parameter key="diamante.email_processing.form.type.default_branch.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
         <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
+        <parameter key="diamante.user.details.service.class">Diamante\DeskBundle\Model\User\UserDetailsServiceImpl</parameter>
+        <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\DeskBundle\Search\DiamanteUserSearchHandler</parameter>
+        <parameter key="diamante.user.details.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension</parameter>
     </parameters>
 
     <services>
 
         <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>
+            <argument type="service" id="diamante.api.user.repository"/>
+        </service>
+
+        <service id="diamante.user.details.service" class="%diamante.user.details.service.class%">
+            <argument type="service" id="diamante.user.service"/>
         </service>
 
         <service id="diamante.datagrid.extension.formatter.assignee_property" class="Diamante\DeskBundle\Datagrid\AssigneePropertyFormatter">
@@ -61,6 +69,28 @@
         <service id="diamante.email_processing.placeholder.filter.default_branch" class="%diamante.email_processing.placeholder.filter.default_branch.class%">
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="oro_ui_placeholder.filter"/>
+        </service>
+
+        <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
+            <argument type="string">Diamante\DeskBundle\Model\User\UserDetails</argument>
+            <argument type="service" id="diamante.user.details.service"/>
+            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="oro_user.autocomplete.user.search_handler"/>
+            <argument type="collection">
+                <argument type="string">email</argument>
+                <argument type="string">firstName</argument>
+                <argument type="string">lastName</argument>
+                <argument type="string">fullName</argument>
+                <argument type="string">username</argument>
+                <argument type="string">type</argument>
+            </argument>
+            <tag name="oro_form.autocomplete.search_handler" alias="diamante_user" acl_resource="oro_user_user_view"/>
+        </service>
+
+        <service id="diamante.user.details.twig.extension" class="%diamante.user.details.twig.extension.class%">
+            <argument type="service" id="diamante.user.details.service"/>
+            <argument type="service" id="diamante.user.service"/>
+            <tag name="twig.extension"/>
         </service>
     </services>
 </container>

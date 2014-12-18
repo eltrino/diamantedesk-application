@@ -22,7 +22,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToCo
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
-use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 
 class Comment extends DomainEventProvider implements Entity, AttachmentHolder

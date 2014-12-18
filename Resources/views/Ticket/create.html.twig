@@ -11,7 +11,7 @@
 
 {% block navButtons %}
     {% if form.vars.data.branch %}
-        {% set cancel_url = path('diamante_branch_view', {'id':form.vars.data.branch.id}) %}
+        {% set cancel_url = path('diamante_branch_view', {'id':form.vars.data.branch}) %}
     {% else %}
         {% set cancel_url = path('diamante_ticket_list') %}
     {% endif %}

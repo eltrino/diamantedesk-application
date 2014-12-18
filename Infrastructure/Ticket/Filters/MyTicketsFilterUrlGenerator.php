@@ -21,10 +21,20 @@ class MyTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implements 
      */
     public function generateFilterUrlPart()
     {
-        return '|g/i=1&p='. $this->defaultPerPage .'&' .
-            's' . $this->encodeSquareBrackets('updatedAt') . '=1&' .
-            'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('value') . "=$this->userId&" .
-            'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('type') . "=$this->textFiltertype&" .
-            't=diamante-ticket-grid';
+        $params = [
+            'i' => 1,
+            'p' => $this->defaultPerPage,
+            's' => [
+                'updatedAt' => 1
+            ],
+            'f' => [
+                'assigneeFullName' => [
+                    'value' => $this->userFullName,
+                    'type'  => $this->textFiltertype
+                ]
+            ]
+        ];
+
+        return $this->arrayToLink($params);
     }
 }

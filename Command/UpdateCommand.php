@@ -47,6 +47,8 @@ class UpdateCommand extends AbstractCommand
             $this->updateDbSchema();
             $output->writeln("Done" . "\n");
 
+            $this->updateEntityConfig($output);
+
             $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
             $output->writeln("Done" . "\n");

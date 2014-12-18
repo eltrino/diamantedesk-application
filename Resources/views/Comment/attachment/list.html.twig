@@ -22,8 +22,8 @@
     </div>
 
     <script type="text/javascript">
-        require(['jquery', 'oroui/js/modal', 'oronavigation/js/navigation', 'orotranslation/js/translator'],
-                function($, Modal, Navigation, __) {
+        require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
+                function($, Modal, Mediator, __) {
                     $('.delete-item-confirmation').click(function (e) {
                         e.preventDefault();
                         var url = $(this).data('url');
@@ -42,12 +42,8 @@
                         });
 
                         dialog.open(function () {
-                            var navigation = Navigation.getInstance();
-                            if (navigation) {
-                                navigation.loadingMask.show();
-                            }
-                            navigation.setLocation(url);
-
+                            Mediator.execute('showLoading');
+                            Mediator.execute('redirectTo', {url: url})
                         });
                     })
                 });

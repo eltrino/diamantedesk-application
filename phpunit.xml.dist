@@ -19,9 +19,10 @@
             <directory suffix="Test.php">Tests/Infrastructure</directory>
             <directory suffix="Test.php">Tests/Model</directory>
             <directory suffix="Test.php">Tests/Placeholder</directory>
+            <directory suffix="Test.php">Tests/Search</directory>
             <directory suffix="Test.php">Tests/Stubs</directory>
+            <directory suffix="Test.php">Tests/Twig</directory>
             <directory suffix="Test.php">Tests/Validator</directory>
-            <directory suffix="Test.php">Tests/EventListener</directory>
         </testsuite>
     </testsuites>
 

@@ -26,6 +26,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\User as DiamanteUser;
 
 class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 {
@@ -75,6 +76,12 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
      */
     private $senderHost = 'host.com';
 
+    /**
+     * @var \Diamante\ApiBundle\Entity\ApiUser
+     * @Mock \Diamante\ApiBundle\Entity\ApiUser
+     */
+    private $apiUser;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -83,9 +90,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     public function testNotify()
     {
         $ticketUniqueId = UniqueId::generate();
-        $reporter = new User();
-        $reporter->setId(1);
-        $reporter->setEmail('reporter@host.com');
+        $reporter = new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE);
         $assignee = new User();
         $assignee->setId(2);
         $assignee->setEmail('assignee@host.com');
@@ -97,7 +102,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
             new Source(Source::WEB), new Priority(Priority::PRIORITY_MEDIUM), new Status(Status::NEW_ONE)
         );
         $notification = new Notification(
-            (string) $ticketUniqueId, 3, 'Header', 'Subject', new \ArrayIterator(array('key' => 'value')), array('file.ext')
+            (string) $ticketUniqueId, $author, 'Header', 'Subject', new \ArrayIterator(array('key' => 'value')), array('file.ext')
         );
 
         $message = new \Swift_Message();
@@ -107,11 +112,16 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('getByUniqueId')->with($ticketUniqueId)
             ->will($this->returnValue($ticket));
 
-        $this->userService->expects($this->any())->method('getUserById')->will(
+        $this->apiUser
+            ->expects($this->atLeastOnce())
+            ->method('getEmail')
+            ->will($this->returnValue('reporter@host.com'));
+
+        $this->userService->expects($this->any())->method('getByUser')->will(
             $this->returnValueMap(array(
-                array($author->getId(), $author),
-                array($reporter->getId(), $reporter),
-                array($assignee->getId(), $assignee)
+                array(new DiamanteUser($author->getId(), DiamanteUser::TYPE_ORO), $author),
+                array($reporter, $this->apiUser),
+                array(new DiamanteUser($assignee->getId(), DiamanteUser::TYPE_ORO), $assignee)
             ))
         );
 

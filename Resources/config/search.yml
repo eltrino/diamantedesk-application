@@ -8,9 +8,12 @@ Diamante\DeskBundle\Entity\Branch:
         parameters:
             id: id
     search_template: DiamanteDeskBundle:Branch:searchResult.html.twig
-    entity_icon_class: icon-home
     fields:
         -
             name: name
             target_type: text
             target_fields: [name]
+        -
+            name: key
+            target_type: text
+            target_fields: [branch_key]
