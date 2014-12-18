@@ -86,7 +86,9 @@
         require(['oroui/js/mediator', 'oroui/js/widget-manager'],function(mediator, widgetManager) {
             mediator.on('page:beforeChange', function () {
                 for (var i in widgetManager.widgets) {
-                    widgetManager.widgets[i].remove();
+                    if(!widgetManager.widgets[i].loadingElement.hasClass('box-type1')) {
+                        widgetManager.widgets[i].remove();
+                    }
                 }
             });
         })
