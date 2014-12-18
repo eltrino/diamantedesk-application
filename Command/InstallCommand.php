@@ -80,6 +80,8 @@ class InstallCommand extends AbstractCommand
 
             $this->loadData($output);
 
+            $this->updateEntityConfig($output);
+
             $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
             $output->writeln("Done" . "\n");

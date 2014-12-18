@@ -29,7 +29,9 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
  *          "ownership"={
  *              "owner_type"="USER",
  *              "owner_field_name"="reporter",
- *              "owner_column_name"="reporter_id"
+ *              "owner_column_name"="reporter_id",
+ *              "organization_field_name"="reporter",
+ *              "organization_column_name"="reporter_id",
  *          },
  *          "security"={
  *              "type"="ACL",

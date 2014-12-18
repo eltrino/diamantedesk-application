@@ -13,3 +13,7 @@ Diamante\DeskBundle\Entity\Branch:
             name: name
             target_type: text
             target_fields: [name]
+        -
+            name: key
+            target_type: text
+            target_fields: [branch_key]

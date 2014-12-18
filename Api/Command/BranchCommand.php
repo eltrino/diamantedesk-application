@@ -31,7 +31,7 @@ class BranchCommand implements Taggable
     /**
      * @Assert\Regex(
      *    pattern = "/^[a-zA-Z]+$/",
-     *    message = "The Key must contain only letters"
+     *    message = "Branch Key must contain letters only. Numbers, special characters and spaces are not allowed."
      * )
      * @Assert\Type(type="string")
      * @Assert\Length(min = 2)
