@@ -43,6 +43,7 @@
                  class="Diamante\ApiBundle\Security\Authentication\Provider\WsseProvider" public="false">
             <argument /> <!-- User Provider -->
             <argument>%kernel.cache_dir%/security/nonces</argument>
+            <argument type="service" id="security.encoder_factory" />
         </service>
 
         <service id="wsse.security.authentication.listener"

@@ -17,10 +17,12 @@ namespace Diamante\ApiBundle\Security\Authentication\Provider;
 use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\NonceExpiredException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -37,14 +39,23 @@ class WsseProvider implements AuthenticationProviderInterface
     private $lifetime;
 
     /**
+     * @var EncoderFactory
+     */
+    private $encoderFactory;
+
+    private $encoder;
+
+    /**
      * @param UserProviderInterface $userProvider
      * @param $cacheDir
+     * @param EncoderFactory $encoderFactory
      */
-    public function __construct(UserProviderInterface $userProvider, $cacheDir)
+    public function __construct(UserProviderInterface $userProvider, $cacheDir, EncoderFactory $encoderFactory)
     {
-        $this->userProvider = $userProvider;
-        $this->cacheDir     = $cacheDir;
-        $this->lifetime     = 300;
+        $this->userProvider   = $userProvider;
+        $this->cacheDir       = $cacheDir;
+        $this->encoderFactory = $encoderFactory;
+        $this->lifetime       = 300;
     }
 
     /**
@@ -59,8 +70,12 @@ class WsseProvider implements AuthenticationProviderInterface
                 $token->getAttribute('digest'),
                 $token->getAttribute('nonce'),
                 $token->getAttribute('created'),
-                $user->getPassword()))
-        {
+                $this->getSecret($user),
+                $this->getSalt($user),
+                $user
+                )
+            )
+            {
             $authenticatedToken = new WsseToken($user->getRoles());
             $authenticatedToken->setUser($user);
             $authenticatedToken->setAuthenticated(true);
@@ -76,9 +91,11 @@ class WsseProvider implements AuthenticationProviderInterface
      * @param $nonce
      * @param $created
      * @param $secret
+     * @param $salt
+     * @param UserInterface $user
      * @return bool
      */
-    protected function validateDigest($digest, $nonce, $created, $secret)
+    private function validateDigest($digest, $nonce, $created, $secret, $salt, UserInterface $user)
     {
         // Check created time is not in the future
         if ($this->isTokenFromFuture($created))
@@ -101,10 +118,46 @@ class WsseProvider implements AuthenticationProviderInterface
         // And save cache
         $this->saveNonceInCache($nonce);
 
-        // Validate Secret
-        $expected = base64_encode(sha1(base64_decode($nonce) . $created . $secret, true));
+        //validate secret
+        $expected = $this->getEncoder($user)->encodePassword(
+            sprintf(
+                '%s%s%s',
+                base64_decode($nonce),
+                $created,
+                $secret
+            ),
+            $salt
+        );
 
         return $digest === $expected;
+    }
+
+    /**
+     * @param $user
+     * @return \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface|void
+     */
+    private function getEncoder($user)
+    {
+        return $this->encoderFactory->getEncoder($user);
+    }
+
+    /**
+     * @param UserInterface $user
+     * @return string
+     */
+    private function getSecret(UserInterface $user)
+    {
+        $encoder = $this->getEncoder($user);
+        return $encoder->encodePassword($user->getPassword(), $user->getSalt());
+    }
+
+    /**
+     * @param UserInterface $user
+     * @return null|string
+     */
+    private function getSalt(UserInterface $user)
+    {
+        return $user->getSalt();
     }
 
     /**
