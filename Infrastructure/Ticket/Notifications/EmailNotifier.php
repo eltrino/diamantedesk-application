@@ -15,6 +15,8 @@
 namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Entity\MessageReference;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
@@ -46,6 +48,11 @@ class EmailNotifier implements Notifier
     private $ticketRepository;
 
     /**
+     * @var MessageReferenceRepository
+     */
+    private $messageReferenceRepository;
+
+    /**
      * @var UserService
      */
     private $userUservice;
@@ -70,6 +77,7 @@ class EmailNotifier implements Notifier
         \Swift_Mailer $mailer,
         TemplateResolver $templateResolver,
         TicketRepository $ticketRepository,
+        MessageReferenceRepository $messageReferenceRepository,
         UserService $userService,
         NameFormatter $nameFormatter,
         $senderEmail,
@@ -79,6 +87,7 @@ class EmailNotifier implements Notifier
         $this->mailer = $mailer;
         $this->templateResolver = $templateResolver;
         $this->ticketRepository = $ticketRepository;
+        $this->messageReferenceRepository = $messageReferenceRepository;
         $this->userUservice = $userService;
         $this->nameFormatter = $nameFormatter;
         $this->senderEmail = $senderEmail;
@@ -91,18 +100,21 @@ class EmailNotifier implements Notifier
      */
     public function notify(Notification $notification)
     {
-        $message = $this->message($notification);
+        $ticket = $this->loadTicket($notification);
+        $message = $this->message($notification, $ticket);
+
         $this->mailer->send($message);
+
+        $reference = new MessageReference($message->getId(), $ticket);
+        $this->messageReferenceRepository->store($reference);
     }
 
     /**
      * @param Notification $notification
      * @return \Swift_Message
      */
-    private function message(Notification $notification)
+    private function message(Notification $notification, Ticket $ticket)
     {
-        $ticket = $this->loadTicket($notification);
-
         $user = $this->userUservice->getUserById($notification->getAuthor());
         $userFormattedName = $this->nameFormatter->format($user);
 
@@ -115,6 +127,7 @@ class EmailNotifier implements Notifier
 
         $headers = $message->getHeaders();
         $headers->addTextHeader('In-Reply-To', $this->inReplyToHeader($notification));
+        $headers->addIdHeader('References', $this->referencesHeader($ticket));
 
         $options = array (
             'changes'     => $notification->getChangeList(),
@@ -141,6 +154,19 @@ class EmailNotifier implements Notifier
         $reporter = $this->userUservice->getUserById($ticket->getReporter()->getId());
         $assignee = $this->userUservice->getUserById($ticket->getAssignee()->getId());
         return array($reporter->getEmail(), $assignee->getEmail());
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @return array
+     */
+    private function referencesHeader(Ticket $ticket)
+    {
+        $ids = array();
+        foreach ($this->messageReferenceRepository->findAllByTicket($ticket) as $reference) {
+            $ids[] = $reference->getMessageId();
+        }
+        return $ids;
     }
 
     /**

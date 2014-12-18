@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\Notifications;
 
 use Diamante\DeskBundle\Infrastructure\Ticket\Notifications\EmailNotifier;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Priority;
@@ -52,6 +53,12 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketRepository
      */
     private $ticketRepository;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
+     * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
+     */
+    private $messageReferenceRepository;
 
     /**
      * @var \Diamante\DeskBundle\Model\Shared\UserService
@@ -135,19 +142,36 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $this->mailer->expects($this->once())->method('send')->with(
             $this->logicalAnd(
                 $this->isInstanceOf('\Swift_Message'),
-                $this->callback(function(\Swift_Message $other) use($notification){
+                $this->callback(function(\Swift_Message $other) use($notification) {
                     $to = $other->getTo();
                     return false !== strpos($other->getSubject(), $notification->getSubject())
                         && false !== strpos($other->getSubject(), 'KEY-1')
                         && false !== strpos($other->getBody(), 'Rendered TXT template')
-                        && array_key_exists('reporter@host.com', $to) && array_key_exists('assignee@host.com', $to);
+                        && array_key_exists('reporter@host.com', $to) && array_key_exists('assignee@host.com', $to)
+                        && $other->getHeaders()->has('References')
+                        && false !== strpos($other->getHeaders()->get('References'), 'id_1@host.com')
+                        && false !== strpos($other->getHeaders()->get('References'), 'id_2@host.com');
                 })
             )
         );
 
+        $this->messageReferenceRepository->expects($this->once())->method('findAllByTicket')->with($ticket)
+            ->will(
+                $this->returnValue(array(
+                        new MessageReference('id_1@host.com', $ticket), new MessageReference('id_2@host.com', $ticket)
+                    )
+                ));
+
+        $this->messageReferenceRepository->expects($this->once())->method('store')->with(
+            $this->logicalAnd(
+                $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference')
+            )
+        );
+
         $notifier = new EmailNotifier(
-            $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository, $this->userService,
-            $this->nameFormatter, $this->senderEmail, $this->senderHost
+            $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository,
+            $this->messageReferenceRepository, $this->userService, $this->nameFormatter,
+            $this->senderEmail, $this->senderHost
         );
 
         $notifier->notify($notification);

@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing;
 
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 
 /**
  * Interface MessageReferenceRepository
@@ -29,4 +30,11 @@ interface MessageReferenceRepository extends Repository
      * @return MessageReference
      */
     public function getReferenceByMessageId($messageId);
+
+    /**
+     * Retrieves all Ticket MessageReferences
+     * @param Ticket $ticket
+     * @return array|MessageReference[]
+     */
+    public function findAllByTicket(Ticket $ticket);
 }
