@@ -340,21 +340,15 @@ class TicketServiceImpl implements TicketService
 
     /**
      * @@param MoveTicketCommand $command
-     * @return bool
+     * @return void
      * @throws \RuntimeException if unable to load required ticket
      */
     public function moveTicket(MoveTicketCommand $command)
     {
         $ticket = $this->loadTicketById($command->id);
-
-        if ($ticket->getBranch()->getId() == $command->branch->getId()) {
-            return false;
-        }
         $ticket->move($command->branch);
         $this->ticketRepository->store($ticket);
         $this->dispatchEvents($ticket);
-
-        return true;
     }
 
     /**

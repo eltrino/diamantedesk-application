@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Controller;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
 use Diamante\DeskBundle\Form\Type\MoveTicketType;
@@ -25,7 +26,6 @@ use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
 use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Ticket\Api\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -158,34 +158,37 @@ class TicketController extends Controller
      */
     public function moveAction($id)
     {
-        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-        $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
-
-        $command = $this->get('diamante.command_factory')
-            ->createMoveTicketCommand($ticket);
-
-        $form = $this->createForm(new MoveTicketType(), $command);
-
+        $response = array();
         try {
-            if (false === $redirect) {
-                try {
-                    $this->handle($form);
-                    if ($this->get('diamante.ticket.service')->moveTicket($command)) {
-                        $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
-                        $redirect = $this->generateUrl('diamante_ticket_view', array('key' => $ticket->getKey()));
-                        $response = array('saved' => true, 'redirect' => $redirect);
-                        return $response;
-                    }
-                    return array('saved' => true);
+            $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+            $command = $this->get('diamante.command_factory')
+                ->createMoveTicketCommand($ticket);
+            $form = $this->createForm(new MoveTicketType(), $command);
 
-                } catch (\Exception $e) {
-                    $this->addErrorMessage('diamante.desk.ticket.messages.move.error');
-                    $response = array('form' => $form->createView());
-                }
-            } else {
+            if (!$this->getRequest()->get('no_redirect')) {
                 $response = array('form' => $form->createView());
+                return $response;
             }
+            $this->handle($form);
+            if ($command->branch->getId() != $ticket->getBranch()->getId()){
+                $this->get('diamante.ticket.service')->moveTicket($command);
+                $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
+                $url = $this->generateUrl('diamante_ticket_view', array('key' => $ticket->getKey()));
+                $response = array('reload_page' => true, 'redirect' => $url);
+                return $response;
+            }
+            $response['reload_page'] = true;
+        } catch (TicketNotFoundException $e) {
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $url = $this->generateUrl('diamante_ticket_list');
+            $response = array('reload_page' => true, 'redirect' => $url);
+        } catch (BranchNotFoundException $e) {
+            $this->addErrorMessage('diamante.desk.branch.messages.get.error');
+            $response = array('reload_page' => true);
         } catch (MethodNotAllowedException $e) {
+        } catch (\Exception $e) {
+            $this->addErrorMessage('diamante.desk.ticket.messages.move.error');
+            $response['reload_page'] = true;
         }
 
         return $response;
