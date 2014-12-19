@@ -49,7 +49,7 @@ class EmailNotifier implements Notifier
     /**
      * @var UserService
      */
-    private $userUservice;
+    private $userService;
 
     /**
      * @var NameFormatter
@@ -80,7 +80,7 @@ class EmailNotifier implements Notifier
         $this->mailer = $mailer;
         $this->templateResolver = $templateResolver;
         $this->ticketRepository = $ticketRepository;
-        $this->userUservice = $userService;
+        $this->userService = $userService;
         $this->nameFormatter = $nameFormatter;
         $this->senderEmail = $senderEmail;
         $this->senderHost = $senderHost;
@@ -141,7 +141,7 @@ class EmailNotifier implements Notifier
     {
         $emails = array();
         $reporter = $ticket->getReporter();
-        $reporter = $this->userUservice->getByUser($reporter);
+        $reporter = $this->userService->getByUser($reporter);
         $assignee = $ticket->getAssignee();
 
         $emails[] = $reporter->getEmail();
@@ -187,7 +187,7 @@ class EmailNotifier implements Notifier
     {
         if ($user instanceof User) {
             if ($user->isApiUser()) {
-                $user = $this->userUservice->getByUser($user);
+                $user = $this->userService->getByUser($user);
             }
         }
 
