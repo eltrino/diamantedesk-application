@@ -28,6 +28,7 @@ use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
+use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
@@ -335,6 +336,25 @@ class TicketServiceImpl implements TicketService
         $this->dispatchEvents($ticket);
 
         return $ticket;
+    }
+
+    /**
+     * @@param MoveTicketCommand $command
+     * @return bool
+     * @throws \RuntimeException if unable to load required ticket
+     */
+    public function moveTicket(MoveTicketCommand $command)
+    {
+        $ticket = $this->loadTicketById($command->id);
+
+        if ($ticket->getBranch()->getId() == $command->branch->getId()) {
+            return false;
+        }
+        $ticket->move($command->branch);
+        $this->ticketRepository->store($ticket);
+        $this->dispatchEvents($ticket);
+
+        return true;
     }
 
     /**

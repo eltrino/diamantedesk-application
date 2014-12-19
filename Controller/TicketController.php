@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\MoveTicketType;
 use Diamante\DeskBundle\Form\Type\AttachmentType;
 use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
@@ -133,6 +134,52 @@ class TicketController extends Controller
 
                 } catch (\Exception $e) {
                     $this->addErrorMessage('diamante.desk.ticket.messages.change_status.error');
+                    $response = array('form' => $form->createView());
+                }
+            } else {
+                $response = array('form' => $form->createView());
+            }
+        } catch (MethodNotAllowedException $e) {
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/move/ticket/{id}",
+     *      name="diamante_ticket_move",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/move.html.twig")
+     *
+     * @param int $id
+     * @return array
+     */
+    public function moveAction($id)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+        $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
+
+        $command = $this->get('diamante.command_factory')
+            ->createMoveTicketCommand($ticket);
+
+        $form = $this->createForm(new MoveTicketType(), $command);
+
+        try {
+            if (false === $redirect) {
+                try {
+                    $this->handle($form);
+                    if ($this->get('diamante.ticket.service')->moveTicket($command)) {
+                        $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
+                        $redirect = $this->generateUrl('diamante_ticket_view', array('key' => $ticket->getKey()));
+                        $response = array('saved' => true, 'redirect' => $redirect);
+                        return $response;
+                    }
+                    return array('saved' => true);
+
+                } catch (\Exception $e) {
+                    $this->addErrorMessage('diamante.desk.ticket.messages.move.error');
                     $response = array('form' => $form->createView());
                 }
             } else {
