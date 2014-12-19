@@ -5,10 +5,10 @@ DiamanteDesk Api Bundle
 
 app/config/security.yml
 
-Change providers section to this one:
+Change corresponding part of security.yml file to this one:
 
 ```
-        providers:
+    providers:
         chain_provider:
             chain:
                 providers:                  [in_memory, oro_user]
