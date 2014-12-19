@@ -10,6 +10,7 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class WsseListener implements ListenerInterface
 {
@@ -30,7 +31,10 @@ class WsseListener implements ListenerInterface
         $request = $event->getRequest();
 
         $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"/';
-        if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
+
+        if (!$request->headers->has('x-wsse') ||
+            1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches))
+        {
             return;
         }
 
@@ -42,8 +46,16 @@ class WsseListener implements ListenerInterface
         $token->setAttribute('created', $matches[4]);
 
         try {
-            $authToken = $this->authenticationManager->authenticate($token);
-            return $this->securityContext->setToken($authToken);
+            $returnValue = $this->authenticationManager->authenticate($token);
+
+            if ($returnValue instanceof TokenInterface)
+            {
+                return $this->securityContext->setToken($returnValue);
+            }
+            else if ($returnValue instanceof Response)
+            {
+                return $event->setResponse($returnValue);
+            }
 
         } catch (AuthenticationException $failed) {
             // ... you might log something here
@@ -55,11 +67,10 @@ class WsseListener implements ListenerInterface
             //     $this->securityContext->setToken(null);
             // }
             // return;
+            // By default deny authorization
+            // $response = new Response();
+            // $response->setStatusCode(403);
+            // $event->setResponse($response);
         }
-
-        // By default deny authorization
-        $response = new Response();
-        $response->setStatusCode(403);
-        $event->setResponse($response);
     }
 }
