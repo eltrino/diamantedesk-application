@@ -89,4 +89,28 @@ class Status
     {
         return $this->getLabel();
     }
+
+    /**
+     * @param Status $status
+     * @return bool
+     */
+    public function equals(Status $status)
+    {
+        if ($this == $status) {
+            return true;
+        }
+        if ($this->status == $status->getValue()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param Status $status
+     * @return bool
+     */
+    public function notEquals(Status $status)
+    {
+        return !$this->equals($status);
+    }
 }

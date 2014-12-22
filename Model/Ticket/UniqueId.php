@@ -37,6 +37,11 @@ class UniqueId
         return $this->id;
     }
 
+    public function __toString()
+    {
+        return $this->id;
+    }
+
     /**
      * Generate new Ticket Unique Id
      * @return UniqueId

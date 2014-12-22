@@ -21,12 +21,14 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketTest extends \PHPUnit_Framework_TestCase
 {
     const TICKET_SUBJECT      = 'Subject';
     const TICKET_DESCRIPTION  = 'Description';
+    const REPORTER_ID         = 1;
 
     public function testCreates()
     {
@@ -137,14 +139,14 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $ticket = $this->createTicket();
-        $newReporter = new User();
+        $newReporter = new User(self::REPORTER_ID, User::TYPE_ORO);
 
         $ticket->update('New Subject',
             'New Description',
             $newReporter,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED,
-            Source::PHONE
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED),
+            new Source(Source::PHONE)
         );
 
         $this->assertEquals('New Subject', $ticket->getSubject());
@@ -156,7 +158,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     public function testAssign()
     {
-        $newAssignee = new User();
+        $newAssignee = new OroUser();
 
         $ticket = $this->createTicket();
 
@@ -190,11 +192,11 @@ class TicketTest extends \PHPUnit_Framework_TestCase
 
     private function createReporter()
     {
-        return new User();
+        return new User(self::REPORTER_ID, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return new OroUser();
     }
 }

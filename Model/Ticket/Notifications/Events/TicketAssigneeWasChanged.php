@@ -14,19 +14,20 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-class TicketAssigneeWasChanged extends AbstractTicketEvent
+use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
+
+class TicketAssigneeWasChanged extends AbstractTicketEvent implements ChangesProviderEvent
 {
     /**
      * @var string
      */
-    private $assigneeEmail;
+    private $assigneeFullName;
 
-    public function __construct($id, $subject, $assigneeEmail, $recipientsList)
+    public function __construct($id, $subject, $assigneeFullName)
     {
-        $this->ticketId       = $id;
-        $this->subject        = $subject;
-        $this->assigneeEmail  = $assigneeEmail;
-        $this->recipientsList = $recipientsList;
+        $this->ticketId         = $id;
+        $this->subject          = $subject;
+        $this->assigneeFullName = $assigneeFullName;
     }
 
     /**
@@ -37,8 +38,21 @@ class TicketAssigneeWasChanged extends AbstractTicketEvent
         return 'ticketAssigneeWasChanged';
     }
 
-    public function getAssigneeEmail()
+    /**
+     * @return string
+     */
+    public function getHeaderText()
     {
-        return $this->assigneeEmail;
+        return 'Ticket assignee was changed';
     }
-} 
+
+    /**
+     * Provide changes of entity of raised event
+     * @param \ArrayAccess $changes
+     * @return void
+     */
+    public function provideChanges(\ArrayAccess $changes)
+    {
+        $changes['Assignee'] = $this->assigneeFullName;
+    }
+}

@@ -23,6 +23,7 @@ use Diamante\DeskBundle\Form\Type\AttachmentType;
 use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Ticket\Api\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -162,7 +163,7 @@ class TicketController extends Controller
             $branch = $this->get('diamante.branch.service')->getBranch($id);
         }
         $command = $this->get('diamante.command_factory')
-            ->createCreateTicketCommand($branch, $this->getUser());
+            ->createCreateTicketCommand($branch, new User($this->getUser()->getId(), User::TYPE_ORO));
 
         $response = null;
         $form = $this->createForm(new CreateTicketType(), $command);
@@ -172,7 +173,6 @@ class TicketController extends Controller
             $this->handle($form);
 
             $command->branch = $command->branch->getId();
-            $command->reporter = $command->reporter->getId();
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
             $attachments = array();
@@ -222,7 +222,6 @@ class TicketController extends Controller
             $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
             $this->handle($form);
 
-            $command->reporter = $command->reporter->getId();
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
             $attachments = array();

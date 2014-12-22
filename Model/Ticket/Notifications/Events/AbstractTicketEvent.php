@@ -14,10 +14,10 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-use Diamante\DeskBundle\Model\Shared\DomainEvent;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationEvent;
 use Symfony\Component\EventDispatcher\Event;
 
-abstract class AbstractTicketEvent extends Event implements DomainEvent
+abstract class AbstractTicketEvent extends Event implements NotificationEvent
 {
     /**
      * @var string
@@ -35,20 +35,9 @@ abstract class AbstractTicketEvent extends Event implements DomainEvent
     protected $recipientsList;
 
     /**
-     * @return string
+     * @var array
      */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRecipientsList()
-    {
-        return $this->recipientsList;
-    }
+    protected $recipientUserIds = array();
 
     /**
      * @return string
@@ -56,5 +45,21 @@ abstract class AbstractTicketEvent extends Event implements DomainEvent
     public function getAggregateId()
     {
         return $this->ticketId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRecipientUserIds()
+    {
+        return $this->recipientUserIds;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
     }
 }

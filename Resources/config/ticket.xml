@@ -52,6 +52,8 @@
         <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.service"/>
             <argument type="service" id="diamante.branch_email_configuration.service"/>
+            <argument type="service" id="diamante.api.user.repository" />
+            <argument type="service" id="diamante.api.user.entity.factory" />
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="email_processing.strategy" />
         </service>
@@ -83,7 +85,8 @@
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="diamante.mail_ticket_process_manager"/>
+            <argument type="service" id="diamante.notification.delivery.manger"/>
+            <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
 
         <service id="diamante.ticket.internal.grid_filters_service"
@@ -152,7 +155,8 @@
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="oro_security.security_facade"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="diamante.mail_comment_process_manager"/>
+            <argument type="service" id="diamante.notification.delivery.manger"/>
+            <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>
@@ -160,6 +164,20 @@
 
         <service id="diamante.form.type.assignee_select" class="Diamante\DeskBundle\Form\Type\AssigneeSelectType">
             <tag name="form.type" alias="diamante_assignee_select"/>
+        </service>
+
+        <service id="diamante.form.type.reporter_select" class="Diamante\DeskBundle\Form\Type\ReporterSelectType">
+            <tag name="form.type" alias="diamante_reporter_select"/>
+        </service>
+
+        <service id="diamante.form.type.user_select" class="Diamante\DeskBundle\Form\Type\DiamanteUserSelectType">
+            <tag name="form.type" alias="diamante_user_select"/>
+        </service>
+
+        <service id="diamante.form.type.jqueryselect2_hidden" class="Diamante\DeskBundle\Form\Type\DiamanteJquerySelect2HiddenType">
+            <argument type="service" id="oro_form.autocomplete.search_registry"/>
+            <tag name="form.type" alias="diamante_jqueryselect2_hidden"/>
+
         </service>
 <!-- repositories start -->
         <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"

@@ -26,13 +26,6 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
  * @ORM\EntityListeners({"Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener"})
  * @Config(
  *      defaultValues={
- *          "ownership"={
- *              "owner_type"="USER",
- *              "owner_field_name"="reporter",
- *              "owner_column_name"="reporter_id",
- *              "organization_field_name"="reporter",
- *              "organization_column_name"="reporter_id",
- *          },
  *          "security"={
  *              "type"="ACL",
  *              "permissions"="VIEW;CREATE;EDIT;DELETE",
@@ -104,9 +97,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
 
     /**
      * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="reporter_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\Column(type="user_type", name="reporter_id")
      */
     protected $reporter;
 

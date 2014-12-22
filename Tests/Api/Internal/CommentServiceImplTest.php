@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Api\Command\EditCommentCommand;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Internal\CommentServiceImpl;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -28,7 +29,8 @@ use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -101,17 +103,23 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
-     * @Mock \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
 
     public function setUp()
     {
         MockAnnotations::init($this);
+        $this->notificationDeliveryManager = new NotificationDeliveryManager();
         $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
             $this->commentFactory, $this->userService, $this->attachmentManager, $this->securityFacade,
-            $this->dispatcher, $this->processManager);
+            $this->dispatcher, $this->notificationDeliveryManager, $this->notifier);
 
         $this->_dummyTicket = new Ticket(
             new UniqueId('unique_id'),
@@ -145,7 +153,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentRetrieves()
     {
         $ticket  = $this->_dummyTicket;
-        $author  = new User;
+        $author  = new User(self::DUMMY_USER_ID, User::TYPE_DIAMANTE);
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
         $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
             ->will($this->returnValue($comment));
@@ -187,14 +195,11 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentPosts()
     {
         $ticket  = $this->_dummyTicket;
-        $author  = new User;
+        $author  = $this->createDiamanteUser();
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
-
-        $this->userService->expects($this->once())->method('getUserById')->with($this->equalTo(self::DUMMY_USER_ID))
-            ->will($this->returnValue($author));
 
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
@@ -213,7 +218,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new EditCommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
-        $command->author = self::DUMMY_USER_ID;
+        $command->author = $author;
         $command->ticketStatus = Status::IN_PROGRESS;
 
         $this->service->postNewCommentForTicket($command);
@@ -228,14 +233,11 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentPostsWithWithAttachments()
     {
         $ticket  = $this->_dummyTicket;
-        $author  = new User;
+        $author  = $this->createDiamanteUser();
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
-
-        $this->userService->expects($this->once())->method('getUserById')->with($this->equalTo(self::DUMMY_USER_ID))
-            ->will($this->returnValue($author));
 
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
@@ -264,7 +266,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new EditCommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
-        $command->author = self::DUMMY_USER_ID;
+        $command->author = $author;
         $command->ticketStatus = Status::IN_PROGRESS;
         $command->attachmentsInput = $attachmentInputs;
 
@@ -296,7 +298,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentUpdates()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
 
         $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
 
@@ -331,7 +333,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentUpdatesWithAttachments()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
 
         $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
 
@@ -389,7 +391,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentDeletes()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
         $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
         $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
 
@@ -419,7 +421,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovingThrowsExceptionWhenCommentHasNoAttachment()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
         $comment->addAttachment(new Attachment(new File('filename.ext')));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
@@ -474,12 +476,22 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createReporter()
     {
-        return new User();
+        return new User(self::DUMMY_USER_ID, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return $this->createOroUser();
+    }
+
+    private function createOroUser()
+    {
+        return new OroUser();
+    }
+
+    private function createDiamanteUser()
+    {
+        return $this->createReporter();
     }
 
     /**

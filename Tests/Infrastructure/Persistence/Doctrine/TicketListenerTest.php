@@ -24,7 +24,8 @@ use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,18 +55,19 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
     public function testPrePersistHandler()
     {
         $branchId = 1;
-        $lastTicketSequenceNumberValue = 9;
-        $ticketSequenceNumberFieldName = 'number';
+        $ticketSequenceNumberValue = 9;
         $branch = new BranchStub('DB', 'Dummy Branch', 'Desc');
         $branch->setId($branchId);
+        $reporter = new User(1, User::TYPE_DIAMANTE);
+
         $ticket = new Ticket(
             new UniqueId('unique_id'),
             new TicketSequenceNumber(null),
             'Subject',
             'Description',
             $branch,
-            new User(),
-            new User(),
+            $reporter,
+            new OroUser(),
             new Source(Source::WEB),
             new Priority(Priority::PRIORITY_MEDIUM),
             new Status(Status::NEW_ONE)
@@ -83,22 +85,10 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($query));
         $query->expects($this->once())->method('setParameter')->with('branchId', $branchId)
             ->will($this->returnValue($query));
-        $query->expects($this->once())->method('getSingleScalarResult')->will($this->returnValue($lastTicketSequenceNumberValue));
-
-        $this->objectManager->expects($this->once())->method('getClassMetadata')->with(get_class($ticket))
-            ->will($this->returnValue($this->classMetadata));
-
-        $this->classMetadata->expects($this->once())->method('getFieldName')->with(TicketListener::TICKET_SEQUENCE_NUMBER_FIELD)
-            ->will($this->returnValue($ticketSequenceNumberFieldName));
-        $this->classMetadata->expects($this->once())->method('setFieldValue')
-            ->with($ticket, $ticketSequenceNumberFieldName, $this->logicalAnd(
-                        $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber'),
-                        $this->callback(
-                            function(TicketSequenceNumber $other) use ($lastTicketSequenceNumberValue) {
-                                return $other->getValue() == $lastTicketSequenceNumberValue + 1;
-                            })
-                ));
+        $query->expects($this->once())->method('getSingleScalarResult')->will($this->returnValue($ticketSequenceNumberValue));
 
         $this->listener->prePersistHandler($ticket, $event);
+
+        $this->assertEquals($ticketSequenceNumberValue+1, $ticket->getSequenceNumber()->getValue());
     }
 } 

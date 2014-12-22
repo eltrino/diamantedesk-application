@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 class TicketListener
 {
-    const TICKET_SEQUENCE_NUMBER_FIELD = 'sequenceNumber';
+    const TICKET_SEQUENCE_NUMBER_FIELD_TO_UPDATE = 'number';
 
     /**
      * @ORM\PrePersist
@@ -33,12 +33,14 @@ class TicketListener
         $em = $event->getEntityManager();
         $query = $em->createQuery("SELECT MAX(t.sequenceNumber) FROM DiamanteDeskBundle:Ticket t WHERE t.branch = :branchId")
             ->setParameter('branchId', $ticket->getBranch()->getId());
-        $lastTicketSequenceNumber = $query->getSingleScalarResult();
+        $ticketSequenceNumberValue = $query->getSingleScalarResult();
+        $ticketSequenceNumberValue++;
+        $ticketSequenceNumber = $ticket->getSequenceNumber();
 
-        $class = $em->getClassMetadata(get_class($ticket));
-        $lastTicketSequenceNumber++;
-        $class->setFieldValue(
-            $ticket, $class->getFieldName(self::TICKET_SEQUENCE_NUMBER_FIELD), new TicketSequenceNumber($lastTicketSequenceNumber)
-        );
+        $ref = new \ReflectionClass($ticketSequenceNumber);
+        $property = $ref->getProperty(self::TICKET_SEQUENCE_NUMBER_FIELD_TO_UPDATE);
+        $property->setAccessible(true);
+        $property->setValue($ticketSequenceNumber, $ticketSequenceNumberValue);
+        $property->setAccessible(false);
     }
-} 
+}

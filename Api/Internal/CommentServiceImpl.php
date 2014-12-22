@@ -20,6 +20,10 @@ use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
@@ -27,7 +31,6 @@ use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Diamante\DeskBundle\EventListener\Mail\CommentProcessManager;
 use \Diamante\DeskBundle\Model\Ticket\Comment;
 
 class CommentServiceImpl implements CommentService
@@ -68,9 +71,14 @@ class CommentServiceImpl implements CommentService
     private $dispatcher;
 
     /**
-     * @var CommentProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var Notifier
+     */
+    private $notifier;
 
     public function __construct(
         Repository $ticketRepository,
@@ -80,7 +88,8 @@ class CommentServiceImpl implements CommentService
         AttachmentManager $attachmentManager,
         SecurityFacade $securityFacade,
         EventDispatcher $dispatcher,
-        CommentProcessManager $processManager
+        NotificationDeliveryManager $notificationDeliveryManager,
+        Notifier $notifier
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
@@ -89,7 +98,8 @@ class CommentServiceImpl implements CommentService
         $this->attachmentManager = $attachmentManager;
         $this->securityFacade = $securityFacade;
         $this->dispatcher = $dispatcher;
-        $this->processManager = $processManager;
+        $this->notificationDeliveryManager = $notificationDeliveryManager;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -147,7 +157,7 @@ class CommentServiceImpl implements CommentService
          */
         $ticket = $this->loadTicketBy($command->ticket);
 
-        $author = $this->userService->getUserById($command->author);
+        $author = User::fromString($command->author);
 
         $comment = $this->commentFactory->create($command->content, $ticket, $author);
 
@@ -157,7 +167,7 @@ class CommentServiceImpl implements CommentService
             }
         }
 
-        $ticket->updateStatus($command->ticketStatus);
+        $ticket->updateStatus(new Status($command->ticketStatus));
         $ticket->postNewComment($comment);
 
         $this->ticketRepository->store($ticket);
@@ -211,8 +221,9 @@ class CommentServiceImpl implements CommentService
          */
         $ticket = $this->loadTicketBy($command->ticket);
 
-        if ($command->ticketStatus !== $ticket->getStatus()->getValue()) {
-            $ticket->updateStatus($command->ticketStatus);
+        $newStatus = new Status($command->ticketStatus);
+        if (false === $ticket->getStatus()->equals($newStatus)) {
+            $ticket->updateStatus($newStatus);
             $this->ticketRepository->store($ticket);
         }
 
@@ -288,8 +299,6 @@ class CommentServiceImpl implements CommentService
             }
         }
 
-        if (count($this->processManager->getEventsHistory())) {
-            $this->processManager->process();
-        }
+        $this->notificationDeliveryManager->deliver($this->notifier);
     }
 }

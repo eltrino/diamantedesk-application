@@ -24,7 +24,8 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -69,8 +70,8 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             'Subject',
             'Description',
             $branch,
-            new User(),
-            new User(),
+            new User(1, User::TYPE_DIAMANTE),
+            new OroUser(),
             new Source(Source::WEB),
             new Priority(Priority::PRIORITY_MEDIUM),
             new Status(Status::NEW_ONE)

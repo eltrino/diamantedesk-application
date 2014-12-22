@@ -20,8 +20,9 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository;
@@ -104,8 +105,8 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
             'Subject',
             'Description',
             new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESCR'),
-            new User(),
-            new User(),
+            new User(1, User::TYPE_DIAMANTE),
+            new OroUser(),
             new Source(Source::PHONE),
             new Priority(Priority::PRIORITY_MEDIUM),
             new Status(Status::OPEN)
