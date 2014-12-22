@@ -82,6 +82,12 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
      */
     private $apiUser;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     */
+    private $userDetailsService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -157,7 +163,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 
         $notifier = new EmailNotifier(
             $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository, $this->userService,
-            $this->nameFormatter, $this->senderEmail, $this->senderHost
+            $this->nameFormatter, $this->userDetailsService, $this->senderEmail, $this->senderHost
         );
 
         $notifier->notify($notification);

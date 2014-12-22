@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetailsService;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 
 class EmailNotifier implements Notifier
@@ -66,6 +67,11 @@ class EmailNotifier implements Notifier
      */
     private $senderHost;
 
+    /**
+     * @var UserDetailsService
+     */
+    private $userDetailsService;
+
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
@@ -73,15 +79,18 @@ class EmailNotifier implements Notifier
         TicketRepository $ticketRepository,
         UserService $userService,
         NameFormatter $nameFormatter,
+        UserDetailsService $userDetailsService,
         $senderEmail,
         $senderHost
-    ) {
+    )
+    {
         $this->twig = $twig;
         $this->mailer = $mailer;
         $this->templateResolver = $templateResolver;
         $this->ticketRepository = $ticketRepository;
         $this->userUservice = $userService;
         $this->nameFormatter = $nameFormatter;
+        $this->userDetailsService = $userDetailsService;
         $this->senderEmail = $senderEmail;
         $this->senderHost = $senderHost;
     }
@@ -117,14 +126,16 @@ class EmailNotifier implements Notifier
         $headers = $message->getHeaders();
         $headers->addTextHeader('In-Reply-To', $this->inReplyToHeader($notification));
 
-        $options = array (
-            'changes'     => $notification->getChangeList(),
-            'attachments' => $notification->getAttachments(),
-            'user'        => $userFormattedName,
-            'header'      => $notification->getHeaderText()
+        $changeList = $this->postProcessChangesList($notification);
+
+        $options = array(
+            'changes'       => $changeList,
+            'attachments'   => $notification->getAttachments(),
+            'user'          => $userFormattedName,
+            'header'        => $notification->getHeaderText()
         );
 
-        $txtTemplate  = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);
+        $txtTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);
         $htmlTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_HTML);
 
         $message->setBody($this->twig->render($txtTemplate, $options), 'text/plain');
@@ -160,7 +171,7 @@ class EmailNotifier implements Notifier
      */
     private function decorateMessageSubject($subject, Ticket $ticket)
     {
-        return sprintf('%s %s', (string) $ticket->getKey(), $subject);
+        return sprintf('%s %s', (string)$ticket->getKey(), $subject);
     }
 
     /**
@@ -183,6 +194,10 @@ class EmailNotifier implements Notifier
         return $ticket;
     }
 
+    /**
+     * @param $user
+     * @return \Diamante\ApiBundle\Entity\ApiUser|\Oro\Bundle\UserBundle\Entity\User
+     */
     private function getUserDependingOnType($user)
     {
         if ($user instanceof User) {
@@ -192,5 +207,21 @@ class EmailNotifier implements Notifier
         }
 
         return $user;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return \ArrayAccess
+     */
+    private function postProcessChangesList(Notification $notification)
+    {
+        $changes = $notification->getChangeList();
+
+        if (isset($changes['Reporter'])) {
+            $details = $this->userDetailsService->fetch($changes['Reporter']);
+            $changes['Reporter'] = $details->getFullName();
+        }
+
+        return $changes;
     }
 }
