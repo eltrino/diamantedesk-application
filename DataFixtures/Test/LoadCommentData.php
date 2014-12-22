@@ -25,6 +25,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Model\User\User;
 
 class LoadCommentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -65,7 +66,7 @@ class LoadCommentData extends AbstractFixture implements ContainerAwareInterface
                 $comment = new Comment(
                     'commentContent' . $i . '-' . $j,
                     $ticket,
-                    $author
+                    new User($author->getId(), User::TYPE_ORO)
                 );
                 $manager->persist($comment);
             }
