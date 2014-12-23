@@ -42,6 +42,11 @@ class HandleView
 
         $data = $event->getControllerResult();
         $responseMethod = strtolower($request->getMethod());
+
+        if (!method_exists($this, $responseMethod)) {
+            throw new \RuntimeException(sprintf('Can not handle response for method "%s".', $responseMethod));
+        }
+
         $response = call_user_func_array([$this, $responseMethod], [$data, $request->getRequestFormat(), $request]);
         $event->setResponse($response);
     }
@@ -101,6 +106,16 @@ class HandleView
             Codes::HTTP_CREATED,
             ['Location' => $location]
         );
+    }
+
+    /**
+     * Prepare response for HTTP PATCH request, with standard HTTP status code and empty body.
+     *
+     * @return Response
+     */
+    protected function patch()
+    {
+        return new Response('', Codes::HTTP_OK);
     }
 
     /**
