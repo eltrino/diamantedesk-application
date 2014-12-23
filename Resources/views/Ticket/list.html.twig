@@ -42,7 +42,7 @@
         </div>
     </div>
     <script>
-        require(['jquery',  'oroui/js/mediator', 'underscore'],
+        require(['jquery',  'oroui/js/mediator'],
             function($, mediator) {
                 mediator.on('grid_render:complete', function (element) {
                     $(element).find("tbody tr").each(function(){
