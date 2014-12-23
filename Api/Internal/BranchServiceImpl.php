@@ -260,6 +260,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
      * )
      *
      * @param Command\UpdatePropertiesCommand $command
+     * @return Branch
      */
     public function updateProperties(Command\UpdatePropertiesCommand $command)
     {
@@ -278,6 +279,8 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
         }
 
         $this->branchRepository->store($branch);
+
+        return $branch;
     }
 
     /**

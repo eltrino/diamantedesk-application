@@ -290,7 +290,7 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
      * )
      *
      * @param Command\UpdateCommentCommand $command
-     * @return void
+     * @return Comment
      */
     public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command)
     {
@@ -309,6 +309,8 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         }
 
         $this->dispatchEvents($comment, $ticket);
+
+        return $comment;
     }
 
     /**

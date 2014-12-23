@@ -569,6 +569,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      * )
      *
      * @param Command\UpdatePropertiesCommand $command
+     * @return Ticket
      */
     public function updateProperties(Command\UpdatePropertiesCommand $command)
     {
@@ -584,6 +585,8 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         }
 
         $this->ticketRepository->store($ticket);
+
+        return $ticket;
     }
 
     /**
