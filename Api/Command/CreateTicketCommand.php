@@ -63,7 +63,6 @@ class CreateTicketCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @Entity()
      */
     public $reporter;
 
