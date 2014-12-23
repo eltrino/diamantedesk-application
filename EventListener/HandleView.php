@@ -80,11 +80,14 @@ class HandleView
     /**
      * Prepare response for HTTP PUT request, with standard HTTP status code and empty body.
      *
+     * @param Entity $data
+     * @param $format
      * @return Response
      */
-    protected function put()
+    protected function put(Entity $data, $format)
     {
-        return new Response('', Codes::HTTP_OK);
+        $context = SerializationContext::create()->setGroups(['Default', 'entity']);
+        return new Response($this->serializer->serialize($data, $format, $context), Codes::HTTP_OK);
     }
 
     /**
@@ -111,11 +114,14 @@ class HandleView
     /**
      * Prepare response for HTTP PATCH request, with standard HTTP status code and empty body.
      *
+     * @param Entity $data
+     * @param $format
      * @return Response
      */
-    protected function patch()
+    protected function patch(Entity $data, $format)
     {
-        return new Response('', Codes::HTTP_OK);
+        $context = SerializationContext::create()->setGroups(['Default', 'entity']);
+        return new Response($this->serializer->serialize($data, $format, $context), Codes::HTTP_OK);
     }
 
     /**
