@@ -150,6 +150,17 @@ class TicketControllerTest extends WebTestCase
         $this->assertEquals("Change", $crawler->selectButton('Change')->html());
     }
 
+
+    public function testMove()
+    {
+        $ticket              = $this->chooseTicketFromGrid();
+        $moveFormUrl = $this->getUrl('diamante_ticket_move', array('id' => $ticket['id']));
+        $crawler             = $this->client->request('GET', $moveFormUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
     public function testUpdate()
     {
         $ticket        = $this->chooseTicketFromGrid();
