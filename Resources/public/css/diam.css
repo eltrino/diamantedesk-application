@@ -63,6 +63,10 @@
     padding: .6em 0;
 }
 
+#diam-default-branch-message i {
+    color: red;
+}
+
 .diam-comments {
     margin: 0 0 1em;
 }
