@@ -239,6 +239,15 @@
     white-space: nowrap
 }
 
+
+.diam-branch-grid td:nth-last-child(n+3){
+    padding-right: 78px;
+}
+
+.diam-branch-grid th.string-cell, td.string-cell{
+    vertical-align: middle;
+}
+
 @keyframes blink {
     0% { background: rgba(238, 238, 238, 1); }
     50% { background: rgba(238, 238, 238, .1); }
