@@ -18,6 +18,7 @@ use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Resolver\ReporterFullNameResolver;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
@@ -218,7 +219,7 @@ class EmailNotifier implements Notifier
         $changes = $notification->getChangeList();
 
         if (isset($changes['Reporter'])) {
-            $details = $this->userDetailsService->fetch($changes['Reporter']);
+            $details = $this->userDetailsService->fetch(User::fromString($changes['Reporter']));
             $changes['Reporter'] = $details->getFullName();
         }
 
