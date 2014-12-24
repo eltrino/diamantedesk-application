@@ -273,3 +273,7 @@
 .ui-multiselect-menu.ui-widget {
     display: none;
 }
+
+.oro-clearfix-width:after, .oro-clearfix:after {
+    clear: none;
+}
