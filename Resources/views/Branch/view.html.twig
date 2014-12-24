@@ -59,7 +59,7 @@
     {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.forms.name'|trans, entity.name)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.key'|trans, entity.key)]) %}
 
-    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssigneeFullName : 'diamante.desk.common.not_defined'|trans %}
+    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssignee|oro_format_name : 'diamante.desk.common.not_defined'|trans %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.default_assignee'|trans, defaultAssigneeFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
