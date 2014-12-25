@@ -404,6 +404,16 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->status = $status;
     }
 
+    public function move(Branch $branch, TicketSequenceNumber $sequenceNumber = null)
+    {
+        if ($sequenceNumber == null) {
+            $sequenceNumber = new TicketSequenceNumber();
+        }
+        $this->branch = $branch;
+        $this->sequenceNumber = $sequenceNumber;
+        $this->key = null;
+    }
+
     /**
      * Assign new assignee (User) to ticket
      * @param OroUser $newAssignee

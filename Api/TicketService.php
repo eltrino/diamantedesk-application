@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api;
 
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -76,6 +77,13 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket and assignee
      */
     public function updateTicket(UpdateTicketCommand $command);
+
+    /**
+     * @param MoveTicketCommand $command
+     * @return bool
+     * @throws \RuntimeException if unable to load required ticket
+     */
+    public function moveTicket(MoveTicketCommand $command);
 
     /**
      * @param UpdateStatusCommand $command

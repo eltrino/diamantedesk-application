@@ -58,6 +58,7 @@ diamante:
             assign:            Assign
             create:            Create Ticket
             change_status:     Change status
+            move:              Move
 
           messages:
             create:
@@ -76,6 +77,9 @@ diamante:
             change_status:
               error:           Error occured while trying to change ticket status.
               success:         Status successfully changed
+            move:
+              error:           Error occured while trying to move ticket.
+              success:         Ticket successfully moved.
             get:
               error:           Ticket loading failed, ticket not found.
               attachment:

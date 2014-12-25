@@ -23,9 +23,12 @@ class LoadBranchData extends AbstractFixture
     public function load(ObjectManager $manager)
     {
 
+        $ASCIIKey = ord('A');
         for ($i = 1; $i <= 10; $i ++) {
 
+            $keySuffix = chr($ASCIIKey + $i);
             $branch = new Branch(
+                'BRANCH' . $keySuffix,
                 'branchName' . $i,
                 'branchDescription' . $i
             );
