@@ -26,11 +26,13 @@ define(['app'], function(App){
     };
 
     App.on('session:login', function(){
+      App.debug('info', 'Event "session:login" fired');
       App.navigate("login");
       API.login();
     });
 
     App.on('session:logout', function(){
+      App.debug('info', 'Event "session:logout" fired');
       App.navigate("logout");
       API.logout();
     });

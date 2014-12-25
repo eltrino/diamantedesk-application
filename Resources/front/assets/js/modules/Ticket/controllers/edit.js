@@ -27,13 +27,19 @@ define(['app'], function(App){
 
           modalEditView.on('modal:submit', function(data){
             editTicketModel.set(data);
-            editTicketModel.save(editTicketModel.changedAttributes(),{
-              patch : true,
-              success : function(resultModel){
-                App.trigger('ticket:view', resultModel.get('id'));
-                modalEditView.$el.modal('hide');
-              }
-            });
+            var attrs = editTicketModel.changedAttributes();
+            if(attrs){
+              editTicketModel.save(attrs,{
+                patch : true,
+                success : function(resultModel){
+                  App.trigger('ticket:view', resultModel.get('id'));
+                  modalEditView.off('modal:closed');
+                  modalEditView.$el.modal('hide');
+                }
+              });
+            } else {
+              modalEditView.$el.modal('hide');
+            }
           });
 
           App.DialogRegion.show(modalEditView);

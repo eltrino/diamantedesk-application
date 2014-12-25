@@ -15,7 +15,7 @@ define([
   'marionette',
   'backbone',
   'config',
-  'bootstrap'], function(Marionette, Backbone) {
+  'bootstrap'], function(Marionette, Backbone, Config) {
 
   var App = new Marionette.Application({
 
@@ -35,6 +35,12 @@ define([
       this.on('history:start', function(){
         Backbone.history.navigate(route, options || {});
       });
+    }
+  };
+
+  App.debug = function(type){
+    if(Config.isDev) {
+      console[type].apply(console, [].slice.call(arguments, 1));
     }
   };
 

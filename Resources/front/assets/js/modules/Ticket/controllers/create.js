@@ -28,10 +28,10 @@ define(['app'], function(App){
         modalCreateView.on('modal:submit', function(data){
           data.branch = 1;
           data.status = 'open';
-          data.source = 'phone';
+          data.source = 'web';
           App.request("user:model:current").done(function(user){
-            data.reporter = user.id;
-            data.assignee = user.id;
+            data.reporter =  'oro_' + user.id;
+            data.assignee =  user.id;
             newTicketModel.save(data, {
               success : function(resultModel){
                 isSuccess = true;

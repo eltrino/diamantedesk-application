@@ -37,21 +37,25 @@ define(['app'], function(App){
     };
 
     App.on('ticket:list', function(){
+      App.debug('info', 'Event "ticket:list" fired');
       App.navigate("tickets");
       API.listTickets();
     });
 
     App.on('ticket:view', function(id){
+      App.debug('info', 'Event "ticket:view" fired');
       App.navigate("tickets/" + id);
       API.viewTicket(id);
     });
 
     App.on('ticket:create', function(){
+      App.debug('info', 'Event "ticket:create" fired');
       App.navigate("tickets/create");
       API.createTicket();
     });
 
     App.on('ticket:edit', function(id){
+      App.debug('info', 'Event "ticket:edit" fired');
       App.navigate("tickets/"+ id + "/edit");
       API.editTicket(id);
     });
