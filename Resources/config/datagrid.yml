@@ -116,9 +116,6 @@ datagrid:
         columns:
             key:
                 label:   diamante.desk.ticket.columns.key
-                type: twig
-                frontend_type: html
-                template: DiamanteDeskBundle:Ticket:Datagrid/Property/key.html.twig
             subject:
                 label:   diamante.desk.ticket.columns.subject
             branchName:

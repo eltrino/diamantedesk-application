@@ -25,11 +25,15 @@ class TicketListener
 
     /**
      * @ORM\PrePersist
+     * @ORM\PreUpdate
      * @param Ticket $ticket
      * @param LifecycleEventArgs $event
      */
     public function prePersistHandler(Ticket $ticket, LifecycleEventArgs $event)
     {
+        if ($ticket->getSequenceNumber()->getValue()) {
+            return;
+        }
         $em = $event->getEntityManager();
         $query = $em->createQuery("SELECT MAX(t.sequenceNumber) FROM DiamanteDeskBundle:Ticket t WHERE t.branch = :branchId")
             ->setParameter('branchId', $ticket->getBranch()->getId());

@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Symfony\Component\DomCrawler\Form;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketControllerTest extends WebTestCase
 {
@@ -54,7 +55,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[status]']      = 'open';
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_MEDIUM;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
-        $form['diamante_ticket_form[reporter]']    = 1;
+        $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
 
@@ -84,7 +85,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[status]']      = Status::OPEN;
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_LOW;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
-        $form['diamante_ticket_form[reporter]']    = 1;
+        $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
 
@@ -144,6 +145,17 @@ class TicketControllerTest extends WebTestCase
         $ticket              = $this->chooseTicketFromGrid();
         $updateStatusFormUrl = $this->getUrl('diamante_ticket_status_change', array('id' => $ticket['id']));
         $crawler             = $this->client->request('GET', $updateStatusFormUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
+
+    public function testMove()
+    {
+        $ticket              = $this->chooseTicketFromGrid();
+        $moveFormUrl = $this->getUrl('diamante_ticket_move', array('id' => $ticket['id']));
+        $crawler             = $this->client->request('GET', $moveFormUrl);
 
         $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
         $this->assertEquals("Change", $crawler->selectButton('Change')->html());
@@ -229,7 +241,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[status]']      = Status::OPEN;
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_LOW;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
-        $form['diamante_ticket_form[reporter]']    = 1;
+        $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER . 1;
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);

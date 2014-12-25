@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 
 use Diamante\DeskBundle\Api\Command\AttachmentCommand;
+use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
@@ -64,6 +65,15 @@ class CommandFactory
         $command = new AssigneeTicketCommand();
         $command->id = $ticket->getId();
         $command->assignee = $ticket->getAssignee();
+
+        return $command;
+    }
+
+    public function createMoveTicketCommand(Ticket $ticket)
+    {
+        $command = new MoveTicketCommand();
+        $command->id = $ticket->getId();
+        $command->branch = $ticket->getBranch();
 
         return $command;
     }

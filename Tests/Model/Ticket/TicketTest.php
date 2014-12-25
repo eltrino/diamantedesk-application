@@ -167,6 +167,14 @@ class TicketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($newAssignee->getId(), $ticket->getAssignee()->getId());
     }
 
+    public function testMove()
+    {
+        $newBranch = $this->createBranch();
+        $ticket = $this->createTicket();
+        $ticket->move($newBranch);
+        $this->assertEquals($newBranch->getId(), $ticket->getBranch()->getId());
+    }
+
     private function createTicket()
     {
         $ticket = new Ticket(
