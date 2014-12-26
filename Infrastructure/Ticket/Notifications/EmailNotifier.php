@@ -98,7 +98,7 @@ class EmailNotifier implements Notifier
         $this->templateResolver = $templateResolver;
         $this->ticketRepository = $ticketRepository;
         $this->messageReferenceRepository = $messageReferenceRepository;
-        $this->userUservice = $userService;
+        $this->userService = $userService;
         $this->nameFormatter = $nameFormatter;
         $this->userDetailsService = $userDetailsService;
         $this->senderEmail = $senderEmail;
