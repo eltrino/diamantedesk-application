@@ -348,7 +348,9 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         $assignee = null;
         if ($command->assignee) {
             $assignee = $ticket->getAssignee();
-            if ($command->assignee != $ticket->getAssignee()->getId()) {
+            $currentAssigneeId = empty($assignee) ? null : $assignee->getId();
+
+            if ($command->assignee != $currentAssigneeId) {
                 $assignee = $this->userService->getByUser(new User((int)$command->assignee, User::TYPE_ORO));
             }
         }
