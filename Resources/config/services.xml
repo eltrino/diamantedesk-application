@@ -39,10 +39,14 @@
             <argument type="service" id="diamante.api.user.repository" />
         </service>
 
+        <service id="wsse.security.cache.provider" class="Doctrine\Common\Cache\PhpFileCache">
+            <argument>%kernel.cache_dir%/security/nonces</argument>
+        </service>
+
         <service id="wsse.security.authentication.provider"
                  class="Diamante\ApiBundle\Security\Authentication\Provider\WsseProvider" public="false">
             <argument /> <!-- User Provider -->
-            <argument>%kernel.cache_dir%/security/nonces</argument>
+            <argument type="service" id="wsse.security.cache.provider" />
             <argument type="service" id="security.encoder_factory" />
         </service>
 

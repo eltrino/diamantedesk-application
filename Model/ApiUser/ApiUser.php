@@ -50,7 +50,7 @@ class ApiUser implements Entity, UserInterface
      */
     protected $salt;
 
-    public function __construct($username, $password, $salt, array $roles)
+    public function __construct($username, $password = null, $salt = null, array $roles)
     {
         $this->username = $username;
         $this->password = $password;

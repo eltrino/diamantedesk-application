@@ -17,20 +17,25 @@ namespace Diamante\ApiBundle\Security\Authentication\Provider;
 use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\NonceExpiredException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use Doctrine\Common\Cache\Cache;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class WsseProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
-    private $cacheDir;
+
+    /**
+     * @var Cache
+     */
+    private $nonceCache;
 
     /**
      * Token lifetime in seconds
@@ -39,21 +44,19 @@ class WsseProvider implements AuthenticationProviderInterface
     private $lifetime;
 
     /**
-     * @var EncoderFactory
+     * @var EncoderFactoryInterface
      */
     private $encoderFactory;
 
-    private $encoder;
-
     /**
      * @param UserProviderInterface $userProvider
-     * @param $cacheDir
-     * @param EncoderFactory $encoderFactory
+     * @param Cache $nonceCache
+     * @param EncoderFactoryInterface $encoderFactory
      */
-    public function __construct(UserProviderInterface $userProvider, $cacheDir, EncoderFactory $encoderFactory)
+    public function __construct(UserProviderInterface $userProvider, Cache $nonceCache, EncoderFactoryInterface $encoderFactory)
     {
         $this->userProvider   = $userProvider;
-        $this->cacheDir       = $cacheDir;
+        $this->nonceCache       = $nonceCache;
         $this->encoderFactory = $encoderFactory;
         $this->lifetime       = 300;
     }
@@ -108,15 +111,14 @@ class WsseProvider implements AuthenticationProviderInterface
             throw new CredentialsExpiredException('Token has expired.');
         }
 
-        // Validate that the nonce is *not* used in the last 5 minutes
-        // if it has, this could be a replay attack
-        if ($this->nonceIsUsed($nonce))
+        //validate that nonce is unique within specified lifetime
+        //if it is not, this could be a replay attack
+        if($this->nonceCache->contains($nonce))
         {
-            throw new NonceExpiredException('Previously used nonce detected');
+            throw new NonceExpiredException('Previously used nonce detected.');
         }
-        // If cache directory does not exist we create it
-        // And save cache
-        $this->saveNonceInCache($nonce);
+
+        $this->nonceCache->save($nonce, time(), $this->lifetime);
 
         //validate secret
         $expected = $this->getEncoder($user)->encodePassword(
@@ -158,28 +160,6 @@ class WsseProvider implements AuthenticationProviderInterface
     private function getSalt(UserInterface $user)
     {
         return $user->getSalt();
-    }
-
-    /**
-     * @param $nonce
-     */
-    private function saveNonceInCache($nonce)
-    {
-        if (!is_dir($this->cacheDir)) {
-            mkdir($this->cacheDir, 0777, true);
-        }
-        file_put_contents($this->cacheDir . '/' . $nonce, time());
-    }
-
-    /**
-     * @param $nonce
-     * @return bool
-     */
-    private function nonceIsUsed($nonce)
-    {
-        return
-            (file_exists($this->cacheDir.'/' . $nonce) &&
-            file_get_contents($this->cacheDir .'/'. $nonce) + $this->lifetime > time());
     }
 
     /**

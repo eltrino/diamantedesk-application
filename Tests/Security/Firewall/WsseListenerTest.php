@@ -18,8 +18,6 @@ use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 use Diamante\ApiBundle\Security\Firewall\WsseListener;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
-use Symfony\Component\HttpFoundation\Response;
-
 class WsseListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
