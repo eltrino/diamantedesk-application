@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 
 class DoctrineMessageReferenceRepository extends DoctrineGenericRepository implements MessageReferenceRepository
 {
@@ -26,5 +27,15 @@ class DoctrineMessageReferenceRepository extends DoctrineGenericRepository imple
     public function getReferenceByMessageId($messageId)
     {
         return $this->findOneBy(array('messageId' => $messageId));
+    }
+
+    /**
+     * Retrieves all Ticket MessageReferences
+     * @param Ticket $ticket
+     * @return array|MessageReference[]
+     */
+    public function findAllByTicket(Ticket $ticket)
+    {
+        return $this->findBy(array('ticket' => $ticket));
     }
 }

@@ -154,13 +154,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
 
+
         $this->raise(
             new TicketWasCreated(
                 (string) $this->uniqueId,
                 $this->branch->getName(),
                 $this->subject,
                 $this->description,
-                $this->getReporterFullName(),
+                (string)$this->reporter,
                 $this->getAssigneeFullName(),
                 (string) $this->priority,
                 (string) $this->status,
@@ -407,7 +408,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         if ($hasChanges) {
             $this->raise(
                 new TicketWasUpdated(
-                    (string) $this->uniqueId, $this->subject, $this->description, $this->getReporterFullName(),
+                    (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
                     (string) $this->priority, (string) $this->status, (string) $this->source
                 )
             );

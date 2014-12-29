@@ -7,6 +7,7 @@ datagrid:
                     - b.id
                     - b.name
                     - b.logo
+                    - b.key
                 from:
                     - { table: %diamante.branch.entity.class%, alias: b }
         properties:
@@ -27,11 +28,16 @@ datagrid:
             columns:
                 name:
                   data_name: b.name
+                key:
+                  data_name: b.key
         filters:
             columns:
                 name:
                     type: string
                     data_name: b.name
+                key:
+                    type: string
+                    data_name: b.key
         columns:
             logo:
                 label: diamante.desk.branch.columns.logo
@@ -40,6 +46,8 @@ datagrid:
                 template: DiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
             name:
                 label: diamante.desk.branch.columns.branch_name
+            key:
+                label: diamante.desk.branch.columns.branch_key
         actions:
             view:
                 type:          navigate

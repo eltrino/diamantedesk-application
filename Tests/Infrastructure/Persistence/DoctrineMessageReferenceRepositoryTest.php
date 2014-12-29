@@ -91,10 +91,35 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(1), $this->equalTo(null)
             )->will($this->returnValue($messageReference));
 
-        $retrievedMessageReference = $this->repository->findOneBy(array('messageId' => $messageId));
+        $retrievedMessageReference = $this->repository->getReferenceByMessageId($messageId);
 
         $this->assertNotNull($retrievedMessageReference);
         $this->assertEquals($messageReference, $retrievedMessageReference);
+    }
+
+    public function testFindAllByTicket()
+    {
+        $messageReference = $this->getMessageReference();
+        $ticket = $messageReference->getTicket();
+        $references = array($messageReference);
+
+        $this->em->expects($this->once())
+            ->method('getUnitOfWork')
+            ->will($this->returnValue($this->unitOfWork));
+
+        $this->unitOfWork->expects($this->once())
+            ->method('getEntityPersister')
+            ->with($this->equalTo(self::DUMMY_CLASS_NAME))
+            ->will($this->returnValue($this->entityPersister));
+
+        $this->entityPersister->expects($this->once())
+            ->method('loadAll')
+            ->with($this->equalTo(array('ticket' => $ticket)), null, null, null)
+            ->will($this->returnValue($references));
+
+        $result = $this->repository->findAllByTicket($ticket);
+
+        $this->assertEquals($references, $result);
     }
 
     private function getMessageReference()

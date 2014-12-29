@@ -8,6 +8,7 @@ diamante:
           columns:
             logo:              Logo
             branch_name:       Branch Name
+            branch_key:        Branch Key
 
           actions:
             view:              View Branch
@@ -53,6 +54,7 @@ diamante:
             edit:              Edit Ticket
             view:              View Ticket
             remove:            Delete Ticket
+            delete:            Delete Tickets
             assign:            Assign
             create:            Create Ticket
             change_status:     Change status

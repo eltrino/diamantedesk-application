@@ -11,7 +11,7 @@
     <ol class="diam-comments unstyled">
         {% for comment in comments if comment.id  %}
             {% set imagePath = '' %}
-            {% set author = fetch_user_details(comment.author) %}
+            {% set author = fetch_oro_user(comment.author) %}
             {% if comment.author.isOroUser %}
                 {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
             {% endif %}
@@ -25,9 +25,9 @@
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
-                    <img src="{{ avatar is defined ? avatar : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="{{ author.getFullName }}">
+                    <img src="{{ avatar is defined ? avatar : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="{{ author|oro_format_name }}">
                 </div>
-                <div class="diam-comment-meta">{{ author.getFirstname }} {{ author.getLastname }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
+                <div class="diam-comment-meta">{{ author|oro_format_name }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
                 <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
@@ -90,7 +90,9 @@
         require(['oroui/js/mediator', 'oroui/js/widget-manager'],function(mediator, widgetManager) {
             mediator.on('page:beforeChange', function () {
                 for (var i in widgetManager.widgets) {
-                    widgetManager.widgets[i].remove();
+                    if(!widgetManager.widgets[i].loadingElement.hasClass('box-type1')) {
+                        widgetManager.widgets[i].remove();
+                    }
                 }
             });
         })

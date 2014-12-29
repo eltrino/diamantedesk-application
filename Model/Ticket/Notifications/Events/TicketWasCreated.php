@@ -25,9 +25,9 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
     private $description;
 
     /**
-     * @var string
+     * @var \Diamante\DeskBundle\Model\User\User
      */
-    private $reporterFullName;
+    private $reporter;
 
     /**
      * @var string
@@ -64,7 +64,7 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
         $branchName,
         $subject,
         $description,
-        $reporterFullName,
+        $reporter,
         $assigneeFullName,
         $priority,
         $status,
@@ -74,7 +74,7 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
         $this->branchName       = $branchName;
         $this->subject          = $subject;
         $this->description      = $description;
-        $this->reporterFullName = $reporterFullName;
+        $this->reporter         = $reporter;
         $this->assigneeFullName = $assigneeFullName;
         $this->priority         = $priority;
         $this->status           = $status;
@@ -108,7 +108,7 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
         $changes['Branch']      = $this->branchName;
         $changes['Subject']     = $this->subject;
         $changes['Description'] = $this->description;
-        $changes['Reporter']    = $this->reporterFullName;
+        $changes['Reporter']    = $this->reporter;
         $changes['Assignee']    = $this->assigneeFullName;
         $changes['Priority']    = $this->priority;
         $changes['Status']      = $this->status;
