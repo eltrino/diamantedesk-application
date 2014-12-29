@@ -5,18 +5,13 @@ DiamanteDesk Api Bundle
 
 app/config/security.yml
 
-Change providers section to this one:
+Change corresponding part of security.yml file to this one:
 
 ```
     providers:
         chain_provider:
             chain:
                 providers:                  [in_memory, oro_user]
-
-        api_chain_provider:
-            chain:
-                providers:          [in_memory, diamante_api_user, oro_user]
-
         diamante_api_user:
             id:                             diamante.api.user.security.provider
         oro_user:
@@ -37,11 +32,16 @@ Change providers section to this one:
 
         wsse_secured:
             pattern:                        ^/api/(rest|soap).*
-            provider:                       api_chain_provider
+            provider:                       chain_provider
             wsse:
                 lifetime:                   3600
                 realm:                      "Secured API"
                 profile:                    "UsernameToken"
             context:                        main
+
+        wsse_secured_diamante:
+            pattern:                        ^/api/diamante/(rest|soap).*
+            provider:                       diamante_api_user
+            stateless:                      true
+            wsse_diamante_api:              true
 ```
-             

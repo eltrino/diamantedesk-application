@@ -26,6 +26,7 @@
         <parameter key="diamante.api.event_listener.handle_exception.class">Diamante\ApiBundle\EventListener\HandleException</parameter>
         <parameter key="diamante.api.user.security.provider.class">Diamante\ApiBundle\Security\ApiUserProvider</parameter>
         <parameter key="diamante.api.user.repository.class">Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository</parameter>
+        <parameter key="diamante.api.user.entity.factory.class">Diamante\ApiBundle\Model\ApiUser\ApiUserFactory</parameter>
     </parameters>
 
     <services>
@@ -77,5 +78,8 @@
             <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
         </service>
 
+        <service id="diamante.api.user.entity.factory" class="%diamante.api.user.entity.factory.class%">
+            <argument type="string">%diamante.api.user.entity.class%</argument>
+        </service>
     </services>
 </container>

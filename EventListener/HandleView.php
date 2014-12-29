@@ -42,6 +42,11 @@ class HandleView
 
         $data = $event->getControllerResult();
         $responseMethod = strtolower($request->getMethod());
+
+        if (!method_exists($this, $responseMethod)) {
+            throw new \RuntimeException(sprintf('Can not handle response for method "%s".', $responseMethod));
+        }
+
         $response = call_user_func_array([$this, $responseMethod], [$data, $request->getRequestFormat(), $request]);
         $event->setResponse($response);
     }
@@ -75,11 +80,14 @@ class HandleView
     /**
      * Prepare response for HTTP PUT request, with standard HTTP status code and empty body.
      *
+     * @param Entity $data
+     * @param $format
      * @return Response
      */
-    protected function put()
+    protected function put(Entity $data, $format)
     {
-        return new Response('', Codes::HTTP_OK);
+        $context = SerializationContext::create()->setGroups(['Default', 'entity']);
+        return new Response($this->serializer->serialize($data, $format, $context), Codes::HTTP_OK);
     }
 
     /**
@@ -101,6 +109,19 @@ class HandleView
             Codes::HTTP_CREATED,
             ['Location' => $location]
         );
+    }
+
+    /**
+     * Prepare response for HTTP PATCH request, with standard HTTP status code and empty body.
+     *
+     * @param Entity $data
+     * @param $format
+     * @return Response
+     */
+    protected function patch(Entity $data, $format)
+    {
+        $context = SerializationContext::create()->setGroups(['Default', 'entity']);
+        return new Response($this->serializer->serialize($data, $format, $context), Codes::HTTP_OK);
     }
 
     /**
