@@ -70,7 +70,6 @@ class ApiUser implements Entity, UserInterface
         $this->username = $username;
         $this->password = $password;
         $this->salt     = $salt;
-        $this->roles    = $roles;
     }
 
     /**
