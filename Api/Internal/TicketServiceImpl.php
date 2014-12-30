@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
+use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Priority;
@@ -628,10 +629,10 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     }
 
     /**
-     * Retrieves list of all Tickets
+     * Retrieves list of all Tickets. Performs filtering of tickets if provided with criteria as GET parameters. Creation/update time filtering criteria has to be UTC time string or indicate the desired time zone
      *
      * @ApiDoc(
-     *  description="Returns all tickets",
+     *  description="Returns all tickets.",
      *  uri="/tickets.{_format}",
      *  method="GET",
      *  resource=true,
@@ -641,13 +642,25 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      *  }
      * )
      *
+     * @param Command\Filter\FilterTicketsCommand $ticketFilterCommand
      * @return Ticket[]
      */
-    public function listAllTickets()
+    public function listAllTickets(Command\Filter\FilterTicketsCommand $ticketFilterCommand)
     {
         $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Ticket');
+        $criteriaProcessor = new TicketFilterCriteriaProcessor();
+        $criteriaProcessor->setCommand($ticketFilterCommand);
+        $criteria = $criteriaProcessor->getCriteria();
+        $pagingProperties = $criteriaProcessor->getPagingProperties();
+
+        if (!empty($criteria)) {
+            $tickets = $this->ticketRepository->filter($criteria, $pagingProperties);
+
+            return $tickets;
+        }
 
         $tickets = $this->ticketRepository->getAll();
+
         return $tickets;
     }
 }

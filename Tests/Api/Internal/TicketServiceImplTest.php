@@ -14,10 +14,12 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\Filter\FilterTicketsCommand;
 use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
@@ -39,9 +41,6 @@ use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
-
-use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -117,26 +116,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
      */
     private $notifier;
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     * @Mock Doctrine\ORM\EntityManager
-     */
-    private $em;
-
-    /**
-     * @var \Doctrine\ORM\UnitOfWork
-     * @Mock \Doctrine\ORM\UnitOfWork
-     */
-    private $unitOfWork;
-
-
-    /**
-     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
-     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
-     */
-    private $entityPersister;
-
 
     protected function setUp()
     {
@@ -1120,148 +1099,50 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testTicketsFiltered()
     {
         $tickets = array(
-            $ticket = new Ticket(
-                "DUMMY_SUBJECT_1",
-                self::DUMMY_TICKET_DESCRIPTION,
+            new Ticket(
+                new UniqueId('unique_id'),
+                new TicketSequenceNumber(13),
+                self::SUBJECT,
+                self::DESCRIPTION,
                 $this->createBranch(),
-                $this->createReporter(),
+                new User(1, User::TYPE_DIAMANTE),
                 $this->createAssignee(),
-                Source::PHONE,
-                Priority::PRIORITY_LOW,
-                Status::CLOSED
+                new Source(Source::PHONE),
+                new Priority(Priority::PRIORITY_LOW),
+                new Status(Status::CLOSED)
             ),
-            $ticket = new Ticket(
-                "DUMMY_SUBJECT_2",
-                self::DUMMY_TICKET_DESCRIPTION,
+            new Ticket(
+                new UniqueId('unique_id'),
+                new TicketSequenceNumber(12),
+                self::SUBJECT,
+                self::DESCRIPTION,
                 $this->createBranch(),
-                $this->createReporter(),
+                new User(1, User::TYPE_ORO),
                 $this->createAssignee(),
-                Source::PHONE,
-                Priority::PRIORITY_LOW,
-                Status::CLOSED
-            )
-        );
-
-        $this->ticketRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Ticket'));
-
-        $this->em
-            ->expects($this->atLeastOnce())
-            ->method('getUnitOfWork')
-            ->will($this->returnValue($this->unitOfWork));
-
-        $this->unitOfWork
-            ->expects($this->atLeastOnce())
-            ->method('getEntityPersister')
-            ->with($this->equalTo('Diamante\DeskBundle\Entity\Ticket'))
-            ->will($this->returnValue($this->entityPersister));
-
-        $this->entityPersister
-            ->expects($this->atLeastOnce())
-            ->method('loadAll')
-            ->will($this->returnValue($tickets));
-
-        $this->ticketService = new TicketServiceImpl(
-            $this->ticketRepository,
-            $this->branchRepository,
-            $this->ticketFactory,
-            $this->attachmentManager,
-            $this->userService,
-            $this->securityFacade,
-            $this->dispatcher,
-            $this->processManager
-        );
-
-        $filtered = $this->ticketService->filterTickets($this->getCorrectFilteringParams());
-
-        $this->assertEquals(1, count($filtered));
-
-        $filteredTicket = $filtered[0];
-        $comparativeTicket = $tickets[0];
-
-        $this->assertEquals($comparativeTicket, $filteredTicket);
-    }
-
-    /**
-     * @test
-     * @expectedException \Exception
-     * @expectedExceptionMessage Invalid filtering constraint 'nonExistentFilteringConstraint' used. Should be one of these: andX, orX, eq, neq, gt, gte, lt, lte, isNull, in, notIn, contains
-     */
-    public function testExceptionThrownIfUsingIncorrectFilteringConstraint()
-    {
-        $tickets = array(
-            $ticket = new Ticket(
-                "DUMMY_SUBJECT_1",
-                self::DUMMY_TICKET_DESCRIPTION,
-                $this->createBranch(),
-                $this->createReporter(),
-                $this->createAssignee(),
-                Source::PHONE,
-                Priority::PRIORITY_LOW,
-                Status::CLOSED
+                new Source(Source::PHONE),
+                new Priority(Priority::PRIORITY_LOW),
+                new Status(Status::CLOSED)
             ),
-            $ticket = new Ticket(
-                "DUMMY_SUBJECT_2",
-                self::DUMMY_TICKET_DESCRIPTION,
-                $this->createBranch(),
-                $this->createReporter(),
-                $this->createAssignee(),
-                Source::PHONE,
-                Priority::PRIORITY_LOW,
-                Status::CLOSED
-            )
         );
 
-        $this->ticketRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Ticket'));
+        $command = new FilterTicketsCommand();
+        $command->reporter = 'oro_1';
 
-        $this->em
-            ->expects($this->atLeastOnce())
-            ->method('getUnitOfWork')
-            ->will($this->returnValue($this->unitOfWork));
+        $this->ticketRepository
+            ->expects($this->once())
+            ->method('filter')
+            ->with($this->equalTo(array(array('reporter','eq','oro_1'))), $this->equalTo(new FilterPagingProperties()))
+            ->will($this->returnValue(array($tickets[1])));
 
-        $this->unitOfWork
-            ->expects($this->atLeastOnce())
-            ->method('getEntityPersister')
-            ->with($this->equalTo('Diamante\DeskBundle\Entity\Ticket'))
-            ->will($this->returnValue($this->entityPersister));
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
+            ->will($this->returnValue(true));
 
-        $this->entityPersister
-            ->expects($this->atLeastOnce())
-            ->method('loadAll')
-            ->will($this->returnValue($tickets));
+        $retrievedTickets = $this->ticketService->listAllTickets($command);
 
-        $this->ticketService = new TicketServiceImpl(
-            $this->ticketRepository,
-            $this->branchRepository,
-            $this->ticketFactory,
-            $this->attachmentManager,
-            $this->userService,
-            $this->securityFacade,
-            $this->dispatcher,
-            $this->processManager
-        );
-
-        $this->ticketService->filterTickets($this->getIncorrectFilteringParams());
-    }
-
-    protected function getCorrectFilteringParams()
-    {
-        return array(
-            array(
-                'subject',
-                'eq',
-                'DUMMY_SUBJECT_1'
-            )
-        );
-    }
-
-    protected function getIncorrectFilteringParams()
-    {
-        return array(
-            array(
-                'subject',
-                'nonExistentFilteringConstraint',
-                'DUMMY_SUBJECT_1'
-            )
-        );
+        $this->assertNotNull($retrievedTickets);
+        $this->assertTrue(is_array($retrievedTickets));
+        $this->assertNotEmpty($retrievedTickets);
+        $this->assertEquals($tickets[1], $retrievedTickets[0]);
     }
 }

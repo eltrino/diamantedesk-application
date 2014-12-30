@@ -14,17 +14,17 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\Filter\FilterBranchesCommand;
 use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Internal\BranchServiceImpl;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
-use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\User\User;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -139,7 +139,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
-        $retrievedBranches = $this->branchServiceImpl->listAllBranches();
+        $retrievedBranches = $this->branchServiceImpl->listAllBranches(new FilterBranchesCommand());
 
         $this->assertNotNull($retrievedBranches);
         $this->assertTrue(is_array($retrievedBranches));
@@ -440,102 +440,29 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testBranchesFiltered()
     {
-        $branches = array(new Branch('DUMMY_NAME_1', "DUMMY_DESC"), new Branch("DUMMY_NAME_2","DUMMY_DESC"));
-
-        $this->branchRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Branch'));
-
-        $this->em
-            ->expects($this->atLeastOnce())
-            ->method('getUnitOfWork')
-            ->will($this->returnValue($this->unitOfWork));
-
-        $this->unitOfWork
-            ->expects($this->atLeastOnce())
-            ->method('getEntityPersister')
-            ->with($this->equalTo('Diamante\DeskBundle\Entity\Branch'))
-            ->will($this->returnValue($this->entityPersister));
-
-        $this->entityPersister
-            ->expects($this->atLeastOnce())
-            ->method('loadAll')
-            ->will($this->returnValue($branches));
-
-        $this->branchServiceImpl = new BranchServiceImpl(
-            $this->branchFactory,
-            $this->branchRepository,
-            $this->branchLogoHandler,
-            $this->tagManager,
-            $this->securityFacade
+        $branches = array(
+            new Branch('DUMM', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
+            new Branch('DUMMY', 'DUMMY_NAME_2', 'DUMMY_DESC_2')
         );
 
-        $filtered = $this->branchServiceImpl->filterBranches($this->getCorrectFilteringParams());
+        $command = new FilterBranchesCommand();
+        $command->name = 'NAME_2';
 
-        $this->assertEquals(1, count($filtered));
+        $this->branchRepository
+            ->expects($this->once())
+            ->method('filter')
+            ->with($this->equalTo(array(array('name','like','NAME_2'))), $this->equalTo(new FilterPagingProperties()))
+            ->will($this->returnValue(array($branches[0])));
 
-        $filteredBranch = $filtered[0];
-        $comparativeBranch = $branches[0];
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
 
-        $this->assertEquals($comparativeBranch, $filteredBranch);
+        $retrievedBranches = $this->branchServiceImpl->listAllBranches($command);
+
+        $this->assertNotNull($retrievedBranches);
+        $this->assertTrue(is_array($retrievedBranches));
+        $this->assertNotEmpty($retrievedBranches);
+        $this->assertEquals($branches[0], $retrievedBranches[0]);
     }
-
-    /**
-     * @test
-     * @expectedException \Exception
-     * @expectedExceptionMessage Invalid filtering constraint 'nonExistentFilteringConstraint' used. Should be one of these: andX, orX, eq, neq, gt, gte, lt, lte, isNull, in, notIn, contains
-     */
-    public function testExceptionThrownIfUsingIncorrectFilteringConstraint()
-    {
-        $branches = array(new Branch('DUMMY_NAME_1', "DUMMY_DESC"), new Branch("DUMMY_NAME_2","DUMMY_DESC"));
-
-        $this->branchRepository = new DoctrineGenericRepository($this->em, new ClassMetadata('Diamante\DeskBundle\Entity\Branch'));
-
-        $this->em
-            ->expects($this->atLeastOnce())
-            ->method('getUnitOfWork')
-            ->will($this->returnValue($this->unitOfWork));
-
-        $this->unitOfWork
-            ->expects($this->atLeastOnce())
-            ->method('getEntityPersister')
-            ->with($this->equalTo('Diamante\DeskBundle\Entity\Branch'))
-            ->will($this->returnValue($this->entityPersister));
-
-        $this->entityPersister
-            ->expects($this->atLeastOnce())
-            ->method('loadAll')
-            ->will($this->returnValue($branches));
-
-        $this->branchServiceImpl = new BranchServiceImpl(
-            $this->branchFactory,
-            $this->branchRepository,
-            $this->branchLogoHandler,
-            $this->tagManager,
-            $this->securityFacade
-        );
-
-        $this->branchServiceImpl->filterBranches($this->getIncorrectFilteringParams());
-    }
-
-    protected function getCorrectFilteringParams()
-    {
-        return array(
-            array(
-                'name',
-                'eq',
-                'DUMMY_NAME_1'
-            )
-        );
-    }
-
-    protected function getIncorrectFilteringParams()
-    {
-        return array(
-            array(
-                'name',
-                'nonExistentFilteringConstraint',
-                'DUMMY_NAME_1'
-            )
-        );
-    }
-
 }

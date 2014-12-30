@@ -15,6 +15,9 @@
 namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
@@ -50,9 +53,34 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     private $entityPersister;
 
+    /**
+     * @var \Doctrine\ORM\QueryBuilder
+     * @Mock \Doctrine\ORM\QueryBuilder
+     */
+    private $queryBuilder;
+
+    /**
+     * @var \Doctrine\ORM\AbstractQuery
+     */
+    private $filterQuery;
+
+    /**
+     * @var \Doctrine\ORM\Query\Expr
+     * @Mock \Doctrine\ORM\Query\Expr
+     */
+    private $expressionBuilder;
+
+    /**
+     * @var \Doctrine\ORM\Internal\Hydration\ObjectHydrator
+     * @Mock \Doctrine\ORM\Internal\Hydration\ObjectHydrator
+     */
+    private $objectHydrator;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
+        $this->filterQuery = $this->getMockForAbstractClass('\Doctrine\ORM\AbstractQuery', array($this->em));
+
         $this->classMetadata->name = self::CLASS_NAME;
         $this->repository = new DoctrineGenericRepository($this->em, $this->classMetadata);
     }
@@ -164,93 +192,101 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
         $a = new EntityStub();
         $b = new EntityStub();
         $a->name = "DUMMY_NAME";
+        $a->id = 1;
         $b->name = "NOT_DUMMY_NAME";
+        $b->id = 2;
 
         $entities = array($a, $b);
 
-        $this
-            ->em
-            ->expects($this->atLeastOnce())
-            ->method('getUnitOfWork')
-            ->will($this->returnValue($this->unitOfWork))
-        ;
-        $this
-            ->unitOfWork
-            ->expects($this->atLeastOnce())
-            ->method('getEntityPersister')
-            ->with($this->equalTo(self::CLASS_NAME))
-            ->will($this->returnValue($this->entityPersister))
-        ;
-        $this
-            ->entityPersister
-            ->expects($this->atLeastOnce())
-            ->method('loadAll')
-            ->with(
-                $this->equalTo(array()), $this->equalTo(null),
-                $this->equalTo(null), $this->equalTo(null)
-            )
-            ->will($this->returnValue($entities))
-        ;
-
-        $filtered = $this->repository->filter($this->getCorrectFilteringConditions());
-
-        $this->assertEquals(1, count($filtered));
-    }
-
-    /**
-     * @test
-     * @expectedException \Exception
-     */
-    public function thatThrowsExceptionIfUsingDisallowedFilteringConstraint()
-    {
-        $entities = array(new EntityStub(), new EntityStub());
-
-        $this
-            ->em
-            ->expects($this->once())
-            ->method('getUnitOfWork')
-            ->will($this->returnValue($this->unitOfWork))
-        ;
-        $this
-            ->unitOfWork
-            ->expects($this->once())
-            ->method('getEntityPersister')
-            ->with($this->equalTo(self::CLASS_NAME))
-            ->will($this->returnValue($this->entityPersister))
-        ;
-        $this
-            ->entityPersister
-            ->expects($this->once())
-            ->method('loadAll')
-            ->with(
-                $this->equalTo(array()), $this->equalTo(null),
-                $this->equalTo(null), $this->equalTo(null)
-            )
-            ->will($this->returnValue($entities))
-        ;
-
-        $this->repository->filter($this->getIncorrectFilteringConditions());
-    }
-
-    protected function getCorrectFilteringConditions()
-    {
-        return array(
-            array(
-                'name',
-                'eq',
-                'DUMMY_NAME'
-            )
+        $pagingConfig = new FilterPagingProperties();
+        $conditions = array(
+            array('name', 'eq', 'DUMMY_NAME')
         );
-    }
+        $whereExpr = new \Doctrine\ORM\Query\Expr\Comparison('e.name','eq',"'DUMMY_NAME'");
+        $this->em
+            ->expects($this->once())
+            ->method('createQueryBuilder')
+            ->will($this->returnValue($this->queryBuilder));
 
-    protected function getIncorrectFilteringConditions()
-    {
-        return array(
-            array(
-                'name',
-                'nonExistingFilteringMethod',
-                'DUMMY_NAME'
-            )
-        );
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('select')
+            ->with($this->equalTo('e'))
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('from')
+            ->with($this->equalTo($this->classMetadata->name), $this->equalTo('e'))
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->queryBuilder
+            ->expects($this->atLeastOnce())
+            ->method('orWhere')
+            ->with($this->equalTo($whereExpr))
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('addOrderBy')
+            ->with($this->equalTo('e.id'), $this->equalTo($pagingConfig->getSortingOrder()))
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('setFirstResult')
+            ->with($this->equalTo(0))
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('setMaxResults')
+            ->with($this->equalTo($pagingConfig->getPerPageCounter()))
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('getQuery')
+            ->will($this->returnValue($this->filterQuery));
+
+        $this->queryBuilder
+            ->expects($this->any())
+            ->method('expr')
+            ->will($this->returnValue($this->expressionBuilder));
+
+        $this->em
+            ->expects($this->any())
+            ->method('getExpressionBuilder')
+            ->will($this->returnValue($this->expressionBuilder));
+
+        $this->expressionBuilder
+            ->expects($this->atLeastOnce())
+            ->method('literal')
+            ->with($this->equalTo('DUMMY_NAME'))
+            ->will($this->returnValue("'DUMMY_NAME'"));
+
+        $this->expressionBuilder
+            ->expects($this->atLeastOnce())
+            ->method('eq')
+            ->with($this->equalTo('e.name'), $this->equalTo("'DUMMY_NAME'"))
+            ->will($this->returnValue($whereExpr));
+
+        $this->em
+            ->expects($this->atLeastOnce())
+            ->method('newHydrator')
+            ->with($this->equalTo(Query::HYDRATE_OBJECT))
+            ->will($this->returnValue($this->objectHydrator));
+
+        $this->objectHydrator
+            ->expects($this->atLeastOnce())
+            ->method('hydrateAll')
+            ->will($this->returnValue(array($a)));
+
+        $filteredEntities = $this->repository->filter($conditions, $pagingConfig);
+
+        $this->assertNotNull($filteredEntities);
+        $this->assertTrue(is_array($filteredEntities));
+        $this->assertNotEmpty($filteredEntities);
+        $this->assertEquals($a, $filteredEntities[0]);
     }
 }

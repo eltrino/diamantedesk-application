@@ -26,9 +26,10 @@ interface BranchService
 {
     /**
      * Retrieves list of all Branches
+     * @param Command\Filter\FilterBranchesCommand
      * @return Branch[]
      */
-    public function listAllBranches();
+    public function listAllBranches(Command\Filter\FilterBranchesCommand $command);
 
     /**
      * Retrieves Branch by id
@@ -65,11 +66,4 @@ interface BranchService
      * @param Command\UpdatePropertiesCommand $command
      */
     public function updateProperties(Command\UpdatePropertiesCommand $command);
-
-    /**
-     * Filter Branches applying conditions
-     * @param array $conditions
-     * @return mixed
-     */
-    public function filterBranches(array $conditions);
 }

@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api;
 
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\Command\Filter\FilterTicketsCommand;
 use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
@@ -123,15 +124,8 @@ interface TicketService
 
     /**
      * Retrieves list of all Tickets
-     * @return Ticket[]
-     */
-    public function listAllTickets();
-
-
-    /**
-     * Filter all tickets applying constraints provided in array
-     * @param array $conditions
+     * @param FilterTicketsCommand $filterTicketsCommand
      * @return mixed
      */
-    public function filterTickets(array $conditions);
+    public function listAllTickets(FilterTicketsCommand $filterTicketsCommand);
 }

@@ -14,14 +14,16 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Doctrine\ORM\EntityRepository;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 class DoctrineGenericRepository extends EntityRepository implements Repository
 {
+    const SELECT_ALIAS = 'e';
     /**
      * @param $id
      * @return Entity
@@ -62,46 +64,60 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
 
     /**
      * @param array $conditions
-     * @return ArrayCollection|null
+     * @param PagingProperties $pagingProperties
+     * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
-    public function filter(array $conditions)
+    public function filter(array $conditions, PagingProperties $pagingProperties)
     {
-        $collection = new ArrayCollection($this->getAll());
+        $qb = $this->_em->createQueryBuilder();
+        $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getOrderByField());
+        $offset = ($pagingProperties->getPageNumber()-1) * $pagingProperties->getPerPageCounter();
 
-        $criteria = Criteria::create();
-        $allowedConstraints = $this->getAllowedFilteringConstraints();
+        $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
 
-        foreach ($conditions as $rule) {
-            list($field, $constraint, $value) = $rule;
-
-            if (!in_array($constraint, $allowedConstraints)) {
-                throw new \Exception(
-                    sprintf("Invalid filtering constraint '%s' used. Should be one of these: %s", $constraint, join(', ', $allowedConstraints))
-                );
-            }
-
-            if (empty($criteria->getWhereExpression())) {
-                $criteria->where(Criteria::expr()->$constraint($field, $value));
-            } else {
-                $criteria->andWhere(Criteria::expr()->$constraint($field, $value));
-            }
+        foreach ($conditions as $condition) {
+            $whereExpression = $this->buildWhereExpression($qb, $condition);
+            $qb->orWhere($whereExpression);
         }
 
-        $criteria->setFirstResult(0);
+        $qb->addOrderBy($orderByField, $pagingProperties->getSortingOrder());
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($pagingProperties->getPerPageCounter());
 
-        $result = $collection->matching($criteria);
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_OBJECT);
+        } catch (\Exception $e) {
+            $result = null;
+        }
 
         return $result;
     }
 
     /**
-     * @return array
+     * @param QueryBuilder $qb
+     * @param array $condition
+     * @return Query\Expr
      */
-    protected function getAllowedFilteringConstraints()
+    protected function buildWhereExpression(QueryBuilder $qb, array $condition)
     {
-        return array(
-            'andX', 'orX', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'isNull', 'in', 'notIn', 'contains'
-        );
+        list($field, $operator, $value) = $condition;
+
+        $field = sprintf('%s.%s', self::SELECT_ALIAS, $field);
+
+        switch ($operator) {
+            case 'like':
+                $literal = $qb->expr()->literal("%{$value}%");
+                break;
+            default:
+                $literal = $qb->expr()->literal("{$value}");
+                break;
+        }
+
+        $expr = call_user_func_array(array($qb->expr(), $operator), array($field, $literal));
+
+        return $expr;
     }
 }

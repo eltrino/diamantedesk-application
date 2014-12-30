@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
 use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Filter\BranchFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
@@ -80,7 +81,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
     }
 
     /**
-     * Retrieves list of all Branches
+     * Retrieves list of all Branches. Filters branches with parameters provided within GET request
      *
      * @ApiDoc(
      *  description="Returns all branches",
@@ -92,13 +93,25 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
      *      403="Returned when the user is not authorized to list branches"
      *  }
      * )
-     *
+     * @param Command\Filter\FilterBranchesCommand $command
      * @return Branch[]
      */
-    public function listAllBranches()
+    public function listAllBranches(Command\Filter\FilterBranchesCommand $command)
     {
         $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
+        $processor = new BranchFilterCriteriaProcessor();
+        $processor->setCommand($command);
+        $criteria = $processor->getCriteria();
+        $pagingProperties = $processor->getPagingProperties();
+
+        if (!empty($criteria)) {
+            $branches = $this->branchRepository->filter($criteria, $pagingProperties);
+
+            return $branches;
+        }
+
         $branches = $this->branchRepository->getAll();
+
         return $branches;
     }
 
@@ -321,17 +334,6 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
             $this->branchLogoHandler->remove($branch->getLogo());
         }
         $this->branchRepository->remove($branch);
-    }
-
-    public function filterBranches(array $conditions = array())
-    {
-        if (empty($conditions)) {
-            $filteredBranches = $this->branchRepository->getAll();
-        } else {
-            $filteredBranches = $this->branchRepository->filter($conditions);
-        }
-
-        return $filteredBranches;
     }
 
     /**

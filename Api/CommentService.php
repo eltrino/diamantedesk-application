@@ -75,11 +75,4 @@ interface CommentService
      * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
      */
     public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command);
-
-    /**
-     * Filter Comments applying conditions given
-     * @param array $conditions
-     * @return mixed
-     */
-    public function filterComments(array $conditions);
 }
