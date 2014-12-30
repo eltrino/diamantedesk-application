@@ -15,23 +15,23 @@ define(['app'], function(App){
 
     var API = {
       listTickets: function(){
-        require(['modules/Ticket/controllers/list'], function(List){
-          List.TicketController();
+        require(['Ticket/controllers/list'], function(List){
+          List.Controller();
         });
       },
       viewTicket: function(id){
-        require(['modules/Ticket/controllers/view'], function(View){
-          View.TicketController(id);
+        require(['Ticket/controllers/view'], function(View){
+          View.Controller(id);
         });
       },
       createTicket: function(){
-        require(['modules/Ticket/controllers/create'], function(Create){
-          Create.TicketController();
+        require(['Ticket/controllers/create'], function(Create){
+          Create.Controller();
         });
       },
       editTicket: function(id){
-        require(['modules/Ticket/controllers/edit'], function(Edit){
-          Edit.TicketController(id);
+        require(['Ticket/controllers/edit'], function(Edit){
+          Edit.Controller(id);
         });
       }
     };

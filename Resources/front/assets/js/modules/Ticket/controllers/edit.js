@@ -2,11 +2,11 @@ define(['app'], function(App){
 
   return App.module('Ticket.Edit', function(Edit, App, Backbone, Marionette, $, _){
 
-    Edit.TicketController = function(id){
+    Edit.Controller = function(id){
 
       require([
-        'modules/Ticket/models/ticket',
-        'modules/Ticket/views/edit'], function(Models, EditView){
+        'Ticket/models/ticket',
+        'Ticket/views/edit'], function(Models, EditView){
 
         App.request("ticket:model", id).done(function(editTicketModel){
 
@@ -14,7 +14,7 @@ define(['app'], function(App){
                 model: editTicketModel
               }),
               modalEditView = new Edit.ModalView({
-                title: 'Edit Ticket ' + editTicketModel.get('branch').key + "-" + editTicketModel.id
+                title: 'Edit Ticket ' + editTicketModel.get('key')
               });
 
           modalEditView.on('show', function(){
@@ -25,11 +25,11 @@ define(['app'], function(App){
             App.trigger('ticket:view', editTicketModel.get('id'));
           });
 
-          modalEditView.on('modal:submit', function(data){
-            editTicketModel.set(data);
-            var attrs = editTicketModel.changedAttributes();
+          editTicketView.on('form:submit', function(data){
+            this.model.set(data);
+            var attrs = this.model.changedAttributes();
             if(attrs){
-              editTicketModel.save(attrs,{
+              this.model.save(attrs,{
                 patch : true,
                 success : function(resultModel){
                   App.trigger('ticket:view', resultModel.get('id'));
@@ -42,6 +42,7 @@ define(['app'], function(App){
             }
           });
 
+          App.debug('log', App.MainRegion.hasView());
           App.DialogRegion.show(modalEditView);
           modalEditView.ModalBody.show(editTicketView);
 

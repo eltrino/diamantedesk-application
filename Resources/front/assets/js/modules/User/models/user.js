@@ -4,10 +4,11 @@ define([
 
   return App.module("User", function(User, App, Backbone, Marionette, $, _){
 
-    var currentUser;
+    var currentUser,
+        userCache = [];
 
     User.UserModel = Backbone.Model.extend({
-      urlRoot : Config.apiUrl + '/user/'
+      urlRoot : Config.apiUrl + '/users/'
     });
 
     var API = {
@@ -17,9 +18,9 @@ define([
         if(is_current && currentUser){
           defer.resolve(currentUser);
         } else {
-          user.urlRoot += 'filter';
+          user.urlRoot = Config.apiUrl + '/user/filter';
           user.fetch({
-            data : {username: username},
+            data : { username: username },
             success : function(data){
               if(is_current){
                 currentUser = _.clone(user);
@@ -27,23 +28,28 @@ define([
               defer.resolve(data);
             },
             complete : function(){
-              user.urlRoot = user.urlRoot.replace('filter','');
+              user.urlRoot = Config.apiUrl + '/users/';
             }
           });
         }
         return defer.promise();
       },
-      getUserModelById : function(id){
+      getUserModelById : function(id, force){
         var user = new User.UserModel({id:id}),
             defer = $.Deferred();
-        user.fetch({
-          success: function(data){
-            defer.resolve(data);
-          },
-          error: function(){
-            defer.reject();
-          }
-        });
+        if(userCache[id] && !force){
+          defer.resolve(userCache[id]);
+        } else {
+          user.fetch({
+            success: function(data){
+              userCache[id] = data;
+              defer.resolve(data);
+            },
+            error: function(){
+              defer.reject();
+            }
+          });
+        }
         return defer.promise();
       }
     };

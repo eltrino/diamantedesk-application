@@ -1,21 +1,19 @@
 define([
   'app',
   'tpl!../templates/form.ejs',
-  'modules/Common/views/modal'], function(App, createTemplate, Modal){
+  'Common/views/modal',
+  'Common/views/form'], function(App, formTemplate, Modal, Form){
 
   return App.module('Ticket.Create', function(Create, App, Backbone, Marionette, $, _){
 
-    Create.ItemView = Marionette.ItemView.extend({
-      template: createTemplate
+    Create.ItemView = Form.ItemView.extend({
+      template: formTemplate
     });
 
     Create.ModalView = Modal.LayoutView.extend({
       submitModal: function(){
-        var arr = this.$('form').serializeArray(), i = arr.length, data = {};
-        for(;i--;) {
-          data[arr[i].name] = arr[i].value;
-        }
-        this.trigger('modal:submit', data);
+        this.ModalBody.currentView.submitForm();
+        this.trigger('modal:submit');
       }
     });
 

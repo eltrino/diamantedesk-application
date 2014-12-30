@@ -4,7 +4,7 @@ define([
 
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
 
-    Ticket.TicketModel = Backbone.Model.extend({
+    Ticket.Model = Backbone.Model.extend({
       urlRoot : Config.apiUrl + '/desk/tickets',
       defaults: {
         subject : '',
@@ -16,14 +16,14 @@ define([
 
     });
 
-    Ticket.TicketCollection = Backbone.Collection.extend({
+    Ticket.Collection = Backbone.Collection.extend({
       url: Config.apiUrl+ '/desk/tickets',
-      model: Ticket.TicketModel
+      model: Ticket.Model
     });
 
     var API = {
       getTicketCollection: function() {
-        var tickets = new Ticket.TicketCollection(),
+        var tickets = new Ticket.Collection(),
             defer = $.Deferred();
         tickets.fetch({
           success: function(data){
@@ -33,7 +33,7 @@ define([
         return defer.promise();
       },
       getTicketModel: function(id) {
-        var ticket = new Ticket.TicketModel({id:id}),
+        var ticket = new Ticket.Model({id:id}),
             defer = $.Deferred();
         ticket.fetch({
           success: function(data){

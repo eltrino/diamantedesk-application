@@ -12,7 +12,6 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 require.config({
-  urlArgs: "bust=" + (new Date()).getTime(),  // prevent caching
   paths : {
     "jquery" : "vendor/jquery/dist/jquery",
     "underscore" : "vendor/underscore/underscore",
@@ -58,24 +57,28 @@ require.config({
 
   "packages": [
     {
+      name: 'Common',
+      location: 'modules/Common'
+    },
+    {
       name: 'User',
-      location: 'modules/User',
-      main: 'module'
+      location: 'modules/User'
     },
     {
       name: 'SessionManager',
-      location: 'modules/SessionManager',
-      main: 'module'
+      location: 'modules/SessionManager'
     },
     {
       name: 'Header',
-      location: 'modules/Header',
-      main: 'module'
+      location: 'modules/Header'
     },
     {
       name: 'Ticket',
-      location: 'modules/Ticket',
-      main: 'module'
+      location: 'modules/Ticket'
+    },
+    {
+      name: 'Comment',
+      location: 'modules/Comment'
     }
   ],
 

@@ -11,14 +11,14 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
         this.title = options.title || "Modal Window";
       },
 
+      regions : {
+        ModalBody : 'div.modal-body'
+      },
+
       serializeData: function(){
         return {
           title: this.title
         };
-      },
-
-      regions : {
-        ModalBody : 'div.modal-body'
       },
 
       events: {

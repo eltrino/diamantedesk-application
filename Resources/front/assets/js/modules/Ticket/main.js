@@ -4,7 +4,7 @@ define(['app','./routers/ticket'], function(App){
 
     Ticket.startWithParent = false;
 
-    Ticket.addInitializer(function(){
+    Ticket.on('start', function(){
       Backbone.history.loadUrl();
       if(App.getCurrentRoute() === ""){
         App.trigger('ticket:list');

@@ -4,7 +4,7 @@ define(['app','./views/header'], function(App, HeaderView){
 
     Header.startWithParent = false;
 
-    Header.addInitializer(function () {
+    Header.on('start', function () {
       App.HeaderRegion.show(new HeaderView.View());
     });
 

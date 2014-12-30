@@ -8,11 +8,11 @@ define(function(){
   apiurl += '/api/rest/latest';
 
   require.config({
+    urlArgs: dev ? "bust=" + (new Date()).getTime() : ''
     //"packages": [
     //  {
     //    name: 'PackageName',
-    //    location: 'modules/PackageName',
-    //    main: 'module'
+    //    location: 'modules/PackageName'
     //  }
     //]
   });

@@ -2,14 +2,27 @@ define(['app'], function(App){
 
   return App.module('Ticket.View', function(View, App, Backbone, Marionette, $, _){
 
-    View.TicketController = function(id){
+    View.Controller = function(id){
 
-      require(['modules/Ticket/models/ticket', 'modules/Ticket/views/view'], function(){
+      require(['Ticket/models/ticket', 'Ticket/views/view'], function(){
 
         App.request("ticket:model", id).done(function(TicketModel){
 
           var TicketView = new View.ItemView({
-            model : TicketModel
+              model : TicketModel
+          });
+          TicketView.on('show', function(){
+            require(['Comment'], function(Comment){
+              Comment.start({
+                ticket : this.model,
+                parentRegion : this.CommentsRegion
+              });
+            }.bind(this));
+          });
+          TicketView.on('destroy', function(){
+            require(['Comment'], function(Comment){
+              Comment.stop();
+            });
           });
           App.MainRegion.show(TicketView);
 

@@ -40,7 +40,11 @@ define([
 
   App.debug = function(type){
     if(Config.isDev) {
-      console[type].apply(console, [].slice.call(arguments, 1));
+      if(arguments.length > 1){
+        console[type].apply(console, [].slice.call(arguments, 1));
+      } else {
+        console.log.apply(console, arguments);
+      }
     }
   };
 

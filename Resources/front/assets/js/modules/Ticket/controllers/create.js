@@ -2,12 +2,12 @@ define(['app'], function(App){
 
   return App.module('Ticket.Create', function(Create, App, Backbone, Marionette, $, _){
 
-    Create.TicketController = function(){
+    Create.Controller = function(){
 
-      require(['modules/Ticket/models/ticket', 'modules/Ticket/views/create'], function(Models, CreateView){
+      require(['Ticket/models/ticket', 'Ticket/views/create'], function(Models, CreateView){
 
         var isSuccess = false,
-            newTicketModel = new Models.TicketModel(),
+            newTicketModel = new Models.Model(),
             newTicketView = new Create.ItemView({
               model: newTicketModel
             }),
@@ -25,13 +25,11 @@ define(['app'], function(App){
           }
         });
 
-        modalCreateView.on('modal:submit', function(data){
+        newTicketView.on('form:submit', function(data){
           data.branch = 1;
-          data.status = 'open';
-          data.source = 'web';
           App.request("user:model:current").done(function(user){
-            data.reporter =  'oro_' + user.id;
-            data.assignee =  user.id;
+            data.reporter =  'oro_' + user.get('id');
+            data.assignee =  user.get('id');
             newTicketModel.save(data, {
               success : function(resultModel){
                 isSuccess = true;

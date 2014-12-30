@@ -9,9 +9,13 @@ define([
       template: missingTicketViewTemplate
     });
 
-    View.ItemView = Marionette.ItemView.extend({
+    View.ItemView = Marionette.LayoutView.extend({
       className: 'ticket-view',
       template: TicketViewTemplate,
+
+      regions: {
+        CommentsRegion: '#comments'
+      },
 
       templateHelpers: function(){
         return {
@@ -31,7 +35,7 @@ define([
 
       editTicket : function(e){
         e.preventDefault();
-        App.trigger('ticket:edit', this.model.get('id'), this.model);
+        App.trigger('ticket:edit', this.model.get('id'));
       }
     });
 

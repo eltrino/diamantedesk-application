@@ -2,9 +2,9 @@ define(['app'], function(App){
 
   return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
-    List.TicketController = function(){
+    List.Controller = function(){
 
-      require(['modules/Ticket/models/ticket', 'modules/Ticket/views/list'], function(){
+      require(['Ticket/models/ticket', 'Ticket/views/list'], function(){
 
         var request = App.request("ticket:collection");
 
