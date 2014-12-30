@@ -14,11 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
-use Diamante\DeskBundle\Model\Ticket\Priority;
-use Diamante\DeskBundle\Model\Ticket\Status;
-use Diamante\DeskBundle\Model\Ticket\Source;
-
-class TicketWasUpdated extends AbstractTicketEvent
+use Diamante\DeskBundle\Model\Ticket\Notifications\AttachmentsEvent;
+use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
+class TicketWasUpdated extends AbstractTicketEvent implements ChangesProviderEvent, AttachmentsEvent
 {
     /**
      * @var string
@@ -26,36 +24,39 @@ class TicketWasUpdated extends AbstractTicketEvent
     private $description;
 
     /**
-     * @var string
+     * @var \Diamante\DeskBundle\Model\User\User
      */
-    private $reporterEmail;
+    private $reporter;
 
     /**
-     * @var Priority
+     * @var string
      */
     private $priority;
 
     /**
-     * @var Status
+     * @var string
      */
     private $status;
 
     /**
-     * @var Source
+     * @var string
      */
     private $source;
 
-    public function __construct($id, $subject, $description, $reporterEmail,
-                                Priority $priority, Status $status, Source $source, $recipientsList)
+    /**
+     * @var array
+     */
+    private $attachments;
+
+    public function __construct($id, $subject, $description, $reporter, $priority, $status, $source)
     {
-        $this->ticketId       = $id;
-        $this->subject        = $subject;
-        $this->description    = $description;
-        $this->reporterEmail  = $reporterEmail;
-        $this->priority       = $priority;
-        $this->status         = $status;
-        $this->source         = $source;
-        $this->recipientsList = $recipientsList;
+        $this->ticketId          = $id;
+        $this->subject           = $subject;
+        $this->description       = $description;
+        $this->reporter          = $reporter;
+        $this->priority          = $priority;
+        $this->status            = $status;
+        $this->source            = $source;
     }
 
     /**
@@ -69,40 +70,43 @@ class TicketWasUpdated extends AbstractTicketEvent
     /**
      * @return string
      */
-    public function getDescription()
+    public function getHeaderText()
     {
-        return $this->description;
+        return 'Ticket was updated';
     }
 
     /**
-     * @return Priority
+     * Provide changes of entity of raised event
+     * @param \ArrayAccess $changes
+     * @return void
      */
-    public function getPriority()
+    public function provideChanges(\ArrayAccess $changes)
     {
-        return $this->priority;
+        $changes['Subject']     = $this->subject;
+        $changes['Description'] = $this->description;
+        $changes['Reporter']    = $this->reporter;
+        $changes['Priority']    = $this->priority;
+        $changes['Status']      = $this->status;
+        $changes['Source']      = $this->source;
     }
 
     /**
-     * @return string
+     * @return array of attachments names
      */
-    public function getReporterEmail()
+    public function attachments()
     {
-        return $this->reporterEmail;
+        return $this->attachments;
     }
 
     /**
-     * @return Source
+     * @param string $attachment
+     * @return void
      */
-    public function getSource()
+    public function pushAttachment($attachment)
     {
-        return $this->source;
-    }
-
-    /**
-     * @return Status
-     */
-    public function getStatus()
-    {
-        return $this->status;
+        if (false === is_string($attachment)) {
+            throw new \InvalidArgumentException('Wrong format of attachment name.');
+        }
+        $this->attachments[] = $attachment;
     }
 }

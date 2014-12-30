@@ -11,8 +11,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-define(['jquery', 'underscore', 'oroui/js/modal'],
-  function ($, _, Modal) {
+define(['jquery', 'underscore', 'oroui/js/modal', 'oroui/js/mediator'],
+  function ($, _, Modal, mediator) {
     return function($file){
       var form = document.getElementById('diam-dropzone-form'),
           $attachment = $('#diam-attachments'),
@@ -99,13 +99,13 @@ define(['jquery', 'underscore', 'oroui/js/modal'],
       $(document).off('dragstart dragenter dragover', onDragStart).off('drop dragleave dragend', onDragEnd);
       $(document).on('dragstart dragenter dragover', onDragStart).on('drop dragleave dragend', onDragEnd);
 
-      $file.on('uniformInit', function(){
-        $.uniform.restore($file);
-      });
       if($.uniform) {
         $.uniform.restore($file);
       }
 
+      mediator.on('page:afterChange', function () {
+        $.uniform.restore($file);
+      });
 
       $file.on('change', onChange);
     }

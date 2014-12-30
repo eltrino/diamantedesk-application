@@ -23,12 +23,12 @@ class MyNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implemen
 
     /**
      * @param $defaultPerPage
-     * @param $userId
+     * @param $userFullName
      * @param $status
      */
-    public function __construct($defaultPerPage, $userId, $status)
+    public function __construct($defaultPerPage, $userFullName, $status)
     {
-        parent::__construct($defaultPerPage, $userId);
+        parent::__construct($defaultPerPage, $userFullName);
         $this->status = $status;
     }
 
@@ -37,13 +37,24 @@ class MyNewTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator implemen
      */
     public function generateFilterUrlPart()
     {
-        return '|g/i=1&p='. $this->defaultPerPage .'&' .
-        's' . $this->encodeSquareBrackets('updatedAt') . '=1&' .
-        'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('value') . "=$this->userId&" .
-        'f' . $this->encodeSquareBrackets('assigneeId') . $this->encodeSquareBrackets('type') . "=$this->textFiltertype&" .
-        'f' . $this->encodeSquareBrackets('status') . $this->encodeSquareBrackets('value') . $this->encodeSquareBrackets() .
-        "=$this->status&" .
-        't=diamante-ticket-grid';
+        $params = [
+            'i' => 1,
+            'p' => $this->defaultPerPage,
+            's' => [
+                'updatedAt' => 1
+            ],
+            'f' => [
+                'assigneeFullName' => [
+                    'value' => $this->userFullName,
+                    'type'  => $this->textFiltertype
+                ],
+                'status'           => [
+                    'value' => [$this->status]
+                ]
+            ]
+        ];
+
+        return $this->arrayToLink($params);
     }
 
 }

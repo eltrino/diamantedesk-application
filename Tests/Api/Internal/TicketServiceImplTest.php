@@ -14,9 +14,11 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -27,9 +29,12 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Api\Internal\TicketServiceImpl;
-use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
@@ -41,9 +46,10 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_TICKET_ID     = 1;
+    const DUMMY_TICKET_KEY    = 'DT-1';
     const DUMMY_ATTACHMENT_ID = 1;
-    const DUMMY_TICKET_SUBJECT      = 'Subject';
-    const DUMMY_TICKET_DESCRIPTION  = 'Description';
+    const SUBJECT      = 'Subject';
+    const DESCRIPTION  = 'Description';
     const DUMMY_FILENAME      = 'dummy_filename.ext';
     const DUMMY_FILE_CONTENT  = 'DUMMY_CONTENT';
     const DUMMY_STATUS        = 'dummy';
@@ -54,8 +60,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\Repository
-     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketRepository
      */
     private $ticketRepository;
 
@@ -78,10 +84,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branchRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Ticket\TicketFactory
-     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketFactory
+     * @var \Diamante\DeskBundle\Model\Ticket\TicketBuilder
+     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      */
-    private $ticketFactory;
+    private $ticketBuilder;
 
     /**
      * @var \Diamante\DeskBundle\Model\Shared\UserService
@@ -90,10 +96,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $userService;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
-     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
@@ -102,10 +108,15 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
-     * @Mock \Diamante\DeskBundle\EventListener\Mail\TicketProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -131,16 +142,50 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
 
+        $this->notificationDeliveryManager = new NotificationDeliveryManager();
+
         $this->ticketService = new TicketServiceImpl(
             $this->ticketRepository,
             $this->branchRepository,
-            $this->ticketFactory,
+            $this->ticketBuilder,
             $this->attachmentManager,
             $this->userService,
-            $this->securityFacade,
+            $this->authorizationService,
             $this->dispatcher,
-            $this->processManager
+            $this->notificationDeliveryManager,
+            $this->notifier
         );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testLoadTicketByKeyThrowsExceptionIfTicketDoesNotExist()
+    {
+        $key = 'TK-1';
+
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')
+            ->with(new TicketKey('TK', 1))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->loadTicketByKey($key);
+    }
+
+    public function testLoadTicketByKey()
+    {
+        $key = 'TK-1';
+        $ticket = $this->ticket;
+
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with('VIEW', $ticket)
+            ->will($this->returnValue(true));
+
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')
+            ->with(new TicketKey('TK', 1))
+            ->will($this->returnValue($ticket));
+
+        $this->ticketService->loadTicketByKey($key);
     }
 
     /**
@@ -149,55 +194,51 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatTicketCreatesWithDefaultStatusAndNoAttachments()
     {
         $branchId = 1;
-        $branch = $this->createBranch();
-        $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
-            ->will($this->returnValue($branch));
-
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter();
-        $assignee = $this->createAssignee();
-
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
-            ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
+        $number = new TicketSequenceNumber(null);
+        $reporter = $this->createReporter($reporterId);
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
-            $branch,
+            UniqueId::generate(),
+            $number,
+            self::SUBJECT,
+            self::DESCRIPTION,
+            $this->createBranch(),
             $reporter,
-            $assignee,
-            $source,
-            $priority,
-            $status
+            $this->createAssignee(),
+            new Source($source),
+            new Priority($priority),
+            new Status($status)
         );
 
-        $this->ticketFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee),
-            $this->equalTo($priority), $this->equalTo($source)
-        )->will($this->returnValue($ticket));
+        $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setStatus')->with(null)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
         $command = new CreateTicketCommand();
         $command->branch = $branchId;
-        $command->subject = self::DUMMY_TICKET_SUBJECT;
-        $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->subject = self::SUBJECT;
+        $command->description = self::DESCRIPTION;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -211,55 +252,51 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatTicketCreatesWithStatusAndNoAttachments()
     {
         $branchId = 1;
-        $branch = $this->createBranch();
-        $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
-            ->will($this->returnValue($branch));
-
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter();
-        $assignee = $this->createAssignee();
-
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
-            ->will($this->returnValue($assignee));
 
         $status = Status::IN_PROGRESS;
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
+        $number = new TicketSequenceNumber(null);
+        $reporter = $this->createReporter($reporterId);
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
-            $branch,
+            UniqueId::generate(),
+            $number,
+            self::SUBJECT,
+            self::DESCRIPTION,
+            $this->createBranch(),
             $reporter,
-            $assignee,
-            $source,
-            $priority,
-            $status
+            $this->createAssignee(),
+            new Source($source),
+            new Priority($priority),
+            new Status($status)
         );
 
-        $this->ticketFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee),
-            $this->equalTo($priority), $this->equalTo($source)
-        )->will($this->returnValue($ticket));
+        $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setStatus')->with($status)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
         $command = new CreateTicketCommand();
         $command->branch = $branchId;
-        $command->subject = self::DUMMY_TICKET_SUBJECT;
-        $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->subject = self::SUBJECT;
+        $command->description = self::DESCRIPTION;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -274,41 +311,37 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatTicketCreatesWithDefaultStatusAndAttachments()
     {
         $branchId = 1;
-        $branch = $this->createBranch();
-        $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo($branchId))
-            ->will($this->returnValue($branch));
-
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter();
-        $assignee = $this->createAssignee();
-
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
-            ->will($this->returnValue($assignee));
 
         $status = Status::NEW_ONE;
         $priority = Priority::PRIORITY_LOW;
         $source = Source::PHONE;
+        $number = new TicketSequenceNumber(null);
+        $reporter = $this->createReporter($reporterId);
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
-            $branch,
+            UniqueId::generate(),
+            $number,
+            self::SUBJECT,
+            self::DESCRIPTION,
+            $this->createBranch(),
             $reporter,
-            $assignee,
-            $source,
-            $priority,
-            $status
+            $this->createAssignee(),
+            new Source($source),
+            new Priority($priority),
+            new Status($status)
         );
 
-        $this->ticketFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_TICKET_SUBJECT), $this->equalTo(self::DUMMY_TICKET_DESCRIPTION),
-            $this->equalTo($branch), $this->equalTo($reporter), $this->equalTo($assignee),
-            $this->equalTo($priority), $this->equalTo($source)
-        )->will($this->returnValue($ticket));
+        $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setStatus')->with(null)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
         $attachmentInputs = $this->attachmentInputs();
 
@@ -322,17 +355,17 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
         $command = new CreateTicketCommand();
         $command->branch = $branchId;
-        $command->subject = self::DUMMY_TICKET_SUBJECT;
-        $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->subject = self::SUBJECT;
+        $command->description = self::DESCRIPTION;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = $priority;
         $command->source = $source;
@@ -349,43 +382,42 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter();
+        $reporter = $this->createReporter($reporterId);
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with(new User($assigneeId, User::TYPE_ORO))
             ->will($this->returnValue($assignee));
 
         $newStatus = Status::IN_PROGRESS;
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
+            UniqueId::generate(),
+            new TicketSequenceNumber(12),
+            self::SUBJECT,
+            self::DESCRIPTION,
             $branch,
             $reporter,
             $assignee,
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::NEW_ONE
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::NEW_ONE)
         );
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
         $command = new UpdateTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
-        $command->subject = self::DUMMY_TICKET_SUBJECT;
-        $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->subject = self::SUBJECT;
+        $command->description = self::DESCRIPTION;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
@@ -403,27 +435,26 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $reporterId = 2;
         $assigneeId = 3;
-        $reporter = $this->createReporter();
+        $reporter = $this->createReporter($reporterId);
         $assignee = $this->createAssignee();
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($reporterId))
-            ->will($this->returnValue($reporter));
-
-        $this->userService->expects($this->at(1))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with(new User($assigneeId, User::TYPE_ORO))
             ->will($this->returnValue($assignee));
 
         $newStatus = Status::IN_PROGRESS;
         $branch = $this->createBranch();
 
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
+            new UniqueId('unique_id'),
+            new TicketSequenceNumber(12),
+            self::SUBJECT,
+            self::DESCRIPTION,
             $branch,
             $reporter,
             $assignee,
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::NEW_ONE
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::NEW_ONE)
         );
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
@@ -439,17 +470,17 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($ticket)
             );
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
         $command = new UpdateTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
-        $command->subject = self::DUMMY_TICKET_SUBJECT;
-        $command->description = self::DUMMY_TICKET_DESCRIPTION;
-        $command->reporter = $reporterId;
+        $command->subject = self::SUBJECT;
+        $command->description = self::DESCRIPTION;
+        $command->reporter = (string)$reporter;
         $command->assignee = $assigneeId;
         $command->priority = Priority::PRIORITY_LOW;
         $command->source = Source::PHONE;
@@ -484,23 +515,26 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
+        $reporterId = 1;
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
+            new UniqueId('unique_id'),
+            new TicketSequenceNumber(12),
+            self::SUBJECT,
+            self::DESCRIPTION,
             $this->createBranch(),
-            $this->createReporter(),
+            $this->createReporter($reporterId),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED)
         );
         $ticket->addAttachment($this->attachment());
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('VIEW'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -519,9 +553,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -553,14 +587,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentsAddsForTicket()
     {
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
+            new UniqueId('unique_id'),
+            new TicketSequenceNumber(12),
+            self::SUBJECT,
+            self::DESCRIPTION,
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED)
         );
         $attachmentInputs = $this->attachmentInputs();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
@@ -574,9 +610,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             );
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -610,22 +646,24 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {
         $ticket = new Ticket(
-            self::DUMMY_TICKET_SUBJECT,
-            self::DUMMY_TICKET_DESCRIPTION,
+            new UniqueId('unique_id'),
+            new TicketSequenceNumber(12),
+            self::SUBJECT,
+            self::DESCRIPTION,
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED)
         );
         $ticket->addAttachment($this->attachment());
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -653,9 +691,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -693,26 +731,35 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testUpdateStatus()
     {
         $status = STATUS::NEW_ONE;
-        $currentUserId = 3;
+        $currentUserId = $assigneeId = 2;
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
+
         $assignee = $this->createAssignee();
-        $assignee->setId($currentUserId);
+        $assignee->setId($assigneeId);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticket->expects($this->once())->method('updateStatus')
+            ->with(
+                $this->logicalAnd(
+                    $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\Status'),
+                    $this->attributeEqualTo('status', $status)
+                )
+            );
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
         $this->ticket->expects($this->any())->method('getAssignee')->will($this->returnValue($assignee));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUserId));
+            ->method('getLoggedUser')
+            ->will($this->returnValue($currentUser));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->never())
-            ->method('isGranted');
+            ->method('isActionPermitted');
 
         $this->ticket
             ->expects($this->once())
@@ -729,25 +776,34 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testUpdateStatusOfTicketAssignedToSomeoneElse()
     {
         $status = STATUS::NEW_ONE;
-        $assignee = $this->createAssignee();
-        $assignee->setId(3);
+        $assigneeId = 3;
         $currentUserId = 2;
+        $assignee = $this->createAssignee();
+        $assignee->setId($assigneeId);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->ticket->expects($this->once())->method('updateStatus')->with($status);
+        $this->ticket->expects($this->once())->method('updateStatus')
+            ->with(
+                $this->logicalAnd(
+                    $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\Status'),
+                    $this->attributeEqualTo('status', $status)
+                )
+            );
         $this->ticket->expects($this->exactly(2))->method('getAssignee')->will($this->returnValue($assignee));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUserId));
+            ->method('getLoggedUser')
+            ->will($this->returnValue($currentUser));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -765,18 +821,24 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMYY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMYY_DESC');
     }
 
-    private function createReporter()
+    private function createReporter($id = 1)
     {
-        return new User();
+        return new User($id, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return $this->createOroUser();
     }
+
+    private function createOroUser()
+    {
+        return new OroUser();
+    }
+
 
     /**
      * @return Attachment
@@ -803,24 +865,27 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $assignee = $this->createAssignee();
         $assignee->setId($assigneeId);
 
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
+
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
             ->will($this->returnValue($assignee));
 
         $this->ticket->expects($this->any())->method('getAssignee')->will($this->returnValue($assignee));
         $this->ticket->expects($this->once())->method('assign')->with($assignee);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUserId));
+            ->method('getLoggedUser')
+            ->will($this->returnValue($currentUser));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->never())
-            ->method('isGranted');
+            ->method('isActionPermitted');
 
         $this->ticket
             ->expects($this->once())
@@ -839,25 +904,27 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $currentUserId = 2;
         $assigneeId = 3;
         $assignee = $this->createAssignee();
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
             ->will($this->returnValue($assignee));
 
         $this->ticket->expects($this->any())->method('getAssigneeId')->will($this->returnValue($assigneeId));
         $this->ticket->expects($this->once())->method('assign')->with($assignee);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
+            ->method('getLoggedUser')
             ->will($this->returnValue($currentUserId));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -903,18 +970,18 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
             ->method('getLoggedUserId')
             ->will($this->returnValue($currentUserId));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->userService->expects($this->at(0))->method('getUserById')->with($this->equalTo($assigneeId))
+        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
             ->will($this->returnValue(null));
 
         $command = new AssigneeTicketCommand();
@@ -924,12 +991,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->assignTicket($command);
     }
 
-    public function testDeleteTicket()
+    public function testDeleteTicketById()
     {
         $this->ticket->expects($this->any())->method('getAttachments')
             ->will($this->returnValue(array($this->attachment())));
 
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+        $this->ticketRepository->expects($this->once())->method('get')
+            ->with(self::DUMMY_TICKET_ID)
             ->will($this->returnValue($this->ticket));
 
         $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
@@ -938,9 +1006,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('deleteAttachment')
             ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -952,16 +1020,98 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
     }
 
+    public function testDeleteTicketByKey()
+    {
+        $this->ticket->expects($this->any())->method('getAttachments')
+            ->will($this->returnValue(array($this->attachment())));
+
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')
+            ->with(new TicketKey('DT', 1))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticketRepository->expects($this->once())->method('remove')->with($this->equalTo($this->ticket));
+
+        $this->attachmentManager->expects($this->exactly(count($this->ticket->getAttachments())))
+            ->method('deleteAttachment')
+            ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isActionPermitted')
+            ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->ticket
+            ->expects($this->once())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
+
+        $this->ticketService->deleteTicketByKey(self::DUMMY_TICKET_KEY);
+    }
+
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
-    public function testDeleteTicketWhenTicketDoesNotExist()
+    public function testDeleteTicketByIdWhenTicketDoesNotExist()
     {
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+        $this->ticketRepository->expects($this->once())->method('get')->with(self::DUMMY_TICKET_ID)
             ->will($this->returnValue(null));
 
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
+    }
+
+    public function testLoadTicket()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->ticketService->loadTicket(self::DUMMY_TICKET_ID);
+    }
+
+    public function testUpdateProperties()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->will($this->returnValue($this->ticket));
+
+        $subject = 'DUMMY_SUBJECT_UPDT';
+        $description = 'DUMMY_DESC_UPDT';
+        $status = 'closed';
+
+        $this->ticket->expects($this->exactly(3))->method('updateProperty');
+
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $command = new UpdatePropertiesCommand();
+        $command->id = 1;
+        $command->properties = [
+            ['name' => 'subject', 'value' => $subject],
+            ['name' => 'description', 'value' => $description],
+            ['name' => 'status', 'value' => $status]
+        ];
+
+        $this->ticketService->updateProperties($command);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Ticket loading failed, ticket not found.
+     */
+    public function testDeleteTicketByKeyWhenTicketDoesNotExist()
+    {
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')->with(new TicketKey('DT', 1))
+            ->will($this->returnValue(null));
+
+        $this->ticketService->deleteTicketByKey(self::DUMMY_TICKET_KEY);
     }
 
     /**

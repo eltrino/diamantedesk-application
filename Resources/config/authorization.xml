@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.authorization_manager.service.class">Diamante\DeskBundle\Infrastructure\Shared\Authorization\AuthorizationManager</parameter>
+        <parameter key="diamante.oro_authorization.service.class">Diamante\DeskBundle\Infrastructure\Shared\Authorization\OroAuthorizationImpl</parameter>
+        <parameter key="diamante.diamante_authorization.service.class">Diamante\DeskBundle\Infrastructure\Shared\Authorization\DiamanteAuthorizationImpl</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.oro_authorization.service" class="%diamante.oro_authorization.service.class%">
+            <argument type="service" id="oro_security.security_facade"/>
+        </service>
+
+        <service id="diamante.diamante_authorization.service" class="%diamante.diamante_authorization.service.class%" />
+
+        <service id="diamante.authorization_manager.service" class="%diamante.authorization_manager.service.class%">
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="security.context"/>
+        </service>
+    </services>
+</container>

@@ -10,7 +10,7 @@ At this moment software in alpha version. Eltrino Team working forward to improv
 Requirements
 ------------
 
-DiamanteDesk supports OroCRM version 1.2
+DiamanteDesk supports OroCRM version 1.4+
 
 Installation
 ------------

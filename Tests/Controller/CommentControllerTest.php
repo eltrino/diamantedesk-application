@@ -74,7 +74,7 @@ class CommentControllerTest extends WebTestCase
     public function testUpdate()
     {
         $ticket = $this->chooseTicket();
-        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']));
         $crawler = $this->client->request('GET', $ticketViewUrl);
         $link = $crawler->filter('.diam-comments a:contains("Edit")')->eq(0)->link();
         $crawler = $this->client->click($link);
@@ -94,7 +94,7 @@ class CommentControllerTest extends WebTestCase
     public function testUpdateCommentAndChangeTicketStatus()
     {
         $ticket = $this->chooseTicket();
-        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']));
         $crawler = $this->client->request('GET', $ticketViewUrl);
         $link = $crawler->filter('.diam-comments a:contains("Edit")')->eq(0)->link();
         $crawler = $this->client->click($link);

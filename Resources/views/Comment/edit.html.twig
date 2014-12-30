@@ -14,29 +14,28 @@
 {% endblock %}
 
 {% block navButtons %}
-    {{ UI.button({'path' : path('diamante_ticket_view', { 'id': ticket.id }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': ticket.key|trim }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
     {{ UI.saveAndCloseButton(editCommand.id ? 'diamante.desk.ui.save'|trans : 'diamante.desk.ui.add'|trans) }}
 {% endblock %}
 
 {% block pageHeader %}
-    {% if editCommand.id %}
-        {% set breadcrumbs = {
-            'entity':      editCommand,
-            'indexPath':   path('diamante_ticket_view', {'id': ticket.id}),
-            'indexLabel':  ticket.subject,
-            'entityTitle': 'diamante.desk.comment.actions.edit'|trans
-        } %}
-        {{ parent() }}
-    {% else %}
-        {% set title = 'diamante.desk.comment.actions.add'|trans %}
-        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
-    {% endif %}
+    {% set breadcrumbs = {
+        'entity':      editCommand,
+        'indexPath': path('diamante_branch_view', {'id': ticket.branch.id}),
+        'indexLabel': ticket.branchName,
+        'additional': [{
+            'indexPath':   path('diamante_ticket_view', {'key': ticket.key|trim}),
+            'indexLabel':  ticket.key ~ ' ' ~ ticket.subject|default('diamante.desk.common.not_available'|trans)
+        }],
+        'entityTitle': (editCommand.id ? 'diamante.desk.comment.actions.edit' : 'diamante.desk.comment.actions.add')|trans
+    } %}
+    {{ parent() }}
 {% endblock pageHeader %}
 
 {% block content_data %}
     {% set id = 'edit-comment' %}
     {% set attachmentListWidget %}
-        {% if editCommand.id %}
+        {% if editCommand.id and form.vars.value.attachmentList.count() %}
             {{ oro_widget_render({
                 'widgetType': 'block',
                 'url': path('diamante_comment_widget_attachment_list', {id: editCommand.id})

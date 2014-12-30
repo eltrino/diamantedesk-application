@@ -1,0 +1,14 @@
+Diamante\DeskBundle\Model\Ticket\Comment:
+    accessor_order: alphabetical
+    properties:
+        ticket:
+            exclude: true
+        author:
+            exclude: true
+    virtual_properties:
+        getTicketId:
+            serialized_name: ticket
+            type: integer
+        getAuthorId:
+            serialized_name: author
+            type: integer

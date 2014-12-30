@@ -15,11 +15,14 @@
     <testsuites>
         <testsuite name="DiamanteDesk Test Suite">
             <directory suffix="Test.php">Tests/Api</directory>
+            <directory suffix="Test.php">Tests/EventListener</directory>
             <directory suffix="Test.php">Tests/Infrastructure</directory>
             <directory suffix="Test.php">Tests/Model</directory>
-            <directory suffix="Test.php">Tests/Attachment</directory>
-            <directory suffix="Test.php">Tests/Entity</directory>
-            <directory suffix="Test.php">Tests/Ticket</directory>
+            <directory suffix="Test.php">Tests/Placeholder</directory>
+            <directory suffix="Test.php">Tests/Search</directory>
+            <directory suffix="Test.php">Tests/Stubs</directory>
+            <directory suffix="Test.php">Tests/Twig</directory>
+            <directory suffix="Test.php">Tests/Validator</directory>
         </testsuite>
     </testsuites>
 

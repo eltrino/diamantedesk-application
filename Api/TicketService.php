@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api;
 
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -27,10 +28,17 @@ interface TicketService
 {
     /**
      * Load Ticket by given ticket id
-     * @param int $ticketId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    public function loadTicket($ticketId);
+    public function loadTicket($id);
+
+    /**
+     * Load Ticket by given Ticket Key
+     * @param string $key
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function loadTicketByKey($key);
 
     /**
      * Retrieves Ticket Attachment
@@ -71,6 +79,13 @@ interface TicketService
     public function updateTicket(UpdateTicketCommand $command);
 
     /**
+     * @param MoveTicketCommand $command
+     * @return bool
+     * @throws \RuntimeException if unable to load required ticket
+     */
+    public function moveTicket(MoveTicketCommand $command);
+
+    /**
      * @param UpdateStatusCommand $command
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required ticket
@@ -78,12 +93,19 @@ interface TicketService
     public function updateStatus(UpdateStatusCommand $command);
 
     /**
-     * Delete Ticket
-     * @param $ticketId
+     * Delete Ticket by id
+     * @param $id
      * @return null
      * @throws \RuntimeException if unable to load required ticket
      */
-    public function deleteTicket($ticketId);
+    public function deleteTicket($id);
+
+    /**
+     * Delete Ticket by key
+     * @param string $key
+     * @return void
+     */
+    public function deleteTicketByKey($key);
 
     /**
      * Assign Ticket to specified User
@@ -91,6 +113,20 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket(AssigneeTicketCommand $command);
+
+    /**
+     * Update certain properties of the ticket
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updateProperties(Command\UpdatePropertiesCommand $command);
+
+    /**
+     * Retrieves list of all Tickets
+     * @return Ticket[]
+     */
+    public function listAllTickets();
+
 
     /**
      * Filter all tickets applying constraints provided in array

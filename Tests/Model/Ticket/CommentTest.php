@@ -20,7 +20,10 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
-use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 
 class CommentTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +32,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $ticket = $this->createTicket();
-        $creator = $this->createCreator();
+        $creator = $this->createDiamanteUser();
         $comment = new Comment(self::COMMENT_CONTENT, $ticket, $creator);
 
         $this->assertEquals(self::COMMENT_CONTENT, $comment->getContent());
@@ -50,7 +53,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
         $comment = new Comment(
             self::COMMENT_CONTENT,
             $this->createTicket(),
-            $this->createCreator()
+            $this->createDiamanteUser()
         );
 
         return $comment;
@@ -59,21 +62,23 @@ class CommentTest extends \PHPUnit_Framework_TestCase
     private function createTicket()
     {
         $ticket = new Ticket(
+            new UniqueId('unique_id'),
+            new TicketSequenceNumber(12),
             TicketTest::TICKET_SUBJECT,
             TicketTest::TICKET_DESCRIPTION,
-            new Branch('DUMMY_NAME', 'DUMMY_DESC'),
-            new User(),
-            new User(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::OPEN
+            new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC'),
+            $this->createDiamanteUser(),
+            new OroUser(),
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::OPEN)
         );
 
         return $ticket;
     }
 
-    private function createCreator()
+    private function createDiamanteUser()
     {
-        return new User();
+        return new User(1, User::TYPE_DIAMANTE);
     }
 }

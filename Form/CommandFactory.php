@@ -15,17 +15,18 @@
 namespace Diamante\DeskBundle\Form;
 
 use Diamante\DeskBundle\Entity\Comment;
-use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
-use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 
 use Diamante\DeskBundle\Api\Command\AttachmentCommand;
+use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
-use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\User;
 
 class CommandFactory
 {
@@ -48,13 +49,13 @@ class CommandFactory
     {
         $command = new UpdateTicketCommand();
         $command->id = $ticket->getId();
+        $command->key = (string) $ticket->getKey();
         $command->subject = $ticket->getSubject();
         $command->description = $ticket->getDescription();
         $command->reporter = $ticket->getReporter();
         $command->assignee = $ticket->getAssignee();
         $command->status = $ticket->getStatus();
         $command->priority = $ticket->getPriority();
-        $command->branch = $ticket->getBranch();
 
         return $command;
     }
@@ -64,6 +65,15 @@ class CommandFactory
         $command = new AssigneeTicketCommand();
         $command->id = $ticket->getId();
         $command->assignee = $ticket->getAssignee();
+
+        return $command;
+    }
+
+    public function createMoveTicketCommand(Ticket $ticket)
+    {
+        $command = new MoveTicketCommand();
+        $command->id = $ticket->getId();
+        $command->branch = $ticket->getBranch();
 
         return $command;
     }
@@ -80,15 +90,15 @@ class CommandFactory
      * Create comment command for create action
      * @param Ticket $ticket
      * @param User $author
-     * @return EditCommentCommand
+     * @return CommentCommand
      */
-    public function createEditCommentCommandForCreate(Ticket $ticket, User $author)
+    public function createCommentCommandForCreate(Ticket $ticket, User $author)
     {
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id = null;
         $command->content = null;
         $command->ticket = $ticket->getId();
-        $command->author = $author->getId();
+        $command->author = (string)$author;
         $command->ticketStatus = $ticket->getStatus();
 
         return $command;
@@ -97,14 +107,14 @@ class CommandFactory
     /**
      * Create Comment command for update action
      * @param Comment $comment
-     * @return EditCommentCommand
+     * @return CommentCommand
      */
-    public function createEditCommentCommandForUpdate(Comment $comment)
+    public function createCommentCommandForUpdate(Comment $comment)
     {
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id = $comment->getId();
         $command->content = $comment->getContent();
-        $command->author = $comment->getAuthor()->getId();
+        $command->author = (string)$comment->getAuthor();
         $command->ticket = $comment->getTicket()->getId();
         $command->attachmentList = $comment->getAttachments();
         $command->ticketStatus = $comment->getTicket()->getStatus();

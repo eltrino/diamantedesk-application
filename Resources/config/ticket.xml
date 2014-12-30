@@ -21,7 +21,9 @@
     <parameters>
         <parameter key="diamante.ticket.entity.class">Diamante\DeskBundle\Entity\Ticket</parameter>
         <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
+        <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
         <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
+        <parameter key="diamante.ticket.builder.class">Diamante\DeskBundle\Model\Ticket\CommonTicketBuilder</parameter>
         <parameter key="diamante.comment.entity.factory.class">Diamante\DeskBundle\Model\Ticket\CommentFactory</parameter>
         <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
         <parameter key="diamante.ticket.internal.grid_filters_service.class">Diamante\DeskBundle\Api\Internal\TicketGridFiltersService</parameter>
@@ -38,17 +40,22 @@
 
         <parameter key="diamante.comment.service.class">Diamante\DeskBundle\Api\Internal\CommentServiceImpl</parameter>
         <parameter key="diamante.ticket.datagrid_status_helper.class">Diamante\DeskBundle\Datagrid\StatusHelper</parameter>
+        <parameter key="diamante.ticket.datagrid_priority_helper.class">Diamante\DeskBundle\Datagrid\PriorityHelper</parameter>
 
         <parameter key="diamante.ticket.email_processing.strategy.service.class">Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy</parameter>
         <parameter key="diamante.ticket.email_processing_message_reference.entity.class">Diamante\DeskBundle\Entity\MessageReference</parameter>
         <parameter key="diamante.ticket.email_processing_message_reference.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository</parameter>
         <parameter key="diamante.ticket.email_processing_message_reference.service.class">Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
+
+        <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
     </parameters>
 
     <services>
         <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.service"/>
             <argument type="service" id="diamante.branch_email_configuration.service"/>
+            <argument type="service" id="diamante.api.user.repository" />
+            <argument type="service" id="diamante.api.user.entity.factory" />
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="email_processing.strategy" />
         </service>
@@ -56,31 +63,35 @@
         <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
             <argument type="service" id="diamante.ticket.repository"/>
-            <argument type="service" id="diamante.branch.repository"/>
-            <argument type="service" id="diamante.ticket.entity.factory"/>
+            <argument type="service" id="diamante.ticket.builder"/>
             <argument type="service" id="diamante.comment.entity.factory"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.attachment.manager"/>
-        </service>
-
-        <service id="diamante.user.service" class="%diamante.user.service.class%">
-            <argument type="service" id="oro_user.manager"/>
         </service>
 
         <service id="diamante.ticket.entity.factory" class="%diamante.ticket.entity.factory.class%">
             <argument type="string">%diamante.ticket.entity.class%</argument>
         </service>
 
+        <service id="diamante.ticket.builder" class="%diamante.ticket.builder.class%">
+            <argument type="service" id="diamante.ticket.entity.factory"/>
+            <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.user.service"/>
+        </service>
+
         <service id="diamante.ticket.service" class="%diamante.ticket.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
-            <argument type="service" id="diamante.ticket.entity.factory"/>
+            <argument type="service" id="diamante.ticket.builder"/>
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.user.service"/>
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="diamante.mail_ticket_process_manager"/>
+            <argument type="service" id="diamante.notification.delivery.manger"/>
+            <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
+
+        <service id="diamante.ticket.api.service" alias="diamante.ticket.service" />
 
         <service id="diamante.ticket.internal.grid_filters_service"
                  class="%diamante.ticket.internal.grid_filters_service.class%">
@@ -146,18 +157,36 @@
             <argument type="service" id="diamante.comment.entity.factory"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.attachment.manager"/>
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="diamante.mail_comment_process_manager"/>
+            <argument type="service" id="diamante.notification.delivery.manger"/>
+            <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
 
+        <service id="diamante.comment.api.service" alias="diamante.comment.service" />
+
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>
+        <service id="diamante.ticket.datagrid_priority_helper" class="%diamante.ticket.datagrid_priority_helper.class%"/>
 
         <service id="diamante.form.type.assignee_select" class="Diamante\DeskBundle\Form\Type\AssigneeSelectType">
             <tag name="form.type" alias="diamante_assignee_select"/>
         </service>
+
+        <service id="diamante.form.type.reporter_select" class="Diamante\DeskBundle\Form\Type\ReporterSelectType">
+            <tag name="form.type" alias="diamante_reporter_select"/>
+        </service>
+
+        <service id="diamante.form.type.user_select" class="Diamante\DeskBundle\Form\Type\DiamanteUserSelectType">
+            <tag name="form.type" alias="diamante_user_select"/>
+        </service>
+
+        <service id="diamante.form.type.jqueryselect2_hidden" class="Diamante\DeskBundle\Form\Type\DiamanteJquerySelect2HiddenType">
+            <argument type="service" id="oro_form.autocomplete.search_registry"/>
+            <tag name="form.type" alias="diamante_jqueryselect2_hidden"/>
+
+        </service>
 <!-- repositories start -->
-        <service id="diamante.ticket.repository" class="%diamante.generic.repository.class%"
+        <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">
             <argument type="string">%diamante.ticket.entity.class%</argument>

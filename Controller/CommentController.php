@@ -18,12 +18,13 @@ use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\Comment;
-use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Form\Type\CommentType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\CommentService;
+use Diamante\DeskBundle\Model\User\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -52,14 +53,14 @@ class CommentController extends Controller
      *
      * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
-     * @param Ticket $ticket
+     * @param Ticket $id
      * @return array
      */
     public function createAction($id)
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
-            ->createEditCommentCommandForCreate($ticket, $this->getUser());
+            ->createCommentCommandForCreate($ticket, new User($this->getUser()->getId(), User::TYPE_ORO));
         return $this->edit($command, function($command) {
             $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')
@@ -76,14 +77,14 @@ class CommentController extends Controller
      *
      * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
-     * @param Comment $comment
+     * @param int $id
      * @return array
      */
     public function updateAction($id)
     {
         $comment = $this->get('diamante.comment.service')->loadComment($id);
         $command = $this->get('diamante.command_factory')
-            ->createEditCommentCommandForUpdate($comment);
+            ->createCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
             $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')->updateTicketComment($command);
@@ -91,10 +92,10 @@ class CommentController extends Controller
     }
 
     /**
-     * @param EditCommentCommand $command
+     * @param CommentCommand $command
      * @return array of AttachmentInput DTOs
      */
-    private function buildAttachmentsInputDTO(EditCommentCommand $command)
+    private function buildAttachmentsInputDTO(CommentCommand $command)
     {
         $attachmentsInput = array();
         foreach ($command->files as $file) {
@@ -123,12 +124,12 @@ class CommentController extends Controller
     }
 
     /**
-     * @param EditCommentCommand $command
+     * @param CommentCommand $command
      * @param $callback
      * @param Ticket $ticket
      * @return array
      */
-    private function edit(EditCommentCommand $command, $callback, Ticket $ticket)
+    private function edit(CommentCommand $command, $callback, Ticket $ticket)
     {
         $response = null;
         $form = $this->createForm(new CommentType(), $command);
@@ -146,7 +147,7 @@ class CommentController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse($ticket->getId());
+            $response = $this->getSuccessSaveResponse((string) $ticket->getKey());
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView, 'ticket' => $ticket);
         } catch (\Exception $e) {
@@ -158,19 +159,19 @@ class CommentController extends Controller
 
     /**
      * @Route(
-     *      "/delete/ticket/{ticketId}/comment/{commentId}",
+     *      "/delete/ticket/{ticketKey}/comment/{commentId}",
      *      name="diamante_comment_delete",
-     *      requirements={"ticketId"="\d+", "commentId"="\d+"}
+     *      requirements={"ticketKey"="[A-Z]+-\d+", "commentId"="\d+"}
      * )
      *
-     * @param Comment $comment
+     * @param string $ticketKey
+     * @param int $commentId
      * @return Response
      */
-    public function deleteAction($ticketId, $commentId)
+    public function deleteAction($ticketKey, $commentId)
     {
         try {
-            $this->get('diamante.comment.service')
-                ->deleteTicketComment($commentId);
+            $this->get('diamante.comment.service')->deleteTicketComment($commentId);
 
             $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
         } catch (Exception $e) {
@@ -179,7 +180,7 @@ class CommentController extends Controller
         }
 
         return $this->redirect(
-            $this->generateUrl('diamante_ticket_view', array('id' => $ticketId))
+            $this->generateUrl('diamante_ticket_view', array('key' => $ticketKey))
         );
     }
 
@@ -189,7 +190,7 @@ class CommentController extends Controller
      *      name="diamante_ticket_comment_attachment_download",
      *      requirements={"commentId"="\d+", "attachId"="\d+"}
      * )
-     * @return Reponse
+     * @return Response
      * @todo move to application service
      */
     public function downloadAttachmentAction($commentId, $attachId)
@@ -231,6 +232,7 @@ class CommentController extends Controller
      *
      * @param integer $commentId
      * @param integer $attachId
+     * @return Response
      */
     public function removeAttachmentAction($commentId, $attachId)
     {
@@ -298,14 +300,14 @@ class CommentController extends Controller
     }
 
     /**
-     * @param int $ticketId
+     * @param string $ticketKey
      * @return array
      */
-    private function getSuccessSaveResponse($ticketId)
+    private function getSuccessSaveResponse($ticketKey)
     {
         return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_comment_update', 'parameters' => ['id' => $ticketId]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticketId]]
+            ['route' => 'diamante_comment_update', 'parameters' => ['key' => $ticketKey]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['key' => $ticketKey]]
         );
     }
 

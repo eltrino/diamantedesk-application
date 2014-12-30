@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
+use Diamante\DeskBundle\Validator\Constraints\Entity;
 
 class BranchCommand implements Taggable
 {
@@ -29,8 +30,23 @@ class BranchCommand implements Taggable
     public $id;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\Regex(
+     *    pattern = "/^[a-zA-Z]+$/",
+     *    message = "Branch Key must contain letters only. Numbers, special characters and spaces are not allowed."
+     * )
      * @Assert\Type(type="string")
+     * @Assert\Length(min = 2)
+     * @var string
+     */
+
+    public $key;
+
+    /**
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
+     * @Assert\Type(type="string")
+     * @Assert\Length(min = 2)
      */
     public $name;
 
@@ -46,13 +62,14 @@ class BranchCommand implements Taggable
 
     /**
      * @Assert\File(
-     *              mimeTypes={"image/jpeg","image/png"}
+     *              mimeTypes={"image/jpeg","image/png"},
+     *              mimeTypesMessage="'JPEG' and 'PNG' image formats are supported only"
      * )
      */
     public $logoFile;
 
     /**
-     * @Assert\Type(type="object")
+     * @Entity()
      */
     public $defaultAssignee;
 

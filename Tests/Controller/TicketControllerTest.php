@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Symfony\Component\DomCrawler\Form;
+use Diamante\DeskBundle\Model\User\User;
 
 class TicketControllerTest extends WebTestCase
 {
@@ -54,7 +55,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[status]']      = 'open';
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_MEDIUM;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
-        $form['diamante_ticket_form[reporter]']    = 1;
+        $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
 
@@ -84,7 +85,7 @@ class TicketControllerTest extends WebTestCase
         $form['diamante_ticket_form[status]']      = Status::OPEN;
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_LOW;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
-        $form['diamante_ticket_form[reporter]']    = 1;
+        $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $this->client->followRedirects(true);
 
@@ -127,7 +128,7 @@ class TicketControllerTest extends WebTestCase
     public function testView()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']));
+        $ticketViewUrl = $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']));
         $crawler     = $this->client->request('GET', $ticketViewUrl);
         $response    = $this->client->getResponse();
 
@@ -149,10 +150,21 @@ class TicketControllerTest extends WebTestCase
         $this->assertEquals("Change", $crawler->selectButton('Change')->html());
     }
 
+
+    public function testMove()
+    {
+        $ticket              = $this->chooseTicketFromGrid();
+        $moveFormUrl = $this->getUrl('diamante_ticket_move', array('id' => $ticket['id']));
+        $crawler             = $this->client->request('GET', $moveFormUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
     public function testUpdate()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -170,7 +182,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdatePriority()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -188,7 +200,7 @@ class TicketControllerTest extends WebTestCase
     public function testUpdateSource()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('id' => $ticket['id']));
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
         $crawler       = $this->client->request('GET', $ticketUpdateUrl);
 
         /** @var Form $form */
@@ -209,22 +221,40 @@ class TicketControllerTest extends WebTestCase
         $ticketAssignUrl = $this->getUrl('diamante_ticket_assign', array('id' => $ticket['id']));
         $crawler = $this->client->request('GET', $ticketAssignUrl);
 
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
+    public function testCreateWithoutAssigneeId()
+    {
+        $branch = $this->chooseBranchFromGrid();
+        $crawler = $this->client->request(
+            'GET', $this->getUrl('diamante_ticket_create',  array('id' => $branch['id']))
+        );
+
         /** @var Form $form */
-        $form = $crawler->selectButton('Save')->form();
-        $form['diamante_ticket_form_assignee[assignee]'] = 1;
+        $form = $crawler->selectButton('Save and Close')->form();
+
+        $form['diamante_ticket_form[branch]']      = $branch['id'];
+        $form['diamante_ticket_form[subject]']     = 'Test Ticket Without Assignee';
+        $form['diamante_ticket_form[description]'] = 'Test Description';
+        $form['diamante_ticket_form[status]']      = Status::OPEN;
+        $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_LOW;
+        $form['diamante_ticket_form[source]']      = Source::PHONE;
+        $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER . 1;
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Ticket successfully re-assigned.", $crawler->html());
+        $this->assertContains("Ticket successfully created.", $crawler->html());
     }
 
     public function testDelete()
     {
         $ticket        = $this->chooseTicketFromGrid();
-        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('id' => $ticket['id']));
+        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('key' => $ticket['key']));
         $this->client->followRedirects(false);
 
         $crawler       = $this->client->request('GET', $ticketDeleteUrl);
@@ -232,7 +262,7 @@ class TicketControllerTest extends WebTestCase
 
         $this->client->request(
             'GET',
-            $this->getUrl('diamante_ticket_view', array('id' => $ticket['id']))
+            $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']))
         );
         $viewResponse = $this->client->getResponse();
 

@@ -1,0 +1,31 @@
+<h4>
+     {{ header }} by {{ user }}
+</h4>
+{% if changes %}
+<p>
+    <ul>
+        {% for key, value in changes %}
+        <ul>
+            <li>
+                <b>{{ key }}: </b>{{ value }}
+            </li>
+        </ul>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
+
+{% if attachments %}
+<p>
+    <h4>
+        Attachments:
+    </h4>
+    {% for key, value in attachments %}
+        {{ value }}<br />
+    {% endfor %}
+</p>
+{% endif %}
+<p>
+    -- <br />
+    DiamanteDesk<br />
+</p>

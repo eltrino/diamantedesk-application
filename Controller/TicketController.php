@@ -15,14 +15,17 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
-use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\MoveTicketType;
 use Diamante\DeskBundle\Form\Type\AttachmentType;
 use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
-use Diamante\DeskBundle\Ticket\Api\TicketService;
+use Diamante\DeskBundle\Model\User\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -69,7 +72,7 @@ class TicketController extends Controller
         $baseUri = $this->getRequest()->getBaseUrl() . $this->getRequest()->getPathInfo();
         foreach($filtersList as $filter) {
             $link['name'] =  $filter->getName();
-            $link['url'] = '#url=' . $baseUri . $filtersGenerator->generateGridFilterUrl($filter->getId());
+            $link['url'] = $filtersGenerator->generateGridFilterUrl($filter->getId());
             $linksList[] = $link;
         }
 
@@ -78,19 +81,19 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *      "/view/{id}",
+     *      "/view/{key}",
      *      name="diamante_ticket_view",
-     *      requirements={"id"="\d+"}
+     *      requirements={"key"="[A-Z]+-\d+"}
      * )
      * @Template
      *
-     * @param int $id
-     * @return array
+     * @param string $key
+     * @return array|Response
      */
-    public function viewAction($id)
+    public function viewAction($key)
     {
         try {
-            $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+            $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
 
             return ['entity'  => $ticket];
         } catch (\Exception $e) {
@@ -144,6 +147,55 @@ class TicketController extends Controller
 
     /**
      * @Route(
+     *      "/move/ticket/{id}",
+     *      name="diamante_ticket_move",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/move.html.twig")
+     *
+     * @param int $id
+     * @return array
+     */
+    public function moveAction($id)
+    {
+        $response = array();
+        try {
+            $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+            $command = $this->get('diamante.command_factory')
+                ->createMoveTicketCommand($ticket);
+            $form = $this->createForm(new MoveTicketType(), $command);
+
+            if (!$this->getRequest()->get('no_redirect')) {
+                $response = array('form' => $form->createView());
+                return $response;
+            }
+            $this->handle($form);
+            if ($command->branch->getId() != $ticket->getBranch()->getId()){
+                $this->get('diamante.ticket.service')->moveTicket($command);
+                $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
+                $url = $this->generateUrl('diamante_ticket_view', array('key' => $ticket->getKey()));
+                $response = array('reload_page' => true, 'redirect' => $url);
+                return $response;
+            }
+            $response['reload_page'] = true;
+        } catch (TicketNotFoundException $e) {
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $url = $this->generateUrl('diamante_ticket_list');
+            $response = array('reload_page' => true, 'redirect' => $url);
+        } catch (BranchNotFoundException $e) {
+            $this->addErrorMessage('diamante.desk.branch.messages.get.error');
+            $response = array('reload_page' => true);
+        } catch (MethodNotAllowedException $e) {
+        } catch (\Exception $e) {
+            $this->addErrorMessage('diamante.desk.ticket.messages.move.error');
+            $response['reload_page'] = true;
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
      *      "/create/{id}",
      *      name="diamante_ticket_create",
      *      requirements={"id" = "\d+"},
@@ -161,7 +213,7 @@ class TicketController extends Controller
             $branch = $this->get('diamante.branch.service')->getBranch($id);
         }
         $command = $this->get('diamante.command_factory')
-            ->createCreateTicketCommand($branch, $this->getUser());
+            ->createCreateTicketCommand($branch, new User($this->getUser()->getId(), User::TYPE_ORO));
 
         $response = null;
         $form = $this->createForm(new CreateTicketType(), $command);
@@ -171,7 +223,6 @@ class TicketController extends Controller
             $this->handle($form);
 
             $command->branch = $command->branch->getId();
-            $command->reporter = $command->reporter->getId();
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
             $attachments = array();
@@ -197,19 +248,20 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *      "/update/{id}",
+     *      "/update/{key}",
      *      name="diamante_ticket_update",
-     *      requirements={"id"="\d+"}
+     *      requirements={"key"="[A-Z]+-\d+"}
      * )
      *
      * @Template("DiamanteDeskBundle:Ticket:update.html.twig")
      *
-     * @param int $id
+     * @param string $key
      * @return array
      */
-    public function updateAction($id)
+    public function updateAction($key)
     {
-        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+        $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
+
         $command = $this->get('diamante.command_factory')
             ->createUpdateTicketCommand($ticket);
         $response = null;
@@ -220,7 +272,6 @@ class TicketController extends Controller
             $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
             $this->handle($form);
 
-            $command->reporter = $command->reporter->getId();
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
             $attachments = array();
@@ -235,35 +286,45 @@ class TicketController extends Controller
             $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
             $response = $this->getSuccessSaveResponse($ticket);
         } catch (MethodNotAllowedException $e) {
-            $response = array('form' => $formView);
+            $response = array(
+                'form' => $formView,
+                'branchId' => $ticket->getBranch()->getId(),
+                'branchName' => $ticket->getBranch()->getName(),
+                'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
+            );
         } catch (\Exception $e) {
             //TODO: Log original error
             $this->addErrorMessage('diamante.desk.ticket.messages.save.error');
-            $response = array('form' => $formView);
+
+            $response = array(
+                'form' => $formView,
+                'branchId' => $ticket->getBranch()->getId(),
+                'branchName' => $ticket->getBranch()->getName(),
+                'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
+            );
         }
         return $response;
     }
 
     /**
      * @Route(
-     *      "/delete/{id}",
+     *      "/delete/{key}",
      *      name="diamante_ticket_delete",
-     *      requirements={"id"="\d+"}
+     *      requirements={"key"="[A-Z]+-\d+"}
      * )
      *
-     * @param int $id
+     * @param string $key
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction($key)
     {
         try {
-            $this->get('diamante.ticket.service')->deleteTicket($id);
+            $this->get('diamante.ticket.service')->deleteTicketByKey($key);
             $this->addSuccessMessage('diamante.desk.ticket.messages.delete.success');
             return $this->redirect(
                 $this->generateUrl('diamante_ticket_list')
             );
         } catch (\Exception $e) {
-            echo $e->getMessage();
             return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
     }
@@ -275,7 +336,7 @@ class TicketController extends Controller
      *      requirements={"id"="\d+"}
      * )
      *
-     * @Template("DiamanteDeskBundle:Ticket:assign.html.twig")
+     * @Template("DiamanteDeskBundle:Ticket:widget/assignee.html.twig")
      *
      * @param int $id
      * @return array
@@ -283,25 +344,33 @@ class TicketController extends Controller
     public function assignAction($id)
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+        $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
+
         $command = $this->get('diamante.command_factory')
             ->createAssigneeTicketCommand($ticket);
 
-        $response = null;
         $form = $this->createForm(new AssigneeTicketType(), $command);
+
         try {
-            $this->handle($form);
+            if (false === $redirect) {
+                try {
+                    $this->handle($form);
 
-            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+                    $command->assignee = $command->assignee ? $command->assignee->getId() : null;
+                    $this->get('diamante.ticket.service')->assignTicket($command);
+                    $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
+                    $response = array('saved' => true);
 
-            $this->get('diamante.ticket.service')->assignTicket($command);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
-            $response = $this->getSuccessSaveResponse($ticket);
+                } catch (\Exception $e) {
+                    $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
+                    $response = array('form' => $form->createView());
+                }
+            } else {
+                $response = array('form' => $form->createView());
+            }
         } catch (MethodNotAllowedException $e) {
-            $response = array('form' => $form->createView());
-        } catch (\Exception $e) {
-            $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
-            $response = array('form' => $form->createView());
         }
+
         return $response;
     }
 
@@ -323,7 +392,7 @@ class TicketController extends Controller
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
         $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
-        return array('form' => $formView);
+        return array('ticket' => $ticket, 'form' => $formView);
     }
 
     /**
@@ -389,7 +458,7 @@ class TicketController extends Controller
                     ),
                     array(
                         'route' => 'diamante_ticket_view',
-                        'parameters' => array('id' => $ticket->getId())
+                        'parameters' => array('key' => (string) $ticket->getKey())
                     )
                 );
             }
@@ -423,16 +492,26 @@ class TicketController extends Controller
         $removeTicketAttachment->attachmentId = $attachId;
 
         try {
-            $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
+            $ticketKey = $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
+        } catch (TicketNotFoundException $e) {
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_list'
+            ));
         } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
+            $ticketKey = $ticketService->loadTicket($ticketId)->getKey();
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
         }
 
-        $response = $this->redirect($this->generateUrl(
-            'diamante_ticket_view',
-            array('id' => $ticketId)
-        ));
         return $response;
     }
 
@@ -564,20 +643,8 @@ class TicketController extends Controller
     private function getSuccessSaveResponse(Ticket $ticket)
     {
         return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_ticket_update', 'parameters' => ['id' => $ticket->getId()]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['id' => $ticket->getId()]]
-        );
-    }
-
-    /**
-     * @param Ticket $ticket
-     * @return string
-     */
-    private function getViewUrl(Ticket $ticket)
-    {
-        return $this->generateUrl(
-            'diamante_ticket_view',
-            array('id' => $ticket->getId())
+            ['route' => 'diamante_ticket_update', 'parameters' => ['key' => (string) $ticket->getKey()]],
+            ['route' => 'diamante_ticket_view', 'parameters' => ['key' => (string) $ticket->getKey()]]
         );
     }
 
@@ -623,6 +690,7 @@ class TicketController extends Controller
                 'id'       => $attachment->getId(),
             );
         }
+        $data["staticFlashMessages"] = $this->get('session')->getFlashBag()->all();
 
         return $data;
     }

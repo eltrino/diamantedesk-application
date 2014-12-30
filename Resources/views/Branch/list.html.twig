@@ -14,4 +14,12 @@
             })
         }}
     {% endif %}
+    <script>
+        require(['jquery',  'oroui/js/mediator'],
+            function($, mediator) {
+                mediator.on('grid_render:complete', function (element) {
+                    $(element).addClass('diam-branch-grid')
+                });
+            });
+    </script>
 {% endblock %}

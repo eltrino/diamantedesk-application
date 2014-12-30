@@ -2,6 +2,7 @@
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import 'OroEmailBundle::macros.html.twig' as EA %}
 
 {% oro_title_set({params : {"%branch.name%": entity.name|default('diamante.desk.common.not_available'|trans) }}) %}
 
@@ -56,8 +57,9 @@
     {% set id = 'branchUpdate' %}
 
     {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.forms.name'|trans, entity.name)] %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.key'|trans, entity.key)]) %}
 
-    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssigneeFullName : 'diamante.desk.common.not_defined'|trans %}
+    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssignee|oro_format_name : 'diamante.desk.common.not_defined'|trans %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.default_assignee'|trans, defaultAssigneeFullName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
@@ -81,7 +83,7 @@
     ) %}
 
     {% if branchEmailConfiguration %}
-        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', branchEmailConfiguration.supportAddress)] %}
+        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', EA.email_address_simple(branchEmailConfiguration.supportAddress))] %}
         {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains)]) %}
 
         {% set dataBlocks = dataBlocks|merge([{

@@ -37,6 +37,12 @@ class Branch implements Entity, Taggable
     protected $description;
 
     /**
+     * Branch key. Immutable value - generated only once when new Branch created
+     * @var string
+     */
+    protected $key;
+
+    /**
      * @var User
      */
     protected $defaultAssignee;
@@ -61,8 +67,12 @@ class Branch implements Entity, Taggable
      */
     protected $updatedAt;
 
-    public function __construct($name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
+    public function __construct($key, $name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
     {
+        if (strtoupper($key) != $key) {
+            $key = strtoupper($key);
+        }
+        $this->key = $key;
         $this->name = $name;
         $this->description = $description;
         $this->defaultAssignee = $defaultAssignee;
@@ -97,11 +107,27 @@ class Branch implements Entity, Taggable
     }
 
     /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
      * @return User
      */
     public function getDefaultAssignee()
     {
         return $this->defaultAssignee;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultAssigneeId()
+    {
+        return $this->defaultAssignee->getId();
     }
 
     /**
@@ -192,5 +218,21 @@ class Branch implements Entity, Taggable
         $this->tags = $tags;
 
         return $this;
+    }
+
+    /**
+     * Update single property of the branch
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function updateProperty($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        } else {
+            throw new \DomainException(sprintf('Branch does not have "%s" property.', $name));
+        }
     }
 }

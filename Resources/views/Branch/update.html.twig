@@ -1,0 +1,52 @@
+{% extends 'DiamanteDeskBundle:Branch:edit.html.twig' %}
+
+{% block content_data %}
+    {% set id = 'branchEdit' %}
+
+    {% set dataBlocks = [{
+    'title': 'diamante.desk.common.general'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'diamante.desk.branch.details'|trans,
+    'data': [
+    form_row(form.name),
+    form_row(form.defaultAssignee),
+    form_row(form.logoFile, {'attr': {'accept' : 'image/jpeg, image/png'}}),
+    form_row(form.tags)
+    ]
+    }
+    ]
+    }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'diamante.desk.common.description'|trans,
+    'subblocks': [
+    {
+    'title':null,
+    'data': [
+    form_row(form.description),
+    ]
+    }]
+    }]
+    ) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Email Configuration'|trans,
+    'subblocks': [
+    {
+    'title':null,
+    'data': [
+    form_row(form.branch_email_configuration.supportAddress),
+    form_row(form.branch_email_configuration.customerDomains)
+    ]
+    }]
+    }]
+    ) %}
+
+    {% set data = {
+    'formErrors': form_errors(form)? form_errors(form) : null,
+    'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

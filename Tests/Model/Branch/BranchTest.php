@@ -31,12 +31,20 @@ class BranchTest extends \PHPUnit_Framework_TestCase
     {
         $defaultAssignee = new User();
         $logo = new Logo('file.dummy');
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
 
+        $this->assertEquals('DUMM', $branch->getKey());
         $this->assertEquals('DUMMY_NAME', $branch->getName());
         $this->assertEquals('DUMMY_DESC', $branch->getDescription());
         $this->assertEquals($defaultAssignee, $branch->getDefaultAssignee());
         $this->assertEquals($logo, $branch->getLogo());
+    }
+
+    public function testThatBranchKeyConvertsToUpperCase()
+    {
+        $branch = new Branch('dumm', 'DUMMY_NAME', 'DUMMY_DESC');
+
+        $this->assertEquals('DUMM', $branch->getKey());
     }
 
     /**
@@ -46,7 +54,7 @@ class BranchTest extends \PHPUnit_Framework_TestCase
     {
         $defaultAssignee = new User();
         $logo = new Logo('file.dummy');
-        $branch = new Branch('DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC', $defaultAssignee, $logo);
 
         $newDefaultAssignee = new User();
         $newLogo = new Logo('new_file.dummy');
@@ -58,4 +66,25 @@ class BranchTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($newLogo, $branch->getLogo());
     }
 
+    /**
+     * @test
+     */
+    public function thatUpdateProperty()
+    {
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
+        $branch->updateProperty('name', self::BRANCH_NAME);
+        $this->assertEquals(self::BRANCH_NAME, $branch->getName());
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \DomainException
+     * @expectedExceptionMessage Branch does not have "invalid_property" property.
+     */
+    public function thatDoesNotUpdateInvalidProperty()
+    {
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
+        $branch->updateProperty('invalid_property', 'value');
+    }
 }

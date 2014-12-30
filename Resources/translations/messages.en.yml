@@ -5,7 +5,13 @@ diamante:
           entity_plural_label: Branches
           details:             Branch Details
 
+          columns:
+            logo:              Logo
+            branch_name:       Branch Name
+            branch_key:        Branch Key
+
           actions:
+            view:              View Branch
             add:               Add Branch
             edit:              Edit Branch
             remove:            Delete Branch
@@ -25,20 +31,34 @@ diamante:
 
           placeholders:
             form:              Choose branch...
+            default:           Current branch is configured as a default for Email Processing and can't be deleted.
 
         ticket:
           entity_label:        Ticket
           entity_plural_label: Tickets
           details:             Ticket Details
           all:                 All Tickets
+          columns:
+            key:               Key
+            subject:           Subject
+            branch:            Branch
+            assignee:          Assignee
+            reporter:          Reporter
+            priority:          Priority
+            status:            Status
+            created:           Created
+            updated:           Updated
 
           actions:
             add:               Add Ticket
             edit:              Edit Ticket
+            view:              View Ticket
             remove:            Delete Ticket
+            delete:            Delete Tickets
             assign:            Assign
             create:            Create Ticket
             change_status:     Change status
+            move:              Move
 
           messages:
             create:
@@ -57,6 +77,9 @@ diamante:
             change_status:
               error:           Error occured while trying to change ticket status.
               success:         Status successfully changed
+            move:
+              error:           Error occured while trying to move ticket.
+              success:         Ticket successfully moved.
             get:
               error:           Ticket loading failed, ticket not found.
               attachment:
@@ -94,6 +117,7 @@ diamante:
               error:           Comment loading failed, comment not found.
             get_attach:
               error:           Attachment loading failed. Comment has no such attachment.
+            empty:             There are no comments yet.
 
           placeholders:
             added:             added a comment
@@ -167,6 +191,7 @@ diamante:
           default_assignee:    Default Assignee
           logoFile:            Logo
           tags:                Tags
+          key:                 Key
 
         attributes:
           name:                Name
@@ -177,3 +202,4 @@ diamante:
           source:              Source
           reporter:            Reporter
           assignee:            Assignee
+          key:                 Key

@@ -27,7 +27,6 @@ class AssigneeTicketCommand
 
     /**
      * @var \Oro\Bundle\UserBundle\Entity\User
-     * @Assert\NotNull()
      * @Assert\Type(type="object")
      */
     public $assignee;

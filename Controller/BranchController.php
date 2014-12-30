@@ -14,17 +14,14 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Doctrine\Common\Util\ClassUtils;
-use Doctrine\Common\Util\Inflector;
+use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
 
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
-use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Doctrine\ORM\EntityManager;
-use Diamante\DeskBundle\Form\CommandFactory;
 
-use Diamante\DeskBundle\Form\Type\BranchType;
+use Diamante\DeskBundle\Form\Type\CreateBranchType;
+use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -81,16 +78,18 @@ class BranchController extends Controller
 
     /**
      * @Route("/create", name="diamante_branch_create")
-     * @Template("DiamanteDeskBundle:Branch:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Branch:create.html.twig")
      */
     public function createAction()
     {
         $command = new BranchCommand();
         try {
-            $result = $this->edit($command, function ($command) {
-                $branchId = $this->get('diamante.branch.service')->createBranch($command);
-                $this->createBranchEmailConfiguration($command, $branchId);
-                return $branchId;
+            $form = $this->createForm(new CreateBranchType(), $command);
+
+            $result = $this->edit($command, $form, function ($command) {
+                $branch = $this->get('diamante.branch.service')->createBranch($command);
+                $this->createBranchEmailConfiguration($command, $branch->getId());
+                return $branch->getId();
             });
         } catch (MethodNotAllowedException $e) {
         } catch(\Exception $e) {
@@ -133,7 +132,7 @@ class BranchController extends Controller
      *      name="diamante_branch_update",
      *      requirements={"id"="\d+"}
      * )
-     * @Template("DiamanteDeskBundle:Branch:edit.html.twig")
+     * @Template("DiamanteDeskBundle:Branch:update.html.twig")
      *
      * @param int $id
      * @return array
@@ -150,7 +149,9 @@ class BranchController extends Controller
         }
 
         try {
-            $result = $this->edit($command, function ($command) use ($branch) {
+            $form = $this->createForm(new UpdateBranchType(), $command);
+
+            $result = $this->edit($command, $form, function ($command) use ($branch) {
                 $branchId = $this->get('diamante.branch.service')->updateBranch($command);
                 $this->updateBranchEmailConfiguration($command, $branchId);
                 return $branchId;
@@ -183,14 +184,17 @@ class BranchController extends Controller
     /**
      * @param BranchCommand $command
      * @param $callback
+     * @param BranchType | UpdateBranchType $form
      * @return array
      */
-    private function edit(BranchCommand $command, $callback)
+    private function edit(BranchCommand $command, $form, $callback)
     {
         $response = null;
-        $form = $this->createForm(new BranchType(), $command);
         try {
             $this->handle($form);
+            if ($command->defaultAssignee) {
+                $command->defaultAssignee = $command->defaultAssignee->getId();
+            }
             $branchId = $callback($command);
             if ($command->id) {
                 $this->addSuccessMessage('diamante.desk.branch.messages.save.success');
@@ -198,6 +202,16 @@ class BranchController extends Controller
                 $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse($branchId);
+        } catch (DuplicateBranchKeyException $e) {
+            $this->addErrorMessage($e->getMessage());
+            $formView = $form->createView();
+            if (is_null($command->key) || empty($command->key)) {
+                $formView->children['key']->vars = array_replace(
+                    $formView->children['key']->vars,
+                    array('value' => $this->get('diamante.branch.default_key_generator')->generate($command->name))
+                );
+            }
+            $response = array('form' => $formView);
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $form->createView());
         } catch (\Exception $e) {

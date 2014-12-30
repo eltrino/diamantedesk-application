@@ -14,20 +14,24 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\UpdateCommentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
-use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Internal\CommentServiceImpl;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
-use Diamante\DeskBundle\Tests\Stubs\AttachmentStub;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
@@ -91,10 +95,10 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     protected $_dummyTicket;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
-     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
@@ -103,10 +107,15 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
-     * @Mock \Diamante\DeskBundle\EventListener\Mail\CommentProcessManager
+     * @var NotificationDeliveryManager
      */
-    private $processManager;
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -130,20 +139,60 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         MockAnnotations::init($this);
-        $this->service = new CommentServiceImpl($this->ticketRepository, $this->commentRepository,
-            $this->commentFactory, $this->userService, $this->attachmentManager, $this->securityFacade,
-            $this->dispatcher, $this->processManager);
+        $this->notificationDeliveryManager = new NotificationDeliveryManager();
+        $this->service = new CommentServiceImpl($this->ticketRepository,
+            $this->commentRepository,
+            $this->commentFactory,
+            $this->userService,
+            $this->attachmentManager,
+            $this->authorizationService,
+            $this->dispatcher,
+            $this->notificationDeliveryManager,
+            $this->notifier
+        );
 
         $this->_dummyTicket = new Ticket(
+            new UniqueId('unique_id'),
+            new TicketSequenceNumber(12),
             self::DUMMY_TICKET_SUBJECT,
             self::DUMMY_TICKET_DESCRIPTION,
             $this->createBranch(),
             $this->createReporter(),
             $this->createAssignee(),
-            Source::PHONE,
-            Priority::PRIORITY_LOW,
-            Status::CLOSED
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_LOW),
+            new Status(Status::CLOSED)
         );
+    }
+
+    /**
+     * @test
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Comment loading failed, comment not found.
+     */
+    public function thatCommentRetrievesThrowsExceptionWhenNotFound()
+    {
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue(null));
+        $this->service->loadComment(self::DUMMY_COMMENT_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function thatCommentRetrieves()
+    {
+        $ticket  = $this->_dummyTicket;
+        $author  = new User(self::DUMMY_USER_ID, User::TYPE_DIAMANTE);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
+        $this->commentRepository->expects($this->once())->method('get')->with(self::DUMMY_COMMENT_ID)
+            ->will($this->returnValue($comment));
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with('VIEW', $comment)->will($this->returnValue(true));
+
+        $result = $this->service->loadComment(self::DUMMY_COMMENT_ID);
+
+        $this->assertEquals($comment, $result);
     }
 
     /**
@@ -156,13 +205,13 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue(null));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
         $command->author = self::DUMMY_USER_ID;
@@ -176,14 +225,11 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentPosts()
     {
         $ticket  = $this->_dummyTicket;
-        $author  = new User;
+        $author  = $this->createDiamanteUser();
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
-
-        $this->userService->expects($this->once())->method('getUserById')->with($this->equalTo(self::DUMMY_USER_ID))
-            ->will($this->returnValue($author));
 
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
@@ -193,16 +239,16 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
-        $command->author = self::DUMMY_USER_ID;
+        $command->author = $author;
         $command->ticketStatus = Status::IN_PROGRESS;
 
         $this->service->postNewCommentForTicket($command);
@@ -217,14 +263,11 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentPostsWithWithAttachments()
     {
         $ticket  = $this->_dummyTicket;
-        $author  = new User;
+        $author  = $this->createDiamanteUser();
         $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $ticket, $author);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
-
-        $this->userService->expects($this->once())->method('getUserById')->with($this->equalTo(self::DUMMY_USER_ID))
-            ->will($this->returnValue($author));
 
         $this->commentFactory->expects($this->once())->method('create')->with(
             $this->equalTo(self::DUMMY_COMMENT_CONTENT),
@@ -244,16 +287,16 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($comment)
             );
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Comment'))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->content  = self::DUMMY_COMMENT_CONTENT;
         $command->ticket = self::DUMMY_TICKET_ID;
-        $command->author = self::DUMMY_USER_ID;
+        $command->author = $author;
         $command->ticketStatus = Status::IN_PROGRESS;
         $command->attachmentsInput = $attachmentInputs;
 
@@ -273,7 +316,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue(null));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
         $command->content = self::DUMMY_COMMENT_CONTENT;
 
@@ -285,34 +328,30 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentUpdates()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
 
         $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
 
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $ticket  = $this->_dummyTicket;
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($ticket));
-
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
         $command->content = $updatedContent;
-        $command->ticket  = self::DUMMY_TICKET_ID;
         $command->ticketStatus = Status::IN_PROGRESS;
 
         $this->service->updateTicketComment($command);
 
         $this->assertEquals($updatedContent, $comment->getContent());
+        $this->assertEquals(Status::IN_PROGRESS, $comment->getTicket()->getStatus()->getValue());
     }
 
     /**
@@ -320,7 +359,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentUpdatesWithAttachments()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
 
         $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
 
@@ -339,25 +378,53 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($comment)
             );
 
-        $ticket  = $this->_dummyTicket;
-        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
-            ->will($this->returnValue($ticket));
-
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $comment)
             ->will($this->returnValue(true));
 
-        $command = new EditCommentCommand();
+        $command = new CommentCommand();
         $command->id      = self::DUMMY_COMMENT_ID;
-        $command->ticket  = self::DUMMY_TICKET_ID;
         $command->content = $updatedContent;
+        $command->ticket  = self::DUMMY_TICKET_ID;
         $command->ticketStatus = Status::IN_PROGRESS;
         $command->attachmentsInput = $filesListDto;
 
         $this->service->updateTicketComment($command);
         $this->assertEquals($updatedContent, $comment->getContent());
+        $this->assertEquals(Status::IN_PROGRESS, $comment->getTicket()->getStatus()->getValue());
+    }
+
+    /**
+     * @test
+     */
+    public function thatCommentUpdatesV2()
+    {
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
+
+        $updatedContent = self::DUMMY_COMMENT_CONTENT . ' (edited)';
+
+        $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
+            ->will($this->returnValue($comment));
+
+        $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isActionPermitted')
+            ->with($this->equalTo('EDIT'), $comment)
+            ->will($this->returnValue(true));
+
+        $command = new UpdateCommentCommand();
+        $command->id      = self::DUMMY_COMMENT_ID;
+        $command->content = $updatedContent;
+        $command->ticketStatus = Status::IN_PROGRESS;
+
+        $this->service->updateCommentContentAndTicketStatus($command);
+
+        $this->assertEquals($updatedContent, $comment->getContent());
+        $this->assertEquals(Status::IN_PROGRESS, $comment->getTicket()->getStatus()->getValue());
     }
 
     /**
@@ -378,7 +445,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatCommentDeletes()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
         $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
         $comment->addAttachment(new Attachment(new File('some/path/file.ext')));
 
@@ -392,9 +459,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('deleteAttachment')
             ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
@@ -408,14 +475,14 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatAttachmentRemovingThrowsExceptionWhenCommentHasNoAttachment()
     {
-        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, new User);
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
         $comment->addAttachment(new Attachment(new File('filename.ext')));
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($comment))
             ->will($this->returnValue(true));
 
@@ -444,9 +511,9 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($this->comment));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->comment))
             ->will($this->returnValue(true));
 
@@ -567,17 +634,27 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
 
     private function createBranch()
     {
-        return new Branch('DUMMY_NAME', 'DUMYY_DESC');
+        return new Branch('DUMM', 'DUMMY_NAME', 'DUMYY_DESC');
     }
 
     private function createReporter()
     {
-        return new User();
+        return new User(self::DUMMY_USER_ID, User::TYPE_DIAMANTE);
     }
 
     private function createAssignee()
     {
-        return new User();
+        return $this->createOroUser();
+    }
+
+    private function createOroUser()
+    {
+        return new OroUser();
+    }
+
+    private function createDiamanteUser()
+    {
+        return $this->createReporter();
     }
 
     /**

@@ -16,11 +16,10 @@ namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
 class TicketWasDeleted extends AbstractTicketEvent
 {
-    public function __construct($id, $subject, $recipientsList)
+    public function __construct($id, $subject)
     {
-        $this->ticketId       = $id;
-        $this->subject        = $subject;
-        $this->recipientsList = $recipientsList;
+        $this->ticketId = $id;
+        $this->subject  = $subject;
     }
 
     /**
@@ -30,4 +29,12 @@ class TicketWasDeleted extends AbstractTicketEvent
     {
         return 'ticketWasDeleted';
     }
-} 
+
+    /**
+     * @return string
+     */
+    public function getHeaderText()
+    {
+        return 'Ticket was deleted';
+    }
+}

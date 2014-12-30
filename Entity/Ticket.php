@@ -14,23 +14,21 @@
  */
 namespace Diamante\DeskBundle\Entity;
 
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository")
  * @ORM\Table(name="diamante_ticket")
+ * @ORM\EntityListeners({"Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener"})
  * @Config(
  *      defaultValues={
- *          "ownership"={
- *              "owner_type"="USER",
- *              "owner_field_name"="reporter",
- *              "owner_column_name"="reporter_id"
- *          },
  *          "security"={
  *              "type"="ACL",
+ *              "permissions"="VIEW;CREATE;EDIT;DELETE",
  *              "group_name"="DiamanteDesk"
  *          }
  *      }
@@ -46,6 +44,20 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="unique_id", type="ticket_unique_id", nullable=false)
+     */
+    protected $uniqueId;
+
+    /**
+     * @var TicketSequenceNumber
+     *
+     * @ORM\Column(name="number", type="ticket_sequence_number")
+     */
+    protected $sequenceNumber;
 
     /**
      * @var string
@@ -85,9 +97,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
 
     /**
      * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="reporter_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\Column(type="user_type", name="reporter_id")
      */
     protected $reporter;
 
