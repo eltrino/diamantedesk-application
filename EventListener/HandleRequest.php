@@ -58,6 +58,7 @@ class HandleRequest
         }
         $methodParameters->addParameterBag($request->request);
         $methodParameters->addParameterBag($request->attributes);
+        $methodParameters->addParameterBag($request->query);
         $methodParameters->putIn($request->attributes);
     }
 }
