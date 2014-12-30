@@ -11,11 +11,13 @@ define([
 
       initialize: function(){
         this.baseUrl = Config.baseUrl;
+        this.basePath = Config.basePath;
       },
 
       serializeData: function(){
         return {
-          baseUrl: this.baseUrl
+          baseUrl: this.baseUrl,
+          basePath: this.basePath
         };
       },
 

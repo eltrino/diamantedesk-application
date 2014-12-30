@@ -15,25 +15,24 @@ module.exports = function(grunt) {
 
   require('load-grunt-tasks')(grunt);
 
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    webRoot: grunt.option('webRoot', '../../../front'),
-    srcRoot: grunt.option('src', 'Resources/front'),
-    lessFolder: '<%= srcRoot %>/assets/less',
+    assetsDir: grunt.option('assets-dir', 'Resources/assets'),
+    publicDir: grunt.option('public-dir', 'Resources/public'),
+    lessDir: '<%= assetsDir %>/less',
 
     sync: {
       main: {
         files: [{
           expand: true,
-          cwd: '<%= srcRoot %>',
-          src: [ '**/*', '**/.*','.htaccess', '!assets/less/**' ],
-          dest: '<%= webRoot %>'
+          cwd: '<%= assetsDir %>',
+          src: [ '**/*', '**/.*','.htaccess', '!less/**' ],
+          dest: '<%= publicDir %>'
         }],
         //pretend: true, // Don't do any disk operations - just write log
         //verbose: true, // Display log messages when copying files
 
-        ignoreInDest: "assets/css/**",
+        ignoreInDest: "css/**",
         updateAndDelete: true
       }
     },
@@ -41,25 +40,24 @@ module.exports = function(grunt) {
     less: {
       main : {
         files: {
-          '<%= webRoot %>/assets/css/main.css': '<%= lessFolder %>/main.less'
+          '<%= publicDir %>/css/main.css': '<%= lessDir %>/main.less'
         }
       }
     },
 
     watch: {
       main: {
-        files: '<%= srcRoot %>/**',
+        files: '<%= assetsDir %>/**',
         tasks: ['sync']
       },
       less : {
-        files: '<%= lessFolder %>/**',
+        files: '<%= lessDir %>/**',
         tasks: ['less']
       }
     }
 
   });
 
-  // Default task(s).
   grunt.registerTask('default', ['sync', 'less']);
 
 };

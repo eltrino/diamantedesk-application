@@ -1,0 +1,4 @@
+diamante_desk_bundle:
+    resource:     "@DiamanteFrontBundle/Controller"
+    type:         annotation
+    prefix:       /diamantefront

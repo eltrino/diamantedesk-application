@@ -1,4 +1,5 @@
 node_modules
 .DS_Store
 .idea
-Resources/front/assets/js/vendor
+Resources/assets/js/vendor
+Resources/public

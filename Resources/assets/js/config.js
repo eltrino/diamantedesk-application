@@ -1,11 +1,9 @@
 define(function(){
 
   var dev = window.location.search === '?dev',
-      baseurl = document.querySelector("script[data-main]").src.split('/assets/js')[0],
-      apiurl = dev ? baseurl.replace(/\/front$/,'/web/app_dev.php') : baseurl.replace(/\/front$/,'/web');
-
-  baseurl += dev ? '?dev' : '';
-  apiurl += '/api/rest/latest';
+      baseurl = config.baseUrl,
+      basepath = config.basePath,
+      apiurl = config.apiUrl;
 
   require.config({
     urlArgs: dev ? "bust=" + (new Date()).getTime() : ''
@@ -20,6 +18,7 @@ define(function(){
   var Config = {
     isDev : dev,
     baseUrl : baseurl,
+    basePath : basepath,
     apiUrl : apiurl
   };
 

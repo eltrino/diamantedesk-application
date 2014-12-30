@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.css') }}" type="text / css"/>
+</head>
+<body>
+<header id="header">
+
+</header>
+
+<section id="content" class="container">
+
+    <div class="starter-template">
+        <h1 style="text-align: center;">Loading ...</h1>
+    </div>
+
+</section>
+
+<footer id="footer">
+
+</footer>
+
+<div id="dialog">
+
+</div>
+
+<script type="application/javascript">
+    config = {
+        'basePath' : '{{ basePath }}',
+        'baseUrl' : '{{ baseUrl }}',
+        'apiUrl' : '{{ apiUrl }}'
+    };
+</script>
+
+<script data-main="{{ asset('bundles/diamantefront/js/main.js') }}"
+        src="{{ asset('bundles/diamantefront/js/vendor/requirejs/require.js') }}"></script>
+</body>
+</html>

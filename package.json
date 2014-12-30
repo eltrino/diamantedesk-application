@@ -1,6 +1,7 @@
 {
-  "name": "diamante-desk",
-  "version": "0.0.1",
+  "name": "diamante-desk-front",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-less": "^0.11.4",
