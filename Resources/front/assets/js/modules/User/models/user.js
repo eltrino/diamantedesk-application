@@ -5,7 +5,8 @@ define([
   return App.module("User", function(User, App, Backbone, Marionette, $, _){
 
     var currentUser,
-        userCache = [];
+        userCache = [],
+        userCacheRequest = [];
 
     User.UserModel = Backbone.Model.extend({
       urlRoot : Config.apiUrl + '/users/'
@@ -37,18 +38,22 @@ define([
       getUserModelById : function(id, force){
         var user = new User.UserModel({id:id}),
             defer = $.Deferred();
-        if(userCache[id] && !force){
+        if(userCache[id]) {
           defer.resolve(userCache[id]);
-        } else {
+        }
+        if(!userCacheRequest[id]){
+          userCacheRequest[id] = user;
           user.fetch({
-            success: function(data){
-              userCache[id] = data;
-              defer.resolve(data);
+            success: function(model){
+              userCache[id] = model;
+              defer.resolve(model);
             },
             error: function(){
               defer.reject();
             }
           });
+        } else {
+          userCacheRequest[id].on('change', function(model){ defer.resolve(model); });
         }
         return defer.promise();
       }
