@@ -14,9 +14,9 @@
  */
 namespace Diamante\EmbeddedFormBundle\Controller;
 
-use Oro\Bundle\EmbeddedFormBundle\Controller\EmbeddedFormController;
+use Oro\Bundle\EmbeddedFormBundle\Controller\EmbeddedFormController as BaseController;
 
-class ExtendedEmbeddedFormController extends EmbeddedFormController
+class EmbeddedFormController extends BaseController
 {
 
 }

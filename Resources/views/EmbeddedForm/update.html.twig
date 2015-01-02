@@ -46,15 +46,16 @@
 
     {% if form.formType.vars.choices is not empty %}
         {% set dataBlocks = [{
-            'title': 'GeneralQWE'|trans,
+            'title': 'General'|trans,
             'class': 'active',
             'subblocks': [{
-                'title': 'Embedded FormQWE'|trans,
+                'title': 'Embedded Form'|trans,
                 'data': [
                     form_row(form.title),
                     form_row(form.formType),
                     form_row(form.css, {'attr':{'class': 'span12' }, 'label': 'oro.embeddedform.css.label'|trans, 'is_translated_label': true}),
-                    form_row(form.successMessage)
+                    form_row(form.successMessage),
+                    form_row(form.branch)
                 ]
             }]
         }] %}
@@ -80,6 +81,7 @@
                         successMessageFieldId: {{ form.successMessage.vars.id|json_encode|raw  }},
                         defaultCss: {{ defaultCss|json_encode|raw }},
                         defaultSuccessMessage: {{ defaultSuccessMessage|json_encode|raw }}
+                        branchFieldId: {{ form.branch.vars.id|json_encode|raw }}
                     }).startWatching(forceDataLoading);
                 });
         </script>

@@ -19,13 +19,17 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.embedded_form.class">Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType</parameter>
+        <parameter key="diamante_embedded_form.class">Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType</parameter>
+        <parameter key="diamante_embedded_form.form_type.class">Diamante\EmbeddedFormBundle\Form\Type\EmbeddedFormType</parameter>
     </parameters>
 
     <services>
-        <service id="diamante.embedded_form" class="%diamante.embedded_form.class%">
+        <service id="diamante_embedded_form.form_type.available_embedded_form" class="%diamante_embedded_form.class%">
             <tag name="oro_embedded_form" label="Diamante Ticket"/>
             <tag name="form.type" alias="diamante_desk_ticket_form_type"/>
+        </service>
+        <service id="diamante_embedded_form.form_type" class="%diamante_embedded_form.form_type.class%">
+            <tag name="form.type" alias="diamante_embedded_form" />
         </service>
     </services>
 </container>
