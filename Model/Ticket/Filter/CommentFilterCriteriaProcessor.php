@@ -28,6 +28,16 @@ class CommentFilterCriteriaProcessor extends AbstractFilterCriteriaProcessor
 {
     protected function buildCriteria()
     {
+        foreach ($this->dataProperties as $property) {
+            $operator = self::EQ_OPERATOR;
+            $propertyValue = $this->command->{$property};
 
+            if (!empty($propertyValue)) {
+                if (in_array($property, array('content'))) {
+                    $operator = self::LIKE_OPERATOR;
+                }
+                array_push($this->criteria, array($property, $operator, $propertyValue));
+            }
+        }
     }
 }

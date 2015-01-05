@@ -33,6 +33,7 @@ class TicketFilterCriteriaProcessor extends AbstractFilterCriteriaProcessor
 
             if ($property == 'subject' && (!empty($propertyValue))) {
                 array_push($this->criteria, array($property, self::LIKE_OPERATOR, $propertyValue));
+                continue;
             }
 
             if (!empty($propertyValue)) {

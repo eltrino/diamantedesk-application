@@ -24,5 +24,17 @@ namespace Diamante\DeskBundle\Api\Command\Filter;
 
 class FilterCommentsCommand extends CommonFilterCommand
 {
+    /**
+     * @var string
+     */
+    public $author;
+    /**
+     * @var string
+     */
+    public $content;
 
+    /**
+     * @var int
+     */
+    public $ticket;
 }

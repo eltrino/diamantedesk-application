@@ -23,6 +23,7 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
+use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -404,5 +405,41 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         }
 
         $this->notificationDeliveryManager->deliver($this->notifier);
+    }
+
+    /**
+     * Retrieves list of all Comments. Filters comments with parameters provided via GET request
+     *
+     * @ApiDoc(
+     *  description="Returns all tickets.",
+     *  uri="/comments.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list tickets"
+     *  }
+     * )
+     *
+     * @param Command\Filter\FilterCommentsCommand $command
+     * @return Comment[]
+     */
+    public function listAllComments(Command\Filter\FilterCommentsCommand $command)
+    {
+        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Comment');
+        $criteriaProcessor = new CommentFilterCriteriaProcessor();
+        $criteriaProcessor->setCommand($command);
+        $criteria = $criteriaProcessor->getCriteria();
+        $pagingProperties = $criteriaProcessor->getPagingProperties();
+
+        if (!empty($criteria)) {
+            $comments = $this->commentRepository->filter($criteria, $pagingProperties);
+
+            return $comments;
+        }
+
+        $comments = $this->commentRepository->getAll();
+
+        return $comments;
     }
 }
