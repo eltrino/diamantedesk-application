@@ -25,12 +25,14 @@ class TicketFilterCriteriaProcessor extends AbstractFilterCriteriaProcessor
             $propertyValue = $this->command->{$property};
 
             if (in_array($property, array('subject', 'description')) && (!empty($propertyValue))) {
-                array_push($this->criteria, array($property, self::LIKE_OPERATOR, $propertyValue));
+                $value = urldecode($propertyValue);
+                array_push($this->criteria, array($property, self::LIKE_OPERATOR, $value));
                 continue;
             }
 
             if (!empty($propertyValue)) {
-                array_push($this->criteria, array($property, self::EQ_OPERATOR, $propertyValue));
+                $value = urldecode($propertyValue);
+                array_push($this->criteria, array($property, self::EQ_OPERATOR, $value));
             }
         }
     }

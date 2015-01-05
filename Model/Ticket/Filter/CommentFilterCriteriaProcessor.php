@@ -26,10 +26,11 @@ class CommentFilterCriteriaProcessor extends AbstractFilterCriteriaProcessor
             $propertyValue = $this->command->{$property};
 
             if (!empty($propertyValue)) {
+                $value = urldecode($propertyValue);
                 if (in_array($property, array('content'))) {
                     $operator = self::LIKE_OPERATOR;
                 }
-                array_push($this->criteria, array($property, $operator, $propertyValue));
+                array_push($this->criteria, array($property, $operator, $value));
             }
         }
     }
