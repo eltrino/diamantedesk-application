@@ -12,19 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\ApiBundle;
+namespace Diamante\ApiBundle\Security\Authentication\Token;
 
-use Diamante\ApiBundle\DependencyInjection\Security\Factory\Factory;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
-class DiamanteApiBundle extends Bundle
+class WsseToken extends AbstractToken
 {
-    public function build(ContainerBuilder $container)
+    public function getCredentials()
     {
-        parent::build($container);
-
-        $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new Factory());
+        return '';
     }
-}
+} 

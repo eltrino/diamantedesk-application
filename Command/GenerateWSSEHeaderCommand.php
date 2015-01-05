@@ -64,13 +64,15 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
         $salt   = ''; // do not use real salt here, because API key already encrypted enough
 
         /** @var MessageDigestPasswordEncoder $encoder */
-        $encoder        = $this->getContainer()->get('escape_wsse_authentication.encoder.wsse_secured');
+        $encoderFactory = $this->getContainer()->get('security.encoder_factory');
+        $encoder = $encoderFactory->getEncoder($user);
+
         $passwordDigest = $encoder->encodePassword(
             sprintf(
                 '%s%s%s',
                 base64_decode($nonce),
                 $created,
-                $user->getPassword()
+                $encoder->encodePassword($user->getPassword(), $user->getSalt())
             ),
             $salt
         );

@@ -40,6 +40,23 @@
             <argument type="service" id="diamante.api.user.repository" />
         </service>
 
+        <service id="wsse.security.cache.provider" class="Doctrine\Common\Cache\PhpFileCache">
+            <argument>%kernel.cache_dir%/security/nonces</argument>
+        </service>
+
+        <service id="wsse.security.authentication.provider"
+                 class="Diamante\ApiBundle\Security\Authentication\Provider\WsseProvider" public="false">
+            <argument /> <!-- User Provider -->
+            <argument type="service" id="wsse.security.cache.provider" />
+            <argument type="service" id="security.encoder_factory" />
+        </service>
+
+        <service id="wsse.security.authentication.listener"
+                 class="Diamante\ApiBundle\Security\Firewall\WsseListener" public="false">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.authentication.manager" />
+        </service>
+
         <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">

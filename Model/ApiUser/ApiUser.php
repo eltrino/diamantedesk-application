@@ -67,12 +67,9 @@ class ApiUser implements Entity, UserInterface
 
     public function __construct($email, $username, $firstName = null, $lastName = null, $password = null, $salt = null)
     {
-        $this->email     = $email;
-        $this->username  = $username;
-        $this->firstName = $firstName;
-        $this->lastName  = $lastName;
-        $this->password  = $password;
-        $this->salt      = $salt;
+        $this->username = $username;
+        $this->password = $password;
+        $this->salt     = $salt;
     }
 
     /**

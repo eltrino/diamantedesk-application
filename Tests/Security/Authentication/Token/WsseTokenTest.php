@@ -12,19 +12,18 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\ApiBundle;
+namespace Diamante\ApiBundle\Tests\Security\Authentication\Token;
 
-use Diamante\ApiBundle\DependencyInjection\Security\Factory\Factory;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 
-class DiamanteApiBundle extends Bundle
+class WsseTokenTest extends \PHPUnit_Framework_TestCase
 {
-    public function build(ContainerBuilder $container)
+    /**
+     * @test
+     */
+    public function getCredentials()
     {
-        parent::build($container);
-
-        $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new Factory());
+        $token = new WsseToken();
+        $this->assertEquals('', $token->getCredentials());
     }
-}
+} 
