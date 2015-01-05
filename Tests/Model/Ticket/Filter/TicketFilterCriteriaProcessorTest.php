@@ -12,16 +12,8 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 5/1/15
- * Time: 2:49 PM
- */
 
 namespace Diamante\DeskBundle\Tests\Model\Ticket\Filter;
-
 
 use Diamante\DeskBundle\Api\Command\Filter\FilterTicketsCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;

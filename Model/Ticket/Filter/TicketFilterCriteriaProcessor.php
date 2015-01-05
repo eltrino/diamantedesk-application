@@ -12,13 +12,6 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 30/12/14
- * Time: 11:17 AM
- */
 
 namespace Diamante\DeskBundle\Model\Ticket\Filter;
 
@@ -31,7 +24,7 @@ class TicketFilterCriteriaProcessor extends AbstractFilterCriteriaProcessor
         foreach ($this->dataProperties as $property) {
             $propertyValue = $this->command->{$property};
 
-            if ($property == 'subject' && (!empty($propertyValue))) {
+            if (in_array('subject', 'description') && (!empty($propertyValue))) {
                 array_push($this->criteria, array($property, self::LIKE_OPERATOR, $propertyValue));
                 continue;
             }

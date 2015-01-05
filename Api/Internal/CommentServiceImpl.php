@@ -408,7 +408,10 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
     }
 
     /**
-     * Retrieves list of all Comments. Filters comments with parameters provided via GET request
+     * Retrieves list of all Comments.
+     * Filters comments with parameters provided via GET request.
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
+     * Time filtering values should be converted to UTC
      *
      * @ApiDoc(
      *  description="Returns all tickets.",
