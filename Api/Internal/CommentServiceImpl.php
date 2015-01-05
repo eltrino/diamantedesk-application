@@ -434,14 +434,7 @@ class CommentServiceImpl implements CommentService, RestServiceInterface
         $criteriaProcessor->setCommand($command);
         $criteria = $criteriaProcessor->getCriteria();
         $pagingProperties = $criteriaProcessor->getPagingProperties();
-
-        if (!empty($criteria)) {
-            $comments = $this->commentRepository->filter($criteria, $pagingProperties);
-
-            return $comments;
-        }
-
-        $comments = $this->commentRepository->getAll();
+        $comments = $this->commentRepository->filter($criteria, $pagingProperties);
 
         return $comments;
     }

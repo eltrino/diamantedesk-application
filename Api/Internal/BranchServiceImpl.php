@@ -82,6 +82,8 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
 
     /**
      * Retrieves list of all Branches. Filters branches with parameters provided within GET request
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
+     * Time filtering values should be converted to UTC
      *
      * @ApiDoc(
      *  description="Returns all branches",
@@ -103,14 +105,7 @@ class BranchServiceImpl implements BranchService, RestServiceInterface
         $processor->setCommand($command);
         $criteria = $processor->getCriteria();
         $pagingProperties = $processor->getPagingProperties();
-
-        if (!empty($criteria)) {
-            $branches = $this->branchRepository->filter($criteria, $pagingProperties);
-
-            return $branches;
-        }
-
-        $branches = $this->branchRepository->getAll();
+        $branches = $this->branchRepository->filter($criteria, $pagingProperties);
 
         return $branches;
     }

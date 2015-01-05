@@ -130,10 +130,14 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatListsAllBranches()
     {
         $branches = array(
-            new Branch('DUMM', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
+            new Branch('DUMMY', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
             new Branch('DUMMY', 'DUMMY_NAME_2', 'DUMMY_DESC_2')
         );
-        $this->branchRepository->expects($this->once())->method('getAll')->will($this->returnValue($branches));
+        $this->branchRepository
+            ->expects($this->once())
+            ->method('filter')
+            ->with($this->equalTo(array()), $this->equalTo(new FilterPagingProperties()))
+            ->will($this->returnValue($branches));
 
         $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))

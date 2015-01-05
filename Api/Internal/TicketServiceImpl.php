@@ -607,7 +607,9 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     }
 
     /**
-     * Retrieves list of all Tickets. Performs filtering of tickets if provided with criteria as GET parameters. Creation/update time filtering criteria has to be UTC time string or indicate the desired time zone
+     * Retrieves list of all Tickets. Performs filtering of tickets if provided with criteria as GET parameters.
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
+     * Time filtering values should be converted to UTC
      *
      * @ApiDoc(
      *  description="Returns all tickets.",
@@ -630,14 +632,7 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
         $criteriaProcessor->setCommand($ticketFilterCommand);
         $criteria = $criteriaProcessor->getCriteria();
         $pagingProperties = $criteriaProcessor->getPagingProperties();
-
-        if (!empty($criteria)) {
-            $tickets = $this->ticketRepository->filter($criteria, $pagingProperties);
-
-            return $tickets;
-        }
-
-        $tickets = $this->ticketRepository->getAll();
+        $tickets = $this->ticketRepository->filter($criteria, $pagingProperties);
 
         return $tickets;
     }
