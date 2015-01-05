@@ -41,9 +41,9 @@ class CommentFilterCriteriaProcessorTest extends \PHPUnit_Framework_TestCase
         $processor = new CommentFilterCriteriaProcessor();
         $processor->setCommand($this->commentFilterCommand);
         $expectedCriteria = array(
-            array('ticket', 'eq', 1),
             array('author', 'eq', 'diamante_1'),
-            array('content', 'like', 'Test')
+            array('content', 'like', 'Test'),
+            array('ticket', 'eq', 1),
         );
 
         $criteria = $processor->getCriteria();

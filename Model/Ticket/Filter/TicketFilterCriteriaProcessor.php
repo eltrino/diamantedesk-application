@@ -24,7 +24,7 @@ class TicketFilterCriteriaProcessor extends AbstractFilterCriteriaProcessor
         foreach ($this->dataProperties as $property) {
             $propertyValue = $this->command->{$property};
 
-            if (in_array('subject', 'description') && (!empty($propertyValue))) {
+            if (in_array($property, array('subject', 'description')) && (!empty($propertyValue))) {
                 array_push($this->criteria, array($property, self::LIKE_OPERATOR, $propertyValue));
                 continue;
             }
