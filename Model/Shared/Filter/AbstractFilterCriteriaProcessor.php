@@ -140,6 +140,7 @@ abstract class AbstractFilterCriteriaProcessor implements FilterCriteriaProcesso
         foreach ($this->timestampProperties as $property) {
             $value = $this->command->{$property};
             if (!empty($value)) {
+                $value = urldecode($value);
                 switch ($property) {
                     case self::CREATED_AFTER_PROP:
                         array_push($this->criteria, array('createdAt', 'gte', $value));
