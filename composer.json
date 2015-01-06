@@ -10,8 +10,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "Diamante\\FrontBundle": "."
+        "psr-4": {
+            "Diamante\\FrontBundle\\": ""
         }
     },
     "target-dir": "Diamante/FrontBundle",

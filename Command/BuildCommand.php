@@ -15,27 +15,26 @@
 namespace Diamante\FrontBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
-abstract class AbstractCommand extends ContainerAwareCommand
+class BuildCommand extends ContainerAwareCommand
 {
     const RETURN_CODE_NO_TOOLS = 1;
-    const RETURN_CODE_WEB_ROOT_EXISTS = 2;
-    const RETURN_CODE_NO_WEB_ROOT = 3;
 
     /**
      * @var Filesystem
      */
     protected $filesystem;
 
-    protected $packageDir;
-
-    protected $appDir;
-
-    protected $webRoot;
+    /**
+     * @var string
+     */
+    protected $bundleDir;
 
     /**
      * Initializes parameters required for installation process
@@ -46,22 +45,44 @@ abstract class AbstractCommand extends ContainerAwareCommand
     {
         $this->filesystem = $this->getContainer()->get('filesystem');
         $kernel = $this->getContainer()->get('kernel');
-        $this->packageDir = $kernel->locateResource('@DiamanteFrontBundle');
-        $this->appDir = $kernel->locateResource('@DiamanteFrontBundle/Resources/front');
-        $this->webRoot = dirname($kernel->getRootDir()) . DIRECTORY_SEPARATOR . 'front';
+        $this->bundleDir = $kernel->locateResource('@DiamanteFrontBundle');
     }
 
-    /**
-     * Copy all files related to front application into web root folder
-     *
-     * @param OutputInterface $output
-     */
-    protected function syncWebRoot(OutputInterface $output)
+    protected function configure()
     {
-        $output->write("Updating web root folder ...");
+        $this
+            ->setName('diamante:front:build')
+            ->setDescription('Build DiamanteDesk Front')
+            ->addOption(
+                'with-assets-dependencies',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, the task will install/update assets dependencies for this bundle.'
+            );
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        if (!$this->isCommandSuccess('grunt --version')
+            || !$this->isCommandSuccess('bower --version')
+        ) {
+            $output->writeln('<error>For full functionality of this bundle, you should install grunt-cli, bower globally using npm.</erroe>');
+            return self::RETURN_CODE_NO_TOOLS;
+        }
+
+        if ($input->getOption('with-assets-dependencies')) {
+            $output->write("Installing assets dependencies ...");
+            $this->executeProcess('bower install', $output);
+            $this->executeProcess('bower update', $output);
+        }
+
+        $assetsDir = $this->bundleDir . DIRECTORY_SEPARATOR . 'Resources/assets';
+        $publicDir = $this->bundleDir . DIRECTORY_SEPARATOR . 'Resources/public';
+
+        $output->write("Building application ...");
         $this->executeProcess([
-            sprintf('grunt less --src=%s --webRoot=%s', $this->appDir, $this->webRoot),
-            sprintf('grunt sync --src=%s --webRoot=%s', $this->appDir, $this->webRoot)
+            sprintf('grunt sync --assets-dir=%s --public-dir=%s', $assetsDir, $publicDir),
+            sprintf('grunt less --assets-dir=%s --public-dir=%s', $assetsDir, $publicDir)
         ], $output);
     }
 
@@ -85,7 +106,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
             $output->writeln("");
         }
 
-        $process = new Process($command, $this->packageDir);
+        $process = new Process($command, $this->bundleDir);
 
         $result = $process->run(function ($type, $buffer) use ($output) {
             if (Process::ERR != $type) {
