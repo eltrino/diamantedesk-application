@@ -38,7 +38,7 @@ class IndexController extends Controller
     {
         return [
             'apiUrl' => $this->getRequest()->getUriForPath('/api/rest/latest'),
-            'baseUrl' => $this->getRequest()->getBaseUrl(),
+            'baseUrl' => $this->getRequest()->getBaseUrl() . $this->getRequest()->getPathInfo(),
             'basePath' => $this->getRequest()->getBasePath()
         ];
     }
