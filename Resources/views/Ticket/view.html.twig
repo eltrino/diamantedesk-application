@@ -25,7 +25,8 @@
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
-                    <img src="{{ avatar is defined ? avatar : asset('bundles/oroui/img/info-' ~ iconType|default('user') ~ '.png') }}" alt="{{ author|oro_format_name }}">
+                    {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
+                    <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author|oro_format_name }}">
                 </div>
                 <div class="diam-comment-meta">{{ author|oro_format_name }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
                 <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
