@@ -281,3 +281,11 @@
 .oro-clearfix-width:after, .oro-clearfix:after {
     clear: none;
 }
+
+.diam-branch-grid td:first-child {
+    width: 150px;
+}
+
+.diam-branch-grid td:nth-child(2) {
+    width: 22%;
+}
