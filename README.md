@@ -38,6 +38,18 @@ Last thing which should be done is assets installation. It should be done throug
 php app/console assets:install
 ```
 
+Configuration
+------------
+
+Frontend will be accessible through http://app/diamantefront url. This url should not be covered by standard Oro Platfrom authentication. You should add additional configuration to filewalls section in `app/etc/security.yml`
+
+```yml
+front_diamante:
+    pattern:        ^/diamantefront
+    provider:       chain_provider
+    anonymous:      true
+```
+
 Development
 ------------
 
