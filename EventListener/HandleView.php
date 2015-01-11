@@ -16,7 +16,7 @@
 namespace Diamante\ApiBundle\EventListener;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
-use FOS\RestBundle\Util\Codes;
+use FOS\Rest\Util\Codes;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
