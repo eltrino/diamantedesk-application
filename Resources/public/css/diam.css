@@ -289,3 +289,7 @@
 .diam-branch-grid td:nth-child(2) {
     width: 22%;
 }
+
+.grid .datetime-cell {
+    vertical-align: middle;
+}
