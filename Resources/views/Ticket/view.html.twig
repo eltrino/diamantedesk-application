@@ -230,12 +230,13 @@
 {% block content_data %}
     {% set id = 'navbarTicketView' %}
     {% set reporter = fetch_user_details(entity.reporter) %}
+    {% set reporterDisplayName = reporter.getFullName != ' ' ? reporter.getFullName : reporter.getEmail %}
     {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.branch'|trans, entity.branchName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, reporter.getFullName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
 
     {% set attachmentListWidget %}
