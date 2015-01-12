@@ -93,7 +93,7 @@ class TicketStrategy implements Strategy
         if (!$message->getReference()) {
             $branchId = $this->getAppropriateBranch($message->getFrom(), $message->getTo());
             $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
-                $message->getContent(), $reporter, $assigneeId, null, null, $attachments);
+                $message->getContent(), $reporter, $assigneeId, $attachments);
         } else {
             $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
                 $message->getReference(), $attachments);
