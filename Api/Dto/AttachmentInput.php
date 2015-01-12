@@ -74,11 +74,10 @@ class AttachmentInput
         return $dto;
     }
 
-    public static function createFromString($input)
+    public static function createFromArray($input)
     {
-        $input = json_decode(base64_decode($input), true);
         if (false == isset($input['filename']) || false == isset($input['content'])) {
-            throw new \InvalidArgumentException('Attachment input string is invalid.');
+            throw new \InvalidArgumentException('Not all required fields exists in array.');
         }
         $dto = new self();
         $dto->setFilename($input['filename']);
