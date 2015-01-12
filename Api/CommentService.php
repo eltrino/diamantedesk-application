@@ -15,6 +15,7 @@
 
 namespace Diamante\DeskBundle\Api;
 
+use Diamante\DeskBundle\Api\Command\AddCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
@@ -47,6 +48,13 @@ interface CommentService
      * @return Attachment
      */
     public function getCommentAttachment(RetrieveCommentAttachmentCommand $command);
+
+    /**
+     * Add Attachments to Comment
+     * @param AddCommentAttachmentCommand $command
+     * @return void
+     */
+    public function addCommentAttachment(AddCommentAttachmentCommand $command);
 
     /**
      * Update Ticket Comment content

@@ -431,7 +431,7 @@ class TicketController extends Controller
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
             $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-            $addTicketAttachmentCommand->attachments = $attachments;
+            $addTicketAttachmentCommand->attachmentsInput = $attachments;
             $addTicketAttachmentCommand->ticketId = $ticket->getId();
             $ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
 

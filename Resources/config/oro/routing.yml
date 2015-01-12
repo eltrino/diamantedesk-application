@@ -26,7 +26,7 @@ diamante_desk_api_branch_oro:
         _format:  json
 
 diamante_desk_api_ticket:
-    resource:     diamante.ticket.api.service
+    resource:     diamante.ticket.api.service_diamante
     type:         diamante_rest_service
     prefix:       /api/diamante/rest/{version}/desk/
     requirements:

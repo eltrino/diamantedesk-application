@@ -526,6 +526,33 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function thatListsTicketAttachments()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')
+            ->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->authorizationService
+            ->expects($this->exactly(2))
+            ->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $attachment = $this->attachment();
+
+        $this->ticket->expects($this->once())->method('getAttachments')->will($this->returnValue(
+            array($attachment)
+        ));
+
+        $attachments = $this->ticketService->listTicketAttachments(self::DUMMY_TICKET_ID);
+
+        $this->assertNotNull($attachments);
+        $this->assertContains($attachment, $attachments);
+    }
+
+    /**
+     * @test
+     */
     public function thatTicketAttachmentRetrieves()
     {
         $attachment = $this->attachment();
@@ -555,7 +582,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
         $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-        $addTicketAttachmentCommand->attachments = $this->attachmentInputs();
+        $addTicketAttachmentCommand->attachmentsInput = $this->attachmentInputs();
         $addTicketAttachmentCommand->ticketId    = self::DUMMY_TICKET_ID;
         $this->ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
     }
@@ -596,7 +623,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-        $addTicketAttachmentCommand->attachments = $attachmentInputs;
+        $addTicketAttachmentCommand->attachmentsInput = $attachmentInputs;
         $addTicketAttachmentCommand->ticketId    = self::DUMMY_TICKET_ID;
         $this->ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
     }

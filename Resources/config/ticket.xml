@@ -26,6 +26,7 @@
         <parameter key="diamante.ticket.builder.class">Diamante\DeskBundle\Model\Ticket\CommonTicketBuilder</parameter>
         <parameter key="diamante.comment.entity.factory.class">Diamante\DeskBundle\Model\Ticket\CommentFactory</parameter>
         <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
+        <parameter key="diamante.ticket.service.api.class">Diamante\DeskBundle\Api\Internal\TicketApiServiceImpl</parameter>
         <parameter key="diamante.ticket.internal.grid_filters_service.class">Diamante\DeskBundle\Api\Internal\TicketGridFiltersService</parameter>
 <!-- filters -->
         <parameter key="diamante.filter.entity.class">Diamante\DeskBundle\Entity\Filter</parameter>
@@ -91,9 +92,11 @@
             <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
 
-        <service id="diamante.ticket.api.service" alias="diamante.ticket.service" />
+        <service id="diamante.ticket.api.service" class="%diamante.ticket.service.api.class%" parent="diamante.ticket.service"/>
 
-        <service id="diamante.ticket.api.service_oro" alias="diamante.ticket.service" />
+        <service id="diamante.ticket.api.service_diamante" alias="diamante.ticket.api.service" />
+
+        <service id="diamante.ticket.api.service_oro" alias="diamante.ticket.api.service" />
 
         <service id="diamante.ticket.internal.grid_filters_service"
                  class="%diamante.ticket.internal.grid_filters_service.class%">

@@ -73,4 +73,16 @@ class AttachmentInput
         $dto->setContent($content);
         return $dto;
     }
+
+    public static function createFromString($input)
+    {
+        $input = json_decode(base64_decode($input), true);
+        if (false == isset($input['filename']) || false == isset($input['content'])) {
+            throw new \InvalidArgumentException('Attachment input string is invalid.');
+        }
+        $dto = new self();
+        $dto->setFilename($input['filename']);
+        $dto->setContent($input['content']);
+        return $dto;
+    }
 }

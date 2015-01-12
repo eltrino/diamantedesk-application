@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddTicketAttachmentCommand
+class AddCommentAttachmentCommand
 {
     /**
      * @var array
@@ -30,5 +30,5 @@ class AddTicketAttachmentCommand
      * @Assert\NotNull()
      * @Assert\Type(type="integer")
      */
-    public $ticketId;
+    public $commentId;
 }

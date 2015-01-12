@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\AddCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\UpdateCommentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
@@ -447,6 +448,67 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $this->service->deleteTicketComment(self::DUMMY_COMMENT_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function thatAddsCommentAttachment()
+    {
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
+        $attachmentInputs = $this->attachmentInputs();
+
+        $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
+            ->will($this->returnValue($comment));
+
+        $this->attachmentManager->expects($this->exactly(count($attachmentInputs)))
+            ->method('createNewAttachment')
+            ->with(
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
+                $this->equalTo($comment)
+            );
+
+        $this->commentRepository->expects($this->once())->method('store')->with($comment);
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isActionPermitted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($comment))
+            ->will($this->returnValue(true));
+
+        $command = new AddCommentAttachmentCommand();
+        $command->attachmentsInput = $attachmentInputs;
+        $command->commentId        = self::DUMMY_COMMENT_ID;
+        $this->service->addCommentAttachment($command);
+    }
+
+    /**
+     * @test
+     */
+    public function thatListsCommentAttachment()
+    {
+        $comment = new Comment(self::DUMMY_COMMENT_CONTENT, $this->_dummyTicket, $this->createDiamanteUser());
+        $a1 = new Attachment(new File('some/path/file.ext'));
+        $a2 = new Attachment(new File('some/path/file.ext'));
+        $comment->addAttachment($a1);
+        $comment->addAttachment($a2);
+
+        $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
+            ->will($this->returnValue($comment));
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($comment))
+            ->will($this->returnValue(true));
+
+        $attachments = $this->service->listCommentAttachment(self::DUMMY_COMMENT_ID);
+
+        $this->assertNotNull($attachments);
+        $this->assertCount(2, $attachments);
+        $this->assertContains($a1, $attachments);
+        $this->assertContains($a2, $attachments);
     }
 
     /**

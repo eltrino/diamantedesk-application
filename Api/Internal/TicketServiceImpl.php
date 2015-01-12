@@ -18,6 +18,7 @@ use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
@@ -209,7 +210,66 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
     }
 
     /**
+     * List Ticket attachments
+     *
+     * @ApiDoc(
+     *  description="Returns ticket attachments",
+     *  uri="/tickets/{id}/attachments.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list ticket attachments"
+     *  }
+     * )
+     *
+     * @param int $id
+     * @return array|Attachment[]
+     */
+    public function listTicketAttachments($id)
+    {
+        $ticket = $this->loadTicket($id);
+        $this->isGranted('VIEW', $ticket);
+        return $ticket->getAttachments();
+    }
+
+    /**
      * Retrieves Ticket Attachment
+     *
+     * @ApiDoc(
+     *  description="Returns a ticket attachment",
+     *  uri="/tickets/{ticketId}/attachments/{attachmentId}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="ticketId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      },
+     *      {
+     *          "name"="attachmentId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket attachment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see ticket attachment",
+     *      404="Returned when the attachment is not found"
+     *  }
+     * )
+     *
      * @param RetrieveTicketAttachmentCommand $command
      * @return \Diamante\DeskBundle\Entity\Attachment
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
@@ -234,15 +294,15 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
-        \Assert\that($command->attachments)->nullOr()->all()
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
         $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
-        if (is_array($command->attachments) && false === empty($command->attachments)) {
-            foreach ($command->attachments as $each) {
+        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
+            foreach ($command->attachmentsInput as $each) {
                 $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
             }
         }
@@ -254,6 +314,33 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Remove Attachment from Ticket
+     *
+     * @ApiDoc(
+     *  description="Remove ticket attachment",
+     *  uri="/tickets/{ticketId}/attachments/{attachmentId}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="ticketId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      },
+     *      {
+     *          "name"="attachmentId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket attachment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete attachment",
+     *      404="Returned when the ticket or attachment is not found"
+     *  }
+     * )
+     *
      * @param RemoveTicketAttachmentCommand $command
      * @return string $ticketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
@@ -278,18 +365,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Create Ticket
-     *
-     * @ApiDoc(
-     *  description="Create ticket",
-     *  uri="/tickets.{_format}",
-     *  method="POST",
-     *  resource=true,
-     *  statusCodes={
-     *      201="Returned when successful",
-     *      403="Returned when the user is not authorized to create ticket"
-     *  }
-     * )
-     *
      * @param CreateTicketCommand $command
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
