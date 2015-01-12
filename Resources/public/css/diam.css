@@ -293,3 +293,7 @@
 .grid .datetime-cell {
     vertical-align: middle;
 }
+
+.icon-status:before {
+    content: "\f024";
+}
