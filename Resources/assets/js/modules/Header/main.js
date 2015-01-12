@@ -5,7 +5,11 @@ define(['app','./views/header'], function(App, HeaderView){
     Header.startWithParent = false;
 
     Header.on('start', function () {
-      App.HeaderRegion.show(new HeaderView.View());
+      var View = new HeaderView.View();
+      Header.on('set:search', function(query){
+        View.ui.searchInput.val(query);
+      });
+      App.HeaderRegion.show(View);
     });
 
     App.on('session:login:success', function(){

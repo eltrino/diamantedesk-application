@@ -9,7 +9,8 @@ define(['app'], function(App){
         "tickets" : "listTickets",
         "tickets/create" : "createTicket",
         "tickets/:id" : "viewTicket",
-        "tickets/:id/edit" : "editTicket"
+        "tickets/:id/edit" : "editTicket",
+        "tickets/search/:query" : "searchTicket"
       }
     });
 
@@ -32,6 +33,12 @@ define(['app'], function(App){
       editTicket: function(id){
         require(['Ticket/controllers/edit'], function(Edit){
           Edit.Controller(id);
+        });
+      },
+      searchTicket: function(query){
+        require(['Ticket/controllers/list'], function(List){
+          App.Header.trigger('set:search', query);
+          List.Controller(query);
         });
       }
     };
@@ -58,6 +65,16 @@ define(['app'], function(App){
       App.debug('info', 'Event "ticket:edit" fired');
       App.navigate("tickets/"+ id + "/edit");
       API.editTicket(id);
+    });
+
+    App.on('ticket:search', function(query){
+      App.debug('info', 'Event "ticket:search" fired');
+      if(query){
+        App.navigate("tickets/search/" + query);
+        API.searchTicket(query);
+      } else {
+        App.trigger('ticket:list');
+      }
     });
 
     Ticket.addInitializer(function(){

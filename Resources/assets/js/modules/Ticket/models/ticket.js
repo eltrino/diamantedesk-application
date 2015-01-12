@@ -1,6 +1,7 @@
 define([
   'app',
-  'config'], function(App, Config){
+  'config',
+  'backbone.paginator'], function(App, Config){
 
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
 
@@ -16,17 +17,25 @@ define([
 
     });
 
-    Ticket.Collection = Backbone.Collection.extend({
-      url: Config.apiUrl+ '/desk/tickets',
-      model: Ticket.Model
+    Ticket.Collection = Backbone.PageableCollection.extend({
+      url: Config.apiUrl + '/desk/tickets',
+      model: Ticket.Model,
+      state: {
+        pageSize: 10
+      },
+      queryParams: {
+        pageSize : 'perPage'
+      }
     });
 
     var API = {
-      getTicketCollection: function() {
+      getTicketCollection: function(query) {
         var tickets = new Ticket.Collection(),
-            defer = $.Deferred();
+            defer = $.Deferred(),
+            data = query ? { subject : query } : null;
         tickets.fetch({
-          success: function(data){
+          data : data,
+          success : function(data){
             defer.resolve(data);
           }
         });
@@ -49,6 +58,10 @@ define([
 
     App.reqres.setHandler("ticket:collection", function(){
       return API.getTicketCollection();
+    });
+
+    App.reqres.setHandler("ticket:collection:filter", function(query){
+      return API.getTicketCollection(query);
     });
 
     App.reqres.setHandler("ticket:model", function(id){

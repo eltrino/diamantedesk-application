@@ -18,6 +18,7 @@
     "bootstrap": "~3.2.0",
     "requirejs-tpl": "*",
     "fontawesome": "~4.2.0",
-    "dfm-crypto-js": "~3.1.2"
+    "dfm-crypto-js": "~3.1.2",
+    "backbone.paginator": "~2.0.2"
   }
 }

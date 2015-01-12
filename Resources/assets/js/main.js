@@ -17,6 +17,7 @@ require.config({
     "underscore" : "vendor/underscore/underscore",
     "backbone" : "vendor/backbone/backbone",
     "marionette" : "vendor/marionette/lib/backbone.marionette",
+    "backbone.paginator" : "vendor/backbone.paginator/lib/backbone.paginator",
     "tpl" : "vendor/requirejs-tpl/tpl",
     "bootstrap" : "vendor/bootstrap/dist/js/bootstrap",
     "cryptojs.core" : "vendor/dfm-crypto-js/components/core",
@@ -32,11 +33,14 @@ require.config({
     },
     "backbone" : {
       deps : ["jquery", "underscore"],
-      exports : 'Backbone'
+      exports : "Backbone"
     },
     "marionette" : {
       deps : ["backbone"],
       exports : "Marionette"
+    },
+    "backbone.paginator" : {
+      deps : ["backbone"]
     },
     "bootstrap" : {
       deps : ["jquery"]
