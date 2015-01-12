@@ -131,7 +131,7 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
                     $contentDisposition = $headers->get('contentdisposition');
                     $disposition = \Zend\Mime\Decode::splitHeaderField($contentDisposition->getFieldValue());
 
-                    if ($disposition[0] == \Zend\Mime\Mime::DISPOSITION_ATTACHMENT && isset($disposition['filename'])) {
+                    if ($disposition[0] == (\Zend\Mime\Mime::DISPOSITION_ATTACHMENT || \Zend\Mime\Mime::DISPOSITION_INLINE) && isset($disposition['filename'])) {
                         $fileName    = $disposition['filename'];
                         $fileContent = $part->getContent();
                         $attachments[] = new Attachment($fileName, base64_decode($fileContent));
