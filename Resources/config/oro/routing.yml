@@ -48,7 +48,7 @@ diamante_desk_api_ticket_oro:
         _format:  json
 
 diamante_desk_api_comment:
-    resource:     diamante.comment.api.service
+    resource:     diamante.comment.api.service_diamante
     type:         diamante_rest_service
     prefix:       /api/diamante/rest/{version}/desk/
     requirements:

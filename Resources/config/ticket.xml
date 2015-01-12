@@ -40,6 +40,7 @@
 <!-- filters end-->
 
         <parameter key="diamante.comment.service.class">Diamante\DeskBundle\Api\Internal\CommentServiceImpl</parameter>
+        <parameter key="diamante.comment.service.api.class">Diamante\DeskBundle\Api\Internal\CommentApiServiceImpl</parameter>
         <parameter key="diamante.ticket.datagrid_status_helper.class">Diamante\DeskBundle\Datagrid\StatusHelper</parameter>
         <parameter key="diamante.ticket.datagrid_priority_helper.class">Diamante\DeskBundle\Datagrid\PriorityHelper</parameter>
 
@@ -168,7 +169,9 @@
             <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
 
-        <service id="diamante.comment.api.service" alias="diamante.comment.service" />
+        <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service"/>
+
+        <service id="diamante.comment.api.service_diamante" alias="diamante.comment.service" />
 
         <service id="diamante.comment.api.service_oro" alias="diamante.comment.service" />
 
