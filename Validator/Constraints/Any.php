@@ -24,15 +24,15 @@ use Symfony\Component\Validator\Constraint;
  */
 class Any extends Constraint
 {
-    public $message = 'This value should be of types {{ types }}.';
-    public $types;
+    public $message = 'This value should satisfy at least one of the constraints.';
+    public $constraints;
 
     /**
      * {@inheritdoc}
      */
     public function getDefaultOption()
     {
-        return 'types';
+        return 'constraints';
     }
 
     /**
@@ -40,6 +40,6 @@ class Any extends Constraint
      */
     public function getRequiredOptions()
     {
-        return array('types');
+        return ['constraints'];
     }
 }

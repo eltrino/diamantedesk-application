@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Constraints\TypeValidator;
 
 class AnyValidator extends ConstraintValidator
 {
@@ -30,20 +29,16 @@ class AnyValidator extends ConstraintValidator
             return;
         }
 
-        $allowedTypes = '';
-        $validator = new TypeValidator();
-        $validator->initialize($this->context);
-        foreach ($constraint->types as $constraintType) {
-            $allowedTypes .= $constraintType->type . ', ';
-            $validator->validate($value, $constraintType);
+        foreach ($constraint->constraints as $constraintEntity) {
+            $validatedBy = $constraintEntity->validatedBy();
+            $validator = new $validatedBy();
+            $validator->initialize($this->context);
+            $validator->validate($value, $constraintEntity);
         }
 
         $violationsCount = $this->context->getViolations()->count();
-        if (count($constraint->types) == $violationsCount) {
-            $this->context->addViolation($constraint->message, array(
-                '{{ value }}' => $this->formatValue($value),
-                '{{ types }}'  => trim($allowedTypes, ', '),
-            ));
+        if (count($constraint->constraints) == $violationsCount) {
+            $this->context->addViolation($constraint->message);
         } else {
             for ($i = 0; $i < $violationsCount; $i++) {
                 $this->context->getViolations()->remove($i);

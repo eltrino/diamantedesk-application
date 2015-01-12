@@ -53,7 +53,6 @@ class CreateTicketCommand
     /**
      * @Assert\NotNull()
      * @Assert\Type(type="string")
-     * @Any(types = {@Assert\Type(type="object"), @Assert\Type(type="string")})
      */
     public $status;
 
