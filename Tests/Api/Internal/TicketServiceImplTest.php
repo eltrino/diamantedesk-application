@@ -1087,9 +1087,23 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $subject = 'DUMMY_SUBJECT_UPDT';
         $description = 'DUMMY_DESC_UPDT';
-        $status = 'closed';
+        $status = 'open';
+        $statusObject = new Status($status);
+        $priority = 'high';
+        $priorityObject = new Priority($priority);
+        $source = 'phone';
+        $sourceObject = new Source($source);
 
-        $this->ticket->expects($this->exactly(3))->method('updateProperty');
+        $this->ticket->expects($this->at(0))->method('updateProperty')
+            ->with($this->equalTo('subject'), $this->equalTo($subject));
+        $this->ticket->expects($this->at(1))->method('updateProperty')
+            ->with($this->equalTo('description'), $this->equalTo($description));
+        $this->ticket->expects($this->at(2))->method('updateProperty')
+            ->with($this->equalTo('status'), $this->equalTo($statusObject));
+        $this->ticket->expects($this->at(3))->method('updateProperty')
+            ->with($this->equalTo('priority'), $this->equalTo($priorityObject));
+        $this->ticket->expects($this->at(4))->method('updateProperty')
+            ->with($this->equalTo('source'), $this->equalTo($sourceObject));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
@@ -1100,9 +1114,11 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new UpdatePropertiesCommand();
         $command->id = 1;
         $command->properties = [
-            ['name' => 'subject', 'value' => $subject],
-            ['name' => 'description', 'value' => $description],
-            ['name' => 'status', 'value' => $status]
+            'subject' => $subject,
+            'description' => $description,
+            'status' => $status,
+            'priority' => $priority,
+            'source' => $source
         ];
 
         $this->ticketService->updateProperties($command);

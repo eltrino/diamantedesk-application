@@ -421,7 +421,10 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $name = 'DUMMY_NAME_UPDT';
         $description = 'DUMMY_DESC_UPDT';
 
-        $this->branch->expects($this->exactly(2))->method('updateProperty');
+        $this->branch->expects($this->at(0))->method('updateProperty')
+            ->with($this->equalTo('name'), $this->equalTo($name));
+        $this->branch->expects($this->at(1))->method('updateProperty')
+            ->with($this->equalTo('description'), $this->equalTo($description));
 
         $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($this->branch));
 
@@ -432,8 +435,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $command = new UpdatePropertiesCommand();
         $command->id = 1;
         $command->properties = [
-            ['name' => 'name', 'value' => $name],
-            ['name' => 'description', 'value' => $description]
+            'name' => $name,
+            'description' => $description
         ];
 
         $this->branchServiceImpl->updateProperties($command);
