@@ -3,6 +3,7 @@
   "jquery": true,
   "newcap": true,
   "globals": {
-    "reqiure": true
+    "reqiure": false,
+    "define": false
   }
 }

@@ -26,15 +26,20 @@
 
 </div>
 
-<script type="application/javascript">
-    config = {
-        'basePath' : '{{ basePath }}',
-        'baseUrl' : '{{ baseUrl }}',
-        'apiUrl' : '{{ apiUrl }}'
-    };
-</script>
-
 <script data-main="{{ asset('bundles/diamantefront/js/main.js') }}"
         src="{{ asset('bundles/diamantefront/js/vendor/requirejs/require.js') }}"></script>
+<script>
+    require.config({
+        config : {
+            'config' : {
+                env : '{{ app.environment }}',
+                basePath : '{{ basePath }}',
+                baseUrl : '{{ baseUrl }}',
+                apiUrl : '{{ apiUrl }}'
+            }
+        }
+    });
+</script>
+
 </body>
 </html>

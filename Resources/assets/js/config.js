@@ -1,12 +1,10 @@
-define(function(){
+define(function(localRequire, exports, module){
 
-  var dev = window.location.search === '?dev',
-      baseurl = config.baseUrl,
-      basepath = config.basePath,
-      apiurl = config.apiUrl;
+  var Config = module.config();
+  Config.isDev = (Config.env === 'dev');
 
   require.config({
-    urlArgs: dev ? "bust=" + (new Date()).getTime() : ''
+    urlArgs: Config.isDev ? "bust=" + (new Date()).getTime() : ''
     //"packages": [
     //  {
     //    name: 'PackageName',
@@ -14,13 +12,6 @@ define(function(){
     //  }
     //]
   });
-
-  var Config = {
-    isDev : dev,
-    baseUrl : baseurl,
-    basePath : basepath,
-    apiUrl : apiurl
-  };
 
   return Config;
 });

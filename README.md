@@ -59,10 +59,9 @@ Source code could be found in `@DiamanteFrontBundle/Resources/front` folder. Thi
 @DiamanteFrontBundle
 +-- Resources
 |    +-- assets
-|    |   +-- js
-|    |   |   +-- img
-|    |   |   +-- js
-|    |   |   +-- less
+|    |    +-- img
+|    |    +-- js
+|    |    +-- less
 +-- .bowerrc
 +-- bower.json
 +-- Grungfile.js
