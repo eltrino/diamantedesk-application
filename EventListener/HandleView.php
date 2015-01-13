@@ -84,10 +84,15 @@ class HandleView
      * @param $format
      * @return Response
      */
-    protected function put(Entity $data, $format)
+    protected function put(Entity $data = null, $format)
     {
         $context = SerializationContext::create()->setGroups(['Default', 'entity']);
-        return new Response($this->serializer->serialize($data, $format, $context), Codes::HTTP_OK);
+        if (is_null($data)) {
+            $body = '';
+        } else {
+            $body = $this->serializer->serialize($data, $format, $context);
+        }
+        return new Response($body, Codes::HTTP_OK);
     }
 
     /**
@@ -98,17 +103,18 @@ class HandleView
      * @param Request $request
      * @return Response
      */
-    protected function post(Entity $data, $format, Request $request)
+    protected function post(Entity $data = null, $format, Request $request)
     {
         $pathInfo = $this->entityLocation($request->getPathInfo());
         $location = $request->getUriForPath(sprintf($pathInfo, $data->getId()));
         $context = SerializationContext::create()->setGroups(['Default', 'entity']);
 
-        return new Response(
-            $this->serializer->serialize($data, $format, $context),
-            Codes::HTTP_CREATED,
-            ['Location' => $location]
-        );
+        if (is_null($data)) {
+            $body = '';
+        } else {
+            $body = $this->serializer->serialize($data, $format, $context);
+        }
+        return new Response($body, Codes::HTTP_CREATED, ['Location' => $location]);
     }
 
     /**
@@ -118,10 +124,15 @@ class HandleView
      * @param $format
      * @return Response
      */
-    protected function patch(Entity $data, $format)
+    protected function patch(Entity $data = null, $format)
     {
         $context = SerializationContext::create()->setGroups(['Default', 'entity']);
-        return new Response($this->serializer->serialize($data, $format, $context), Codes::HTTP_OK);
+        if (is_null($data)) {
+            $body = '';
+        } else {
+            $body = $this->serializer->serialize($data, $format, $context);
+        }
+        return new Response($body, Codes::HTTP_OK);
     }
 
     /**
