@@ -25,12 +25,6 @@ use Symfony\Component\Validator\Constraints\File;
 
 class AnyValidatorTest extends AbstractConstraintValidatorTest
 {
-    /**
-     * @var \Symfony\Component\Validator\ExecutionContext
-     * @Mock \Symfony\Component\Validator\ExecutionContext
-     */
-
-    /** @var UserValidator */
 
     protected function createValidator() {
         return new AnyValidator();
