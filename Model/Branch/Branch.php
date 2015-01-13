@@ -123,15 +123,18 @@ class Branch implements Entity, Taggable
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getDefaultAssigneeId()
     {
+        if (is_null($this->defaultAssignee)) {
+            return null;
+        }
         return $this->defaultAssignee->getId();
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDefaultAssigneeFullName()
     {
