@@ -1,0 +1,31 @@
+{% form_theme form with ['OroCRMContactUsBundle::fields.html.twig'] %}
+
+{{ form_start(form, {'action': url('diamante_embedded_form_submit', {'id': formEntity.id}), 'attr': {'id': form.vars.name }}) }}
+<div class="wrapper">
+    <div class="row-group">
+        <div class="box">
+            {{ form_row(form.firstName) }}
+        </div>
+        <div class="box">
+            {{ form_row(form.lastName) }}
+        </div>
+    </div>
+    <div class="row-group">
+        <div class="box">
+            {{ form_row(form.emailAddress) }}
+        </div>
+    </div>
+    <div class="row-group">
+        {{ form_row(form.subject) }}
+    </div>
+    <div class="row-group">
+        {{ form_row(form.description) }}
+    </div>
+    <div class="row-group">
+        {{ form_row(form.files) }}
+    </div>
+    <div class="row-group">
+        {{ form_widget(form.submit) }}
+    </div>
+</div>
+{{ form_end(form) }}

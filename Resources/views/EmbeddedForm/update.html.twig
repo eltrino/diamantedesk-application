@@ -55,7 +55,7 @@
                     form_row(form.formType),
                     form_row(form.css, {'attr':{'class': 'span12' }, 'label': 'oro.embeddedform.css.label'|trans, 'is_translated_label': true}),
                     form_row(form.successMessage),
-                    form_row(form.branch)
+                    form_row(form.branch_id)
                 ]
             }]
         }] %}
@@ -80,8 +80,8 @@
                         cssFieldId: {{ form.css.vars.id|json_encode|raw }},
                         successMessageFieldId: {{ form.successMessage.vars.id|json_encode|raw  }},
                         defaultCss: {{ defaultCss|json_encode|raw }},
-                        defaultSuccessMessage: {{ defaultSuccessMessage|json_encode|raw }}
-                        branchFieldId: {{ form.branch.vars.id|json_encode|raw }}
+                        defaultSuccessMessage: {{ defaultSuccessMessage|json_encode|raw }},
+                        branchFieldId: {{ form.branch_id.vars.id|json_encode|raw }}
                     }).startWatching(forceDataLoading);
                 });
         </script>

@@ -225,6 +225,6 @@ CSS;
      */
     public function getFormLayout()
     {
-        return 'DiamanteDeskBundle::embeddedForm.html.twig';
+        return 'DiamanteEmbeddedFormBundle::embeddedForm.html.twig';
     }
 }

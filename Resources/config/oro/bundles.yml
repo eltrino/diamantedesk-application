@@ -1,2 +1,2 @@
 bundles:
-    - Diamante\EmbeddedFormBundle\DiamanteEmbeddedFormBundle
+    - { name: Diamante\EmbeddedFormBundle\DiamanteEmbeddedFormBundle, priority: 1024 }

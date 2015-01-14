@@ -34,8 +34,9 @@ class DiamanteEmbeddedFormBundle implements Migration
             array(
                 'notnull' => false,
                 'oro_options' => array(
-                    'extend' => array('is_extend' => true, 'owner' => ExtendScope::OWNER_SYSTEM),
-                    'datagrid' => array('is_visible' => false)
+                    'extend' => array('is_extend' => true, 'owner' => ExtendScope::OWNER_CUSTOM),
+                    'datagrid' => array('is_visible' => false),
+                    'merge'    => array('display' => true)
             ))
         );
     }
