@@ -15,7 +15,7 @@
 namespace Diamante\ApiBundle\Model\ApiUser;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
-use \OroCRM\Bundle\ContactBundle\Entity\Contact;
+use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ApiUser implements Entity, UserInterface
@@ -31,31 +31,6 @@ class ApiUser implements Entity, UserInterface
     protected $password;
 
     /**
-     * @var Contact
-     */
-    protected $contact;
-
-    /**
-     * @var string
-     */
-    protected $username;
-
-    /**
-     * @var string
-     */
-    protected $email;
-
-    /**
-     * @var string
-     */
-    protected $firstName;
-
-    /**
-     * @var string
-     */
-    protected $lastName;
-
-    /**
      * @var array
      */
     protected $roles = array();
@@ -65,22 +40,15 @@ class ApiUser implements Entity, UserInterface
      */
     protected $salt;
 
-    public function __construct($email, $username, $firstName = null, $lastName = null, $password = null, $salt = null)
-    {
-        $this->username  = $username;
-        $this->password  = $password;
-        $this->email     = $email;
-        $this->firstName = $firstName;
-        $this->lastName  = $lastName;
-        $this->salt      = $salt;
-    }
-
     /**
-     * @return Contact
+     * @var DiamanteUser
      */
-    public function getContact()
+    protected $diamanteUser;
+
+    public function __construct($password = null, $salt = null)
     {
-        return $this->contact;
+        $this->password  = $password;
+        $this->salt      = $salt;
     }
 
     /**
@@ -89,6 +57,24 @@ class ApiUser implements Entity, UserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        return 'username';
+    }
+
+    /**
+     * @return DiamanteUser
+     */
+    public function getDiamanteUser()
+    {
+        return $this->diamanteUser;
     }
 
     /**
@@ -107,38 +93,6 @@ class ApiUser implements Entity, UserInterface
         return $this->salt;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
     public function getRoles()
     {
         return $this->roles;
@@ -147,10 +101,5 @@ class ApiUser implements Entity, UserInterface
     public function eraseCredentials()
     {
 
-    }
-    
-    public function getFullName()
-    {
-        return $this->firstName . ' ' . $this->lastName;
     }
 }

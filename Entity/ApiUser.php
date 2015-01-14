@@ -15,10 +15,10 @@
 namespace Diamante\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use \OroCRM\Bundle\ContactBundle\Entity\Contact;
+use Diamante\DeskBundle\Entity\DiamanteUser;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_api_user")
  */
 class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
@@ -33,50 +33,14 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
     protected $id;
 
     /**
-     * OroCrm Contact
+     * Diamante User
      *
-     * @var Contact
+     * @var DiamanteUser
      *
-     * @ORM\OneToOne(targetEntity="\OroCRM\Bundle\ContactBundle\Entity\Contact")
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="\Diamante\DeskBundle\Entity\DiamanteUser")
+     * @ORM\JoinColumn(name="diamante_user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $contact;
-
-    /**
-     * Unique username for Api User
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
-     */
-    protected $username;
-
-    /**
-     * Unique email for Api User
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
-    protected $email;
-
-    /**
-     * First name
-     *
-     * @var string
-     *
-     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
-     */
-    protected $firstName;
-
-    /**
-     * Last name
-     *
-     * @var string
-     *
-     * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
-     */
-    protected $lastName;
+    protected $diamanteUser;
 
     /**
      * Encrypted password. Must be persisted.
