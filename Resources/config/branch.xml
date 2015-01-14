@@ -55,9 +55,13 @@
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.branch.logo_handler"/>
             <argument type="service" id="oro_tag.tag.manager"/>
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="diamante.user.service"/>
         </service>
+
+        <service id="diamante.branch.api.service" alias="diamante.branch.service" />
+
+        <service id="diamante.branch.api.service_oro" alias="diamante.branch.service" />
 
         <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%">
             <argument type="service" id="diamante.branch_email_configuration.entity.factory"/>

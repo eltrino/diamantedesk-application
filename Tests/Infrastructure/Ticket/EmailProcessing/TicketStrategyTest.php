@@ -281,6 +281,6 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
     private function getApiUser()
     {
-        return new ApiUser('test_email', 'test_username');
+        return new ApiUser('test_email', 'test_username', 'salt',  array());
     }
 }

@@ -14,26 +14,29 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\ApiBundle\Annotation\ApiDoc;
+use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\CommentService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
+use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\User\User;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
-use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Comment;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use \Diamante\DeskBundle\Model\Ticket\Comment;
 
-class CommentServiceImpl implements CommentService
+class CommentServiceImpl implements CommentService, RestServiceInterface
 {
     /**
      * @var Repository
@@ -61,9 +64,9 @@ class CommentServiceImpl implements CommentService
     private $attachmentManager;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     /**
      * @var EventDispatcher
@@ -86,7 +89,7 @@ class CommentServiceImpl implements CommentService
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentManager $attachmentManager,
-        SecurityFacade $securityFacade,
+        AuthorizationService $authorizationService,
         EventDispatcher $dispatcher,
         NotificationDeliveryManager $notificationDeliveryManager,
         Notifier $notifier
@@ -96,7 +99,7 @@ class CommentServiceImpl implements CommentService
         $this->commentFactory = $commentFactory;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
-        $this->securityFacade = $securityFacade;
+        $this->authorizationService = $authorizationService;
         $this->dispatcher = $dispatcher;
         $this->notificationDeliveryManager = $notificationDeliveryManager;
         $this->notifier = $notifier;
@@ -104,12 +107,33 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Load Comment by given comment id
-     * @param int $commentId
+     *
+     * @ApiDoc(
+     *  description="Returns a comment",
+     *  uri="/comments/{id}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see comment",
+     *      404="Returned when the comment is not found"
+     *  }
+     * )
+     *
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
-    public function loadComment($commentId)
+    public function loadComment($id)
     {
-        $comment = $this->loadCommentBy($commentId);
+        $comment = $this->loadCommentBy($id);
         $this->isGranted('VIEW', $comment);
         return $comment;
     }
@@ -142,10 +166,10 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Post Comment for Ticket
-     * @param Command\EditCommentCommand $command
-     * @return void
+     * @param Command\CommentCommand $command
+     * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
-    public function postNewCommentForTicket(Command\EditCommentCommand $command)
+    public function postNewCommentForTicket(Command\CommentCommand $command)
     {
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Comment');
 
@@ -173,10 +197,71 @@ class CommentServiceImpl implements CommentService
         $this->ticketRepository->store($ticket);
 
         $this->dispatchEvents($comment, $ticket);
+
+        return $comment;
+    }
+
+    /**
+     * Retrieves comment attachments
+     *
+     * @ApiDoc(
+     *  description="Returns comment attachments",
+     *  uri="/comments/{id}/attachments.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list comment attachments"
+     *  }
+     * )
+     *
+     * @param $commentId
+     * @return array
+     */
+    public function listCommentAttachment($commentId)
+    {
+        $comment = $this->loadCommentBy($commentId);
+        $this->isGranted('VIEW', $comment);
+        return $comment->getAttachments();
     }
 
     /**
      * Retrieves Comment Attachment
+     *
+     * @ApiDoc(
+     *  description="Returns a comment attachment",
+     *  uri="/comments/{id}/attachments/{a_id}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      },
+     *      {
+     *          "name"="a_id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment attachment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see comment attachment",
+     *      404="Returned when the attachment is not found"
+     *  }
+     * )
+     *
      * @param RetrieveCommentAttachmentCommand $command
      * @return Attachment
      */
@@ -194,11 +279,36 @@ class CommentServiceImpl implements CommentService
     }
 
     /**
-     * Update Ticket Comment content
-     * @param Command\EditCommentCommand $command
+     * Add Attachments to Comment
+     * @param AddCommentAttachmentCommand $command
      * @return void
      */
-    public function updateTicketComment(Command\EditCommentCommand $command)
+    public function addCommentAttachment(Command\AddCommentAttachmentCommand $command)
+    {
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
+            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+
+        $comment = $this->loadCommentBy($command->commentId);
+
+        $this->isGranted('EDIT', $comment);
+
+        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
+            foreach ($command->attachmentsInput as $each) {
+                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
+            }
+        }
+
+        $this->commentRepository->store($comment);
+
+        $this->dispatchEvents($comment);
+    }
+
+    /**
+     * Update Ticket Comment content
+     * @param Command\CommentCommand $command
+     * @return void
+     */
+    public function updateTicketComment(Command\CommentCommand $command)
     {
         $comment = $this->loadCommentBy($command->id);
 
@@ -216,11 +326,7 @@ class CommentServiceImpl implements CommentService
         }
         $this->commentRepository->store($comment);
 
-        /**
-         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
-         */
-        $ticket = $this->loadTicketBy($command->ticket);
-
+        $ticket = $comment->getTicket();
         $newStatus = new Status($command->ticketStatus);
         if (false === $ticket->getStatus()->equals($newStatus)) {
             $ticket->updateStatus($newStatus);
@@ -231,7 +337,78 @@ class CommentServiceImpl implements CommentService
     }
 
     /**
+     * Update certain properties of the Comment
+     *
+     * @ApiDoc(
+     *  description="Update comment",
+     *  uri="/comments/{id}.{_format}",
+     *  method={
+     *      "PUT",
+     *      "PATCH"
+     *  },
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to update comment",
+     *      404="Returned when the comment is not found"
+     *  }
+     * )
+     *
+     * @param Command\UpdateCommentCommand $command
+     * @return Comment
+     */
+    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command)
+    {
+        $comment = $this->loadCommentBy($command->id);
+
+        $this->isGranted('EDIT', $comment);
+
+        $comment->updateContent($command->content);
+        $this->commentRepository->store($comment);
+
+        $ticket = $comment->getTicket();
+        $newStatus = new Status($command->ticketStatus);
+        if (false === $ticket->getStatus()->equals($newStatus)) {
+            $ticket->updateStatus($newStatus);
+            $this->ticketRepository->store($ticket);
+        }
+
+        $this->dispatchEvents($comment, $ticket);
+
+        return $comment;
+    }
+
+    /**
      * Delete Ticket Comment
+     *
+     * @ApiDoc(
+     *  description="Delete comment",
+     *  uri="/comments/{id}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete comment",
+     *      404="Returned when the comment is not found"
+     *  }
+     * )
+     *
      * @param integer $commentId
      */
     public function deleteTicketComment($commentId)
@@ -250,6 +427,33 @@ class CommentServiceImpl implements CommentService
 
     /**
      * Remove Attachment from Comment
+     *
+     * @ApiDoc(
+     *  description="Remove comment attachment",
+     *  uri="/comments/{id}/attachments/{a_id}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment Id"
+     *      },
+     *      {
+     *          "name"="a_id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Comment attachment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete attachment",
+     *      404="Returned when the comment or attachment is not found"
+     *  }
+     * )
+     *
      * @param RemoveCommentAttachmentCommand $command
      * @return void
      * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
@@ -278,7 +482,7 @@ class CommentServiceImpl implements CommentService
      */
     private function isGranted($operation, $entity)
     {
-        if (!$this->securityFacade->isGranted($operation, $entity)) {
+        if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
     }
@@ -300,5 +504,37 @@ class CommentServiceImpl implements CommentService
         }
 
         $this->notificationDeliveryManager->deliver($this->notifier);
+    }
+
+    /**
+     * Retrieves list of all Comments.
+     * Filters comments with parameters provided via GET request.
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
+     * Time filtering values should be converted to UTC
+     *
+     * @ApiDoc(
+     *  description="Returns all tickets.",
+     *  uri="/comments.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list tickets"
+     *  }
+     * )
+     *
+     * @param Command\Filter\FilterCommentsCommand $command
+     * @return Comment[]
+     */
+    public function listAllComments(Command\Filter\FilterCommentsCommand $command)
+    {
+        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Comment');
+        $criteriaProcessor = new CommentFilterCriteriaProcessor();
+        $criteriaProcessor->setCommand($command);
+        $criteria = $criteriaProcessor->getCriteria();
+        $pagingProperties = $criteriaProcessor->getPagingProperties();
+        $comments = $this->commentRepository->filter($criteria, $pagingProperties);
+
+        return $comments;
     }
 }

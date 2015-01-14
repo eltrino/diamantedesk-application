@@ -85,7 +85,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @var \Diamante\ApiBundle\Entity\ApiUser
-     * @Mock Diamante\ApiBundle\Entity\ApiUser
+     * @Mock \Diamante\ApiBundle\Entity\ApiUser
      */
     private $apiUser;
 

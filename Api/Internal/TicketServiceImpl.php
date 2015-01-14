@@ -14,9 +14,14 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\ApiBundle\Annotation\ApiDoc;
+use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
+use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Priority;
@@ -42,7 +47,7 @@ use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class TicketServiceImpl implements TicketService
+class TicketServiceImpl implements TicketService, RestServiceInterface
 {
     /**
      * @var TicketRepository
@@ -70,9 +75,9 @@ class TicketServiceImpl implements TicketService
     private $userService;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     /**
      * @var EventDispatcher
@@ -94,7 +99,7 @@ class TicketServiceImpl implements TicketService
                                 TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
                                 UserService $userService,
-                                SecurityFacade $securityFacade,
+                                AuthorizationService $authorizationService,
                                 EventDispatcher $dispatcher,
                                 NotificationDeliveryManager $notificationDeliveryManager,
                                 Notifier $notifier
@@ -104,7 +109,7 @@ class TicketServiceImpl implements TicketService
         $this->ticketBuilder = $ticketBuilder;
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
-        $this->securityFacade = $securityFacade;
+        $this->authorizationService = $authorizationService;
         $this->dispatcher = $dispatcher;
         $this->notificationDeliveryManager = $notificationDeliveryManager;
         $this->notifier = $notifier;
@@ -112,18 +117,59 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Load Ticket by given ticket id
-     * @param int $ticketId
+     *
+     * @ApiDoc(
+     *  description="Returns a ticket",
+     *  uri="/tickets/{id}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    public function loadTicket($ticketId)
+    public function loadTicket($id)
     {
-        $ticket = $this->loadTicketById($ticketId);
+        $ticket = $this->loadTicketById($id);
         $this->isGranted('VIEW', $ticket);
         return $ticket;
     }
 
     /**
      * Load Ticket by given Ticket Key
+     *
+     * @ApiDoc(
+     *  description="Returns a ticket by ticket key",
+     *  uri="/tickets/{key}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="key",
+     *          "dataType"="string",
+     *          "description"="Ticket Key"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
      * @param string $key
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
@@ -150,13 +196,13 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * @param int $ticketId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws TicketNotFoundException if Ticket does not exists
      */
-    private function loadTicketById($ticketId)
+    private function loadTicketById($id)
     {
-        $ticket = $this->ticketRepository->get($ticketId);
+        $ticket = $this->ticketRepository->get($id);
         if (is_null($ticket)) {
             throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
@@ -164,7 +210,66 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
+     * List Ticket attachments
+     *
+     * @ApiDoc(
+     *  description="Returns ticket attachments",
+     *  uri="/tickets/{id}/attachments.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list ticket attachments"
+     *  }
+     * )
+     *
+     * @param int $id
+     * @return array|Attachment[]
+     */
+    public function listTicketAttachments($id)
+    {
+        $ticket = $this->loadTicket($id);
+        $this->isGranted('VIEW', $ticket);
+        return $ticket->getAttachments();
+    }
+
+    /**
      * Retrieves Ticket Attachment
+     *
+     * @ApiDoc(
+     *  description="Returns a ticket attachment",
+     *  uri="/tickets/{ticketId}/attachments/{attachmentId}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="ticketId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      },
+     *      {
+     *          "name"="attachmentId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket attachment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to see ticket attachment",
+     *      404="Returned when the attachment is not found"
+     *  }
+     * )
+     *
      * @param RetrieveTicketAttachmentCommand $command
      * @return \Diamante\DeskBundle\Entity\Attachment
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
@@ -189,15 +294,15 @@ class TicketServiceImpl implements TicketService
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
-        \Assert\that($command->attachments)->nullOr()->all()
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
         $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
-        if (is_array($command->attachments) && false === empty($command->attachments)) {
-            foreach ($command->attachments as $each) {
+        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
+            foreach ($command->attachmentsInput as $each) {
                 $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
             }
         }
@@ -209,6 +314,33 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Remove Attachment from Ticket
+     *
+     * @ApiDoc(
+     *  description="Remove ticket attachment",
+     *  uri="/tickets/{ticketId}/attachments/{attachmentId}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="ticketId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      },
+     *      {
+     *          "name"="attachmentId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket attachment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete attachment",
+     *      404="Returned when the ticket or attachment is not found"
+     *  }
+     * )
+     *
      * @param RemoveTicketAttachmentCommand $command
      * @return string $ticketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
@@ -381,8 +513,29 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Delete Ticket by id
-     * @param int $id
-     * @return void
+     *
+     * @ApiDoc(
+     *  description="Delete ticket",
+     *  uri="/tickets/{id}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
+     * @param $id
+     * @return null
      * @throws \RuntimeException if unable to load required ticket
      */
     public function deleteTicket($id)
@@ -394,6 +547,26 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Delete Ticket by key
+     *
+     * @ApiDoc(
+     *  description="Delete ticket by key",
+     *  uri="/tickets/{key}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="key",
+     *          "dataType"="string",
+     *          "description"="Ticket Key"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
      * @param string $key
      * @return void
      */
@@ -428,7 +601,7 @@ class TicketServiceImpl implements TicketService
      */
     private function isGranted($operation, $entity)
     {
-        if (!$this->securityFacade->isGranted($operation, $entity)) {
+        if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
     }
@@ -441,7 +614,8 @@ class TicketServiceImpl implements TicketService
      */
     private function isAssigneeGranted(Ticket $entity)
     {
-        if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $this->securityFacade->getLoggedUserId()) {
+        $user = $this->authorizationService->getLoggedUser();
+        if (is_null($entity->getAssignee()) || $entity->getAssignee()->getId() != $user->getId()) {
             $this->isGranted('EDIT', $entity);
         }
     }
@@ -458,5 +632,93 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->notificationDeliveryManager->deliver($this->notifier);
+    }
+
+    /**
+     * Update certain properties of the Ticket
+     *
+     * @ApiDoc(
+     *  description="Update ticket",
+     *  uri="/tickets/{id}.{_format}",
+     *  method={
+     *      "PUT",
+     *      "PATCH"
+     *  },
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Branch Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to update ticket",
+     *      404="Returned when the branch is not found"
+     *  }
+     * )
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     * @return Ticket
+     */
+    public function updateProperties(Command\UpdatePropertiesCommand $command)
+    {
+        /**
+         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
+         */
+        $ticket = $this->loadTicketById($command->id);
+
+        $this->isGranted('EDIT', $ticket);
+
+        foreach ($command->properties as $name => $value) {
+            /**
+             * @todo Not a very good approach in case number of such properties will increase, should be refactored
+             */
+            if ($name == 'status') {
+                $value = new Status($value);
+            } elseif ($name == 'priority') {
+                $value = new Priority($value);
+            } elseif ($name == 'source') {
+                $value = new Source($value);
+            }
+            $ticket->updateProperty($name, $value);
+        }
+
+        $this->ticketRepository->store($ticket);
+
+        return $ticket;
+    }
+
+    /**
+     * Retrieves list of all Tickets. Performs filtering of tickets if provided with criteria as GET parameters.
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
+     * Time filtering values should be converted to UTC
+     *
+     * @ApiDoc(
+     *  description="Returns all tickets.",
+     *  uri="/tickets.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to list tickets"
+     *  }
+     * )
+     *
+     * @param Command\Filter\FilterTicketsCommand $ticketFilterCommand
+     * @return Ticket[]
+     */
+    public function listAllTickets(Command\Filter\FilterTicketsCommand $ticketFilterCommand)
+    {
+        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Ticket');
+        $criteriaProcessor = new TicketFilterCriteriaProcessor();
+        $criteriaProcessor->setCommand($ticketFilterCommand);
+        $criteria = $criteriaProcessor->getCriteria();
+        $pagingProperties = $criteriaProcessor->getPagingProperties();
+        $tickets = $this->ticketRepository->filter($criteria, $pagingProperties);
+
+        return $tickets;
     }
 }

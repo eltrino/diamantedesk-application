@@ -207,4 +207,27 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     {
         return new OroUser();
     }
+
+    /**
+     * @test
+     */
+    public function thatUpdateProperty()
+    {
+        $ticket = $this->createTicket();
+        $subject = 'Updated subject';
+        $ticket->updateProperty('subject', $subject);
+        $this->assertEquals($subject, $ticket->getSubject());
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \DomainException
+     * @expectedExceptionMessage Ticket does not have "invalid_property" property.
+     */
+    public function thatDoesNotUpdateInvalidProperty()
+    {
+        $ticket = $this->createTicket();
+        $ticket->updateProperty('invalid_property', 'value');
+    }
 }

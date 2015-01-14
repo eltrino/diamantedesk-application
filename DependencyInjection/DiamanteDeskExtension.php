@@ -61,6 +61,7 @@ class DiamanteDeskExtension extends Extension implements PrependExtensionInterfa
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+        $loader->load('authorization.xml');
         $loader->load('branch.xml');
         $loader->load('attachment.xml');
         $loader->load('ticket.xml');

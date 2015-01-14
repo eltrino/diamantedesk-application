@@ -87,9 +87,9 @@ class BranchController extends Controller
             $form = $this->createForm(new CreateBranchType(), $command);
 
             $result = $this->edit($command, $form, function ($command) {
-                $branchId = $this->get('diamante.branch.service')->createBranch($command);
-                $this->createBranchEmailConfiguration($command, $branchId);
-                return $branchId;
+                $branch = $this->get('diamante.branch.service')->createBranch($command);
+                $this->createBranchEmailConfiguration($command, $branch->getId());
+                return $branch->getId();
             });
         } catch (MethodNotAllowedException $e) {
         } catch(\Exception $e) {

@@ -18,7 +18,7 @@ use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\Comment;
-use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Form\Type\CommentType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\CommandFactory;
@@ -53,14 +53,14 @@ class CommentController extends Controller
      *
      * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
-     * @param Ticket $ticket
+     * @param Ticket $id
      * @return array
      */
     public function createAction($id)
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
-            ->createEditCommentCommandForCreate($ticket, new User($this->getUser()->getId(), User::TYPE_ORO));
+            ->createCommentCommandForCreate($ticket, new User($this->getUser()->getId(), User::TYPE_ORO));
         return $this->edit($command, function($command) {
             $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')
@@ -84,7 +84,7 @@ class CommentController extends Controller
     {
         $comment = $this->get('diamante.comment.service')->loadComment($id);
         $command = $this->get('diamante.command_factory')
-            ->createEditCommentCommandForUpdate($comment);
+            ->createCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
             $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')->updateTicketComment($command);
@@ -92,10 +92,10 @@ class CommentController extends Controller
     }
 
     /**
-     * @param EditCommentCommand $command
+     * @param CommentCommand $command
      * @return array of AttachmentInput DTOs
      */
-    private function buildAttachmentsInputDTO(EditCommentCommand $command)
+    private function buildAttachmentsInputDTO(CommentCommand $command)
     {
         $attachmentsInput = array();
         foreach ($command->files as $file) {
@@ -124,12 +124,12 @@ class CommentController extends Controller
     }
 
     /**
-     * @param EditCommentCommand $command
+     * @param CommentCommand $command
      * @param $callback
      * @param Ticket $ticket
      * @return array
      */
-    private function edit(EditCommentCommand $command, $callback, Ticket $ticket)
+    private function edit(CommentCommand $command, $callback, Ticket $ticket)
     {
         $response = null;
         $form = $this->createForm(new CommentType(), $command);
@@ -190,7 +190,7 @@ class CommentController extends Controller
      *      name="diamante_ticket_comment_attachment_download",
      *      requirements={"commentId"="\d+", "attachId"="\d+"}
      * )
-     * @return Reponse
+     * @return Response
      * @todo move to application service
      */
     public function downloadAttachmentAction($commentId, $attachId)
@@ -232,6 +232,7 @@ class CommentController extends Controller
      *
      * @param integer $commentId
      * @param integer $attachId
+     * @return Response
      */
     public function removeAttachmentAction($commentId, $attachId)
     {

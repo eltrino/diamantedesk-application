@@ -14,12 +14,16 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Doctrine\ORM\EntityRepository;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 class DoctrineGenericRepository extends EntityRepository implements Repository
 {
+    const SELECT_ALIAS = 'e';
     /**
      * @param $id
      * @return Entity
@@ -56,5 +60,64 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
     {
         $this->_em->remove($entity);
         $this->_em->flush();
+    }
+
+    /**
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return \Doctrine\Common\Collections\Collection|static
+     * @throws \Exception
+     */
+    public function filter(array $conditions, PagingProperties $pagingProperties)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getOrderByField());
+        $offset = ($pagingProperties->getPageNumber()-1) * $pagingProperties->getPerPageCounter();
+
+        $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
+
+        foreach ($conditions as $condition) {
+            $whereExpression = $this->buildWhereExpression($qb, $condition);
+            $qb->orWhere($whereExpression);
+        }
+
+        $qb->addOrderBy($orderByField, $pagingProperties->getSortingOrder());
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($pagingProperties->getPerPageCounter());
+
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_OBJECT);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param array $condition
+     * @return Query\Expr
+     */
+    protected function buildWhereExpression(QueryBuilder $qb, array $condition)
+    {
+        list($field, $operator, $value) = $condition;
+
+        $field = sprintf('%s.%s', self::SELECT_ALIAS, $field);
+
+        switch ($operator) {
+            case 'like':
+                $literal = $qb->expr()->literal("%{$value}%");
+                break;
+            default:
+                $literal = $qb->expr()->literal("{$value}");
+                break;
+        }
+
+        $expr = call_user_func_array(array($qb->expr(), $operator), array($field, $literal));
+
+        return $expr;
     }
 }
