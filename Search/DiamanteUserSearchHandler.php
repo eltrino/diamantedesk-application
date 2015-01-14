@@ -22,7 +22,7 @@
 
 namespace Diamante\DeskBundle\Search;
 
-use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
+use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
 use Oro\Bundle\FormBundle\Autocomplete\SearchHandlerInterface;
@@ -40,7 +40,7 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
     public function __construct(
         $entityName,
         UserDetailsService  $diamanteUserDetailsService,
-        ApiUserRepository   $diamanteUserRepository,
+        DiamanteUserRepository $diamanteUserRepository,
         UserSearchHandler   $oroUserSearchHandler,
         array $properties
     )

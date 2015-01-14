@@ -19,6 +19,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="diamante.user.entity.class">Diamante\DeskBundle\Entity\DiamanteUser</parameter>
         <parameter key="diamante.user.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService</parameter>
         <parameter key="diamante.command_factory.class">Diamante\DeskBundle\Form\CommandFactory</parameter>
         <!-- repositories start -->
@@ -34,9 +35,15 @@
 
     <services>
 
+        <service id="diamante.user.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.user.entity.class%</argument>
+        </service>
+
         <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>
-            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.user.repository"/>
         </service>
 
         <service id="diamante.user.details.service" class="%diamante.user.details.service.class%">
@@ -75,7 +82,7 @@
         <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
             <argument type="string">Diamante\DeskBundle\Model\User\UserDetails</argument>
             <argument type="service" id="diamante.user.details.service"/>
-            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="oro_user.autocomplete.user.search_handler"/>
             <argument type="collection">
                 <argument type="string">email</argument>
