@@ -189,15 +189,15 @@ class TicketServiceImpl implements TicketService
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
-        \Assert\that($command->attachments)->nullOr()->all()
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
         $ticket = $this->loadTicketById($command->ticketId);
 
         $this->isGranted('EDIT', $ticket);
 
-        if (is_array($command->attachments) && false === empty($command->attachments)) {
-            foreach ($command->attachments as $each) {
+        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
+            foreach ($command->attachmentsInput as $each) {
                 $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
             }
         }

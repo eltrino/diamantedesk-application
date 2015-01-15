@@ -45,7 +45,7 @@ class AttachmentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\AttachmentCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand',
                 'intention' => 'attachment',
                 'cascade_validation' => true
             )

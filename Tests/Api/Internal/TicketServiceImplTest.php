@@ -552,7 +552,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
         $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-        $addTicketAttachmentCommand->attachments = $this->attachmentInputs();
+        $addTicketAttachmentCommand->attachmentsInput = $this->attachmentInputs();
         $addTicketAttachmentCommand->ticketId    = self::DUMMY_TICKET_ID;
         $this->ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
     }
@@ -593,7 +593,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-        $addTicketAttachmentCommand->attachments = $attachmentInputs;
+        $addTicketAttachmentCommand->attachmentsInput = $attachmentInputs;
         $addTicketAttachmentCommand->ticketId    = self::DUMMY_TICKET_ID;
         $this->ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
     }

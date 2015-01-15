@@ -23,7 +23,7 @@ class AddTicketAttachmentCommand
      * @Assert\NotNull()
      * @Assert\Type(type="array")
      */
-    public $attachments;
+    public $attachmentsInput;
 
     /**
      * @var int

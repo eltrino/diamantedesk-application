@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Diamante\DeskBundle\Api\Command\AttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
@@ -380,7 +379,7 @@ class TicketController extends Controller
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $commandFactory = new CommandFactory();
-        $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
+        $form = $this->createForm(new AttachmentType(), $commandFactory->createAddTicketAttachmentCommand($ticket));
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,
@@ -406,7 +405,7 @@ class TicketController extends Controller
         $response = null;
         $session = $this->get('session');
         $commandFactory = new CommandFactory();
-        $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
+        $form = $this->createForm(new AttachmentType(), $commandFactory->createAddTicketAttachmentCommand($ticket));
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,
@@ -416,17 +415,10 @@ class TicketController extends Controller
 
         try {
             $this->handle($form);
-
-            /** @var AttachmentCommand $command */
             $command = $form->getData();
-
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
-            $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-            $addTicketAttachmentCommand->attachments = $command->attachmentsInput;
-            $addTicketAttachmentCommand->ticketId = $ticket->getId();
-            $ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
-
+            $ticketService->addAttachmentsForTicket($command);
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');
             if ($this->getRequest()->request->get('diam-dropzone')) {
                 $response = new Response();
