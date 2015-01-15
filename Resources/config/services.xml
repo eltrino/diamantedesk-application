@@ -20,12 +20,22 @@
 
     <parameters>
         <parameter key="diamante_embedded_form.class">Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType</parameter>
+        <parameter key="diamante_embedded_form.event_listener.embedded_form.class">Diamante\EmbeddedFormBundle\EventListener\EmbeddedFormListener</parameter>
+        <parameter key="diamante_embedded_form.form.embedded_type_extension.class">Diamante\EmbeddedFormBundle\Form\Extension\EmbeddedFormTypeExtension</parameter>
     </parameters>
 
     <services>
         <service id="diamante_embedded_form.form_type.available_embedded_form" class="%diamante_embedded_form.class%">
             <tag name="oro_embedded_form" label="Diamante Ticket"/>
             <tag name="form.type" alias="diamante_desk_ticket_form_type"/>
+        </service>
+        <service id="diamante_embedded_form.event_listener.embedded_form" class="%diamante_embedded_form.event_listener.embedded_form.class%">
+            <call method="setRequest"><argument id="request" type="service" on-invalid="ignore" strict="false"/></call>
+            <tag name="kernel.event_listener" event="entity_form.render.before" method="addBranchField"/>
+            <tag name="kernel.event_listener" event="oro_embedded_form.form_submit.before" method="onEmbeddedFormSubmit"/>
+        </service>
+        <service id="diamante_embedded_form.form.embedded_type_extension" class="%diamante_embedded_form.form.embedded_type_extension.class%">
+            <tag name="form.type_extension" alias="embedded_form"/>
         </service>
     </services>
 </container>
