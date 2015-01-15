@@ -16,22 +16,57 @@ define([
       },
 
       events : {
-        'click' : "viewClicked"
+        'click' : 'viewClicked'
       },
 
       viewClicked: function(e){
         e.preventDefault();
         e.stopPropagation();
-        this.trigger("ticket:view", this.model);
+        this.trigger('ticket:view', this.model);
       }
     });
 
     List.CompositeView = Marionette.CompositeView.extend({
-      tagName: "table",
+      tagName: 'table',
       template: listTemplate,
-      className: "table table-hover table-bordered",
-      childViewContainer: "tbody",
-      childView: List.ItemView
+      className: 'ticket-list table table-hover table-bordered',
+      childViewContainer: 'tbody',
+      childView: List.ItemView,
+
+      initialize: function(){
+        App.debug(this.collection.state);
+      },
+
+      events : {
+        'click th': 'sortHandle'
+      },
+
+      sortHandle: function(e){
+        var sortKey = e.target.className,
+            order = -1;
+        if(this.collection.state.sortKey == sortKey) {
+          order = this.collection.state.order > 0 ? -1 : 1;
+        }
+        this.trigger('ticket:sort', sortKey, order);
+      },
+
+      templateHelpers: function(){
+        var filterState = this.collection.state;
+        return {
+          sorterState : function(attr){
+            if(filterState.sortKey === attr) {
+              if(filterState.order > 0){
+                return '<i class="fa fa-sort-desc"></i>';
+              } else {
+                return '<i class="fa fa-sort-asc"></i>';
+              }
+            } else {
+              return '<i class="fa fa-sort"></i>';
+            }
+          }
+        };
+      }
+
     });
 
   });

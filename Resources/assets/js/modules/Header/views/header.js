@@ -11,15 +11,14 @@ define([
       template: headerTemplate,
       className: 'container',
 
-      initialize: function(){
-        this.baseUrl = Config.baseUrl;
-        this.basePath = Config.basePath;
+      initialize: function(options){
+        this.options = options;
       },
 
-      serializeData: function(){
+      templateHelpers: function(){
         return {
-          baseUrl: this.baseUrl,
-          basePath: this.basePath
+          baseUrl: this.options.baseUrl,
+          basePath: this.options.basePath
         };
       },
 

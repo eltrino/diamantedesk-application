@@ -20,12 +20,21 @@ define([
     Ticket.Collection = Backbone.PageableCollection.extend({
       url: Config.apiUrl + '/desk/tickets',
       model: Ticket.Model,
+
+      comparator: 'created_at',
+
       state: {
-        pageSize: 10
+        pageSize: 10,
+        sortKey: 'createdAt',
+        order: -1
       },
+
       queryParams: {
-        pageSize : 'perPage'
+        pageSize: 'perPage',
+        sortKey: 'orderByField',
+        order: 'sortingOrder'
       }
+
     });
 
     var API = {

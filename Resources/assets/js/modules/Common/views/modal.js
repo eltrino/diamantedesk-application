@@ -7,24 +7,24 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
       template: modalTemplate,
 
       initialize: function(options){
-        var options = options || {};
-        this.title = options.title || "Modal Window";
+        var opt = options || {};
+        this.title = opt.title || 'Modal Window';
       },
 
       regions : {
         ModalBody : 'div.modal-body'
       },
 
-      serializeData: function(){
+      templateHelpers: function(){
         return {
           title: this.title
         };
       },
 
       events: {
-        'show.bs.modal': "beforeShowModal",
-        'hidden.bs.modal': "hideModal",
-        'click .js-save-btn': "submitModal"
+        'show.bs.modal': 'beforeShowModal',
+        'hidden.bs.modal': 'hideModal',
+        'click .js-save-btn': 'submitModal'
       },
 
       beforeShowModal: function(){

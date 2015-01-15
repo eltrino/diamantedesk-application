@@ -8,9 +8,9 @@ define(['app'], function(App){
 
         var request;
         if(query){
-          request = App.request("ticket:collection:filter", query);
+          request = App.request('ticket:collection:filter', query);
         } else {
-          request = App.request("ticket:collection");
+          request = App.request('ticket:collection');
         }
 
         request.done(function(TicketCollection){
@@ -18,8 +18,17 @@ define(['app'], function(App){
             collection: TicketCollection
           });
 
-          TicketListView.on("childview:ticket:view", function(childView, ticketModel){
-            App.trigger("ticket:view", ticketModel.get('id'));
+          TicketListView.on('childview:ticket:view', function(childView, ticketModel){
+            App.trigger('ticket:view', ticketModel.get('id'));
+          });
+
+          TicketListView.on('ticket:sort', function(sortKey, order){
+            TicketCollection.setSorting(sortKey, order);
+            TicketCollection.fetch({
+              success : function(){
+                TicketListView.render();
+              }
+            });
           });
 
           App.MainRegion.show(TicketListView);
