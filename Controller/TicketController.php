@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
+use Diamante\DeskBundle\Api\Command\AttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
@@ -218,20 +219,15 @@ class TicketController extends Controller
         $response = null;
         $form = $this->createForm(new CreateTicketType(), $command);
         $formView = $form->createView();
-        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
+        $formView->children['attachmentsInput']->vars = array_replace(
+            $formView->children['attachmentsInput']->vars,
+            array('full_name' => 'diamante_ticket_form[attachmentsInput][]')
+        );
         try {
             $this->handle($form);
 
             $command->branch = $command->branch->getId();
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
-
-            $attachments = array();
-            foreach ($command->files as $file) {
-                if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
-                    array_push($attachments, AttachmentInput::createFromUploadedFile($file));
-                }
-            }
-            $command->attachmentsInput = $attachments;
 
             $ticket = $this->get('diamante.ticket.service')->createTicket($command);
 
@@ -269,18 +265,13 @@ class TicketController extends Controller
 
         try {
             $formView = $form->createView();
-            $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_ticket_form[files][]'));
+            $formView->children['attachmentsInput']->vars = array_replace(
+                $formView->children['attachmentsInput']->vars,
+                array('full_name' => 'diamante_ticket_form[attachmentsInput][]')
+            );
             $this->handle($form);
 
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
-
-            $attachments = array();
-            foreach ($command->files as $file) {
-                if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
-                    array_push($attachments, AttachmentInput::createFromUploadedFile($file));
-                }
-            }
-            $command->attachmentsInput = $attachments;
 
             $ticket = $this->get('diamante.ticket.service')->updateTicket($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
@@ -391,7 +382,10 @@ class TicketController extends Controller
         $commandFactory = new CommandFactory();
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
-        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
+        $formView->children['attachmentsInput']->vars = array_replace(
+            $formView->children['attachmentsInput']->vars,
+            array('full_name' => 'diamante_attachment_form[attachmentsInput][]')
+        );
         return array('ticket' => $ticket, 'form' => $formView);
     }
 
@@ -414,7 +408,10 @@ class TicketController extends Controller
         $commandFactory = new CommandFactory();
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAttachmentCommand($ticket));
         $formView = $form->createView();
-        $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_attachment_form[files][]'));
+        $formView->children['attachmentsInput']->vars = array_replace(
+            $formView->children['attachmentsInput']->vars,
+            array('full_name' => 'diamante_attachment_form[attachmentsInput][]')
+        );
         $beforeUploadAttachments = $ticket->getAttachments()->toArray();
 
         try {
@@ -423,15 +420,10 @@ class TicketController extends Controller
             /** @var AttachmentCommand $command */
             $command = $form->getData();
 
-            $attachments = array();
-            foreach ($command->files as $file) {
-                array_push($attachments, AttachmentInput::createFromUploadedFile($file));
-            }
-
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
             $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-            $addTicketAttachmentCommand->attachments = $attachments;
+            $addTicketAttachmentCommand->attachments = $command->attachmentsInput;
             $addTicketAttachmentCommand->ticketId = $ticket->getId();
             $ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
 

@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -46,15 +47,17 @@ class CommentType extends AbstractType
         );
 
         $builder->add(
-            'files',
-            'file',
-            array(
-                'label'    => 'diamante.desk.attachment.entity_plural_label',
-                'required' => false,
-                'attr' => array(
-                    'multiple' => 'multiple'
+            $builder->create(
+                'attachmentsInput',
+                'file',
+                array(
+                    'label'    => 'diamante.desk.attachment.entity_plural_label',
+                    'required' => false,
+                    'attr' => array(
+                        'multiple' => 'multiple'
+                    )
                 )
-            )
+            )->addModelTransformer(new AttachmentTransformer())
         );
     }
 

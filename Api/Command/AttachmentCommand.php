@@ -30,5 +30,5 @@ class AttachmentCommand
      * @Assert\NotNull()
      * @Assert\Type(type="array")
      */
-    public $files;
+    public $attachmentsInput;
 }
