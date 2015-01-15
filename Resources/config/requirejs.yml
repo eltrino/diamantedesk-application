@@ -1,0 +1,3 @@
+config:
+    paths:
+        'diamanteembeddedform/js/embedded-form-watcher': 'bundles/diamanteembeddedform/js/embedded-form-watcher.js'

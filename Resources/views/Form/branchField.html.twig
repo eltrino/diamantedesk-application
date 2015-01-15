@@ -1,3 +1,13 @@
 {% if form.branch is defined %}
     {{ form_row(form.branch) }}
 {% endif %}
+
+<script type="text/javascript">
+    require(['diamanteembeddedform/js/embedded-form-watcher'],
+            function (EmbeddedFormWatcher) {
+                new EmbeddedFormWatcher({
+                    formTypeFieldId: {{ form.formType.vars.id|json_encode|raw }},
+                    branchFieldId: {{ form.branch.vars.id|json_encode|raw }}
+                }).startWatching();
+            });
+</script>
