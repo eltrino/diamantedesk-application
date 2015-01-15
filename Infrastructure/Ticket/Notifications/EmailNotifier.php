@@ -30,6 +30,8 @@ use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 
 class EmailNotifier implements Notifier
 {
+    const DELIMITER = '[[ Please reply above this line ]]';
+
     /**
      * @var \Twig_Environment
      */
@@ -146,7 +148,8 @@ class EmailNotifier implements Notifier
             'changes'       => $changeList,
             'attachments'   => $notification->getAttachments(),
             'user'          => $userFormattedName,
-            'header'        => $notification->getHeaderText()
+            'header'        => $notification->getHeaderText(),
+            'delimiter'     => self::DELIMITER
         );
 
         $txtTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);
