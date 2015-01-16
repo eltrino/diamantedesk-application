@@ -283,6 +283,44 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->comment, $ticket->getComments()->get(0));
     }
 
+    /**
+     * @test
+     */
+    public function thatCommentContainsOnlyLastResponse()
+    {
+        $author  = $this->createAuthor();
+
+        $ticket = $this->createDummyTicket();
+
+        $this->messageReferenceRepository->expects($this->once())
+            ->method('getReferenceByMessageId')
+            ->with($this->equalTo(self::DUMMY_MESSAGE_ID))
+            ->will($this->returnValue($this->messageReference));
+
+        $this->messageReference->expects($this->once())
+            ->method('getTicket')
+            ->will($this->returnValue($ticket));
+
+        $this->commentFactory->expects($this->once())->method('create')->with(
+            $this->equalTo(self::DUMMY_COMMENT_CONTENT),
+            $this->equalTo($ticket),
+            $this->equalTo($author)
+        )->will($this->returnValue($this->comment));
+
+        $this->ticketRepository->expects($this->once())->method('store')
+            ->with($this->equalTo($ticket));
+
+        $rawComment = self::DUMMY_COMMENT_CONTENT
+            . MessageReferenceServiceImpl::DELIMITER_LINE
+            . self::DUMMY_COMMENT_CONTENT
+            . MessageReferenceServiceImpl::DELIMITER_LINE
+            . self::DUMMY_COMMENT_CONTENT;
+
+        $this->messageReferenceService->createCommentForTicket(
+            $rawComment, (string)$author, self::DUMMY_MESSAGE_ID
+        );
+    }
+
     private function createBranch()
     {
         return new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');

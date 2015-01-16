@@ -31,6 +31,8 @@ use Diamante\DeskBundle\Model\User\User;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
+    const DELIMITER_LINE = '[[ Please reply above this line ]]';
+
     /**
      * @var MessageReferenceRepository
      */
@@ -145,6 +147,8 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         }
 
         $author = User::fromString($authorId);
+        $content = $this->cleanupCommentsContent($content);
+
         $comment = $this->commentFactory->create($content, $ticket, $author);
 
         if ($attachments) {
@@ -165,5 +169,23 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     {
         $messageReference = new MessageReference($messageId, $ticket);
         $this->messageReferenceRepository->store($messageReference);
+    }
+
+    /**
+     * Remove everything after first delimiter in message content
+     *
+     * @param string $content
+     * @return string
+     */
+    private function cleanupCommentsContent($content)
+    {
+        $content = quoted_printable_decode($content);
+
+        $position = strpos($content, self::DELIMITER_LINE);
+        if ($position === FALSE) {
+            return $content;
+        }
+
+        return substr($content, 0, $position);
     }
 }

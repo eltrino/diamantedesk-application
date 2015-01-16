@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
@@ -30,8 +31,6 @@ use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 
 class EmailNotifier implements Notifier
 {
-    const DELIMITER = '[[ Please reply above this line ]]';
-
     /**
      * @var \Twig_Environment
      */
@@ -149,7 +148,7 @@ class EmailNotifier implements Notifier
             'attachments'   => $notification->getAttachments(),
             'user'          => $userFormattedName,
             'header'        => $notification->getHeaderText(),
-            'delimiter'     => self::DELIMITER
+            'delimiter'     => MessageReferenceServiceImpl::DELIMITER_LINE
         );
 
         $txtTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);
