@@ -25,6 +25,7 @@
         <parameter key="diamante.branch.entity.factory.class">Diamante\DeskBundle\Model\Branch\BranchFactory</parameter>
         <parameter key="diamante.branch.logo.handler.class">Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler</parameter>
         <parameter key="diamante.branch.service.class">Diamante\DeskBundle\Api\Internal\BranchServiceImpl</parameter>
+        <parameter key="diamante.branch.service.api.class">Diamante\DeskBundle\Api\Internal\BranchApiServiceImpl</parameter>
         <parameter key="diamante.branch_email_configuration.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository</parameter>
         <parameter key="diamante.branch_email_configuration.entity.factory.class">Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory</parameter>
         <parameter key="diamante.branch_email_configuration.service.class">Diamante\DeskBundle\Api\Internal\BranchEmailConfigurationServiceImpl</parameter>
@@ -59,9 +60,11 @@
             <argument type="service" id="diamante.user.service"/>
         </service>
 
-        <service id="diamante.branch.api.service" alias="diamante.branch.service" />
+        <service id="diamante.branch.api.service" class="%diamante.branch.service.api.class%" parent="diamante.branch.service"/>
 
-        <service id="diamante.branch.api.service_oro" alias="diamante.branch.service" />
+        <service id="diamante.branch.api.service_diamante" alias="diamante.branch.api.service" />
+
+        <service id="diamante.branch.api.service_oro" alias="diamante.branch.api.service" />
 
         <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%">
             <argument type="service" id="diamante.branch_email_configuration.entity.factory"/>

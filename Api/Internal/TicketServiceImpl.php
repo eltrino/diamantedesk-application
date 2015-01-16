@@ -14,8 +14,6 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
-use Diamante\ApiBundle\Annotation\ApiDoc;
-use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
@@ -40,14 +38,13 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class TicketServiceImpl implements TicketService, RestServiceInterface
+class TicketServiceImpl implements TicketService
 {
     /**
      * @var TicketRepository
@@ -117,27 +114,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Load Ticket by given ticket id
-     *
-     * @ApiDoc(
-     *  description="Returns a ticket",
-     *  uri="/tickets/{id}.{_format}",
-     *  method="GET",
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Ticket Id"
-     *      }
-     *  },
-     *  statusCodes={
-     *      200="Returned when successful",
-     *      403="Returned when the user is not authorized to see ticket",
-     *      404="Returned when the ticket is not found"
-     *  }
-     * )
-     *
      * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
@@ -150,26 +126,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Load Ticket by given Ticket Key
-     *
-     * @ApiDoc(
-     *  description="Returns a ticket by ticket key",
-     *  uri="/tickets/{key}.{_format}",
-     *  method="GET",
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="key",
-     *          "dataType"="string",
-     *          "description"="Ticket Key"
-     *      }
-     *  },
-     *  statusCodes={
-     *      200="Returned when successful",
-     *      403="Returned when the user is not authorized to see ticket",
-     *      404="Returned when the ticket is not found"
-     *  }
-     * )
-     *
      * @param string $key
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
@@ -211,26 +167,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * List Ticket attachments
-     *
-     * @ApiDoc(
-     *  description="Returns ticket attachments",
-     *  uri="/tickets/{id}/attachments.{_format}",
-     *  method="GET",
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Ticket Id"
-     *      }
-     *  },
-     *  statusCodes={
-     *      200="Returned when successful",
-     *      403="Returned when the user is not authorized to list ticket attachments"
-     *  }
-     * )
-     *
      * @param int $id
      * @return array|Attachment[]
      */
@@ -243,33 +179,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Retrieves Ticket Attachment
-     *
-     * @ApiDoc(
-     *  description="Returns a ticket attachment",
-     *  uri="/tickets/{ticketId}/attachments/{attachmentId}.{_format}",
-     *  method="GET",
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="ticketId",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Ticket Id"
-     *      },
-     *      {
-     *          "name"="attachmentId",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Ticket attachment Id"
-     *      }
-     *  },
-     *  statusCodes={
-     *      200="Returned when successful",
-     *      403="Returned when the user is not authorized to see ticket attachment",
-     *      404="Returned when the attachment is not found"
-     *  }
-     * )
-     *
      * @param RetrieveTicketAttachmentCommand $command
      * @return \Diamante\DeskBundle\Entity\Attachment
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
@@ -314,33 +223,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Remove Attachment from Ticket
-     *
-     * @ApiDoc(
-     *  description="Remove ticket attachment",
-     *  uri="/tickets/{ticketId}/attachments/{attachmentId}.{_format}",
-     *  method="DELETE",
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="ticketId",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Ticket Id"
-     *      },
-     *      {
-     *          "name"="attachmentId",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Ticket attachment Id"
-     *      }
-     *  },
-     *  statusCodes={
-     *      204="Returned when successful",
-     *      403="Returned when the user is not authorized to delete attachment",
-     *      404="Returned when the ticket or attachment is not found"
-     *  }
-     * )
-     *
      * @param RemoveTicketAttachmentCommand $command
      * @return string $ticketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
@@ -513,27 +395,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Delete Ticket by id
-     *
-     * @ApiDoc(
-     *  description="Delete ticket",
-     *  uri="/tickets/{id}.{_format}",
-     *  method="DELETE",
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Ticket Id"
-     *      }
-     *  },
-     *  statusCodes={
-     *      204="Returned when successful",
-     *      403="Returned when the user is not authorized to delete ticket",
-     *      404="Returned when the ticket is not found"
-     *  }
-     * )
-     *
      * @param $id
      * @return null
      * @throws \RuntimeException if unable to load required ticket
@@ -547,26 +408,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Delete Ticket by key
-     *
-     * @ApiDoc(
-     *  description="Delete ticket by key",
-     *  uri="/tickets/{key}.{_format}",
-     *  method="DELETE",
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="key",
-     *          "dataType"="string",
-     *          "description"="Ticket Key"
-     *      }
-     *  },
-     *  statusCodes={
-     *      204="Returned when successful",
-     *      403="Returned when the user is not authorized to delete ticket",
-     *      404="Returned when the ticket is not found"
-     *  }
-     * )
-     *
      * @param string $key
      * @return void
      */
@@ -636,30 +477,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
 
     /**
      * Update certain properties of the Ticket
-     *
-     * @ApiDoc(
-     *  description="Update ticket",
-     *  uri="/tickets/{id}.{_format}",
-     *  method={
-     *      "PUT",
-     *      "PATCH"
-     *  },
-     *  resource=true,
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Branch Id"
-     *      }
-     *  },
-     *  statusCodes={
-     *      200="Returned when successful",
-     *      403="Returned when the user is not authorized to update ticket",
-     *      404="Returned when the branch is not found"
-     *  }
-     * )
-     *
      * @param Command\UpdatePropertiesCommand $command
      * @return Ticket
      */
@@ -695,18 +512,6 @@ class TicketServiceImpl implements TicketService, RestServiceInterface
      * Retrieves list of all Tickets. Performs filtering of tickets if provided with criteria as GET parameters.
      * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
      * Time filtering values should be converted to UTC
-     *
-     * @ApiDoc(
-     *  description="Returns all tickets.",
-     *  uri="/tickets.{_format}",
-     *  method="GET",
-     *  resource=true,
-     *  statusCodes={
-     *      200="Returned when successful",
-     *      403="Returned when the user is not authorized to list tickets"
-     *  }
-     * )
-     *
      * @param Command\Filter\FilterTicketsCommand $ticketFilterCommand
      * @return Ticket[]
      */

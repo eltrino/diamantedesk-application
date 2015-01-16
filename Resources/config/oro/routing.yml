@@ -4,7 +4,7 @@ diamante_desk_bundle:
     prefix:       /desk
 
 diamante_desk_api_branch:
-    resource:     diamante.branch.api.service
+    resource:     diamante.branch.api.service_diamante
     type:         diamante_rest_service
     prefix:       /api/diamante/rest/{version}/desk/
     requirements:
