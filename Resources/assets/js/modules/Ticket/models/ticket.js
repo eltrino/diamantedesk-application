@@ -14,25 +14,27 @@ define([
         status: 'open',
         source: 'web'
       }
-
     });
 
     Ticket.Collection = Backbone.PageableCollection.extend({
       url: Config.apiUrl + '/desk/tickets',
       model: Ticket.Model,
 
-      comparator: 'created_at',
-
       state: {
         pageSize: 10,
         sortKey: 'createdAt',
-        order: -1
+        order: -1,
+        totalPages: 2  //WARNING
       },
 
       queryParams: {
         pageSize: 'perPage',
         sortKey: 'orderByField',
         order: 'sortingOrder'
+      },
+
+      setFilter: function(query) {
+        this.params = { subject : query };
       }
 
     });
@@ -40,10 +42,12 @@ define([
     var API = {
       getTicketCollection: function(query) {
         var tickets = new Ticket.Collection(),
-            defer = $.Deferred(),
-            data = query ? { subject : query } : null;
+            defer = $.Deferred();
+        if(query){
+          tickets.setFilter(query);
+        }
         tickets.fetch({
-          data : data,
+          data : tickets.params,
           success : function(data){
             defer.resolve(data);
           }
@@ -69,7 +73,7 @@ define([
       return API.getTicketCollection();
     });
 
-    App.reqres.setHandler("ticket:collection:filter", function(query){
+    App.reqres.setHandler("ticket:collection:search", function(query){
       return API.getTicketCollection(query);
     });
 

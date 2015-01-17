@@ -4,34 +4,53 @@ define(['app'], function(App){
 
     List.Controller = function(query){
 
-      require(['Ticket/models/ticket', 'Ticket/views/list'], function(){
+      require([
+        'Ticket/models/ticket',
+        'Ticket/views/list'], function(){
 
         var request;
         if(query){
-          request = App.request('ticket:collection:filter', query);
+          request = App.request('ticket:collection:search', query);
+          App.Header.trigger('set:search', query);
         } else {
           request = App.request('ticket:collection');
         }
 
-        request.done(function(TicketCollection){
-          var TicketListView = new List.CompositeView({
-            collection: TicketCollection
+        request.done(function(ticketCollection){
+          var ticketListView = new List.PaginatedView({
+            collection: ticketCollection
           });
 
-          TicketListView.on('childview:ticket:view', function(childView, ticketModel){
+          ticketListView.mainView.on('childview:ticket:view', function(childView, ticketModel){
             App.trigger('ticket:view', ticketModel.get('id'));
           });
 
-          TicketListView.on('ticket:sort', function(sortKey, order){
-            TicketCollection.setSorting(sortKey, order);
-            TicketCollection.fetch({
+          ticketListView.mainView.on('ticket:sort', function(sortKey, order){
+            ticketCollection.setSorting(sortKey, order);
+            ticketCollection.fetch({
+              data : ticketCollection.params,
               success : function(){
-                TicketListView.render();
+                ticketListView.mainView.render();
               }
             });
           });
 
-          App.MainRegion.show(TicketListView);
+          ticketListView.on('page:change', function(page){
+            ticketCollection.getPage(page);
+            ticketCollection.fetch({
+              data : ticketCollection.params,
+              success : function(){
+                ticketListView.pagerView.model.set(ticketCollection.state);
+                ticketListView.mainView.render();
+              }
+            });
+          });
+
+          ticketListView.on('destroy', function(){
+            App.Header.trigger('set:search', null);
+          });
+
+          App.mainRegion.show(ticketListView);
         });
 
       });

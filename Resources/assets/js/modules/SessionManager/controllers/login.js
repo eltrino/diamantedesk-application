@@ -14,7 +14,7 @@ define(['app'], function(App){
           this.model.login(data);
         });
 
-        App.MainRegion.show(loginView);
+        App.mainRegion.show(loginView);
 
       });
 

@@ -12,7 +12,7 @@ define([
       Header.on('set:search', function(query){
         View.ui.searchInput.val(query);
       });
-      App.HeaderRegion.show(View);
+      App.headerRegion.show(View);
     });
 
     App.on('session:login:success', function(){

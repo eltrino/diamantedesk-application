@@ -2,7 +2,7 @@ define([
   'app',
   'config'], function(App, Config){
 
-  return App.module("Ticket.View.Comment", function(Comment, App, Backbone, Marionette, $, _){
+  return App.module('Ticket.View.Comment', function(Comment, App, Backbone, Marionette, $, _){
 
     Comment.Model = Backbone.Model.extend({
       urlRoot : Config.apiUrl + '/desk/comments',

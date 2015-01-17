@@ -23,14 +23,14 @@ define([
       },
 
       ui : {
-        "createTicketButton" : ".js-create-ticket",
-        "searchForm" : ".js-search-form",
-        "searchInput" : ".js-search-input"
+        'createTicketButton' : '.js-create-ticket',
+        'searchForm' : '.js-search-form',
+        'searchInput' : '.js-search-input'
       },
 
       events : {
-        "click @ui.createTicketButton" : "createTicketHandler",
-        "submit @ui.searchForm" : "searchTicketHandler"
+        'click @ui.createTicketButton' : 'createTicketHandler',
+        'submit @ui.searchForm' : 'searchTicketHandler'
       },
 
       createTicketHandler : function(e){

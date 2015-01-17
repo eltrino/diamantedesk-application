@@ -12,7 +12,7 @@ define([
 
     Create.ModalView = Modal.LayoutView.extend({
       submitModal: function(){
-        this.ModalBody.currentView.submitForm();
+        this.modalBody.currentView.submitForm();
         this.trigger('modal:submit');
       }
     });

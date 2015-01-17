@@ -5,27 +5,27 @@ define(['app'], function(App){
     Form.Controller = function(options){
       require(['Comment/models/comment', 'Comment/views/form'], function(Models, Form){
 
-        var FormView = new Form.ItemView({});
+        var formView = new Form.ItemView({});
 
-        FormView.on('form:submit', function(data){
-          var CommentModel = new Models.Model({},{
+        formView.on('form:submit', function(data){
+          var commentModel = new Models.Model({},{
                 ticket : options.ticket
               });
-          App.request("user:model:current").done(function(user){
-            CommentModel.set({
+          App.request('user:model:current').done(function(user){
+            commentModel.set({
               'author': 'oro_' + user.get('id'),
               'authorFullName' : user.get('firstName') + ' ' + user.get('lastName')
             }, { 'silent': true });
-            CommentModel.save(data, {
+            commentModel.save(data, {
               success : function(model){
                 options.collection.add(model);
-                FormView.clearForm();
+                formView.clearForm();
               }
             });
           });
         });
 
-        options.parentRegion.show(FormView);
+        options.parentRegion.show(formView);
 
       });
     };

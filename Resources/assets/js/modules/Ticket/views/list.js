@@ -1,12 +1,13 @@
 define([
   'app',
+  'Common/views/pagination',
   'tpl!../templates/list-item.ejs',
-  'tpl!../templates/list.ejs'], function(App, listItemTemplate, listTemplate){
+  'tpl!../templates/list.ejs'], function(App,Pagination, listItemTemplate, listTemplate){
 
   return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
     List.ItemView = Marionette.ItemView.extend({
-      tagName: "tr",
+      tagName: 'tr',
       template: listItemTemplate,
 
       templateHelpers: function(){
@@ -32,10 +33,6 @@ define([
       className: 'ticket-list table table-hover table-bordered',
       childViewContainer: 'tbody',
       childView: List.ItemView,
-
-      initialize: function(){
-        App.debug(this.collection.state);
-      },
 
       events : {
         'click th': 'sortHandle'
@@ -67,6 +64,10 @@ define([
         };
       }
 
+    });
+
+    List.PaginatedView = Pagination.LayoutView.extend({
+      MainView: List.CompositeView
     });
 
   });

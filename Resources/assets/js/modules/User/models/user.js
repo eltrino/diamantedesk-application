@@ -2,7 +2,7 @@ define([
   'app',
   'config'], function(App, Config){
 
-  return App.module("User", function(User, App, Backbone, Marionette, $, _){
+  return App.module('User', function(User, App, Backbone, Marionette, $, _){
 
     var currentUser,
         userCache = [],
@@ -59,15 +59,15 @@ define([
       }
     };
 
-    App.reqres.setHandler("user:model:current", function(){
+    App.reqres.setHandler('user:model:current', function(){
       return API.getUserModelByName(App.session.get('username'), true);
     });
 
-    App.reqres.setHandler("user:model:username", function(username){
+    App.reqres.setHandler('user:model:username', function(username){
       return API.getUserModelByName(username);
     });
 
-    App.reqres.setHandler("user:model", function(id){
+    App.reqres.setHandler('user:model', function(id){
       return API.getUserModelById(id);
     });
 

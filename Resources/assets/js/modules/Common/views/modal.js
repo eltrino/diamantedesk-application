@@ -2,6 +2,8 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
 
   return App.module('Common.Modal', function(Modal, App, Backbone, Marionette, $, _){
 
+    var body = $('body');
+
     Modal.LayoutView = Marionette.LayoutView.extend({
       className: 'modal fade',
       template: modalTemplate,
@@ -12,7 +14,7 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
       },
 
       regions : {
-        ModalBody : 'div.modal-body'
+        modalBody : 'div.modal-body'
       },
 
       templateHelpers: function(){
@@ -28,11 +30,11 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
       },
 
       beforeShowModal: function(){
-        $('body').addClass('blured');
+        body.addClass('blured');
       },
 
       hideModal: function(){
-        $('body').removeClass('blured');
+        body.removeClass('blured');
         this.trigger('modal:closed');
         this.destroy();
       },

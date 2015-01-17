@@ -5,10 +5,10 @@ define(['app'], function(App){
     Form.ItemView = Marionette.ItemView.extend({
 
       ui : {
-        "submitButton" : ".js-submit"
+        'submitButton' : '.js-submit'
       },
       events: {
-        "click @ui.submitButton" : "submitForm"
+        'click @ui.submitButton' : 'submitForm'
       },
 
       submitForm: function(e){

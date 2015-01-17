@@ -1,9 +1,12 @@
-define(['app', 'User/models/user', '../common/wsse', 'config'], function(App, User, Wsse, Config) {
+define([
+  'app',
+  'User/models/user',
+  '../common/wsse'], function(App, User, Wsse) {
 
   return App.module('SessionManager', function(SessionManager, App, Backbone, Marionette, $, _){
 
-    var username = "admin";
-    var password = "2ed9b7ae9d680aa1953f80af4a6e92cc81036c00";
+    var username = 'admin';
+    var password = '5c76179545225078a3ba580dff644b0113faf9dc';
 
 
     SessionManager.SessionModel = Backbone.Model.extend({
@@ -58,7 +61,7 @@ define(['app', 'User/models/user', '../common/wsse', 'config'], function(App, Us
         var defer = $.Deferred();
         if(this.get('username') && this.get('password')){
 
-          App.request("user:model:current")
+          App.request('user:model:current')
             .done(function(){defer.resolve();})
             .fail(function(){defer.reject();});
 

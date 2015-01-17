@@ -22,12 +22,12 @@ define([
       },
 
       modelEvents: {
-        "login:success" : "onLoginSuccess",
-        "login:fail" : "onLoginFail"
+        'login:success' : 'onLoginSuccess',
+        'login:fail' : 'onLoginFail'
       },
 
       events: {
-        "click .js-submit" : "submitForm"
+        'click .js-submit' : 'submitForm'
       },
 
       submitForm: function(e){

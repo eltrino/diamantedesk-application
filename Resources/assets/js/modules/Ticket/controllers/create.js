@@ -25,12 +25,12 @@ define(['app'], function(App){
           }
         });
 
-        newTicketView.on('form:submit', function(data){
-          data.branch = 1;
-          App.request("user:model:current").done(function(user){
-            data.reporter =  'oro_' + user.get('id');
-            data.assignee =  user.get('id');
-            newTicketModel.save(data, {
+        newTicketView.on('form:submit', function(attr){
+          attr.branch = 1;
+          App.request('user:model:current').done(function(user){
+            attr.reporter =  'oro_' + user.get('id');
+            attr.assignee =  user.get('id');
+            newTicketModel.save(attr, {
               success : function(resultModel){
                 isSuccess = true;
                 App.trigger('ticket:view', resultModel.get('id'));
@@ -41,8 +41,8 @@ define(['app'], function(App){
 
         });
 
-        App.DialogRegion.show(modalCreateView);
-        modalCreateView.ModalBody.show(newTicketView);
+        App.dialogRegion.show(modalCreateView);
+        modalCreateView.modalBody.show(newTicketView);
 
       });
 

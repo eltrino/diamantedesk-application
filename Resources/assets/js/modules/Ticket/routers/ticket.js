@@ -6,11 +6,11 @@ define(['app'], function(App){
 
     Ticket.Router = Marionette.AppRouter.extend({
       appRoutes: {
-        "tickets" : "listTickets",
-        "tickets/create" : "createTicket",
-        "tickets/:id" : "viewTicket",
-        "tickets/:id/edit" : "editTicket",
-        "tickets/search/:query" : "searchTicket"
+        'tickets' : 'listTickets',
+        'tickets/create' : 'createTicket',
+        'tickets/:id' : 'viewTicket',
+        'tickets/:id/edit' : 'editTicket',
+        'tickets/search/:query' : 'searchTicket'
       }
     });
 
@@ -37,7 +37,6 @@ define(['app'], function(App){
       },
       searchTicket: function(query){
         require(['Ticket/controllers/list'], function(List){
-          App.Header.trigger('set:search', query);
           List.Controller(query);
         });
       }
@@ -45,7 +44,7 @@ define(['app'], function(App){
 
     App.on('ticket:list', function(){
       App.debug('info', 'Event "ticket:list" fired');
-      App.navigate("tickets");
+      App.navigate('tickets');
       API.listTickets();
     });
 
@@ -57,20 +56,20 @@ define(['app'], function(App){
 
     App.on('ticket:create', function(){
       App.debug('info', 'Event "ticket:create" fired');
-      App.navigate("tickets/create");
+      App.navigate('tickets/create');
       API.createTicket();
     });
 
     App.on('ticket:edit', function(id){
       App.debug('info', 'Event "ticket:edit" fired');
-      App.navigate("tickets/"+ id + "/edit");
+      App.navigate('tickets/'+ id + '/edit');
       API.editTicket(id);
     });
 
     App.on('ticket:search', function(query){
       App.debug('info', 'Event "ticket:search" fired');
       if(query){
-        App.navigate("tickets/search/" + query);
+        App.navigate('tickets/search/' + query);
         API.searchTicket(query);
       } else {
         App.trigger('ticket:list');

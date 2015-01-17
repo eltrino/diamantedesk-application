@@ -4,22 +4,25 @@ define(['app'], function(App){
 
     List.Controller = function(options){
 
-      require(['Comment/models/comment', 'Comment/controllers/form' , 'Comment/views/list'], function(Models, Form){
+      require([
+        'Comment/models/comment',
+        'Comment/controllers/form',
+        'Comment/views/list'], function(Models, Form){
 
-        var Ticket = options.ticket,
-            CommentCollection = new Models.Collection(Ticket.get('comments')),
-            CommentCollectionView = new List.CollectionView({
-              collection : CommentCollection
+        var ticket = options.ticket,
+            commentCollection = new Models.Collection(ticket.get('comments')),
+            commentCollectionView = new List.CollectionView({
+              collection : commentCollection
             }),
-            CommentLayoutView = new List.LayoutView({});
+            commentLayoutView = new List.LayoutView({});
 
-        options.parentRegion.show(CommentLayoutView);
-        CommentLayoutView.ListRegion.show(CommentCollectionView);
+        options.parentRegion.show(commentLayoutView);
+        commentLayoutView.listRegion.show(commentCollectionView);
 
         Form.Controller({
-          ticket: Ticket,
-          parentRegion : CommentLayoutView.FormRegion,
-          collection : CommentCollection
+          ticket: ticket,
+          parentRegion : commentLayoutView.formRegion,
+          collection : commentCollection
         });
 
       });

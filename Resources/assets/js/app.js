@@ -20,13 +20,23 @@ define([
   var App = new Marionette.Application({
 
     regions : {
-      HeaderRegion: '#header',
-      MainRegion:   '#content',
-      FooterRegion: '#footer',
-      DialogRegion: '#dialog'
+      headerRegion: '#header',
+      mainRegion:   '#content',
+      footerRegion: '#footer',
+      dialogRegion: '#dialog'
     }
 
   });
+
+  App.debug = function(type){
+    if(Config.isDev) {
+      if(arguments.length > 1){
+        console[type].apply(console, [].slice.call(arguments, 1));
+      } else {
+        console.log.apply(console, arguments);
+      }
+    }
+  };
 
   App.navigate = function(route, options){
     if(Backbone.History.started){
@@ -38,14 +48,8 @@ define([
     }
   };
 
-  App.debug = function(type){
-    if(Config.isDev) {
-      if(arguments.length > 1){
-        console[type].apply(console, [].slice.call(arguments, 1));
-      } else {
-        console.log.apply(console, arguments);
-      }
-    }
+  App.back = function(){
+    Backbone.history.history.back();
   };
 
   App.getCurrentRoute = function(){

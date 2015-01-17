@@ -6,14 +6,14 @@ define(['app','./routers/ticket'], function(App){
 
     Ticket.on('start', function(){
       Backbone.history.loadUrl();
-      if(App.getCurrentRoute() === ""){
+      if(App.getCurrentRoute() === ''){
         App.trigger('ticket:list');
       }
     });
 
     App.on('session:login:success', function(){
       Ticket.start();
-      if(App.getCurrentRoute() === "login"){
+      if(App.getCurrentRoute() === 'login'){
         App.trigger('ticket:list');
       }
     });

@@ -8,7 +8,7 @@ define(['app'], function(App){
         'Ticket/models/ticket',
         'Ticket/views/edit'], function(Models, EditView){
 
-        App.request("ticket:model", id).done(function(editTicketModel){
+        App.request('ticket:model', id).done(function(editTicketModel){
 
           var editTicketView = new Edit.ItemView({
                 model: editTicketModel
@@ -42,14 +42,14 @@ define(['app'], function(App){
             }
           });
 
-          App.debug('log', App.MainRegion.hasView());
-          App.DialogRegion.show(modalEditView);
-          modalEditView.ModalBody.show(editTicketView);
+          App.debug('log', App.mainRegion.hasView());
+          App.dialogRegion.show(modalEditView);
+          modalEditView.modalBody.show(editTicketView);
 
         }).fail(function(){
 
           var ticketMissingView = new Edit.MissingView();
-          App.MainRegion.show(ticketMissingView);
+          App.mainRegion.show(ticketMissingView);
 
         });
 

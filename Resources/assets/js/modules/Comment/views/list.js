@@ -9,8 +9,8 @@ define([
       template : listTemplate,
 
       regions : {
-        ListRegion : '#comments-list',
-        FormRegion : '#comments-form'
+        listRegion : '#comments-list',
+        formRegion : '#comments-form'
       }
 
     });

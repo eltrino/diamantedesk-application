@@ -6,12 +6,12 @@ define(['app'], function(App){
 
       require(['Ticket/models/ticket', 'Ticket/views/view'], function(){
 
-        App.request("ticket:model", id).done(function(TicketModel){
+        App.request('ticket:model', id).done(function(ticketModel){
 
-          var TicketView = new View.ItemView({
-              model : TicketModel
+          var ticketView = new View.ItemView({
+              model : ticketModel
           });
-          TicketView.on('show', function(){
+          ticketView.on('show', function(){
             require(['Comment'], function(Comment){
               Comment.start({
                 ticket : this.model,
@@ -19,17 +19,17 @@ define(['app'], function(App){
               });
             }.bind(this));
           });
-          TicketView.on('destroy', function(){
+          ticketView.on('destroy', function(){
             require(['Comment'], function(Comment){
               Comment.stop();
             });
           });
-          App.MainRegion.show(TicketView);
+          App.mainRegion.show(ticketView);
 
         }).fail(function(){
 
           var missingView = new View.MissingView();
-          App.MainRegion.show(missingView);
+          App.mainRegion.show(missingView);
 
         });
 

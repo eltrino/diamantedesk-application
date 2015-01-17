@@ -24,13 +24,13 @@ define([
       },
 
       events : {
-        "click .js-ticket-list" : "listTickets",
-        "click .js-edit-ticket" : "editTicket"
+        'click .js-ticket-list' : 'listTickets',
+        'click .js-edit-ticket' : 'editTicket'
       },
 
       listTickets : function(e){
         e.preventDefault();
-        App.trigger('ticket:list');
+        App.back();
       },
 
       editTicket : function(e){
