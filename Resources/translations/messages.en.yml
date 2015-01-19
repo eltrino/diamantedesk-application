@@ -184,6 +184,7 @@ diamante:
           updated:             Updated
           not_available:       N/A
           not_defined:         Not defined
+          no_description:      No description
           delete_confirmation: Confirm Deletion
           filters:             Filters
 
