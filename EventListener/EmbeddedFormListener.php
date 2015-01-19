@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Oro\Bundle\EmbeddedFormBundle\Event\EmbeddedFormSubmitBeforeEvent;
 use Oro\Bundle\UIBundle\Event\BeforeFormRenderEvent;
+use Oro\Bundle\EntityExtendBundle\Event\ValueRenderEvent;
+
 
 use Diamante\DiamanteDeskBundle\Model\BranchAwareInterface;
 
@@ -46,7 +48,7 @@ class EmbeddedFormListener
              */
             if (!empty($data['dataBlocks'])) {
                 if (isset($data['dataBlocks'][0]['subblocks'])) {
-                    $data['dataBlocks'][0]['subblocks'][0]['data'][] = $branchField;
+                    array_splice($data['dataBlocks'][0]['subblocks'][0]['data'], 1, 0, $branchField);
                 }
             }
 
@@ -68,5 +70,13 @@ class EmbeddedFormListener
             $branch = $form->getBranch();
             $data->setBranch($branch);
         }
+    }
+
+    /**
+     * $param ValueRenderEvent $event
+     */
+    public function showBranchFieldForTicketType(ValueRenderEvent $event)
+    {
+
     }
 }

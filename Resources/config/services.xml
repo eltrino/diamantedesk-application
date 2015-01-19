@@ -33,6 +33,7 @@
             <call method="setRequest"><argument id="request" type="service" on-invalid="ignore" strict="false"/></call>
             <tag name="kernel.event_listener" event="entity_form.render.before" method="addBranchField"/>
             <tag name="kernel.event_listener" event="oro_embedded_form.form_submit.before" method="onEmbeddedFormSubmit"/>
+            <tag name="kernel.event_listener" event="oro.entity_extend_event.before_value_render" method="showBranchFieldForTicketType"/>
         </service>
         <service id="diamante_embedded_form.form.embedded_type_extension" class="%diamante_embedded_form.form.embedded_type_extension.class%">
             <tag name="form.type_extension" alias="embedded_form"/>
