@@ -451,15 +451,9 @@ class TicketController extends Controller
                     $response->setStatusCode(500);
                 }
             } else {
-                $response = $this->get('oro_ui.router')->actionRedirect(
-                    array(
-                        'route' => 'diamante_attachment_attach',
-                        'parameters' => array(),
-                    ),
-                    array(
-                        'route' => 'diamante_ticket_view',
-                        'parameters' => array('key' => (string) $ticket->getKey())
-                    )
+                $response = $this->get('oro_ui.router')->redirectAfterSave(
+                    ['route' => 'diamante_attachment_attach', 'parameters' => []],
+                    ['route' => 'diamante_ticket_view', 'parameters' => ['key' => (string) $ticket->getKey()]]
                 );
             }
         } catch (MethodNotAllowedException $e) {
