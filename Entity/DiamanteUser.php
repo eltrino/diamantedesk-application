@@ -43,7 +43,7 @@ class DiamanteUser extends \Diamante\DeskBundle\Model\User\DiamanteUser
     protected $contact;
 
     /**
-     * Unique username for Api User
+     * Unique username for Diamante User
      *
      * @var string
      *

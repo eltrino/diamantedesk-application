@@ -14,29 +14,19 @@
  */
 namespace Diamante\DeskBundle\Model\User;
 
-use Diamante\DeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 
-interface DiamanteUserRepository extends Repository
+class DiamanteUserFactory extends AbstractEntityFactory
 {
     /**
-     * Finds a user by username
-     *
-     * @param  string $username
-     * @return DiamanteUser
-     */
-    public function findUserByUsername($username);
-
-    /**
-     * Finds a user by email
      * @param $email
-     * @return DiamanteUser
+     * @param $username
+     * @param null $firstName
+     * @param null $lastName
+     * @return mixed
      */
-    public function findUserByEmail($email);
-
-    /**
-     * @param $query
-     * @param array $fields
-     * @return DiamanteUser[]
-     */
-    public function searchByInput($query, array $fields);
-}
+    public function create($email, $username, $firstName = null, $lastName = null)
+    {
+        return new $this->entityClassName($email, $username, $firstName, $lastName);
+    }
+} 

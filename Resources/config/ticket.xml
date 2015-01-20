@@ -56,8 +56,8 @@
         <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.service"/>
             <argument type="service" id="diamante.branch_email_configuration.service"/>
-            <argument type="service" id="diamante.api.user.repository" />
-            <argument type="service" id="diamante.api.user.entity.factory" />
+            <argument type="service" id="diamante.user.repository" />
+            <argument type="service" id="diamante.user_factory" />
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="email_processing.strategy" />
         </service>
