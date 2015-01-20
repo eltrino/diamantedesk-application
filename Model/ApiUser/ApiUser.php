@@ -41,12 +41,13 @@ class ApiUser implements Entity, UserInterface
     protected $salt;
 
     /**
-     * @var DiamanteUser
+     * @var string
      */
-    protected $diamanteUser;
+    protected $username;
 
-    public function __construct($password = null, $salt = null)
+    public function __construct($username, $password, $salt = null)
     {
+        $this->username  = $username;
         $this->password  = $password;
         $this->salt      = $salt;
     }
@@ -60,21 +61,11 @@ class ApiUser implements Entity, UserInterface
     }
 
     /**
-     * Returns the username used to authenticate the user.
-     *
-     * @return string The username
+     * @return string
      */
     public function getUsername()
     {
-        return 'username';
-    }
-
-    /**
-     * @return DiamanteUser
-     */
-    public function getDiamanteUser()
-    {
-        return $this->diamanteUser;
+        return $this->username;
     }
 
     /**
@@ -93,6 +84,9 @@ class ApiUser implements Entity, UserInterface
         return $this->salt;
     }
 
+    /**
+     * @return array
+     */
     public function getRoles()
     {
         return $this->roles;

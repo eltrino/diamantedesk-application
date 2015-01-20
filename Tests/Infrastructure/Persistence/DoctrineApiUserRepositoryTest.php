@@ -89,36 +89,6 @@ class DoctrineApiUserRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($apiUser, $retrievedApiUser);
     }
 
-    /**
-     * @test
-     */
-    public function thatApiUserRetrievesByEmail()
-    {
-        $email = 'test_email';
-        $apiUser = $this->getApiUser();
-
-        $this->em->expects($this->once())
-            ->method('getUnitOfWork')
-            ->will($this->returnValue($this->unitOfWork));
-
-        $this->unitOfWork->expects($this->once())
-            ->method('getEntityPersister')
-            ->with($this->equalTo(self::DUMMY_CLASS_NAME))
-            ->will($this->returnValue($this->entityPersister));
-
-        $this->entityPersister->expects($this->once())
-            ->method('load')
-            ->with(
-                $this->equalTo(array('email' => $email)), $this->equalTo(null), $this->equalTo(null), array(), $this->equalTo(0),
-                $this->equalTo(1), $this->equalTo(null)
-            )->will($this->returnValue($apiUser));
-
-        $retrievedApiUser = $this->repository->findOneBy(array('email' => $email));
-
-        $this->assertNotNull($retrievedApiUser);
-        $this->assertEquals($apiUser, $retrievedApiUser);
-    }
-
     private function getApiUser()
     {
         $apiUser = new ApiUser(

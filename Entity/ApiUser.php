@@ -15,10 +15,9 @@
 namespace Diamante\ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Diamante\DeskBundle\Entity\DiamanteUser;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository")
  * @ORM\Table(name="diamante_api_user")
  */
 class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
@@ -33,21 +32,20 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
     protected $id;
 
     /**
-     * Diamante User
+     * Unique username for Api User
      *
-     * @var DiamanteUser
+     * @var string
      *
-     * @ORM\OneToOne(targetEntity="\Diamante\DeskBundle\Entity\DiamanteUser")
-     * @ORM\JoinColumn(name="diamante_user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\Column(type="string", length=255, unique=true)
      */
-    protected $diamanteUser;
+    protected $username;
 
     /**
      * Encrypted password. Must be persisted.
      *
      * @var string
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     protected $password;
 
