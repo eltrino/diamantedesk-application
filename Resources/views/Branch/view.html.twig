@@ -74,17 +74,19 @@
         }]
     %}
 
+    {% set description = entity.description|escape('html')|nl2br %}
     {% set dataBlocks = dataBlocks|merge([{
         'title': 'diamante.desk.common.description'|trans,
         'subblocks':[{
             'title': null,
-            'data': [entity.description|escape('html')|nl2br]}]
+            'data': [description ? description : 'diamante.desk.common.no_description'|trans]}]
         }]
     ) %}
 
     {% if branchEmailConfiguration %}
-        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', EA.email_address_simple(branchEmailConfiguration.supportAddress))] %}
-        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains)]) %}
+        {% set supportAdress = EA.email_address_simple(branchEmailConfiguration.supportAddress) %}
+        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', supportAdress ? supportAdress : 'diamante.desk.common.not_defined'|trans)] %}
+        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains ? branchEmailConfiguration.customerDomains : 'diamante.desk.common.not_defined'|trans)]) %}
 
         {% set dataBlocks = dataBlocks|merge([{
             'title': 'Email Configuration',

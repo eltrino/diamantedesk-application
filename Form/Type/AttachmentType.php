@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -23,16 +24,17 @@ class AttachmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'files',
-            'file',
-            array(
-                'label' => 'diamante.desk.attachment.file',
-                'required' => true,
-                'attr' => array(
-//                    "accept" => "image/*",
-                    'multiple' => 'multiple'
+            $builder->create(
+                'attachmentsInput',
+                'file',
+                array(
+                    'label' => 'diamante.desk.attachment.file',
+                    'required' => true,
+                    'attr' => array(
+                        'multiple' => 'multiple'
+                    )
                 )
-            )
+            )->addModelTransformer(new AttachmentTransformer())
         );
     }
 
@@ -43,7 +45,7 @@ class AttachmentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\AttachmentCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand',
                 'intention' => 'attachment',
                 'cascade_validation' => true
             )

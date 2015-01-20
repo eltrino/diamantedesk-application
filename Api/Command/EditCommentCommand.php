@@ -32,15 +32,15 @@ class EditCommentCommand
     public $content;
 
     /**
-     * @Assert\Type(type="array")
-     */
-    public $files;
-
-    /**
      * @Assert\Type(type="object")
      */
     public $attachmentList;
 
+    /**
+     * @var array
+     * @Assert\NotNull()
+     * @Assert\Type(type="array")
+     */
     public $attachmentsInput;
 
     /**
