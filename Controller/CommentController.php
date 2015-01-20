@@ -53,7 +53,7 @@ class CommentController extends Controller
      *
      * @Template("DiamanteDeskBundle:Comment:edit.html.twig")
      *
-     * @param Ticket $id
+     * @param int $id
      * @return array
      */
     public function createAction($id)
@@ -62,7 +62,6 @@ class CommentController extends Controller
         $command = $this->get('diamante.command_factory')
             ->createCommentCommandForCreate($ticket, new User($this->getUser()->getId(), User::TYPE_ORO));
         return $this->edit($command, function($command) {
-            $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')
                 ->postNewCommentForTicket($command);
         }, $ticket);
@@ -86,25 +85,8 @@ class CommentController extends Controller
         $command = $this->get('diamante.command_factory')
             ->createCommentCommandForUpdate($comment);
         return $this->edit($command, function($command) use ($comment) {
-            $command->attachmentsInput = $this->buildAttachmentsInputDTO($command);
             $this->get('diamante.comment.service')->updateTicketComment($command);
         }, $comment->getTicket());
-    }
-
-    /**
-     * @param CommentCommand $command
-     * @return array of AttachmentInput DTOs
-     */
-    private function buildAttachmentsInputDTO(CommentCommand $command)
-    {
-        $attachmentsInput = array();
-        foreach ($command->files as $file) {
-            if (!empty($file)) {
-                $attachmentsInput[] = AttachmentInput::createFromUploadedFile($file);
-            }
-        }
-
-        return $attachmentsInput;
     }
 
     /**
@@ -134,9 +116,9 @@ class CommentController extends Controller
         $response = null;
         $form = $this->createForm(new CommentType(), $command);
         $formView = $form->createView();
-        $formView->children['files']->vars = array_replace(
-            $formView->children['files']->vars,
-            array('full_name' => 'diamante_comment_form[files][]')
+        $formView->children['attachmentsInput']->vars = array_replace(
+            $formView->children['attachmentsInput']->vars,
+            array('full_name' => 'diamante_comment_form[attachmentsInput][]')
         );
         try {
             $this->handle($form);

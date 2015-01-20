@@ -52,11 +52,6 @@ class UpdateTicketCommand
     public $status;
 
     /**
-     * @Assert\Type(type="array")
-     */
-    public $files;
-
-    /**
      * @Assert\NotNull(
      *              message="This is a required field"
      * )

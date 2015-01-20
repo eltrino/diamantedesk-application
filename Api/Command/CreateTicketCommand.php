@@ -56,11 +56,6 @@ class CreateTicketCommand
     public $status;
 
     /**
-     * @var array
-     */
-    public $files;
-
-    /**
      * @Assert\NotNull(
      *              message="This is a required field"
      * )

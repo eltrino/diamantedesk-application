@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
 use Diamante\DeskBundle\Form\DataTransformer\PriorityTransformer;
 use Diamante\DeskBundle\Form\DataTransformer\SourceTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -71,15 +72,17 @@ class CreateTicketType extends AbstractType
         );
 
         $builder->add(
-            'files',
-            'file',
-            array(
-                'label' => 'diamante.desk.attachment.file',
-                'required' => false,
-                'attr' => array(
-                    'multiple' => 'multiple'
+            $builder->create(
+                'attachmentsInput',
+                'file',
+                array(
+                    'label' => 'diamante.desk.attachment.file',
+                    'required' => false,
+                    'attr' => array(
+                        'multiple' => 'multiple'
+                    )
                 )
-            )
+            )->addModelTransformer(new AttachmentTransformer())
         );
 
         $priorityTransformer = new PriorityTransformer();

@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Form;
 
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -21,7 +22,6 @@ use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 
-use Diamante\DeskBundle\Api\Command\AttachmentCommand;
 use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 
 use Diamante\DeskBundle\Entity\Branch;
@@ -78,9 +78,9 @@ class CommandFactory
         return $command;
     }
 
-    public function createAttachmentCommand(Ticket $ticket)
+    public function createAddTicketAttachmentCommand(Ticket $ticket)
     {
-        $command = new AttachmentCommand();
+        $command = new AddTicketAttachmentCommand();
         $command->ticketId = $ticket->getId();
 
         return $command;
