@@ -91,50 +91,50 @@ class DiamanteEmbeddedFormController extends Controller
                 }
             }
 
-            $apiUserRepository = $this->get('diamante.api.user.repository');
-            $apiUser = $apiUserRepository->findUserByEmail($data['emailAddress']);
-            if (is_null($apiUser)) {
-                $apiUser = $this->get('diamante.api.user.entity.factory')->create($data['emailAddress'], $data['emailAddress'], $data['firstName'], $data['lastName']);
-                $apiUserRepository->store($apiUser);
-            }
-            $reporterId = $apiUser->getId();
-            $reporter = new User($reporterId, User::TYPE_DIAMANTE);
-
-            $command = $this->get('diamante.command_factory')
-                ->createEmbeddedFormCommand($branch, $reporter);
-
-            /** @var EmbeddedFormManager $formManager */
-            $formManager = $this->get('oro_embedded_form.manager');
-            $form = $formManager->createForm($formEntity->getFormType(), $command);
-            $formView = $form->createView();
-            $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_embedded_form[files][]'));
-
-            $response = null;
-
-            try {
-                $this->handle($form);
-
-                $command->branch = $command->branch->getId();
-                $command->assignee = 1;
-
-                $attachments = array();
-                foreach ($command->files as $file) {
-                    if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
-                        array_push($attachments, AttachmentInput::createFromUploadedFile($file));
-                    }
-                }
-                $command->attachmentsInput = $attachments;
-
-                $this->get('diamante.ticket.service')->createTicket($command);
-
-                return $this->redirect($this->generateUrl('oro_embedded_form_success', ['id' => $formEntity->getId()]));
-            } catch (MethodNotAllowedException $e) {
-                $response = array('form' => $formView);
-            } catch (\Exception $e) {
-                echo $e->getMessage();dd();
-                $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
-                $response = array('form' => $formView);
-            }
+//            $apiUserRepository = $this->get('diamante.api.user.repository');
+//            $apiUser = $apiUserRepository->findUserByEmail($data['emailAddress']);
+//            if (is_null($apiUser)) {
+//                $apiUser = $this->get('diamante.api.user.entity.factory')->create($data['emailAddress'], $data['emailAddress'], $data['firstName'], $data['lastName']);
+//                $apiUserRepository->store($apiUser);
+//            }
+//            $reporterId = $apiUser->getId();
+//            $reporter = new User($reporterId, User::TYPE_DIAMANTE);
+//
+//            $command = $this->get('diamante.command_factory')
+//                ->createEmbeddedFormCommand($branch, $reporter);
+//
+//            /** @var EmbeddedFormManager $formManager */
+//            $formManager = $this->get('oro_embedded_form.manager');
+//            $form = $formManager->createForm($formEntity->getFormType(), $command);
+//            $formView = $form->createView();
+//            $formView->children['files']->vars = array_replace($formView->children['files']->vars, array('full_name' => 'diamante_embedded_form[files][]'));
+//
+//            $response = null;
+//
+//            try {
+//                $this->handle($form);
+//
+//                $command->branch = $command->branch->getId();
+//                $command->assignee = 1;
+//
+//                $attachments = array();
+//                foreach ($command->files as $file) {
+//                    if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+//                        array_push($attachments, AttachmentInput::createFromUploadedFile($file));
+//                    }
+//                }
+//                $command->attachmentsInput = $attachments;
+//
+//                $this->get('diamante.ticket.service')->createTicket($command);
+//
+//                return $this->redirect($this->generateUrl('oro_embedded_form_success', ['id' => $formEntity->getId()]));
+//            } catch (MethodNotAllowedException $e) {
+//                $response = array('form' => $formView);
+//            } catch (\Exception $e) {
+//                echo $e->getMessage();dd();
+//                $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
+//                $response = array('form' => $formView);
+//            }
             return $response;
         }
 
