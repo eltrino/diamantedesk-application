@@ -40,7 +40,7 @@
                     <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> {{ 'diamante.desk.attachment.placeholders.dropzone'|trans }}</label>
                     <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>
                     <input type="hidden" name="diamante_attachment_form[_token]" value="{{ csrf_token('attachment') }}" />
-                    <input id="diam-dropzone-file" type="file" name="diamante_attachment_form[files][]" multiple />
+                    <input id="diam-dropzone-file" type="file" name="diamante_attachment_form[attachmentsInput][]" multiple />
                 </form>
             </div>
         </li>
