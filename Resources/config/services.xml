@@ -22,6 +22,7 @@
         <parameter key="diamante_embedded_form.class">Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType</parameter>
         <parameter key="diamante_embedded_form.event_listener.embedded_form.class">Diamante\EmbeddedFormBundle\EventListener\EmbeddedFormListener</parameter>
         <parameter key="diamante_embedded_form.form.embedded_type_extension.class">Diamante\EmbeddedFormBundle\Form\Extension\EmbeddedFormTypeExtension</parameter>
+        <parameter key="diamante_embedded_form.twig.extension.dynamic_fields.class">Diamante\EmbeddedFormBundle\Twig\DynamicFieldsExtension</parameter>
     </parameters>
 
     <services>
@@ -33,10 +34,15 @@
             <call method="setRequest"><argument id="request" type="service" on-invalid="ignore" strict="false"/></call>
             <tag name="kernel.event_listener" event="entity_form.render.before" method="addBranchField"/>
             <tag name="kernel.event_listener" event="oro_embedded_form.form_submit.before" method="onEmbeddedFormSubmit"/>
-            <tag name="kernel.event_listener" event="oro.entity_extend_event.before_value_render" method="showBranchFieldForTicketType"/>
         </service>
         <service id="diamante_embedded_form.form.embedded_type_extension" class="%diamante_embedded_form.form.embedded_type_extension.class%">
             <tag name="form.type_extension" alias="embedded_form"/>
+        </service>
+        <service id="diamante_embedded_form.twig.extension.dynamic_fields" class="%diamante_embedded_form.twig.extension.dynamic_fields.class%">
+            <argument type="service" id="oro_entity_config.config_manager"/>
+            <argument type="service" id="oro_entity_extend.extend.field_type_helper"/>
+            <argument type="service" id="event_dispatcher"/>
+            <tag name="twig.extension"/>
         </service>
     </services>
 </container>
