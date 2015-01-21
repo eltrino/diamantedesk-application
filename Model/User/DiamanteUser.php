@@ -58,6 +58,14 @@ class DiamanteUser implements Entity
     }
 
     /**
+     * @param Contact $contact
+     */
+    public function assignContact(Contact $contact)
+    {
+        $this->contact = $contact;
+    }
+
+    /**
      * @return Contact
      */
     public function getContact()

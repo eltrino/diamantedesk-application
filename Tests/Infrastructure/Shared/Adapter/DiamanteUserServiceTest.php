@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Shared\Adapter;
 
-use Diamante\ApiBundle\Entity\ApiUser;
+use Diamante\DeskBundle\Entity\DiamanteUser;
 use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
 use Diamante\DeskBundle\Model\User\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -24,8 +24,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
 {
 
     const DUMMY_NAME = 'dummy_diamante_user_name';
-    const DUMMY_PASSWORD = 'dummy_password';
-    const DUMMY_SALT = 'dummy_salt';
+    const DUMMY_EMAIL = 'test@gmail.com';
 
     /**
      * @var \Oro\Bundle\UserBundle\Entity\UserManager
@@ -73,7 +72,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetDiamanteTypeUserByUser()
     {
         $userValueObject = new User(1, User::TYPE_DIAMANTE);
-        $user = new ApiUser(self::DUMMY_NAME, self::DUMMY_PASSWORD, self::DUMMY_SALT, array(), '','','');
+        $user = new DiamanteUser(self::DUMMY_NAME, self::DUMMY_EMAIL);
 
         $this->diamanteUserRepository
             ->expects($this->once())

@@ -20,7 +20,7 @@
 
     <parameters>
         <parameter key="diamante.user.entity.class">Diamante\DeskBundle\Entity\DiamanteUser</parameter>
-        <parameter key="diamante.user_factory.class">Diamante\DeskBundle\Entity\DiamanteUser</parameter>
+        <parameter key="diamante.user_factory.class">Diamante\DeskBundle\Model\User\DiamanteUserFactory</parameter>
         <parameter key="diamante.user.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService</parameter>
         <parameter key="diamante.command_factory.class">Diamante\DeskBundle\Form\CommandFactory</parameter>
         <!-- repositories start -->
@@ -42,7 +42,9 @@
             <argument type="string">%diamante.user.entity.class%</argument>
         </service>
 
-        <service id="diamante.user_factory" class="%diamante.user_factory.class%" />
+        <service id="diamante.user_factory" class="%diamante.user_factory.class%">
+            <argument type="string">%diamante.user.entity.class%</argument>
+        </service>
 
         <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>

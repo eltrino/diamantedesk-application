@@ -81,7 +81,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testProcessWhenApiUserExists()
+    public function testProcessWhenDiamanteUserExists()
     {
         $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
             self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO);
@@ -121,7 +121,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $this->ticketStrategy->process($message);
     }
 
-    public function testProcessWhenApiUserNotExists()
+    public function testProcessWhenDiamantrUserNotExists()
     {
         $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
             self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO);

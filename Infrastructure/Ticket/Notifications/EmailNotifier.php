@@ -223,12 +223,12 @@ class EmailNotifier implements Notifier
 
     /**
      * @param $user
-     * @return \Diamante\ApiBundle\Entity\ApiUser|\Oro\Bundle\UserBundle\Entity\User
+     * @return \Diamante\DeskBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
      */
     private function getUserDependingOnType($user)
     {
         if ($user instanceof User) {
-            if ($user->isApiUser()) {
+            if ($user->isDiamanteUser()) {
                 $user = $this->userService->getByUser($user);
             }
         }

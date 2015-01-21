@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
+use OroCRM\Bundle\ContactBundle\Entity\Provider\EmailOwnerProvider;
 
 class TicketStrategy implements Strategy
 {
