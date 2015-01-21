@@ -18,69 +18,69 @@ namespace Diamante\DeskBundle\Model\Shared\Filter;
 class FilterPagingProperties implements PagingProperties
 {
     const PAGE_PROP_NAME     = 'page';
-    const PER_PAGE_PROP_NAME = 'perPage';
-    const ORDER_PROP_NAME    = 'orderByField';
-    const SORT_PROP_NAME     = 'sortingOrder';
+    const LIMIT_PROP_NAME    = 'limit';
+    const SORT_PROP_NAME     = 'sort';
+    const ORDER_PROP_NAME    = 'order';
 
     const DEFAULT_PAGE       = 1;
-    const DEFAULT_PER_PAGE   = 25;
-    const DEFAULT_ORDER_BY   = 'id';
-    const DEFAULT_SORT_ORDER = 'ASC';
+    const DEFAULT_LIMIT      = 25;
+    const DEFAULT_SORT       = 'id';
+    const DEFAULT_ORDER      = 'ASC';
     /**
      * @var int
      */
-    protected $pageNumber;
+    protected $page;
     /**
      * @var int
      */
-    protected $perPageCounter;
+    protected $limit;
     /**
      * @var string
      */
-    protected $orderByField;
+    protected $sort;
     /**
      * @var string
      */
-    protected $sortingOrder;
+    protected $order;
 
-    public function __construct($page = null, $perPage = null, $orderByField = null, $sortingOrder = null)
+    public function __construct($page = null, $limit = null, $sort = null, $order = null)
     {
-        $this->pageNumber       = $page ? $page : self::DEFAULT_PAGE;
-        $this->perPageCounter   = $perPage ? $perPage : self::DEFAULT_PER_PAGE;
-        $this->orderByField     = $orderByField ? $orderByField : self::DEFAULT_ORDER_BY;
-        $this->sortingOrder     = $sortingOrder ? $sortingOrder : self::DEFAULT_SORT_ORDER;
+        $this->page     = $page ? $page : self::DEFAULT_PAGE;
+        $this->limit    = $limit ? $limit : self::DEFAULT_LIMIT;
+        $this->sort    = $sort ? $sort : self::DEFAULT_SORT;
+        $this->order     = $order ? $order : self::DEFAULT_ORDER;
     }
 
     /**
      * @return int
      */
-    public function getPageNumber()
+    public function getPage()
     {
-        return $this->pageNumber;
+        return $this->page;
     }
 
     /**
      * @return int
      */
-    public function getPerPageCounter()
+    public function getLimit()
     {
-        return $this->perPageCounter;
+        return $this->limit;
     }
 
     /**
      * @return string
      */
-    public function getOrderByField()
+    public function getSort()
     {
-        return $this->orderByField;
+        return $this->sort;
     }
 
     /**
      * @return string
      */
-    public function getSortingOrder()
+    public function getOrder()
     {
-        return $this->sortingOrder;
+        return $this->order;
     }
 
     /**
@@ -91,9 +91,9 @@ class FilterPagingProperties implements PagingProperties
     {
         return new self(
             $pagingConfig[self::PAGE_PROP_NAME],
-            $pagingConfig[self::PER_PAGE_PROP_NAME],
-            $pagingConfig[self::ORDER_PROP_NAME],
-            $pagingConfig[self::SORT_PROP_NAME]
+            $pagingConfig[self::LIMIT_PROP_NAME],
+            $pagingConfig[self::SORT_PROP_NAME],
+            $pagingConfig[self::ORDER_PROP_NAME]
         );
     }
 }

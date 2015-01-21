@@ -41,13 +41,13 @@ class CommonFilterCommand
     /**
      * @var int
      */
-    public $perPage;
+    public $limit;
     /**
      * @var string
      */
-    public $orderByField;
+    public $sort;
     /**
      * @var string
      */
-    public $sortingOrder;
+    public $order;
 }
