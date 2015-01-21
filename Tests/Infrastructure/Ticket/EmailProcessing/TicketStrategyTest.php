@@ -87,16 +87,16 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $apiUser = $this->getDiamanteUser();
+        $diamanteUser = $this->getDiamanteUser();
 
         $this->diamanteUserRepository->expects($this->once())
             ->method('findUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
-            )->will($this->returnValue($apiUser));
+            )->will($this->returnValue($diamanteUser));
 
 
-        $reporter = $this->getReporter($apiUser->getId());
+        $reporter = $this->getReporter($diamanteUser->getId());
 
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
@@ -180,16 +180,16 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, self::DUMMY_MESSAGE_FROM, self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $apiUser = $this->getDiamanteUser();
+        $diamanteUser = $this->getDiamanteUser();
 
         $this->diamanteUserRepository->expects($this->once())
             ->method('findUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
-            )->will($this->returnValue($apiUser));
+            )->will($this->returnValue($diamanteUser));
 
 
-        $reporter = $this->getReporter($apiUser->getId());
+        $reporter = $this->getReporter($diamanteUser->getId());
 
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
@@ -221,16 +221,16 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $reporterId = 1;
         $assigneeId = 1;
-        $apiUser = $this->getDiamanteUser();
+        $diamanteUser = $this->getDiamanteUser();
 
         $this->diamanteUserRepository->expects($this->once())
             ->method('findUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
-            )->will($this->returnValue($apiUser));
+            )->will($this->returnValue($diamanteUser));
 
 
-        $reporter = $this->getReporter($apiUser->getId());
+        $reporter = $this->getReporter($diamanteUser->getId());
 
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
