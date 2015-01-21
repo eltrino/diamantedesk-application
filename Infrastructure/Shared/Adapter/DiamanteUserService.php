@@ -12,22 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 19/11/14
- * Time: 8:03 PM
- */
-
 namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
-use Diamante\ApiBundle\Entity\ApiUser;
-use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
+use Diamante\DeskBundle\Entity\DiamanteUser;
+use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User;
-use Diamante\DeskBundle\Model\User\User as DiamanteUser;
+use Diamante\DeskBundle\Model\User\User as UserAdapter;
 
 class DiamanteUserService implements UserService
 {
@@ -35,28 +27,31 @@ class DiamanteUserService implements UserService
     * @var UserManager
     */
     private $oroUserManager;
-    private $diamanteApiUserRepository;
+
+    /**
+     * @var DiamanteUserRepository
+     */
+    private $diamanteUserRepository;
 
     function __construct(
         UserManager $userManager,
-        ApiUserRepository $diamanteApiUserRepository
+        DiamanteUserRepository $diamanteUserRepository
     )
     {
-        $this->oroUserManager            = $userManager;
-        $this->diamanteApiUserRepository = $diamanteApiUserRepository;
+        $this->oroUserManager         = $userManager;
+        $this->diamanteUserRepository = $diamanteUserRepository;
     }
 
     /**
-     * @param DiamanteUser $user
-     * @throws \RuntimeException
-     * @return User|ApiUser
+     * @param UserAdapter $user
+     * @return DiamanteUser|User
      */
-    public function getByUser(DiamanteUser $user)
+    public function getByUser(UserAdapter $user)
     {
         if ($user->isOroUser()) {
             $user = $this->oroUserManager->findUserBy(array('id' => $user->getId()));
         } else {
-            $user = $this->diamanteApiUserRepository->get($user->getId());
+            $user = $this->diamanteUserRepository->get($user->getId());
         }
 
         if (!$user) {

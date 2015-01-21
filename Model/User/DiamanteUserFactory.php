@@ -12,23 +12,21 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Shared;
+namespace Diamante\DeskBundle\Model\User;
 
-use Diamante\DeskBundle\Model\User\DiamanteUser;
-use Diamante\DeskBundle\Model\User\User;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 
-/**
- * Interface UserService
- * @package Diamante\DeskBundle\Model\Shared
- * @codeCoverageIgnore
- */
-interface UserService
+class DiamanteUserFactory extends AbstractEntityFactory
 {
     /**
-     * Retrieves User|DiamanteUser entity
-     * @param User $user
-     * @return OroUser|DiamanteUser
+     * @param $email
+     * @param $username
+     * @param null $firstName
+     * @param null $lastName
+     * @return mixed
      */
-    public function getByUser(User $user);
-}
+    public function create($email, $username, $firstName = null, $lastName = null)
+    {
+        return new $this->entityClassName($email, $username, $firstName, $lastName);
+    }
+} 

@@ -12,17 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 20/11/14
- * Time: 2:11 PM
- */
-
 namespace Diamante\DeskBundle\Search;
 
-use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
+use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
 use Oro\Bundle\FormBundle\Autocomplete\SearchHandlerInterface;
@@ -32,15 +24,30 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
 {
     const ID_FIELD_NAME = 'id';
 
+    /**
+     * @var array
+     */
     protected $properties;
+
+    /**
+     * @var string
+     */
     protected $entityName;
+
+    /**
+     * @var DiamanteUserRepository
+     */
     protected $diamanteUserRepository;
+
+    /**
+     * @var UserSearchHandler
+     */
     protected $oroUserSearchHandler;
 
     public function __construct(
         $entityName,
         UserDetailsService  $diamanteUserDetailsService,
-        ApiUserRepository   $diamanteUserRepository,
+        DiamanteUserRepository $diamanteUserRepository,
         UserSearchHandler   $oroUserSearchHandler,
         array $properties
     )
