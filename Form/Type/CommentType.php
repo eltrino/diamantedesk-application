@@ -68,7 +68,7 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\EditCommentCommand',
+                'data_class' => 'Diamante\DeskBundle\Api\Command\CommentCommand',
                 'intention' => 'comment',
                 'cascade_validation' => true
             )

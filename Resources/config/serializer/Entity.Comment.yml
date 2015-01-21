@@ -1,0 +1,2 @@
+Diamante\DeskBundle\Entity\Comment:
+    exclusion_policy: ALL

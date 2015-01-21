@@ -17,21 +17,23 @@ namespace Diamante\DeskBundle\Api;
 
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\Command\Filter\FilterTicketsCommand;
 use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
+use Diamante\DeskBundle\Model\Attachment\Attachment;
 
 interface TicketService
 {
     /**
      * Load Ticket by given ticket id
-     * @param int $ticketId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
-    public function loadTicket($ticketId);
+    public function loadTicket($id);
 
     /**
      * Load Ticket by given Ticket Key
@@ -39,6 +41,13 @@ interface TicketService
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function loadTicketByKey($key);
+
+    /**
+     * List Ticket attachments
+     * @param int $id
+     * @return array|Attachment[]
+     */
+    public function listTicketAttachments($id);
 
     /**
      * Retrieves Ticket Attachment
@@ -94,8 +103,9 @@ interface TicketService
 
     /**
      * Delete Ticket by id
-     * @param int $id
-     * @return void
+     * @param $id
+     * @return null
+     * @throws \RuntimeException if unable to load required ticket
      */
     public function deleteTicket($id);
 
@@ -112,4 +122,18 @@ interface TicketService
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket(AssigneeTicketCommand $command);
+
+    /**
+     * Update certain properties of the ticket
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updateProperties(Command\UpdatePropertiesCommand $command);
+
+    /**
+     * Retrieves list of all Tickets
+     * @param FilterTicketsCommand $filterTicketsCommand
+     * @return mixed
+     */
+    public function listAllTickets(FilterTicketsCommand $filterTicketsCommand);
 }

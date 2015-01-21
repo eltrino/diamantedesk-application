@@ -98,11 +98,27 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
+     * @return int
+     */
+    public function getTicketId()
+    {
+        return $this->ticket->getId();
+    }
+
+    /**
      * @return \Oro\Bundle\UserBundle\Entity\User
      */
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAuthorId()
+    {
+        return $this->author->getId();
     }
 
     /**

@@ -26,9 +26,10 @@ interface BranchService
 {
     /**
      * Retrieves list of all Branches
+     * @param Command\Filter\FilterBranchesCommand
      * @return Branch[]
      */
-    public function listAllBranches();
+    public function listAllBranches(Command\Filter\FilterBranchesCommand $command);
 
     /**
      * Retrieves Branch by id
@@ -40,7 +41,7 @@ interface BranchService
     /**
      * Create Branch
      * @param Command\BranchCommand $branchCommand
-     * @return int
+     * @return \Diamante\DeskBundle\Model\Branch\Branch
      * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand);
@@ -58,4 +59,11 @@ interface BranchService
      * @return void
      */
     public function deleteBranch($branchId);
+
+    /**
+     * Update certain properties of the branch
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updateProperties(Command\UpdatePropertiesCommand $command);
 }

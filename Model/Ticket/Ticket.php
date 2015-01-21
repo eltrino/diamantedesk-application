@@ -231,6 +231,14 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
+     * @return int
+     */
+    public function getBranchId()
+    {
+        return $this->branch->getId();
+    }
+
+    /**
      * @return string
      */
     public function getBranchName()
@@ -255,11 +263,27 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
+     * @return string
+     */
+    public function getStatusValue()
+    {
+        return $this->status->getValue();
+    }
+
+    /**
      * @return Priority
      */
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPriorityValue()
+    {
+        return $this->priority->getValue();
     }
 
     /**
@@ -284,6 +308,17 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getAssignee()
     {
         return $this->assignee;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAssigneeId()
+    {
+        if (is_null($this->assignee)) {
+            return null;
+        }
+        return $this->assignee->getId();
     }
 
     /**
@@ -533,10 +568,34 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         return $this->source;
     }
 
+    /**
+     * @return string
+     */
+    public function getSourceValue()
+    {
+        return $this->source->getValue();
+    }
+
     public function delete()
     {
         $this->raise(
             new TicketWasDeleted($this->uniqueId, $this->subject)
         );
+    }
+
+    /**
+     * Update single property of the ticket
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function updateProperty($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        } else {
+            throw new \DomainException(sprintf('Ticket does not have "%s" property.', $name));
+        }
     }
 }

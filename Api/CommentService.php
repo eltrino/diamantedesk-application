@@ -15,7 +15,8 @@
 
 namespace Diamante\DeskBundle\Api;
 
-use Diamante\DeskBundle\Api\Command\EditCommentCommand;
+use Diamante\DeskBundle\Api\Command\AddCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
@@ -29,17 +30,17 @@ interface CommentService
 {
     /**
      * Load Comment by given comment id
-     * @param int $commentId
+     * @param int $id
      * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
-    public function loadComment($commentId);
+    public function loadComment($id);
 
     /**
      * Post Comment for Ticket
-     * @param EditCommentCommand $command
-     * @return void
+     * @param CommentCommand $command
+     * @return \Diamante\DeskBundle\Model\Ticket\Comment
      */
-    public function postNewCommentForTicket(EditCommentCommand $command);
+    public function postNewCommentForTicket(CommentCommand $command);
 
     /**
      * Retrieves Comment Attachment
@@ -49,11 +50,25 @@ interface CommentService
     public function getCommentAttachment(RetrieveCommentAttachmentCommand $command);
 
     /**
-     * Update Ticket Comment content
-     * @param EditCommentCommand $command
+     * Add Attachments to Comment
+     * @param AddCommentAttachmentCommand $command
      * @return void
      */
-    public function updateTicketComment(EditCommentCommand $command);
+    public function addCommentAttachment(AddCommentAttachmentCommand $command);
+
+    /**
+     * Update Ticket Comment content
+     * @param CommentCommand $command
+     * @return void
+     */
+    public function updateTicketComment(CommentCommand $command);
+
+    /**
+     * Update certain properties of the Comment
+     * @param Command\UpdateCommentCommand $command
+     * @return void
+     */
+    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command);
 
     /**
      * Delete Ticket Comment
@@ -68,4 +83,11 @@ interface CommentService
      * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
      */
     public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command);
+
+    /**
+     * List all comments
+     * @param Command\Filter\FilterCommentsCommand $command
+     * @return mixed
+     */
+    public function listAllComments(Command\Filter\FilterCommentsCommand $command);
 }
