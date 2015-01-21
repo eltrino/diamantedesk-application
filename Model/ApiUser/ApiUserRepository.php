@@ -25,11 +25,4 @@ interface ApiUserRepository extends Repository
      * @return ApiUser
      */
     public function findUserByUsername($username);
-
-    /**
-     * Finds a user by email
-     * @param $email
-     * @return ApiUser
-     */
-    public function findUserByEmail($email);
 } 

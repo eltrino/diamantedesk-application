@@ -29,9 +29,9 @@ class ApiUserProvider implements UserProviderInterface
      */
     private $apiUserRepository;
 
-    public function __construct(ApiUserRepository $apiUserRepository)
+    public function __construct(ApiUserRepository $diamanteUserRepository)
     {
-        $this->apiUserRepository = $apiUserRepository;
+        $this->apiUserRepository = $diamanteUserRepository;
     }
 
     /**

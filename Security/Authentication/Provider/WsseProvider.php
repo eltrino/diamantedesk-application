@@ -56,7 +56,7 @@ class WsseProvider implements AuthenticationProviderInterface
     public function __construct(UserProviderInterface $userProvider, Cache $nonceCache, EncoderFactoryInterface $encoderFactory)
     {
         $this->userProvider   = $userProvider;
-        $this->nonceCache       = $nonceCache;
+        $this->nonceCache     = $nonceCache;
         $this->encoderFactory = $encoderFactory;
         $this->lifetime       = 300;
     }
