@@ -68,10 +68,10 @@ class BranchFilterCriteriaProcessorTest extends \PHPUnit_Framework_TestCase
         $pagingProperties = $processor->getPagingProperties();
 
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Shared\Filter\PagingProperties', $pagingProperties);
-        $this->assertEquals(25, $pagingProperties->getPerPageCounter());
-        $this->assertEquals(1, $pagingProperties->getPageNumber());
-        $this->assertEquals('id', $pagingProperties->getOrderByField());
-        $this->assertEquals('ASC', $pagingProperties->getSortingOrder());
+        $this->assertEquals(25, $pagingProperties->getLimit());
+        $this->assertEquals(1, $pagingProperties->getPage());
+        $this->assertEquals('id', $pagingProperties->getSort());
+        $this->assertEquals('ASC', $pagingProperties->getOrder());
     }
 
     /**
@@ -80,19 +80,19 @@ class BranchFilterCriteriaProcessorTest extends \PHPUnit_Framework_TestCase
     public function testGetPagingPropertiesWithModifiedValues()
     {
         $command = new FilterBranchesCommand();
-        $command->perPage = 50;
+        $command->limit = 50;
         $command->page = 2;
-        $command->orderByField = 'subject';
-        $command->sortingOrder = 'DESC';
+        $command->sort = 'subject';
+        $command->order = 'DESC';
 
         $processor = new BranchFilterCriteriaProcessor();
         $processor->setCommand($command);
         $pagingProperties = $processor->getPagingProperties();
 
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Shared\Filter\PagingProperties', $pagingProperties);
-        $this->assertEquals(50, $pagingProperties->getPerPageCounter());
-        $this->assertEquals(2, $pagingProperties->getPageNumber());
-        $this->assertEquals('subject', $pagingProperties->getOrderByField());
-        $this->assertEquals('DESC', $pagingProperties->getSortingOrder());
+        $this->assertEquals(50, $pagingProperties->getLimit());
+        $this->assertEquals(2, $pagingProperties->getPage());
+        $this->assertEquals('subject', $pagingProperties->getSort());
+        $this->assertEquals('DESC', $pagingProperties->getOrder());
     }
 }

@@ -21,20 +21,20 @@ interface PagingProperties
     /**
      * @return int
      */
-    public function getPageNumber();
+    public function getPage();
 
     /**
      * @return int
      */
-    public function getPerPageCounter();
+    public function getLimit();
 
     /**
      * @return string
      */
-    public function getOrderByField();
+    public function getSort();
 
     /**
      * @return string
      */
-    public function getSortingOrder();
+    public function getOrder();
 }

@@ -71,8 +71,8 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
     public function filter(array $conditions, PagingProperties $pagingProperties)
     {
         $qb = $this->_em->createQueryBuilder();
-        $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getOrderByField());
-        $offset = ($pagingProperties->getPageNumber()-1) * $pagingProperties->getPerPageCounter();
+        $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
+        $offset = ($pagingProperties->getPage()-1) * $pagingProperties->getLimit();
 
         $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
 
@@ -81,9 +81,9 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
             $qb->orWhere($whereExpression);
         }
 
-        $qb->addOrderBy($orderByField, $pagingProperties->getSortingOrder());
+        $qb->addOrderBy($orderByField, $pagingProperties->getOrder());
         $qb->setFirstResult($offset);
-        $qb->setMaxResults($pagingProperties->getPerPageCounter());
+        $qb->setMaxResults($pagingProperties->getLimit());
 
         $query = $qb->getQuery();
 
