@@ -32,6 +32,7 @@ use Diamante\DeskBundle\Model\User\User;
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
     const DELIMITER_LINE = '[[ Please reply above this line ]]';
+    const EMPTY_SUBJECT_PLACEHOLDER = '[No Subject]';
 
     /**
      * @var MessageReferenceRepository
@@ -96,6 +97,10 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
                                  array $attachments = null)
     {
+        if (empty($subject)) {
+            $subject = self::EMPTY_SUBJECT_PLACEHOLDER;
+        }
+
         $this->ticketBuilder
             ->setSubject($subject)
             ->setDescription($description)
