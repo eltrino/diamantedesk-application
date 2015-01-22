@@ -36,10 +36,10 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
      *      403="Returned when the user is not authorized to list branches"
      *  }
      * )
-     * @param Command\Filter\FilterBranchesCommand $command
+     * @param Command\Filter\FilterBranchesCommand $command|null
      * @return \Diamante\DeskBundle\Model\Branch\Branch[]
      */
-    public function listAllBranches(Command\Filter\FilterBranchesCommand $command)
+    public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null)
     {
         return parent::listAllBranches($command);
     }

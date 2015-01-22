@@ -82,11 +82,15 @@ class BranchServiceImpl implements BranchService
      * Retrieves list of all Branches. Filters branches with parameters provided within GET request
      * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
      * Time filtering values should be converted to UTC
-     * @param Command\Filter\FilterBranchesCommand $command
+     * @param Command\Filter\FilterBranchesCommand $command|null
      * @return Branch[]
      */
-    public function listAllBranches(Command\Filter\FilterBranchesCommand $command)
+    public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null)
     {
+        if (!$command) {
+            return $this->branchRepository->getAll();
+        }
+
         $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
         $processor = new BranchFilterCriteriaProcessor();
         $processor->setCommand($command);
