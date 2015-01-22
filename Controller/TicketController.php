@@ -418,10 +418,7 @@ class TicketController extends Controller
             $command = $form->getData();
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
-            $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-            $addTicketAttachmentCommand->attachmentsInput = $attachments;
-            $addTicketAttachmentCommand->ticketId = $ticket->getId();
-            $ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
+            $ticketService->addAttachmentsForTicket($command);
 
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');
             if ($this->getRequest()->request->get('diam-dropzone')) {
