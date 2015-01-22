@@ -21,6 +21,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Oro\Bundle\EmbeddedFormBundle\Form\Type\EmbeddedFormInterface;
 use Oro\Bundle\EmbeddedFormBundle\Form\Type\CustomLayoutFormInterface;
 
+use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
+
 class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInterface, CustomLayoutFormInterface
 {
     /**
@@ -76,31 +78,21 @@ class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInter
         );
 
         $builder->add(
-            'files',
-            'file',
-            array(
-                'label' => 'diamante.desk.attachment.file',
-                'required' => false,
-                'attr' => array(
-                    'multiple' => 'multiple'
+            $builder->create(
+                'attachmentsInput',
+                'file',
+                array(
+                    'label' => 'diamante.desk.attachment.file',
+                    'required' => false,
+                    'attr' => array(
+                        'multiple' => 'multiple'
+                    )
                 )
             )
+            ->addModelTransformer(new AttachmentTransformer())
         );
 
         $builder->add('submit', 'submit');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array(
-                'data_class'        => 'Diamante\DeskBundle\Api\Command\EmbeddedFormCommand',
-                'dataChannelField'  => false
-            )
-        );
     }
 
     /**
