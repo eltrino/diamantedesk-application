@@ -38,7 +38,6 @@ class CommentCommand
 
     /**
      * @var array
-     * @Assert\NotNull()
      * @Assert\Type(type="array")
      */
     public $attachmentsInput;
