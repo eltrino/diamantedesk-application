@@ -17,6 +17,8 @@ namespace Diamante\DeskBundle\Form\DataTransformer;
 
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AttachmentTransformer implements DataTransformerInterface
 {
@@ -39,8 +41,15 @@ class AttachmentTransformer implements DataTransformerInterface
     {
         $inputs = array();
         foreach ($value as $each) {
-            $attachment = AttachmentInput::createFromUploadedFile($each);
-            array_push($inputs, $attachment);
+            if ($each) {
+                if (false === ($each instanceof UploadedFile)) {
+                    throw new TransformationFailedException(
+                        "Every item in input files array should be an instance of the UploadedFile."
+                    );
+                }
+                $attachment = AttachmentInput::createFromUploadedFile($each);
+                array_push($inputs, $attachment);
+            }
         }
         return $inputs;
     }
