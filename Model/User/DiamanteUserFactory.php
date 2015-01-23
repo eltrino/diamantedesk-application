@@ -15,18 +15,20 @@
 namespace Diamante\DeskBundle\Model\User;
 
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+use OroCRM\Bundle\ContactBundle\Entity\Contact;
 
 class DiamanteUserFactory extends AbstractEntityFactory
 {
     /**
      * @param $email
      * @param $username
+     * @param Contact $contact
      * @param null $firstName
      * @param null $lastName
      * @return mixed
      */
-    public function create($email, $username, $firstName = null, $lastName = null)
+    public function create($email, $username, Contact $contact = null, $firstName = null, $lastName = null)
     {
-        return new $this->entityClassName($email, $username, $firstName, $lastName);
+        return new $this->entityClassName($email, $username, $contact, $firstName, $lastName);
     }
 } 

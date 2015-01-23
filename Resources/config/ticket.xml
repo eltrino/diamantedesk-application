@@ -59,6 +59,7 @@
             <argument type="service" id="diamante.user.repository" />
             <argument type="service" id="diamante.user_factory" />
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
+            <argument type="service" id="diamante.contact.service"/>
             <tag name="email_processing.strategy" />
         </service>
 
