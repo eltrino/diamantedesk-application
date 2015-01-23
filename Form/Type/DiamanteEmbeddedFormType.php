@@ -85,7 +85,7 @@ class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInter
                     'label' => 'diamante.desk.attachment.file',
                     'required' => false,
                     'attr' => array(
-                        'multiple' => 'multiple'
+                        'multiple' => 'multiple',
                     )
                 )
             )
