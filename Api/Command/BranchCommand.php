@@ -83,6 +83,11 @@ class BranchCommand implements Taggable
      */
     public $branchEmailConfiguration;
 
+    /**
+     * @var $emptyFile
+     */
+    public $emptyFile;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -148,5 +153,13 @@ class BranchCommand implements Taggable
         $command->logoFile        = null;
         $command->logo            = $branch->getLogo();
         return $command;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEmptyFile()
+    {
+        return $this->emptyFile;
     }
 }

@@ -178,7 +178,11 @@ class BranchServiceImpl implements BranchService
 
         /** @var \Symfony\Component\HttpFoundation\File\File $file */
         $file = null;
-        if ($branchCommand->logoFile) {
+
+        if($branchCommand->isEmptyFile()) {
+            $this->branchLogoHandler->remove($branch->getLogo());
+            $file = new Logo();
+        } elseif ($branchCommand->logoFile) {
             if ($branch->getLogo()) {
                 $this->branchLogoHandler->remove($branch->getLogo());
             }

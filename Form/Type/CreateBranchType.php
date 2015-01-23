@@ -65,6 +65,11 @@ class CreateBranchType extends AbstractType
         );
 
         $builder->add(
+            'emptyFile',
+            'hidden'
+        );
+
+        $builder->add(
             'defaultAssignee',
             'diamante_assignee_select',
             array(

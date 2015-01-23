@@ -31,7 +31,7 @@ class Logo
     /**
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct($name = null)
     {
         $this->name     = $name;
         $this->pathname = self::PATH_TO_LOGO_DIR . $name;
