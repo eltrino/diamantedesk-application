@@ -236,7 +236,9 @@ class BranchController extends Controller
         try {
             $this->get('diamante.branch.service')
                 ->deleteBranch($id);
-            $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
+            if (false == $this->isDeletionRequestFromGrid()) {
+                $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
+            }
             return new Response(null, 204, array(
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
@@ -297,5 +299,18 @@ class BranchController extends Controller
             ['route' => 'diamante_branch_update', 'parameters' => ['id' => $branchId]],
             ['route' => 'diamante_branch_view', 'parameters' => ['id' => $branchId]]
         );
+    }
+
+    private function isDeletionRequestFromGrid()
+    {
+        $referer = $this->getRequest()->headers->get('referer');
+
+        if (empty($referer)) {
+            return false;
+        }
+
+        $origin = array_pop(explode('/', $referer));
+
+        return 'branches' === $origin;
     }
 }
