@@ -75,18 +75,24 @@
     %}
 
     {% set description = entity.description|escape('html')|nl2br %}
+    {% set noDescription %}
+    <span>{{ 'diamante.desk.common.no_description'|trans }}</span>
+    {% endset %}
     {% set dataBlocks = dataBlocks|merge([{
         'title': 'diamante.desk.common.description'|trans,
         'subblocks':[{
             'title': null,
-            'data': [description ? description : 'diamante.desk.common.no_description'|trans]}]
+            'data': [description ? description : noDescription]}]
         }]
     ) %}
 
     {% if branchEmailConfiguration %}
+        {% set notDefined %}
+        <span>{{ 'diamante.desk.common.not_defined'|trans }}</span>
+        {% endset %}
         {% set supportAdress = EA.email_address_simple(branchEmailConfiguration.supportAddress) %}
-        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', supportAdress ? supportAdress : 'diamante.desk.common.not_defined'|trans)] %}
-        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains ? branchEmailConfiguration.customerDomains : 'diamante.desk.common.not_defined'|trans)]) %}
+        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', supportAdress ? supportAdress : notDefined)] %}
+        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains ? branchEmailConfiguration.customerDomains : notDefined)]) %}
 
         {% set dataBlocks = dataBlocks|merge([{
             'title': 'Email Configuration',

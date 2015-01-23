@@ -286,3 +286,7 @@
 .diam-tickets .row-click-action > .string-cell:nth-child(2) {
     width: 5%;
 }
+
+.control-label > span, .responsive-cell > span {
+    font-style: italic;
+}
