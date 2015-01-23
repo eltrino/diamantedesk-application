@@ -143,6 +143,10 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
             $converted[$property] = $this->getPropertyValue($property, $obj);
         }
 
+        if (empty($converted['fullName']) || $converted['fullName'] === ' ') {
+            $converted['fullName'] = $converted['email'];
+        }
+
         return $converted;
     }
 
