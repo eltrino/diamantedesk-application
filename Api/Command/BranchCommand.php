@@ -84,9 +84,9 @@ class BranchCommand implements Taggable
     public $branchEmailConfiguration;
 
     /**
-     * @var $emptyFile
+     * @var $removeLogo
      */
-    public $emptyFile;
+    public $removeLogo;
 
     public function __construct()
     {
@@ -158,8 +158,8 @@ class BranchCommand implements Taggable
     /**
      * @return boolean
      */
-    public function isEmptyFile()
+    public function isRemoveLogo()
     {
-        return $this->emptyFile;
+        return $this->removeLogo;
     }
 }

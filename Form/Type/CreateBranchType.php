@@ -65,7 +65,7 @@ class CreateBranchType extends AbstractType
         );
 
         $builder->add(
-            'emptyFile',
+            'removeLogo',
             'hidden'
         );
 

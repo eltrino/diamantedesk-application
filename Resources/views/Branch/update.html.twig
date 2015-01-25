@@ -20,7 +20,7 @@
                     <img src="{{ form.vars.value.logo.pathname | imagine_filter('branch_logo_preview') }}" alt="branch logo preview" />
                 </span>
 
-                {{ form_row(form.emptyFile) }}
+                {{ form_row(form.removeLogo) }}
                 <button id = "branch-image" class="btn btn-action btn-link delete" type="button"></button>
                 <script type="text/javascript">
                     require(['jquery'],
@@ -28,7 +28,7 @@
                             $(function() {
                                 $(document).on('click', '#branch-image', function() {
                                     $('#branch-image-block').hide();
-                                    $('#{{ form.emptyFile.vars.id }}').val('true');
+                                    $('#{{ form.removeLogo.vars.id }}').val('true');
                                     return false;
                                 });
                             });
