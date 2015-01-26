@@ -1,0 +1,9 @@
+{% extends 'OroEmbeddedFormBundle::base.html.twig' %}
+
+{% block page %}
+    {% if formEntity.getFormType() == 'diamante_embedded_form.form_type.available_embedded_form' %}
+        {{ formEntity.successMessage|default('oro.embeddedform.success_message.default'|trans)|diamante_back_link(formEntity.id)|raw }}
+    {% else %}
+        {{ formEntity.successMessage|default('oro.embeddedform.success_message.default'|trans)|back_link(formEntity.id)|raw }}
+    {% endif %}
+{% endblock %}

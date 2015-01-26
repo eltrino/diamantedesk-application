@@ -23,6 +23,7 @@
         <parameter key="diamante_embedded_form.event_listener.embedded_form.class">Diamante\EmbeddedFormBundle\EventListener\EmbeddedFormListener</parameter>
         <parameter key="diamante_embedded_form.form.embedded_type_extension.class">Diamante\EmbeddedFormBundle\Form\Extension\EmbeddedFormTypeExtension</parameter>
         <parameter key="diamante_embedded_form.twig.extension.dynamic_fields.class">Diamante\EmbeddedFormBundle\Twig\DynamicFieldsExtension</parameter>
+        <parameter key="diamante_embedded_form.back_link.twig.extension.class">Diamante\EmbeddedFormBundle\Twig\BackLinkExtension</parameter>
     </parameters>
 
     <services>
@@ -42,6 +43,11 @@
             <argument type="service" id="oro_entity_config.config_manager"/>
             <argument type="service" id="oro_entity_extend.extend.field_type_helper"/>
             <argument type="service" id="event_dispatcher"/>
+            <tag name="twig.extension"/>
+        </service>
+        <service id="diamante_embedded_form.back_link.twig.extension" class="%diamante_embedded_form.back_link.twig.extension.class%">
+            <argument type="service" id="router"/>
+            <argument type="service" id="translator"/>
             <tag name="twig.extension"/>
         </service>
     </services>
