@@ -52,7 +52,7 @@ class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInter
 
         $builder->add(
             'emailAddress',
-            'text',
+            'email',
             ['required' => true, 'label' => 'Email']
         );
 
