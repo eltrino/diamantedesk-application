@@ -1,5 +1,5 @@
 <?php
-namespace Diamante\EmbeddedFormBundle\Tests\Unit\Twig;
+namespace Diamante\EmbeddedFormBundle\Tests\Twig;
 
 use Diamante\EmbeddedFormBundle\Twig\BackLinkExtension;
 

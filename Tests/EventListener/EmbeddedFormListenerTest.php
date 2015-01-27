@@ -1,6 +1,6 @@
 <?php
 
-namespace Diamante\EmbeddedFormBundle\Tests\Unit\EventListener;
+namespace Diamante\EmbeddedFormBundle\Tests\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;
 
