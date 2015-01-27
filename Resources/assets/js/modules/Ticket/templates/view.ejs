@@ -1,5 +1,5 @@
 <p>
-    <a class="btn btn-link js-ticket-list" href="#tickets">
+    <a class="btn btn-link js-back" href="#tickets">
         <span class="fa fa-chevron-left"></span>
         Back
     </a>
@@ -32,7 +32,11 @@
     <div class="col-md-4 ticket-aside">
         <div class="group">
             <div class="block">
-                <button type="button" class="btn btn-primary btn-lg btn-block">Resolve Ticket</button>
+                <% if(status !== 'closed'){ %>
+                <button type="button" class="btn btn-primary btn-lg btn-block js-close-ticket">Resolve Ticket</button>
+                <% } else { %>
+                <button type="button" class="btn btn-primary btn-lg btn-block js-open-ticket">Reopen Ticket</button>
+                <% } %>
             </div>
             <div class="block">
                 <h2>File Attachments</h2>

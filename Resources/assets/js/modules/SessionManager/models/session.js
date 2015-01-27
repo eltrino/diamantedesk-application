@@ -15,8 +15,19 @@ define([
         var savedData = window.localStorage.getItem('authModel') || window.sessionStorage.getItem('authModel');
         if(savedData){
           this.set(JSON.parse(savedData));
-          this.addHeaders();
         }
+        this.addHeaders();
+        $.ajaxSetup({
+          statusCode: {
+            401: function () {
+              if(App.getCurrentRoute() !== 'login'){
+                this.logout();
+                App.alert({ title: "Authorization Required", messages: ["this action require authorization"] });
+                App.trigger('session:login');
+              }
+            }.bind(this)
+          }
+        });
       },
 
       addHeaders: function(){
@@ -30,10 +41,9 @@ define([
 
       login: function(creds) {
         this.set(creds);
-        this.addHeaders();
         this.getAuth().done(function(){
-          this.trigger('login:success');
           this.set({ logged_in: true });
+          this.trigger('login:success');
           if(creds.remember){
             window.localStorage.setItem('authModel', JSON.stringify(this));
           } else {
@@ -45,6 +55,7 @@ define([
           this.clear();
           this.set({ logged_in: false });
           App.trigger('session:login:fail');
+          App.alert({ title: "Authorization Failed", messages: ["Username or password is wrong"] });
         }.bind(this));
 
       },
@@ -60,11 +71,7 @@ define([
       getAuth: function() {
         var defer = $.Deferred();
         if(this.get('username') && this.get('password')){
-
-          App.request('user:model:current')
-            .done(function(){defer.resolve();})
-            .fail(function(){defer.reject();});
-
+          return App.request('user:model:current');
         } else {
           defer.reject();
         }

@@ -80,6 +80,15 @@ define(['app'], function(App){
       new Ticket.Router({
         controller: API
       });
+
+      Backbone.history.on("route", function(router, route, param){
+        if(route === "searchTicket"){
+          App.Header.trigger('set:search', param[0]);
+        } else {
+          App.Header.trigger('set:search', null);
+        }
+      });
+
     });
 
   });

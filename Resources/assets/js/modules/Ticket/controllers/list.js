@@ -11,7 +11,6 @@ define(['app'], function(App){
         var request;
         if(query){
           request = App.request('ticket:collection:search', query);
-          App.Header.trigger('set:search', query);
         } else {
           request = App.request('ticket:collection');
         }
@@ -37,17 +36,13 @@ define(['app'], function(App){
 
           ticketListView.on('page:change', function(page){
             ticketCollection.getPage(page);
+            ticketListView.pagerView.model.set(ticketCollection.state);
             ticketCollection.fetch({
               data : ticketCollection.params,
               success : function(){
-                ticketListView.pagerView.model.set(ticketCollection.state);
                 ticketListView.mainView.render();
               }
             });
-          });
-
-          ticketListView.on('destroy', function(){
-            App.Header.trigger('set:search', null);
           });
 
           App.mainRegion.show(ticketListView);

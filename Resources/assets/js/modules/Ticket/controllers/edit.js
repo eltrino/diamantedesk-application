@@ -35,6 +35,11 @@ define(['app'], function(App){
                   App.trigger('ticket:view', resultModel.get('id'));
                   modalEditView.off('modal:closed');
                   modalEditView.$el.modal('hide');
+                },
+                error : function(){
+                  App.alert({
+                    title: "Edit Ticket Error"
+                  });
                 }
               });
             } else {

@@ -39,6 +39,12 @@ module.exports = function(grunt) {
 
     less: {
       main : {
+        options: {
+          sourceMap: true,
+          outputSourceFiles: true,
+          sourceMapURL: 'main.css.map',
+          sourceMapFilename: '<%= publicDir %>/css/main.css.map'
+        },
         files: {
           '<%= publicDir %>/css/main.css': '<%= lessDir %>/main.less'
         }
@@ -46,6 +52,12 @@ module.exports = function(grunt) {
     },
 
     watch: {
+      css: {
+        files: ['<%= publicDir %>/css/main.css'],
+        options: {
+          livereload: true
+        }
+      },
       main: {
         files: '<%= assetsDir %>/**',
         tasks: ['sync']

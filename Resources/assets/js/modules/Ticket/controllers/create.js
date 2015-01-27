@@ -35,6 +35,11 @@ define(['app'], function(App){
                 isSuccess = true;
                 App.trigger('ticket:view', resultModel.get('id'));
                 modalCreateView.$el.modal('hide');
+              },
+              error : function(){
+                App.alert({
+                  title: "Create Tcket Error"
+                });
               }
             });
           });

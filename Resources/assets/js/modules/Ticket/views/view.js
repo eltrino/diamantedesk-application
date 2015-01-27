@@ -13,6 +13,10 @@ define([
       className: 'ticket-view',
       template: TicketViewTemplate,
 
+      initialize: function() {
+        this.listenTo(this.model, "change:status", this.render);
+      },
+
       regions: {
         CommentsRegion: '#comments'
       },
@@ -24,11 +28,13 @@ define([
       },
 
       events : {
-        'click .js-ticket-list' : 'listTickets',
-        'click .js-edit-ticket' : 'editTicket'
+        'click .js-back' : 'back',
+        'click .js-edit-ticket' : 'editTicket',
+        'click .js-close-ticket' : 'resolveTicket',
+        'click .js-open-ticket' : 'reopenTicket'
       },
 
-      listTickets : function(e){
+      back : function(e){
         e.preventDefault();
         App.back();
       },
@@ -36,7 +42,18 @@ define([
       editTicket : function(e){
         e.preventDefault();
         App.trigger('ticket:edit', this.model.get('id'));
+      },
+
+      resolveTicket : function(e){
+        e.preventDefault();
+        this.trigger('ticket:close');
+      },
+
+      reopenTicket : function(e){
+        e.preventDefault();
+        this.trigger('ticket:open');
       }
+
     });
 
   });

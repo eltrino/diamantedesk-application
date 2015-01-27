@@ -38,6 +38,12 @@ define([
     }
   };
 
+  App.alert = function(options){
+    require(['Common/views/alert'], function(Alert){
+      App.dialogRegion.show(new Alert.View(options));
+    });
+  };
+
   App.navigate = function(route, options){
     if(Backbone.History.started){
       Backbone.history.navigate(route, options || {});

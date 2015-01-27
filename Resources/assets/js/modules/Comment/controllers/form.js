@@ -20,6 +20,11 @@ define(['app'], function(App){
               success : function(model){
                 options.collection.add(model);
                 formView.clearForm();
+              },
+              error : function(){
+                App.alert({
+                  title: "Create Comment Error"
+                });
               }
             });
           });

@@ -28,6 +28,9 @@ define([
               }
               defer.resolve(data);
             },
+            error : function(data){
+              defer.reject(data);
+            },
             complete : function(){
               user.urlRoot = Config.apiUrl + '/users/';
             }

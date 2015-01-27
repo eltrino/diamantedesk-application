@@ -5,12 +5,15 @@ define(['app'], function(App){
     Comment.startWithParent = false;
 
     Comment.on('start', function(options){
+      Comment.render(options);
+      Comment.ready = true;
+    });
 
+    Comment.render = function(options){
       require(['Comment/controllers/list'], function(List){
         List.Controller(options);
       });
-
-    });
+    };
 
   });
 

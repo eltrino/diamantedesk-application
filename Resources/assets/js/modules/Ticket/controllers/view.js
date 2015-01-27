@@ -11,12 +11,18 @@ define(['app'], function(App){
           var ticketView = new View.ItemView({
               model : ticketModel
           });
-          ticketView.on('show', function(){
+          ticketView.on('dom:refresh', function(){
             require(['Comment'], function(Comment){
-              Comment.start({
+              var options = {
                 ticket : this.model,
                 parentRegion : this.CommentsRegion
-              });
+              };
+              if(Comment.ready){
+                Comment.render(options);
+              } else {
+                Comment.start(options);
+              }
+
             }.bind(this));
           });
           ticketView.on('destroy', function(){
@@ -24,6 +30,13 @@ define(['app'], function(App){
               Comment.stop();
             });
           });
+          ticketView.on('ticket:close', function(){
+            ticketModel.save({'status':'closed'}, {patch : true});
+          });
+          ticketView.on('ticket:open', function(){
+            ticketModel.save({'status':'open'}, {patch : true});
+          });
+
           App.mainRegion.show(ticketView);
 
         }).fail(function(){
