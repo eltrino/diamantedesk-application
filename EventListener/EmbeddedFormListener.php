@@ -16,10 +16,7 @@ namespace Diamante\EmbeddedFormBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;
 
-use Oro\Bundle\EmbeddedFormBundle\Event\EmbeddedFormSubmitBeforeEvent;
 use Oro\Bundle\UIBundle\Event\BeforeFormRenderEvent;
-
-use Diamante\DiamanteDeskBundle\Model\BranchAwareInterface;
 
 class EmbeddedFormListener
 {
@@ -63,22 +60,6 @@ class EmbeddedFormListener
             }
 
             $event->setFormData($data);
-        }
-    }
-
-    /**
-     * @param EmbeddedFormSubmitBeforeEvent $event
-     */
-    public function onEmbeddedFormSubmit(EmbeddedFormSubmitBeforeEvent $event)
-    {
-        /** @var BranchAwareInterface $form */
-        $form = $event->getFormEntity();
-        /** @var  Object */
-        $data = $event->getData();
-
-        if ($data instanceof BranchAwareInterface) {
-            $branch = $form->getBranch();
-            $data->setBranch($branch);
         }
     }
 
