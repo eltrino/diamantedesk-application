@@ -25,7 +25,7 @@ class UpdateCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('diamante:update')
+        $this->setName('diamante:desk:update')
             ->setDescription('Update DiamanteDesk');
     }
 
