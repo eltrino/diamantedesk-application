@@ -99,7 +99,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
      */
     protected function assetsInstall(OutputInterface $output)
     {
-        $this->runExistingCommand('assets:install', $output);
+        $this->runExistingCommand('oro:assets:install', $output, array('target' => './'));
     }
 
     /**
