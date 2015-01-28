@@ -5,12 +5,12 @@ define(['app'], function(App){
     Form.Controller = function(options){
       require(['Comment/models/comment', 'Comment/views/form'], function(Models, Form){
 
-        var formView = new Form.ItemView({});
+        var commentModel = new Models.Model({},{
+              ticket : options.ticket
+            }),
+            formView = new Form.ItemView({ model: commentModel });
 
         formView.on('form:submit', function(data){
-          var commentModel = new Models.Model({},{
-                ticket : options.ticket
-              });
           App.request('user:model:current').done(function(user){
             commentModel.set({
               'author': 'oro_' + user.get('id'),

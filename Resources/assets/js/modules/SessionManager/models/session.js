@@ -30,6 +30,19 @@ define([
         });
       },
 
+      validate: function(attrs, options){
+        var errors = {};
+        if(!attrs.username) {
+          errors.username = "login is required";
+        }
+        if(!attrs.password) {
+          errors.password = "password is required";
+        }
+        if(!_.isEmpty(errors)){
+          return errors;
+        }
+      },
+
       addHeaders: function(){
         $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
           if(this.get('username') && this.get('password')){
@@ -39,25 +52,29 @@ define([
         }.bind(this));
       },
 
-      login: function(creds) {
-        this.set(creds);
-        this.getAuth().done(function(){
-          this.set({ logged_in: true });
-          this.trigger('login:success');
-          if(creds.remember){
-            window.localStorage.setItem('authModel', JSON.stringify(this));
-          } else {
-            window.sessionStorage.setItem('authModel', JSON.stringify(this));
-          }
-          App.trigger('session:login:success');
-        }.bind(this)).fail(function(){
-          this.trigger('login:fail');
-          this.clear();
-          this.set({ logged_in: false });
-          App.trigger('session:login:fail');
-          App.alert({ title: "Authorization Failed", messages: ["Username or password is wrong"] });
-        }.bind(this));
+      loginSuccess: function() {
+        this.set({ logged_in: true });
+        this.trigger('login:success');
+        if(creds.remember){
+          window.localStorage.setItem('authModel', JSON.stringify(this));
+        } else {
+          window.sessionStorage.setItem('authModel', JSON.stringify(this));
+        }
+        App.trigger('session:login:success');
+      },
 
+      loginFail: function(){
+        this.trigger('login:fail');
+        this.clear();
+        this.set({ logged_in: false });
+        App.trigger('session:login:fail');
+        App.alert({ title: "Authorization Failed", messages: ["Username or password is wrong"] });
+      },
+
+      login: function(creds) {
+        if(this.set(creds, {validate: true})){
+          this.getAuth().done(this.loginSuccess.bind(this)).fail(this.loginFail.bind(this));
+        }
       },
 
       logout: function() {

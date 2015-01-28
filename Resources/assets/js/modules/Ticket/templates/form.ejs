@@ -1,6 +1,6 @@
 <form action="/" role="form">
     <div class="form-group">
-        <label for="subject">Ticket Subject</label>
+        <label class="control-label" for="subject">Ticket Subject</label>
         <input type="text"
                class="form-control"
                id="subject"
@@ -9,7 +9,7 @@
                value="<%= subject %>">
     </div>
     <div class="form-group">
-        <label for="description">Description</label>
+        <label class="control-label" for="description">Description</label>
         <textarea class="form-control"
                   id="description"
                   name="description"
@@ -17,7 +17,7 @@
                   placeholder="Type in detailed description of your ticket"><%= description %></textarea>
     </div>
     <div class="form-group">
-        <label for="priority">Priority</label>
+        <label class="control-label" for="priority">Priority</label>
         <select class="form-control"
                 id="priority"
                 name="priority">

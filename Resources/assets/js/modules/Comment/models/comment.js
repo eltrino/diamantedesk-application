@@ -20,6 +20,15 @@ define([
             ticketStatus : options.ticket.get('status')
           });
         }
+      },
+      validate: function(attrs, options){
+        var errors = {};
+        if(!attrs.content) {
+          errors.content = "can't be blank";
+        }
+        if(!_.isEmpty(errors)){
+          return errors;
+        }
       }
     });
 

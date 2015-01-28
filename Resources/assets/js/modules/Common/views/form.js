@@ -4,6 +4,10 @@ define(['app'], function(App){
 
     Form.ItemView = Marionette.ItemView.extend({
 
+      modelEvents: {
+        'invalid' : 'formDataInvalid'
+      },
+
       ui : {
         'submitButton' : '.js-submit'
       },
@@ -30,9 +34,25 @@ define(['app'], function(App){
 
       clearForm : function(){
         this.$('form')[0].reset();
+      },
+
+      formDataInvalid: function (model ,errors){
+        var clearErrors = function(){
+          var $form = this.$("form");
+          $form.find(".help-block").remove();
+          $form.find(".has-error").removeClass("has-error");
+        };
+        var markErrors = function(value, key){
+          var $controlGroup = this.$('[name="'+key + '"]').parent();
+          var $errorEl = $("<span>", {class: "help-block", text: value});
+          $controlGroup.append($errorEl).addClass("has-error");
+        };
+        clearErrors.call(this);
+        _.each(errors, markErrors, this);
+
       }
 
-    });
+  });
 
   });
 

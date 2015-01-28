@@ -35,14 +35,13 @@ define(['app'], function(App){
           });
 
           ticketListView.on('page:change', function(page){
-            ticketCollection.getPage(page);
-            ticketListView.pagerView.model.set(ticketCollection.state);
-            ticketCollection.fetch({
+            ticketCollection.getPage(page, {
               data : ticketCollection.params,
               success : function(){
                 ticketListView.mainView.render();
               }
             });
+            ticketListView.pagerView.model.set(ticketCollection.state);
           });
 
           App.mainRegion.show(ticketListView);

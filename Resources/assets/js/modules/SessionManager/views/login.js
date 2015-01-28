@@ -1,11 +1,12 @@
 define([
   'app',
   'config',
-  'tpl!../templates/login.ejs'], function(App, Config, loginTemplate){
+  'Common/views/form',
+  'tpl!../templates/login.ejs'], function(App, Config, Form, loginTemplate){
 
   return App.module('SessionManager', function(SessionManager, App, Backbone, Marionette, $, _){
 
-    SessionManager.LoginView = Marionette.ItemView.extend({
+    SessionManager.LoginView = Form.ItemView.extend({
       template: loginTemplate,
       className: 'login-block',
 
@@ -22,28 +23,16 @@ define([
       },
 
       modelEvents: {
-        'login:success' : 'onLoginSuccess',
-        'login:fail' : 'onLoginFail'
+        'login:success' : 'loginSuccess',
+        'login:fail' : 'loginFail',
+        'invalid' : 'formDataInvalid'
       },
 
-      events: {
-        'click .js-submit' : 'submitForm'
-      },
-
-      submitForm: function(e){
-        e.preventDefault();
-        var arr = this.$('form').serializeArray(), i = arr.length, data = {};
-        for(;i--;) {
-          data[arr[i].name] = arr[i].value;
-        }
-        this.trigger('form:submit', data);
-      },
-
-      onLoginSuccess: function(){
+      loginSuccess: function(){
         this.$el.fadeOut();
       },
 
-      onLoginFail: function(){
+      loginFail: function(){
 
       },
 

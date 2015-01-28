@@ -13,6 +13,18 @@ define([
         priority : 'medium',
         status: 'open',
         source: 'web'
+      },
+      validate: function(attrs, options){
+        var errors = {};
+        if(!attrs.subject) {
+          errors.subject = "can't be blank";
+        }
+        if(!attrs.description) {
+          errors.description = "can't be blank";
+        }
+        if(!_.isEmpty(errors)){
+          return errors;
+        }
       }
     });
 
