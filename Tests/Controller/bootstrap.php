@@ -60,7 +60,7 @@ if (true === (bool)$autoloadFlag) {
     $application->add($loadCommand);
     $input = new ArrayInput(array(
         'command'               => 'doctrine:fixtures:load',
-        '--fixtures'            => "{$kernelDir}/../src/Diamante/DeskBundle/DataFixtures/Test",
+        '--fixtures'            => "{$kernelDir}/../src/Diamante/EmbeddedFormBundle/DataFixtures/Test",
         '--append'              => true,
         '--no-interaction'      => true
 

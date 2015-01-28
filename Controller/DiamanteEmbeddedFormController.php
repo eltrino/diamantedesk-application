@@ -84,10 +84,12 @@ class DiamanteEmbeddedFormController extends Controller
             $command->source = Source::WEB;
             $command->status = Status::NEW_ONE;
             $command->branch = $formEntity->getBranch();
-            if ($formEntity->getBranch()->getDefaultAssignee()) {
-                $command->assignee = $formEntity->getBranch()->getDefaultAssignee();
-            } else {
-                $command->assignee = null;
+            $command->assignee = null;
+            if ($formEntity->getBranch()) {
+                $assignee = $formEntity->getBranch()->getDefaultAssignee();
+            }
+            if ($assignee) {
+                $command->assignee = $assignee;
             }
 
             $form->handleRequest($this->getRequest());

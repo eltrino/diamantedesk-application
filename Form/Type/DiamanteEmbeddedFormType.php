@@ -209,7 +209,7 @@ CSS;
      */
     public function getDefaultSuccessMessage()
     {
-        return '<p>Ticket has been placed successfully</p>{back_link}';
+        return '<p>Ticket has been placed successfully.</p>{back_link}';
     }
 
     /**
