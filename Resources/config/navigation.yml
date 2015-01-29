@@ -34,7 +34,7 @@ oro_titles:
     diamante_comment_update: 'Edit Comment - %%ticket.subject%%'
 
     diamante_ticket_list: ~
-    diamante_ticket_view: '%%ticket.subject%%'
+    diamante_ticket_view: '%%ticket.key%% %%ticket.subject%%'
     diamante_ticket_create: 'Create Ticket'
     diamante_ticket_update: '%%ticket.subject%% - Edit'
     diamante_ticket_create_attach: 'Add Attachment'
