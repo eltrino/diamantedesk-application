@@ -57,12 +57,6 @@ class DiamanteEmbeddedFormController extends Controller
 
         $formType = new DiamanteEmbeddedFormType();
         $form = $this->createForm($formType, $command);
-        $formView = $form->createView();
-
-        $formView->children['attachmentsInput']->vars = array_replace(
-            $formView->children['attachmentsInput']->vars,
-            array('full_name' => 'diamante_embedded_form[attachmentsInput][]')
-        );
 
         if (in_array($this->getRequest()->getMethod(), ['POST', 'PUT'])) {
 
@@ -104,6 +98,13 @@ class DiamanteEmbeddedFormController extends Controller
             }
 
         }
+
+        $formView = $form->createView();
+
+        $formView->children['attachmentsInput']->vars = array_replace(
+            $formView->children['attachmentsInput']->vars,
+            array('full_name' => 'diamante_embedded_form[attachmentsInput][]')
+        );
 
         $this->render(
             'OroEmbeddedFormBundle:EmbedForm:form.html.twig',
