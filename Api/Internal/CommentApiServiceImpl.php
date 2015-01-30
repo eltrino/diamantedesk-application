@@ -16,13 +16,21 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
+use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
 
 class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInterface
 {
     use ApiServiceImplTrait;
+
+    /**
+     * @var ApiPagingService
+     */
+    protected $apiPagingService;
 
     /**
      * Load Comment by given comment id
@@ -300,6 +308,24 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      */
     public function listAllComments(Command\Filter\FilterCommentsCommand $command)
     {
-        return parent::listAllComments($command);
+        $criteriaProcessor = new CommentFilterCriteriaProcessor();
+        $criteriaProcessor->setCommand($command);
+        $criteria = $criteriaProcessor->getCriteria();
+        $pagingProperties = $criteriaProcessor->getPagingProperties();
+        $repository = $this->getCommentsRepository();
+        $comments = $repository->filter($criteria, $pagingProperties);
+
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+
+        return $comments;
+    }
+
+    /**
+     * @param ApiPagingService $apiPagingService
+     */
+    public function setApiPagingService(ApiPagingService $apiPagingService)
+    {
+        $this->apiPagingService = $apiPagingService;
     }
 }

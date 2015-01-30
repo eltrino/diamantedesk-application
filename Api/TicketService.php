@@ -129,11 +129,4 @@ interface TicketService
      * @param Command\UpdatePropertiesCommand $command
      */
     public function updateProperties(Command\UpdatePropertiesCommand $command);
-
-    /**
-     * Retrieves list of all Tickets
-     * @param FilterTicketsCommand $filterTicketsCommand
-     * @return mixed
-     */
-    public function listAllTickets(FilterTicketsCommand $filterTicketsCommand);
 }

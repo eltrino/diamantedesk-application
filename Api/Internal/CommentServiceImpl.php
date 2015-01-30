@@ -364,22 +364,10 @@ class CommentServiceImpl implements CommentService
     }
 
     /**
-     * Retrieves list of all Comments.
-     * Filters comments with parameters provided via GET request.
-     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
-     * Time filtering values should be converted to UTC
-     * @param Command\Filter\FilterCommentsCommand $command
-     * @return Comment[]
+     * @return Repository
      */
-    public function listAllComments(Command\Filter\FilterCommentsCommand $command)
+    protected function getCommentsRepository()
     {
-        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Comment');
-        $criteriaProcessor = new CommentFilterCriteriaProcessor();
-        $criteriaProcessor->setCommand($command);
-        $criteria = $criteriaProcessor->getCriteria();
-        $pagingProperties = $criteriaProcessor->getPagingProperties();
-        $comments = $this->commentRepository->filter($criteria, $pagingProperties);
-
-        return $comments;
+        return $this->commentRepository;
     }
 }

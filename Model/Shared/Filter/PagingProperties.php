@@ -37,4 +37,9 @@ interface PagingProperties
      * @return string
      */
     public function getOrder();
+
+    /**
+     * @return array
+     */
+    public function toArray();
 }

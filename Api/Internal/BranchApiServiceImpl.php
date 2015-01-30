@@ -16,11 +16,19 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
+use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Filter\BranchFilterCriteriaProcessor;
 
 class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInterface
 {
+    use ApiServiceImplTrait;
+    /**
+     * @var ApiPagingService
+     */
+    private $apiPagingService;
+
     /**
      * Retrieves list of all Branches. Filters branches with parameters provided within GET request
      * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
@@ -41,7 +49,17 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
      */
     public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null)
     {
-        return parent::listAllBranches($command);
+        $processor = new BranchFilterCriteriaProcessor();
+        $processor->setCommand($command);
+        $criteria = $processor->getCriteria();
+        $pagingProperties = $processor->getPagingProperties();
+        $repository = $this->getBranchRepository();
+        $branches = $repository->filter($criteria, $pagingProperties);
+
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+
+        return $branches;
     }
 
     /**
@@ -161,5 +179,13 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
     public function deleteBranch($branchId)
     {
         parent::deleteBranch($branchId);
+    }
+
+    /**
+     * @param ApiPagingService $pagingService
+     */
+    public function setApiPagingService(ApiPagingService $pagingService)
+    {
+        $this->apiPagingService = $pagingService;
     }
 }

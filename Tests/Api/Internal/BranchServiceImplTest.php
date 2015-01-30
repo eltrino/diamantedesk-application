@@ -126,33 +126,6 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     */
-    public function thatListsAllBranches()
-    {
-        $branches = array(
-            new Branch('DUMMY', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
-            new Branch('DUMMY', 'DUMMY_NAME_2', 'DUMMY_DESC_2')
-        );
-        $this->branchRepository
-            ->expects($this->once())
-            ->method('filter')
-            ->with($this->equalTo(array()), $this->equalTo(new FilterPagingProperties()))
-            ->will($this->returnValue($branches));
-
-        $this->authorizationService->expects($this->once())->method('isActionPermitted')
-            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
-            ->will($this->returnValue(true));
-
-        $retrievedBranches = $this->branchServiceImpl->listAllBranches(new FilterBranchesCommand());
-
-        $this->assertNotNull($retrievedBranches);
-        $this->assertTrue(is_array($retrievedBranches));
-        $this->assertNotEmpty($retrievedBranches);
-        $this->assertEquals($branches, $retrievedBranches);
-    }
-
-    /**
-     * @test
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Branch loading failed. Branch not found.
      */
@@ -440,36 +413,5 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->branchServiceImpl->updateProperties($command);
-    }
-
-    /**
-     * @test
-     */
-    public function testBranchesFiltered()
-    {
-        $branches = array(
-            new Branch('DUMM', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
-            new Branch('DUMMY', 'DUMMY_NAME_2', 'DUMMY_DESC_2')
-        );
-
-        $command = new FilterBranchesCommand();
-        $command->name = 'NAME_2';
-
-        $this->branchRepository
-            ->expects($this->once())
-            ->method('filter')
-            ->with($this->equalTo(array(array('name','like','NAME_2'))), $this->equalTo(new FilterPagingProperties()))
-            ->will($this->returnValue(array($branches[0])));
-
-        $this->authorizationService->expects($this->once())->method('isActionPermitted')
-            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
-            ->will($this->returnValue(true));
-
-        $retrievedBranches = $this->branchServiceImpl->listAllBranches($command);
-
-        $this->assertNotNull($retrievedBranches);
-        $this->assertTrue(is_array($retrievedBranches));
-        $this->assertNotEmpty($retrievedBranches);
-        $this->assertEquals($branches[0], $retrievedBranches[0]);
     }
 }
