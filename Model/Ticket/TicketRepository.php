@@ -14,9 +14,10 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
+use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
 
-interface TicketRepository extends Repository
+interface TicketRepository extends Repository, FilterableRepository
 {
     /**
      * Find Ticket by given TicketKey
