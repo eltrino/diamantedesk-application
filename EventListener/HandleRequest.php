@@ -16,18 +16,28 @@
 namespace Diamante\ApiBundle\EventListener;
 
 use Diamante\ApiBundle\Handler\MethodParameters;
+use Diamante\ApiBundle\Paging\Provider\PagingContext;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Validator\Validator;
 
 class HandleRequest
 {
-
+    /**
+     * @var Validator
+     */
     private $validator;
 
-    public function __construct(Validator $validator)
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function __construct(Validator $validator, ContainerInterface $container)
     {
         $this->validator = $validator;
+        $this->container = $container;
     }
 
     public function onKernelController(FilterControllerEvent $event)
@@ -51,6 +61,12 @@ class HandleRequest
         }
 
         $request->attributes->set('_diamante_rest_service', true);
+
+        if ($request->getMethod() == 'GET') {
+            $pagingContext = PagingContext::fromRequest($request);
+            $pagingContext->setHeaderContainer($this->container->get('diamante.api.headers.container'));
+            $this->container->get('diamante.api.paging.provider')->setContext($pagingContext);
+        }
 
         $methodParameters = new MethodParameters($reflection, $this->validator);
         if ($request->request->count()) {
