@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
 
 trait ApiServiceImplTrait
 {
@@ -46,5 +48,15 @@ trait ApiServiceImplTrait
         }
         $input['content'] = base64_decode($input['content']);
         return $input;
+    }
+
+    /**
+     * @param ApiPagingService $service
+     * @param PagingInfo $info
+     */
+    protected function populatePagingHeaders(ApiPagingService $service, PagingInfo $info)
+    {
+        $links = $service->createPagingLinks($info);
+        $service->populatePagingHeaders($info, $links);
     }
 }
