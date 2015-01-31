@@ -17,21 +17,28 @@ define([
         this.listenTo(this.model, "change:status", this.render);
       },
 
-      regions: {
-        CommentsRegion: '#comments'
+      regions : {
+        CommentsRegion : '#comments'
       },
 
-      templateHelpers: function(){
+      templateHelpers : function(){
         return {
           created : new Date(this.model.get('created_at')).toLocaleDateString()
         };
       },
 
+      ui : {
+        backButton : '.js-back',
+        editButton : '.js-edit-ticket',
+        closeButton : '.js-close-ticket',
+        openButton : '.js-open-ticket'
+      },
+
       events : {
-        'click .js-back' : 'back',
-        'click .js-edit-ticket' : 'editTicket',
-        'click .js-close-ticket' : 'resolveTicket',
-        'click .js-open-ticket' : 'reopenTicket'
+        'click @ui.backButton' : 'back',
+        'click @ui.editButton' : 'editTicket',
+        'click @ui.closeButton' : 'resolveTicket',
+        'click @ui.openButton' : 'reopenTicket'
       },
 
       back : function(e){

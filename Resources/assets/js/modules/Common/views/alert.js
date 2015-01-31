@@ -9,9 +9,16 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
       template: alertTemplate,
 
       initialize: function(options){
-        var opt = options || {};
+        var opt = options || {},
+            message;
         this.title = opt.title || 'Error';
         this.messages = opt.messages || ['An unprocessed error happened. Please try again!'];
+        if(opt.xhr && opt.xhr.responseJSON){
+          message = opt.xhr.responseJSON.message || opt.xhr.responseJSON.error;
+        }
+        if(message) {
+          this.messages = [message];
+        }
       },
 
       templateHelpers: function(){

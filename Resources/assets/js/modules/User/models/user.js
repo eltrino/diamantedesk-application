@@ -24,7 +24,7 @@ define([
             data : { username: username },
             success : function(data){
               if(is_current){
-                currentUser = _.clone(user);
+                currentUser = user.clone();
               }
               defer.resolve(data);
             },

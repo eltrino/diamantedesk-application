@@ -52,10 +52,13 @@ define([
         }.bind(this));
       },
 
-      loginSuccess: function() {
-        this.set({ logged_in: true });
+      loginSuccess: function(data) {
+        this.set({
+          id: data.id,
+          logged_in: true
+        });
         this.trigger('login:success');
-        if(creds.remember){
+        if(this.get('remember')){
           window.localStorage.setItem('authModel', JSON.stringify(this));
         } else {
           window.sessionStorage.setItem('authModel', JSON.stringify(this));

@@ -5,8 +5,12 @@ define([
   return App.module('Ticket.View.Comment', function(Comment, App, Backbone, Marionette, $, _){
 
     Comment.Model = Backbone.Model.extend({
-      urlRoot : Config.apiUrl + '/desk/comments',
-      initialize : function(attr, options){
+      urlRoot: Config.apiUrl + '/desk/comments',
+      defaults: {
+        content: ''
+      },
+
+      initialize: function(attr, options){
 
         if(attr && attr.author){
           App.request('user:model', attr.author).done(function(user){
@@ -21,6 +25,7 @@ define([
           });
         }
       },
+
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.content) {

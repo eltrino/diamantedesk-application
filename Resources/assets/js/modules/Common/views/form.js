@@ -11,6 +11,7 @@ define(['app'], function(App){
       ui : {
         'submitButton' : '.js-submit'
       },
+
       events: {
         'click @ui.submitButton' : 'submitForm'
       },

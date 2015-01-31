@@ -12,17 +12,15 @@ define([
 
       templateHelpers: function(){
         return {
-          created : new Date(this.model.get('created_at')).toLocaleDateString()
+          created: new Date(this.model.get('created_at')).toLocaleDateString()
         };
       },
 
-      events : {
-        'click' : 'viewClicked'
+      events: {
+        'click': 'viewClicked'
       },
 
-      viewClicked: function(e){
-        e.preventDefault();
-        e.stopPropagation();
+      viewClicked: function(){
         this.trigger('ticket:view', this.model);
       }
     });
@@ -34,7 +32,7 @@ define([
       childViewContainer: 'tbody',
       childView: List.ItemView,
 
-      events : {
+      events: {
         'click th': 'sortHandle'
       },
 
@@ -50,7 +48,7 @@ define([
       templateHelpers: function(){
         var filterState = this.collection.state;
         return {
-          sorterState : function(attr){
+          sorterState: function(attr){
             if(filterState.sortKey === attr) {
               if(filterState.order > 0){
                 return '<i class="fa fa-sort-desc"></i>';

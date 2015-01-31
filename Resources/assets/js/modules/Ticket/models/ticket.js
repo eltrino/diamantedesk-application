@@ -6,7 +6,7 @@ define([
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
 
     Ticket.Model = Backbone.Model.extend({
-      urlRoot : Config.apiUrl + '/desk/tickets',
+      urlRoot: Config.apiUrl + '/desk/tickets',
       defaults: {
         subject : '',
         description: '',
@@ -40,9 +40,9 @@ define([
       },
 
       queryParams: {
-        pageSize: 'perPage',
-        sortKey: 'orderByField',
-        order: 'sortingOrder'
+        pageSize: 'limit',
+        sortKey: 'sort',
+        order: 'order'
       },
 
       setFilter: function(query) {

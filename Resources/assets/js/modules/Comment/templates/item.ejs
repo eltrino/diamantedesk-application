@@ -1,3 +1,9 @@
+<% if(isAuthor) {%>
+<ul class="comment-tools pull-right">
+    <li><button class="btn btn-link js-edit-comment" title="Edit Comment"><i class="fa fa-pencil"></i></button></li>
+    <li><button class="btn btn-link js-delete-comment" title="Delete Comment"><i class="fa fa-times"></i></button></li>
+</ul>
+<% } %>
 <strong>
     <% if(typeof authorFullName !== 'undefined') { %>
     <%= authorFullName  %>
@@ -5,3 +11,4 @@
     Loading...
     <% } %>
 </strong> <%= content %>
+<p><small><%= created %></small></p>
