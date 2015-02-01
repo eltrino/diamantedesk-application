@@ -69,7 +69,6 @@ class TicketController extends Controller
 
         $filtersList = $filtersGenerator->getFilters();
         $linksList = array();
-        $baseUri = $this->getRequest()->getBaseUrl() . $this->getRequest()->getPathInfo();
         foreach($filtersList as $filter) {
             $link['name'] =  $filter->getName();
             $link['url'] = $filtersGenerator->generateGridFilterUrl($filter->getId());
@@ -310,10 +309,7 @@ class TicketController extends Controller
     {
         try {
             $this->get('diamante.ticket.service')->deleteTicketByKey($key);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.delete.success');
-            return $this->redirect(
-                $this->generateUrl('diamante_ticket_list')
-            );
+            return new Response(null, 204);
         } catch (\Exception $e) {
             return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
