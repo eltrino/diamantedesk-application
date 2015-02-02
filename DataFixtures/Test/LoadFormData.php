@@ -17,11 +17,21 @@ namespace Diamante\DeskBundle\DataFixtures\Test;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\EmbeddedFormBundle\Entity\EmbeddedForm;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 class LoadFormData extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
+
+        /** @var Organization $organization */
+        $organization = $manager->getRepository('OroOrganizationBundle:Organization')
+            ->getFirst();
+
+        /** @var Organization $organization */
+        $branches = $manager->getRepository('DiamanteDeskBundle:Branch')
+            ->getAll();
+        $branch = current($branches);
 
         $ASCIIKey = ord('A');
         for ($i = 1; $i <= 10; $i ++) {
@@ -32,6 +42,8 @@ class LoadFormData extends AbstractFixture
             $form->setFormType('diamante_embedded_form.form_type.available_embedded_form');
             $form->setSuccessMessage('Ticket has been placed successfully');
             $form->setCss('');
+            $form->setOwner($organization);
+            $form->setBranch($branch);
             $manager->persist($form);
         }
 
