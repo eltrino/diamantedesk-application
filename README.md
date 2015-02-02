@@ -6,6 +6,27 @@ create ticket from third party sites.
 
 For more information about Embedded Form look at Oro/Bundle/EmbeddedFormBundle/README.md
 
+Installation
+------------
+
+Add as dependency in composer
+
+```bash
+composer require diamante/embedded-form:dev-master
+```
+
+Installation requires additional migration you should run
+
+```bash
+php app/console oro:migration:load
+```
+
+You should install assets. It should be done through standard Symfony way
+
+```bash
+php app/console assets:install
+```
+
 Configuration
 ------------
 
