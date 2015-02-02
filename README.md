@@ -13,7 +13,7 @@ Diamante Embedded Form url should not be covered by standard Oro Platfrom authen
 
 ```yml
 diamante_embedded_form:
-    pattern:                        ^/embedded-form/diamante-embedded-form/submit
+    pattern:                        ^/embedded-form/submit-ticket
     provider:                       chain_provider
     anonymous:                      true
 ```
