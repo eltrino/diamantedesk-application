@@ -32,14 +32,11 @@ use Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
-/**
- * @Route("diamante-embedded-form")
- */
 class DiamanteEmbeddedFormController extends Controller
 {
     /**
      * @Route(
-     *      "/submit/{id}",
+     *      "/submit-ticket/{id}",
      *      name="diamante_embedded_form_submit",
      *      requirements={"id"="[-\d\w]+"},
      * )
