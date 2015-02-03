@@ -57,4 +57,9 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
      * @ORM\Column(type="string", nullable=true)
      */
     protected $salt;
+
+    public static function getClassName()
+    {
+        return __CLASS__;
+    }
 }
