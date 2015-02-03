@@ -27,10 +27,12 @@ class DynamicFieldsExtension extends BaseDynamicFieldsExtension
     public function getFields($entity, $entityClass = null)
     {
         $dynamicRows = parent::getFields($entity, $entityClass);
-        if ($entity->getFormType() != 'diamante_embedded_form.form_type.available_embedded_form') {
-            unset($dynamicRows['branch']);
-        } else {
-            unset($dynamicRows['dataChannel']);
+        if (method_exists($entity, 'getFormType')) {
+            if ($entity->getFormType() != 'diamante_embedded_form.form_type.available_embedded_form') {
+                unset($dynamicRows['branch']);
+            } else {
+                unset($dynamicRows['dataChannel']);
+            }
         }
         return $dynamicRows;
     }
