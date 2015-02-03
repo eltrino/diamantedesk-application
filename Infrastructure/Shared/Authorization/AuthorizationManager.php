@@ -51,6 +51,10 @@ class AuthorizationManager implements AuthorizationService
             $this->authImpl = $serviceContainer->get('diamante.oro_authorization.service');
             $this->userType = 'Oro';
         }
+
+        $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
+        $this->userType = 'Anonymous';
+
     }
 
     /**
@@ -64,9 +68,7 @@ class AuthorizationManager implements AuthorizationService
             return null;
         }
 
-        if (!is_object($user = $token->getUser())) {
-            return null;
-        }
+        $user = $token->getUser();
 
         return $user;
     }

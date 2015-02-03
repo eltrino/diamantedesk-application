@@ -22,6 +22,7 @@
         <parameter key="diamante.authorization_manager.service.class">Diamante\DeskBundle\Infrastructure\Shared\Authorization\AuthorizationManager</parameter>
         <parameter key="diamante.oro_authorization.service.class">Diamante\DeskBundle\Infrastructure\Shared\Authorization\OroAuthorizationImpl</parameter>
         <parameter key="diamante.diamante_authorization.service.class">Diamante\DeskBundle\Infrastructure\Shared\Authorization\DiamanteAuthorizationImpl</parameter>
+        <parameter key="diamante.anonymous_authorization.service.class">Diamante\DeskBundle\Infrastructure\Shared\Authorization\AnonymousAuthorizationImpl</parameter>
     </parameters>
 
     <services>
@@ -30,6 +31,8 @@
         </service>
 
         <service id="diamante.diamante_authorization.service" class="%diamante.diamante_authorization.service.class%" />
+
+        <service id="diamante.anonymous_authorization.service" class="%diamante.anonymous_authorization.service.class%" />
 
         <service id="diamante.authorization_manager.service" class="%diamante.authorization_manager.service.class%">
             <argument type="service" id="service_container"/>
