@@ -14,6 +14,8 @@
             {% set author = fetch_oro_user(comment.author) %}
             {% if comment.author.isOroUser %}
                 {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
+            {% else %}
+                {% set avatar = get_gravatar(comment.author) %}
             {% endif %}
             <li class="diam-comment">
                 <div class="pull-right">
