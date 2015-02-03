@@ -79,15 +79,16 @@ class TicketStrategy implements Strategy
         $assigneeId = 1;
 
         $diamanteUser = $this->diamanteUserRepository->findUserByEmail($message->getFrom());
-
+        $type = User::TYPE_ORO;
         if (is_null($diamanteUser)) {
             $diamanteUser = $this->diamanteUserFactory->create($message->getFrom(), $message->getFrom());
             $this->diamanteUserRepository->store($diamanteUser);
+            $type = User::TYPE_DIAMANTE;
         }
 
         $reporterId = $diamanteUser->getId();
 
-        $reporter = new User($reporterId, User::TYPE_DIAMANTE);
+        $reporter = new User($reporterId, $type);
 
         $attachments = $message->getAttachments();
 
