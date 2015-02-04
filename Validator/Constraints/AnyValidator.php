@@ -18,7 +18,7 @@ namespace Diamante\DeskBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class EntityValidator extends ConstraintValidator
+class AnyValidator extends ConstraintValidator
 {
     /**
      * {@inheritdoc}
@@ -29,8 +29,20 @@ class EntityValidator extends ConstraintValidator
             return;
         }
 
-        if (!is_numeric($value) && !is_object($value)) {
+        foreach ($constraint->constraints as $constraintEntity) {
+            $validatedBy = $constraintEntity->validatedBy();
+            $validator = new $validatedBy();
+            $validator->initialize($this->context);
+            $validator->validate($value, $constraintEntity);
+        }
+
+        $violationsCount = $this->context->getViolations()->count();
+        if (count($constraint->constraints) == $violationsCount) {
             $this->context->addViolation($constraint->message);
+        } else {
+            for ($i = 0; $i < $violationsCount; $i++) {
+                $this->context->getViolations()->remove($i);
+            }
         }
     }
 }
