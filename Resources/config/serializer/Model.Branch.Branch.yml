@@ -1,0 +1,9 @@
+Diamante\DeskBundle\Model\Branch\Branch:
+    accessor_order: alphabetical
+    properties:
+        defaultAssignee:
+            exclude: true
+    virtual_properties:
+        getDefaultAssigneeId:
+            serialized_name: default_assignee
+            type: integer

@@ -14,9 +14,12 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\Filter\FilterTicketsCommand;
+use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
@@ -92,10 +95,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $userService;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
-     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
@@ -126,7 +129,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->ticketBuilder,
             $this->attachmentManager,
             $this->userService,
-            $this->securityFacade,
+            $this->authorizationService,
             $this->dispatcher,
             $this->notificationDeliveryManager,
             $this->notifier
@@ -153,7 +156,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $key = 'TK-1';
         $ticket = $this->ticket;
 
-        $this->securityFacade->expects($this->once())->method('isGranted')
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with('VIEW', $ticket)
             ->will($this->returnValue(true));
 
@@ -204,9 +207,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
@@ -262,9 +265,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
@@ -331,9 +334,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
             ->will($this->returnValue(true));
 
@@ -383,9 +386,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -446,9 +449,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($ticket)
             );
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -508,9 +511,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('VIEW'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -523,15 +526,42 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function thatListsTicketAttachments()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')
+            ->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->authorizationService
+            ->expects($this->exactly(2))
+            ->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $attachment = $this->attachment();
+
+        $this->ticket->expects($this->once())->method('getAttachments')->will($this->returnValue(
+            array($attachment)
+        ));
+
+        $attachments = $this->ticketService->listTicketAttachments(self::DUMMY_TICKET_ID);
+
+        $this->assertNotNull($attachments);
+        $this->assertContains($attachment, $attachments);
+    }
+
+    /**
+     * @test
+     */
     public function thatTicketAttachmentRetrieves()
     {
         $attachment = $this->attachment();
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -586,9 +616,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             );
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -637,9 +667,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
 
@@ -667,9 +697,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -707,9 +737,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testUpdateStatus()
     {
         $status = STATUS::NEW_ONE;
-        $currentUserId = 3;
+        $currentUserId = $assigneeId = 2;
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
+
         $assignee = $this->createAssignee();
-        $assignee->setId($currentUserId);
+        $assignee->setId($assigneeId);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
@@ -725,14 +758,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticket->expects($this->any())->method('getAssignee')->will($this->returnValue($assignee));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUserId));
+            ->method('getLoggedUser')
+            ->will($this->returnValue($currentUser));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->never())
-            ->method('isGranted');
+            ->method('isActionPermitted');
 
         $this->ticket
             ->expects($this->once())
@@ -749,9 +782,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testUpdateStatusOfTicketAssignedToSomeoneElse()
     {
         $status = STATUS::NEW_ONE;
-        $assignee = $this->createAssignee();
-        $assignee->setId(3);
+        $assigneeId = 3;
         $currentUserId = 2;
+        $assignee = $this->createAssignee();
+        $assignee->setId($assigneeId);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
@@ -766,14 +800,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->exactly(2))->method('getAssignee')->will($this->returnValue($assignee));
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUserId));
+            ->method('getLoggedUser')
+            ->will($this->returnValue($currentUser));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -835,6 +871,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $assignee = $this->createAssignee();
         $assignee->setId($assigneeId);
 
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
+
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
@@ -845,14 +884,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->once())->method('assign')->with($assignee);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
-            ->will($this->returnValue($currentUserId));
+            ->method('getLoggedUser')
+            ->will($this->returnValue($currentUser));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->never())
-            ->method('isGranted');
+            ->method('isActionPermitted');
 
         $this->ticket
             ->expects($this->once())
@@ -871,6 +910,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $currentUserId = 2;
         $assigneeId = 3;
         $assignee = $this->createAssignee();
+        $currentUser = $this->createOroUser();
+        $currentUser->setId($currentUserId);
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
@@ -882,14 +923,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticket->expects($this->once())->method('assign')->with($assignee);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
-            ->method('getLoggedUserId')
+            ->method('getLoggedUser')
             ->will($this->returnValue($currentUserId));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -935,14 +976,14 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->any())
             ->method('getLoggedUserId')
             ->will($this->returnValue($currentUserId));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -971,9 +1012,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('deleteAttachment')
             ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -1000,9 +1041,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('deleteAttachment')
             ->with($this->isInstanceOf('\Diamante\DeskBundle\Model\Attachment\Attachment'));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
@@ -1026,6 +1067,63 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
     }
 
+    public function testLoadTicket()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
+            ->will($this->returnValue($this->ticket));
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $this->ticketService->loadTicket(self::DUMMY_TICKET_ID);
+    }
+
+    public function testUpdateProperties()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->will($this->returnValue($this->ticket));
+
+        $subject = 'DUMMY_SUBJECT_UPDT';
+        $description = 'DUMMY_DESC_UPDT';
+        $status = 'open';
+        $statusObject = new Status($status);
+        $priority = 'high';
+        $priorityObject = new Priority($priority);
+        $source = 'phone';
+        $sourceObject = new Source($source);
+
+        $this->ticket->expects($this->at(0))->method('updateProperty')
+            ->with($this->equalTo('subject'), $this->equalTo($subject));
+        $this->ticket->expects($this->at(1))->method('updateProperty')
+            ->with($this->equalTo('description'), $this->equalTo($description));
+        $this->ticket->expects($this->at(2))->method('updateProperty')
+            ->with($this->equalTo('status'), $this->equalTo($statusObject));
+        $this->ticket->expects($this->at(3))->method('updateProperty')
+            ->with($this->equalTo('priority'), $this->equalTo($priorityObject));
+        $this->ticket->expects($this->at(4))->method('updateProperty')
+            ->with($this->equalTo('source'), $this->equalTo($sourceObject));
+
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $command = new UpdatePropertiesCommand();
+        $command->id = 1;
+        $command->properties = [
+            'subject' => $subject,
+            'description' => $description,
+            'status' => $status,
+            'priority' => $priority,
+            'source' => $source
+        ];
+
+        $this->ticketService->updateProperties($command);
+    }
+
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Ticket loading failed, ticket not found.
@@ -1036,5 +1134,58 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(null));
 
         $this->ticketService->deleteTicketByKey(self::DUMMY_TICKET_KEY);
+    }
+
+    /**
+     * @test
+     */
+    public function testTicketsFiltered()
+    {
+        $tickets = array(
+            new Ticket(
+                new UniqueId('unique_id'),
+                new TicketSequenceNumber(13),
+                self::SUBJECT,
+                self::DESCRIPTION,
+                $this->createBranch(),
+                new User(1, User::TYPE_DIAMANTE),
+                $this->createAssignee(),
+                new Source(Source::PHONE),
+                new Priority(Priority::PRIORITY_LOW),
+                new Status(Status::CLOSED)
+            ),
+            new Ticket(
+                new UniqueId('unique_id'),
+                new TicketSequenceNumber(12),
+                self::SUBJECT,
+                self::DESCRIPTION,
+                $this->createBranch(),
+                new User(1, User::TYPE_ORO),
+                $this->createAssignee(),
+                new Source(Source::PHONE),
+                new Priority(Priority::PRIORITY_LOW),
+                new Status(Status::CLOSED)
+            ),
+        );
+
+        $command = new FilterTicketsCommand();
+        $command->reporter = 'oro_1';
+
+        $this->ticketRepository
+            ->expects($this->once())
+            ->method('filter')
+            ->with($this->equalTo(array(array('reporter','eq','oro_1'))), $this->equalTo(new FilterPagingProperties()))
+            ->will($this->returnValue(array($tickets[1])));
+
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Ticket'))
+            ->will($this->returnValue(true));
+
+        $retrievedTickets = $this->ticketService->listAllTickets($command);
+
+        $this->assertNotNull($retrievedTickets);
+        $this->assertTrue(is_array($retrievedTickets));
+        $this->assertNotEmpty($retrievedTickets);
+        $this->assertEquals($tickets[1], $retrievedTickets[0]);
     }
 }

@@ -12,14 +12,6 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 19/11/14
- * Time: 7:20 PM
- */
-
 namespace Diamante\DeskBundle\Model\User;
 
 class User
@@ -68,7 +60,7 @@ class User
     /**
      * @return bool
      */
-    public function isApiUser()
+    public function isDiamanteUser()
     {
         return ($this->type == self::TYPE_DIAMANTE);
     }

@@ -123,7 +123,18 @@ class Branch implements Entity, Taggable
     }
 
     /**
-     * @return string
+     * @return int|null
+     */
+    public function getDefaultAssigneeId()
+    {
+        if (is_null($this->defaultAssignee)) {
+            return null;
+        }
+        return $this->defaultAssignee->getId();
+    }
+
+    /**
+     * @return string|null
      */
     public function getDefaultAssigneeFullName()
     {
@@ -210,5 +221,21 @@ class Branch implements Entity, Taggable
         $this->tags = $tags;
 
         return $this;
+    }
+
+    /**
+     * Update single property of the branch
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function updateProperty($name, $value)
+    {
+        if (property_exists($this, $name)) {
+            $this->$name = $value;
+        } else {
+            throw new \DomainException(sprintf('Branch does not have "%s" property.', $name));
+        }
     }
 }

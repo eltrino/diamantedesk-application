@@ -22,7 +22,7 @@
 
 namespace Diamante\DeskBundle\Tests\Search;
 
-use Diamante\ApiBundle\Entity\ApiUser;
+use Diamante\DeskBundle\Entity\DiamanteUser;
 use Diamante\DeskBundle\Model\User\UserDetails;
 use Diamante\DeskBundle\Search\DiamanteUserSearchHandler;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -38,10 +38,10 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
     private $userDetailsService;
 
     /**
-     * @var \Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository
-     * @Mock Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository
+     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
      */
-    private $apiUserRepository;
+    private $diamanteUserRepository;
 
     /**
      * @var \Oro\Bundle\UserBundle\Autocomplete\UserSearchHandler
@@ -60,7 +60,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $this->diamanteUserSearchHandler = new DiamanteUserSearchHandler(
             'diamante_user',
             $this->userDetailsService,
-            $this->apiUserRepository,
+            $this->diamanteUserRepository,
             $this->userSearchHandler,
             $this->getProperties()
         );
@@ -95,7 +95,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $query = '';
 
-        $this->apiUserRepository
+        $this->diamanteUserRepository
             ->expects($this->once())
             ->method('searchByInput')
             ->with($this->equalTo($query), $this->equalTo($this->getProperties()))
@@ -125,7 +125,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $expectedOroUsers      = 3;
         $totalExpectedResult   = $expectedDiamanteUsers + $expectedOroUsers;
 
-        $this->apiUserRepository
+        $this->diamanteUserRepository
             ->expects($this->once())
             ->method('searchByInput')
             ->with($this->equalTo($query), $this->equalTo($this->getProperties()))
@@ -173,7 +173,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $result = array();
 
         for ($i = 0; $i < $size; $i++) {
-            $user = new ApiUser("email@host{$i}.com", "username{$i}", "First {$specificData}");
+            $user = new DiamanteUser("email@host{$i}.com", "username{$i}", "First {$specificData}");
             $result[] = $user;
         }
 

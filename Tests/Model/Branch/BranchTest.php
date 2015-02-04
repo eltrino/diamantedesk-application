@@ -66,4 +66,25 @@ class BranchTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($newLogo, $branch->getLogo());
     }
 
+    /**
+     * @test
+     */
+    public function thatUpdateProperty()
+    {
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
+        $branch->updateProperty('name', self::BRANCH_NAME);
+        $this->assertEquals(self::BRANCH_NAME, $branch->getName());
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException \DomainException
+     * @expectedExceptionMessage Branch does not have "invalid_property" property.
+     */
+    public function thatDoesNotUpdateInvalidProperty()
+    {
+        $branch = new Branch('DUMM', 'DUMMY_NAME', 'DUMMY_DESC');
+        $branch->updateProperty('invalid_property', 'value');
+    }
 }

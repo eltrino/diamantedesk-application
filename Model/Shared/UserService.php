@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Model\Shared;
 
-use Diamante\ApiBundle\Entity\ApiUser;
+use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -26,9 +26,9 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 interface UserService
 {
     /**
-     * Retrieves User|ApiUser entity
+     * Retrieves User|DiamanteUser entity
      * @param User $user
-     * @return OroUser|ApiUser
+     * @return OroUser|DiamanteUser
      */
     public function getByUser(User $user);
 }

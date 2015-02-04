@@ -12,17 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 21/11/14
- * Time: 6:12 PM
- */
-
 namespace Diamante\DeskBundle\Tests\Infrastructure\Shared\Adapter;
 
-use Diamante\ApiBundle\Entity\ApiUser;
+use Diamante\DeskBundle\Entity\DiamanteUser;
 use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
 use Diamante\DeskBundle\Model\User\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -32,8 +24,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
 {
 
     const DUMMY_NAME = 'dummy_diamante_user_name';
-    const DUMMY_PASSWORD = 'dummy_password';
-    const DUMMY_SALT = 'dummy_salt';
+    const DUMMY_EMAIL = 'test@gmail.com';
 
     /**
      * @var \Oro\Bundle\UserBundle\Entity\UserManager
@@ -42,10 +33,10 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     private $oroUserManager;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
      */
-    private $diamanteApiUserRepository;
+    private $diamanteUserRepository;
 
     /**
      * @var DiamanteUserService
@@ -55,7 +46,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->diamanteUserService = new DiamanteUserService($this->oroUserManager, $this->diamanteApiUserRepository);
+        $this->diamanteUserService = new DiamanteUserService($this->oroUserManager, $this->diamanteUserRepository);
     }
 
     /**
@@ -81,9 +72,9 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetDiamanteTypeUserByUser()
     {
         $userValueObject = new User(1, User::TYPE_DIAMANTE);
-        $user = new ApiUser(self::DUMMY_NAME, self::DUMMY_PASSWORD, self::DUMMY_SALT, array(), '','','');
+        $user = new DiamanteUser(self::DUMMY_NAME, self::DUMMY_EMAIL);
 
-        $this->diamanteApiUserRepository
+        $this->diamanteUserRepository
             ->expects($this->once())
             ->method('get')
             ->with($this->equalTo($userValueObject->getId()))
@@ -102,7 +93,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     {
         $userValueObject = new User(1, User::TYPE_DIAMANTE);
 
-        $this->diamanteApiUserRepository
+        $this->diamanteUserRepository
             ->expects($this->once())
             ->method('get')
             ->with($this->equalTo($userValueObject->getId()))

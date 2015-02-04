@@ -13,6 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 namespace Diamante\DeskBundle\Model\Shared;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 
 /**
  * Interface Repository
@@ -43,4 +44,11 @@ interface Repository
      * @return void
      */
     public function remove(Entity $entity);
+
+    /**
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return Entity[]
+     */
+    public function filter(array $conditions, PagingProperties $pagingProperties);
 }

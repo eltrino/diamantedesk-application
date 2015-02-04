@@ -42,7 +42,7 @@ class FixturesPurgeCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('diamante:fixtures:purge')
+        $this->setName('diamante:desk:fixtures:purge')
             ->setDescription('Purge Test Fixtures');
     }
 

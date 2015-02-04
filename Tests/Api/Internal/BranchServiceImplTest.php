@@ -14,14 +14,17 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
+use Diamante\DeskBundle\Api\Command\Filter\FilterBranchesCommand;
+use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Internal\BranchServiceImpl;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\User\User;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -77,10 +80,29 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $branch;
 
     /**
-     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
-     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
-    private $securityFacade;
+    private $authorizationService;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @var \Doctrine\ORM\UnitOfWork
+     * @Mock \Doctrine\ORM\UnitOfWork
+     */
+    private $unitOfWork;
+
+
+    /**
+     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
+     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
+     */
+    private $entityPersister;
 
     /**
      * @var \Diamante\DeskBundle\Model\Shared\UserService
@@ -97,7 +119,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->branchRepository,
             $this->branchLogoHandler,
             $this->tagManager,
-            $this->securityFacade,
+            $this->authorizationService,
             $this->userService
         );
     }
@@ -108,12 +130,20 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatListsAllBranches()
     {
         $branches = array(
-            new Branch('DUMM', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
+            new Branch('DUMMY', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
             new Branch('DUMMY', 'DUMMY_NAME_2', 'DUMMY_DESC_2')
         );
-        $this->branchRepository->expects($this->once())->method('getAll')->will($this->returnValue($branches));
+        $this->branchRepository
+            ->expects($this->once())
+            ->method('filter')
+            ->with($this->equalTo(array()), $this->equalTo(new FilterPagingProperties()))
+            ->will($this->returnValue($branches));
 
-        $retrievedBranches = $this->branchServiceImpl->listAllBranches();
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
+
+        $retrievedBranches = $this->branchServiceImpl->listAllBranches(new FilterBranchesCommand());
 
         $this->assertNotNull($retrievedBranches);
         $this->assertTrue(is_array($retrievedBranches));
@@ -128,6 +158,10 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatRetreivingExceptionsThrowsExceptionIfBranchDoesNotExists()
     {
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
+
         $this->branchRepository->expects($this->once())->method('get')->will($this->returnValue(null));
         $this->branchServiceImpl->getBranch(100);
     }
@@ -135,13 +169,14 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function thatRetirevesBranchById()
+    public function thatRetrievesBranchById()
     {
         $branch = new Branch('DN', 'DUMMY_NAME', 'DUMMY_DESC');
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_BRANCH_ID))
             ->will($this->returnValue($branch));
 
-        $this->securityFacade->expects($this->once())->method('isGranted')->with('VIEW', $branch)
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $retrievedBranch = $this->branchServiceImpl->getBranch(self::DUMMY_BRANCH_ID);
@@ -163,7 +198,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($branchStub));
 
-        $this->securityFacade->expects($this->once())->method('isGranted')
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
@@ -211,7 +246,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($branch));
 
-        $this->securityFacade->expects($this->once())->method('isGranted')
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
@@ -244,7 +279,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($this->branch));
 
-        $this->securityFacade->expects($this->once())->method('isGranted')
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
@@ -291,7 +326,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->tagManager->expects($this->once())->method('saveTagging')->with($this->equalTo($this->branch));
 
-        $this->securityFacade->expects($this->once())->method('isGranted')
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
@@ -321,9 +356,9 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_BRANCH_ID))
             ->will($this->returnValue(null));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
@@ -344,7 +379,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branchRepository->expects($this->once())->method('remove')->with($this->equalTo($branch));
 
-        $this->securityFacade->expects($this->once())->method('isGranted')
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
@@ -370,12 +405,71 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('remove')
             ->with($this->equalTo($branch));
 
-        $this->securityFacade
+        $this->authorizationService
             ->expects($this->once())
-            ->method('isGranted')
+            ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
         $this->branchServiceImpl->deleteBranch(self::DUMMY_BRANCH_ID);
+    }
+
+    public function testUpdateProperties()
+    {
+        $this->branchRepository->expects($this->once())->method('get')->will($this->returnValue($this->branch));
+
+        $name = 'DUMMY_NAME_UPDT';
+        $description = 'DUMMY_DESC_UPDT';
+
+        $this->branch->expects($this->at(0))->method('updateProperty')
+            ->with($this->equalTo('name'), $this->equalTo($name));
+        $this->branch->expects($this->at(1))->method('updateProperty')
+            ->with($this->equalTo('description'), $this->equalTo($description));
+
+        $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($this->branch));
+
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
+
+        $command = new UpdatePropertiesCommand();
+        $command->id = 1;
+        $command->properties = [
+            'name' => $name,
+            'description' => $description
+        ];
+
+        $this->branchServiceImpl->updateProperties($command);
+    }
+
+    /**
+     * @test
+     */
+    public function testBranchesFiltered()
+    {
+        $branches = array(
+            new Branch('DUMM', 'DUMMY_NAME_1', 'DUMMY_DESC_1'),
+            new Branch('DUMMY', 'DUMMY_NAME_2', 'DUMMY_DESC_2')
+        );
+
+        $command = new FilterBranchesCommand();
+        $command->name = 'NAME_2';
+
+        $this->branchRepository
+            ->expects($this->once())
+            ->method('filter')
+            ->with($this->equalTo(array(array('name','like','NAME_2'))), $this->equalTo(new FilterPagingProperties()))
+            ->will($this->returnValue(array($branches[0])));
+
+        $this->authorizationService->expects($this->once())->method('isActionPermitted')
+            ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
+            ->will($this->returnValue(true));
+
+        $retrievedBranches = $this->branchServiceImpl->listAllBranches($command);
+
+        $this->assertNotNull($retrievedBranches);
+        $this->assertTrue(is_array($retrievedBranches));
+        $this->assertNotEmpty($retrievedBranches);
+        $this->assertEquals($branches[0], $retrievedBranches[0]);
     }
 }

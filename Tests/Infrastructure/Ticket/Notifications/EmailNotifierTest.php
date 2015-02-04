@@ -84,10 +84,10 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     private $senderHost = 'host.com';
 
     /**
-     * @var \Diamante\ApiBundle\Entity\ApiUser
-     * @Mock Diamante\ApiBundle\Entity\ApiUser
+     * @var \Diamante\DeskBundle\Entity\DiamanteUser
+     * @Mock \Diamante\DeskBundle\Entity\DiamanteUser
      */
-    private $apiUser;
+    private $diamanteUser;
 
     /**
      * @var \Diamante\DeskBundle\Model\User\UserDetailsService
@@ -125,7 +125,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('getByUniqueId')->with($ticketUniqueId)
             ->will($this->returnValue($ticket));
 
-        $this->apiUser
+        $this->diamanteUser
             ->expects($this->atLeastOnce())
             ->method('getEmail')
             ->will($this->returnValue('reporter@host.com'));
@@ -133,7 +133,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $this->userService->expects($this->any())->method('getByUser')->will(
             $this->returnValueMap(array(
                 array(new DiamanteUser($author->getId(), DiamanteUser::TYPE_ORO), $author),
-                array($reporter, $this->apiUser),
+                array($reporter, $this->diamanteUser),
                 array(new DiamanteUser($assignee->getId(), DiamanteUser::TYPE_ORO), $assignee)
             ))
         );
