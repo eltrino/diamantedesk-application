@@ -1,6 +1,44 @@
 {% extends 'DiamanteDeskBundle:Branch:edit.html.twig' %}
 
 {% block content_data %}
+    {% set logo %}
+        <div class="control-group">
+            {{ form_label(form.logoFile, null, {'label_attr': {'class' : 'control-label'}}) }}
+            <div class="controls">
+                <div class="control-group" style="margin-bottom: 0">
+                    {{ form_widget(form.logoFile, {'attr': {'accept' : 'image/jpeg, image/png'}}) }}
+                </div>
+            {% if form_errors(form.logoFile) %}
+                <div style="clear:both; float:left">
+                    {{ form_errors(form.logoFile) }}
+                </div>
+            {% endif %}
+
+        {% if form.vars.value.logo%}
+            <div id="branch-image-block" class="well well-small oro_attachment_file">
+                <span class="filename">
+                    <img src="{{ form.vars.value.logo.pathname | imagine_filter('branch_logo_preview') }}" alt="branch logo preview" />
+                </span>
+
+                {{ form_row(form.removeLogo) }}
+                <button id = "branch-image" class="btn btn-action btn-link delete" type="button"></button>
+                <script type="text/javascript">
+                    require(['jquery'],
+                        function($){
+                            $(function() {
+                                $(document).on('click', '#branch-image', function() {
+                                    $('#branch-image-block').hide();
+                                    $('#{{ form.removeLogo.vars.id }}').val('true');
+                                    return false;
+                                });
+                            });
+                        });
+                </script>
+            </div>
+        {% endif %}
+            </div>
+        </div>
+    {% endset %}
     {% set id = 'branchEdit' %}
 
     {% set dataBlocks = [{
@@ -12,7 +50,7 @@
     'data': [
     form_row(form.name),
     form_row(form.defaultAssignee),
-    form_row(form.logoFile, {'attr': {'accept' : 'image/jpeg, image/png'}}),
+    logo,
     form_row(form.tags)
     ]
     }
