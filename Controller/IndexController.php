@@ -36,10 +36,13 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
+        $settings = $this->container->get('diamante.email_processing.mail_system_settings');
+
         return [
             'apiUrl' => $this->getRequest()->getUriForPath('/api/rest/latest'),
             'baseUrl' => $this->getRequest()->getBaseUrl() . $this->getRequest()->getPathInfo(),
-            'basePath' => $this->getRequest()->getBasePath()
+            'basePath' => $this->getRequest()->getBasePath(),
+            'branchId' => $settings->getDefaultBranchId()
         ];
     }
 }
