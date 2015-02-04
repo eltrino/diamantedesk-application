@@ -149,7 +149,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($apiUser)
             );
 
-        $reporter = $this->getReporter($apiUser->getId());
+        $reporter = new User($apiUser->getId(), User::TYPE_DIAMANTE);
 
         preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
         $customerDomain = $output[1];
@@ -276,7 +276,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
     private function getReporter($id)
     {
-        return new User($id, User::TYPE_DIAMANTE);
+        return new User($id, User::TYPE_ORO);
     }
 
     private function getDiamanteUser()
