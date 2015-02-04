@@ -4,7 +4,6 @@ define([
   'backbone.paginator'], function(App, Config){
 
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
-
     Ticket.Model = Backbone.Model.extend({
       urlRoot: Config.apiUrl + '/desk/tickets',
       defaults: {
@@ -12,7 +11,8 @@ define([
         description: '',
         priority : 'medium',
         status: 'open',
-        source: 'web'
+        source: 'web',
+        branch: Config.branchId
       },
       validate: function(attrs, options){
         var errors = {};
