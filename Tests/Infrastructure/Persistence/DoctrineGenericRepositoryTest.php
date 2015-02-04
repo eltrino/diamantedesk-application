@@ -229,7 +229,7 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder
             ->expects($this->once())
             ->method('addOrderBy')
-            ->with($this->equalTo('e.id'), $this->equalTo($pagingConfig->getSortingOrder()))
+            ->with($this->equalTo('e.id'), $this->equalTo($pagingConfig->getOrder()))
             ->will($this->returnValue($this->queryBuilder));
 
         $this->queryBuilder
@@ -241,7 +241,7 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder
             ->expects($this->once())
             ->method('setMaxResults')
-            ->with($this->equalTo($pagingConfig->getPerPageCounter()))
+            ->with($this->equalTo($pagingConfig->getLimit()))
             ->will($this->returnValue($this->queryBuilder));
 
         $this->queryBuilder

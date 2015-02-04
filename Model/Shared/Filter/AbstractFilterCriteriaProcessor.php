@@ -119,9 +119,9 @@ abstract class AbstractFilterCriteriaProcessor implements FilterCriteriaProcesso
         );
         $this->pagingProperties    = array(
             FilterPagingProperties::PAGE_PROP_NAME,
-            FilterPagingProperties::PER_PAGE_PROP_NAME,
-            FilterPagingProperties::ORDER_PROP_NAME,
-            FilterPagingProperties::SORT_PROP_NAME
+            FilterPagingProperties::LIMIT_PROP_NAME,
+            FilterPagingProperties::SORT_PROP_NAME,
+            FilterPagingProperties::ORDER_PROP_NAME
         );
 
         foreach ($properties as $property) {

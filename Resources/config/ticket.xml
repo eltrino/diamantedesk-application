@@ -172,9 +172,9 @@
 
         <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service"/>
 
-        <service id="diamante.comment.api.service_diamante" alias="diamante.comment.service" />
+        <service id="diamante.comment.api.service_diamante" alias="diamante.comment.api.service" />
 
-        <service id="diamante.comment.api.service_oro" alias="diamante.comment.service" />
+        <service id="diamante.comment.api.service_oro" alias="diamante.comment.api.service" />
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>
         <service id="diamante.ticket.datagrid_priority_helper" class="%diamante.ticket.datagrid_priority_helper.class%"/>
