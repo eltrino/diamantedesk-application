@@ -12,29 +12,29 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket;
+namespace Diamante\DeskBundle\Api\Internal;
 
-use Diamante\DeskBundle\Model\Shared\Repository;
 use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 
-interface TicketRepository extends Repository
-{
+class ReporterService {
     /**
-     * Find Ticket by given TicketKey
-     * @param TicketKey $key
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @var TicketRepository
      */
-    public function getByTicketKey(TicketKey $key);
+    private $ticketRepository;
 
     /**
-     * @param UniqueId $uniqueId
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @param TicketRepository $ticketRepository
      */
-    public function getByUniqueId(UniqueId $uniqueId);
+    public function __construct(TicketRepository $ticketRepository) {
+        $this->ticketRepository = $ticketRepository;
+    }
 
     /**
-     * Remove reporter id from ticket table
      * @param User $user
      */
-    public function removeTicketReporter(User $user);
+    public function cleanupReporter(User $user)
+    {
+        $this->ticketRepository->removeTicketReporter($user);
+    }
 }
