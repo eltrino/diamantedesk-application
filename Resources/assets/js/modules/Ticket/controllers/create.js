@@ -26,7 +26,6 @@ define(['app'], function(App){
         });
 
         newTicketView.on('form:submit', function(attr){
-          attr.branch = 1;
           App.request('user:model:current').done(function(user){
             attr.reporter =  'oro_' + user.get('id');
             attr.assignee =  user.get('id');
