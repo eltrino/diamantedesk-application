@@ -8,11 +8,11 @@ define([
     Header.startWithParent = false;
 
     Header.on('start', function () {
-      var View = new HeaderView.View(Config);
+      var headerView = new HeaderView.View(Config);
       Header.on('set:search', function(query){
-        View.ui.searchInput.val(query);
+        headerView.ui.searchInput.val(query);
       });
-      App.headerRegion.show(View);
+      App.headerRegion.show(headerView);
     });
 
     App.on('session:login:success', function(){

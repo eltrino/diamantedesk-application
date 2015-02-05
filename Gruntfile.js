@@ -51,6 +51,28 @@ module.exports = function(grunt) {
       }
     },
 
+    revision: {
+      options: {
+        property: 'meta.revision',
+        ref: 'HEAD',
+        short: true
+      }
+    },
+
+    'string-replace': {
+      dist: {
+        files: {
+          '<%= publicDir %>/js/modules/Footer/templates/footer.ejs' : '<%= publicDir %>/js/modules/Footer/templates/footer.ejs'
+        },
+        options: {
+          replacements: [{
+            pattern: '<span class="revision">revision</span>',
+            replacement: '<span class="revision"><%= meta.revision %></span>'
+          }]
+        }
+      }
+    },
+
     watch: {
       css: {
         files: ['<%= publicDir %>/css/main.css'],
@@ -60,7 +82,7 @@ module.exports = function(grunt) {
       },
       main: {
         files: '<%= assetsDir %>/**',
-        tasks: ['sync']
+        tasks: ['sync', 'revision', 'string-replace']
       },
       less : {
         files: '<%= lessDir %>/**',
@@ -70,6 +92,6 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('default', ['sync', 'less']);
+  grunt.registerTask('default', ['sync', 'less', 'revision', 'string-replace']);
 
 };
