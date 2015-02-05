@@ -56,8 +56,11 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
         $repository = $this->getBranchRepository();
         $branches = $repository->filter($criteria, $pagingProperties);
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        try {
+            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        } catch(\Exception $e) {
+        }
 
         return $branches;
     }

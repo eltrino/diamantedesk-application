@@ -315,8 +315,11 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
         $repository = $this->getCommentsRepository();
         $comments = $repository->filter($criteria, $pagingProperties);
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        try {
+            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        } catch (\Exception $e) {
+        }
 
         return $comments;
     }

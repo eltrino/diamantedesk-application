@@ -352,8 +352,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $repository = $this->getTicketRepository();
         $tickets = $repository->filter($criteria, $pagingProperties);
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        try {
+            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        } catch (\Exception $e) {
+        }
 
         return $tickets;
     }
