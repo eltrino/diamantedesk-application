@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
+use Diamante\DeskBundle\Model\Ticket\CommentRepository;
 
 class ReporterService {
     /**
@@ -24,17 +25,25 @@ class ReporterService {
     private $ticketRepository;
 
     /**
-     * @param TicketRepository $ticketRepository
+     * @var CommentRepository
      */
-    public function __construct(TicketRepository $ticketRepository) {
+    private $commentRepository;
+
+    /**
+     * @param TicketRepository $ticketRepository
+     * @param CommentRepository $commentRepository
+     */
+    public function __construct(TicketRepository $ticketRepository, CommentRepository $commentRepository) {
         $this->ticketRepository = $ticketRepository;
+        $this->commentRepository = $commentRepository;
     }
 
     /**
      * @param User $user
      */
-    public function cleanupReporter(User $user)
+    public function cleanupUser(User $user)
     {
         $this->ticketRepository->removeTicketReporter($user);
+        $this->commentRepository->removeCommentAuthor($user);
     }
 }

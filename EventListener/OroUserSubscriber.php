@@ -51,7 +51,7 @@ class OroUserSubscriber implements EventSubscriber
     {
         $entity = $event->getEntity();
         if($entity instanceof User) {
-            $this->container->get('diamante.reporter.service')->cleanupReporter($entity);
+            $this->container->get('diamante.user_cleanup.service')->cleanupUser($entity);
         }
     }
 }

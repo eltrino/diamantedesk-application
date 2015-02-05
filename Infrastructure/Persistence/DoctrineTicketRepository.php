@@ -52,6 +52,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     }
 
     /**
+     * Remove reporter id from ticket table
      * @param User $user
      */
     public function removeTicketReporter(User $user)

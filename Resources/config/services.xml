@@ -33,7 +33,7 @@
         <parameter key="diamante.user.details.service.class">Diamante\DeskBundle\Model\User\UserDetailsServiceImpl</parameter>
         <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\DeskBundle\Search\DiamanteUserSearchHandler</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension</parameter>
-        <parameter key="diamante.reporter.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
+        <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
     </parameters>
 
     <services>
@@ -73,8 +73,9 @@
             <tag name="doctrine.event_subscriber" connection="default"/>
         </service>
 
-        <service id="diamante.reporter.service" class="%diamante.reporter.service.class%">
+        <service id="diamante.user_cleanup.service" class="%diamante.user_cleanup.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.comment.repository"/>
         </service>
 
         <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>

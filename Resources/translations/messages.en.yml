@@ -122,6 +122,7 @@ diamante:
 
           placeholders:
             added:             added a comment
+            deleted_user:      Deleted user
 
         attachment:
           entity_label:        Attachment
