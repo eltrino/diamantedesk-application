@@ -58,7 +58,7 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFunctions()
     {
-        $expectedFunctions = array('fetch_user_details', 'fetch_oro_user');
+        $expectedFunctions = array('fetch_user_details', 'fetch_oro_user', 'get_gravatar');
 
         $actualFunctions = $this->userDetailsExtension->getFunctions();
 
@@ -145,9 +145,49 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->userDetailsExtension->fetchOroUser($user);
     }
 
+    /**
+     * @test
+     */
+    public function testGetGravatarForUser()
+    {
+        $user    = User::fromString('diamante_1');
+        $details = $this->createDummyUserDetails();
 
+        $this->userDetailsService
+            ->expects($this->once())
+            ->method('fetch')
+            ->with($this->equalTo($user))
+            ->will($this->returnValue($details));
+
+        $link = $this->userDetailsExtension->getGravatarForUser($user);
+
+        $this->assertEquals(sprintf('http://gravatar.com/avatar/%s.jpg?s=58&d=identicon', $this->getHash($details->getEmail())), $link);
+    }
+
+    /**
+     * @test
+     * @expectedException \Twig_Error_Runtime
+     * @expectedExceptionMessage Invalid user details source is provided. Expected instance of Diamante\DeskBundle\Model\User\User or Diamante\DeskBundle\Model\User\UserDetails, ArrayObject given
+     */
+    public function testGetGravatarForUserThrowsExceptionOnInvalidDataSourceType()
+    {
+        $this->userDetailsExtension->getGravatarForUser(new \ArrayObject());
+    }
+
+    /**
+     * @return UserDetails
+     */
     protected function createDummyUserDetails()
     {
-        return new UserDetails(User::TYPE_DIAMANTE . User::DELIMITER . 1, User::TYPE_DIAMANTE, 'First', 'Last', 'email@example.com','username');
+        return new UserDetails(User::TYPE_DIAMANTE . User::DELIMITER . 1, User::TYPE_DIAMANTE, 'email@example.com', 'First', 'Last','username');
+    }
+
+    /**
+     * @param string $email
+     * @return string
+     */
+    private function getHash($email)
+    {
+        return md5(strtolower(trim($email)));
     }
 } 

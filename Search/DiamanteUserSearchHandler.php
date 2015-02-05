@@ -169,6 +169,10 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
                 $converted[self::ID_FIELD_NAME] = $type . User::DELIMITER . $user->getId();
             }
 
+            if ($type === User::TYPE_DIAMANTE) {
+                $converted['avatar'] = $this->buildGravatarLink($converted['email']);
+            }
+
             $result[] = $converted;
         }
 
@@ -196,5 +200,25 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param $email
+     * @param bool $secure
+     * @return string
+     */
+    private function buildGravatarLink($email, $secure = false)
+    {
+        $hash = md5(strtolower(trim($email)));
+        $schema = (bool)$secure ? 'https' : 'http';
+
+        //Query parameters are:
+        // s - size, default oro avatar size is 58px,
+        // d - default image if no configured image found for given hash.
+        // for details see https://en.gravatar.com/site/implement/images/
+
+        $link = sprintf('%s://gravatar.com/avatar/%s.jpg?s=%d&d=identicon', $schema, $hash, 16);
+
+        return $link;
     }
 } 
