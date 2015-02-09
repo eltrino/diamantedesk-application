@@ -28,7 +28,6 @@ define(['app'], function(App){
         newTicketView.on('form:submit', function(attr){
           App.request('user:model:current').done(function(user){
             attr.reporter =  'oro_' + user.get('id');
-            attr.assignee =  user.get('id');
             newTicketModel.save(attr, {
               success : function(resultModel){
                 isSuccess = true;

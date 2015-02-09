@@ -10,8 +10,8 @@ define(['app'], function(App){
     });
 
     Comment.render = function(options){
-      require(['Comment/controllers/list'], function(List){
-        List.Controller(options);
+      require(['Comment/controllers/comment'], function(Comment){
+        Comment.Controller(options);
       });
     };
 

@@ -12,22 +12,34 @@ define(['app'], function(App){
               model : ticketModel
           });
           ticketView.on('dom:refresh', function(){
-            require(['Comment'], function(Comment){
-              var options = {
-                ticket : this.model,
-                parentRegion : this.CommentsRegion
-              };
+            require(['Comment','Attachment'], function(Comment, Attachment){
+              var commentOptions = {
+                    ticket : this.model,
+                    parentRegion : this.commentsRegion
+                  },
+                  attachmentOptions = {
+                    ticket : this.model,
+                    parentRegion : this.attachmentsRegion
+                  };
+              console.log('Comment', Comment.ready);
+              console.log('Attachment', Attachment.ready);
               if(Comment.ready){
-                Comment.render(options);
+                Comment.render(commentOptions);
               } else {
-                Comment.start(options);
+                Comment.start(commentOptions);
+              }
+              if(Attachment.ready){
+                Attachment.render(attachmentOptions);
+              } else {
+                Attachment.start(attachmentOptions);
               }
 
             }.bind(this));
           });
           ticketView.on('destroy', function(){
-            require(['Comment'], function(Comment){
+            require(['Comment', 'Attachment'], function(Comment, Attachment){
               Comment.stop();
+              Attachment.stop();
             });
           });
           ticketView.on('ticket:close', function(){
