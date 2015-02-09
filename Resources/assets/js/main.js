@@ -87,6 +87,10 @@ require.config({
     {
       name: 'Comment',
       location: 'modules/Comment'
+    },
+    {
+      name: 'Attachment',
+      location: 'modules/Attachment'
     }
   ],
 
