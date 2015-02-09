@@ -12,7 +12,6 @@ define(['app'], function(App){
             dropView = new DropZone.ItemView({ model: attachmentModel });
 
         dropView.on('attachment:add', function(data){
-
           //data.append('ticketId', options.ticket.id);
           //attachmentModel.save({},{
           //  data: data,
@@ -20,9 +19,21 @@ define(['app'], function(App){
           //  contentType: false
           //});
 
-          attachmentModel.save({
-            'ticketId': options.ticket.id,
-            'attachmentsInput' : data
+          var attr = {
+            ticketId: options.ticket.id,
+            attachmentsInput : data
+          };
+          attachmentModel.save(attr, {
+            success: function(model){
+              attachmentCollection.add(model);
+              Create.Controller(options);
+            },
+            error: function(model, xhr){
+              App.alert({
+                title: "Add Attach Error",
+                xhr : xhr
+              });
+            }
           });
         });
 
