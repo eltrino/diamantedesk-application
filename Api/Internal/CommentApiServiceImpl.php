@@ -109,12 +109,12 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * )
      *
      * @param Command\AddCommentAttachmentCommand $command
-     * @return void
+     * @return array
      */
     public function addCommentAttachment(Command\AddCommentAttachmentCommand $command)
     {
         $this->prepareAttachmentInput($command);
-        parent::addCommentAttachment($command);
+        return parent::addCommentAttachment($command);
     }
 
     /**
@@ -139,7 +139,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *  }
      * )
      *
-     * @param $commentId
+     * @param $id
      * @return array
      */
     public function listCommentAttachment($id)
@@ -253,18 +253,18 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *
      * @ApiDoc(
      *  description="Remove comment attachment",
-     *  uri="/comments/{id}/attachments/{a_id}.{_format}",
+     *  uri="/comments/{commentId}/attachments/{attachmentId}.{_format}",
      *  method="DELETE",
      *  resource=true,
      *  requirements={
      *      {
-     *          "name"="id",
+     *          "name"="commentId",
      *          "dataType"="integer",
      *          "requirement"="\d+",
      *          "description"="Comment Id"
      *      },
      *      {
-     *          "name"="a_id",
+     *          "name"="attachmentId",
      *          "dataType"="integer",
      *          "requirement"="\d+",
      *          "description"="Comment attachment Id"

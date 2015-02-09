@@ -198,7 +198,7 @@ class TicketServiceImpl implements TicketService
     /**
      * Adds Attachments for Ticket
      * @param AddTicketAttachmentCommand $command
-     * @return void
+     * @return array
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
@@ -209,15 +209,19 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
+        $attachments = [];
+
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
+                $attachments[] = $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
             }
         }
 
         $this->ticketRepository->store($ticket);
 
         $this->dispatchEvents($ticket);
+
+        return $attachments;
     }
 
     /**
@@ -236,9 +240,11 @@ class TicketServiceImpl implements TicketService
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
         }
-        $this->attachmentManager->deleteAttachment($attachment);
+
         $ticket->removeAttachment($attachment);
         $this->ticketRepository->store($ticket);
+
+        $this->attachmentManager->deleteAttachment($attachment);
 
         $this->dispatchEvents($ticket);
         return $ticket->getKey();

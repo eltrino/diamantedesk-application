@@ -42,7 +42,6 @@ trait ApiServiceImplTrait
      */
     private function decodeAttachmentInput($input)
     {
-        $input = json_decode($input, true);
         if (false == isset($input['filename']) || false == isset($input['content'])) {
             throw new \InvalidArgumentException('Attachment input string is invalid.');
         }

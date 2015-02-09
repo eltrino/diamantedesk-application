@@ -443,7 +443,7 @@ class TicketController extends Controller
             }
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.create.error');
             $response = array('form' => $formView);
         }
@@ -517,7 +517,7 @@ class TicketController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
 
             return $response;
-        } catch (\Exeception $e) {
+        } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }

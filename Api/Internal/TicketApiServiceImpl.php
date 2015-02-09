@@ -15,7 +15,6 @@
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
-use Diamante\ApiBundle\EventListener\Container\HeaderContainer;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Command;
@@ -209,16 +208,43 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * )
      *
      * @param AddTicketAttachmentCommand $command
-     * @return void
+     * @return array
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
         $this->prepareAttachmentInput($command);
-        parent::addAttachmentsForTicket($command);
+        return parent::addAttachmentsForTicket($command);
     }
 
     /**
      * Remove Attachment from Ticket
+     *
+     * @ApiDoc(
+     *  description="Remove ticket attachment",
+     *  uri="/tickets/{ticketId}/attachments/{attachmentId}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="ticketId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Ticket Id"
+     *      },
+     *      {
+     *          "name"="attachmentId",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Attachment Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete attachment",
+     *      404="Returned when the ticket or attachment is not found"
+     *  }
+     * )
+     *
      * @param RemoveTicketAttachmentCommand $command
      * @return string $ticketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment

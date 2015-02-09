@@ -52,7 +52,7 @@ interface CommentService
     /**
      * Add Attachments to Comment
      * @param AddCommentAttachmentCommand $command
-     * @return void
+     * @return array
      */
     public function addCommentAttachment(AddCommentAttachmentCommand $command);
 
