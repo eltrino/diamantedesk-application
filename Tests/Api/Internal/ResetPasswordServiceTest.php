@@ -15,10 +15,37 @@
 
 namespace Diamante\FrontBundle\Tests\Api\Internal;
 
+use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
-class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase {
+use Diamante\FrontBundle\Api\Internal\ResetPasswordService;
 
+class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
+{
 
+    /**
+     * @var ResetPasswordService
+     */
+    private $resetPasswordService;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     */
+    private $diamanteUserRepository;
+
+    protected function setUp()
+    {
+        MockAnnotations::init($this);
+
+        $this->resetPasswordService = new ResetPasswordService($this->diamanteUserRepository);
+    }
+
+    public function testResetPassword()
+    {
+        $emailAddress = 'max@gmail.com';
+
+        $this->resetPasswordService->resetPassword($emailAddress);
+    }
 
 }
  

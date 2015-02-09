@@ -20,11 +20,16 @@
 
     <parameters>
         <parameter key="diamante.front.system_settings.class">Diamante\FrontBundle\Model\SystemSettings</parameter>
+        <parameter key="diamante.front.reset_password.class">Diamante\FrontBundle\Api\Internal\ResetPasswordService</parameter>
     </parameters>
 
     <services>
         <service id="diamante.front.system_settings" class="%diamante.front.system_settings.class%">
             <argument type="service" id="oro_config.global"/>
+        </service>
+        <service id="diamante.front.reset_password" class="%diamante.front.reset_password.class%">
+            <argument type="service" id="diamante.user.repository" />
+            <argument type="service" id="diamante.api.user.repository" />
         </service>
     </services>
 </container>

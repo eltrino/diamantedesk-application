@@ -14,26 +14,11 @@
  */
 namespace Diamante\FrontBundle\Api;
 
-use Diamante\DeskBundle\Model\User;
-
 interface ResetPassword
 {
-    /**
-     * @param User $user
-     * @return mixed
-     */
-    public function grantApiAccess(User $user);
 
-    /**
-     * @param User $user
-     * @return mixed
-     */
-    public function generateHash(User $user);
+    public function generateHash($emailAddress);
 
-    /**
-     * @param User $user
-     * @return mixed
-     */
-    public function sendEmail(User $user);
+    public function checkHash($hash);
 
 }

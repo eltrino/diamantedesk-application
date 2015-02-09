@@ -15,36 +15,85 @@
 
 namespace Diamante\FrontBundle\Api\Internal;
 
+use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\FrontBundle\Api\ResetPassword;
-use Diamante\DeskBundle\Model\User;
+use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
+use Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository;
 
 class ResetPasswordService implements ResetPassword
 {
 
-    /**
-     * @param User $user
-     * @return mixed
-     */
-    public function grantApiAccess(User $user)
-    {
+    const EXPIRE_TIME = 900;//Hash expiration time in seconds (15 minutes);
 
+    /**
+     * @var DiamanteUserRepository
+     */
+    private $diamanteUserRepository;
+
+    /**
+     * @var ApiUserRepository
+     */
+    private $apiUserRepository;
+
+
+    /**
+     * @param DiamanteUserRepository $diamanteUserRepository
+     */
+    public function __construct(DiamanteUserRepository $diamanteUserRepository,
+                                DoctrineApiUserRepository $apiUserRepository)
+    {
+        $this->diamanteUserRepository = $diamanteUserRepository;
+        $this->apiUserRepository = $apiUserRepository;
     }
 
     /**
-     * @param User $user
-     * @return mixed
+     * @param $emailAddress
      */
-    public function generateHash(User $user)
+    public function generateHash($emailAddress)
     {
+
+        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($emailAddress);
+        if (is_null($diamanteUser)) {
+            throw new \RuntimeException('No accounts with that email found.');
+        }
+
+        $apiUser = $this->apiUserRepository->findUserByUsername($emailAddress);
+        if (is_null($apiUser)) {
+            $apiUser = new ApiUser($diamanteUser->getEmail(), null);
+        }
+        $timestamp = time();
+        $hash = md5($apiUser->getUsername(), $timestamp, $apiUser->getPassword());
+        $apiUser->setHash($hash);
+        $apiUser->setHashExpireTime($timestamp + self::EXPIRE_TIME);
+
+        //$this->apiUserRepository->store($apiUser);
+
+
+
+//        -generates and saves hash
+//        -sends email
 
     }
 
-    /**
-     * @param User $user
-     * @return mixed
-     */
-    public function sendEmail(User $user)
+
+    public function checkHash($hash, $newPassword)
     {
+        $apiUser = $this->apiUserRepository->findUserByHash($hash);
+
+        if (is_null($apiUser)) {
+            throw new \RuntimeException('This password reset code is invalid.');
+        }
+
+        if (time() > $apiUser->getHashExpireTime())
+        {
+            throw new \RuntimeException('This password reset code is invalid.');
+        }
+
+
+        $apiUser->setPassword($newPassword);
+        $apiUser->setActive(true);
+
+        $this->apiUserRepository->store($apiUser);
 
     }
 
