@@ -50,7 +50,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
     public function store(Entity $entity)
     {
         $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->_em->flush($entity);
     }
 
     /**
@@ -60,7 +60,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
     public function remove(Entity $entity)
     {
         $this->_em->remove($entity);
-        $this->_em->flush();
+        $this->_em->flush($entity);
     }
 
     /**
