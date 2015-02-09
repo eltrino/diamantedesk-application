@@ -26,7 +26,7 @@
         <parameter key="diamante.api.event_listener.handle_exception.class">Diamante\ApiBundle\EventListener\HandleException</parameter>
         <parameter key="diamante.api.user.security.provider.class">Diamante\ApiBundle\Security\ApiUserProvider</parameter>
         <parameter key="diamante.api.user.repository.class">Diamante\ApiBundle\Infrastructure\Persistence\ApiUserRepository</parameter>
-        <parameter key="diamante.api.headers.container.class">Symfony\Component\HttpFoundation\HeaderBag</parameter>
+        <parameter key="diamante.api.headers.container.class">Symfony\Component\HttpFoundation\ResponseHeaderBag</parameter>
         <parameter key="diamante.api.paging.provider.class">Diamante\ApiBundle\Paging\Provider\PagingContextProvider</parameter>
     </parameters>
 

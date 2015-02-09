@@ -65,7 +65,7 @@ class HandleView
     protected function get($data, $format)
     {
         $groups = ['Default'];
-        $headers = $this->container->get('diamante.api.headers.container')->all();
+        $headers = $this->container->get('diamante.api.headers.container')->allPreserveCase();
 
         if (is_array($data)) {
             $groups[] = 'list';
