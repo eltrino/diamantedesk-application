@@ -42,7 +42,7 @@ define([
             filename : file.name
           };
           reader.onloadend = function () {
-            data[i].content = reader.result;
+            data[i].content = reader.result.replace(/^data:.+?;base64,/, '');
             if(files.length == ++ready){
               this.trigger('attachment:add', data);
             }
