@@ -27,28 +27,28 @@ define([
       },
 
       addFile: function(){
-        var form = $('<form />'), data;
-        form.append(this.ui.fileInput);
-        data = new FormData(form[0]);
-        this.trigger('attachment:add', data);
+        //var form = $('<form />'), data;
+        //form.append(this.ui.fileInput);
+        //data = new FormData(form[0]);
+        //this.trigger('attachment:add', data);
 
-        //var files = this.ui.fileInput[0].files,
-        //    data = [],
-        //    ready = 0;
-        //_.each(files, function(file){
-        //  var reader = new FileReader(),
-        //      i = data.length;
-        //  data[i] = {
-        //    filename : file.name
-        //  };
-        //  reader.onloadend = function () {
-        //    data[i].content = reader.result;
-        //    if(files.length == ++ready){
-        //      this.trigger('attachment:add', data);
-        //    }
-        //  }.bind(this);
-        //  reader.readAsDataURL(file);
-        //}, this);
+        var files = this.ui.fileInput[0].files,
+            data = [],
+            ready = 0;
+        _.each(files, function(file){
+          var reader = new FileReader(),
+              i = data.length;
+          data[i] = {
+            filename : file.name
+          };
+          reader.onloadend = function () {
+            data[i].content = reader.result;
+            if(files.length == ++ready){
+              this.trigger('attachment:add', data);
+            }
+          }.bind(this);
+          reader.readAsDataURL(file);
+        }, this);
       },
 
       success: function(){
