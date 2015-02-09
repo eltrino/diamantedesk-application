@@ -37,7 +37,7 @@ define([
       model: Ticket.Model,
 
       state: {
-        pageSize: 5,
+        pageSize: 10,
         sortKey: 'createdAt',
         order: -1
       },
