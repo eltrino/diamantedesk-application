@@ -110,16 +110,20 @@ class HandleView
      * @param Request $request
      * @return Response
      */
-    protected function post(Entity $data = null, $format, Request $request)
+    protected function post($data = null, $format, Request $request)
     {
         $pathInfo = $this->entityLocation($request->getPathInfo());
-        $context = SerializationContext::create()->setGroups(['Default', 'entity']);
 
         if (is_null($data)) {
             $headers = [];
             $body = '';
+        } elseif (is_array($data)) {
+            $headers = [];
+            $context = SerializationContext::create()->setGroups(['Default', 'list']);
+            $body = $this->serializer->serialize($data, $format, $context);
         } else {
             $headers = ['Location' => $request->getUriForPath(sprintf($pathInfo, $data->getId()))];
+            $context = SerializationContext::create()->setGroups(['Default', 'entity']);
             $body = $this->serializer->serialize($data, $format, $context);
         }
         return new Response($body, Codes::HTTP_CREATED, $headers);
