@@ -173,7 +173,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $result = array();
 
         for ($i = 0; $i < $size; $i++) {
-            $user = new DiamanteUser("email@host{$i}.com", "username{$i}", "First {$specificData}");
+            $user = new DiamanteUser("email@host{$i}.com", "username{$i}", null, "First {$specificData}");
             $result[] = $user;
         }
 

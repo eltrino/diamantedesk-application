@@ -49,10 +49,11 @@ class DiamanteUser implements Entity
      */
     protected $lastName;
 
-    public function __construct($email, $username, $firstName = null, $lastName = null)
+    public function __construct($email, $username, Contact $contact = null, $firstName = null, $lastName = null)
     {
         $this->username  = $username;
         $this->email     = $email;
+        $this->contact   = $contact;
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
     }

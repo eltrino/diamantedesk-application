@@ -19,10 +19,27 @@ use Symfony\Component\Validator\Constraint;
 
 /**
  * @Annotation
- * @Target({"PROPERTY"})
+ * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
  * @codeCoverageIgnore
  */
-class Entity extends Constraint
+class Any extends Constraint
 {
-    public $message = 'This value should be object or identifier to represent entity.';
+    public $message = 'This value should satisfy at least one of the constraints.';
+    public $constraints;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultOption()
+    {
+        return 'constraints';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredOptions()
+    {
+        return ['constraints'];
+    }
 }

@@ -22,6 +22,7 @@
         <parameter key="diamante.user.entity.class">Diamante\DeskBundle\Entity\DiamanteUser</parameter>
         <parameter key="diamante.user_factory.class">Diamante\DeskBundle\Model\User\DiamanteUserFactory</parameter>
         <parameter key="diamante.user.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService</parameter>
+        <parameter key="diamante.contact.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteContactService</parameter>
         <parameter key="diamante.command_factory.class">Diamante\DeskBundle\Form\CommandFactory</parameter>
         <!-- repositories start -->
         <parameter key="diamante.generic.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
@@ -50,6 +51,11 @@
         <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="diamante.user.repository"/>
+        </service>
+
+        <service id="diamante.contact.service" class="%diamante.contact.service.class%">
+            <argument type="service" id="orocrm_contact.email.owner.provider"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
 
         <service id="diamante.user.details.service" class="%diamante.user.details.service.class%">

@@ -142,9 +142,9 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * @param $commentId
      * @return array
      */
-    public function listCommentAttachment($commentId)
+    public function listCommentAttachment($id)
     {
-        return parent::listCommentAttachment($commentId);
+        return parent::listCommentAttachment($id);
     }
 
     /**
@@ -243,9 +243,9 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *
      * @param integer $commentId
      */
-    public function deleteTicketComment($commentId)
+    public function deleteTicketComment($id)
     {
-        parent::deleteTicketComment($commentId);
+        parent::deleteTicketComment($id);
     }
 
     /**
