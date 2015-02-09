@@ -17,8 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Oro\Bundle\UserBundle\Entity\User;
-use Diamante\DeskBundle\Model\User\User as UserModel;
+use Diamante\DeskBundle\Model\User\User;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -60,7 +59,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         $query = $this->_em
             ->createQuery("UPDATE DiamanteDeskBundle:Ticket t SET t.reporter = null WHERE t.reporter = :reporter_id");
         $query->setParameters(array(
-                'reporter_id' => UserModel::TYPE_ORO . UserModel::DELIMITER . $user->getId(),
+                'reporter_id' => (string)$user,
             ));
         $query->execute();
     }

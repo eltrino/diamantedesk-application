@@ -15,7 +15,7 @@
 namespace Diamante\DeskBundle\Model\Ticket;
 
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\User;
 
 interface CommentRepository extends Repository
 {

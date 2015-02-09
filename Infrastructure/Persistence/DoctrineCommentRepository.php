@@ -15,8 +15,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Ticket\CommentRepository;
-use Oro\Bundle\UserBundle\Entity\User;
-use Diamante\DeskBundle\Model\User\User as UserModel;
+use Diamante\DeskBundle\Model\User\User;
 
 class DoctrineCommentRepository extends DoctrineGenericRepository implements CommentRepository
 {
@@ -29,7 +28,7 @@ class DoctrineCommentRepository extends DoctrineGenericRepository implements Com
         $query = $this->_em
             ->createQuery("UPDATE DiamanteDeskBundle:Comment t SET t.author = null WHERE t.author = :author_id");
         $query->setParameters(array(
-                'author_id' => UserModel::TYPE_ORO . UserModel::DELIMITER . $user->getId(),
+                'author_id' => (string)$user,
             ));
         $query->execute();
     }

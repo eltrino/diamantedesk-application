@@ -14,9 +14,9 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
-use Oro\Bundle\UserBundle\Entity\User;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\CommentRepository;
+use Diamante\DeskBundle\Model\User\User;
 
 class ReporterService {
     /**

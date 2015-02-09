@@ -15,6 +15,8 @@
 namespace Diamante\DeskBundle\EventListener;
 
 use Oro\Bundle\UserBundle\Entity\User;
+use Diamante\DeskBundle\Model\User\DiamanteUser;
+use Diamante\DeskBundle\Model\User\User as UserModel;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -50,8 +52,10 @@ class OroUserSubscriber implements EventSubscriber
     public function preRemove(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
-        if($entity instanceof User) {
-            $this->container->get('diamante.user_cleanup.service')->cleanupUser($entity);
+        if($entity instanceof User || $entity instanceof DiamanteUser) {
+            $type = $entity instanceof User ? UserModel::TYPE_ORO : UserModel::TYPE_DIAMANTE;
+            $user = new UserModel($entity->getId(), $type);
+            $this->container->get('diamante.user_cleanup.service')->cleanupUser($user);
         }
     }
 }
