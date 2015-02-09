@@ -13,17 +13,17 @@ define(['app'], function(App){
 
         dropView.on('attachment:add', function(data){
 
-          data.append('ticketId', options.ticket.id);
-          attachmentModel.save({},{
-            data: data,
-            processData: false,
-            contentType: false
-          });
-
-          //attachmentModel.save({
-          //  'ticketId': options.ticket.id,
-          //  'attachmentsInput' : data[0]
+          //data.append('ticketId', options.ticket.id);
+          //attachmentModel.save({},{
+          //  data: data,
+          //  processData: false,
+          //  contentType: false
           //});
+
+          attachmentModel.save({
+            'ticketId': options.ticket.id,
+            'attachmentsInput' : data
+          });
         });
 
         options.parentView.dropRegion.show(dropView);
