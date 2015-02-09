@@ -16,9 +16,12 @@
 namespace Diamante\ApiBundle\EventListener;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use FOS\Rest\Util\Codes;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -27,9 +30,10 @@ class HandleView
 {
     private $serializer;
 
-    public function __construct(Serializer $serializer)
+    public function __construct(Serializer $serializer, ContainerInterface $container)
     {
         $this->serializer = $serializer;
+        $this->container  = $container;
     }
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
@@ -61,6 +65,8 @@ class HandleView
     protected function get($data, $format)
     {
         $groups = ['Default'];
+        $headers = $this->container->get('diamante.api.headers.container')->all();
+
         if (is_array($data)) {
             $groups[] = 'list';
         } else {
@@ -73,7 +79,8 @@ class HandleView
                 $format,
                 SerializationContext::create()->setGroups($groups)
             ),
-            Codes::HTTP_OK
+            Codes::HTTP_OK,
+            $headers
         );
     }
 
