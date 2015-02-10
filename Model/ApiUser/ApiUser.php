@@ -45,11 +45,23 @@ class ApiUser implements Entity, UserInterface
      */
     protected $username;
 
+    /**
+     * @var bool
+     */
+    protected $isActive;
+
+    /**
+     * @var string
+     */
+    protected $activationHash;
+
     public function __construct($username, $password, $salt = null)
     {
         $this->username  = $username;
         $this->password  = $password;
         $this->salt      = $salt;
+        $this->isActive  = false;
+        $this->activationHash = md5($this->username . time());
     }
 
     /**
@@ -95,5 +107,38 @@ class ApiUser implements Entity, UserInterface
     public function eraseCredentials()
     {
 
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActivationHash()
+    {
+        return $this->activationHash;
+    }
+
+    /**
+     * Activate user
+     * @param string $hash
+     * @return void
+     * @throws \RuntimeException if given hash is not equal to generated one for user
+     */
+    public function activate($hash)
+    {
+        if ($this->isActive()) {
+            return;
+        }
+        if ($this->activationHash != $hash) {
+            throw new \RuntimeException('Given hash is invalid and user can not be activated.');
+        }
+        $this->isActive = true;
     }
 }
