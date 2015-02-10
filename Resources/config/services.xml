@@ -29,10 +29,12 @@
         <!-- repositories end -->
         <parameter key="diamante.email_processing.form.type.default_branch.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
         <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
+        <parameter key="diamante.oro_user.OroUserSubscriber.class">Diamante\DeskBundle\EventListener\OroUserSubscriber</parameter>
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
         <parameter key="diamante.user.details.service.class">Diamante\DeskBundle\Model\User\UserDetailsServiceImpl</parameter>
         <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\DeskBundle\Search\DiamanteUserSearchHandler</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension</parameter>
+        <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
     </parameters>
 
     <services>
@@ -72,6 +74,16 @@
             <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-ticket-attachments-grid" method="onBuildAfter"/>
         </service>
 
+        <service id="diamante.event_listener.oro_user_listener" class="%diamante.oro_user.OroUserSubscriber.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_subscriber" connection="default"/>
+        </service>
+
+        <service id="diamante.user_cleanup.service" class="%diamante.user_cleanup.service.class%">
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.comment.repository"/>
+        </service>
+
         <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>
 
         <service id="diamante.email_processing.form.type.default_branch" class="%diamante.email_processing.form.type.default_branch.class%">
@@ -81,7 +93,7 @@
 
         <service id="diamante.email_processing.branchRemoveEventListener" class="%diamante.email_processing.branchRemoveEventListener.class%">
             <argument type="service" id="service_container"/>
-            <tag name="doctrine.event_listener" event="preRemove"></tag>
+            <tag name="doctrine.event_listener" event="preRemove"/>
         </service>
 
         <service id="diamante.email_processing.placeholder.filter.default_branch" class="%diamante.email_processing.placeholder.filter.default_branch.class%">
