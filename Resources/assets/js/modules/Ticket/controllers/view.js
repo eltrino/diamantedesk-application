@@ -21,8 +21,6 @@ define(['app'], function(App){
                     ticket : this.model,
                     parentRegion : this.attachmentsRegion
                   };
-              console.log('Comment', Comment.ready);
-              console.log('Attachment', Attachment.ready);
               if(Comment.ready){
                 Comment.render(commentOptions);
               } else {
