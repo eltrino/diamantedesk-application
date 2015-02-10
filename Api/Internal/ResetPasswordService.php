@@ -57,14 +57,10 @@ class ResetPasswordService implements ResetPassword
             throw new \RuntimeException('No accounts with that email found.');
         }
 
-        $apiUser = $this->apiUserRepository->findUserByUsername($emailAddress);
-        if (is_null($apiUser)) {
-            $apiUser = new ApiUser($diamanteUser->getEmail(), null);
-        }
         $timestamp = time();
-        $hash = md5($apiUser->getUsername(), $timestamp, $apiUser->getPassword());
-        $apiUser->setHash($hash);
-        $apiUser->setHashExpireTime($timestamp + self::EXPIRE_TIME);
+        $activationHash = md5($diamanteUser->getEmail(), $timestamp, $diamanteUser->getActivationHash());
+        $diamanteUser->setActivationHash($activationHash);
+        $diamanteUser->setHashExpireTime($timestamp + self::EXPIRE_TIME);
 
         //$this->apiUserRepository->store($apiUser);
 
@@ -78,22 +74,16 @@ class ResetPasswordService implements ResetPassword
 
     public function checkHash($hash, $newPassword)
     {
-        $apiUser = $this->apiUserRepository->findUserByHash($hash);
+        $diamanteUser = $this->diamanteUserRepository->findUserByHash($hash);
 
-        if (is_null($apiUser)) {
+        if (is_null($apiUser) || time() > $diamanteUser->getHashExpireTime()) {
             throw new \RuntimeException('This password reset code is invalid.');
         }
-
-        if (time() > $apiUser->getHashExpireTime())
-        {
-            throw new \RuntimeException('This password reset code is invalid.');
-        }
-
 
         $apiUser->setPassword($newPassword);
-        $apiUser->setActive(true);
+        $apiUser->activate(true);
 
-        $this->apiUserRepository->store($apiUser);
+        $this->diamanteUserRepository->store($apiUser);
 
     }
 
