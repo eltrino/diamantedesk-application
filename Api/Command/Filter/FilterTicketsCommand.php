@@ -49,4 +49,9 @@ class FilterTicketsCommand extends CommonFilterCommand
      * @var string
      */
     public $subject;
+
+    /**
+     * @var string
+     */
+    public $description;
 }
