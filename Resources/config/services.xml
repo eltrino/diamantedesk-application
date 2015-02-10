@@ -20,7 +20,7 @@
 
     <parameters>
         <parameter key="diamante.front.system_settings.class">Diamante\FrontBundle\Model\SystemSettings</parameter>
-        <parameter key="diamante.front.reset_password.class">Diamante\FrontBundle\Api\Internal\ResetPasswordService</parameter>
+        <parameter key="diamante.front.reset_password.class">Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl</parameter>
         <parameter key="diamante.front.reset_password_mailer.class">Diamante\FrontBundle\Model\ResetPasswordMailer</parameter>
     </parameters>
 
