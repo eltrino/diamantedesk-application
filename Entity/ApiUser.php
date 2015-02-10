@@ -58,6 +58,18 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
      */
     protected $salt;
 
+    /**
+     * @var bool
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    protected $isActive;
+
+    /**
+     * @var string
+     * @ORM\Column(name="activation_hash", type="string", length=255)
+     */
+    protected $activationHash;
+
     public static function getClassName()
     {
         return __CLASS__;

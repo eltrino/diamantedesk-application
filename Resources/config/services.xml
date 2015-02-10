@@ -20,6 +20,7 @@
 
     <parameters>
         <parameter key="diamante.api.user.entity.class">Diamante\ApiBundle\Entity\ApiUser</parameter>
+        <parameter key="diamante.api.user.entity.factory.class">Diamante\ApiBundle\Model\ApiUser\ApiUserFactory</parameter>
         <parameter key="diamante.api.routing.rest_service_loader.class">Diamante\ApiBundle\Routing\RestServiceLoader</parameter>
         <parameter key="diamante.api.event_listener.handle_request.class">Diamante\ApiBundle\EventListener\HandleRequest</parameter>
         <parameter key="diamante.api.event_listener.handle_view.class">Diamante\ApiBundle\EventListener\HandleView</parameter>
@@ -61,6 +62,10 @@
         <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">
+            <argument type="string">%diamante.api.user.entity.class%</argument>
+        </service>
+
+        <service id="diamante.api.user.entity.factory" class="%diamante.api.user.entity.factory.class%">
             <argument type="string">%diamante.api.user.entity.class%</argument>
         </service>
 
