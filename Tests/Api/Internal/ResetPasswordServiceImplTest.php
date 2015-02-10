@@ -17,13 +17,13 @@ namespace Diamante\FrontBundle\Tests\Api\Internal;
 
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
-use Diamante\FrontBundle\Api\Internal\ResetPasswordService;
+use Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl;
 
 class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var ResetPasswordService
+     * @var ResetPasswordServiceImpl
      */
     private $resetPasswordService;
 
@@ -33,18 +33,39 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $diamanteUserRepository;
 
+    /**
+     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     */
+    private $apiUserRepository;
+
+    /**
+     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
+     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
+     */
+    private $apiUserFactory;
+
+    /**
+     * @var \Diamante\FrontBundle\Model\ResetPasswordMailer
+     * @Mock \Diamante\FrontBundle\Model\ResetPasswordMailer
+     */
+    private $resetPasswordMailer;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
-        $this->resetPasswordService = new ResetPasswordService($this->diamanteUserRepository);
+        $this->resetPasswordService = new ResetPasswordServiceImpl($this->diamanteUserRepository,
+            $this->apiUserRepository,
+            $this->apiUserFactory,
+            $this->resetPasswordMailer);
     }
 
-    public function testResetPassword()
+    public function testGenerateHash()
     {
         $emailAddress = 'max@gmail.com';
 
-        $this->resetPasswordService->resetPassword($emailAddress);
+        $this->resetPasswordService->generateHash($emailAddress);
     }
 
 }

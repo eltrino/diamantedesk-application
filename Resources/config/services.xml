@@ -21,15 +21,22 @@
     <parameters>
         <parameter key="diamante.front.system_settings.class">Diamante\FrontBundle\Model\SystemSettings</parameter>
         <parameter key="diamante.front.reset_password.class">Diamante\FrontBundle\Api\Internal\ResetPasswordService</parameter>
+        <parameter key="diamante.front.reset_password_mailer.class">Diamante\FrontBundle\Model\ResetPasswordMailer</parameter>
     </parameters>
 
     <services>
         <service id="diamante.front.system_settings" class="%diamante.front.system_settings.class%">
             <argument type="service" id="oro_config.global"/>
         </service>
+        <service id="diamante.front.reset_password_mailer" class="%diamante.front.reset_password_mailer.class%">
+            <argument type="service" id="twig"/>
+            <!-- ADD ARGUMENTS -->
+        </service>
         <service id="diamante.front.reset_password" class="%diamante.front.reset_password.class%">
             <argument type="service" id="diamante.user.repository" />
-            <argument type="service" id="diamante.api.user.repository" />
+            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.api.user.entity.factory"/>
+            <argument type="service" id="diamante.front.reset_password_mailer"/>
         </service>
     </services>
 </container>
