@@ -7,7 +7,7 @@ define(['app'], function(App){
         'Attachment/models/attachment',
         'Attachment/views/dropzone'], function(Models, DropZone){
 
-        var attachmentModel = new Models.Model({},{ ticket : options.ticket }),
+        var attachmentModel = new Models.Model({},{ ticket: options.ticket }),
             attachmentCollection = options.collection,
             dropView = new DropZone.ItemView({ model: attachmentModel });
 
@@ -20,15 +20,17 @@ define(['app'], function(App){
           //});
 
           var attr = {
-            ticketId: options.ticket.id,
             attachmentsInput : data
           };
-          attachmentModel.save(attr, {
-            success: function(model){
-              attachmentCollection.add(model);
+          $.ajax({
+            url:attachmentModel.urlRoot,
+            type:'post',
+            data: attr,
+            success: function(collection){
+              attachmentCollection.add(collection, { ticket: options.ticket });
               Create.Controller(options);
             },
-            error: function(model, xhr){
+            error: function(xhr){
               App.alert({
                 title: "Add Attach Error",
                 xhr : xhr

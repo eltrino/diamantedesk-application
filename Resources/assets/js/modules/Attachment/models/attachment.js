@@ -10,9 +10,6 @@ define([
       initialize: function(attr, options){
         if(options.ticket){
           this.urlRoot = this.urlRoot.replace('{ticketId}', options.ticket.get('id'));
-          this.set({
-            ticket : options.ticket.get('id')
-          });
         } else {
           App.debug('error','"options.ticket" is required');
         }
