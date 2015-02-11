@@ -15,9 +15,7 @@
 
 namespace Diamante\FrontBundle\Infrastructure;
 
-use Diamante\FrontBundle\Model\ResetPasswordMailer as BaseInterface
-
-class ResetPasswordMailer extends BaseInterface
+class ResetPasswordMailer implements \Diamante\FrontBundle\Model\ResetPasswordMailer
 {
     /**
      * @var \Twig_Environment

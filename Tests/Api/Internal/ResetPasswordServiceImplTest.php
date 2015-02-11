@@ -15,6 +15,8 @@
 
 namespace Diamante\FrontBundle\Tests\Api\Internal;
 
+use Diamante\ApiBundle\Model\ApiUser\ApiUser;
+use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 use Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl;
@@ -64,6 +66,26 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
     public function testGenerateHash()
     {
         $emailAddress = 'max@gmail.com';
+
+        $diamanteUser = new DiamanteUser($emailAddress, 'test');
+        $apiUser = new ApiUser($emailAddress, null);
+
+        $this->diamanteUserRepository
+            ->expects($this->once())
+            ->method('findUserByEmail')
+            ->with($this->equalTo($emailAddress))
+            ->will($this->returnValue($diamanteUser));
+
+        $this->apiUserRepository
+            ->expects($this->once())
+            ->method('findUserByUsername')
+            ->with($this->equalTo($emailAddress))
+            ->will($this->returnValue($apiUser));
+
+        $this->apiUserRepository->expects($this->once())->method('store')->with($apiUser);
+
+        $this->resetPasswordMailer->expects($this->once())->method('sendEmail')
+            ->with($emailAddress, $apiUser->getActivationHash());
 
         $this->resetPasswordService->generateHash($emailAddress);
     }
