@@ -50,6 +50,14 @@ front_diamante:
     anonymous:      true
 ```
 
+For reset and update password url you should use anonymous user. Add the following rule in the same section as above
+```yml
+front_diamante_reset_password:
+    pattern:        ^/diamantefront/password/*
+    provider:       chain_provider
+    anonymous:      true
+```
+            
 Development
 ------------
 
