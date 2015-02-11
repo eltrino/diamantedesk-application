@@ -13,7 +13,7 @@
     syntaxCheck                 = "false">
 
     <testsuites>
-        <testsuite name="Email Processing Test Suite">
+        <testsuite name="Diamante Api Test Suite">
             <directory suffix="Test.php">Tests</directory>
         </testsuite>
     </testsuites>
