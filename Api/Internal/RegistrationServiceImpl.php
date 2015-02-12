@@ -78,4 +78,30 @@ class RegistrationServiceImpl implements RegistrationService
 
         $this->registrationMailer->sendConfirmationEmail($diamanteUser->getEmail(), $apiUser->getActivationHash());
     }
+
+    /**
+     * Confirm user registration
+     * @param Command\ConfirmCommand $command
+     * @return void
+     */
+    public function confirm(Command\ConfirmCommand $command)
+    {
+        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($command->email);
+        if (is_null($diamanteUser)) {
+            throw new \RuntimeException('Can not find Diamante User.');
+        }
+
+        $apiUser = $this->apiUserRepository->findUserByUsername($diamanteUser->getUsername());
+
+        if (is_null($apiUser)) {
+            throw new \RuntimeException('Diamante User is not granted for API Access.');
+        }
+
+        try {
+            $apiUser->activate($command->activationHash);
+            $this->apiUserRepository->store($apiUser);
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Can not confirm registration.');
+        }
+    }
 }

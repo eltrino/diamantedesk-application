@@ -23,4 +23,11 @@ interface RegistrationService
      * @return void
      */
     public function register(Command\RegisterCommand $command);
+
+    /**
+     * Confirm user registration
+     * @param Command\ConfirmCommand $command
+     * @return void
+     */
+    public function confirm(Command\ConfirmCommand $command);
 }

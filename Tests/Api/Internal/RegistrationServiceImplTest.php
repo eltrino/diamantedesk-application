@@ -16,6 +16,7 @@ namespace Diamante\FrontBundle\Tests\Api\Internal;
 
 use Diamante\ApiBundle\Model\ApiUser\ApiUser;
 use Diamante\DeskBundle\Model\User\DiamanteUser;
+use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
 use Diamante\FrontBundle\Api\Internal\RegistrationServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -99,5 +100,98 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
         $command->lastname = $lastname;
 
         $this->service->register($command);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Can not find Diamante User.
+     */
+    public function testConfirmWhenDiamanteUserDoesNotExist()
+    {
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with('user@email.com')->will($this->returnValue(null));
+
+        $command = new ConfirmCommand();
+        $command->email = 'user@email.com';
+        $command->activationHash = md5(time());
+
+        $this->service->confirm($command);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Diamante User is not granted for API Access.
+     */
+    public function testConfirmWhenDiamanteUserHasNoApiAccess()
+    {
+        $email = 'test@email.com';
+        $username = 'testuser';
+        $firstname = 'Firstname';
+        $lastname = 'Lastname';
+        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
+
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with($email)->will($this->returnValue($diamanteUser));
+
+        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
+            ->with($diamanteUser->getUsername())->will($this->returnValue(null));
+
+        $command = new ConfirmCommand();
+        $command->email = $email;
+        $command->activationHash = md5(time());
+
+        $this->service->confirm($command);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Can not confirm registration.
+     */
+    public function testConfirmWhenActivationHashIsNotValid()
+    {
+        $email = 'test@email.com';
+        $username = 'testuser';
+        $password = '123123q';
+        $firstname = 'Firstname';
+        $lastname = 'Lastname';
+        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
+        $apiUser = new ApiUser($username, $password);
+
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with($email)->will($this->returnValue($diamanteUser));
+
+        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
+            ->with($diamanteUser->getUsername())->will($this->returnValue($apiUser));
+
+        $command = new ConfirmCommand();
+        $command->email = $email;
+        $command->activationHash = md5('dummy_username' . time());
+
+        $this->service->confirm($command);
+    }
+
+    public function testConfirm()
+    {
+        $email = 'test@email.com';
+        $username = 'testuser';
+        $password = '123123q';
+        $firstname = 'Firstname';
+        $lastname = 'Lastname';
+        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
+        $apiUser = new ApiUser($username, $password);
+
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with($email)->will($this->returnValue($diamanteUser));
+
+        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
+            ->with($diamanteUser->getUsername())->will($this->returnValue($apiUser));
+
+        $this->apiUserRepository->expects($this->once())->method('store')->with($apiUser);
+
+        $command = new ConfirmCommand();
+        $command->email = $email;
+        $command->activationHash = $apiUser->getActivationHash();
+
+        $this->service->confirm($command);
     }
 }
