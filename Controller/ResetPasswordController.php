@@ -14,27 +14,24 @@
  */
 namespace Diamante\FrontBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Post;
 
-
-/**
- * @Route("/")
- */
-class ResetPasswordController extends Controller
+class ResetPasswordController
 {
     /**
-     * @Route(
-     *      "/resetpassword",
-     *      name="diamante_front_reset_password"
-     * )
-     *
-     * @return array
+     * Reset password action
+     * @Post("/password/reset", name="diamante_front_reset_password")
      */
-    public function indexAction()
+    public function resetAction(){
+    }
+
+    /**
+     * Update password action
+     * @Post("password/update", name="diamante_front_update_password")
+     */
+    public function updateAction()
     {
+
         $service = $this->container->get('diamante.front.reset_password');
         $service->reset('max@gmail.com');
     }
