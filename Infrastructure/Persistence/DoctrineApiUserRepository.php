@@ -31,4 +31,15 @@ class DoctrineApiUserRepository extends DoctrineGenericRepository implements Api
     {
         return $this->findOneBy(array('username' => $username));
     }
+
+    /**
+     * Finds a user by activation hash
+     *
+     * @param  string $hash
+     * @return ApiUser
+     */
+    public function findUserByHash($hash)
+    {
+        return $this->findOneBy(array('activation_hash' => $hash));
+    }
 }

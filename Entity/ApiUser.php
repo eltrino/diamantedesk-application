@@ -70,6 +70,15 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
      */
     protected $activationHash;
 
+    /**
+     * The time of living hash
+     *
+     * @var int
+     * @ORM\Column(name="hash_expiration_time", type="int")
+     */
+    protected $hashExpirationTime;
+
+
     public static function getClassName()
     {
         return __CLASS__;

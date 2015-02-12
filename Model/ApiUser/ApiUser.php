@@ -20,6 +20,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ApiUser implements Entity, UserInterface
 {
+    const EXPIRATION_TIME = 900;//Hash expiration time in seconds (15 minutes);
+
     /**
      * @var integer
      */
@@ -55,13 +57,19 @@ class ApiUser implements Entity, UserInterface
      */
     protected $activationHash;
 
+    /**
+     * @var integer
+     */
+    protected $hashExpirationTime;
+
     public function __construct($username, $password, $salt = null)
     {
-        $this->username  = $username;
-        $this->password  = $password;
-        $this->salt      = $salt;
-        $this->isActive  = false;
+        $this->username = $username;
+        $this->password = $password;
+        $this->salt = $salt;
+        $this->isActive = false;
         $this->activationHash = md5($this->username . time());
+        $this->hashExpirationTime = 0;
     }
 
     /**
@@ -141,4 +149,32 @@ class ApiUser implements Entity, UserInterface
         }
         $this->isActive = true;
     }
+
+    /**
+     * Generate new activation hash for reset pass
+     */
+    public function generateHash()
+    {
+        $timestamp = time();
+        $this->activationHash = md5($this->getUsername() . $timestamp . $this->getPassword());
+        $this->hashExpirationTime = $timestamp + self::EXPIRATION_TIME;
+
+    }
+
+    /**
+     * Set new password for user
+     * @param $newPassword
+     * @return void
+     * @throws \RuntimeException if hash is expired
+     */
+    public function changePassword($newPassword)
+    {
+        if (time() > $this->hashExpirationTime ) {
+            throw new \RuntimeException('This password reset code is invalid.');
+        }
+
+        $this->password = $newPassword;
+        $this->isActive = true;
+    }
+
 }

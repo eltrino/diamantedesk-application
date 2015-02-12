@@ -25,4 +25,12 @@ interface ApiUserRepository extends Repository
      * @return ApiUser
      */
     public function findUserByUsername($username);
+
+    /**
+     * Finds a user by activation hash
+     *
+     * @param  string $hash
+     * @return ApiUser
+     */
+    public function findUserByHash($hash);
 } 
