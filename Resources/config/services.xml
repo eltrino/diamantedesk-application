@@ -35,6 +35,7 @@
         <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\DeskBundle\Search\DiamanteUserSearchHandler</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension</parameter>
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
+        <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -121,6 +122,10 @@
             <argument type="service" id="diamante.user.details.service"/>
             <argument type="service" id="diamante.user.service"/>
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.api.paging.service" class="%diamante.api.paging.service.class%">
+            <argument type="service" id="diamante.api.paging.provider"/>
         </service>
     </services>
 </container>

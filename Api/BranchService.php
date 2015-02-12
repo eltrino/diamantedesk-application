@@ -29,7 +29,7 @@ interface BranchService
      * @param Command\Filter\FilterBranchesCommand
      * @return Branch[]
      */
-    public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null);
+    public function getAllBranches();
 
     /**
      * Retrieves Branch by id

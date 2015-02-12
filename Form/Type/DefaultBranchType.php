@@ -34,7 +34,7 @@ class DefaultBranchType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $choices = array();
-        foreach ($this->branchService->listAllBranches() as $branch) {
+        foreach ($this->branchService->getAllbranches() as $branch) {
             $choices[$branch->getId()] = $branch->getName();
         }
         $resolver->setDefaults(array(

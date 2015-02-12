@@ -19,7 +19,6 @@ use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
 use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
-use Diamante\DeskBundle\Model\Branch\Filter\BranchFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
@@ -79,26 +78,15 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * Retrieves list of all Branches. Filters branches with parameters provided within GET request
-     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
-     * Time filtering values should be converted to UTC
-     * @param Command\Filter\FilterBranchesCommand $command|null
+     * Retrieves list of all Branches.
+     *
      * @return Branch[]
      */
-    public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null)
+    public function getAllBranches()
     {
-        if (!$command) {
-            return $this->branchRepository->getAll();
-        }
-
         $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
-        $processor = new BranchFilterCriteriaProcessor();
-        $processor->setCommand($command);
-        $criteria = $processor->getCriteria();
-        $pagingProperties = $processor->getPagingProperties();
-        $branches = $this->branchRepository->filter($criteria, $pagingProperties);
 
-        return $branches;
+        return $this->branchRepository->getAll();
     }
 
     /**
@@ -269,5 +257,13 @@ class BranchServiceImpl implements BranchService
         if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
+    }
+
+    /**
+     * @return Repository
+     */
+    protected function getBranchRepository()
+    {
+        return $this->branchRepository;
     }
 }

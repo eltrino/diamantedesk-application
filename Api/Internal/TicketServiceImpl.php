@@ -19,7 +19,6 @@ use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
-use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Priority;
@@ -199,7 +198,7 @@ class TicketServiceImpl implements TicketService
     /**
      * Adds Attachments for Ticket
      * @param AddTicketAttachmentCommand $command
-     * @return void
+     * @return array
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {
@@ -210,15 +209,19 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
+        $attachments = [];
+
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
+                $attachments[] = $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
             }
         }
 
         $this->ticketRepository->store($ticket);
 
         $this->dispatchEvents($ticket);
+
+        return $attachments;
     }
 
     /**
@@ -237,9 +240,11 @@ class TicketServiceImpl implements TicketService
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
         }
-        $this->attachmentManager->deleteAttachment($attachment);
+
         $ticket->removeAttachment($attachment);
         $this->ticketRepository->store($ticket);
+
+        $this->attachmentManager->deleteAttachment($attachment);
 
         $this->dispatchEvents($ticket);
         return $ticket->getKey();
@@ -509,21 +514,10 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
-     * Retrieves list of all Tickets. Performs filtering of tickets if provided with criteria as GET parameters.
-     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
-     * Time filtering values should be converted to UTC
-     * @param Command\Filter\FilterTicketsCommand $ticketFilterCommand
-     * @return Ticket[]
+     * @return TicketRepository
      */
-    public function listAllTickets(Command\Filter\FilterTicketsCommand $ticketFilterCommand)
+    protected function getTicketRepository()
     {
-        $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Ticket');
-        $criteriaProcessor = new TicketFilterCriteriaProcessor();
-        $criteriaProcessor->setCommand($ticketFilterCommand);
-        $criteria = $criteriaProcessor->getCriteria();
-        $pagingProperties = $criteriaProcessor->getPagingProperties();
-        $tickets = $this->ticketRepository->filter($criteria, $pagingProperties);
-
-        return $tickets;
+        return $this->ticketRepository;
     }
 }

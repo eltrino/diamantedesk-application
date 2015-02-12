@@ -26,29 +26,18 @@ class FilterPagingProperties implements PagingProperties
     const DEFAULT_LIMIT      = 25;
     const DEFAULT_SORT       = 'id';
     const DEFAULT_ORDER      = 'ASC';
+
     /**
-     * @var int
+     * @var array
      */
-    protected $page;
-    /**
-     * @var int
-     */
-    protected $limit;
-    /**
-     * @var string
-     */
-    protected $sort;
-    /**
-     * @var string
-     */
-    protected $order;
+    protected $config = array();
 
     public function __construct($page = null, $limit = null, $sort = null, $order = null)
     {
-        $this->page     = $page ? $page : self::DEFAULT_PAGE;
-        $this->limit    = $limit ? $limit : self::DEFAULT_LIMIT;
-        $this->sort    = $sort ? $sort : self::DEFAULT_SORT;
-        $this->order     = $order ? $order : self::DEFAULT_ORDER;
+        $this->config[self::PAGE_PROP_NAME]     = $page  ? $page  : self::DEFAULT_PAGE;
+        $this->config[self::LIMIT_PROP_NAME]    = $limit ? $limit : self::DEFAULT_LIMIT;
+        $this->config[self::SORT_PROP_NAME]     = $sort  ? $sort  : self::DEFAULT_SORT;
+        $this->config[self::ORDER_PROP_NAME]    = $order ? $order : self::DEFAULT_ORDER;
     }
 
     /**
@@ -56,7 +45,7 @@ class FilterPagingProperties implements PagingProperties
      */
     public function getPage()
     {
-        return $this->page;
+        return $this->config[self::PAGE_PROP_NAME];
     }
 
     /**
@@ -64,7 +53,7 @@ class FilterPagingProperties implements PagingProperties
      */
     public function getLimit()
     {
-        return $this->limit;
+        return $this->config[self::LIMIT_PROP_NAME];
     }
 
     /**
@@ -72,7 +61,7 @@ class FilterPagingProperties implements PagingProperties
      */
     public function getSort()
     {
-        return $this->sort;
+        return $this->config[self::SORT_PROP_NAME];
     }
 
     /**
@@ -80,7 +69,7 @@ class FilterPagingProperties implements PagingProperties
      */
     public function getOrder()
     {
-        return $this->order;
+        return $this->config[self::ORDER_PROP_NAME];
     }
 
     /**
@@ -95,5 +84,13 @@ class FilterPagingProperties implements PagingProperties
             $pagingConfig[self::SORT_PROP_NAME],
             $pagingConfig[self::ORDER_PROP_NAME]
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->config;
     }
 }

@@ -93,7 +93,11 @@
             <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
 
-        <service id="diamante.ticket.api.service" class="%diamante.ticket.service.api.class%" parent="diamante.ticket.service"/>
+        <service id="diamante.ticket.api.service" class="%diamante.ticket.service.api.class%" parent="diamante.ticket.service">
+            <call method="setApiPagingService">
+                <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+        </service>
 
         <service id="diamante.ticket.api.service_diamante" alias="diamante.ticket.api.service" />
 
@@ -169,7 +173,11 @@
             <argument type="service" id="diamante.notification.email.notifier"/>
         </service>
 
-        <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service"/>
+        <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service">
+            <call method="setApiPagingService">
+                <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+        </service>
 
         <service id="diamante.comment.api.service_diamante" alias="diamante.comment.api.service" />
 

@@ -15,13 +15,14 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Doctrine\ORM\EntityRepository;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
-class DoctrineGenericRepository extends EntityRepository implements Repository
+class DoctrineGenericRepository extends EntityRepository implements Repository, FilterableRepository
 {
     const SELECT_ALIAS = 'e';
     /**
@@ -49,7 +50,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
     public function store(Entity $entity)
     {
         $this->_em->persist($entity);
-        $this->_em->flush();
+        $this->_em->flush($entity);
     }
 
     /**
@@ -59,7 +60,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
     public function remove(Entity $entity)
     {
         $this->_em->remove($entity);
-        $this->_em->flush();
+        $this->_em->flush($entity);
     }
 
     /**
@@ -119,5 +120,31 @@ class DoctrineGenericRepository extends EntityRepository implements Repository
         $expr = call_user_func_array(array($qb->expr(), $operator), array($field, $literal));
 
         return $expr;
+    }
+
+    /**
+     * @param array $criteria
+     * @return int
+     */
+    public function count(array $criteria)
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb->select($qb->expr()->count(self::SELECT_ALIAS))->from($this->_entityName, self::SELECT_ALIAS);
+
+        foreach ($criteria as $condition) {
+            $whereExpression = $this->buildWhereExpression($qb, $condition);
+            $qb->orWhere($whereExpression);
+        }
+
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_SINGLE_SCALAR);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 }

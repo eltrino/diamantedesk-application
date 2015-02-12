@@ -21,7 +21,7 @@ interface Manager
      * @param string $filename
      * @param string $content
      * @param AttachmentHolder $holder
-     * @return int
+     * @return \Diamante\DeskBundle\Model\Attachment\Attachment
      */
     public function createNewAttachment($filename, $content, AttachmentHolder $holder);
 

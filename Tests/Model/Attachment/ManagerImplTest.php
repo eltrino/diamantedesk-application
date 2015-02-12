@@ -114,10 +114,10 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
         $this->holder->expects($this->once())->method('addAttachment')->with($this->equalTo($attachment));
         $this->repository->expects($this->once())->method('store')->with($this->equalTo($attachment));
 
-        $createdAttachmentId = $this->manager->createNewAttachment($filename, $content, $this->holder);
+        $createdAttachment = $this->manager->createNewAttachment($filename, $content, $this->holder);
 
-        $this->assertNotNull($createdAttachmentId);
-        $this->assertEquals($attachmentId, $createdAttachmentId);
+        $this->assertNotNull($createdAttachment->getId());
+        $this->assertEquals($attachmentId, $createdAttachment->getId());
     }
 
     /**
