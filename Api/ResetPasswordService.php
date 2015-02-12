@@ -17,8 +17,8 @@ namespace Diamante\FrontBundle\Api;
 interface ResetPasswordService
 {
 
-    public function generateHash($emailAddress);
+    public function reset($emailAddress);
 
-    public function checkHash($hash);
+    public function changePassword($hash, $newPassword);
 
 }

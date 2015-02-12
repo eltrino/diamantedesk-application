@@ -36,6 +36,6 @@ class ResetPasswordController extends Controller
     public function indexAction()
     {
         $service = $this->container->get('diamante.front.reset_password');
-        $service->resetPassword('max@gmail.com');
+        $service->reset('max@gmail.com');
     }
 }

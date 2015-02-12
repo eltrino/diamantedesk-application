@@ -67,7 +67,7 @@ class ResetPasswordServiceImpl implements ResetPasswordService
      * @return void
      * @throws \RuntimeException if given emailAddres is not equal to generated one for user
      */
-    public function generateHash($emailAddress)
+    public function reset($emailAddress)
     {
         /**
          * @var DiamanteUser $diamanteUser
@@ -93,22 +93,25 @@ class ResetPasswordServiceImpl implements ResetPasswordService
 
     }
 
-    public function checkHash($hash)
+    /**
+     * @param string $hash
+     * @param string $newPassword
+     * @return void
+     */
+    public function changePassword($hash, $newPassword)
     {
-//        /**
-//         * @var ApiUser $apiUser
-//         */
-//        $apiUser = $this->diamanteUserRepository->findUserByHash($hash);
-//
-//        if (is_null($apiUser) || time() > $apiUser->getHashExpireTime()) {
-//            throw new \RuntimeException('This password reset code is invalid.');
-//        }
-//
-//        $apiUser->setPassword($newPassword);
-//        $apiUser->activate(true);
-//
-//        $this->diamanteUserRepository->store($apiUser);
+        /**
+         * @var ApiUser $apiUser
+         */
+        $apiUser = $this->apiUserRepository->findUserByHash($hash);
 
+        if (is_null($apiUser)) {
+            throw new \RuntimeException('This password reset code is invalid.');
+        }
+
+        $apiUser->changePassword($newPassword);
+
+        $this->apiUserRepository->store($apiUser);
     }
 
 } 

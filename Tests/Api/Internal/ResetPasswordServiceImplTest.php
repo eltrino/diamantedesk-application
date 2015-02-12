@@ -53,6 +53,12 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $resetPasswordMailer;
 
+    /**
+     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUser
+     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUser
+     */
+    private $resetPasswordMailer;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -63,7 +69,7 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
             $this->resetPasswordMailer);
     }
 
-    public function testGenerateHash()
+    public function testReset()
     {
         $emailAddress = 'max@gmail.com';
 
@@ -87,7 +93,25 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
         $this->resetPasswordMailer->expects($this->once())->method('sendEmail')
             ->with($emailAddress, $apiUser->getActivationHash());
 
-        $this->resetPasswordService->generateHash($emailAddress);
+        $this->resetPasswordService->reset($emailAddress);
+    }
+
+    public function testChangePassword()
+    {
+        $emailAddress = 'test@example.com';
+        $password = 'newPass';
+        $hash = md5('test');
+        $apiUser = new ApiUser($emailAddress, null);
+
+        $this->apiUserRepository
+            ->expects($this->once())
+            ->method('findUserByHash')
+            ->with($this->equalTo($hash))
+            ->will($this->returnValue($apiUser));
+
+        $this->
+
+        $this->resetPasswordService->changePassword($hash, $password);
     }
 
 }
