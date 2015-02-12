@@ -143,13 +143,14 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
     {
-        $ticket = $this->messageReferenceRepository
-            ->getReferenceByMessageId($messageId)
-            ->getTicket();
+        $reference = $this->messageReferenceRepository
+            ->getReferenceByMessageId($messageId);
 
-        if (is_null($ticket)) {
+        if (is_null($reference)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $ticket = $reference->getTicket();
 
         $author = User::fromString($authorId);
         $content = $this->cleanupCommentsContent($content);
