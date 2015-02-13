@@ -78,15 +78,4 @@ class DiamanteUser extends \Diamante\DeskBundle\Model\User\DiamanteUser
      */
     protected $lastName;
 
-    /**
-     * @var bool
-     * @ORM\Column(name="is_active", type="boolean")
-     */
-    protected $isActive;
-
-    /**
-     * @var string
-     * @ORM\Column(name="activation_hash", type="string", length=255)
-     */
-    protected $activationHash;
 }
