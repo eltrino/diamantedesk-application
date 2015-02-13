@@ -48,7 +48,7 @@ class ManagerImpl implements Manager
      * @param string $filename
      * @param string $content
      * @param AttachmentHolder $holder
-     * @return int
+     * @return \Diamante\DeskBundle\Model\Attachment\Attachment
      */
     public function createNewAttachment($filename, $content, AttachmentHolder $holder)
     {
@@ -66,7 +66,7 @@ class ManagerImpl implements Manager
         $holder->addAttachment($attachment);
         $this->repository->store($attachment);
 
-        return $attachment->getId();
+        return $attachment;
     }
 
     /**

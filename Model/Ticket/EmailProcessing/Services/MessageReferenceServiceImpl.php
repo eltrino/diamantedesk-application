@@ -31,6 +31,9 @@ use Diamante\DeskBundle\Model\User\User;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
+    const DELIMITER_LINE = '[[ Please reply above this line ]]';
+    const EMPTY_SUBJECT_PLACEHOLDER = '[No Subject]';
+
     /**
      * @var MessageReferenceRepository
      */
@@ -94,6 +97,10 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
                                  array $attachments = null)
     {
+        if (empty($subject)) {
+            $subject = self::EMPTY_SUBJECT_PLACEHOLDER;
+        }
+
         $this->ticketBuilder
             ->setSubject($subject)
             ->setDescription($description)
@@ -136,15 +143,18 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
     {
-        $ticket = $this->messageReferenceRepository
-            ->getReferenceByMessageId($messageId)
-            ->getTicket();
+        $reference = $this->messageReferenceRepository
+            ->getReferenceByMessageId($messageId);
 
-        if (is_null($ticket)) {
+        if (is_null($reference)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 
+        $ticket = $reference->getTicket();
+
         $author = User::fromString($authorId);
+        $content = $this->cleanupCommentsContent($content);
+
         $comment = $this->commentFactory->create($content, $ticket, $author);
 
         if ($attachments) {
@@ -165,5 +175,23 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     {
         $messageReference = new MessageReference($messageId, $ticket);
         $this->messageReferenceRepository->store($messageReference);
+    }
+
+    /**
+     * Remove everything after first delimiter in message content
+     *
+     * @param string $content
+     * @return string
+     */
+    private function cleanupCommentsContent($content)
+    {
+        $content = quoted_printable_decode($content);
+
+        $position = strpos($content, self::DELIMITER_LINE);
+        if ($position === FALSE) {
+            return $content;
+        }
+
+        return substr($content, 0, $position);
     }
 }

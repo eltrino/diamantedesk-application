@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteContactService;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
 use Diamante\DeskBundle\Model\User\DiamanteUserFactory;
@@ -22,7 +23,6 @@ use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
-use OroCRM\Bundle\ContactBundle\Entity\Provider\EmailOwnerProvider;
 
 class TicketStrategy implements Strategy
 {
@@ -52,23 +52,31 @@ class TicketStrategy implements Strategy
     private $emailProcessingSettings;
 
     /**
+     * @var DiamanteContactService
+     */
+    private $diamanteContactService;
+
+    /**
      * @param MessageReferenceService $messageReferenceService
      * @param BranchEmailConfigurationService $branchEmailConfigurationService
      * @param DiamanteUserRepository $diamanteUserRepository
      * @param DiamanteUserFactory $diamanteUserFactory
      * @param SystemSettings $settings
+     * @param DiamanteContactService $diamanteContactService
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 BranchEmailConfigurationService $branchEmailConfigurationService,
                                 DiamanteUserRepository $diamanteUserRepository,
                                 DiamanteUserFactory $diamanteUserFactory,
-                                SystemSettings $settings)
+                                SystemSettings $settings,
+                                DiamanteContactService $diamanteContactService)
     {
         $this->messageReferenceService         = $messageReferenceService;
         $this->branchEmailConfigurationService = $branchEmailConfigurationService;
         $this->diamanteUserRepository          = $diamanteUserRepository;
         $this->diamanteUserFactory             = $diamanteUserFactory;
         $this->emailProcessingSettings         = $settings;
+        $this->diamanteContactService          = $diamanteContactService;
     }
 
     /**
@@ -78,23 +86,28 @@ class TicketStrategy implements Strategy
     {
         $assigneeId = 1;
 
-        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($message->getFrom());
+        $email = $message->getFrom();
+        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
+        $type = User::TYPE_ORO;
 
         if (is_null($diamanteUser)) {
-            $diamanteUser = $this->diamanteUserFactory->create($message->getFrom(), $message->getFrom());
+            $contact = $this->diamanteContactService->findEmailOwner($email);
+            $diamanteUser = $this->diamanteUserFactory->create($email, $email, $contact);
+
             $this->diamanteUserRepository->store($diamanteUser);
+            $type = User::TYPE_DIAMANTE;
         }
 
         $reporterId = $diamanteUser->getId();
 
-        $reporter = new User($reporterId, User::TYPE_DIAMANTE);
+        $reporter = new User($reporterId, $type);
 
         $attachments = $message->getAttachments();
 
         if (!$message->getReference()) {
             $branchId = $this->getAppropriateBranch($message->getFrom(), $message->getTo());
             $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
-                $message->getContent(), $reporter, $assigneeId, null, null, $attachments);
+                $message->getContent(), $reporter, $assigneeId, $attachments);
         } else {
             $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
                 $message->getReference(), $attachments);

@@ -69,7 +69,6 @@ class TicketController extends Controller
 
         $filtersList = $filtersGenerator->getFilters();
         $linksList = array();
-        $baseUri = $this->getRequest()->getBaseUrl() . $this->getRequest()->getPathInfo();
         foreach($filtersList as $filter) {
             $link['name'] =  $filter->getName();
             $link['url'] = $filtersGenerator->generateGridFilterUrl($filter->getId());
@@ -310,10 +309,7 @@ class TicketController extends Controller
     {
         try {
             $this->get('diamante.ticket.service')->deleteTicketByKey($key);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.delete.success');
-            return $this->redirect(
-                $this->generateUrl('diamante_ticket_list')
-            );
+            return new Response(null, 204);
         } catch (\Exception $e) {
             return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
@@ -418,10 +414,7 @@ class TicketController extends Controller
             $command = $form->getData();
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
-            $addTicketAttachmentCommand = new AddTicketAttachmentCommand();
-            $addTicketAttachmentCommand->attachmentsInput = $attachments;
-            $addTicketAttachmentCommand->ticketId = $ticket->getId();
-            $ticketService->addAttachmentsForTicket($addTicketAttachmentCommand);
+            $ticketService->addAttachmentsForTicket($command);
 
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');
             if ($this->getRequest()->request->get('diam-dropzone')) {
@@ -439,20 +432,14 @@ class TicketController extends Controller
                     $response->setStatusCode(500);
                 }
             } else {
-                $response = $this->get('oro_ui.router')->actionRedirect(
-                    array(
-                        'route' => 'diamante_attachment_attach',
-                        'parameters' => array(),
-                    ),
-                    array(
-                        'route' => 'diamante_ticket_view',
-                        'parameters' => array('key' => (string) $ticket->getKey())
-                    )
+                $response = $this->get('oro_ui.router')->redirectAfterSave(
+                    ['route' => 'diamante_attachment_attach', 'parameters' => []],
+                    ['route' => 'diamante_ticket_view', 'parameters' => ['key' => (string) $ticket->getKey()]]
                 );
             }
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.create.error');
             $response = array('form' => $formView);
         }
@@ -526,7 +513,7 @@ class TicketController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
 
             return $response;
-        } catch (\Exeception $e) {
+        } catch (\Exception $e) {
             $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }

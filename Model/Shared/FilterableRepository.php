@@ -13,33 +13,22 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\Model\Shared\Filter;
+namespace Diamante\DeskBundle\Model\Shared;
 
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 
-interface PagingProperties
+interface FilterableRepository
 {
     /**
+     * @param array $criteria
+     * @param PagingProperties $pagingProperties
+     * @return Entity[]
+     */
+    public function filter(array $criteria, PagingProperties $pagingProperties);
+
+    /**
+     * @param array $criteria
      * @return int
      */
-    public function getPage();
-
-    /**
-     * @return int
-     */
-    public function getLimit();
-
-    /**
-     * @return string
-     */
-    public function getSort();
-
-    /**
-     * @return string
-     */
-    public function getOrder();
-
-    /**
-     * @return array
-     */
-    public function toArray();
+    public function count(array $criteria);
 }

@@ -14,28 +14,14 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\User\User;
 
-interface TicketRepository extends Repository, FilterableRepository
+interface CommentRepository extends Repository
 {
     /**
-     * Find Ticket by given TicketKey
-     * @param TicketKey $key
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
-     */
-    public function getByTicketKey(TicketKey $key);
-
-    /**
-     * @param UniqueId $uniqueId
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
-     */
-    public function getByUniqueId(UniqueId $uniqueId);
-
-    /**
-     * Remove reporter id from ticket table
+     * Remove author id from comment table
      * @param User $user
      */
-    public function removeTicketReporter(User $user);
+    public function removeCommentAuthor(User $user);
 }

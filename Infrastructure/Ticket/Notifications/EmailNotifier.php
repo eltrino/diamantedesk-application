@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
@@ -146,7 +147,8 @@ class EmailNotifier implements Notifier
             'changes'       => $changeList,
             'attachments'   => $notification->getAttachments(),
             'user'          => $userFormattedName,
-            'header'        => $notification->getHeaderText()
+            'header'        => $notification->getHeaderText(),
+            'delimiter'     => MessageReferenceServiceImpl::DELIMITER_LINE
         );
 
         $txtTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);

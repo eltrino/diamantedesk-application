@@ -77,7 +77,7 @@ define(['jquery', 'underscore', 'oroui/js/modal', 'oroui/js/mediator'],
 
               event.originalEvent.dataTransfer.effectAllowed= 'none';
               event.originalEvent.dataTransfer.dropEffect= 'none';
-              if(event.target.id = 'diam-dropzone-file') {
+              if(event.target.id == 'diam-dropzone-file') {
                 event.originalEvent.dataTransfer.effectAllowed= 'copyMove';
                 event.originalEvent.dataTransfer.dropEffect= 'move';
               } else {

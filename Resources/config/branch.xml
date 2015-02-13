@@ -60,7 +60,11 @@
             <argument type="service" id="diamante.user.service"/>
         </service>
 
-        <service id="diamante.branch.api.service" class="%diamante.branch.service.api.class%" parent="diamante.branch.service"/>
+        <service id="diamante.branch.api.service" class="%diamante.branch.service.api.class%" parent="diamante.branch.service">
+            <call method="setApiPagingService">
+                <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+        </service>
 
         <service id="diamante.branch.api.service_diamante" alias="diamante.branch.api.service" />
 

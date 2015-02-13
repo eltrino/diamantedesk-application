@@ -12,18 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 1/12/14
- * Time: 7:56 PM
- */
 
 namespace Diamante\DeskBundle\Twig\Extensions;
 
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetails;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
 
 class UserDetailsExtension extends \Twig_Extension
@@ -46,14 +40,23 @@ class UserDetailsExtension extends \Twig_Extension
         return 'diamante_user_details_extension';
     }
 
+    /**
+     * @return array
+     */
     public function getFunctions()
     {
         return [
             'fetch_user_details' => new \Twig_Function_Method($this, 'fetchUserDetails', array('is_safe' => array('html'))),
             'fetch_oro_user' => new \Twig_Function_Method($this, 'fetchOroUser', array('is_safe' => array('html'))),
+            'get_gravatar' => new \Twig_Function_Method($this, 'getGravatarForUser', array('is_safe' => array('html'))),
         ];
     }
 
+    /**
+     * @param User $user
+     * @return UserDetails
+     * @throws \Twig_Error_Runtime
+     */
     public function fetchUserDetails(User $user)
     {
         /**
@@ -68,6 +71,11 @@ class UserDetailsExtension extends \Twig_Extension
         return $details;
     }
 
+    /**
+     * @param User $user
+     * @return \Diamante\DeskBundle\Model\User\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
+     * @throws \Twig_Error_Runtime
+     */
     public function fetchOroUser(User $user)
     {
         $oroUser = $this->userService->getByUser($user);
@@ -77,5 +85,44 @@ class UserDetailsExtension extends \Twig_Extension
         }
 
         return $oroUser;
+    }
+
+    /**
+     * @param $userDetails
+     * @param int $size
+     * @param bool $secure
+     * @throws \Twig_Error_Runtime
+     * @return string
+     */
+    public function getGravatarForUser($userDetails, $size = 58, $secure = false)
+    {
+        if (!($userDetails instanceof User) && !($userDetails instanceof UserDetails)) {
+            throw new \Twig_Error_Runtime(
+                sprintf('Invalid user details source is provided. Expected instance of %s, %s given',
+                    join(' or ', [
+                        'Diamante\DeskBundle\Model\User\User',
+                        'Diamante\DeskBundle\Model\User\UserDetails',
+                    ]),
+                    get_class($userDetails)
+                )
+            );
+        }
+
+        if (is_object($userDetails) && ($userDetails instanceof User)) {
+            $userDetails = $this->userDetailsService->fetch($userDetails);
+        }
+
+        $email = $userDetails->getEmail();
+        $hash = md5(strtolower(trim($email)));
+        $schema = (bool)$secure ? 'https' : 'http';
+
+        //Query parameters are:
+        // s - size, default oro avatar size is 58px,
+        // d - default image if no configured image found for given hash.
+        // for details see https://en.gravatar.com/site/implement/images/
+
+        $link = sprintf('%s://gravatar.com/avatar/%s.jpg?s=%d&d=identicon', $schema, $hash, (int)$size);
+
+        return $link;
     }
 } 

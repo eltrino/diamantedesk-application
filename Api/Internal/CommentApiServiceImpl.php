@@ -16,13 +16,21 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
+use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
 
 class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInterface
 {
     use ApiServiceImplTrait;
+
+    /**
+     * @var ApiPagingService
+     */
+    protected $apiPagingService;
 
     /**
      * Load Comment by given comment id
@@ -101,12 +109,12 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * )
      *
      * @param Command\AddCommentAttachmentCommand $command
-     * @return void
+     * @return array
      */
     public function addCommentAttachment(Command\AddCommentAttachmentCommand $command)
     {
         $this->prepareAttachmentInput($command);
-        parent::addCommentAttachment($command);
+        return parent::addCommentAttachment($command);
     }
 
     /**
@@ -131,7 +139,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *  }
      * )
      *
-     * @param $commentId
+     * @param $id
      * @return array
      */
     public function listCommentAttachment($id)
@@ -245,18 +253,18 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *
      * @ApiDoc(
      *  description="Remove comment attachment",
-     *  uri="/comments/{id}/attachments/{a_id}.{_format}",
+     *  uri="/comments/{commentId}/attachments/{attachmentId}.{_format}",
      *  method="DELETE",
      *  resource=true,
      *  requirements={
      *      {
-     *          "name"="id",
+     *          "name"="commentId",
      *          "dataType"="integer",
      *          "requirement"="\d+",
      *          "description"="Comment Id"
      *      },
      *      {
-     *          "name"="a_id",
+     *          "name"="attachmentId",
      *          "dataType"="integer",
      *          "requirement"="\d+",
      *          "description"="Comment attachment Id"
@@ -300,6 +308,27 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      */
     public function listAllComments(Command\Filter\FilterCommentsCommand $command)
     {
-        return parent::listAllComments($command);
+        $criteriaProcessor = new CommentFilterCriteriaProcessor();
+        $criteriaProcessor->setCommand($command);
+        $criteria = $criteriaProcessor->getCriteria();
+        $pagingProperties = $criteriaProcessor->getPagingProperties();
+        $repository = $this->getCommentsRepository();
+        $comments = $repository->filter($criteria, $pagingProperties);
+
+        try {
+            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        } catch (\Exception $e) {
+        }
+
+        return $comments;
+    }
+
+    /**
+     * @param ApiPagingService $apiPagingService
+     */
+    public function setApiPagingService(ApiPagingService $apiPagingService)
+    {
+        $this->apiPagingService = $apiPagingService;
     }
 }

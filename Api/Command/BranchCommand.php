@@ -19,7 +19,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
-use Diamante\DeskBundle\Validator\Constraints\Entity;
+use Diamante\DeskBundle\Validator\Constraints\Any;
 
 class BranchCommand implements Taggable
 {
@@ -69,7 +69,7 @@ class BranchCommand implements Taggable
     public $logoFile;
 
     /**
-     * @Entity()
+     * @Any({@Assert\Type(type="integer"), @Assert\Type(type="object")})
      */
     public $defaultAssignee;
 
@@ -82,6 +82,11 @@ class BranchCommand implements Taggable
      * @var BranchEmailConfigurationCommand
      */
     public $branchEmailConfiguration;
+
+    /**
+     * @var $removeLogo
+     */
+    public $removeLogo;
 
     public function __construct()
     {
@@ -148,5 +153,13 @@ class BranchCommand implements Taggable
         $command->logoFile        = null;
         $command->logo            = $branch->getLogo();
         return $command;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isRemoveLogo()
+    {
+        return $this->removeLogo;
     }
 }

@@ -56,6 +56,8 @@ class CommandFactory
         $command->assignee = $ticket->getAssignee();
         $command->status = $ticket->getStatus();
         $command->priority = $ticket->getPriority();
+        $command->branch = $ticket->getBranch();
+        $command->source = $ticket->getSource();
 
         return $command;
     }

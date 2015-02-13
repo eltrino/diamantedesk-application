@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
 
 trait ApiServiceImplTrait
 {
@@ -40,11 +42,20 @@ trait ApiServiceImplTrait
      */
     private function decodeAttachmentInput($input)
     {
-        $input = json_decode($input, true);
         if (false == isset($input['filename']) || false == isset($input['content'])) {
             throw new \InvalidArgumentException('Attachment input string is invalid.');
         }
         $input['content'] = base64_decode($input['content']);
         return $input;
+    }
+
+    /**
+     * @param ApiPagingService $service
+     * @param PagingInfo $info
+     */
+    protected function populatePagingHeaders(ApiPagingService $service, PagingInfo $info)
+    {
+        $links = $service->createPagingLinks($info);
+        $service->populatePagingHeaders($info, $links);
     }
 }

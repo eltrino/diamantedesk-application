@@ -243,11 +243,6 @@
     white-space: nowrap
 }
 
-
-.diam-branch-grid td:nth-last-child(n+3){
-    padding-right: 78px;
-}
-
 .diam-branch-grid th.string-cell, td.string-cell{
     vertical-align: middle;
 }
@@ -282,10 +277,16 @@
     clear: none;
 }
 
-.diam-branch-grid td:first-child {
-    width: 150px;
+.diam-tickets .row-click-action > .datetime-cell,
+.diam-tickets .row-click-action > .select-row-cell,
+.diam-tickets .row-click-action > .action-cell {
+    vertical-align: middle;
 }
 
-.diam-branch-grid td:nth-child(2) {
-    width: 22%;
+.diam-tickets .row-click-action > .string-cell:nth-child(2) {
+    width: 5%;
+}
+
+.control-label > span, .responsive-cell > span {
+    font-style: italic;
 }
