@@ -29,7 +29,7 @@ class ResetPasswordController extends Controller
     {
         $email = $request->get('email');
         $resetService = $this->container->get('diamante.front.reset_password');
-        $resetService->reset($email);
+        $resetService->resetPassword($email);
         return new Response();
     }
 

@@ -57,16 +57,16 @@ class ResetPasswordMailer implements \Diamante\FrontBundle\Model\ResetPasswordMa
     }
 
     /**
-     * Sends confirmation email
+     * Sends reset email
      * @param string $email
      * @param string $activationHash
      * @return void
      */
-    public function sendEmail($email, $activationHash)
+    public function sendResetEmail($email, $activationHash)
     {
         /** @var \Swift_Message $confirmation */
         $confirmation = $this->mailer->createMessage();
-        $confirmation->setSubject('Confirmation');
+        $confirmation->setSubject('Reset your password');
         $confirmation->setFrom($this->senderEmail);
         $confirmation->setTo($email);
         $confirmation->setReplyTo($this->senderEmail);

@@ -67,7 +67,7 @@ class ResetPasswordServiceImpl implements ResetPasswordService
      * @return void
      * @throws \RuntimeException if given emailAddres is not equal to generated one for user
      */
-    public function reset($emailAddress)
+    public function resetPassword($emailAddress)
     {
         /**
          * @var DiamanteUser $diamanteUser
@@ -89,7 +89,7 @@ class ResetPasswordServiceImpl implements ResetPasswordService
 
         $this->apiUserRepository->store($apiUser);
 
-        $this->resetPasswordMailer->sendEmail($diamanteUser->getEmail(), $apiUser->getActivationHash());
+        $this->resetPasswordMailer->sendResetEmail($diamanteUser->getEmail(), $apiUser->getActivationHash());
 
     }
 

@@ -17,10 +17,10 @@ namespace Diamante\FrontBundle\Model;
 interface ResetPasswordMailer
 {
     /**
-     * Sends confirmation email
+     * Sends reset email
      * @param string $email
      * @param string $activationHash
      * @return void
      */
-    public function sendEmail($email, $activationHash);
+    public function sendResetEmail($email, $activationHash);
 }

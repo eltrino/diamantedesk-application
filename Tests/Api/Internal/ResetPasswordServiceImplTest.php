@@ -70,7 +70,7 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
             $this->apiUser);
     }
 
-    public function testReset()
+    public function testResetPassword()
     {
         $emailAddress = 'test@gmail.com';
 
@@ -91,10 +91,10 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->apiUserRepository->expects($this->once())->method('store')->with($apiUser);
 
-        $this->resetPasswordMailer->expects($this->once())->method('sendEmail')
+        $this->resetPasswordMailer->expects($this->once())->method('sendResetEmail')
             ->with($emailAddress, $apiUser->getActivationHash());
 
-        $this->resetPasswordService->reset($emailAddress);
+        $this->resetPasswordService->resetPassword($emailAddress);
     }
 
     public function testChangePassword()
