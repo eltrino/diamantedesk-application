@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
-use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationImpl;
+use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 
 class AuthorizationManager implements AuthorizationService
 {
@@ -32,7 +32,7 @@ class AuthorizationManager implements AuthorizationService
     private $userType;
 
     /**
-     * @var AuthorizationImpl
+     * @var Authorization
      */
     private $authImpl;
 
