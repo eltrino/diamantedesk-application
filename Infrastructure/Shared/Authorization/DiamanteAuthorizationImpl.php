@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 
-class DiamanteAuthorization implements Authorization
+class DiamanteAuthorizationImpl implements Authorization
 {
     use AuthorizationImplTrait;
 
