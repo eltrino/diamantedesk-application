@@ -49,16 +49,6 @@ class DiamanteUser implements Entity
      */
     protected $lastName;
 
-    /**
-     * @var bool
-     */
-    protected $isActive;
-
-    /**
-     * @var string
-     */
-    protected $activationHash;
-
     public function __construct($email, $username, Contact $contact = null, $firstName = null, $lastName = null)
     {
         $this->username  = $username;
@@ -132,30 +122,5 @@ class DiamanteUser implements Entity
     public function getFullName()
     {
         return $this->firstName . ' ' . $this->lastName;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * Activate user
-     * @param string $hash
-     * @return void
-     * @throws \RuntimeException if given hash is not equal to generated one for user
-     */
-    public function activate($hash)
-    {
-        if ($this->isActive()) {
-            return;
-        }
-        if ($this->activationHash != $hash) {
-            throw new \RuntimeException('Given hash is invalid and user can not be activated.');
-        }
-        $this->isActive = true;
     }
 }
