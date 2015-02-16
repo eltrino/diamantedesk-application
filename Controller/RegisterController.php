@@ -6,6 +6,7 @@ use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
 use FOS\Rest\Util\Codes;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -38,13 +39,19 @@ class RegisterController extends FOSRestController
         $command->firstname = $this->getRequest()->get('firstname');
         $command->lastname = $this->getRequest()->get('lastname');
 
+        $errors = $this->get('validator')->validate($command);
+
+        if (count($errors)) {
+            return $this->response($this->view(null, Codes::HTTP_BAD_REQUEST));
+        }
+
         try {
             $this->get('diamante.front.registration.service')->register($command);
             $view = $this->view(null, Codes::HTTP_CREATED);
         } catch (\Exception $e) {
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
         }
-        return $this->get('fos_rest.view_handler')->handle($view);
+        return $this->response($view);
     }
 
     /**
@@ -62,12 +69,27 @@ class RegisterController extends FOSRestController
         $command->email = $this->getRequest()->get('email');
         $command->activationHash = $this->getRequest()->get('activation_hash');
 
+        $errors = $this->get('validator')->validate($command);
+
+        if (count($errors)) {
+            return $this->response($this->view(null, Codes::HTTP_BAD_REQUEST));
+        }
+
         try {
             $this->get('diamante.front.registration.service')->confirm($command);
             $view = $this->view(null, Codes::HTTP_CREATED);
         } catch (\Exception $e) {
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
         }
+        return $this->response($view);
+    }
+
+    /**
+     * @param View $view
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function response(View $view)
+    {
         return $this->get('fos_rest.view_handler')->handle($view);
     }
 }

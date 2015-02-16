@@ -14,9 +14,19 @@
  */
 namespace Diamante\FrontBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class ConfirmCommand
 {
+    /**
+     * @Assert\NotNull(message="This is a required field")
+     * @Assert\Email()
+     */
     public $email;
 
+    /**
+     * @Assert\NotNull(message="This is a required field")
+     * @Assert\Type(type="string")
+     */
     public $activationHash;
 }

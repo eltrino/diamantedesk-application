@@ -14,15 +14,35 @@
  */
 namespace Diamante\FrontBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class RegisterCommand
 {
+    /**
+     * @Assert\NotNull(message="This is a required field")
+     * @Assert\Email()
+     */
     public $email;
 
+    /**
+     * @Assert\NotNull(message="This is a required field")
+     * @Assert\Type(type="string")
+     */
     public $username;
 
+    /**
+     * @Assert\NotNull(message="This is a required field")
+     * @Assert\Type(type="string")
+     */
     public $password;
 
+    /**
+     * @Assert\Type(type="string")
+     */
     public $firstname;
 
+    /**
+     * @Assert\Type(type="string")
+     */
     public $lastname;
 }
