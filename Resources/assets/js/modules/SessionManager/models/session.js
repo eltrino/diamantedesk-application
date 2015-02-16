@@ -75,6 +75,7 @@ define([
       },
 
       login: function(creds) {
+        creds.password = Wsse.encodePassword(creds.password);
         if(this.set(creds, {validate: true})){
           this.getAuth().done(this.loginSuccess.bind(this)).fail(this.loginFail.bind(this));
         }
