@@ -19,7 +19,8 @@ define([
         if(is_current && currentUser){
           defer.resolve(currentUser);
         } else {
-          user.urlRoot = Config.apiUrl + '/user/filter';
+          //user.urlRoot = Config.apiUrl + '/user/filter';
+          user.urlRoot = Config.apiUrl + '/desk/tickets';
           user.fetch({
             data : { username: username },
             success : function(data){

@@ -1,4 +1,4 @@
-define(['cryptojs.core', 'cryptojs.sha1', 'cryptojs.base64'], function(CryptoJS){
+define(['cryptojs.core', 'cryptojs.sha1', 'cryptojs.sha512', 'cryptojs.base64'], function(CryptoJS){
 
   var Wsse = function() {};
 
@@ -9,6 +9,14 @@ define(['cryptojs.core', 'cryptojs.sha1', 'cryptojs.base64'], function(CryptoJS)
 
   Wsse.prototype.getCreatedDate = function() {
     return new Date().toISOString();
+  };
+
+  Wsse.prototype.encodePassword = function(password) {
+    var passwordEncoded = CryptoJS.SHA512(password);
+    for(var i = 1; i < 5000; i++) { //TODO use webworker
+      passwordEncoded = CryptoJS.SHA512(passwordEncoded.concat(CryptoJS.enc.Utf8.parse(password)));
+    }
+    return passwordEncoded.toString(CryptoJS.enc.Base64);
   };
 
 
@@ -24,7 +32,7 @@ define(['cryptojs.core', 'cryptojs.sha1', 'cryptojs.base64'], function(CryptoJS)
     var nonce = this.getNonce();
     var created = this.getCreatedDate();
     var passwordDigest = this.getPasswordDigest(nonce, created, password);
-    var usernameToken = '';
+    var usernameToken = 'UsernameToken ';
     usernameToken += 'Username="' + username + '", ';
     usernameToken += 'PasswordDigest="' + passwordDigest + '", ';
     usernameToken += 'Nonce="' + nonce + '", ';
