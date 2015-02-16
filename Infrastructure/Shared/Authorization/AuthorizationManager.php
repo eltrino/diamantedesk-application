@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
-use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationImpl;
+use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 
 class AuthorizationManager implements AuthorizationService
 {
@@ -32,7 +32,7 @@ class AuthorizationManager implements AuthorizationService
     private $userType;
 
     /**
-     * @var AuthorizationImpl
+     * @var Authorization
      */
     private $authImpl;
 
@@ -51,6 +51,10 @@ class AuthorizationManager implements AuthorizationService
             $this->authImpl = $serviceContainer->get('diamante.oro_authorization.service');
             $this->userType = 'Oro';
         }
+
+        $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
+        $this->userType = 'Anonymous';
+
     }
 
     /**
@@ -64,9 +68,7 @@ class AuthorizationManager implements AuthorizationService
             return null;
         }
 
-        if (!is_object($user = $token->getUser())) {
-            return null;
-        }
+        $user = $token->getUser();
 
         return $user;
     }

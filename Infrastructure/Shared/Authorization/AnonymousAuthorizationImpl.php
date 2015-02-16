@@ -14,28 +14,18 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
-use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 
-class OroAuthorizationImpl implements Authorization
+class AnonymousAuthorizationImpl implements Authorization
 {
-    /**
-     * @var SecurityFacade
-     */
-    private $securityFacade;
 
-    public function __construct(SecurityFacade $securityFacade)
-    {
-        $this->securityFacade = $securityFacade;
-    }
+    use AuthorizationImplTrait;
 
     /**
-     * @param $attributes
-     * @param null $object
-     * @return bool
+     * @var array
      */
-    public function isGranted($attributes, $object = null)
-    {
-        return $this->securityFacade->isGranted($attributes, $object);
-    }
+    private $permissionsMap = array(
+        'Entity:DiamanteDeskBundle:Ticket'   => array('CREATE'),
+    );
+
 } 
