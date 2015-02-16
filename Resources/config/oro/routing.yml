@@ -1,4 +1,14 @@
 diamante_desk_bundle:
-    resource:     "@DiamanteFrontBundle/Controller"
+    resource:     "@DiamanteFrontBundle/Controller/IndexController.php"
     type:         annotation
     prefix:       /diamantefront
+
+diamante_desk_api_register:
+    resource:     "@DiamanteFrontBundle/Controller/RegisterController.php"
+    type:         rest
+    prefix:       /api/diamante_front/rest/{version}/desk/
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest
+        _format:  json
