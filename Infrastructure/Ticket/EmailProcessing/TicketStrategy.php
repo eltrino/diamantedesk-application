@@ -88,7 +88,7 @@ class TicketStrategy implements Strategy
 
         $email = $message->getFrom();
         $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
-        $type = User::TYPE_ORO;
+        $type = User::TYPE_DIAMANTE;
 
         if (is_null($diamanteUser)) {
             $contact = $this->diamanteContactService->findEmailOwner($email);
