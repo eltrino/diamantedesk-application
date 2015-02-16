@@ -106,11 +106,31 @@ class DiamanteUser implements Entity
     }
 
     /**
+     * @param $firstName string
+     * @return $this
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    /**
+     * @param $lastName string
+     * @return $this
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+        return $this;
     }
 
     /**
