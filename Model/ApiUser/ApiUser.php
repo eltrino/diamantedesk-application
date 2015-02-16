@@ -77,6 +77,16 @@ class ApiUser implements Entity, UserInterface
     }
 
     /**
+     * @param $password
+     * @return $this
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getSalt()
