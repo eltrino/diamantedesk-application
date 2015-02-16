@@ -290,3 +290,7 @@
 .control-label > span, .responsive-cell > span {
     font-style: italic;
 }
+
+.diam-ticket-description {
+    width: 600px;
+}
