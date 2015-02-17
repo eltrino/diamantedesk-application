@@ -14,6 +14,8 @@
  */
 namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
 
+use Diamante\EmailProcessingBundle\Model\Message\MessageSender;
+
 abstract class AbstractMessageProvider
 {
     /**
@@ -34,12 +36,13 @@ abstract class AbstractMessageProvider
 
     /**
      * @param $headers
-     * @return string
+     * @return MessageSender
      */
     public function processFrom($headers)
     {
-        $messageFrom = $headers->get('from')->getAddressList()->key();
-        return $messageFrom;
+        $senderInfo = $headers->get('from')->getAddressList()->current();
+
+        return new MessageSender($senderInfo->getEmail(), $senderInfo->getName());
     }
 
     /**

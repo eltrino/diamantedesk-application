@@ -15,6 +15,7 @@
 namespace Diamante\EmailProcessingBundle\Model;
 
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
+use Diamante\EmailProcessingBundle\Model\Message\MessageSender;
 
 class Message
 {
@@ -44,7 +45,7 @@ class Message
     private $subject;
 
     /**
-     * @var string
+     * @var MessageSender
      */
     private $from;
 
@@ -68,7 +69,7 @@ class Message
      * @param null $reference
      * @param array $attachments
      */
-    public function __construct($uniqueId, $messageId, $subject, $content, $from, $to, $reference = null, array $attachments = null)
+    public function __construct($uniqueId, $messageId, $subject, $content, MessageSender $from, $to, $reference = null, array $attachments = null)
     {
         $this->uniqueId    = $uniqueId;
         $this->messageId   = $messageId;
@@ -112,11 +113,17 @@ class Message
         return $this->subject;
     }
 
+    /**
+     * @return MessageSender
+     */
     public function getFrom()
     {
         return $this->from;
     }
 
+    /**
+     * @return string
+     */
     public function getTo()
     {
         return $this->to;

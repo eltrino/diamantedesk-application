@@ -16,6 +16,7 @@ namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
+use Diamante\EmailProcessingBundle\Model\Message\MessageSender;
 use Zend\Mail\AddressList;
 use Zend\Mail\Header\ContentTransferEncoding;
 use Zend\Mail\Header\From;
@@ -124,7 +125,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
                 self::DUMMY_MESSAGE_ID,
                 self::DUMMY_MESSAGE_SUBJECT,
                 self::DUMMY_MESSAGE_CONTENT,
-                self::DUMMY_MESSAGE_FROM,
+                $this->getDummyFrom(),
                 self::DUMMY_MESSAGE_TO,
                 self::DUMMY_MESSAGE_REFERENCE
             );
@@ -166,7 +167,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
                 self::DUMMY_MESSAGE_ID,
                 self::DUMMY_MESSAGE_SUBJECT,
                 self::DUMMY_MESSAGE_CONTENT,
-                self::DUMMY_MESSAGE_FROM,
+                $this->getDummyFrom(),
                 self::DUMMY_MESSAGE_TO,
                 self::DUMMY_MESSAGE_REFERENCE
             );
@@ -207,7 +208,7 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $headers->addHeader($messageId);
 
         $addressList = new AddressList();
-        $addressList->add('test@gmail.com');
+        $addressList->add('test@gmail.com', 'Dummy Name');
 
         $from = new From();
         $from->setAddressList($addressList);
@@ -222,5 +223,10 @@ class ImapMessageProviderTest extends \PHPUnit_Framework_TestCase
         $headers->addHeader($contentTransferEncoding);
 
         return $headers;
+    }
+
+    private function getDummyFrom()
+    {
+        return new MessageSender(self::DUMMY_MESSAGE_FROM, 'Dummy Name');
     }
 }

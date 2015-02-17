@@ -74,7 +74,7 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_MESSAGE_ID,
             self::DUMMY_MESSAGE_SUBJECT,
             self::DUMMY_MESSAGE_CONTENT,
-            self::DUMMY_MESSAGE_FROM,
+            $this->getDummyFrom(),
             self::DUMMY_MESSAGE_TO,
             self::DUMMY_MESSAGE_REFERENCE)
         );
@@ -108,5 +108,10 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->manager->handle($this->provider);
+    }
+
+    protected function getDummyFrom()
+    {
+        return new Message\MessageSender(self::DUMMY_MESSAGE_FROM, 'Dummy Name');
     }
 }
