@@ -12,7 +12,7 @@ define(['app'], function(App){
     var API = {
       login: function(){
         if(App.session.get('logged_in')){
-          Backbone.history.history.back();
+          App.back({force:true});
         } else {
           require(['modules/SessionManager/controllers/login'], function(){
             SessionManager.LoginController();
@@ -27,13 +27,13 @@ define(['app'], function(App){
 
     App.on('session:login', function(){
       App.debug('info', 'Event "session:login" fired');
-      App.navigate('login');
+      App.navigate('login', { nohistory:true });
       API.login();
     });
 
     App.on('session:logout', function(){
       App.debug('info', 'Event "session:logout" fired');
-      App.navigate('logout');
+      App.navigate('logout', { nohistory:true });
       API.logout();
     });
 

@@ -28,6 +28,13 @@ define([
 
   });
 
+  var _navigate = function(route, options){
+    Backbone.history.navigate(route, options);
+    if(!options.nohistory){
+      App.history.push(route);
+    }
+  };
+
   App.debug = function(type){
     if(Config.isDev) {
       if(arguments.length > 1){
@@ -46,16 +53,27 @@ define([
 
   App.navigate = function(route, options){
     if(Backbone.History.started){
-      Backbone.history.navigate(route, options || {});
+      _navigate(route, options || {});
     } else {
-      this.on('history:start', function(){
-        Backbone.history.navigate(route, options || {});
+      App.on('history:start', function(){
+        _navigate(route, options || {});
       });
     }
   };
 
-  App.back = function(){
-    Backbone.history.history.back();
+  App.on('history:start', function(){
+    App.history = [];
+    Backbone.history.on("route", function(router, route, param){
+      App.history.push(App.getCurrentRoute());
+    });
+  });
+
+  App.back = function(options){
+    var opt = options || {};
+    if(!opt.force){
+      App.history.pop();
+    }
+    App.navigate(App.history[App.history.length - 1], { nohistory: true, trigger: true, replace: true });
   };
 
   App.getCurrentRoute = function(){
