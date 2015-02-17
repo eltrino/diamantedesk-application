@@ -86,13 +86,14 @@ class TicketStrategy implements Strategy
     {
         $assigneeId = 1;
 
-        $email = $message->getFrom();
+        $email = $message->getFrom()->getEmail();
         $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
         $type = User::TYPE_DIAMANTE;
 
         if (is_null($diamanteUser)) {
             $contact = $this->diamanteContactService->findEmailOwner($email);
-            $diamanteUser = $this->diamanteUserFactory->create($email, $email, $contact);
+            $sender = $message->getFrom();
+            $diamanteUser = $this->diamanteUserFactory->create($email, $email, $contact, $sender->getFirstName(), $sender->getLastName());
 
             $this->diamanteUserRepository->store($diamanteUser);
             $type = User::TYPE_DIAMANTE;
@@ -105,7 +106,7 @@ class TicketStrategy implements Strategy
         $attachments = $message->getAttachments();
 
         if (!$message->getReference()) {
-            $branchId = $this->getAppropriateBranch($message->getFrom(), $message->getTo());
+            $branchId = $this->getAppropriateBranch($message->getFrom()->getEmail(), $message->getTo());
             $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
                 $message->getContent(), $reporter, $assigneeId, $attachments);
         } else {
