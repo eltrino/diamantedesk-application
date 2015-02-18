@@ -84,8 +84,6 @@ class TicketStrategy implements Strategy
      */
     public function process(Message $message)
     {
-        $assigneeId = 1;
-
         $email = $message->getFrom()->getEmail();
         $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
         $type = User::TYPE_DIAMANTE;
@@ -107,6 +105,8 @@ class TicketStrategy implements Strategy
 
         if (!$message->getReference()) {
             $branchId = $this->getAppropriateBranch($message->getFrom()->getEmail(), $message->getTo());
+            $assigneeId = $this->branchEmailConfigurationService->getBranchDefaultAssignee($branchId);
+
             $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
                 $message->getContent(), $reporter, $assigneeId, $attachments);
         } else {

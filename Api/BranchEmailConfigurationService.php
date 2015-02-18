@@ -55,4 +55,10 @@ interface BranchEmailConfigurationService
      * @return int
      */
     public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
+
+    /**
+     * @param $branchId
+     * @return int
+     */
+    public function getBranchDefaultAssignee($branchId);
 }
