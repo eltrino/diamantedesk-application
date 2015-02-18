@@ -294,3 +294,7 @@
 .diam-ticket-description {
     width: 600px;
 }
+
+.diam-branch-grid .action-cell {
+    vertical-align: middle !important;
+}
