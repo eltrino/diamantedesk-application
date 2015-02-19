@@ -50,7 +50,7 @@ class MessageSender
     protected function parseName($name)
     {
         if (!empty($name)) {
-            list($firstName, $lastName) = explode(array(' ', ',', '_'), $name);
+            list($firstName, $lastName) = explode(" ", $name);
             $this->firstName = $firstName;
             $this->lastName  = $lastName;
         }
