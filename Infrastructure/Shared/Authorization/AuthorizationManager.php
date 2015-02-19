@@ -45,15 +45,13 @@ class AuthorizationManager implements AuthorizationService
         if ($user instanceof \Diamante\ApiBundle\Model\ApiUser\ApiUser) {
             $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
             $this->userType = 'Diamante';
-        }
-
-        if ($user instanceof \Oro\Bundle\UserBundle\Entity\User) {
+        } else if ($user instanceof \Oro\Bundle\UserBundle\Entity\User) {
             $this->authImpl = $serviceContainer->get('diamante.oro_authorization.service');
             $this->userType = 'Oro';
+        } else {
+            $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
+            $this->userType = 'Anonymous';
         }
-
-        $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
-        $this->userType = 'Anonymous';
 
     }
 
