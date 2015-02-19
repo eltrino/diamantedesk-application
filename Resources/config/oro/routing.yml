@@ -12,3 +12,14 @@ diamante_desk_api_register:
     defaults:
         version:  latest
         _format:  json
+
+diamante_front_api_user:
+    resource:     diamante.front.update_user.service
+    type:         diamante_rest_service
+    prefix:       /api/diamante/rest/{version}/desk/
+    requirements:
+        version:  latest|v1
+        _format:  xml|json
+    defaults:
+        version:  latest
+        _format:  json

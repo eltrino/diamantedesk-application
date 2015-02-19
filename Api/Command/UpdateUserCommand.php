@@ -20,9 +20,9 @@ class UpdateUserCommand
 {
     /**
      * @Assert\NotNull()
-     * @Assert\Email()
+     * @Assert\Type(type="integer")
      */
-    public $email;
+    public $id;
 
     /**
      * @Assert\NotNull()
