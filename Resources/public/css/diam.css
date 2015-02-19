@@ -291,7 +291,8 @@
     font-style: italic;
 }
 
-.diam-ticket-description {
+.diam-ticket-description,
+#diamante_branch_form_description {
     width: 600px;
 }
 
