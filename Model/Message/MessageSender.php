@@ -50,6 +50,8 @@ class MessageSender
     protected function parseName($name)
     {
         if (!empty($name)) {
+            $name = $this->canonicalizeName($name);
+
             list($firstName, $lastName) = explode(" ", $name);
             $this->firstName = $firstName;
             $this->lastName  = $lastName;
@@ -78,5 +80,10 @@ class MessageSender
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    public function canonicalizeName($name)
+    {
+        return str_replace(array('_', ',', '.'), ' ', $name);
     }
 }
