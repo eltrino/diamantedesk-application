@@ -23,8 +23,8 @@ use OroCRM\Bundle\ContactBundle\Entity\Contact;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 {
-    const DEFAULT_BRANCH_ID  = 'default_branch_id';
-    const DUMMY_BRANCH_ID    = 'dummy_branch_id';
+    const DEFAULT_BRANCH_ID  = '1';
+    const DUMMY_BRANCH_ID    = '2';
 
     const DUMMY_UNIQUE_ID    = 'dummy_unique_id';
     const DUMMY_MESSAGE_ID   = 'dummy_message_id';
@@ -116,6 +116,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($customerDomain)
             )->will($this->returnValue(null));
 
+        $this->branchEmailConfigurationService
+            ->expects($this->once())
+            ->method('getBranchDefaultAssignee')
+            ->with($this->equalTo(1))
+            ->will($this->returnValue(1));
+
         $this->emailProcessingSettings->expects($this->once())
             ->method('getDefaultBranchId')
             ->will($this->returnValue(self::DEFAULT_BRANCH_ID));
@@ -188,6 +194,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
                 $reporter, $assigneeId);
 
+        $this->branchEmailConfigurationService
+            ->expects($this->once())
+            ->method('getBranchDefaultAssignee')
+            ->with($this->equalTo(1))
+            ->will($this->returnValue(1));
+
         $this->ticketStrategy->process($message);
     }
 
@@ -228,6 +240,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
                 $reporter, $assigneeId);
 
+        $this->branchEmailConfigurationService
+            ->expects($this->once())
+            ->method('getBranchDefaultAssignee')
+            ->with($this->equalTo($assigneeId))
+            ->will($this->returnValue(1));
+
         $this->ticketStrategy->process($message);
     }
 
@@ -257,6 +275,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(self::DUMMY_MESSAGE_TO),
                 $this->equalTo($customerDomain)
             )->will($this->returnValue(self::DUMMY_BRANCH_ID));
+
+        $this->branchEmailConfigurationService
+            ->expects($this->once())
+            ->method('getBranchDefaultAssignee')
+            ->with($this->equalTo(2))
+            ->will($this->returnValue(1));
 
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
