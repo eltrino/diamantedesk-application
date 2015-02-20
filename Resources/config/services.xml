@@ -22,7 +22,7 @@
         <parameter key="diamante.front.system_settings.class">Diamante\FrontBundle\Model\SystemSettings</parameter>
         <parameter key="diamante.front.registration.service.class">Diamante\FrontBundle\Api\Internal\RegistrationServiceImpl</parameter>
         <parameter key="diamante.front.registration.mailer.class">Diamante\FrontBundle\Infrastructure\RegistrationMailer</parameter>
-        <parameter key="diamante.front.user_update.class">Diamante\FrontBundle\Api\Internal\UpdateUserService</parameter>
+        <parameter key="diamante.front.user_update.service.class">Diamante\FrontBundle\Api\Internal\UpdateUserServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -30,7 +30,7 @@
             <argument type="service" id="oro_config.global"/>
         </service>
 
-        <service id="diamante.front.update_user.service" class="%diamante.front.user_update.class%">
+        <service id="diamante.front.update_user.service" class="%diamante.front.user_update.service.class%">
             <argument type="service" id="diamante.diamante_user.repository"/>
             <argument type="service" id="diamante.api.user.repository"/>
         </service>

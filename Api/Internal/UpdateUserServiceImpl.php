@@ -19,8 +19,9 @@ use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
 use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\FrontBundle\Api\Command\UpdateUserCommand;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
+use Diamante\FrontBundle\Api\UpdateUserService;
 
-class UpdateUserService implements RestServiceInterface
+class UpdateUserServiceImpl implements UpdateUserService, RestServiceInterface
 {
     /**
      * @var DiamanteUserRepository
@@ -47,7 +48,7 @@ class UpdateUserService implements RestServiceInterface
      *  description="Update user",
      *  uri="/users/{id}.{_format}",
      *  method={
-     *      "PUT",
+     *      "PATCH",
      *      "POST"
      *  },
      *  resource=true,
