@@ -79,7 +79,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
 
         foreach ($conditions as $condition) {
             $whereExpression = $this->buildWhereExpression($qb, $condition);
-            $qb->orWhere($whereExpression);
+            $qb->andWhere($whereExpression);
         }
 
         $qb->addOrderBy($orderByField, $pagingProperties->getOrder());

@@ -18,6 +18,8 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Doctrine\ORM\Query;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -62,5 +64,46 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
                 'reporter_id' => (string)$user,
             ));
         $query->execute();
+    }
+
+    /**
+     * Search reporter id from ticket table
+     * @param string $searchQuery
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return \Diamante\DeskBundle\Entity\Ticket[]
+     */
+    public function search($searchQuery, array $conditions, PagingProperties $pagingProperties)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
+        $offset = ($pagingProperties->getPage()-1) * $pagingProperties->getLimit();
+
+        $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
+
+        foreach ($conditions as $condition) {
+            $whereExpression = $this->buildWhereExpression($qb, $condition);
+            $qb->andWhere($whereExpression);
+        }
+
+        $qb->addOrderBy($orderByField, $pagingProperties->getOrder());
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($pagingProperties->getLimit());
+
+        $literal = $qb->expr()->literal("%{$searchQuery}%");
+        $qb->andWhere($qb->expr()->orX(
+            $qb->expr()->like(sprintf('%s.%s', self::SELECT_ALIAS, 'description'), $literal),
+            $qb->expr()->like(sprintf('%s.%s', self::SELECT_ALIAS, 'subject'), $literal)
+        ));
+
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_OBJECT);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 }

@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 
 interface TicketRepository extends Repository, FilterableRepository
 {
@@ -38,4 +39,15 @@ interface TicketRepository extends Repository, FilterableRepository
      * @param User $user
      */
     public function removeTicketReporter(User $user);
+
+    /**
+     * Search ticket by subject and description
+     *
+     * @param string $searchQuery
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return \Diamante\DeskBundle\Entity\Ticket[]
+     */
+    public function search($searchQuery, array $conditions, PagingProperties $pagingProperties);
+
 }
