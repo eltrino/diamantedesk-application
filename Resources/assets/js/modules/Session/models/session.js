@@ -3,13 +3,15 @@ define([
   'User/models/user',
   '../common/wsse'], function(App, User, Wsse) {
 
-  return App.module('SessionManager', function(SessionManager, App, Backbone, Marionette, $, _){
+  return App.module('Session', function(Session, App, Backbone, Marionette, $, _){
 
     var username = 'admin';
     var password = '5c76179545225078a3ba580dff644b0113faf9dc';
 
+    Session.startWithParent = false;
 
-    SessionManager.SessionModel = Backbone.Model.extend({
+
+    Session.SessionModel = Backbone.Model.extend({
 
       initialize: function () {
         var savedData = window.localStorage.getItem('authModel') || window.sessionStorage.getItem('authModel');
