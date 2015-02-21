@@ -79,8 +79,8 @@ require.config({
       location: 'modules/User'
     },
     {
-      name: 'SessionManager',
-      location: 'modules/SessionManager'
+      name: 'Session',
+      location: 'modules/Session'
     },
     {
       name: 'Header',

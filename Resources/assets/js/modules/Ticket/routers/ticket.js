@@ -76,7 +76,7 @@ define(['app'], function(App){
       }
     });
 
-    Ticket.addInitializer(function(){
+    Ticket.on('start',function(){
       new Ticket.Router({
         controller: API
       });

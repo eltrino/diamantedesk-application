@@ -87,7 +87,7 @@ define([
     this.trigger('history:start');
   });
 
-  require(['SessionManager','Header', 'Footer', 'Ticket'], function(){
+  require(['Session','Header', 'Footer', 'Ticket'], function(){
     App.start();
   });
 

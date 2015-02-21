@@ -2,13 +2,13 @@ define([
   'app',
   'config',
   'Common/views/form',
-  'tpl!../templates/login.ejs'], function(App, Config, Form, loginTemplate){
+  'tpl!../templates/reset.ejs'], function(App, Config, Form, loginTemplate){
 
-  return App.module('SessionManager', function(SessionManager, App, Backbone, Marionette, $, _){
+  return App.module('Session', function(Session, App, Backbone, Marionette, $, _){
 
-    SessionManager.LoginView = Form.ItemView.extend({
+    Session.ResetView = Form.ItemView.extend({
       template: loginTemplate,
-      className: 'login-block',
+      className: 'auth-block reset-block',
 
       initialize: function(){
         this.baseUrl = Config.baseUrl;
@@ -23,25 +23,20 @@ define([
       },
 
       modelEvents: {
-        'login:success' : 'loginSuccess',
-        'login:fail' : 'loginFail',
+        'reset:success' : 'resetSuccess',
         'invalid' : 'formDataInvalid'
       },
 
-      loginSuccess: function(){
+      resetSuccess: function(){
         this.$el.fadeOut();
       },
 
-      loginFail: function(){
-
-      },
-
       onShow: function(){
-        $('body').addClass('login-page');
+        $('body').addClass('auth-page');
       },
 
       onDestroy: function(){
-        $('body').removeClass('login-page');
+        $('body').removeClass('auth-page');
       }
     });
 
