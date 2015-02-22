@@ -13,6 +13,29 @@ define([
     });
 
     var API = {
+      registerUser: function(data){
+        var user = new User.UserModel(),
+            defer = $.Deferred();
+
+        user.urlRoot = Config.apiUrl.replace('diamante', 'diamante_front') + '/desk/users/register';
+
+        user.save(data,{
+          success : function(data){
+            if(is_current){
+              currentUser = user.clone();
+            }
+            defer.resolve(data);
+          },
+          error : function(data){
+            defer.reject(data);
+          },
+          complete : function(){
+            user.urlRoot = Config.apiUrl + '/users/';
+          }
+        });
+
+        return defer.promise();
+      },
       getUserModelByName: function(username, is_current) {
         var user = new User.UserModel(),
             defer = $.Deferred();
@@ -73,6 +96,10 @@ define([
 
     App.reqres.setHandler('user:model', function(id){
       return API.getUserModelById(id);
+    });
+
+    App.reqres.setHandler('user:model:create', function(data){
+      return API.registerUser(data);
     });
 
   });

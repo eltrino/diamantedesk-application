@@ -1,11 +1,11 @@
 define([
   'app',
+  'config',
   'User/models/user',
-  '../common/wsse'], function(App, User, Wsse) {
+  '../common/wsse'], function(App, Config, User, Wsse) {
 
   return App.module('Session', function(Session, App, Backbone, Marionette, $, _){
 
-    var username = 'admin';
     var password = '5c76179545225078a3ba580dff644b0113faf9dc';
 
     Session.startWithParent = false;
@@ -77,10 +77,31 @@ define([
       },
 
       login: function(creds) {
-        creds.password = Wsse.encodePassword(creds.password);
+        if(creds.password){
+          creds.password = Wsse.encodePassword(creds.password);
+        }
         if(this.set(creds, {validate: true})){
           this.getAuth().done(this.loginSuccess.bind(this)).fail(this.loginFail.bind(this));
         }
+      },
+
+      register: function(creds) {
+        if(creds.password){
+          creds.password = Wsse.encodePassword(creds.password);
+        }
+        if(this.set(creds, {validate: true})) {
+          App.request('user:model:create', creds).done(function () {
+            console.log(arguments);
+          });
+          this.clear();
+        }
+      },
+
+      confirm: function(hash){
+        '0345167f4d44dcdfc6b5c61cd06a8496';
+
+
+
       },
 
       logout: function() {

@@ -11,7 +11,7 @@ define(['app'], function(App){
         });
 
         registrationView.on('form:submit', function(data){
-          this.model.set(data);
+          this.model.register(data);
         });
 
         App.mainRegion.show(registrationView);

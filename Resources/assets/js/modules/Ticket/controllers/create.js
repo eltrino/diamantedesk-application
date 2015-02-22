@@ -21,7 +21,7 @@ define(['app'], function(App){
 
         modalCreateView.on('modal:closed', function(){
           if(!isSuccess){
-            Backbone.history.history.back();
+            App.back();
           }
         });
 
