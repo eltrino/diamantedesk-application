@@ -32,13 +32,13 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
     protected $id;
 
     /**
-     * Unique username for Api User
+     * Unique email (username) for Api User
      *
      * @var string
      *
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    protected $username;
+    protected $email;
 
     /**
      * Encrypted password. Must be persisted.
@@ -57,6 +57,18 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
      * @ORM\Column(type="string", nullable=true)
      */
     protected $salt;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    protected $isActive;
+
+    /**
+     * @var string
+     * @ORM\Column(name="hash", type="string", length=255, options={"comment" = "Hash used for confirmation, password reset."});)
+     */
+    protected $hash;
 
     public static function getClassName()
     {

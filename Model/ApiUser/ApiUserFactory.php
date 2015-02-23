@@ -14,23 +14,17 @@
  */
 namespace Diamante\ApiBundle\Model\ApiUser;
 
-use Diamante\DeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 
-interface ApiUserRepository extends Repository
+class ApiUserFactory extends AbstractEntityFactory
 {
     /**
-     * Finds a user by username
-     *
-     * @param  string $email
+     * @param string $email
+     * @param string $password
      * @return ApiUser
      */
-    public function findUserByEmail($email);
-
-    /**
-     * Finds a user by hash
-     *
-     * @param  string $hash
-     * @return ApiUser
-     */
-    public function findUserByHash($hash);
-} 
+    public function create($email, $password)
+    {
+        return new $this->entityClassName($email, $password);
+    }
+}
