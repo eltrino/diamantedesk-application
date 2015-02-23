@@ -18,11 +18,11 @@ namespace Diamante\FrontBundle\Api\Internal;
 use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserFactory;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
-
 use Diamante\FrontBundle\Model\ResetPasswordMailer;
 use Diamante\FrontBundle\Api\ResetPasswordService;
-
 use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
+use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
+use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 
 class ResetPasswordServiceImpl implements ResetPasswordService
 {
@@ -63,16 +63,16 @@ class ResetPasswordServiceImpl implements ResetPasswordService
     }
 
     /**
-     * @param $emailAddress
+     * @param ResetPasswordCommand $command
      * @return void
      * @throws \RuntimeException if given emailAddres is not equal to generated one for user
      */
-    public function resetPassword($emailAddress)
+    public function resetPassword(ResetPasswordCommand $command)
     {
         /**
          * @var DiamanteUser $diamanteUser
          */
-        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($emailAddress);
+        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($command->email);
         if (is_null($diamanteUser)) {
             throw new \RuntimeException('No accounts with that email found.');
         }
@@ -80,9 +80,9 @@ class ResetPasswordServiceImpl implements ResetPasswordService
         /**
          * @var ApiUser $apiUser
          */
-        $apiUser = $this->apiUserRepository->findUserByUsername($emailAddress);
+        $apiUser = $this->apiUserRepository->findUserByUsername($command->email);
         if (is_null($apiUser)) {
-            $apiUser = $this->apiUserFactory->create($emailAddress, null);
+            $apiUser = $this->apiUserFactory->create($command->email, null);
         }
 
         $apiUser->generateHash();
@@ -94,22 +94,21 @@ class ResetPasswordServiceImpl implements ResetPasswordService
     }
 
     /**
-     * @param string $hash
-     * @param string $newPassword
+     * @param ChangePasswordCommand $command
      * @return void
      */
-    public function changePassword($hash, $newPassword)
+    public function changePassword(ChangePasswordCommand $command)
     {
         /**
          * @var ApiUser $apiUser
          */
-        $apiUser = $this->apiUserRepository->findUserByHash($hash);
+        $apiUser = $this->apiUserRepository->findUserByHash($command->hash);
 
         if (is_null($apiUser)) {
             throw new \RuntimeException('This password reset code is invalid.');
         }
 
-        $apiUser->changePassword($newPassword);
+        $apiUser->changePassword($command->password);
 
         $this->apiUserRepository->store($apiUser);
     }

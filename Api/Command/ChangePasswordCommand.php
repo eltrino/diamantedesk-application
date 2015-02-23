@@ -12,21 +12,21 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\FrontBundle\Api;
+namespace Diamante\FrontBundle\Api\Command;
 
-interface ResetPasswordService
+use Symfony\Component\Validator\Constraints as Assert;
+
+class ChangePasswordCommand
 {
     /**
-     * Reset user password
-     * @param Command\ResetPasswordCommand $command
-     * @return void
+     * @Assert\NotNull(message="This is a required field")
+     * @Assert\Type(type="string")
      */
-    public function resetPassword(Command\ResetPasswordCommand $command);
+    public $hash;
 
     /**
-     * Change user password
-     * @param Command\ChangePasswordCommand $command
-     * @return void
+     * @Assert\NotNull(message="This is a required field")
+     * @Assert\Type(type="string")
      */
-    public function changePassword(Command\ChangePasswordCommand $command);
+    public $password;
 }

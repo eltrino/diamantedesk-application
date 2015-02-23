@@ -18,6 +18,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\HttpFoundation\Request;
+use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
+use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
 
 class ResetPasswordController extends Controller
 {
@@ -27,9 +29,15 @@ class ResetPasswordController extends Controller
      */
     public function resetAction(Request $request)
     {
-        $email = $request->get('email');
-        $resetService = $this->container->get('diamante.front.reset_password');
-        $resetService->resetPassword($email);
+        $command = new ResetPasswordCommand();
+        $command->email = $request->get('email');
+        try {
+            $resetService = $this->container->get('diamante.front.reset_password');
+            $resetService->resetPassword($command);
+        } catch(\Exception $e) {
+            return new Response($e->getMessage(), 404);
+        }
+
         return new Response();
     }
 
@@ -39,10 +47,17 @@ class ResetPasswordController extends Controller
      */
     public function updateAction(Request $request)
     {
-        $hash = $request->get('hash');
-        $password = $request->get('password');
-        $resetService = $this->container->get('diamante.front.reset_password');
-        $resetService->changePassword($hash, $password);
+        // сделать логирование как в оро контроллерах при ексепшене
+        $command = new ChangePasswordCommand();
+        $command->hash = $request->get('hash');
+        $command->password = $request->get('password');
+        try {
+            $resetService = $this->container->get('diamante.front.reset_password');
+            $resetService->changePassword($command);
+        } catch(\Exception $e) {
+            return new Response($e->getMessage(), 404);
+        }
+
         return new Response();
     }
 }
