@@ -73,6 +73,7 @@ class BuildCommand extends ContainerAwareCommand
         if ($input->getOption('with-assets-dependencies')) {
             $output->write("Installing assets dependencies ...");
             $this->executeProcess('bower install', $output);
+            $output->write("Updating assets dependencies ...");
             $this->executeProcess('bower update', $output);
         }
 

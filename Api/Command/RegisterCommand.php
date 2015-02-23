@@ -28,12 +28,6 @@ class RegisterCommand
      * @Assert\NotNull(message="This is a required field")
      * @Assert\Type(type="string")
      */
-    public $username;
-
-    /**
-     * @Assert\NotNull(message="This is a required field")
-     * @Assert\Type(type="string")
-     */
     public $password;
 
     /**

@@ -70,13 +70,13 @@ class RegistrationServiceImpl implements RegistrationService
     public function register(Command\RegisterCommand $command)
     {
         $diamanteUser = $this->diamanteUserFactory
-            ->create($command->email, $command->username, $command->firstname, $command->lastname);
-        $apiUser = $this->apiUserFactory->create($command->username, $command->password);
+            ->create($command->email, $command->firstname, $command->lastname);
+        $apiUser = $this->apiUserFactory->create($command->email, $command->password);
 
         $this->diamanteUserRepository->store($diamanteUser);
         $this->apiUserRepository->store($apiUser);
 
-        $this->registrationMailer->sendConfirmationEmail($diamanteUser->getEmail(), $apiUser->getActivationHash());
+        $this->registrationMailer->sendConfirmationEmail($diamanteUser->getEmail(), $apiUser->getHash());
     }
 
     /**
@@ -86,19 +86,14 @@ class RegistrationServiceImpl implements RegistrationService
      */
     public function confirm(Command\ConfirmCommand $command)
     {
-        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($command->email);
-        if (is_null($diamanteUser)) {
-            throw new \RuntimeException('Can not find Diamante User.');
-        }
-
-        $apiUser = $this->apiUserRepository->findUserByUsername($diamanteUser->getUsername());
+        $apiUser = $this->apiUserRepository->findUserByHash($command->hash);
 
         if (is_null($apiUser)) {
-            throw new \RuntimeException('Diamante User is not granted for API Access.');
+            throw new \RuntimeException('Can not confirm registration.');
         }
 
         try {
-            $apiUser->activate($command->activationHash);
+            $apiUser->activate($command->hash);
             $this->apiUserRepository->store($apiUser);
         } catch (\Exception $e) {
             throw new \RuntimeException('Can not confirm registration.');
