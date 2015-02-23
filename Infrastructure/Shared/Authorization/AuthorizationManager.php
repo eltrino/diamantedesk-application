@@ -14,6 +14,8 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
+use Diamante\ApiBundle\Model\ApiUser\ApiUser;
+use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
@@ -42,12 +44,12 @@ class AuthorizationManager implements AuthorizationService
         $this->securityContext = $securityContext;
         $user = $this->getLoggedUser();
 
-        if ($user instanceof \Diamante\ApiBundle\Model\ApiUser\ApiUser) {
+        if ($user instanceof ApiUser) {
             $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
             $this->userType = 'Diamante';
         }
 
-        if ($user instanceof \Oro\Bundle\UserBundle\Entity\User) {
+        if ($user instanceof User) {
             $this->authImpl = $serviceContainer->get('diamante.oro_authorization.service');
             $this->userType = 'Oro';
         }

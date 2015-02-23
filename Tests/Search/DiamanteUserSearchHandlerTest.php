@@ -158,7 +158,6 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
             'firstName',
             'lastName',
             'fullName',
-            'username',
             'type'
         ];
     }
@@ -173,7 +172,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $result = array();
 
         for ($i = 0; $i < $size; $i++) {
-            $user = new DiamanteUser("email@host{$i}.com", "username{$i}", "First {$specificData}");
+            $user = new DiamanteUser("email@host{$i}.com", "First {$specificData}", "Last {$specificData}");
             $result[] = $user;
         }
 
@@ -193,6 +192,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
             $user = new OroUser();
             $user->setUsername("username_{$i}");
             $user->setFirstName("First {$specificData}");
+            $user->setLastName("Last {$specificData}");
             $user->setEmail("some@host{$i}.com");
             $result[] = $user;
         }
@@ -206,6 +206,6 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
      */
     protected function createUserDetails($type)
     {
-        return new UserDetails($type . User::DELIMITER . 1, $type, 'First', 'Last', 'email@example.com','username');
+        return new UserDetails($type . User::DELIMITER . 1, $type, 'email@example.com', 'First', 'Last');
     }
 }
