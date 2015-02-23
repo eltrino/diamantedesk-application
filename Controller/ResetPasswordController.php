@@ -14,18 +14,30 @@
  */
 namespace Diamante\FrontBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 
-class ResetPasswordController extends Controller
+/**
+ * @RouteResource("password")
+ * @NamePrefix("diamante_front_api_")
+ */
+class ResetPasswordController extends FOSRestController
 {
     /**
-     * Reset password action
-     * @Post("/password/reset", name="diamante_front_reset_password")
+     * Reset user password action
+     *
+     * @Post
+     * @ApiDoc(
+     *      description="Reset user password action",
+     *      resource=true
+     * )
      */
     public function resetAction(Request $request)
     {
@@ -42,12 +54,16 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Update password action
-     * @Post("password/update", name="diamante_front_update_password")
+     * Update user password action
+     *
+     * @Post
+     * @ApiDoc(
+     *      description="Update user password action",
+     *      resource=true
+     * )
      */
     public function updateAction(Request $request)
     {
-        // сделать логирование как в оро контроллерах при ексепшене
         $command = new ChangePasswordCommand();
         $command->hash = $request->get('hash');
         $command->password = $request->get('password');
