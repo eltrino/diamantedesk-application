@@ -72,8 +72,8 @@ class UpdateUserServiceImpl implements UpdateUserService, RestServiceInterface
      */
     public function update(UpdateUserCommand $command)
     {
-        $diamanteUser = $this->loadUserBy($command->id);
-        $apiUser = $this->apiUserRepository->findUserByUsername($diamanteUser->getUsername());
+        $diamanteUser = $this->loadDiamanteUserBy($command->id);
+        $apiUser = $this->loadApiUserBy($diamanteUser->getUsername());
 
         $diamanteUser->setFirstName($command->firstName)
             ->setLastName($command->lastName);
@@ -87,12 +87,25 @@ class UpdateUserServiceImpl implements UpdateUserService, RestServiceInterface
      * @param $userId
      * @return \Diamante\DeskBundle\Entity\DiamanteUser
      */
-    private function loadUserBy($userId)
+    private function loadDiamanteUserBy($userId)
     {
         $user = $this->diamanteUserRepository->get($userId);
         if (is_null($user)) {
             throw new \RuntimeException('User loading failed, user not found.');
         }
         return $user;
+    }
+
+    /**
+     * @param $userName
+     * @return \Diamante\ApiBundle\Entity\ApiUser
+     */
+    private function loadApiUserBy($userName)
+    {
+        $apiUser = $this->apiUserRepository->findUserByUsername($userName);
+        if (is_null($apiUser)) {
+            throw new \RuntimeException('Diamante User is not granted for API Access.');
+        }
+        return $apiUser;
     }
 }
