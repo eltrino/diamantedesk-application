@@ -20,13 +20,12 @@ class DiamanteUserFactory extends AbstractEntityFactory
 {
     /**
      * @param $email
-     * @param $username
      * @param null $firstName
      * @param null $lastName
      * @return DiamanteUser
      */
-    public function create($email, $username, $firstName = null, $lastName = null)
+    public function create($email, $firstName = null, $lastName = null)
     {
-        return new $this->entityClassName($email, $username, $firstName, $lastName);
+        return new $this->entityClassName($email, $firstName, $lastName);
     }
 }

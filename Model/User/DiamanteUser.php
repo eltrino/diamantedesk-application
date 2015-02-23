@@ -32,11 +32,6 @@ class DiamanteUser implements Entity
     /**
      * @var string
      */
-    protected $username;
-
-    /**
-     * @var string
-     */
     protected $email;
 
     /**
@@ -49,9 +44,8 @@ class DiamanteUser implements Entity
      */
     protected $lastName;
 
-    public function __construct($email, $username, $firstName = null, $lastName = null)
+    public function __construct($email, $firstName = null, $lastName = null)
     {
-        $this->username  = $username;
         $this->email     = $email;
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
@@ -79,14 +73,6 @@ class DiamanteUser implements Entity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
     }
 
     /**
