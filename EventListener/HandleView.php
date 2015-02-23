@@ -16,9 +16,12 @@
 namespace Diamante\ApiBundle\EventListener;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use FOS\Rest\Util\Codes;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -27,9 +30,10 @@ class HandleView
 {
     private $serializer;
 
-    public function __construct(Serializer $serializer)
+    public function __construct(Serializer $serializer, ContainerInterface $container)
     {
         $this->serializer = $serializer;
+        $this->container  = $container;
     }
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
@@ -61,6 +65,8 @@ class HandleView
     protected function get($data, $format)
     {
         $groups = ['Default'];
+        $headers = $this->container->get('diamante.api.headers.container')->allPreserveCase();
+
         if (is_array($data)) {
             $groups[] = 'list';
         } else {
@@ -73,7 +79,8 @@ class HandleView
                 $format,
                 SerializationContext::create()->setGroups($groups)
             ),
-            Codes::HTTP_OK
+            Codes::HTTP_OK,
+            $headers
         );
     }
 
@@ -103,16 +110,20 @@ class HandleView
      * @param Request $request
      * @return Response
      */
-    protected function post(Entity $data = null, $format, Request $request)
+    protected function post($data = null, $format, Request $request)
     {
         $pathInfo = $this->entityLocation($request->getPathInfo());
-        $context = SerializationContext::create()->setGroups(['Default', 'entity']);
 
         if (is_null($data)) {
             $headers = [];
             $body = '';
+        } elseif (is_array($data)) {
+            $headers = [];
+            $context = SerializationContext::create()->setGroups(['Default', 'list']);
+            $body = $this->serializer->serialize($data, $format, $context);
         } else {
             $headers = ['Location' => $request->getUriForPath(sprintf($pathInfo, $data->getId()))];
+            $context = SerializationContext::create()->setGroups(['Default', 'entity']);
             $body = $this->serializer->serialize($data, $format, $context);
         }
         return new Response($body, Codes::HTTP_CREATED, $headers);

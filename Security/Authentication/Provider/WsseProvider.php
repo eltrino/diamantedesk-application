@@ -121,26 +121,17 @@ class WsseProvider implements AuthenticationProviderInterface
         $this->nonceCache->save($nonce, time(), $this->lifetime);
 
         //validate secret
-        $expected = $this->getEncoder($user)->encodePassword(
+        $expected = base64_encode(sha1(
             sprintf(
                 '%s%s%s',
                 base64_decode($nonce),
                 $created,
                 $secret
             ),
-            $salt
-        );
+            true
+        ));
 
         return $digest === $expected;
-    }
-
-    /**
-     * @param $user
-     * @return \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface|void
-     */
-    private function getEncoder($user)
-    {
-        return $this->encoderFactory->getEncoder($user);
     }
 
     /**
@@ -149,8 +140,7 @@ class WsseProvider implements AuthenticationProviderInterface
      */
     private function getSecret(UserInterface $user)
     {
-        $encoder = $this->getEncoder($user);
-        return $encoder->encodePassword($user->getPassword(), $user->getSalt());
+        return $user->getPassword();
     }
 
     /**

@@ -57,25 +57,20 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
 
 
         $created = date('c');
-
         // http://stackoverflow.com/questions/18117695/how-to-calculate-wsse-nonce
         $prefix = gethostname();
         $nonce  = base64_encode(substr(md5(uniqid($prefix . '_', true)), 0, 16));
-        $salt   = ''; // do not use real salt here, because API key already encrypted enough
+        $secret = $user->getPassword();
 
-        /** @var MessageDigestPasswordEncoder $encoder */
-        $encoderFactory = $this->getContainer()->get('security.encoder_factory');
-        $encoder = $encoderFactory->getEncoder($user);
-
-        $passwordDigest = $encoder->encodePassword(
+        $passwordDigest = base64_encode(sha1(
             sprintf(
                 '%s%s%s',
                 base64_decode($nonce),
                 $created,
-                $encoder->encodePassword($user->getPassword(), $user->getSalt())
+                $secret
             ),
-            $salt
-        );
+            true
+        ));
 
         $output->writeln('<info>To use WSSE authentication add following headers to the request:</info>');
         $output->writeln('Authorization: WSSE profile="UsernameToken"');
