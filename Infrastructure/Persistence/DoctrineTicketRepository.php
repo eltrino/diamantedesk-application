@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -91,10 +92,11 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         $qb->setMaxResults($pagingProperties->getLimit());
 
         $literal = $qb->expr()->literal("%{$searchQuery}%");
-        $qb->andWhere($qb->expr()->orX(
+        $whereExpression = $qb->expr()->orX(
             $qb->expr()->like(sprintf('%s.%s', self::SELECT_ALIAS, 'description'), $literal),
             $qb->expr()->like(sprintf('%s.%s', self::SELECT_ALIAS, 'subject'), $literal)
-        ));
+        );
+        $qb->andWhere($whereExpression);
 
         $query = $qb->getQuery();
 

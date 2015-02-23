@@ -222,7 +222,7 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->queryBuilder
             ->expects($this->atLeastOnce())
-            ->method('orWhere')
+            ->method('andWhere')
             ->with($this->equalTo($whereExpr))
             ->will($this->returnValue($this->queryBuilder));
 
