@@ -9,6 +9,7 @@ define(['app'], function(App){
         'login' : 'login',
         'logout' : 'logout',
         'registration': 'registration',
+        'confirm/:activation_hash': 'confirm',
         'resetpassword': 'reset'
       }
     });
@@ -37,6 +38,10 @@ define(['app'], function(App){
             Session.RegistrationController();
           });
         }
+      },
+
+      confirm: function(activation_hash){
+        App.session.confirm(activation_hash);
       },
 
       reset: function(){
@@ -71,7 +76,7 @@ define(['app'], function(App){
     App.on('session:reset', function(){
       App.debug('info', 'Event "session:reset" fired');
       App.navigate('resetpassword');
-      API.registration();
+      API.reset();
     });
 
     Session.on('start',function(){

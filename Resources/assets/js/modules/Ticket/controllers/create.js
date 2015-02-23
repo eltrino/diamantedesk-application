@@ -36,7 +36,7 @@ define(['app'], function(App){
               },
               error : function(){
                 App.alert({
-                  title: "Create Tcket Error"
+                  title: "Create Ticket Error"
                 });
               }
             });

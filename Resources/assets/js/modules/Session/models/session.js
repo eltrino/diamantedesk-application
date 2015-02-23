@@ -13,6 +13,8 @@ define([
 
     Session.SessionModel = Backbone.Model.extend({
 
+      urlRoot: Config.apiUrl.replace('diamante', 'diamante_front') + '/desk/users',
+
       initialize: function () {
         var savedData = window.localStorage.getItem('authModel') || window.sessionStorage.getItem('authModel');
         if(savedData){
@@ -89,19 +91,43 @@ define([
         if(creds.password){
           creds.password = Wsse.encodePassword(creds.password);
         }
-        if(this.set(creds, {validate: true})) {
-          App.request('user:model:create', creds).done(function () {
-            console.log(arguments);
-          });
-          this.clear();
-        }
+        this.urlRoot += '/register';
+        this.save(creds,{
+          success : function(){
+            console.log(this);
+            this.clear();
+            App.trigger('session:register:success');
+          },
+          error : function(){
+            App.trigger('session:register:fail');
+            App.alert({ title: "Registration Failed" });
+          },
+          complete : function(){
+            this.urlRoot = this.urlRoot.replace('/register');
+          }
+        });
       },
 
-      confirm: function(hash){
-        '0345167f4d44dcdfc6b5c61cd06a8496';
-
-
-
+      confirm: function(activation_hash){
+        'http://oro.loc/app_dev.php/diamantefront/#confirm/0345167f4d44dcdfc6b5c61cd06a8496';
+        this.urlRoot += '/confirm';
+        this.save({ activation_hash : activation_hash },{
+          validate: false,
+          success : function(){
+            this.clear();
+            App.trigger('session:confirm:success');
+            App.alert({ title: "Email Confirmation Success", messages: ["You may login and use application"] });
+            App.trigger('session:login');
+          }.bind(this),
+          error : function(){
+            App.trigger('session:confirm:fail');
+            App.alert({ title: "Email Confirmation Failed", messages: ["Activation code is wrong "] });
+            App.trigger('session:register');
+          }.bind(this),
+          complete : function(){
+            this.urlRoot = this.urlRoot.replace('/confirm');
+          }.bind(this)
+        });
       },
 
       logout: function() {
