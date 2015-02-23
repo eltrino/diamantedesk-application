@@ -17,13 +17,13 @@ namespace Diamante\FrontBundle\Tests\Api\Internal;
 use Diamante\ApiBundle\Model\ApiUser\ApiUser;
 use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Diamante\FrontBundle\Api\Command\UpdateUserCommand;
-use Diamante\FrontBundle\Api\Internal\UpdateUserServiceImpl;
+use Diamante\FrontBundle\Api\Internal\CurrentUserApiServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
-class UpdateUserServiceImplTest extends \PHPUnit_Framework_TestCase
+class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var UpdateUserServiceImpl
+     * @var CurrentUserApiServiceImpl
      */
     private $service;
 
@@ -39,12 +39,19 @@ class UpdateUserServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $apiUserRepository;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     */
+    private $authorizationService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->service = new UpdateUserServiceImpl(
+        $this->service = new CurrentUserApiServiceImpl(
             $this->diamanteUserRepository,
-            $this->apiUserRepository
+            $this->apiUserRepository,
+            $this->authorizationService
         );
     }
 

@@ -12,7 +12,7 @@ diamante_front_user:
     prefix:       /diamantefront
 
 diamante_front_api_user:
-    resource:     diamante.front.update_user.service
+    resource:     diamante.front.current_user.api.service_diamante
     type:         diamante_rest_service
     prefix:       /api/diamante/rest/{version}/desk/
     requirements:

@@ -19,25 +19,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UpdateUserCommand
 {
     /**
-     * @Assert\NotNull()
-     * @Assert\Type(type="integer")
-     */
-    public $id;
-
-    /**
-     * @Assert\NotNull()
      * @Assert\Type(type="string")
      */
-    public $lastName;
+    public $lastname;
 
     /**
-     * @Assert\NotNull()
      * @Assert\Type(type="string")
      */
-    public $firstName;
+    public $firstname;
 
     /**
-     * @Assert\NotNull()
      * @Assert\Type(type="string")
      */
     public $password;

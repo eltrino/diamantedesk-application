@@ -1,5 +1,5 @@
 {
-    "name": "diamante/front-bundle",
+    "name": "diamante/desk-bundle",
     "description": "DiamanteDesk Front Bundle",
     "homepage": "https://github.com/eltrino/DiamanteFrontBundle",
     "license": "OSL-3.0",
@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": ">=5.4.4",
-        "oro/platform": "1.4.*",
+        "diamante/desk": "*",
         "eloquent/composer-npm-bridge": "~2"
     },
     "minimum-stability": "dev",

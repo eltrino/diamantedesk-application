@@ -14,12 +14,19 @@
  */
 namespace Diamante\FrontBundle\Api;
 
-interface UpdateUserService
+interface CurrentUserService
 {
     /**
      * Update Diamante and Api users
+     *
      * @param Command\UpdateUserCommand $command
      * @return void
      */
     public function update(Command\UpdateUserCommand $command);
+
+    /**
+     *
+     * @return DiamanteUser
+     */
+    public function getCurrentUser();
 }
