@@ -81,6 +81,17 @@ class ApiUser implements Entity, UserInterface
     }
 
     /**
+     * Method returns same value as getEmail
+     * This is required bc of \Oro\Bundle\NavigationBundle\Content\TopicSender::send method
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->email;
+    }
+
+    /**
      * @return string
      */
     public function getPassword()
