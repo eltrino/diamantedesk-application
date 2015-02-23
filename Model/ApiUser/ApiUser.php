@@ -43,7 +43,7 @@ class ApiUser implements Entity, UserInterface
     /**
      * @var string
      */
-    protected $username;
+    protected $email;
 
     /**
      * @var bool
@@ -53,15 +53,15 @@ class ApiUser implements Entity, UserInterface
     /**
      * @var string
      */
-    protected $activationHash;
+    protected $hash;
 
-    public function __construct($username, $password, $salt = null)
+    public function __construct($email, $password, $salt = null)
     {
-        $this->username  = $username;
+        $this->email  = $email;
         $this->password  = $password;
         $this->salt      = $salt;
         $this->isActive  = false;
-        $this->activationHash = md5($this->username . time());
+        $this->hash = md5($this->email . time());
     }
 
     /**
@@ -75,9 +75,9 @@ class ApiUser implements Entity, UserInterface
     /**
      * @return string
      */
-    public function getUsername()
+    public function getEmail()
     {
-        return $this->username;
+        return $this->email;
     }
 
     /**
@@ -120,13 +120,14 @@ class ApiUser implements Entity, UserInterface
     /**
      * @return string
      */
-    public function getActivationHash()
+    public function getHash()
     {
-        return $this->activationHash;
+        return $this->hash;
     }
 
     /**
      * Activate user
+     *
      * @param string $hash
      * @return void
      * @throws \RuntimeException if given hash is not equal to generated one for user
@@ -136,9 +137,10 @@ class ApiUser implements Entity, UserInterface
         if ($this->isActive()) {
             return;
         }
-        if ($this->activationHash != $hash) {
+        if ($this->hash != $hash) {
             throw new \RuntimeException('Given hash is invalid and user can not be activated.');
         }
         $this->isActive = true;
+        $this->hash = '';
     }
 }

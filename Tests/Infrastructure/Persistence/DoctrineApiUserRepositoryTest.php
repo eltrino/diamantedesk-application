@@ -64,7 +64,7 @@ class DoctrineApiUserRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function thatApiUserRetrievesByUsername()
     {
-        $username = 'test_username';
+        $email = 'test@domain.com';
         $apiUser = $this->getApiUser();
 
         $this->em->expects($this->once())
@@ -79,11 +79,11 @@ class DoctrineApiUserRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->entityPersister->expects($this->once())
             ->method('load')
             ->with(
-                $this->equalTo(array('username' => $username)), $this->equalTo(null), $this->equalTo(null), array(), $this->equalTo(0),
+                $this->equalTo(array('email' => $email)), $this->equalTo(null), $this->equalTo(null), array(), $this->equalTo(0),
                 $this->equalTo(1), $this->equalTo(null)
             )->will($this->returnValue($apiUser));
 
-        $retrievedApiUser = $this->repository->findOneBy(array('username' => $username));
+        $retrievedApiUser = $this->repository->findOneBy(array('email' => $email));
 
         $this->assertNotNull($retrievedApiUser);
         $this->assertEquals($apiUser, $retrievedApiUser);
@@ -92,7 +92,7 @@ class DoctrineApiUserRepositoryTest extends \PHPUnit_Framework_TestCase
     private function getApiUser()
     {
         $apiUser = new ApiUser(
-            'test_username',
+            'test@domain.com',
             'test_user_password',
             'test_user_salt',
             array()

@@ -19,12 +19,12 @@ use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 class ApiUserFactory extends AbstractEntityFactory
 {
     /**
-     * @param string $username
+     * @param string $email
      * @param string $password
      * @return ApiUser
      */
-    public function create($username, $password)
+    public function create($email, $password)
     {
-        return new $this->entityClassName($username, $password);
+        return new $this->entityClassName($email, $password);
     }
 }

@@ -31,7 +31,7 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
         $this->setDescription('Generate X-WSSE HTTP header for a given Api User');
         $this->setDefinition(
             array(
-                 new InputArgument('username', InputArgument::REQUIRED, 'The username'),
+                 new InputArgument('email', InputArgument::REQUIRED, 'User email'),
             )
         );
     }
@@ -45,14 +45,14 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $username = $input->getArgument('username');
+        $email = $input->getArgument('email');
         $user     = $this
             ->getContainer()
             ->get('diamante.api.user.repository')
-            ->findUserByUsername($username);
+            ->findUserByEmail($email);
 
         if (null === $user) {
-            throw new \InvalidArgumentException(sprintf('User "%s" does not exist', $username));
+            throw new \InvalidArgumentException(sprintf('User "%s" does not exist', $email));
         }
 
 
@@ -77,7 +77,7 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
         $output->writeln(
             sprintf(
                 'X-WSSE: UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"',
-                $username,
+                $email,
                 $passwordDigest,
                 $nonce,
                 $created

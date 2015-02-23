@@ -31,7 +31,7 @@ class ApiUserTest extends \PHPUnit_Framework_TestCase
     public function testActivate()
     {
         $apiUser = new ApiUser('username', 'password');
-        $hash = $apiUser->getActivationHash();
+        $hash = $apiUser->getHash();
         $apiUser->activate($hash);
 
         $this->assertTrue($apiUser->isActive());

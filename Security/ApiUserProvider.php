@@ -39,10 +39,18 @@ class ApiUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->apiUserRepository->findUserByUsername($username);
+       return $this->loadUserByEmail($username);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function loadUserByEmail($email)
+    {
+        $user = $this->apiUserRepository->findUserByEmail($email);
 
         if (!$user) {
-            throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+            throw new UsernameNotFoundException(sprintf('User "%s" does not exist.', $email));
         }
 
         return $user;
@@ -59,7 +67,7 @@ class ApiUserProvider implements UserProviderInterface
             );
         }
 
-        return $this->loadUserByUsername($user->getUsername());
+        return $this->loadUserByUsername($user->getEmail());
     }
 
     /**
