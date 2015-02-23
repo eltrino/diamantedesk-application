@@ -18,8 +18,9 @@ namespace Diamante\FrontBundle\Tests\Api\Internal;
 use Diamante\ApiBundle\Model\ApiUser\ApiUser;
 use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-
 use Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl;
+use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
+use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 
 class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -94,7 +95,9 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
         $this->resetPasswordMailer->expects($this->once())->method('sendResetEmail')
             ->with($emailAddress, $apiUser->getActivationHash());
 
-        $this->resetPasswordService->resetPassword($emailAddress);
+        $command = new ResetPasswordCommand();
+        $command->email = $emailAddress;
+        $this->resetPasswordService->resetPassword($command);
     }
 
     public function testChangePassword()
@@ -117,7 +120,10 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
             ->method('store')
             ->with($apiUser);
 
-        $this->resetPasswordService->changePassword($hash, $password);
+        $command = new ChangePasswordCommand();
+        $command->password = $password;
+        $command->hash = $hash;
+        $this->resetPasswordService->changePassword($command);
     }
 
 }
