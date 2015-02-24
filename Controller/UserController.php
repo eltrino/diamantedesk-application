@@ -2,8 +2,10 @@
 
 namespace Diamante\FrontBundle\Controller;
 
+use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
+use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
 use FOS\Rest\Util\Codes;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -79,6 +81,53 @@ class UserController extends FOSRestController
             $view = $this->view(null, Codes::HTTP_OK);
         } catch (\Exception $e) {
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
+        }
+        return $this->response($view);
+    }
+
+    /**
+     * Reset user password action
+     *
+     * @Patch("/user/reset")
+     * @ApiDoc(
+     *      description="Reset user password",
+     *      resource=true
+     * )
+     */
+    public function resetAction()
+    {
+        $command = new ResetPasswordCommand();
+        $command->email = $this->getRequest()->get('email');
+        try {
+            $resetService = $this->container->get('diamante.front.reset_password.service');
+            $resetService->resetPassword($command);
+            $view = $this->view(null, Codes::HTTP_OK);
+        } catch(\Exception $e) {
+            $view = $this->view(null, Codes::HTTP_NOT_FOUND);
+        }
+        return $this->response($view);
+    }
+
+    /**
+     * Update user password action
+     *
+     * @Patch("/user/password")
+     * @ApiDoc(
+     *      description="Update user password",
+     *      resource=true
+     * )
+     */
+    public function passwordAction()
+    {
+        $command = new ChangePasswordCommand();
+        $command->hash = $this->getRequest()->get('hash');
+        $command->password = $this->getRequest()->get('password');
+        try {
+            $resetService = $this->container->get('diamante.front.reset_password.service');
+            $resetService->changePassword($command);
+            $view = $this->view(null, Codes::HTTP_OK);
+        } catch (\Exception $e) {
+            $view = $this->view(null, Codes::HTTP_NOT_FOUND);
         }
         return $this->response($view);
     }

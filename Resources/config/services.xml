@@ -20,8 +20,8 @@
 
     <parameters>
         <parameter key="diamante.front.system_settings.class">Diamante\FrontBundle\Model\SystemSettings</parameter>
-        <parameter key="diamante.front.reset_password.class">Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl</parameter>
-        <parameter key="diamante.front.reset_password_mailer.class">Diamante\FrontBundle\Model\ResetPasswordMailer</parameter>
+        <parameter key="diamante.front.reset_password.service.class">Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl</parameter>
+        <parameter key="diamante.front.reset_password.mailer.class">Diamante\FrontBundle\Infrastructure\ResetPasswordMailer</parameter>
         <parameter key="diamante.front.registration.service.class">Diamante\FrontBundle\Api\Internal\RegistrationServiceImpl</parameter>
         <parameter key="diamante.front.registration.mailer.class">Diamante\FrontBundle\Infrastructure\RegistrationMailer</parameter>
         <parameter key="diamante.front.current_user.api.service.class">Diamante\FrontBundle\Api\Internal\CurrentUserApiServiceImpl</parameter>
@@ -56,14 +56,13 @@
 
         <service id="diamante.front.current_user.api.service_diamante" alias="diamante.front.current_user.api.service" />
 
-        <service id="diamante.front.reset_password" class="%diamante.front.reset_password.class%">
+        <service id="diamante.front.reset_password.service" class="%diamante.front.reset_password.service.class%">
             <argument type="service" id="diamante.user.repository" />
             <argument type="service" id="diamante.api.user.repository"/>
             <argument type="service" id="diamante.api.user.entity.factory"/>
-            <argument type="service" id="diamante.front.reset_password_mailer"/>
+            <argument type="service" id="diamante.front.reset_password.mailer"/>
         </service>
-        <service id="diamante.front.reset_password_mailer" class="%diamante.front.reset_password_mailer.class%">
-            <argument type="service" id="twig"/>
+        <service id="diamante.front.reset_password.mailer" class="%diamante.front.reset_password.mailer.class%">
             <argument type="service" id="twig"/>
             <argument type="service" id="mailer"/>
             <argument>%mailer_user%</argument>

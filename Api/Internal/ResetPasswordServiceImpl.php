@@ -18,6 +18,7 @@ namespace Diamante\FrontBundle\Api\Internal;
 use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserFactory;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
+use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Diamante\FrontBundle\Model\ResetPasswordMailer;
 use Diamante\FrontBundle\Api\ResetPasswordService;
 use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
@@ -50,6 +51,9 @@ class ResetPasswordServiceImpl implements ResetPasswordService
 
     /**
      * @param DiamanteUserRepository $diamanteUserRepository
+     * @param ApiUserRepository $apiUserRepository
+     * @param ApiUserFactory $apiUserFactory
+     * @param ResetPasswordMailer $resetPasswordMailer
      */
     public function __construct(DiamanteUserRepository $diamanteUserRepository,
                                 ApiUserRepository $apiUserRepository,
@@ -82,7 +86,7 @@ class ResetPasswordServiceImpl implements ResetPasswordService
          */
         $apiUser = $this->apiUserRepository->findUserByUsername($command->email);
         if (is_null($apiUser)) {
-            $apiUser = $this->apiUserFactory->create($command->email, null);
+            $apiUser = $this->apiUserFactory->create($command->email, sha1(microtime(true), true));
         }
 
         $apiUser->generateHash();

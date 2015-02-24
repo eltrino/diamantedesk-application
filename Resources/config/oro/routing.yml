@@ -6,6 +6,9 @@ diamante_front_bundle:
 diamante_front_confirm:
     path:         /diamantefront/confirm
 
+diamante_front_reset_password:
+    path:         /diamantefront/resetpassword
+
 diamante_front_user:
     resource:     "@DiamanteFrontBundle/Controller/UserController.php"
     type:         rest
@@ -18,16 +21,6 @@ diamante_front_api_user:
     requirements:
         version:  latest|v1
         _format:  xml|json
-    defaults:
-        version:  latest
-        _format:  json
-
-diamante_desk_api_reset_password:
-    resource:     "@DiamanteFrontBundle/Controller/ResetPasswordController.php"
-    type:         rest
-    prefix:       /api/diamante_front/rest/{version}/desk/
-    requirements:
-        version:  latest|v1
     defaults:
         version:  latest
         _format:  json
