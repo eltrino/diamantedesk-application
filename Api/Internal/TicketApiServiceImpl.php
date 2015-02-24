@@ -23,6 +23,7 @@ use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
+use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -352,7 +353,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
 
     /**
      * Retrieves list of all Tickets. Performs filtering of tickets if provided with criteria as GET parameters.
-     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\Filter\CommonFilterCommand class.
      * Time filtering values should be converted to UTC
      *
      * @ApiDoc(
@@ -377,6 +378,49 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $pagingProperties = $criteriaProcessor->getPagingProperties();
         $repository = $this->getTicketRepository();
         $tickets = $repository->filter($criteria, $pagingProperties);
+
+        try {
+            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        } catch (\Exception $e) {
+        }
+
+        return $tickets;
+    }
+
+    /**
+     * Retrieves list of Tickets found by query. Ticket is searched by subject and description.
+     * Performs filtering of tickets if provided with criteria as GET parameters.
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\Filter\CommonFilterCommand class.
+     * Time filtering values should be converted to UTC
+     *
+     * @ApiDoc(
+     *  description="Returns found tickets.",
+     *  uri="/tickets/search.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to search tickets"
+     *  }
+     * )
+     *
+     * @param Command\SearchTicketsCommand $ticketSearchCommand
+     * @return \Diamante\DeskBundle\Entity\Ticket[]
+     */
+    public function searchTickets(Command\SearchTicketsCommand $searchTicketsCommand)
+    {
+        $searchProcessor = new TicketSearchProcessor();
+        $searchProcessor->setCommand($searchTicketsCommand);
+
+        $query = $searchProcessor->getSearchQuery();
+
+        $criteria = $searchProcessor->getCriteria();
+
+        $pagingProperties = $searchProcessor->getPagingProperties();
+
+        $repository = $this->getTicketRepository();
+        $tickets = $repository->search($query, $criteria, $pagingProperties);
 
         try {
             $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);

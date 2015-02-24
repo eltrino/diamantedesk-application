@@ -16,6 +16,7 @@
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
 use Diamante\DeskBundle\Api\Command\Filter\FilterTicketsCommand;
+use Diamante\DeskBundle\Api\Command\SearchTicketsCommand;
 use Diamante\DeskBundle\Api\Internal\TicketApiServiceImpl;
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Entity\Ticket;
@@ -175,6 +176,62 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($pagingInfo));
 
         $retrievedTickets = $this->ticketService->listAllTickets($command);
+
+        $this->assertNotNull($retrievedTickets);
+        $this->assertTrue(is_array($retrievedTickets));
+        $this->assertNotEmpty($retrievedTickets);
+        $this->assertEquals($tickets[1], $retrievedTickets[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function testSearchTickets()
+    {
+        $tickets = array(
+            new Ticket(
+                new UniqueId('unique_id'),
+                new TicketSequenceNumber(13),
+                self::SUBJECT,
+                self::DESCRIPTION,
+                $this->createBranch(),
+                new User(1, User::TYPE_DIAMANTE),
+                $this->createAssignee(),
+                new Source(Source::PHONE),
+                new Priority(Priority::PRIORITY_LOW),
+                new Status(Status::CLOSED)
+            ),
+            new Ticket(
+                new UniqueId('unique_id'),
+                new TicketSequenceNumber(12),
+                self::SUBJECT,
+                self::DESCRIPTION,
+                $this->createBranch(),
+                new User(1, User::TYPE_ORO),
+                $this->createAssignee(),
+                new Source(Source::PHONE),
+                new Priority(Priority::PRIORITY_LOW),
+                new Status(Status::CLOSED)
+            ),
+        );
+
+        $command = new SearchTicketsCommand();
+        $command->q = 'scr';
+        $command->reporter = 'oro_1';
+        $pagingInfo = new PagingInfo(1, new FilterPagingProperties());
+
+        $this->ticketRepository
+            ->expects($this->once())
+            ->method('search')
+            ->with($this->equalTo('scr'), $this->equalTo(array(array('reporter','eq','oro_1'))), $this->equalTo(new FilterPagingProperties()))
+            ->will($this->returnValue(array($tickets[1])));
+
+        $this->apiPagingService
+            ->expects($this->once())
+            ->method('getPagingInfo')
+            ->will($this->returnValue($pagingInfo));
+
+        $retrievedTickets = $this->ticketService->searchTickets($command);
 
         $this->assertNotNull($retrievedTickets);
         $this->assertTrue(is_array($retrievedTickets));
