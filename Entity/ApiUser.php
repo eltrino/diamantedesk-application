@@ -74,7 +74,7 @@ class ApiUser extends \Diamante\ApiBundle\Model\ApiUser\ApiUser
      * The time of living hash
      *
      * @var int
-     * @ORM\Column(name="hash_expiration_time", type="int")
+     * @ORM\Column(name="hash_expiration_time", type="integer")
      */
     protected $hashExpirationTime;
 

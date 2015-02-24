@@ -199,6 +199,8 @@ class ApiUser implements Entity, UserInterface
 
         $this->password = $newPassword;
         $this->isActive = true;
+        $this->hash = null;
+        $this->hashExpirationTime = 0;
     }
 
 }
