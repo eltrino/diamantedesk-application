@@ -21,17 +21,6 @@ use Doctrine\ORM\Query;
 class DoctrineDiamanteUserRepository extends DoctrineGenericRepository implements DiamanteUserRepository
 {
     /**
-     * Finds a user by username
-     *
-     * @param  string $username
-     * @return DiamanteUser
-     */
-    public function findUserByUsername($username)
-    {
-        return $this->findOneBy(array('username' => $username));
-    }
-
-    /**
      * Finds a user by email
      *
      * @param $email

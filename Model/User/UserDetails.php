@@ -50,19 +50,14 @@ class UserDetails
      */
     protected $lastName;
 
-    /**
-     * @var string
-     */
-    protected $username;
 
-    public function __construct($id, $type, $email, $firstName, $lastName, $username)
+    public function __construct($id, $type, $email, $firstName, $lastName)
     {
         $this->id           = $id;
         $this->type         = $type;
         $this->email        = $email;
         $this->firstName    = $firstName;
         $this->lastName     = $lastName;
-        $this->username     = $username;
     }
 
     /**
@@ -112,14 +107,4 @@ class UserDetails
     {
         return $this->type;
     }
-
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-
 } 

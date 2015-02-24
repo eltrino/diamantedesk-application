@@ -19,14 +19,6 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 interface DiamanteUserRepository extends Repository
 {
     /**
-     * Finds a user by username
-     *
-     * @param  string $username
-     * @return DiamanteUser
-     */
-    public function findUserByUsername($username);
-
-    /**
      * Finds a user by email
      * @param $email
      * @return DiamanteUser

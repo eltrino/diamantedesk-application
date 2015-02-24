@@ -49,8 +49,7 @@ class UserDetailsServiceImpl implements UserDetailsService
             $user->getType(),
             $loadedUser->getEmail(),
             $loadedUser->getFirstName(),
-            $loadedUser->getLastName(),
-            $loadedUser->getUsername()
+            $loadedUser->getLastName()
         );
     }
 

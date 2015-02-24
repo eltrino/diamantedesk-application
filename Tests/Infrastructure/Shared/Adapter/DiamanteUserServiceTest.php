@@ -23,7 +23,6 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
 {
 
-    const DUMMY_NAME = 'dummy_diamante_user_name';
     const DUMMY_EMAIL = 'test@gmail.com';
 
     /**
@@ -72,7 +71,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetDiamanteTypeUserByUser()
     {
         $userValueObject = new User(1, User::TYPE_DIAMANTE);
-        $user = new DiamanteUser(self::DUMMY_NAME, self::DUMMY_EMAIL);
+        $user = new DiamanteUser(self::DUMMY_EMAIL);
 
         $this->diamanteUserRepository
             ->expects($this->once())

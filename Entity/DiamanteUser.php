@@ -43,15 +43,6 @@ class DiamanteUser extends \Diamante\DeskBundle\Model\User\DiamanteUser
     protected $contact;
 
     /**
-     * Unique username for Diamante User
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
-     */
-    protected $username;
-
-    /**
      * Unique email for Api User
      *
      * @var string
@@ -78,4 +69,8 @@ class DiamanteUser extends \Diamante\DeskBundle\Model\User\DiamanteUser
      */
     protected $lastName;
 
+    public static function getClassName()
+    {
+        return __CLASS__;
+    }
 }

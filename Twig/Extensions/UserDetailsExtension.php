@@ -125,4 +125,4 @@ class UserDetailsExtension extends \Twig_Extension
 
         return $link;
     }
-} 
+}

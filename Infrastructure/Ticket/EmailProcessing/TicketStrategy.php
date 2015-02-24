@@ -91,7 +91,7 @@ class TicketStrategy implements Strategy
 
         if (is_null($diamanteUser)) {
             $contact = $this->diamanteContactService->findEmailOwner($email);
-            $diamanteUser = $this->diamanteUserFactory->create($email, $email, $contact);
+            $diamanteUser = $this->diamanteUserFactory->create($email, $contact);
 
             $this->diamanteUserRepository->store($diamanteUser);
         }

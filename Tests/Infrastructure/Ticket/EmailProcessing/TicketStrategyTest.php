@@ -150,13 +150,13 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(self::DUMMY_MESSAGE_FROM))
             ->will($this->returnValue($contact));
 
-        $diamanteUser = new DiamanteUser('test_email', 'test_username', new Contact());
+        $diamanteUser = new DiamanteUser('test_email', new Contact());
 
         $this->diamanteUserFactory->expects($this->once())
             ->method('create')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM),
-                $this->equalTo(self::DUMMY_MESSAGE_FROM)
+                new Contact()
             )->will($this->returnValue($diamanteUser));
 
         $this->diamanteUserRepository->expects($this->once())
@@ -296,6 +296,6 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
     private function getDiamanteUser()
     {
-        return new DiamanteUser('test_email', 'test_username');
+        return new DiamanteUser('test_email');
     }
 }
