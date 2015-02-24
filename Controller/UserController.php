@@ -14,17 +14,18 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Patch;
 
 /**
- * @RouteResource("user")
+ * @RouteResource("User")
  * @NamePrefix("diamante_front_api_")
  */
-class RegisterController extends FOSRestController
+class UserController extends FOSRestController
 {
     /**
      * Register new Diamante User
      *
-     * @Post
+     * @Post("/user")
      * @ApiDoc(
      *      description="Register (create) new Diamante User",
      *      resource=true
@@ -33,7 +34,6 @@ class RegisterController extends FOSRestController
     public function registerAction()
     {
         $command = new RegisterCommand();
-        $command->username = $this->getRequest()->get('username');
         $command->email = $this->getRequest()->get('email');
         $command->password = $this->getRequest()->get('password');
         $command->firstname = $this->getRequest()->get('firstname');
@@ -57,7 +57,7 @@ class RegisterController extends FOSRestController
     /**
      * Confirm new Diamante User registration
      *
-     * @Post
+     * @Patch("/user/confirm")
      * @ApiDoc(
      *      description="Confirm new Diamante User registration",
      *      resource=true
@@ -66,8 +66,7 @@ class RegisterController extends FOSRestController
     public function confirmAction()
     {
         $command = new ConfirmCommand();
-        $command->email = $this->getRequest()->get('email');
-        $command->activationHash = $this->getRequest()->get('activation_hash');
+        $command->hash = $this->getRequest()->get('hash');
 
         $errors = $this->get('validator')->validate($command);
 
@@ -77,7 +76,7 @@ class RegisterController extends FOSRestController
 
         try {
             $this->get('diamante.front.registration.service')->confirm($command);
-            $view = $this->view(null, Codes::HTTP_CREATED);
+            $view = $this->view(null, Codes::HTTP_OK);
         } catch (\Exception $e) {
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
         }

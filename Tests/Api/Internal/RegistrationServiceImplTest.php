@@ -71,30 +71,28 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testRegister()
     {
         $email = 'test@email.com';
-        $username = 'testuser';
         $password = '123123q';
         $firstname = 'Firstname';
         $lastname = 'Lastname';
 
-        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
-        $apiUser = new ApiUser($username, $password);
+        $diamanteUser = new DiamanteUser($email, $firstname, $lastname);
+        $apiUser = new ApiUser($email, $password);
 
         $this->diamanteUserFactory->expects($this->once())->method('create')
-            ->with($email, $username, $firstname, $lastname)
+            ->with($email, $firstname, $lastname)
             ->will($this->returnValue($diamanteUser));
 
         $this->apiUserFactory->expects($this->once())->method('create')
-            ->with($username, $password)->will($this->returnValue($apiUser));
+            ->with($email, $password)->will($this->returnValue($apiUser));
 
         $this->diamanteUserRepository->expects($this->once())->method('store')->with($diamanteUser);
         $this->apiUserRepository->expects($this->once())->method('store')->with($apiUser);
 
         $this->registrationMailer->expects($this->once())->method('sendConfirmationEmail')
-            ->with($email, $apiUser->getActivationHash());
+            ->with($email, $apiUser->getHash());
 
         $command = new RegisterCommand();
         $command->email = $email;
-        $command->username = $username;
         $command->password = $password;
         $command->firstname = $firstname;
         $command->lastname = $lastname;
@@ -104,68 +102,17 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Can not find Diamante User.
-     */
-    public function testConfirmWhenDiamanteUserDoesNotExist()
-    {
-        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
-            ->with('user@email.com')->will($this->returnValue(null));
-
-        $command = new ConfirmCommand();
-        $command->email = 'user@email.com';
-        $command->activationHash = md5(time());
-
-        $this->service->confirm($command);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Diamante User is not granted for API Access.
-     */
-    public function testConfirmWhenDiamanteUserHasNoApiAccess()
-    {
-        $email = 'test@email.com';
-        $username = 'testuser';
-        $firstname = 'Firstname';
-        $lastname = 'Lastname';
-        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
-
-        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
-            ->with($email)->will($this->returnValue($diamanteUser));
-
-        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
-            ->with($diamanteUser->getUsername())->will($this->returnValue(null));
-
-        $command = new ConfirmCommand();
-        $command->email = $email;
-        $command->activationHash = md5(time());
-
-        $this->service->confirm($command);
-    }
-
-    /**
-     * @expectedException \RuntimeException
      * @expectedExceptionMessage Can not confirm registration.
      */
-    public function testConfirmWhenActivationHashIsNotValid()
+    public function testConfirmWhenDiamanteUserHasNoApiAccessOrInvalidHash()
     {
-        $email = 'test@email.com';
-        $username = 'testuser';
-        $password = '123123q';
-        $firstname = 'Firstname';
-        $lastname = 'Lastname';
-        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
-        $apiUser = new ApiUser($username, $password);
+        $hash = md5(time());
 
-        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
-            ->with($email)->will($this->returnValue($diamanteUser));
-
-        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
-            ->with($diamanteUser->getUsername())->will($this->returnValue($apiUser));
+        $this->apiUserRepository->expects($this->once())->method('findUserByHash')
+            ->with($hash)->will($this->returnValue(null));
 
         $command = new ConfirmCommand();
-        $command->email = $email;
-        $command->activationHash = md5('dummy_username' . time());
+        $command->hash = $hash;
 
         $this->service->confirm($command);
     }
@@ -173,24 +120,16 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testConfirm()
     {
         $email = 'test@email.com';
-        $username = 'testuser';
         $password = '123123q';
-        $firstname = 'Firstname';
-        $lastname = 'Lastname';
-        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
-        $apiUser = new ApiUser($username, $password);
+        $apiUser = new ApiUser($email, $password);
 
-        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
-            ->with($email)->will($this->returnValue($diamanteUser));
-
-        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
-            ->with($diamanteUser->getUsername())->will($this->returnValue($apiUser));
+        $this->apiUserRepository->expects($this->once())->method('findUserByHash')
+            ->with($apiUser->getHash())->will($this->returnValue($apiUser));
 
         $this->apiUserRepository->expects($this->once())->method('store')->with($apiUser);
 
         $command = new ConfirmCommand();
-        $command->email = $email;
-        $command->activationHash = $apiUser->getActivationHash();
+        $command->hash = $apiUser->getHash();
 
         $this->service->confirm($command);
     }

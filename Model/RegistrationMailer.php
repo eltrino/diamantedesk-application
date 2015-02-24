@@ -19,8 +19,8 @@ interface RegistrationMailer
     /**
      * Sends confirmation email
      * @param string $email
-     * @param string $activationHash
+     * @param string $hash
      * @return void
      */
-    public function sendConfirmationEmail($email, $activationHash);
+    public function sendConfirmationEmail($email, $hash);
 }

@@ -12,31 +12,21 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\FrontBundle\Api\Command;
+namespace Diamante\FrontBundle\Api;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
-class RegisterCommand
+interface CurrentUserService
 {
     /**
-     * @Assert\NotNull(message="This is a required field")
-     * @Assert\Email()
+     * Update Diamante and Api users
+     *
+     * @param Command\UpdateUserCommand $command
+     * @return void
      */
-    public $email;
+    public function update(Command\UpdateUserCommand $command);
 
     /**
-     * @Assert\NotNull(message="This is a required field")
-     * @Assert\Type(type="string")
+     *
+     * @return DiamanteUser
      */
-    public $password;
-
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $firstname;
-
-    /**
-     * @Assert\Type(type="string")
-     */
-    public $lastname;
+    public function getCurrentUser();
 }

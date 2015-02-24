@@ -58,10 +58,10 @@ class RegistrationMailer implements \Diamante\FrontBundle\Model\RegistrationMail
     /**
      * Sends confirmation email
      * @param string $email
-     * @param string $activationHash
+     * @param string $hash
      * @return void
      */
-    public function sendConfirmationEmail($email, $activationHash)
+    public function sendConfirmationEmail($email, $hash)
     {
         /** @var \Swift_Message $confirmation */
         $confirmation = $this->mailer->createMessage();
@@ -72,12 +72,12 @@ class RegistrationMailer implements \Diamante\FrontBundle\Model\RegistrationMail
 
         $confirmation->setBody(
             $this->twig->render(
-                $this->txtTwigTemplate, array('activation_hash' => $activationHash)
+                $this->txtTwigTemplate, array('hash' => $hash)
             ), 'text/plain'
         );
         $confirmation->addPart(
             $this->twig->render(
-                $this->htmlTwigTemplate, array('activation_hash' => $activationHash)
+                $this->htmlTwigTemplate, array('hash' => $hash)
             ), 'text/html'
         );
 
