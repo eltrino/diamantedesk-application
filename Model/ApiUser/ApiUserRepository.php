@@ -19,18 +19,18 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 interface ApiUserRepository extends Repository
 {
     /**
-     * Finds a user by username
+     * Finds a user by email
      *
-     * @param  string $username
+     * @param  string $email
      * @return ApiUser
      */
-    public function findUserByUsername($username);
+    public function findUserByEmail($email);
 
     /**
-     * Finds a user by activation hash
+     * Finds a user by hash
      *
      * @param  string $hash
      * @return ApiUser
      */
     public function findUserByHash($hash);
-} 
+}

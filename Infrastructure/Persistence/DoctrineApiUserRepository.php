@@ -22,24 +22,24 @@ use Doctrine\ORM\Query;
 class DoctrineApiUserRepository extends DoctrineGenericRepository implements ApiUserRepository
 {
     /**
-     * Finds a user by username
+     * Finds a user by email
      *
-     * @param  string $username
+     * @param  string $email
      * @return ApiUser
      */
-    public function findUserByUsername($username)
+    public function findUserByEmail($email)
     {
-        return $this->findOneBy(array('username' => $username));
+        return $this->findOneBy(array('email' => $email));
     }
 
     /**
-     * Finds a user by activation hash
+     * Finds a user by hash
      *
      * @param  string $hash
      * @return ApiUser
      */
     public function findUserByHash($hash)
     {
-        return $this->findOneBy(array('activation_hash' => $hash));
+        return $this->findOneBy(array('hash' => $hash));
     }
 }

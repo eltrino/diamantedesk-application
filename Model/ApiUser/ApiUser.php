@@ -45,7 +45,7 @@ class ApiUser implements Entity, UserInterface
     /**
      * @var string
      */
-    protected $username;
+    protected $email;
 
     /**
      * @var bool
@@ -55,20 +55,20 @@ class ApiUser implements Entity, UserInterface
     /**
      * @var string
      */
-    protected $activationHash;
+    protected $hash;
 
     /**
      * @var integer
      */
     protected $hashExpirationTime;
 
-    public function __construct($username, $password, $salt = null)
+    public function __construct($email, $password, $salt = null)
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->salt = $salt;
-        $this->isActive = false;
-        $this->activationHash = md5($this->username . time());
+        $this->email  = $email;
+        $this->password  = $password;
+        $this->salt      = $salt;
+        $this->isActive  = false;
+        $this->hash = md5($this->email . time());
         $this->hashExpirationTime = 0;
     }
 
@@ -83,9 +83,20 @@ class ApiUser implements Entity, UserInterface
     /**
      * @return string
      */
-    public function getUsername()
+    public function getEmail()
     {
-        return $this->username;
+        return $this->email;
+    }
+
+    /**
+     * Method returns same value as getEmail
+     * This is required bc of \Oro\Bundle\NavigationBundle\Content\TopicSender::send method
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->email;
     }
 
     /**
@@ -94,6 +105,16 @@ class ApiUser implements Entity, UserInterface
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @param $password
+     * @return $this
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
     }
 
     /**
@@ -128,13 +149,14 @@ class ApiUser implements Entity, UserInterface
     /**
      * @return string
      */
-    public function getActivationHash()
+    public function getHash()
     {
-        return $this->activationHash;
+        return $this->hash;
     }
 
     /**
      * Activate user
+     *
      * @param string $hash
      * @return void
      * @throws \RuntimeException if given hash is not equal to generated one for user
@@ -144,10 +166,11 @@ class ApiUser implements Entity, UserInterface
         if ($this->isActive()) {
             return;
         }
-        if ($this->activationHash != $hash) {
+        if ($this->hash != $hash) {
             throw new \RuntimeException('Given hash is invalid and user can not be activated.');
         }
         $this->isActive = true;
+        $this->hash = '';
     }
 
     /**
@@ -156,13 +179,14 @@ class ApiUser implements Entity, UserInterface
     public function generateHash()
     {
         $timestamp = time();
-        $this->activationHash = md5($this->getUsername() . $timestamp . $this->getPassword());
+        $this->hash = md5($this->getEmail() . $timestamp . $this->getPassword());
         $this->hashExpirationTime = $timestamp + self::EXPIRATION_TIME;
 
     }
 
     /**
      * Set new password for user
+     *
      * @param $newPassword
      * @return void
      * @throws \RuntimeException if hash is expired
@@ -170,7 +194,7 @@ class ApiUser implements Entity, UserInterface
     public function changePassword($newPassword)
     {
         if (time() > $this->hashExpirationTime ) {
-            throw new \RuntimeException('This password reset code is invalid.');
+            throw new \RuntimeException('Given hash is invalid and password can not be reset.');
         }
 
         $this->password = $newPassword;

@@ -31,7 +31,7 @@ class ApiUserTest extends \PHPUnit_Framework_TestCase
     public function testActivate()
     {
         $apiUser = new ApiUser('username', 'password');
-        $hash = $apiUser->getActivationHash();
+        $hash = $apiUser->getHash();
         $apiUser->activate($hash);
 
         $this->assertTrue($apiUser->isActive());
@@ -56,7 +56,7 @@ class ApiUserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Expiration time is out and user can not change password.
+     * @expectedExceptionMessage Given hash is invalid and password can not be reset.
      */
     public function testChangePasswordWhenTimeIsExpired()
     {

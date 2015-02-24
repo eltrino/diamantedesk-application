@@ -22,7 +22,6 @@ Change corresponding part of security.yml file to this one:
 
     encoders:
         Oro\Bundle\UserBundle\Entity\User: sha512
-        Diamante\ApiBundle\Entity\ApiUser: sha512
         Symfony\Component\Security\Core\User\User: plaintext
 
     firewalls:

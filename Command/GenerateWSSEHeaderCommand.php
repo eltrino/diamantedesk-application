@@ -31,7 +31,7 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
         $this->setDescription('Generate X-WSSE HTTP header for a given Api User');
         $this->setDefinition(
             array(
-                 new InputArgument('username', InputArgument::REQUIRED, 'The username'),
+                 new InputArgument('email', InputArgument::REQUIRED, 'User email'),
             )
         );
     }
@@ -45,44 +45,39 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $username = $input->getArgument('username');
+        $email = $input->getArgument('email');
         $user     = $this
             ->getContainer()
             ->get('diamante.api.user.repository')
-            ->findUserByUsername($username);
+            ->findUserByEmail($email);
 
         if (null === $user) {
-            throw new \InvalidArgumentException(sprintf('User "%s" does not exist', $username));
+            throw new \InvalidArgumentException(sprintf('User "%s" does not exist', $email));
         }
 
 
         $created = date('c');
-
         // http://stackoverflow.com/questions/18117695/how-to-calculate-wsse-nonce
         $prefix = gethostname();
         $nonce  = base64_encode(substr(md5(uniqid($prefix . '_', true)), 0, 16));
-        $salt   = ''; // do not use real salt here, because API key already encrypted enough
+        $secret = $user->getPassword();
 
-        /** @var MessageDigestPasswordEncoder $encoder */
-        $encoderFactory = $this->getContainer()->get('security.encoder_factory');
-        $encoder = $encoderFactory->getEncoder($user);
-
-        $passwordDigest = $encoder->encodePassword(
+        $passwordDigest = base64_encode(sha1(
             sprintf(
                 '%s%s%s',
                 base64_decode($nonce),
                 $created,
-                $encoder->encodePassword($user->getPassword(), $user->getSalt())
+                $secret
             ),
-            $salt
-        );
+            true
+        ));
 
         $output->writeln('<info>To use WSSE authentication add following headers to the request:</info>');
         $output->writeln('Authorization: WSSE profile="UsernameToken"');
         $output->writeln(
             sprintf(
                 'X-WSSE: UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"',
-                $username,
+                $email,
                 $passwordDigest,
                 $nonce,
                 $created
