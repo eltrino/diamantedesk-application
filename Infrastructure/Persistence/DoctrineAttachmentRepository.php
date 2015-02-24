@@ -12,20 +12,20 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Attachment;
 
-use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
-class AttachmentFactory extends AbstractEntityFactory
+use Diamante\DeskBundle\Entity\Attachment;
+use Diamante\DeskBundle\Model\Attachment\AttachmentRepository;
+
+class DoctrineAttachmentRepository extends DoctrineGenericRepository implements AttachmentRepository
 {
     /**
-     * Create Attachment entity
-     * @param File $file
-     * @param string|null $hash
-     * @return \Diamante\DeskBundle\Model\Attachment\Attachment
+     * @param $hash
+     * @return Attachment|null
      */
-    public function create(File $file, $hash = null)
+    public function getByHash($hash)
     {
-        return new $this->entityClassName($file, $hash);
+        return $this->findOneBy(['hash' => $hash]);
     }
 }
