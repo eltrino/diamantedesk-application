@@ -61,76 +61,93 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateWhenDiamanteUserDoesNotExist()
     {
-        $id = 1;
-        $password = '123123q';
+        $apiUser = $this->createApiUser();
         $firstname = 'Firstname';
         $lastname = 'Lastname';
 
-        $this->diamanteUserRepository->expects($this->once())->method('get')
-            ->with($id)->will($this->returnValue(null));
+        $this->authorizationService->expects($this->once())->method('getLoggedUser')
+            ->will($this->returnValue($apiUser));
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with($apiUser->getEmail())->will($this->returnValue(null));
 
         $command = new UpdateUserCommand();
-        $command->id = $id;
-        $command->password = $password;
-        $command->firstName = $firstname;
-        $command->lastName = $lastname;
-
-        $this->service->update($command);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Diamante User is not granted for API Access.
-     */
-    public function testUpdateWhenDiamanteUserHasNoApiAccess()
-    {
-        $id = 1;
-        $email = 'test@email.com';
-        $username = 'testuser';
-        $firstname = 'Firstname';
-        $password = '123123q';
-        $lastname = 'Lastname';
-        
-        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
-
-        $this->diamanteUserRepository->expects($this->once())->method('get')
-            ->with($id)->will($this->returnValue($diamanteUser));
-
-        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
-            ->with($diamanteUser->getUsername())->will($this->returnValue(null));
-
-        $command = new UpdateUserCommand();
-        $command->id = $id;
-        $command->password = $password;
-        $command->firstName = $firstname;
-        $command->lastName = $lastname;
+        $command->password = $apiUser->getPassword();
+        $command->firstname = $firstname;
+        $command->lastname = $lastname;
 
         $this->service->update($command);
     }
 
     public function testUpdate()
     {
-        $id = 1;
+        $diamanteUser = $this->createDiamanteUser();
+        $apiUser = $this->createApiUser();
+
+        $this->authorizationService->expects($this->once())->method('getLoggedUser')
+            ->will($this->returnValue($apiUser));
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with($apiUser->getEmail())->will($this->returnValue($diamanteUser));
+
+        $command = new UpdateUserCommand();
+        $command->password = "mod_" . $apiUser->getPassword();
+        $command->firstname = "mod_" . $diamanteUser->getFirstName();
+        $command->lastname = "mod_" . $diamanteUser->getLastName();
+
+        $this->service->update($command);
+
+        $this->assertStringStartsWith("mod_", $diamanteUser->getFirstName());
+        $this->assertStringStartsWith("mod_", $diamanteUser->getLastName());
+        $this->assertStringStartsWith("mod_", $apiUser->getPassword());
+    }
+
+    public function testGetCurrentUser()
+    {
+        $diamanteUser = $this->createDiamanteUser();
+        $apiUser = $this->createApiUser();
+
+        $this->authorizationService->expects($this->once())->method('getLoggedUser')
+            ->will($this->returnValue($apiUser));
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with($apiUser->getEmail())->will($this->returnValue($diamanteUser));
+
+        $this->assertEquals($diamanteUser, $this->service->getCurrentUser());
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage User loading failed, user not found.
+     */
+    public function testGetCurrentUserWithNoDiamanteUser()
+    {
+        $apiUser = $this->createApiUser();
+
+        $this->authorizationService->expects($this->once())->method('getLoggedUser')
+            ->will($this->returnValue($apiUser));
+        $this->diamanteUserRepository->expects($this->once())->method('findUserByEmail')
+            ->with($apiUser->getEmail())->will($this->returnValue(null));
+
+        $this->service->getCurrentUser();
+    }
+
+    /**
+     * @return ApiUser
+     */
+    private function createApiUser()
+    {
+        $apiUser = new ApiUser('test@email.com', '3F8117C1CEC19534C385EE9EC1E8713E884F6F7C');
+        return $apiUser;
+    }
+
+    /**
+     * @return DiamanteUser
+     */
+    private function createDiamanteUser()
+    {
         $email = 'test@email.com';
-        $username = 'testuser';
-        $password = '123123q';
         $firstname = 'Firstname';
         $lastname = 'Lastname';
 
-        $diamanteUser = new DiamanteUser($email, $username, $firstname, $lastname);
-        $apiUser = new ApiUser($username, $password);
-
-        $this->diamanteUserRepository->expects($this->once())->method('get')
-            ->with($id)->will($this->returnValue($diamanteUser));
-        $this->apiUserRepository->expects($this->once())->method('findUserByUsername')
-            ->with($username)->will($this->returnValue($apiUser));
-
-        $command = new UpdateUserCommand();
-        $command->id = $id;
-        $command->password = $password;
-        $command->firstName = $firstname;
-        $command->lastName = $lastname;
-
-        $this->service->update($command);
+        $diamanteUser = new DiamanteUser($email, $firstname, $lastname);
+        return $diamanteUser;
     }
 }
