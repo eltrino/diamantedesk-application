@@ -15,7 +15,6 @@
 namespace Diamante\FrontBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -23,6 +22,8 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\View\View;
+use FOS\Rest\Util\Codes;
 
 /**
  * @RouteResource("password")
@@ -39,18 +40,18 @@ class ResetPasswordController extends FOSRestController
      *      resource=true
      * )
      */
-    public function resetAction(Request $request)
+    public function resetAction()
     {
         $command = new ResetPasswordCommand();
-        $command->email = $request->get('email');
+        $command->email = $this->getRequest()->get('email');
         try {
             $resetService = $this->container->get('diamante.front.reset_password');
             $resetService->resetPassword($command);
+            $view = $this->view(null, Codes::HTTP_OK);
         } catch(\Exception $e) {
-            return new Response($e->getMessage(), 404);
+            $view = $this->view(null, Codes::HTTP_NOT_FOUND);
         }
-
-        return new Response();
+        return $this->response($view);
     }
 
     /**
@@ -62,18 +63,27 @@ class ResetPasswordController extends FOSRestController
      *      resource=true
      * )
      */
-    public function updateAction(Request $request)
+    public function updateAction()
     {
         $command = new ChangePasswordCommand();
-        $command->hash = $request->get('hash');
-        $command->password = $request->get('password');
+        $command->hash = $this->getRequest()->get('hash');
+        $command->password = $this->getRequest()->get('password');
         try {
             $resetService = $this->container->get('diamante.front.reset_password');
             $resetService->changePassword($command);
+            $view = $this->view(null, Codes::HTTP_OK);
         } catch(\Exception $e) {
-            return new Response($e->getMessage(), 404);
+            $view = $this->view(null, Codes::HTTP_NOT_FOUND);
         }
+        return $this->response($view);
+    }
 
-        return new Response();
+    /**
+     * @param View $view
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function response(View $view)
+    {
+        return $this->get('fos_rest.view_handler')->handle($view);
     }
 }
