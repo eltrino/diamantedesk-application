@@ -51,10 +51,21 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
      */
     private $holder;
 
+    /**
+     * @var \Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader
+     * @Mock Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader
+     */
+    private $imagine;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->manager = new ManagerImpl($this->fileStorageService, $this->factory, $this->repository);
+        $this->manager = new ManagerImpl(
+            $this->fileStorageService,
+            $this->factory,
+            $this->repository,
+            $this->imagine
+        );
     }
 
     /**
