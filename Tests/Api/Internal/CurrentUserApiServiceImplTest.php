@@ -62,8 +62,8 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testUpdateWhenDiamanteUserDoesNotExist()
     {
         $apiUser = $this->createApiUser();
-        $firstname = 'Firstname';
-        $lastname = 'Lastname';
+        $firstName = 'Firstname';
+        $lastName = 'Lastname';
 
         $this->authorizationService->expects($this->once())->method('getLoggedUser')
             ->will($this->returnValue($apiUser));
@@ -72,8 +72,8 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $command = new UpdateUserCommand();
         $command->password = $apiUser->getPassword();
-        $command->firstname = $firstname;
-        $command->lastname = $lastname;
+        $command->firstName = $firstName;
+        $command->lastName = $lastName;
 
         $this->service->update($command);
     }
@@ -90,8 +90,8 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $command = new UpdateUserCommand();
         $command->password = "mod_" . $apiUser->getPassword();
-        $command->firstname = "mod_" . $diamanteUser->getFirstName();
-        $command->lastname = "mod_" . $diamanteUser->getLastName();
+        $command->firstName = "mod_" . $diamanteUser->getFirstName();
+        $command->lastName = "mod_" . $diamanteUser->getLastName();
 
         $this->service->update($command);
 
@@ -144,10 +144,10 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private function createDiamanteUser()
     {
         $email = 'test@email.com';
-        $firstname = 'Firstname';
-        $lastname = 'Lastname';
+        $firstName = 'Firstname';
+        $lastName = 'Lastname';
 
-        $diamanteUser = new DiamanteUser($email, $firstname, $lastname);
+        $diamanteUser = new DiamanteUser($email, null, $firstName, $lastName);
         return $diamanteUser;
     }
 }

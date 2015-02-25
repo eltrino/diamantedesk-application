@@ -21,12 +21,12 @@ class UpdateUserCommand
     /**
      * @Assert\Type(type="string")
      */
-    public $lastname;
+    public $lastName;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $firstname;
+    public $firstName;
 
     /**
      * @Assert\Type(type="string")

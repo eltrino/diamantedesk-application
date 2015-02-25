@@ -33,10 +33,10 @@ class RegisterCommand
     /**
      * @Assert\Type(type="string")
      */
-    public $firstname;
+    public $firstName;
 
     /**
      * @Assert\Type(type="string")
      */
-    public $lastname;
+    public $lastName;
 }

@@ -38,8 +38,8 @@ class UserController extends FOSRestController
         $command = new RegisterCommand();
         $command->email = $this->getRequest()->get('email');
         $command->password = $this->getRequest()->get('password');
-        $command->firstname = $this->getRequest()->get('firstname');
-        $command->lastname = $this->getRequest()->get('lastname');
+        $command->firstName = $this->getRequest()->get('first_name');
+        $command->lastName = $this->getRequest()->get('last_name');
 
         $errors = $this->get('validator')->validate($command);
 

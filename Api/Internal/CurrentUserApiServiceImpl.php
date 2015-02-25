@@ -103,12 +103,12 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
 
         $diamanteUser = $this->loadDiamanteUser($apiUser);
 
-        if ($command->firstname) {
-            $diamanteUser->setFirstName($command->firstname);
+        if ($command->firstName) {
+            $diamanteUser->setFirstName($command->firstName);
         }
 
-        if ($command->lastname) {
-            $diamanteUser->setLastName($command->lastname);
+        if ($command->lastName) {
+            $diamanteUser->setLastName($command->lastName);
         }
 
         if ($command->password) {

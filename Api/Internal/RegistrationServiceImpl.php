@@ -69,7 +69,7 @@ class RegistrationServiceImpl implements RegistrationService
     public function register(Command\RegisterCommand $command)
     {
         $diamanteUser = $this->diamanteUserFactory
-            ->create($command->email, $command->firstname, $command->lastname);
+            ->create($command->email, null, $command->firstName, $command->lastName);
         $apiUser = $this->apiUserFactory->create($command->email, $command->password);
 
         $this->diamanteUserRepository->store($diamanteUser);

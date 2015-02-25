@@ -75,7 +75,7 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         $emailAddress = 'test@gmail.com';
 
-        $diamanteUser = new DiamanteUser($emailAddress, 'test');
+        $diamanteUser = new DiamanteUser($emailAddress, null, 'firstName', 'lastName');
         $apiUser = new ApiUser($emailAddress, null);
 
         $this->diamanteUserRepository
@@ -86,14 +86,14 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->apiUserRepository
             ->expects($this->once())
-            ->method('findUserByUsername')
+            ->method('findUserByEmail')
             ->with($this->equalTo($emailAddress))
             ->will($this->returnValue($apiUser));
 
         $this->apiUserRepository->expects($this->once())->method('store')->with($apiUser);
 
         $this->resetPasswordMailer->expects($this->once())->method('sendResetEmail')
-            ->with($emailAddress, $apiUser->getActivationHash());
+            ->with($emailAddress, $apiUser->getHash());
 
         $command = new ResetPasswordCommand();
         $command->email = $emailAddress;
@@ -113,7 +113,7 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
 
         $apiUser->generateHash();
 
-        $hash = $apiUser->getActivationHash();
+        $hash = $apiUser->getHash();
 
         $this->apiUserRepository
             ->expects($this->once())
@@ -127,4 +127,3 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
     }
 
 }
- 

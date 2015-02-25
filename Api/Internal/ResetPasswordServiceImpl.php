@@ -84,7 +84,7 @@ class ResetPasswordServiceImpl implements ResetPasswordService
         /**
          * @var ApiUser $apiUser
          */
-        $apiUser = $this->apiUserRepository->findUserByUsername($command->email);
+        $apiUser = $this->apiUserRepository->findUserByEmail($command->email);
         if (is_null($apiUser)) {
             $apiUser = $this->apiUserFactory->create($command->email, sha1(microtime(true), true));
         }
@@ -93,7 +93,7 @@ class ResetPasswordServiceImpl implements ResetPasswordService
 
         $this->apiUserRepository->store($apiUser);
 
-        $this->resetPasswordMailer->sendResetEmail($diamanteUser->getEmail(), $apiUser->getActivationHash());
+        $this->resetPasswordMailer->sendResetEmail($diamanteUser->getEmail(), $apiUser->getHash());
 
     }
 
