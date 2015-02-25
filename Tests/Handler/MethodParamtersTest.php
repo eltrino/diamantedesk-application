@@ -43,7 +43,8 @@ class MethodParametersTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $dummyBagSecond = new ParameterBag([
-            'anotherId' => '56'
+            'anotherId' => '56',
+            'sub_map' => '1'
         ]);
 
         $this->validator->expects($this->once())
@@ -57,7 +58,8 @@ class MethodParametersTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($dummyBagSecond->get('anotherId'), $dummyBagFirst->get('anotherId'));
         $this->assertTrue($dummyBagFirst->has('map'));
-        $this->assertEquals(3, $dummyBagFirst->count());
+        $this->assertTrue($dummyBagFirst->has('subMap'));
+        $this->assertEquals(4, $dummyBagFirst->count());
     }
 
     /**

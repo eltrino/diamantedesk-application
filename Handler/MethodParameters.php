@@ -15,6 +15,7 @@
 
 namespace Diamante\ApiBundle\Handler;
 
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Validator\Validator;
 
@@ -32,7 +33,7 @@ class MethodParameters
 
     public function addParameterBag(ParameterBag $bag)
     {
-        $this->data = array_merge($this->data, $bag->all());
+        $this->data = array_merge($this->data, $this->camelizeKeys($bag->all()));
     }
 
     public function putIn(ParameterBag $bag)
@@ -60,5 +61,18 @@ class MethodParameters
                 $bag->set($parameter->getName(), $this->data[$parameter->getName()]);
             }
         }
+    }
+
+    private function camelizeKeys($array)
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $key = lcfirst(Container::camelize($key));
+            if (is_array($value)) {
+                $value = $this->camelizeKeys($value);
+            }
+            $result[$key] = $value;
+        }
+        return $result;
     }
 } 

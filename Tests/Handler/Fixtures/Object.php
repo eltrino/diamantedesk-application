@@ -17,5 +17,5 @@ namespace Diamante\ApiBundle\Tests\Handler\Fixtures;
 
 class Object
 {
-    public function getParts($id, $anotherId, Command $map){}
+    public function getParts($id, $anotherId, Command $map, $subMap){}
 }
