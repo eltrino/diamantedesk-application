@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 use Diamante\DeskBundle\Api\AttachmentService;
 use Diamante\DeskBundle\Model\Attachment\AttachmentRepository;
 use Diamante\DeskBundle\Model\Attachment\Manager;
+use Symfony\Component\HttpFoundation\File\File;
 
 class AttachmentServiceImpl implements AttachmentService
 {
@@ -43,5 +44,18 @@ class AttachmentServiceImpl implements AttachmentService
     public function getByHash($hash)
     {
         return $this->repository->getByHash($hash);
+    }
+
+    /**
+     * @param $hash
+     * @return \Symfony\Component\HttpFoundation\File\File
+     */
+    public function getThumbnail($hash)
+    {
+        $file = $this->getByHash($hash);
+        $location = $file->getFile()->getPathname();
+        $filename = sprintf('%s/thumbnail/%s.png', $location, $hash);
+
+        return new File($filename);
     }
 }

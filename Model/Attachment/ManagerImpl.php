@@ -20,6 +20,8 @@ use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
 
 class ManagerImpl implements Manager
 {
+    const DEFAULT_THUMB_EXT = 'png';
+
     /**
      * @var Services\FileStorageService
      */
@@ -163,7 +165,7 @@ class ManagerImpl implements Manager
                 mkdir($destinationFolder);
                 chmod($destinationFolder, 0777);
             }
-            $destination = sprintf("%s/%s.%s", $destinationFolder, $hash, $file->getExtension());
+            $destination = sprintf("%s/%s.%s", $destinationFolder, $hash, self::DEFAULT_THUMB_EXT);
             $thumbnail->save($destination);
         } catch (\Exception $e) {
             throw new \RuntimeException('Thumbnail could not be created. ' . $e->getMessage());
