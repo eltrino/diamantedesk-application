@@ -39,11 +39,16 @@ class AttachmentServiceImpl implements AttachmentService
 
     /**
      * @param $hash
-     * @return \Diamante\DeskBundle\Entity\Attachment|null
+     * @return \Diamante\DeskBundle\Entity\Attachment
      */
     public function getByHash($hash)
     {
-        return $this->repository->getByHash($hash);
+        $attachment = $this->repository->getByHash($hash);
+        if (is_null($attachment)) {
+            throw new \RuntimeException('No attachment with that hash found.');
+        }
+
+        return $attachment;
     }
 
     /**

@@ -23,7 +23,7 @@ class AttachmentController extends Controller
      * @param string $hash
      * @return BinaryFileResponse
      */
-    public function fileAttachmentAction($hash)
+    public function imageAttachmentAction($hash)
     {
         $attachmentService = $this->get('diamante.attachment.service');
         try {
