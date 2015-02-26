@@ -9,15 +9,18 @@ define(['app'], function(App){
         'login' : 'login',
         'logout' : 'logout',
         'registration': 'registration',
-        'confirm/:activation_hash': 'confirm',
+        'confirm/:hash': 'confirm',
         'resetpassword': 'reset'
       }
     });
 
     var API = {
-      login: function(){
+      login: function(options){
+        if(options && options.return_path){
+          App.session.return_path = options.return_path;
+        }
         if(App.session.get('logged_in')){
-          App.back({force:true});
+          App.navigate('');
         } else {
           require(['modules/Session/controllers/login'], function(){
             Session.LoginController();
@@ -32,7 +35,7 @@ define(['app'], function(App){
 
       registration: function(){
         if(App.session.get('logged_in')){
-          App.back({force:true});
+          App.navigate('');
         } else {
           require(['modules/Session/controllers/registration'], function(){
             Session.RegistrationController();
@@ -40,30 +43,30 @@ define(['app'], function(App){
         }
       },
 
-      confirm: function(activation_hash){
-        App.session.confirm(activation_hash);
+      confirm: function(hash){
+        if(App.session.get('logged_in')){
+          App.navigate('');
+        } else {
+          App.session.confirm(hash);
+        }
       },
 
       reset: function(){
-        if(App.session.get('logged_in')){
-          App.back({force:true});
-        } else {
-          require(['modules/Session/controllers/reset'], function(){
-            Session.ResetController();
-          });
-        }
+        require(['modules/Session/controllers/reset'], function(){
+          Session.ResetController();
+        });
       }
     };
 
-    App.on('session:login', function(){
+    App.on('session:login', function(options){
       App.debug('info', 'Event "session:login" fired');
-      App.navigate('login', { nohistory:true });
-      API.login();
+      App.navigate('login');
+      API.login(options);
     });
 
     App.on('session:logout', function(){
       App.debug('info', 'Event "session:logout" fired');
-      App.navigate('logout', { nohistory:true });
+      App.navigate('logout');
       API.logout();
     });
 

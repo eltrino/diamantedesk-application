@@ -6,7 +6,10 @@
     </div>
     <div class="modal-body">
       <% _.each(messages, function(message){ %>
-        <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i>&nbsp;<%= message %></div>
+          <div class="alert alert-<%= message.status_class %>" role="alert">
+            <i class="fa fa-<%= message.status_icon %>"></i>&nbsp;
+            <%= message.text %>
+          </div>
       <% }); %>
     </div>
   </div><!-- /.modal-content -->

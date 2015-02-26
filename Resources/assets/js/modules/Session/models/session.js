@@ -6,14 +6,12 @@ define([
 
   return App.module('Session', function(Session, App, Backbone, Marionette, $, _){
 
-    var password = '5c76179545225078a3ba580dff644b0113faf9dc';
-
     Session.startWithParent = false;
 
 
     Session.SessionModel = Backbone.Model.extend({
 
-      urlRoot: Config.apiUrl.replace('diamante', 'diamante_front') + '/desk/users',
+      url: Config.apiUrl.replace('api/diamante/rest/latest', 'diamantefront') + '/user',
 
       initialize: function () {
         var savedData = window.localStorage.getItem('authModel') || window.sessionStorage.getItem('authModel');
@@ -27,7 +25,7 @@ define([
               if(App.getCurrentRoute() !== 'login'){
                 this.logout();
                 App.alert({ title: "Authorization Required", messages: ["this action require authorization"] });
-                App.trigger('session:login');
+                App.trigger('session:login', { return_path: App.getCurrentRoute() });
               }
             }.bind(this)
           }
@@ -36,8 +34,8 @@ define([
 
       validate: function(attrs, options){
         var errors = {};
-        if(!attrs.username) {
-          errors.username = "login is required";
+        if(!attrs.email) {
+          errors.email = "login is required";
         }
         if(!attrs.password) {
           errors.password = "password is required";
@@ -49,9 +47,9 @@ define([
 
       addHeaders: function(){
         $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-          if(this.get('username') && this.get('password')){
+          if(this.get('email') && this.get('password')){
             jqXHR.setRequestHeader('Authorization', 'WSSE profile="UsernameToken"');
-            jqXHR.setRequestHeader('X-WSSE', Wsse.getUsernameToken(this.get('username'), this.get('password')));
+            jqXHR.setRequestHeader('X-WSSE', Wsse.getUsernameToken(this.get('email'), this.get('password')));
           }
         }.bind(this));
       },
@@ -91,41 +89,46 @@ define([
         if(creds.password){
           creds.password = Wsse.encodePassword(creds.password);
         }
-        this.urlRoot += '/register';
         this.save(creds,{
           success : function(){
-            console.log(this);
             this.clear();
+            App.alert({ title: 'Registration Success', messages: [{
+              status: 'success',
+              text: 'Thank you. <br>' +
+                'We have sent you email to' + this.get('email') +
+                'Please click the link in that message to activate your account.'
+            }] });
             App.trigger('session:register:success');
           },
           error : function(){
             App.trigger('session:register:fail');
             App.alert({ title: "Registration Failed" });
-          },
-          complete : function(){
-            this.urlRoot = this.urlRoot.replace('/register');
           }
         });
       },
 
-      confirm: function(activation_hash){
-        'http://oro.loc/app_dev.php/diamantefront/#confirm/0345167f4d44dcdfc6b5c61cd06a8496';
-        this.urlRoot += '/confirm';
-        this.save({ activation_hash : activation_hash },{
+      confirm: function(hash){
+        'http://oro.loc/app_dev.php/diamantefront/#confirm/cb66904976d3439b78913ffec433f36b';
+        this.url += '/confirm';
+        this.set('id', 1);
+        this.save({ hash : hash },{
+          patch: true,
           validate: false,
           success : function(){
-            this.clear();
             App.trigger('session:confirm:success');
-            App.alert({ title: "Email Confirmation Success", messages: ["You may login and use application"] });
+            App.alert({ title: "Email Confirmation Success", messages: [{
+              status:'success',
+              text: "You may login and use application"}] });
             App.trigger('session:login');
           }.bind(this),
           error : function(){
             App.trigger('session:confirm:fail');
             App.alert({ title: "Email Confirmation Failed", messages: ["Activation code is wrong "] });
-            App.trigger('session:register');
+            App.trigger('session:registration');
           }.bind(this),
           complete : function(){
-            this.urlRoot = this.urlRoot.replace('/confirm');
+            this.url = this.url.replace('/confirm');
+            this.clear();
           }.bind(this)
         });
       },
@@ -140,7 +143,7 @@ define([
 
       getAuth: function() {
         var defer = $.Deferred();
-        if(this.get('username') && this.get('password')){
+        if(this.get('email') && this.get('password')){
           return App.request('user:model:current');
         } else {
           defer.reject();

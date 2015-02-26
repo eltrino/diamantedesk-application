@@ -13,7 +13,7 @@ define(['app','./routers/ticket'], function(App){
 
     App.on('session:login:success', function(){
       Ticket.start();
-      if(App.getCurrentRoute() === 'login'){
+      if(App.getCurrentRoute() === 'login' && !App.session.return_path){
         App.trigger('ticket:list');
       }
     });
