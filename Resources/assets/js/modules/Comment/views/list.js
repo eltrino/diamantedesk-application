@@ -1,21 +1,11 @@
 define([
   'app',
-  'tpl!../templates/list.ejs',
-  'tpl!../templates/item.ejs'], function(App, listTemplate, itemTemplate){
+  'tpl!../templates/item.ejs'], function(App, itemTemplate){
 
-  return App.module('Ticket.View.Comment.List', function(Comment, App, Backbone, Marionette, $, _){
+  return App.module('Ticket.View.Comment.List', function(List, App, Backbone, Marionette, $, _){
 
-    Comment.LayoutView = Marionette.LayoutView.extend({
-      template: listTemplate,
-
-      regions: {
-        listRegion: '#comments-list',
-        formRegion: '#comments-form'
-      }
-
-    });
-
-    Comment.ItemView = Marionette.ItemView.extend({
+    List.ItemView = Marionette.ItemView.extend({
+      tagName: 'li',
       template: itemTemplate,
 
       initialize: function(){
@@ -51,8 +41,10 @@ define([
 
     });
 
-    Comment.CollectionView = Marionette.CollectionView.extend({
-      childView: Comment.ItemView
+    List.CollectionView = Marionette.CollectionView.extend({
+      tagName: 'ul',
+      className: 'list-unstyled',
+      childView: List.ItemView
     });
 
   });

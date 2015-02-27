@@ -4,6 +4,10 @@ define([
   'backbone.paginator'], function(App, Config){
 
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
+
+    var PARAM_TRIM_RE = /[\s'"]/g,
+        URL_TRIM_RE = /[<>\s'"]/g;
+
     Ticket.Model = Backbone.Model.extend({
       urlRoot: Config.apiUrl + '/desk/tickets',
       defaults: {
@@ -35,8 +39,7 @@ define([
       state: {
         pageSize: 10,
         sortKey: 'createdAt',
-        order: -1,
-        totalPages: 2  //WARNING
+        order: -1
       },
 
       queryParams: {
@@ -47,6 +50,33 @@ define([
 
       setFilter: function(query) {
         this.params = { subject : query };
+      },
+
+      parseState: function(resp, queryParams, state, options){
+        return { totalRecords: parseInt(options.xhr.getResponseHeader("X-Total"), 10) };
+      },
+
+      parseLinks: function (resp, options){
+        var links = {},
+            linkHeader = options.xhr.getResponseHeader("Link"),
+            relations = ["first", "prev", "next", "last"];
+        if (linkHeader) {
+          _.each(linkHeader.split(","), function(linkValue){
+            var linkParts = linkValue.split(";"),
+                url = linkParts[0].replace(URL_TRIM_RE, ''),
+                params = linkParts.slice(1);
+            _.each(params, function(param){
+              var paramParts = param.split("="),
+                  key = paramParts[0].replace(PARAM_TRIM_RE, ''),
+                  value = paramParts[1].replace(PARAM_TRIM_RE, '');
+              if (key == "rel" && _.contains(relations, value)){
+                links[value] = url;
+              }
+            });
+          });
+        }
+
+        return links;
       }
 
     });

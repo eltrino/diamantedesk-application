@@ -48,14 +48,14 @@ define([
     if(Backbone.History.started){
       Backbone.history.navigate(route, options || {});
     } else {
-      this.on('history:start', function(){
+      App.on('history:start', function(){
         Backbone.history.navigate(route, options || {});
       });
     }
   };
 
   App.back = function(){
-    Backbone.history.history.back();
+    window.history.back();
   };
 
   App.getCurrentRoute = function(){
@@ -69,7 +69,7 @@ define([
     this.trigger('history:start');
   });
 
-  require(['SessionManager','Header', 'Ticket'], function(){
+  require(['Session','Header', 'Footer', 'Ticket'], function(){
     App.start();
   });
 

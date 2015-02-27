@@ -21,14 +21,13 @@ define(['app'], function(App){
 
         modalCreateView.on('modal:closed', function(){
           if(!isSuccess){
-            Backbone.history.history.back();
+            App.back();
           }
         });
 
         newTicketView.on('form:submit', function(attr){
           App.request('user:model:current').done(function(user){
             attr.reporter =  'oro_' + user.get('id');
-            attr.assignee =  user.get('id');
             newTicketModel.save(attr, {
               success : function(resultModel){
                 isSuccess = true;
@@ -37,7 +36,7 @@ define(['app'], function(App){
               },
               error : function(){
                 App.alert({
-                  title: "Create Tcket Error"
+                  title: "Create Ticket Error"
                 });
               }
             });

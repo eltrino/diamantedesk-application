@@ -21,7 +21,9 @@ require.config({
     "tpl" : "vendor/requirejs-tpl/tpl",
     "bootstrap" : "vendor/bootstrap/dist/js/bootstrap",
     "cryptojs.core" : "vendor/dfm-crypto-js/components/core",
+    "cryptojs.x64" : "vendor/dfm-crypto-js/components/x64-core",
     "cryptojs.sha1" : "vendor/dfm-crypto-js/components/sha1",
+    "cryptojs.sha512" : "vendor/dfm-crypto-js/components/sha512",
     "cryptojs.base64" : "vendor/dfm-crypto-js/components/enc-base64"
   },
   shim : {
@@ -48,9 +50,17 @@ require.config({
     "cryptojs.core" : {
       exports: "CryptoJS"
     },
+    "cryptojs.x64" : {
+      deps: ["cryptojs.core"],
+      exports: "CryptoJS.x64"
+    },
     "cryptojs.sha1": {
       deps: ["cryptojs.core"],
       exports: "CryptoJS.SHA1"
+    },
+    "cryptojs.sha512": {
+      deps: ["cryptojs.core", "cryptojs.x64"],
+      exports: "CryptoJS.SHA512"
     },
     "cryptojs.base64": {
       deps: ["cryptojs.core"],
@@ -69,12 +79,16 @@ require.config({
       location: 'modules/User'
     },
     {
-      name: 'SessionManager',
-      location: 'modules/SessionManager'
+      name: 'Session',
+      location: 'modules/Session'
     },
     {
       name: 'Header',
       location: 'modules/Header'
+    },
+    {
+      name: 'Footer',
+      location: 'modules/Footer'
     },
     {
       name: 'Ticket',
@@ -83,6 +97,10 @@ require.config({
     {
       name: 'Comment',
       location: 'modules/Comment'
+    },
+    {
+      name: 'Attachment',
+      location: 'modules/Attachment'
     }
   ],
 

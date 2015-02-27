@@ -1,0 +1,17 @@
+.attachment-tools {
+  &:extend(.list-unstyled);
+  li {
+    display: inline;
+    cursor: pointer;
+  }
+  .btn {
+    line-height: 1;
+    color: @text-color;
+    padding: 0;
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
+
+@import "dropzone";

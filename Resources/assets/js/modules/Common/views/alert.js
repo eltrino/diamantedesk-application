@@ -12,19 +12,51 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
         var opt = options || {},
             message;
         this.title = opt.title || 'Error';
-        this.messages = opt.messages || ['An unprocessed error happened. Please try again!'];
+        this.messages = opt.messages || 'An unprocessed error happened. Please try again!';
         if(opt.xhr && opt.xhr.responseJSON){
           message = opt.xhr.responseJSON.message || opt.xhr.responseJSON.error;
         }
         if(message) {
-          this.messages = [message];
+          this.messages = message;
+        }
+        if(_.isString(this.messages)){
+          this.messages = [ this.messages ];
         }
       },
 
       templateHelpers: function(){
+        var messages = _.map(this.messages, function(message){
+          if(_.isObject(message) && message.status){
+            switch (message.status){
+              case 'error':
+                message.status_class = 'danger';
+                message.status_icon = 'exclamation-circle';
+                break;
+              case 'success':
+                message.status_class = 'success';
+                message.status_icon = 'check-circle';
+                break;
+              case 'info':
+                message.status_class = 'info';
+                message.status_icon = 'info-circle';
+                break;
+              case 'warning':
+                message.status_class = 'warning';
+                message.status_icon = 'exclamation-circle';
+                break;
+            }
+            return message;
+          } else {
+            return {
+              status_class: 'danger',
+              status_icon: 'exclamation-circle',
+              text: message
+            };
+          }
+        });
         return {
           title: this.title,
-          messages: this.messages
+          messages: messages
         };
       },
 
@@ -40,6 +72,11 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
       hideModal: function(){
         body.removeClass('blured');
         this.destroy();
+      },
+
+      onDestroy: function(){
+        body.removeClass('blured');
+        $('.modal-backdrop').remove();
       },
 
       onShow: function(){
