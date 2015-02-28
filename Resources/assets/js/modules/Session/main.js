@@ -11,7 +11,7 @@ define([
     App.session = new Session.SessionModel();
     App.session.getAuth().fail(function(){
       App.on('history:start', function(){
-        var path = App.getCurrentRoute();
+        var path = App.getCurrentRoute().replace(/\/.+?$/,'/:hash');
         if(!_.has(routes, path)){
           App.trigger('session:login', {return_path: path});
         }

@@ -116,18 +116,68 @@ define([
           validate: false,
           success : function(){
             App.trigger('session:confirm:success');
-            App.alert({ title: "Email Confirmation Success", messages: [{
+            App.alert({ title: 'Email Confirmation Success', messages: [{
               status:'success',
-              text: "You may login and use application"}] });
+              text: 'You may login and use application'}] });
             App.trigger('session:login');
           }.bind(this),
           error : function(){
             App.trigger('session:confirm:fail');
-            App.alert({ title: "Email Confirmation Failed", messages: ["Activation code is wrong "] });
+            App.alert({ title: 'Email Confirmation Failed', messages: ['Activation code is wrong'] });
             App.trigger('session:registration');
           }.bind(this),
           complete : function(){
             this.url = this.url.replace('/confirm');
+            this.clear();
+          }.bind(this)
+        });
+      },
+
+      reset: function(data){
+        this.url += '/reset';
+        this.set('id', 1);
+        this.save(data, {
+          patch: true,
+          validate: false,
+          success : function(){
+            App.trigger('session:reset:sent');
+            App.alert({ title: 'Password Reset Info', messages: [{
+              status:'info',
+              text: 'You will receive instructions to your email'}] });
+          }.bind(this),
+          error : function(){
+            App.trigger('session:reset:fail');
+            App.alert({ title: 'Password Reset Failed', messages: ['Email not found'] });
+          }.bind(this),
+          complete : function(){
+            this.url = this.url.replace('/reset');
+            this.clear();
+          }.bind(this)
+        });
+      },
+
+      newpassword: function(data){
+        this.url += '/password';
+        this.set('id', 1);
+        data.password = Wsse.encodePassword(data.password);
+        this.save(data, {
+          patch: true,
+          validate: false,
+          success : function(){
+            App.trigger('session:reset:success');
+            App.alert({ title: 'Password Reset Success', messages: [{
+              status:'success',
+              text: 'Password successfully changed, you can use it to login'}] });
+            App.trigger('session:password:change');
+          }.bind(this),
+          error : function(){
+            App.trigger('session:reset:fail');
+            App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'] });
+            this.clear();
+            App.trigger('session:reset');
+          }.bind(this),
+          complete : function(){
+            this.url = this.url.replace('/password');
             this.clear();
           }.bind(this)
         });
@@ -150,6 +200,8 @@ define([
         }
         return defer.promise();
       }
+
+
 
     });
 

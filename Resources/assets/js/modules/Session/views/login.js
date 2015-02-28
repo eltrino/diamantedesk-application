@@ -15,7 +15,7 @@ define([
         this.basePath = Config.basePath;
       },
 
-      serializeData: function(){
+      templateHelpers: function(){
         return {
           baseUrl: this.baseUrl,
           basePath: this.basePath
