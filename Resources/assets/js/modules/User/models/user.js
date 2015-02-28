@@ -13,17 +13,36 @@ define([
     });
 
     var API = {
-      registerUser: function(data){
+      getCurrentUserModel: function(){
         var user = new User.UserModel(),
             defer = $.Deferred();
-
-        user.urlRoot = Config.apiUrl.replace('diamante', 'diamante_front') + '/desk/users/register';
-
-        user.save(data,{
-          success : function(data){
-            if(is_current){
+        var _url = user.url;
+        if(currentUser){
+          defer.resolve(currentUser);
+        } else {
+          user.url = Config.apiUrl + '/desk/users/current';
+          user.fetch({
+            success : function(data){
               currentUser = user.clone();
+              defer.resolve(data);
+            },
+            error : function(data){
+              defer.reject(data);
+            },
+            complete : function(){
+              user.url = _url;
             }
+          });
+        }
+        return defer.promise();
+      },
+      getUserModelByName: function(username) {
+        var user = new User.UserModel(),
+            defer = $.Deferred();
+        user.urlRoot = Config.apiUrl + '/users/filter';
+        user.fetch({
+          data : { username: username },
+          success : function(data){
             defer.resolve(data);
           },
           error : function(data){
@@ -33,33 +52,6 @@ define([
             user.urlRoot = Config.apiUrl + '/users/';
           }
         });
-
-        return defer.promise();
-      },
-      getUserModelByName: function(username, is_current) {
-        var user = new User.UserModel(),
-            defer = $.Deferred();
-        if(is_current && currentUser){
-          defer.resolve(currentUser);
-        } else {
-          //user.urlRoot = Config.apiUrl + '/user/filter';
-          user.urlRoot = Config.apiUrl + '/desk/tickets';
-          user.fetch({
-            data : { username: username },
-            success : function(data){
-              if(is_current){
-                currentUser = user.clone();
-              }
-              defer.resolve(data);
-            },
-            error : function(data){
-              defer.reject(data);
-            },
-            complete : function(){
-              user.urlRoot = Config.apiUrl + '/users/';
-            }
-          });
-        }
         return defer.promise();
       },
       getUserModelById : function(id, force){
@@ -87,7 +79,7 @@ define([
     };
 
     App.reqres.setHandler('user:model:current', function(){
-      return API.getUserModelByName(App.session.get('username'), true);
+      return API.getCurrentUserModel();
     });
 
     App.reqres.setHandler('user:model:username', function(username){
@@ -96,10 +88,6 @@ define([
 
     App.reqres.setHandler('user:model', function(id){
       return API.getUserModelById(id);
-    });
-
-    App.reqres.setHandler('user:model:create', function(data){
-      return API.registerUser(data);
     });
 
   });
