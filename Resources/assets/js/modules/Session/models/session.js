@@ -95,7 +95,7 @@ define([
             App.alert({ title: 'Registration Success', messages: [{
               status: 'success',
               text: 'Thank you. <br>' +
-                'We have sent you email to' + this.get('email') +
+                'We have sent you email to ' + this.get('email') + '.<br>'+
                 'Please click the link in that message to activate your account.'
             }] });
             App.trigger('session:register:success');
@@ -143,7 +143,9 @@ define([
             App.trigger('session:reset:sent');
             App.alert({ title: 'Password Reset Info', messages: [{
               status:'info',
-              text: 'You will receive instructions to your email'}] });
+              text: 'We have sent you email to ' + this.get('email') + '.<br>' +
+                'Please click the link in that message to reset your password.'
+            }] });
           }.bind(this),
           error : function(){
             App.trigger('session:reset:fail');
