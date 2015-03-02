@@ -63,6 +63,11 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
      */
     protected $updatedAt;
 
+    /**
+     * @var boolean
+     */
+    protected $private;
+
     public function __construct($content, $ticket, $author)
     {
         $this->content = $content;
@@ -200,5 +205,15 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
                 $this->ticket->getUniqueId(), $this->ticket->getSubject(), $this->content
             )
         );
+    }
+
+    public function getPrivate()
+    {
+        return $this->private;
+    }
+
+    public function setPrivate($private)
+    {
+        $this->private = $private;
     }
 }
