@@ -69,7 +69,7 @@ define([
     this.trigger('history:start');
   });
 
-  require(['Session','Header', 'Footer', 'Ticket'], function(){
+  require(['User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
     App.start();
   });
 

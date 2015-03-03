@@ -9,7 +9,22 @@ define([
         userCacheRequest = [];
 
     User.UserModel = Backbone.Model.extend({
-      urlRoot : Config.apiUrl + '/users/'
+      urlRoot : Config.apiUrl + '/users/',
+      validate: function(attrs, options){
+        var errors = {};
+        if(!attrs.firstname) {
+          errors.subject = "can't be blank";
+        }
+        if(!attrs.lastname) {
+          errors.description = "can't be blank";
+        }
+        if(!attrs.password) {
+          errors.description = "can't be blank";
+        }
+        if(!_.isEmpty(errors)){
+          return errors;
+        }
+      }
     });
 
     var API = {

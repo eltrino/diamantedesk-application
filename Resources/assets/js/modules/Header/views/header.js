@@ -7,9 +7,13 @@ define([
 
     Header.startWithParent = false;
 
-    Header.View = Marionette.ItemView.extend({
+    Header.LayoutView = Marionette.LayoutView.extend({
       template: headerTemplate,
       className: 'container',
+
+      regions : {
+        profileRegion : '#profile'
+      },
 
       initialize: function(options){
         this.options = options;
