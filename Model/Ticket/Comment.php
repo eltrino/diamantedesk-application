@@ -151,7 +151,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
         if ($this->content !== $content) {
             $this->raise(
                 new CommentWasUpdated(
-                    $this->ticket->getUniqueId(), $this->ticket->getSubject(), $content
+                    $this->ticket->getUniqueId(), $this->ticket->getSubject(), $content, $this->getPrivate()
                 )
             );
         }

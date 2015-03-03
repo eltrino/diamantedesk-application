@@ -19,6 +19,8 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationEvent;
+use Diamante\DeskBundle\Infrastructure\User\UserStateService;
+use Diamante\DeskBundle\Model\Ticket\Notifications\CommentsEvent;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -40,6 +42,11 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
      */
     private $configManager;
 
+    /**
+     * @var UserStateService
+     */
+    private $userState;
+
     private static $events = array(
         'ticketWasCreated' => 'processEvent',
         'ticketWasUpdated' => 'processEvent',
@@ -58,11 +65,13 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
     public function __construct(
         SecurityFacade $securityFacade,
         NotificationDeliveryManager $manager,
-        ConfigManager $configManager
+        ConfigManager $configManager,
+        UserStateService $userState
     ) {
         $this->securityFacade = $securityFacade;
         $this->manager = $manager;
         $this->configManager = $configManager;
+        $this->userState = $userState;
     }
 
     /**
@@ -83,6 +92,9 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if ($event instanceof CommentsEvent && $event->getPrivate() && !$this->userState->isOroUser()) {
+            return;
+        }
         $changeList = new \ArrayIterator();
         if ($event instanceof ChangesProviderEvent) {
             $event->provideChanges($changeList);

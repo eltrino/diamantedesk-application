@@ -12,25 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
+namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
-use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
-
-class CommentWasDeleted extends AbstractCommentEvent implements ChangesProviderEvent
+interface CommentsEvent
 {
     /**
-     * @return string
+     * @return bool
      */
-    public function getEventName()
-    {
-        return 'commentWasDeleted';
-    }
-
-    /**
-     * @return string
-     */
-    public function getHeaderText()
-    {
-        return 'Comment was deleted';
-    }
+    public function getPrivate();
 }
