@@ -18,7 +18,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Infrastructure\User\UserStateService;
+use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -117,9 +117,9 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     }
 
     /**
-     * @param UserStateService $userState
+     * @param UserStateServiceImpl $userState
      */
-    public function setUserState(UserStateService $userState)
+    public function setUserState(UserStateServiceImpl $userState)
     {
         $this->userState = $userState;
     }

@@ -50,7 +50,7 @@ abstract class AbstractCommentEvent extends AbstractTicketEvent implements Chang
     /**
      * @return bool
      */
-    public function getPrivate()
+    public function isPrivate()
     {
         return $this->private;
     }

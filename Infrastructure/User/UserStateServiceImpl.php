@@ -14,11 +14,25 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\User;
 
-interface UserStateService
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Oro\Bundle\UserBundle\Entity\User;
+
+class UserStateServiceImpl implements UserStateService
 {
     /**
-     * Checks if the current user is oro user
-     * @return bool
+     * @var SecurityContextInterface
      */
-    public function isOroUser();
+    private $securityContext;
+
+    public function __construct(SecurityContextInterface $securityContext)
+    {
+        $this->securityContext = $securityContext;
+    }
+
+    public function isOroUser()
+    {
+        $oroUser = $this->securityContext->getToken()->getUser();
+
+        return $oroUser instanceof User;
+    }
 }

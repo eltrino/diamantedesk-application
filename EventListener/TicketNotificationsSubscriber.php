@@ -19,7 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationEvent;
-use Diamante\DeskBundle\Infrastructure\User\UserStateService;
+use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Notifications\CommentsEvent;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -43,7 +43,7 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
     private $configManager;
 
     /**
-     * @var UserStateService
+     * @var UserStateServiceImpl
      */
     private $userState;
 
@@ -66,7 +66,7 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
         SecurityFacade $securityFacade,
         NotificationDeliveryManager $manager,
         ConfigManager $configManager,
-        UserStateService $userState
+        UserStateServiceImpl $userState
     ) {
         $this->securityFacade = $securityFacade;
         $this->manager = $manager;
@@ -92,7 +92,7 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($event instanceof CommentsEvent && $event->getPrivate() && !$this->userState->isOroUser()) {
+        if ($event instanceof CommentsEvent && $event->isPrivate() && !$this->userState->isOroUser()) {
             return;
         }
         $changeList = new \ArrayIterator();

@@ -120,7 +120,7 @@ class CommandFactory
         $command->ticket = $comment->getTicket()->getId();
         $command->attachmentList = $comment->getAttachments();
         $command->ticketStatus = $comment->getTicket()->getStatus();
-        $command->private = $comment->getPrivate();
+        $command->private = $comment->isPrivate();
 
         return $command;
     }

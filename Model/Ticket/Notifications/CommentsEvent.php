@@ -19,5 +19,5 @@ interface CommentsEvent
     /**
      * @return bool
      */
-    public function getPrivate();
+    public function isPrivate();
 }
