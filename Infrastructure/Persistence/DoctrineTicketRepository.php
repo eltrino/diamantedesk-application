@@ -22,6 +22,9 @@ use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
+    /**
+     * @var UserStateServiceImpl
+     */
     private $userState;
 
     /**
