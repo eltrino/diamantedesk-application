@@ -3,11 +3,8 @@ diamante_front_bundle:
     type:         annotation
     prefix:       /diamantefront
 
-diamante_front_confirm:
-    path:         /diamantefront/confirm
-
-diamante_front_reset_password:
-    path:         /diamantefront/resetpassword
+diamante_front:
+    path:         /diamantefront
 
 diamante_front_user:
     resource:     "@DiamanteFrontBundle/Controller/UserController.php"
