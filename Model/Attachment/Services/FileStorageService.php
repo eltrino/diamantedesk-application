@@ -35,4 +35,9 @@ interface FileStorageService
      * @return void
      */
     public function remove($filename);
+
+    /**
+     * @return string
+     */
+    public function getConfiguredUploadDir();
 }

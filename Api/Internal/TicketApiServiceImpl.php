@@ -22,8 +22,12 @@ use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
+use Diamante\DeskBundle\Model\Ticket\Reporter\ReporterDTO;
+use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetailsService;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -31,6 +35,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * @var ApiPagingService
      */
     private $apiPagingService;
+
+    /**
+     * @var UserDetailsService
+     */
+    private $userDetailsService;
 
     use ApiServiceImplTrait;
 
@@ -385,6 +394,13 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         } catch (\Exception $e) {
         }
 
+        /**
+         * @var $ticket Ticket
+         */
+        foreach ($tickets as $ticket) {
+            $ticket->setReporterDTO($this->getReporterDTO($ticket->getReporter()));
+        }
+
         return $tickets;
     }
 
@@ -437,5 +453,23 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function setApiPagingService(ApiPagingService $pagingService)
     {
         $this->apiPagingService = $pagingService;
+    }
+
+    /**
+     * @param \Diamante\DeskBundle\Model\User\UserDetailsService $userDetailsService
+     */
+    public function setUserDetailsService(UserDetailsService $userDetailsService)
+    {
+        $this->userDetailsService = $userDetailsService;
+    }
+
+    /**
+     * @param \Diamante\DeskBundle\Model\User\User $user
+     * @return \Diamante\DeskBundle\Model\Ticket\Reporter\ReporterDTO
+     */
+    private function getReporterDTO(User $user)
+    {
+        $details = $this->userDetailsService->fetch($user);
+        return new ReporterDTO($details->getId(), $details->getFullName());
     }
 }

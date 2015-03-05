@@ -39,13 +39,20 @@ class Attachment implements Entity
     protected $updatedAt;
 
     /**
-     * @param File $file
+     * @var string
      */
-    public function __construct(File $file)
+    protected $hash;
+
+    /**
+     * @param File $file
+     * @param string $hash
+     */
+    public function __construct(File $file, $hash = null)
     {
         $this->file      = $file;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
+        $this->hash      = $hash;
     }
 
     /**
@@ -86,5 +93,13 @@ class Attachment implements Entity
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
     }
 }

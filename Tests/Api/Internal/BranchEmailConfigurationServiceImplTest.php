@@ -202,4 +202,25 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
 
         $this->branchEmailConfigurationServiceImpl->updateBranchEmailConfiguration($command);
     }
+
+    /**
+     * @test
+     */
+    public function testBranchDefaultAssigneeRetrieved()
+    {
+        $this->branchRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo(1))
+            ->will($this->returnValue($this->branch));
+
+        $this->branch
+            ->expects($this->once())
+            ->method('getDefaultAssigneeId')
+            ->will($this->returnValue(1));
+
+        $assignee = $this->branchEmailConfigurationServiceImpl->getBranchDefaultAssignee(1);
+
+        $this->assertEquals(1, $assignee);
+    }
 }

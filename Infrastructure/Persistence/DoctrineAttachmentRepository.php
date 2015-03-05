@@ -12,23 +12,20 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\User;
 
-use Diamante\DeskBundle\Model\Shared\Repository;
+namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
-interface DiamanteUserRepository extends Repository
+use Diamante\DeskBundle\Entity\Attachment;
+use Diamante\DeskBundle\Model\Attachment\AttachmentRepository;
+
+class DoctrineAttachmentRepository extends DoctrineGenericRepository implements AttachmentRepository
 {
     /**
-     * Finds a user by email
-     * @param $email
-     * @return DiamanteUser
+     * @param $hash
+     * @return Attachment|null
      */
-    public function findUserByEmail($email);
-
-    /**
-     * @param $query
-     * @param array $fields
-     * @return DiamanteUser[]
-     */
-    public function searchByInput($query, array $fields);
+    public function getByHash($hash)
+    {
+        return $this->findOneBy(['hash' => $hash]);
+    }
 }

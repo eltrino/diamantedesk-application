@@ -12,23 +12,31 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\User;
 
-use Diamante\DeskBundle\Model\Shared\Repository;
+namespace Diamante\DeskBundle\Api\Command;
 
-interface DiamanteUserRepository extends Repository
+use OroCRM\Bundle\ContactBundle\Entity\Contact;
+
+class CreateDiamanteUserCommand
 {
     /**
-     * Finds a user by email
-     * @param $email
-     * @return DiamanteUser
+     * @var string
      */
-    public function findUserByEmail($email);
-
+    public $username;
     /**
-     * @param $query
-     * @param array $fields
-     * @return DiamanteUser[]
+     * @var string
      */
-    public function searchByInput($query, array $fields);
+    public $email;
+    /**
+     * @var Contact
+     */
+    public $contact;
+    /**
+     * @var string
+     */
+    public $firstName;
+    /**
+     * @var string
+     */
+    public $lastName;
 }

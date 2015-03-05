@@ -21,10 +21,11 @@ class AttachmentFactory extends AbstractEntityFactory
     /**
      * Create Attachment entity
      * @param File $file
+     * @param string|null $hash
      * @return \Diamante\DeskBundle\Model\Attachment\Attachment
      */
-    public function create(File $file)
+    public function create(File $file, $hash = null)
     {
-        return new $this->entityClassName($file);
+        return new $this->entityClassName($file, $hash);
     }
 }

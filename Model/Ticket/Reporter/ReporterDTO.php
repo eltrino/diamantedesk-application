@@ -12,23 +12,43 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\User;
 
-use Diamante\DeskBundle\Model\Shared\Repository;
+namespace Diamante\DeskBundle\Model\Ticket\Reporter;
 
-interface DiamanteUserRepository extends Repository
+class ReporterDTO
 {
     /**
-     * Finds a user by email
-     * @param $email
-     * @return DiamanteUser
+     * @var string
      */
-    public function findUserByEmail($email);
+    private $name;
+    /**
+     * @var int
+     */
+    private $id;
 
     /**
-     * @param $query
-     * @param array $fields
-     * @return DiamanteUser[]
+     * @param $id
+     * @param $name
      */
-    public function searchByInput($query, array $fields);
+    public function __construct($id, $name)
+    {
+        $this->name = $name;
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

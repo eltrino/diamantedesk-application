@@ -62,4 +62,9 @@ class File
         }
         return strtolower($fileInfo['extension']);
     }
+
+    public function __toString()
+    {
+        return $this->getPathname();
+    }
 }
