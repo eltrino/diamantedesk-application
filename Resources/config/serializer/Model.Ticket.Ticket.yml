@@ -23,14 +23,13 @@ Diamante\DeskBundle\Model\Ticket\Ticket:
             exclude: true
         status:
             exclude: true
-        reporterDTO:
-            exclude: true
     virtual_properties:
         getAssigneeId:
             serialized_name: assignee
             type: integer
-        getReporterDto:
+        getReporterId:
             serialized_name: reporter
+            type: integer
         getBranchId:
             serialized_name: branch
             type: integer

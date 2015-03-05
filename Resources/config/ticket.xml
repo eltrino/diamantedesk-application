@@ -100,9 +100,6 @@
             <call method="setApiPagingService">
                 <argument type="service" id="diamante.api.paging.service"/>
             </call>
-            <call method="setUserDetailsService">
-                <argument type="service" id="diamante.user.details.service"/>
-            </call>
         </service>
 
         <service id="diamante.ticket.api.service_diamante" alias="diamante.ticket.api.service" />

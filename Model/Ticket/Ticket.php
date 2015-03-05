@@ -28,7 +28,6 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
-use Diamante\DeskBundle\Model\Ticket\Reporter\ReporterDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
@@ -116,11 +115,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @var \DateTime
      */
     protected $updatedAt;
-
-    /**
-     * @var ReporterDTO
-     */
-    protected $reporterDTO;
 
     /**
      * @param UniqueId $uniqueId
@@ -603,21 +597,5 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         } else {
             throw new \DomainException(sprintf('Ticket does not have "%s" property.', $name));
         }
-    }
-
-    /**
-     * @return \Diamante\DeskBundle\Model\Ticket\Reporter\ReporterDTO
-     */
-    public function getReporterDto()
-    {
-        return $this->reporterDTO;
-    }
-
-    /**
-     * @param \Diamante\DeskBundle\Model\Ticket\Reporter\ReporterDTO $dto
-     */
-    public function setReporterDto(ReporterDTO $dto)
-    {
-        $this->reporterDTO = $dto;
     }
 }
