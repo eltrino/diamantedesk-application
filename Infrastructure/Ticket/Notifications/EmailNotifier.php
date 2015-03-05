@@ -27,6 +27,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 
 class EmailNotifier implements Notifier
@@ -94,16 +95,16 @@ class EmailNotifier implements Notifier
         $senderHost
     )
     {
-        $this->twig = $twig;
-        $this->mailer = $mailer;
-        $this->templateResolver = $templateResolver;
-        $this->ticketRepository = $ticketRepository;
-        $this->messageReferenceRepository = $messageReferenceRepository;
-        $this->userService = $userService;
-        $this->nameFormatter = $nameFormatter;
-        $this->userDetailsService = $userDetailsService;
-        $this->senderEmail = $senderEmail;
-        $this->senderHost = $senderHost;
+        $this->twig                         = $twig;
+        $this->mailer                       = $mailer;
+        $this->templateResolver             = $templateResolver;
+        $this->ticketRepository             = $ticketRepository;
+        $this->messageReferenceRepository   = $messageReferenceRepository;
+        $this->userService                  = $userService;
+        $this->nameFormatter                = $nameFormatter;
+        $this->userDetailsService           = $userDetailsService;
+        $this->senderEmail                  = $senderEmail;
+        $this->senderHost                   = $senderHost;
     }
 
     /**
@@ -127,8 +128,7 @@ class EmailNotifier implements Notifier
      */
     private function message(Notification $notification, Ticket $ticket)
     {
-        $user = $this->getUserDependingOnType($notification->getAuthor());
-        $userFormattedName = $this->nameFormatter->format($user);
+        $userFormattedName = $this->getFormattedUserName($notification, $ticket);
 
         /** @var \Swift_Message $message */
         $message = $this->mailer->createMessage();
@@ -148,7 +148,7 @@ class EmailNotifier implements Notifier
             'attachments'   => $notification->getAttachments(),
             'user'          => $userFormattedName,
             'header'        => $notification->getHeaderText(),
-            'delimiter'     => MessageReferenceServiceImpl::DELIMITER_LINE
+            'delimiter'     => MessageReferenceServiceImpl::DELIMITER_LINE,
         );
 
         $txtTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);
@@ -252,5 +252,30 @@ class EmailNotifier implements Notifier
         }
 
         return $changes;
+    }
+
+    /**
+     * @param Notification $notification
+     * @param Ticket $ticket
+     *
+     * @return string
+     */
+    private function getFormattedUserName(Notification $notification, Ticket $ticket)
+    {
+        $user = $this->getUserDependingOnType($notification->getAuthor());
+        $name = $this->nameFormatter->format($user);
+
+        if (empty($name)) {
+            $format = $this->nameFormatter->getNameFormat();
+            $user   = $this->getUserDependingOnType($ticket->getReporter());
+
+            $name = str_replace(
+                array('%first_name%','%last_name%','%prefix%','%middle_name%','%suffix%'),
+                array($user->getFirstName(), $user->getLastName(),'','',''),
+                $format
+            );
+        }
+
+        return trim($name);
     }
 }

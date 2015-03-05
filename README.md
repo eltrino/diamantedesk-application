@@ -32,3 +32,15 @@ or to update already installed software
 ```bash
 php app/console diamante:update
 ```
+
+Configuration
+------------
+
+For attachment download you should add additional configuration to filewalls section in `app/etc/security.yml`
+
+```yml
+diamante_attachments_download:
+    pattern:        ^/desk/attachments/download/*
+    provider:       chain_provider
+    anonymous:      true
+```

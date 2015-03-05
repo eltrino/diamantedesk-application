@@ -71,4 +71,12 @@ class LocalFileStorageService implements FileStorageService
     {
         return new LocalFileStorageService(new \SplFileInfo($attachmentUploadDirPath), $fs);
     }
+
+    /**
+     * @return string
+     */
+    public function getConfiguredUploadDir()
+    {
+        return $this->uploadDir->getPathname();
+    }
 }

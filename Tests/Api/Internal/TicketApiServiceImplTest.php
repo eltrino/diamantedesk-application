@@ -28,6 +28,7 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetails;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -35,6 +36,12 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
 {
     const SUBJECT      = 'Subject';
     const DESCRIPTION  = 'Description';
+
+    /**
+     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     */
+    private $userDetailsService;
 
     /**
      * @var TicketApiServiceImpl
@@ -125,6 +132,7 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->ticketService->setApiPagingService($this->apiPagingService);
+        $this->ticketService->setUserDetailsService($this->userDetailsService);
     }
 
     /**
@@ -174,6 +182,13 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getPagingInfo')
             ->will($this->returnValue($pagingInfo));
 
+        $this->userDetailsService
+            ->expects($this->atLeastOnce())
+            ->method('fetch')
+            ->with($this->createDiamanteUser())
+            ->will($this->returnValue($this->createUserDetails()));
+
+
         $retrievedTickets = $this->ticketService->listAllTickets($command);
 
         $this->assertNotNull($retrievedTickets);
@@ -204,5 +219,15 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private function createOroUser()
     {
         return new OroUser();
+    }
+
+    private function createDiamanteUser()
+    {
+        return new User(1, User::TYPE_ORO);
+    }
+
+    private function createUserDetails()
+    {
+        return new UserDetails(1,User::TYPE_ORO,'dummy@email.com','First','Last','dummy');
     }
 }

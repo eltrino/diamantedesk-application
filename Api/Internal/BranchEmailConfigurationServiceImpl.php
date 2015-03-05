@@ -129,4 +129,22 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
         $this->branchEmailConfigurationRepository->store($branchEmailConfiguration);
         return $branchEmailConfiguration->getId();
     }
+
+    /**
+     * @param $branchId
+     * @return int
+     */
+    public function getBranchDefaultAssignee($branchId)
+    {
+        /**
+         * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
+         */
+        $branch = $this->branchRepository->get($branchId);
+
+        if (empty($branch)) {
+            throw new \RuntimeException('No branch with given ID found');
+        }
+
+        return $branch->getDefaultAssigneeId();
+    }
 }

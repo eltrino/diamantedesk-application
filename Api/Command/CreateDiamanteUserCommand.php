@@ -12,20 +12,31 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Attachment;
 
-use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+namespace Diamante\DeskBundle\Api\Command;
 
-class AttachmentFactory extends AbstractEntityFactory
+use OroCRM\Bundle\ContactBundle\Entity\Contact;
+
+class CreateDiamanteUserCommand
 {
     /**
-     * Create Attachment entity
-     * @param File $file
-     * @param string|null $hash
-     * @return \Diamante\DeskBundle\Model\Attachment\Attachment
+     * @var string
      */
-    public function create(File $file, $hash = null)
-    {
-        return new $this->entityClassName($file, $hash);
-    }
+    public $username;
+    /**
+     * @var string
+     */
+    public $email;
+    /**
+     * @var Contact
+     */
+    public $contact;
+    /**
+     * @var string
+     */
+    public $firstName;
+    /**
+     * @var string
+     */
+    public $lastName;
 }

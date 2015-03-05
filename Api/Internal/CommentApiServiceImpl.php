@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
 

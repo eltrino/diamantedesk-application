@@ -54,6 +54,7 @@
         <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="diamante.user_factory"/>
         </service>
 
         <service id="diamante.user_state.service" class="%diamante.user_state.service.class%">
