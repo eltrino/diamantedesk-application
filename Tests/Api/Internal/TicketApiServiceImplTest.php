@@ -133,7 +133,6 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->ticketService->setApiPagingService($this->apiPagingService);
-        $this->ticketService->setUserDetailsService($this->userDetailsService);
     }
 
     /**
@@ -182,6 +181,8 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getPagingInfo')
             ->will($this->returnValue($pagingInfo));
+
+        $this->markTestIncomplete("This test should be completed after DIAM-553");
 
         $this->userDetailsService
             ->expects($this->atLeastOnce())
