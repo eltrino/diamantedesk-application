@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Shared\Adapter;
 
+use Diamante\DeskBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\DeskBundle\Entity\DiamanteUser;
+use Diamante\DeskBundle\Model\User\DiamanteUserFactory;
 use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Oro\Bundle\UserBundle\Entity\UserManager;
@@ -32,14 +34,20 @@ class DiamanteUserService implements UserService
      * @var DiamanteUserRepository
      */
     private $diamanteUserRepository;
+    /**
+     * @var \Diamante\DeskBundle\Model\User\DiamanteUserFactory
+     */
+    private $factory;
 
     function __construct(
         UserManager $userManager,
-        DiamanteUserRepository $diamanteUserRepository
+        DiamanteUserRepository $diamanteUserRepository,
+        DiamanteUserFactory $factory
     )
     {
         $this->oroUserManager         = $userManager;
         $this->diamanteUserRepository = $diamanteUserRepository;
+        $this->factory                = $factory;
     }
 
     /**
@@ -59,5 +67,39 @@ class DiamanteUserService implements UserService
         }
 
         return $user;
+    }
+
+    /**
+     * @param string $email
+     * @return int|null
+     */
+    public function verifyDiamanteUserExists($email)
+    {
+        $user = $this->diamanteUserRepository->findUserByEmail($email);
+
+        if (empty($user)) {
+            return null;
+        }
+
+        return $user->getId();
+    }
+
+    /**
+     * @param \Diamante\DeskBundle\Api\Command\CreateDiamanteUserCommand $command
+     * @return int
+     */
+    public function createDiamanteUser(CreateDiamanteUserCommand $command)
+    {
+        $user = $this->factory->create(
+            $command->username,
+            $command->email,
+            $command->contact,
+            $command->firstName,
+            $command->lastName
+        );
+
+        $this->diamanteUserRepository->store($user);
+
+        return $user->getId();
     }
 }

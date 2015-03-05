@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Model\Ticket;
 
 use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Diamante\DeskBundle\Model\User\User;
 
 interface TicketRepository extends Repository, FilterableRepository
 {
@@ -31,4 +32,10 @@ interface TicketRepository extends Repository, FilterableRepository
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function getByUniqueId(UniqueId $uniqueId);
-} 
+
+    /**
+     * Remove reporter id from ticket table
+     * @param User $user
+     */
+    public function removeTicketReporter(User $user);
+}

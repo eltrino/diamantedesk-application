@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\DeskBundle\Model\User\User;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -47,5 +48,19 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     public function getByUniqueId(UniqueId $uniqueId)
     {
         return $this->findOneBy(array('uniqueId' => $uniqueId));
+    }
+
+    /**
+     * Remove reporter id from ticket table
+     * @param User $user
+     */
+    public function removeTicketReporter(User $user)
+    {
+        $query = $this->_em
+            ->createQuery("UPDATE DiamanteDeskBundle:Ticket t SET t.reporter = null WHERE t.reporter = :reporter_id");
+        $query->setParameters(array(
+                'reporter_id' => (string)$user,
+            ));
+        $query->execute();
     }
 }

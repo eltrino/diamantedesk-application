@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineAttachmentRepository")
  * @ORM\Table(name="diamante_attachment")
  */
 class Attachment extends \Diamante\DeskBundle\Model\Attachment\Attachment
@@ -37,6 +37,12 @@ class Attachment extends \Diamante\DeskBundle\Model\Attachment\Attachment
      * @ORM\Column(name="file", type="file")
      */
     protected $file;
+
+    /**
+     * @var string
+     * @ORM\Column(name="hash", type="string")
+     */
+    protected $hash;
 
     /**
      * @var \DateTime

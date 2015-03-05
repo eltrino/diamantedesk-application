@@ -11,3 +11,8 @@ liip_imagine:
             filters:
                 thumbnail:    { size: [180, 180], mode: outbound, allow_upscale: true }
                 strip:        ~
+        branch_logo_preview:
+            quality:          95
+            filters:
+                thumbnail:    { size: [16, 16], mode: outbound, allow_upscale: true }
+                strip:        ~

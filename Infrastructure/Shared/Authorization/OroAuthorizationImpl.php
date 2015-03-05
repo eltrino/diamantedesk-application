@@ -15,9 +15,9 @@
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Oro\Bundle\SecurityBundle\SecurityFacade;
-use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationImpl;
+use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 
-class OroAuthorizationImpl implements AuthorizationImpl
+class OroAuthorizationImpl implements Authorization
 {
     /**
      * @var SecurityFacade

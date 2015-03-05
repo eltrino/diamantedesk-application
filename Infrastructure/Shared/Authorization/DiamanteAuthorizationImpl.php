@@ -14,10 +14,12 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
-use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationImpl;
+use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 
-class DiamanteAuthorizationImpl implements AuthorizationImpl
+class DiamanteAuthorizationImpl implements Authorization
 {
+    use AuthorizationImplTrait;
+
     /**
      * @var array
      */
@@ -27,32 +29,4 @@ class DiamanteAuthorizationImpl implements AuthorizationImpl
         'Entity:DiamanteDeskBundle:Comment'  => array('CREATE'),
         'Diamante\DeskBundle\Entity\Comment' => array('VIEW', 'EDIT'),
     );
-
-    /**
-     * @param $attributes
-     * @param $object
-     * @return bool|mixed
-     */
-    public function isGranted($attributes, $object)
-    {
-        if (!is_object($object) && !is_string($object)) {
-            return false;
-        }
-
-        if (is_object($object)) {
-            $objectIdentity = get_class($object);
-        }
-
-        if (is_string($object)) {
-            $objectIdentity = $object;
-        }
-
-        if (array_key_exists($objectIdentity, $this->permissionsMap)) {
-            if (in_array($attributes, $this->permissionsMap[$objectIdentity])) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 } 

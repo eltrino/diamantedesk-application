@@ -51,10 +51,21 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
      */
     private $holder;
 
+    /**
+     * @var \Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader
+     * @Mock Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader
+     */
+    private $imagine;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->manager = new ManagerImpl($this->fileStorageService, $this->factory, $this->repository);
+        $this->manager = new ManagerImpl(
+            $this->fileStorageService,
+            $this->factory,
+            $this->repository,
+            $this->imagine
+        );
     }
 
     /**
@@ -114,10 +125,10 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
         $this->holder->expects($this->once())->method('addAttachment')->with($this->equalTo($attachment));
         $this->repository->expects($this->once())->method('store')->with($this->equalTo($attachment));
 
-        $createdAttachmentId = $this->manager->createNewAttachment($filename, $content, $this->holder);
+        $createdAttachment = $this->manager->createNewAttachment($filename, $content, $this->holder);
 
-        $this->assertNotNull($createdAttachmentId);
-        $this->assertEquals($attachmentId, $createdAttachmentId);
+        $this->assertNotNull($createdAttachment->getId());
+        $this->assertEquals($attachmentId, $createdAttachment->getId());
     }
 
     /**

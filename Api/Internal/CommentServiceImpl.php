@@ -211,6 +211,7 @@ class CommentServiceImpl implements CommentService
     /**
      * Add Attachments to Comment
      * @param Command\AddCommentAttachmentCommand $command
+     * return array
      */
     public function addCommentAttachment(Command\AddCommentAttachmentCommand $command)
     {
@@ -221,15 +222,19 @@ class CommentServiceImpl implements CommentService
 
         $this->isGranted('EDIT', $comment);
 
+        $attachments = [];
+
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
+                $attachments[] = $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
             }
         }
 
         $this->commentRepository->store($comment);
 
         $this->dispatchEvents($comment);
+
+        return $attachments;
     }
 
     /**

@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Shared\Adapter;
 
 use Diamante\DeskBundle\Entity\DiamanteUser;
 use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService;
+use Diamante\DeskBundle\Model\User\DiamanteUserFactory;
 use Diamante\DeskBundle\Model\User\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
@@ -42,10 +43,20 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $diamanteUserService;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\User\DiamanteUserFactory
+     * @Mock Diamante\DeskBundle\Model\User\DiamanteUserFactory
+     */
+    private $diamanteUserFactory;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->diamanteUserService = new DiamanteUserService($this->oroUserManager, $this->diamanteUserRepository);
+        $this->diamanteUserService = new DiamanteUserService(
+            $this->oroUserManager,
+            $this->diamanteUserRepository,
+            $this->diamanteUserFactory
+        );
     }
 
     /**

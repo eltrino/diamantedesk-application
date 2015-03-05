@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Model\Shared\Authorization;
 
-interface  AuthorizationImpl
+interface  Authorization
 {
     /**
      * @param $attributes

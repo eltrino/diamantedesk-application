@@ -19,7 +19,7 @@ use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineCommentRepository")
  * @ORM\Table(name="diamante_comment")
  * @Config(
  *      defaultValues={

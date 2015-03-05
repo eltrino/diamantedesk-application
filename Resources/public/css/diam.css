@@ -290,3 +290,12 @@
 .control-label > span, .responsive-cell > span {
     font-style: italic;
 }
+
+.diam-ticket-description,
+#diamante_branch_form_description {
+    width: 600px;
+}
+
+.diam-branch-grid .action-cell {
+    vertical-align: middle !important;
+}

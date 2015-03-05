@@ -11,11 +11,16 @@
     <ol class="diam-comments unstyled">
         {% for comment in comments if comment.id  %}
             {% set imagePath = '' %}
-            {% set author = fetch_oro_user(comment.author) %}
-            {% if comment.author.isOroUser %}
-                {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
-            {% else %}
-                {% set avatar = get_gravatar(comment.author) %}
+            {% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
+            {% if comment.author %}
+                {% set author = fetch_oro_user(comment.author) %}
+                {% if comment.author.isOroUser %}
+                    {% set author = author|oro_format_name %}
+                    {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
+                {% else %}
+                    {% set author = author.firstName ~ ' ' ~ author.lastName %}
+                    {% set avatar = get_gravatar(comment.author) %}
+                {% endif %}
             {% endif %}
             <li class="diam-comment">
                 <div class="pull-right">
@@ -28,9 +33,9 @@
                 </div>
                 <div class="diam-comment-user-image">
                     {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
-                    <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author|oro_format_name }}">
+                    <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
                 </div>
-                <div class="diam-comment-meta">{{ author|oro_format_name }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
+                <div class="diam-comment-meta">{{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
                 <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
@@ -231,8 +236,12 @@
 
 {% block content_data %}
     {% set id = 'navbarTicketView' %}
-    {% set reporter = fetch_user_details(entity.reporter) %}
-    {% set reporterDisplayName = reporter.getFullName != ' ' ? reporter.getFullName : reporter.getEmail %}
+    {% set reporterDisplayName = entity.unassignedLabel|trans %}
+    {% if entity.reporter %}
+        {% set reporter = fetch_user_details(entity.reporter) %}
+        {% set reporterDisplayName = reporter.getFullName != ' ' ? reporter.getFullName : reporter.getEmail %}
+    {% endif %}
+
     {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.branch'|trans, entity.branchName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}

@@ -15,19 +15,19 @@
 namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
-use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
-use Diamante\DeskBundle\Model\Ticket\TicketFactory;
 use Diamante\DeskBundle\Model\Ticket\Source;
-use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\User\User;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -64,13 +64,31 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     private $attachmentManager;
 
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @var NotificationDeliveryManager
+     */
+    private $notificationDeliveryManager;
+
+    /**
+     * @var Notifier
+     */
+    private $notifier;
+
     public function __construct(
         MessageReferenceRepository $messageReferenceRepository,
         Repository $ticketRepository,
         TicketBuilder $ticketBuilder,
         CommentFactory $commentFactory,
         UserService $userService,
-        AttachmentManager $attachmentManager
+        AttachmentManager $attachmentManager,
+        EventDispatcher $dispatcher,
+        NotificationDeliveryManager $notificationDeliveryManager,
+        Notifier $notifier
     )
     {
         $this->messageReferenceRepository = $messageReferenceRepository;
@@ -79,6 +97,9 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $this->commentFactory             = $commentFactory;
         $this->userService                = $userService;
         $this->attachmentManager          = $attachmentManager;
+        $this->dispatcher                 = $dispatcher;
+        $this->notificationDeliveryManager = $notificationDeliveryManager;
+        $this->notifier                   = $notifier;
     }
 
     /**
@@ -116,6 +137,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         }
         $this->ticketRepository->store($ticket);
         $this->createMessageReference($messageId, $ticket);
+        $this->dispatchEvents($ticket);
 
         return $ticket;
     }
@@ -143,13 +165,14 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
     {
-        $ticket = $this->messageReferenceRepository
-            ->getReferenceByMessageId($messageId)
-            ->getTicket();
+        $reference = $this->messageReferenceRepository
+            ->getReferenceByMessageId($messageId);
 
-        if (is_null($ticket)) {
+        if (is_null($reference)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $ticket = $reference->getTicket();
 
         $author = User::fromString($authorId);
         $content = $this->cleanupCommentsContent($content);
@@ -162,6 +185,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
 
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
+        $this->dispatchEvents($ticket);
     }
 
     /**
@@ -192,5 +216,17 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         }
 
         return substr($content, 0, $position);
+    }
+
+    /**
+     * @param Ticket $ticket
+     */
+    private function dispatchEvents(Ticket $ticket)
+    {
+        foreach ($ticket->getRecordedEvents() as $event) {
+            $this->dispatcher->dispatch($event->getEventName(), $event);
+        }
+
+        $this->notificationDeliveryManager->deliver($this->notifier);
     }
 }

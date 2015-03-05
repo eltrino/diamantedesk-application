@@ -15,9 +15,13 @@
 namespace Diamante\DeskBundle\Model\Attachment;
 
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Imagine\Image\Box;
+use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
 
 class ManagerImpl implements Manager
 {
+    const DEFAULT_THUMB_EXT = 'png';
+
     /**
      * @var Services\FileStorageService
      */
@@ -32,15 +36,27 @@ class ManagerImpl implements Manager
      * @var Repository
      */
     private $repository;
+    /**
+     * @var \Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader
+     */
+    private $loader;
 
+    /**
+     * @param \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService $fileStorageService
+     * @param \Diamante\DeskBundle\Model\Attachment\AttachmentFactory           $factory
+     * @param \Diamante\DeskBundle\Model\Shared\Repository                      $repository
+     * @param \Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader          $loader
+     */
     public function __construct(
         Services\FileStorageService $fileStorageService,
         AttachmentFactory $factory,
-        Repository $repository
+        Repository $repository,
+        FileSystemLoader $loader
     ) {
         $this->fileStorageService = $fileStorageService;
         $this->factory = $factory;
         $this->repository = $repository;
+        $this->loader = $loader;
     }
 
     /**
@@ -48,7 +64,7 @@ class ManagerImpl implements Manager
      * @param string $filename
      * @param string $content
      * @param AttachmentHolder $holder
-     * @return int
+     * @return \Diamante\DeskBundle\Model\Attachment\Attachment
      */
     public function createNewAttachment($filename, $content, AttachmentHolder $holder)
     {
@@ -61,12 +77,18 @@ class ManagerImpl implements Manager
 
         $file = new File($path);
 
-        $attachment = $this->factory->create($file);
+        $hash = $this->generateFileHash($file);
+
+        if ($this->isImage($file)) {
+            $this->createThumbnail($file, $hash, $filenamePrefix);
+        }
+
+        $attachment = $this->factory->create($file, $hash);
 
         $holder->addAttachment($attachment);
         $this->repository->store($attachment);
 
-        return $attachment->getId();
+        return $attachment;
     }
 
     /**
@@ -103,5 +125,61 @@ class ManagerImpl implements Manager
         $parts = explode("\\", get_class($attachmentHolder));
         $prefix = strtolower(array_pop($parts));
         return $prefix;
+    }
+
+    /**
+     * @param \Diamante\DeskBundle\Model\Attachment\File $file
+     * @return string
+     */
+    private function generateFileHash(File $file)
+    {
+        return md5($file->getFilename() . time());
+    }
+
+    /**
+     * @param \Diamante\DeskBundle\Model\Attachment\File $file
+     * @return bool
+     */
+    protected function isImage(File $file)
+    {
+        $ext = strtolower($file->getExtension());
+
+        return in_array($ext,['jpg','jpeg','png','gif','bmp']);
+    }
+
+    /**
+     * @param \Diamante\DeskBundle\Model\Attachment\File $file
+     * @param                                            $hash
+     * @param                                            $fileNamePrefix
+     * @return \Imagine\Image\ManipulatorInterface
+     */
+    protected function createThumbnail(File $file, $hash, $fileNamePrefix)
+    {
+        $image = $this->loader->find($file->getPathname());
+        $thumbnail = $image->thumbnail(new Box(100,100));
+
+        $destinationFolder = sprintf('%s/thumbnails', $this->getDestination($fileNamePrefix));
+
+        try {
+            if (!file_exists($destinationFolder)) {
+                mkdir($destinationFolder);
+                chmod($destinationFolder, 0777);
+            }
+            $destination = sprintf("%s/%s.%s", $destinationFolder, $hash, self::DEFAULT_THUMB_EXT);
+            $thumbnail->save($destination);
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Thumbnail could not be created. ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @param    string $prefix
+     * @return   string
+     */
+    protected function getDestination($prefix)
+    {
+        $folder = $this->fileStorageService->getConfiguredUploadDir();
+
+        return $folder . '/' . $prefix;
     }
 }

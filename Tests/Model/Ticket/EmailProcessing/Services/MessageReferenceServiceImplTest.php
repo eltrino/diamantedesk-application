@@ -112,6 +112,24 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $messageReference;
 
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @Mock Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager
+     * @Mock Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager
+     */
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -122,7 +140,10 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->ticketBuilder,
             $this->commentFactory,
             $this->userService,
-            $this->attachmentManager
+            $this->attachmentManager,
+            $this->dispatcher,
+            $this->notificationDeliveryManager,
+            $this->notifier
         );
     }
 
@@ -149,6 +170,11 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->messageReferenceRepository->expects($this->once())->method('store')
             ->with($this->equalTo($messageReference));
+
+        $this->ticket
+            ->expects($this->atLeastOnce())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $this->messageReferenceService->createTicket(
             self::DUMMY_MESSAGE_ID,
@@ -194,6 +220,11 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->messageReferenceRepository->expects($this->once())
             ->method('store')
             ->with($this->equalTo($messageReference));
+
+        $this->ticket
+            ->expects($this->atLeastOnce())
+            ->method('getRecordedEvents')
+            ->will($this->returnValue(array()));
 
         $this->messageReferenceService->createTicket(
             self::DUMMY_MESSAGE_ID,

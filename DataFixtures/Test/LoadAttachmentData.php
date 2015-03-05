@@ -47,10 +47,16 @@ class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterf
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i <= 10; $i ++) {
-            $attachment = new Attachment(new File('fileName' . $i));
+            $name = 'fileName' . $i;
+            $attachment = new Attachment(new File($name), md5($name));
 
             $manager->persist($attachment);
         }
+
+        $image = $this->container->get('kernel')
+            ->locateResource('@DiamanteDeskBundle/Tests/Controller/fixture/test.jpg');
+        $attachment = new Attachment(new File($image), md5($image));
+        $manager->persist($attachment);
 
         $manager->flush();
     }

@@ -60,7 +60,7 @@ interface TicketService
     /**
      * Adds Attachments for Ticket
      * @param AddTicketAttachmentCommand $command
-     * @return void
+     * @return array
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command);
 
