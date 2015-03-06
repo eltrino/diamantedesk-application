@@ -1,0 +1,16 @@
+Diamante\DeskBundle\Model\User\UserDetails:
+    accessor_order: alphabetical
+    properties:
+        type:
+          exclude: true
+        firstName:
+          exclude: true
+        lastName:
+          exclude: true
+        email:
+          exclude: true
+
+    virtual_properties:
+        getFullName:
+            serialized_name: name
+            type: string

@@ -24,6 +24,8 @@ use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
+use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetailsService;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -31,6 +33,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * @var ApiPagingService
      */
     private $apiPagingService;
+
+    /**
+     * @var UserDetailsService
+     */
+    private $userDetailsService;
 
     use ApiServiceImplTrait;
 
@@ -437,5 +444,85 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function setApiPagingService(ApiPagingService $pagingService)
     {
         $this->apiPagingService = $pagingService;
+    }
+
+    /**
+     * @param \Diamante\DeskBundle\Model\User\UserDetailsService $detailsService
+     */
+    public function setUserDetailsService(UserDetailsService $detailsService)
+    {
+        $this->userDetailsService = $detailsService;
+    }
+
+    /**
+     * Retrieves Person (Provider or Assignee) Data based on typed ID provided
+     *
+     * @ApiDoc(
+     *  description="Returns person data",
+     *  uri="/ticket/{id}/reporter.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *       {
+     *           "name"="id",
+     *           "dataType"="integer",
+     *           "requirement"="\d+",
+     *           "description"="Ticket Id"
+     *       }
+     *   },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to view tickets"
+     *  }
+     * )
+     *
+     * @param $id
+     * @return array
+     */
+    public function getReporterForTicket($id)
+    {
+        $ticket = parent::loadTicket($id);
+        $details = $this->userDetailsService->fetch($ticket->getReporter());
+
+        return $details;
+    }
+
+    /**
+     * Retrieves Person (Provider or Assignee) Data based on typed ID provided
+     *
+     * @ApiDoc(
+     *  description="Returns person data",
+     *  uri="/ticket/{id}/assignee.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *       {
+     *           "name"="id",
+     *           "dataType"="integer",
+     *           "requirement"="\d+",
+     *           "description"="Ticket Id"
+     *       }
+     *   },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to view tickets"
+     *  }
+     * )
+     *
+     * @param $id
+     * @return array
+     */
+    public function getAssigneeForTicket($id)
+    {
+        $ticket = parent::loadTicket($id);
+        $assignee = $ticket->getAssignee();
+        $details = [];
+
+        if (!empty($assignee)) {
+            $assigneeAdapter = new User($assignee->getId(), User::TYPE_ORO);
+            $details = $this->userDetailsService->fetch($assigneeAdapter);
+        }
+
+        return $details;
     }
 }

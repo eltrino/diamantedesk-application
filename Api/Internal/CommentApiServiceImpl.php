@@ -23,6 +23,8 @@ use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
+use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\User\UserDetailsService;
 
 class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInterface
 {
@@ -32,6 +34,11 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * @var ApiPagingService
      */
     protected $apiPagingService;
+
+    /**
+     * @var UserDetailsService
+     */
+    protected $userDetailsService;
 
     /**
      * Load Comment by given comment id
@@ -331,5 +338,48 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     public function setApiPagingService(ApiPagingService $apiPagingService)
     {
         $this->apiPagingService = $apiPagingService;
+    }
+
+
+    /**
+     * @param \Diamante\DeskBundle\Model\User\UserDetailsService $detailsService
+     */
+    public function setUserDetailsService(UserDetailsService $detailsService)
+    {
+        $this->userDetailsService = $detailsService;
+    }
+
+    /**
+     * Retrieves comment author data based on typed ID provided
+     *
+     * @ApiDoc(
+     *  description="Returns person data",
+     *  uri="/comment/{id}/author.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *       {
+     *           "name"="id",
+     *           "dataType"="integer",
+     *           "requirement"="\d+",
+     *           "description"="Author Id"
+     *       }
+     *   },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to view tickets"
+     *  }
+     * )
+     *
+     * @param $id
+     * @return array
+     */
+    public function getPersonData($id)
+    {
+        $comment = parent::loadComment($id);
+
+        $details = $this->userDetailsService->fetch($comment->getAuthor());
+
+        return $details;
     }
 }

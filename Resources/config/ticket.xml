@@ -100,6 +100,9 @@
             <call method="setApiPagingService">
                 <argument type="service" id="diamante.api.paging.service"/>
             </call>
+            <call method="setUserDetailsService">
+                <argument type="service" id="diamante.user.details.service"/>
+            </call>
         </service>
 
         <service id="diamante.ticket.api.service_diamante" alias="diamante.ticket.api.service" />
@@ -179,6 +182,9 @@
         <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service">
             <call method="setApiPagingService">
                 <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+            <call method="setUserDetailsService">
+                <argument type="service" id="diamante.user.details.service"/>
             </call>
         </service>
 
