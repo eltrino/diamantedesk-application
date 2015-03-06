@@ -68,7 +68,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
      */
     protected $private;
 
-    public function __construct($content, $ticket, $author)
+    public function __construct($content, $ticket, $author, $private = false)
     {
         $this->content = $content;
         $this->ticket = $ticket;
@@ -76,6 +76,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
         $this->attachments = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
+        $this->private = $private;
     }
 
     /**
