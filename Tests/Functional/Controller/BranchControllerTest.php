@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Tests\Controller;
+namespace Diamante\DiamanteDeskBundle\Tests\Functional\Controller;
 
 use Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
