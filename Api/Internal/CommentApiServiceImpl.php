@@ -374,7 +374,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * @param $id
      * @return array
      */
-    public function getPersonData($id)
+    public function getAuthorData($id)
     {
         $comment = parent::loadComment($id);
 
