@@ -14,3 +14,20 @@
     }
   }
 }
+
+.profile-view,
+.profile-edit {
+  width: 320px;
+  padding: @grid-gutter-width/2;
+}
+
+.user-meta {
+  &:extend(.clearfix all);
+  padding-left: 64 + @grid-gutter-width/2;
+  margin-bottom: @grid-gutter-width/2;
+}
+.user-image {
+  float: left;
+  margin-left: -64 - @grid-gutter-width/2;
+  vertical-align: top;
+}

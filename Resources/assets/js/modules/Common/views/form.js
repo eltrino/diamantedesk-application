@@ -38,6 +38,7 @@ define(['app'], function(App){
       },
 
       formDataInvalid: function (model ,errors){
+        App.debug('warn', 'Validation Errors:', errors);
         var clearErrors = function(){
           var $form = this.$("form");
           $form.find(".help-block").remove();

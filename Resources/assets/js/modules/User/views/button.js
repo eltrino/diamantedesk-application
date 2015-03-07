@@ -4,19 +4,20 @@ define([
 
   return App.module('User', function(User, App, Backbone, Marionette, $, _){
 
-    User.ItemView = Marionette.ItemView.extend({
-      template: userTemplate,
+    User.LayoutView = Marionette.LayoutView.extend({
+      template : userTemplate,
+      className : 'dropdown',
 
-      templateHelpers: function(){
-
+      regions : {
+        dropdownRegion : '#dropdown-profile'
       },
 
-      events: {
+      events : {
         'click': 'viewClicked'
       },
 
-      viewClicked: function(){
-        this.trigger('user:view', this.model);
+      viewClicked : function(){
+        this.trigger('user:view');
       }
     });
 

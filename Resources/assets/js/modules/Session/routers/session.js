@@ -11,7 +11,7 @@ define(['app'], function(App){
         'registration': 'registration',
         'confirm/:hash': 'confirm',
         'resetpassword': 'reset',
-        'newpassword/:hash': 'newpassword'
+        'newpassword/:hash': 'newPassword'
       }
     });
 
@@ -58,7 +58,7 @@ define(['app'], function(App){
         });
       },
 
-      newpassword: function(hash){
+      newPassword: function(hash){
         require(['modules/Session/controllers/reset'], function(){
           Session.ResetController(hash);
         });

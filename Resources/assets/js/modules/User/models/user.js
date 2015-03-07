@@ -9,17 +9,14 @@ define([
         userCacheRequest = [];
 
     User.UserModel = Backbone.Model.extend({
-      urlRoot : Config.apiUrl + '/users/',
+      url : Config.apiUrl + '/desk/users/current',
       validate: function(attrs, options){
         var errors = {};
-        if(!attrs.firstname) {
-          errors.subject = "can't be blank";
+        if(!attrs.email) {
+          errors.email = "can't be blank";
         }
-        if(!attrs.lastname) {
-          errors.description = "can't be blank";
-        }
-        if(!attrs.password) {
-          errors.description = "can't be blank";
+        if(!attrs.password && _.indexOf(options.ignore, 'password') === -1) {
+          errors.password = "can't be blank";
         }
         if(!_.isEmpty(errors)){
           return errors;
@@ -31,11 +28,9 @@ define([
       getCurrentUserModel: function(){
         var user = new User.UserModel(),
             defer = $.Deferred();
-        var _url = user.url;
         if(currentUser){
           defer.resolve(currentUser);
         } else {
-          user.url = Config.apiUrl + '/desk/users/current';
           user.fetch({
             success : function(data){
               currentUser = user.clone();
@@ -43,9 +38,6 @@ define([
             },
             error : function(data){
               defer.reject(data);
-            },
-            complete : function(){
-              user.url = _url;
             }
           });
         }

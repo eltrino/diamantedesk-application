@@ -95,7 +95,7 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
      * )
      *
      * @param UpdateUserCommand $command
-     * @return void
+     * @return DiamanteUser
      */
     public function update(UpdateUserCommand $command)
     {
@@ -117,6 +117,8 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
 
         $this->diamanteUserRepository->store($diamanteUser);
         $this->apiUserRepository->store($apiUser);
+
+        return $diamanteUser;
     }
 
     /**

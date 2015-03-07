@@ -11,8 +11,14 @@ define(['app'], function(App){
         var request = App.request('user:model:current');
 
         request.done(function(userModel){
-          var userButton = new User.ItemView({
+          var userButton = new User.LayoutView({
             model: userModel
+          });
+
+          userButton.on('user:view', function(){
+            App.trigger('user:view',{
+              parentRegion: userButton.dropdownRegion
+            });
           });
 
           options.parentRegion.show(userButton);

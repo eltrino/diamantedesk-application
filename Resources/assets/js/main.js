@@ -22,6 +22,7 @@ require.config({
     "bootstrap" : "vendor/bootstrap/dist/js/bootstrap",
     "cryptojs.core" : "vendor/dfm-crypto-js/components/core",
     "cryptojs.x64" : "vendor/dfm-crypto-js/components/x64-core",
+    "cryptojs.md5" : "vendor/dfm-crypto-js/components/md5",
     "cryptojs.sha1" : "vendor/dfm-crypto-js/components/sha1",
     "cryptojs.sha512" : "vendor/dfm-crypto-js/components/sha512",
     "cryptojs.base64" : "vendor/dfm-crypto-js/components/enc-base64"
@@ -53,6 +54,10 @@ require.config({
     "cryptojs.x64" : {
       deps: ["cryptojs.core"],
       exports: "CryptoJS.x64"
+    },
+    "cryptojs.md5" : {
+      deps: ["cryptojs.core"],
+      exports: "CryptoJS.MD5"
     },
     "cryptojs.sha1": {
       deps: ["cryptojs.core"],

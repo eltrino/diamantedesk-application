@@ -20,7 +20,7 @@ interface CurrentUserService
      * Update Diamante and Api users
      *
      * @param Command\UpdateUserCommand $command
-     * @return void
+     * @return DiamanteUser
      */
     public function update(Command\UpdateUserCommand $command);
 

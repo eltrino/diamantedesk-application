@@ -16,7 +16,7 @@ define(['app'], function(App){
 
         resetView.on('form:submit', function(data){
           if(hash){
-            this.model.newpassword(data);
+            this.model.newPassword(data);
           } else {
             this.model.reset(data);
           }

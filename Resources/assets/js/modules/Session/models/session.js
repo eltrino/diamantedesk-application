@@ -2,7 +2,7 @@ define([
   'app',
   'config',
   'User/models/user',
-  '../common/wsse'], function(App, Config, User, Wsse) {
+  'helpers/wsse'], function(App, Config, User, Wsse) {
 
   return App.module('Session', function(Session, App, Backbone, Marionette, $, _){
 
@@ -13,7 +13,7 @@ define([
 
       url: Config.apiUrl.replace('api/diamante/rest/latest', 'diamantefront') + '/user',
 
-      initialize: function () {
+      initialize: function(){
         var savedData = window.localStorage.getItem('authModel') || window.sessionStorage.getItem('authModel');
         if(savedData){
           this.set(JSON.parse(savedData));
@@ -78,7 +78,7 @@ define([
 
       login: function(creds) {
         if(creds.password){
-        creds.password = Wsse.encodePassword(creds.password);
+          creds.password = Wsse.encodePassword(creds.password);
         }
         if(this.set(creds, {validate: true})){
           this.getAuth().done(this.loginSuccess.bind(this)).fail(this.loginFail.bind(this));
@@ -91,15 +91,15 @@ define([
         }
         this.save(creds,{
           success : function(){
-            this.clear();
             App.alert({ title: 'Registration Success', messages: [{
               status: 'success',
               text: 'Thank you. <br>' +
                 'We have sent you email to ' + this.get('email') + '.<br>'+
                 'Please click the link in that message to activate your account.'
             }] });
+            this.clear();
             App.trigger('session:register:success');
-          },
+          }.bind(this),
           error : function(){
             App.trigger('session:register:fail');
             App.alert({ title: "Registration Failed" });
@@ -126,7 +126,7 @@ define([
             App.trigger('session:registration');
           }.bind(this),
           complete : function(){
-            this.url = this.url.replace('/confirm');
+            this.url = this.url.replace('/confirm', '');
             this.clear();
           }.bind(this)
         });
@@ -151,13 +151,13 @@ define([
             App.alert({ title: 'Password Reset Failed', messages: ['Email not found'] });
           }.bind(this),
           complete : function(){
-            this.url = this.url.replace('/reset');
+            this.url = this.url.replace('/reset', '');
             this.clear();
           }.bind(this)
         });
       },
 
-      newpassword: function(data){
+      newPassword: function(data){
         this.url += '/password';
         this.set('id', 1);
         data.password = Wsse.encodePassword(data.password);
@@ -178,7 +178,7 @@ define([
             App.trigger('session:reset');
           }.bind(this),
           complete : function(){
-            this.url = this.url.replace('/password');
+            this.url = this.url.replace('/password', '');
             this.clear();
           }.bind(this)
         });
