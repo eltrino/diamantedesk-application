@@ -78,7 +78,7 @@ define([
 
       login: function(creds) {
         if(creds.password){
-          creds.password = Wsse.encodePassword(creds.password);
+        creds.password = Wsse.encodePassword(creds.password);
         }
         if(this.set(creds, {validate: true})){
           this.getAuth().done(this.loginSuccess.bind(this)).fail(this.loginFail.bind(this));
@@ -108,7 +108,6 @@ define([
       },
 
       confirm: function(hash){
-        'http://oro.loc/app_dev.php/diamantefront/#confirm/cb66904976d3439b78913ffec433f36b';
         this.url += '/confirm';
         this.set('id', 1);
         this.save({ hash : hash },{
@@ -202,8 +201,6 @@ define([
         }
         return defer.promise();
       }
-
-
 
     });
 

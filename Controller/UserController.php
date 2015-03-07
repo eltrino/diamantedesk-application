@@ -49,7 +49,7 @@ class UserController extends FOSRestController
 
         try {
             $this->get('diamante.front.registration.service')->register($command);
-            $view = $this->view(null, Codes::HTTP_CREATED);
+            $view = $this->view(['success' => true], Codes::HTTP_CREATED);
         } catch (\Exception $e) {
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
         }
