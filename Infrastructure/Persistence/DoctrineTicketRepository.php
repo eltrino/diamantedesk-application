@@ -40,7 +40,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->createQueryBuilder()->select(array('t', 'c'))
             ->from('DiamanteDeskBundle:Ticket', 't')
             ->from('DiamanteDeskBundle:Branch', 'b')
-            ->join('t.comments', 'c')
+            ->leftJoin('t.comments', 'c')
             ->where('b.id = t.branch')
             ->andWhere('b.key = :branchKey')
             ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
@@ -70,7 +70,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         $queryBuilder = $this->_em
             ->createQueryBuilder()->select(array('t', 'c'))
             ->from('DiamanteDeskBundle:Ticket', 't')
-            ->join('t.comments', 'c')
+            ->leftJoin('t.comments', 'c')
             ->where('t.uniqueId = :uniqueId')
             ->setParameter('uniqueId', $uniqueId);
 
@@ -108,7 +108,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         $queryBuilder = $this->_em
             ->createQueryBuilder()->select(array('t', 'c'))
             ->from('DiamanteDeskBundle:Ticket', 't')
-            ->join('t.comments', 'c')
+            ->leftJoin('t.comments', 'c')
             ->where('t.id = :id')
             ->setParameter('id', $id);
 
