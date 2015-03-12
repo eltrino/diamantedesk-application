@@ -55,7 +55,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             $queryBuilder->andWhere('c.private = false');
         }
 
-        $ticket = $queryBuilder->getQuery()->getSingleResult();
+        $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
 
         return $ticket;
     }
@@ -78,7 +78,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             $queryBuilder->andWhere('c.private = false');
         }
 
-        return $queryBuilder->getQuery()->getSingleResult();
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -116,7 +116,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             $queryBuilder->andWhere('c.private = false');
         }
 
-        return $queryBuilder->getQuery()->getSingleResult();
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /**
