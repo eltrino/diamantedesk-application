@@ -368,7 +368,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->comments->add($comment);
         $this->raise(
             new CommentWasAddedToTicket(
-                $this->uniqueId, $this->subject, $comment->getContent()
+                $this->uniqueId, $this->subject, $comment->getContent(), $comment->isPrivate()
             )
         );
     }
