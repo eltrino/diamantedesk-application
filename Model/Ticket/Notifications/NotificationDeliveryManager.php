@@ -39,6 +39,7 @@ class NotificationDeliveryManager
     {
         foreach ($this->queue as $notification) {
             $notifier->notify($notification);
+            $this->queue->dequeue();
         }
     }
 
