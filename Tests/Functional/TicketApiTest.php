@@ -18,8 +18,11 @@ use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
 use Diamante\ApiBundle\Routine\Tests\ResponseAnalyzer;
 use Diamante\ApiBundle\Routine\Tests\ApiCommand;
 use FOS\Rest\Util\Codes;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\User\User;
 
-class BranchApiTest extends ApiTestCase
+class TicketApiTest extends ApiTestCase
 {
     /**
      * @var ResponseAnalyzer
@@ -41,56 +44,57 @@ class BranchApiTest extends ApiTestCase
     public function testList()
     {
         $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_branch_api_service_oro_list_all_branches');
+        $this->request('GET', 'diamante_ticket_api_service_oro_list_all_tickets');
     }
 
-    public function testGetBranch()
+    public function testGetTicket()
     {
         $this->command->urlParameters = array('id' => 1);
         $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_branch_api_service_oro_get_branch');
+        $this->request('GET', 'diamante_ticket_api_service_oro_load_ticket');
     }
 
-    public function testCreateBranch()
+    public function testCreateTicket()
     {
         $this->command->requestParameters = array(
-                'name' => 'Test Branch',
-                'description' => 'Test Description',
-                'tags' => array('Test Tag'),
-                'key' => 'BRANCHTEST'
+            'branch' => 1,
+            'subject' => 'Test Ticket',
+            'description' => 'Test Description',
+            'status' => 'open',
+            'priority' => Priority::PRIORITY_MEDIUM,
+            'source' => Source::PHONE,
+            'reporter' => User::TYPE_ORO . User::DELIMITER .  1
         );
         $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_CREATED);
-        $this->request('POST', 'diamante_branch_api_service_oro_create_branch');
+        $this->request('POST', 'diamante_ticket_api_service_oro_create_ticket');
     }
 
-    public function testUpdateBranch()
+    public function testUpdateTicket()
     {
         $this->command->urlParameters = array('id' => 2);
         $this->command->requestParameters = array(
-            'name' => 'Test Branch PUT',
-            'description' => 'Test Description',
-            'tags' => array('Test Tag')
+            'subject' => 'Test Ticket Updated PUT'
         );
 
         $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('PUT', 'diamante_branch_api_service_oro_update_properties');
+        $this->request('PUT', 'diamante_ticket_api_service_oro_update_properties');
 
         $this->command->urlParameters = array('id' => 3);
-        $this->command->requestParameters['name'] = 'Test Branch PATCH';
+        $this->command->requestParameters['subject'] = 'Test Ticket Updated PATCH';
 
         $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('PATCH', 'diamante_branch_api_service_oro_update_properties');
+        $this->request('PATCH', 'diamante_ticket_api_service_oro_update_properties');
     }
 
-    public function testDeleteBranch()
+    public function testDeleteTicket()
     {
         $this->command->urlParameters = array('id' => 1);
 
         $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NO_CONTENT);
-        $this->request('DELETE', 'diamante_branch_api_service_oro_delete_branch');
+        $this->request('DELETE', 'diamante_ticket_api_service_oro_delete_ticket');
 
         $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NOT_FOUND);
-        $this->request('GET', 'diamante_branch_api_service_oro_get_branch');
+        $this->request('GET', 'diamante_ticket_api_service_oro_load_ticket');
     }
 
     public function request($method, $uri)
