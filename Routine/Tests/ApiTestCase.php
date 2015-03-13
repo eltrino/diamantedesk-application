@@ -34,18 +34,20 @@ class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @param string $method
-     * @param string $uri
+     * @param string           $method
+     * @param string           $uri
      * @param ResponseAnalyzer $responseAnalyzer
-     * @param ApiCommand $command
+     * @param ApiCommand       $command
+     *
+     * @return \Symfony\Component\HttpFoundation\Response $response
      */
     public function request($method, $uri, ResponseAnalyzer $responseAnalyzer, ApiCommand $command)
     {
         $this->client->request($method, $this->getUrl($uri, $command->urlParameters), $command->requestParameters);
-        try{
+        try {
             $responseAnalyzer->setResponse($this->client->getResponse())
                 ->analyze();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
     }
