@@ -176,12 +176,12 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
      *  }
      * )
      *
-     * @param int $branchId
+     * @param int $id
      * @return void
      */
-    public function deleteBranch($branchId)
+    public function deleteBranch($id)
     {
-        parent::deleteBranch($branchId);
+        parent::deleteBranch($id);
     }
 
     /**
