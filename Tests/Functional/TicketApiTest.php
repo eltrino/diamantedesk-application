@@ -15,8 +15,7 @@
 namespace Diamante\DeskBundle\Tests\Functional;
 
 use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
-use Diamante\ApiBundle\Routine\Tests\ResponseAnalyzer;
-use Diamante\ApiBundle\Routine\Tests\ApiCommand;
+use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 use FOS\Rest\Util\Codes;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
@@ -25,11 +24,6 @@ use Diamante\DeskBundle\Model\User\User;
 class TicketApiTest extends ApiTestCase
 {
     /**
-     * @var ResponseAnalyzer
-     */
-    protected $responseAnalyzer;
-
-    /**
      * @var ApiCommand
      */
     protected $command;
@@ -37,36 +31,33 @@ class TicketApiTest extends ApiTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->responseAnalyzer = new ResponseAnalyzer();
         $this->command = new ApiCommand();
     }
 
     public function testList()
     {
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_ticket_api_service_oro_list_all_tickets');
-    }
-
-    public function testGetTicket()
-    {
-        $this->command->urlParameters = array('id' => 1);
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_ticket_api_service_oro_load_ticket');
+        $this->getAll('diamante_ticket_api_service_oro_list_all_tickets');
     }
 
     public function testCreateTicket()
     {
         $this->command->requestParameters = array(
-            'branch' => 1,
-            'subject' => 'Test Ticket',
+            'branch'      => 1,
+            'subject'     => 'Test Ticket',
             'description' => 'Test Description',
-            'status' => 'open',
-            'priority' => Priority::PRIORITY_MEDIUM,
-            'source' => Source::PHONE,
-            'reporter' => User::TYPE_ORO . User::DELIMITER .  1
+            'status'      => 'open',
+            'priority'    => Priority::PRIORITY_MEDIUM,
+            'source'      => Source::PHONE,
+            'reporter'    => User::TYPE_ORO . User::DELIMITER . 1
         );
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_CREATED);
-        $this->request('POST', 'diamante_ticket_api_service_oro_create_ticket');
+
+        $this->post('diamante_ticket_api_service_oro_create_ticket', $this->command);
+    }
+
+    public function testGetTicket()
+    {
+        $this->command->urlParameters = array('id' => 1);
+        $this->get('diamante_ticket_api_service_oro_load_ticket', $this->command);
     }
 
     public function testUpdateTicket()
@@ -75,30 +66,17 @@ class TicketApiTest extends ApiTestCase
         $this->command->requestParameters = array(
             'subject' => 'Test Ticket Updated PUT'
         );
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('PUT', 'diamante_ticket_api_service_oro_update_properties');
+        $this->put('diamante_ticket_api_service_oro_update_properties', $this->command);
 
         $this->command->urlParameters = array('id' => 3);
         $this->command->requestParameters['subject'] = 'Test Ticket Updated PATCH';
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('PATCH', 'diamante_ticket_api_service_oro_update_properties');
+        $this->patch('diamante_ticket_api_service_oro_update_properties', $this->command);
     }
 
     public function testDeleteTicket()
     {
         $this->command->urlParameters = array('id' => 1);
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NO_CONTENT);
-        $this->request('DELETE', 'diamante_ticket_api_service_oro_delete_ticket');
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NOT_FOUND);
-        $this->request('GET', 'diamante_ticket_api_service_oro_load_ticket');
-    }
-
-    public function request($method, $uri)
-    {
-        parent::request($method, $uri, $this->responseAnalyzer, $this->command);
+        $this->delete('diamante_ticket_api_service_oro_delete_ticket', $this->command);
+        $this->get('diamante_ticket_api_service_oro_load_ticket', $this->command, Codes::HTTP_NOT_FOUND);
     }
 }
