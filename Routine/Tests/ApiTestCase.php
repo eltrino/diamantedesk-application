@@ -16,9 +16,10 @@ namespace Diamante\ApiBundle\Routine\Tests;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\TestFrameworkBundle\Test\Client;
-use Rhumsaa\Uuid\Console\Exception;
+use FOS\Rest\Util\Codes;
+use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 
-class ApiTestCase extends WebTestCase
+abstract class ApiTestCase extends WebTestCase
 {
     /**
      * @var Client
@@ -29,26 +30,63 @@ class ApiTestCase extends WebTestCase
     {
         $this->initClient(
             array(),
-            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('akolomiec', 'akolomiec'), array('HTTP_X-CSRF-Header' => 1))
         );
     }
 
-    /**
-     * @param string           $method
-     * @param string           $uri
-     * @param ResponseAnalyzer $responseAnalyzer
-     * @param ApiCommand       $command
-     *
-     * @return \Symfony\Component\HttpFoundation\Response $response
-     */
-    public function request($method, $uri, ResponseAnalyzer $responseAnalyzer, ApiCommand $command)
+    public function getAll($url)
     {
-        $this->client->request($method, $this->getUrl($uri, $command->urlParameters), $command->requestParameters);
-        try {
-            $responseAnalyzer->setResponse($this->client->getResponse())
-                ->analyze();
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $this->request('GET', $url, Codes::HTTP_OK);
+    }
+
+    public function get($url, ApiCommand $command, $code = Codes::HTTP_OK)
+    {
+        $this->request('GET', $url, $code, $command->urlParameters);
+    }
+
+    public function post($url, ApiCommand $command)
+    {
+        $this->request('POST', $url, Codes::HTTP_CREATED, array(), $command->requestParameters);
+    }
+
+    public function put($url, ApiCommand $command)
+    {
+        $this->request('PUT', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
+    }
+
+    public function patch($url, ApiCommand $command)
+    {
+        $this->request('PATCH', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
+    }
+
+    public function delete($url, ApiCommand $command)
+    {
+        $this->request(
+            'DELETE',
+            $url,
+            Codes::HTTP_NO_CONTENT,
+            $command->urlParameters,
+            array(),
+            'assertEmptyResponseStatusCodeEquals'
+        );
+    }
+
+    protected function request(
+        $method,
+        $url,
+        $code,
+        $urlParameters = array(),
+        $requestParameters = array(),
+        $assert = 'assertJsonResponseStatusCodeEquals'
+    ) {
+        $this->client->request(
+            $method,
+            $this->getUrl($url, $urlParameters),
+            $requestParameters
+        );
+        $result = $this->client->getResponse();
+        call_user_func(array($this, $assert), $result, $code);
+
+        return $result;
     }
 }
