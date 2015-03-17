@@ -202,7 +202,7 @@ class CommentServiceImpl implements CommentService
         $this->isGranted('VIEW', $comment);
 
         $attachment = $comment->getAttachment($command->attachmentId);
-        if (is_null($attachment)) {
+        if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
         return $attachment;
@@ -332,9 +332,9 @@ class CommentServiceImpl implements CommentService
         if (!$attachment) {
             throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
-        $this->attachmentManager->deleteAttachment($attachment);
         $comment->removeAttachment($attachment);
         $this->commentRepository->store($comment);
+        $this->attachmentManager->deleteAttachment($attachment);
     }
 
     /**
