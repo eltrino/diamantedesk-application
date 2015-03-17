@@ -74,6 +74,8 @@
             <argument type="service" id="diamante.branch_email_configuration.entity.factory"/>
             <argument type="service" id="diamante.branch_email_configuration.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
         </service>
 
         <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">

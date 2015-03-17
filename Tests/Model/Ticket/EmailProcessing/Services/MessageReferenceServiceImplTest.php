@@ -130,6 +130,12 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $notifier;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     * @Mock Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -143,7 +149,8 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->attachmentManager,
             $this->dispatcher,
             $this->notificationDeliveryManager,
-            $this->notifier
+            $this->notifier,
+            $this->logger
         );
     }
 

@@ -72,6 +72,8 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.notification.delivery.manger"/>
             <argument type="service" id="diamante.notification.email.notifier"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
         </service>
 
         <service id="diamante.ticket.entity.factory" class="%diamante.ticket.entity.factory.class%">

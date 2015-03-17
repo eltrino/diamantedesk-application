@@ -57,6 +57,12 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
      */
     private $imagine;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     * @Mock Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -64,7 +70,8 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
             $this->fileStorageService,
             $this->factory,
             $this->repository,
-            $this->imagine
+            $this->imagine,
+            $this->logger
         );
     }
 

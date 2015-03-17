@@ -96,6 +96,7 @@ class TicketController extends Controller
 
             return ['entity'  => $ticket];
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Ticket loading failed: %s', $e->getMessage()));
             $this->addErrorMessage('Ticket loading failed, ticket not found');
 
             return new Response($e->getMessage(), 404);
@@ -132,6 +133,8 @@ class TicketController extends Controller
                     $response = array('saved' => true);
 
                 } catch (\Exception $e) {
+                    $this->container->get('monolog.logger.diamante')
+                        ->error(sprintf('Change ticket status failed: %s', $e->getMessage()));
                     $this->addErrorMessage('diamante.desk.ticket.messages.change_status.error');
                     $response = array('form' => $form->createView());
                 }
@@ -178,14 +181,17 @@ class TicketController extends Controller
             }
             $response['reload_page'] = true;
         } catch (TicketNotFoundException $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Move ticket failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
             $url = $this->generateUrl('diamante_ticket_list');
             $response = array('reload_page' => true, 'redirect' => $url);
         } catch (BranchNotFoundException $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch loading failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.get.error');
             $response = array('reload_page' => true);
         } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Move ticket failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.ticket.messages.move.error');
             $response['reload_page'] = true;
         }
@@ -234,6 +240,7 @@ class TicketController extends Controller
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView);
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Ticket creation failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.ticket.messages.create.error');
             $response = array('form' => $formView);
         }
@@ -282,7 +289,7 @@ class TicketController extends Controller
                 'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
             );
         } catch (\Exception $e) {
-            //TODO: Log original error
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Ticket update failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.ticket.messages.save.error');
 
             $response = array(
@@ -311,6 +318,7 @@ class TicketController extends Controller
             $this->get('diamante.ticket.service')->deleteTicketByKey($key);
             return new Response(null, 204);
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Ticket removal failed: %s', $e->getMessage()));
             return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
     }
@@ -348,6 +356,7 @@ class TicketController extends Controller
                     $response = array('saved' => true);
 
                 } catch (\Exception $e) {
+                    $this->container->get('monolog.logger.diamante')->error(sprintf('Ticket assignment failed: %s', $e->getMessage()));
                     $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
                     $response = array('form' => $form->createView());
                 }
@@ -429,6 +438,7 @@ class TicketController extends Controller
                     $session->set('recent_attachments_ids', $uploadedAttachmentsIds);
                     $response->setStatusCode(200);
                 } catch (\Exception $e) {
+                    $this->container->get('monolog.logger.diamante')->error(sprintf('Adding attachment failed: %s', $e->getMessage()));
                     $response->setStatusCode(500);
                 }
             } else {
@@ -440,6 +450,7 @@ class TicketController extends Controller
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView);
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Adding attachment failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.attachment.messages.create.error');
             $response = array('form' => $formView);
         }
@@ -474,11 +485,13 @@ class TicketController extends Controller
                 array('key' => $ticketKey)
             ));
         } catch (TicketNotFoundException $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment removal failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
             $response = $this->redirect($this->generateUrl(
                 'diamante_ticket_list'
             ));
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment removal failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
             $ticketKey = $ticketService->loadTicket($ticketId)->getKey();
             $response = $this->redirect($this->generateUrl(
@@ -514,6 +527,7 @@ class TicketController extends Controller
 
             return $response;
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment retrieval failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
             throw $this->createNotFoundException('Attachment not found');
         }

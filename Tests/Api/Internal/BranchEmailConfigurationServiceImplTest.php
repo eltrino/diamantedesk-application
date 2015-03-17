@@ -62,6 +62,12 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
      */
     private $branchEmailConfiguration;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     * @Mock Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -69,7 +75,8 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
         $this->branchEmailConfigurationServiceImpl = new BranchEmailConfigurationServiceImpl(
             $this->branchEmailConfigurationFactory,
             $this->branchEmailConfigurationRepository,
-            $this->branchRepository
+            $this->branchRepository,
+            $this->logger
         );
     }
 

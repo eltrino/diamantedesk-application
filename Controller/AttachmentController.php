@@ -32,6 +32,7 @@ class AttachmentController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
             return $response;
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment loading failed: %s', $e->getMessage()));
             throw $this->createNotFoundException('Attachment not found');
         }
     }
@@ -57,6 +58,7 @@ class AttachmentController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
             return $response;
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment loading failed: %s', $e->getMessage()));
             throw $this->createNotFoundException('Attachment not found');
         }
     }
