@@ -51,6 +51,7 @@ class UserController extends FOSRestController
             $this->get('diamante.front.registration.service')->register($command);
             $view = $this->view(['success' => true], Codes::HTTP_CREATED);
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Registration failed for user %s', $command->email));
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
         }
         return $this->response($view);
@@ -80,6 +81,7 @@ class UserController extends FOSRestController
             $this->get('diamante.front.registration.service')->confirm($command);
             $view = $this->view(null, Codes::HTTP_OK);
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Confirmation failed for hash %s', $hash));
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
         }
         return $this->response($view);
@@ -103,6 +105,7 @@ class UserController extends FOSRestController
             $resetService->resetPassword($command);
             $view = $this->view(null, Codes::HTTP_OK);
         } catch(\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Password reset failed for user %s', $command->email));
             $view = $this->view(null, Codes::HTTP_NOT_FOUND);
         }
         return $this->response($view);
