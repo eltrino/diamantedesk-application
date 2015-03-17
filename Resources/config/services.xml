@@ -39,6 +39,8 @@
         <service id="diamante.email_processing.message_processing_manager" class="%diamante.email_processing.message_processing_manager.class%">
             <argument type="service" id="diamante.email_processing.context"/>
             <argument type="service" id="diamante.email_processing.strategy_holder"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
         </service>
 
         <service id="diamante.email_processing.service" class="%diamante.email_processing.service.class%">

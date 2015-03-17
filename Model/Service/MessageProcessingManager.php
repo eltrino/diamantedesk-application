@@ -17,6 +17,7 @@ namespace Diamante\EmailProcessingBundle\Model\Service;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Diamante\EmailProcessingBundle\Model\Processing\Context;
 use Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder;
+use Symfony\Bridge\Monolog\Logger;
 
 class MessageProcessingManager implements ManagerInterface
 {
@@ -27,10 +28,13 @@ class MessageProcessingManager implements ManagerInterface
 
     private $strategyHolder;
 
-    public function __construct(Context $processingContext, StrategyHolder $strategyHolder)
+    private $logger;
+
+    public function __construct(Context $processingContext, StrategyHolder $strategyHolder, Logger $logger)
     {
         $this->processingContext = $processingContext;
-        $this->strategyHolder = $strategyHolder;
+        $this->strategyHolder    = $strategyHolder;
+        $this->logger            = $logger;
     }
 
     /**
@@ -51,6 +55,7 @@ class MessageProcessingManager implements ManagerInterface
                         $messagesToMove[$message->getUniqueId()] = $message;
                     }
                 } catch (\Exception $e) {
+                    $this->logger->error(sprintf('Error processing message: %s', $e->getMessage()));
                 }
             }
         }
