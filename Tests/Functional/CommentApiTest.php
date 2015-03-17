@@ -15,18 +15,12 @@
 namespace Diamante\DeskBundle\Tests\Functional;
 
 use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
-use Diamante\ApiBundle\Routine\Tests\ResponseAnalyzer;
-use Diamante\ApiBundle\Routine\Tests\ApiCommand;
+use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 use FOS\Rest\Util\Codes;
 use Diamante\DeskBundle\Model\Ticket\Status;
 
 class CommentApiTest extends ApiTestCase
 {
-    /**
-     * @var ResponseAnalyzer
-     */
-    protected $responseAnalyzer;
-
     /**
      * @var ApiCommand
      */
@@ -35,109 +29,108 @@ class CommentApiTest extends ApiTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->responseAnalyzer = new ResponseAnalyzer();
         $this->command = new ApiCommand();
     }
 
     public function testListComments()
     {
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_comment_api_service_oro_list_all_comments');
+        $this->getAll('diamante_comment_api_service_oro_list_all_comments');
     }
 
     public function testGetComment()
     {
         $this->command->urlParameters = array('id' => 1);
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_comment_api_service_oro_load_comment');
+        $this->get('diamante_comment_api_service_oro_load_comment', $this->command);
     }
 
     public function testCreateComment()
     {
         $this->command->urlParameters = array('id' => 1);
         $this->command->requestParameters = array(
-            'content' => 'Test Comment',
-            'ticket' => 1,
-            'author' => 'oro_1',
+            'content'      => 'Test Comment',
+            'ticket'       => 1,
+            'author'       => 'oro_1',
             'ticketStatus' => Status::NEW_ONE
         );
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_CREATED);
-        $this->request('POST', 'diamante_comment_api_service_oro_post_new_comment_for_ticket');
+        $this->post('diamante_comment_api_service_oro_post_new_comment_for_ticket', $this->command);
     }
 
     public function testUpdateComment()
     {
         $this->command->urlParameters = array('id' => 2);
         $this->command->requestParameters = array(
-            'content' => 'Test Comment Updated PUT',
+            'content'      => 'Test Comment Updated PUT',
             'ticketStatus' => Status::CLOSED
         );
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('PUT', 'diamante_comment_api_service_oro_update_comment_content_and_ticket_status');
+        $this->put('diamante_comment_api_service_oro_update_comment_content_and_ticket_status', $this->command);
 
         $this->command->urlParameters = array('id' => 3);
         $this->command->requestParameters['content'] = 'Test Ticket Updated PATCH';
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('PATCH', 'diamante_comment_api_service_oro_update_comment_content_and_ticket_status');
+        $this->patch('diamante_comment_api_service_oro_update_comment_content_and_ticket_status', $this->command);
     }
 
     public function testDeleteComment()
     {
         $this->command->urlParameters = array('id' => 1);
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NO_CONTENT);
-        $this->request('DELETE', 'diamante_comment_api_service_oro_delete_ticket_comment');
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NOT_FOUND);
-        $this->request('GET', 'diamante_comment_api_service_oro_load_comment');
+        $this->delete('diamante_comment_api_service_oro_delete_ticket_comment', $this->command);
+        $this->get('diamante_comment_api_service_oro_load_comment', $this->command, Codes::HTTP_NOT_FOUND);
     }
 
     public function testAddAttachmentToComment()
     {
-        $attachment = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg');
-        $this->command->urlParameters = array('commentId' => 1);
+        $attachment = file_get_contents(
+            dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg'
+        );
+        $this->command->urlParameters = array('commentId' => 2);
         $this->command->requestParameters = array(
             'attachmentsInput' => array(
                 array(
                     'filename' => 'test.jpg',
-                    'content' => base64_encode($attachment)
+                    'content'  => base64_encode($attachment)
                 )
             )
         );
 
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_CREATED);
-        $this->request('POST', 'diamante_comment_api_service_oro_add_comment_attachment');
+        return $this->post('diamante_comment_api_service_oro_add_comment_attachment', $this->command);
     }
 
     public function testListCommentAttachment()
     {
-        $this->command->urlParameters = array('id' => 1);
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_comment_api_service_oro_list_comment_attachment');
+        $this->command->urlParameters = array('id' => 2);
+        $this->get('diamante_comment_api_service_oro_list_comment_attachment', $this->command);
     }
 
-    public function testGetCommentAttachment()
+    /**
+     * @depends testAddAttachmentToComment
+     *
+     * @param array $response
+     */
+    public function testGetCommentAttachment($response)
     {
-        $this->command->urlParameters = array('commentId' => 1, 'attachmentId' => 1);
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_OK);
-        $this->request('GET', 'diamante_comment_api_service_oro_get_comment_attachment');
+        $attachmentId = $this->getByKey($response, 'id');
+        $this->command->urlParameters = array('commentId' => 2, 'attachmentId' => $attachmentId);
+        $this->get('diamante_comment_api_service_oro_get_comment_attachment', $this->command);
     }
 
-    public function testDeleteCommentAttachment()
+    /**
+     * @depends testAddAttachmentToComment
+     *
+     * @param array $response
+     */
+    public function testDeleteCommentAttachment($response)
     {
-        $this->command->urlParameters = array('commentId' => 1, 'attachmentId' => 1);
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NO_CONTENT);
-        $this->request('DELETE', 'diamante_comment_api_service_oro_remove_attachment_from_comment');
-
-        $this->responseAnalyzer->expects('getStatusCode')->will(Codes::HTTP_NOT_FOUND);
-        $this->request('GET', 'diamante_comment_api_service_oro_get_comment_attachment');
+        $attachmentId = $this->getByKey($response, 'id');
+        $this->command->urlParameters = array('commentId' => 2, 'attachmentId' => $attachmentId);
+        $this->delete('diamante_comment_api_service_oro_remove_attachment_from_comment', $this->command);
+        $this->get('diamante_comment_api_service_oro_get_comment_attachment', $this->command, Codes::HTTP_NOT_FOUND);
     }
 
-    public function request($method, $uri)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param string                                     $key
+     */
+    protected function getByKey($response, $key)
     {
-        parent::request($method, $uri, $this->responseAnalyzer, $this->command);
+        return self::jsonToArray($response->getContent())[0][$key];
     }
 }
