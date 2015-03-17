@@ -16,6 +16,7 @@ namespace Diamante\ApiBundle\Security\Authentication\Provider;
 
 use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -49,16 +50,23 @@ class WsseProvider implements AuthenticationProviderInterface
     private $encoderFactory;
 
     /**
-     * @param UserProviderInterface $userProvider
-     * @param Cache $nonceCache
-     * @param EncoderFactoryInterface $encoderFactory
+     * @var \Symfony\Bridge\Monolog\Logger
      */
-    public function __construct(UserProviderInterface $userProvider, Cache $nonceCache, EncoderFactoryInterface $encoderFactory)
+    private $logger;
+
+    /**
+     * @param UserProviderInterface          $userProvider
+     * @param Cache                          $nonceCache
+     * @param EncoderFactoryInterface        $encoderFactory
+     * @param \Symfony\Bridge\Monolog\Logger $logger
+     */
+    public function __construct(UserProviderInterface $userProvider, Cache $nonceCache, EncoderFactoryInterface $encoderFactory, Logger $logger)
     {
         $this->userProvider   = $userProvider;
         $this->nonceCache     = $nonceCache;
         $this->encoderFactory = $encoderFactory;
         $this->lifetime       = 300;
+        $this->logger         = $logger;
     }
 
     /**
@@ -85,7 +93,7 @@ class WsseProvider implements AuthenticationProviderInterface
 
             return $authenticatedToken;
         }
-
+        $this->logger->error(sprintf('Attempt of unauthorized access for user: %s', $token->getUsername()));
         throw new AuthenticationException('The WSSE authentication failed.');
     }
 

@@ -51,6 +51,7 @@
             <argument /> <!-- User Provider -->
             <argument type="service" id="wsse.security.cache.provider" />
             <argument type="service" id="security.encoder_factory" />
+            <argument type="service" id="monolog.logger.diamante"/>
         </service>
 
         <service id="wsse.security.authentication.listener"
@@ -78,7 +79,9 @@
         <service id="diamante.api.event_listener.handle_view" class="%diamante.api.event_listener.handle_view.class%">
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="service_container"/>
+            <argument type="service" id="logger"/>
             <tag name="kernel.event_listener" event="kernel.view" method="onKernelView" />
+            <tag name="monolog.logger" channel="diamante"/>
         </service>
 
         <service id="diamante.api.event_listener.handle_exception" class="%diamante.api.event_listener.handle_exception.class%">

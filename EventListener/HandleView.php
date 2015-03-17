@@ -18,9 +18,10 @@ namespace Diamante\ApiBundle\EventListener;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,11 +30,13 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 class HandleView
 {
     private $serializer;
+    private $logger;
 
-    public function __construct(Serializer $serializer, ContainerInterface $container)
+    public function __construct(Serializer $serializer, ContainerInterface $container, Logger $logger)
     {
         $this->serializer = $serializer;
         $this->container  = $container;
+        $this->logger     = $logger;
     }
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
@@ -48,6 +51,7 @@ class HandleView
         $responseMethod = strtolower($request->getMethod());
 
         if (!method_exists($this, $responseMethod)) {
+            $this->logger->error(sprintf('Invalid method provided: %s', $responseMethod));
             throw new \RuntimeException(sprintf('Can not handle response for method "%s".', $responseMethod));
         }
 
