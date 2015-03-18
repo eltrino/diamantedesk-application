@@ -2,7 +2,7 @@ define(['app'], function(App){
 
   return App.module('Common.Form', function(Form, App, Backbone, Marionette, $, _){
 
-    Form.ItemView = Marionette.ItemView.extend({
+    Form.LayoutView = Marionette.LayoutView.extend({
 
       modelEvents: {
         'invalid' : 'formDataInvalid'
@@ -54,7 +54,9 @@ define(['app'], function(App){
 
       }
 
-  });
+    });
+
+    Form.ItemView = Form.LayoutView;
 
   });
 

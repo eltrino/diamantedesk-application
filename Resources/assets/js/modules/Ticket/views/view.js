@@ -43,8 +43,7 @@ define([
       },
 
       back : function(e){
-        e.preventDefault();
-        App.back();
+
       },
 
       editTicket : function(e){

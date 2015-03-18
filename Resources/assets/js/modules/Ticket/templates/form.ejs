@@ -26,4 +26,8 @@
             <option value="high"<% if (priority.toLowerCase() == 'high') { %> selected<% } %>>High</option>
         </select>
     </div>
+    <% if(typeof is_new !== 'undifined'){ %>
+      <div id="ticket-attachment"></div>
+      <div id="ticket-attachment-drop"></div>
+    <% } %>
 </form>

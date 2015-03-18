@@ -9,8 +9,9 @@ define([
       template: itemTemplate,
 
       initialize: function(){
-        this.listenTo(this.model, 'change:authorFullName', this.render );
+        this.listenTo(this.model, 'change:authorName', this.render );
         this.listenTo(this.model, 'change:content', this.render );
+        this.listenTo(this.model, 'change:attachments', this.render );
       },
 
       templateHelpers: function(){

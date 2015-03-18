@@ -5,22 +5,35 @@ define(['app'], function(App){
     Create.Controller = function(options){
       require([
         'Comment/models/comment',
-        'Comment/views/form'], function(Models, Form){
+        'Comment/models/attachment',
+        'Comment/views/form'], function(CommentModels, AttachmentModels, Form){
 
-        var commentModel = new Models.Model({},{ ticket : options.ticket }),
+        var commentModel = new CommentModels.Model({},{ ticket : options.ticket }),
             commentCollection = options.collection,
-            formView = new Form.ItemView({ model: commentModel });
+            attachmentCollection = new AttachmentModels.Collection(),
+            formView = new Form.LayoutView({ model: commentModel, attachmentCollection: attachmentCollection });
 
         formView.on('form:submit', function(data){
           App.request('user:model:current').done(function(user){
             commentModel.set({
-              'author': 'oro_' + user.get('id'),
+              'author': 'diamante_' + user.get('id'),
               'authorFullName' : user.get('firstName') + ' ' + user.get('lastName')
             }, { 'silent': true });
             commentModel.save(data, {
               success : function(model){
-                commentCollection.add(model);
-                Create.Controller(options);
+                if(attachmentCollection.length){
+                  attachmentCollection.save({
+                    comment : commentModel,
+                    success : function(data){
+                      model.set('attachments', data);
+                      commentCollection.add(model);
+                      Create.Controller(options);
+                    }
+                  });
+                } else {
+                  commentCollection.add(model);
+                  Create.Controller(options);
+                }
               },
               error : function(model, xhr){
                 App.alert({
@@ -30,6 +43,12 @@ define(['app'], function(App){
               }
             });
           });
+        });
+        formView.on('attachment:add', function(data){
+          attachmentCollection.add(data);
+        });
+        formView.on('attachment:delete', function(model){
+          attachmentCollection.remove(model);
         });
 
         options.parentView.formRegion.show(formView);

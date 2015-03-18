@@ -16,7 +16,8 @@ define([
         'click @ui.deleteButton' : 'deleteAttachment'
       },
 
-      deleteAttachment: function(){
+      deleteAttachment: function(e){
+        e.preventDefault();
         this.trigger('attachment:delete', this.model);
       }
 

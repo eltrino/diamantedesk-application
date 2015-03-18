@@ -5,10 +5,20 @@
 </ul>
 <% } %>
 <strong>
-    <% if(typeof authorFullName !== 'undefined') { %>
-    <%= authorFullName  %>
+    <% if(typeof authorName !== 'undefined') { %>
+    <%= authorName  %>
     <% } else { %>
     Loading...
     <% } %>
 </strong> <%= content %>
 <p><small><%= created %></small></p>
+<% if(attachments && attachments.length) { %>
+<div class="comment-attachments-block">
+  <strong>File attachments:</strong>
+  <ul class="comment-attachments">
+    <% _.each(attachments, function(attachment){ %>
+    <li><%= attachment.filename %></li>
+    <% }); %>
+  </ul>
+</div>
+<% } %>
