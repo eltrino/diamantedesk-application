@@ -11,6 +11,7 @@ define(['app'], function(App){
           var ticketView = new View.ItemView({
               model : ticketModel
           });
+          App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
           ticketView.on('dom:refresh', function(){
             require(['Comment','Attachment'], function(Comment, Attachment){
               var commentOptions = {

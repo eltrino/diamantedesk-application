@@ -17,6 +17,8 @@ define(['app'], function(App){
                 title: 'Edit Ticket ' + editTicketModel.get('key')
               });
 
+          App.setTitle(_.template('Edit Ticket: <%=key%> - <%=subject%>')(editTicketModel.toJSON()));
+
           modalEditView.on('show', function(){
             this.$el.modal();
           });

@@ -23,6 +23,7 @@ define(['app'], function(App){
         if(App.session.get('logged_in')){
           App.navigate('');
         } else {
+          App.setTitle('Login');
           require(['modules/Session/controllers/login'], function(){
             Session.LoginController();
           });
@@ -38,6 +39,7 @@ define(['app'], function(App){
         if(App.session.get('logged_in')){
           App.navigate('');
         } else {
+          App.setTitle('Registration');
           require(['modules/Session/controllers/registration'], function(){
             Session.RegistrationController();
           });
@@ -53,6 +55,7 @@ define(['app'], function(App){
       },
 
       reset: function(){
+        App.setTitle('Reset Password');
         require(['modules/Session/controllers/reset'], function(){
           Session.ResetController();
         });

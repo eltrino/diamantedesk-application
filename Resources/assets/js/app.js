@@ -69,6 +69,11 @@ define([
     this.trigger('history:start');
   });
 
+  App.setTitle = function(title){
+    var template = "{title} | " + Config.title;
+    document.title = title ? template.replace('{title}', title) : Config.title;
+  };
+
   require(['User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
     App.start();
   });
