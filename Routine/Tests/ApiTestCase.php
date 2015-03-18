@@ -30,38 +30,38 @@ abstract class ApiTestCase extends WebTestCase
     {
         $this->initClient(
             array(),
-            array_merge($this->generateBasicAuthHeader('akolomiec', 'akolomiec'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
         );
     }
 
     public function getAll($url)
     {
-        $this->request('GET', $url, Codes::HTTP_OK);
+        return $this->request('GET', $url, Codes::HTTP_OK);
     }
 
     public function get($url, ApiCommand $command, $code = Codes::HTTP_OK)
     {
-        $this->request('GET', $url, $code, $command->urlParameters);
+        return $this->request('GET', $url, $code, $command->urlParameters);
     }
 
     public function post($url, ApiCommand $command)
     {
-        $this->request('POST', $url, Codes::HTTP_CREATED, array(), $command->requestParameters);
+        return $this->request('POST', $url, Codes::HTTP_CREATED, $command->urlParameters, $command->requestParameters);
     }
 
     public function put($url, ApiCommand $command)
     {
-        $this->request('PUT', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
+        return $this->request('PUT', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
     }
 
     public function patch($url, ApiCommand $command)
     {
-        $this->request('PATCH', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
+        return $this->request('PATCH', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
     }
 
     public function delete($url, ApiCommand $command)
     {
-        $this->request(
+        return $this->request(
             'DELETE',
             $url,
             Codes::HTTP_NO_CONTENT,
