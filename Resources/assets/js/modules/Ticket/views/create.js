@@ -8,18 +8,23 @@ define([
 
     Create.ItemView = Form.LayoutView.extend({
       template: formTemplate,
+      className: 'ticket-edit-form',
+
       regions : {
         attachmentRegion: '#ticket-attachment',
         dropRegion : '#ticket-attachment-drop'
       },
+
       templateHelpers : function(){
         return {
           'is_new' : true
         };
       },
+
       initialize : function(options){
         this.attachmentCollection = options.attachmentCollection;
       },
+
       onShow : function(){
         var formView = this;
 
@@ -39,7 +44,17 @@ define([
           formView.dropRegion.show(dropZone);
 
         });
+
+        formView.$('textarea').keyup(function(){
+          var height = this.clientHeight;
+          if(this.clientHeight < this.scrollHeight){
+            while(this.clientHeight < this.scrollHeight) {
+              $(this).height(++height);
+            }
+          }
+        });
       }
+
     });
 
     Create.ModalView = Modal.LayoutView.extend({
