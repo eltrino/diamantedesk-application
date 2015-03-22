@@ -20,7 +20,8 @@ define([
         'click': 'viewClicked'
       },
 
-      viewClicked: function(){
+      viewClicked: function(e){
+        e.preventDefault();
         this.trigger('ticket:view', this.model);
       }
     });
