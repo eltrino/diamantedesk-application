@@ -13,10 +13,14 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.email) {
-          errors.email = "can't be blank";
+          errors.email = "Can't be blank";
         }
-        if(!attrs.password && _.indexOf(options.ignore, 'password') === -1) {
-          errors.password = "can't be blank";
+        if(_.indexOf(options.ignore, 'password') === -1){
+          if(!attrs.password) {
+            errors.password = "Can't be blank";
+          } else if(attrs.password.length < 6) {
+            errors.password = 'Must be at least six (6) symbols';
+          }
         }
         if(!_.isEmpty(errors)){
           return errors;

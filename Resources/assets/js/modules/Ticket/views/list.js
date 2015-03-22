@@ -33,11 +33,11 @@ define([
       childView: List.ItemView,
 
       events: {
-        'click th': 'sortHandle'
+        'click .sortable': 'sortHandle'
       },
 
       sortHandle: function(e){
-        var sortKey = e.target.className,
+        var sortKey = e.target.className.replace(' sortable',''),
             order = -1;
         if(this.collection.state.sortKey == sortKey) {
           order = this.collection.state.order > 0 ? -1 : 1;

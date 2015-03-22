@@ -1,11 +1,14 @@
 define([
   'app',
-  'tpl!../templates/item.ejs'], function(App, itemTemplate){
+  'config',
+  'cryptojs.md5',
+  'tpl!../templates/item.ejs'], function(App, Config, MD5, itemTemplate){
 
   return App.module('Ticket.View.Comment.List', function(List, App, Backbone, Marionette, $, _){
 
     List.ItemView = Marionette.ItemView.extend({
       tagName: 'li',
+      className: 'comments-item',
       template: itemTemplate,
 
       initialize: function(){
@@ -16,8 +19,12 @@ define([
 
       templateHelpers: function(){
         return {
+          avatar_url : 'http://www.gravatar.com/avatar/' + MD5(this.model.get('authorEmail')),
           created: new Date(this.model.get('created_at')).toLocaleDateString() + ' ' + new Date(this.model.get('created_at')).toLocaleTimeString(),
-          isAuthor: this.model.get('author') === App.session.get('id')
+          isAuthor: this.model.get('author') === App.session.get('id'),
+          attach_link : function(hash){
+            return Config.baseUrl.replace('diamantefront','desk') + 'attachments/download/file/' + hash;
+          }
         };
       },
 
@@ -44,7 +51,7 @@ define([
 
     List.CollectionView = Marionette.CollectionView.extend({
       tagName: 'ul',
-      className: 'list-unstyled',
+      className: 'comments-list list-unstyled',
       childView: List.ItemView
     });
 

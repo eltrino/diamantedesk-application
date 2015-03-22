@@ -17,7 +17,10 @@ define([
             var author = new Author.Model({}, { comment : this });
             author.fetch({
               success: function(){
-                this.set('authorName', author.get('name'));
+                this.set({
+                  'authorName': author.get('name'),
+                  'authorEmail': author.get('email')
+                });
               }.bind(this)
             });
           }.bind(this));
@@ -34,7 +37,7 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.content) {
-          errors.content = "can't be blank";
+          errors.content = "Can't be blank";
         }
         if(!_.isEmpty(errors)){
           return errors;

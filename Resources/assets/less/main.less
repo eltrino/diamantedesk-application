@@ -32,5 +32,11 @@ body {
     }
   }
 }
+.required {
+  .control-label:after {
+    content: " *";
+    display: inline;
+  }
+}
 
 @import "modules";

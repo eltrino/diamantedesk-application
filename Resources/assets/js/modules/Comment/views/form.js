@@ -7,6 +7,7 @@ define([
 
     Form.LayoutView = CommonForm.LayoutView.extend({
       template : formTemplate,
+      className : 'comments-form',
       regions : {
         attachmentRegion: '#comment-attachment',
         dropRegion : '#comment-attachment-drop'

@@ -4,20 +4,28 @@
     <li><button class="btn btn-link js-delete-comment" title="Delete Comment"><i class="fa fa-times"></i></button></li>
 </ul>
 <% } %>
-<strong>
-    <% if(typeof authorName !== 'undefined') { %>
+<% if(typeof authorName !== 'undefined') { %>
+<img src="<%= avatar_url %>?s=32&d=identicon"
+     class="comment-author-image img-circle"
+     alt="<%= authorName %>" />
+<strong class="commment-author-name">
     <%= authorName  %>
-    <% } else { %>
-    Loading...
-    <% } %>
-</strong> <%= content %>
-<p><small><%= created %></small></p>
+</strong>
+<% } else { %>
+<img src="<%= avatar_url %>?s=32&d=mm"
+     class="comment-author-image img-circle"
+     alt="Loading..." />
+<strong class="commment-author-name">
+  Loading...
+</strong>
+<% } %> <%= content %>
+<small class="comment-date"><%= created %></small>
 <% if(attachments && attachments.length) { %>
 <div class="comment-attachments-block">
   <strong>File attachments:</strong>
   <ul class="comment-attachments">
     <% _.each(attachments, function(attachment){ %>
-    <li><%= attachment.filename %></li>
+    <li><a href="<%= attach_link(attachment.hash) %>" title="Download: <%= attachment.filename %>"><%= attachment.filename %></a></li>
     <% }); %>
   </ul>
 </div>

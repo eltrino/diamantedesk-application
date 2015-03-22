@@ -35,10 +35,12 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.email) {
-          errors.email = "login is required";
+          errors.email = "Login is required";
         }
         if(!attrs.password) {
-          errors.password = "password is required";
+          errors.password = "Can't be blank";
+        } else if(attrs.password.length < 6) {
+          errors.password = 'Must be at least six (6) symbols';
         }
         if(!_.isEmpty(errors)){
           return errors;

@@ -1,3 +1,22 @@
+.comments-list {
+  margin-bottom: 25px;
+}
+.comments-item {
+  &:extend(.list-unstyled);
+  padding-left: 42px;
+  margin-bottom: 15px;
+}
+
+.comment-author-image {
+  float: left;
+  margin:5px 0 0 -42px;
+}
+
+.comment-date {
+  display: block;
+  margin: 5px 0;
+}
+
 .comment-tools {
   &:extend(.list-unstyled);
   li {
@@ -15,7 +34,13 @@
 }
 .comments-form {
   textarea {
-    resize: horizontal;
+    resize: vertical;
+  }
+  .dropzone {
+    margin-bottom: 15px;
+    @media (min-width: @screen-md-min) {
+      width: percentage((6 / @grid-columns));
+    }
   }
 }
 @import "attachments";

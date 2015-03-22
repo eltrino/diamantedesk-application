@@ -1,6 +1,7 @@
 define([
   'app',
-  'tpl!../templates/item.ejs'], function(App, itemTemplate){
+  'config',
+  'tpl!../templates/item.ejs'], function(App, Config, itemTemplate){
 
   return App.module('Ticket.View.Attachment.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -14,6 +15,12 @@ define([
 
       events: {
         'click @ui.deleteButton' : 'deleteAttachment'
+      },
+
+      templateHelpers: function(){
+        return {
+          link : Config.baseUrl.replace('diamantefront','desk') + 'attachments/download/file/' + this.model.get('hash')
+        };
       },
 
       deleteAttachment: function(e){
