@@ -42,10 +42,24 @@ define(['app'], function(App){
             });
           });
           ticketView.on('ticket:close', function(){
-            ticketModel.save({'status':'closed'}, {patch : true});
+            ticketModel.save({'status':'closed'}, {patch : true, wait: true}).done(
+              function(){
+                App.trigger('message:show', {
+                  status:'success',
+                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Closed"'
+                });
+              }
+            );
           });
           ticketView.on('ticket:open', function(){
-            ticketModel.save({'status':'open'}, {patch : true});
+            ticketModel.save({'status':'open'}, {patch : true, wait: true}).done(
+              function(){
+                App.trigger('message:show', {
+                  status:'success',
+                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Open"'
+                });
+              }
+            );
           });
 
           App.mainRegion.show(ticketView);

@@ -35,13 +35,15 @@ define(['app'], function(App){
                 patch : true,
                 success : function(resultModel){
                   App.trigger('ticket:view', resultModel.get('id'));
+                  App.trigger('message:show', {
+                    status:'success',
+                    text: 'Ticket ' + resultModel.get('key') + ' updated'
+                  });
                   modalEditView.off('modal:closed');
                   modalEditView.$el.modal('hide');
                 },
                 error : function(){
-                  App.alert({
-                    title: "Edit Ticket Error"
-                  });
+                  App.alert({title: "Edit Ticket Error"});
                 }
               });
             } else {

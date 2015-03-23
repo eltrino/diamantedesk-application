@@ -21,6 +21,7 @@ define([
 
     regions : {
       headerRegion: '#header',
+      messagesRegion: '#messages',
       mainRegion:   '#content',
       footerRegion: '#footer',
       dialogRegion: '#dialog'
@@ -74,7 +75,7 @@ define([
     document.title = title ? template.replace('{title}', title) : Config.title;
   };
 
-  require(['User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
+  require(['Common', 'User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
     App.start();
   });
 

@@ -11,13 +11,22 @@ define(['app'], function(App){
         var commentModel = new CommentModels.Model({},{ ticket : options.ticket }),
             commentCollection = options.collection,
             attachmentCollection = new AttachmentModels.Collection(),
-            formView = new Form.LayoutView({ model: commentModel, attachmentCollection: attachmentCollection });
+            formView = new Form.LayoutView({ model: commentModel, attachmentCollection: attachmentCollection }),
+            onSuccess = function(model){
+              commentCollection.add(model);
+              App.trigger('message:show', {
+                status:'success',
+                text: 'Comment was posted successfully'
+              });
+              Create.Controller(options);
+            };
 
         formView.on('form:submit', function(data){
           App.request('user:model:current').done(function(user){
             commentModel.set({
               'author': 'diamante_' + user.get('id'),
-              'authorFullName' : user.get('firstName') + ' ' + user.get('lastName')
+              'authorName' : user.get('first_name') + ' ' + user.get('last_name'),
+              'authorEmail' : user.get('email')
             }, { 'silent': true });
             commentModel.save(data, {
               success : function(model){
@@ -26,13 +35,11 @@ define(['app'], function(App){
                     comment : commentModel,
                     success : function(data){
                       model.set('attachments', data);
-                      commentCollection.add(model);
-                      Create.Controller(options);
+                      onSuccess(model);
                     }
                   });
                 } else {
-                  commentCollection.add(model);
-                  Create.Controller(options);
+                  onSuccess(model);
                 }
               },
               error : function(model, xhr){

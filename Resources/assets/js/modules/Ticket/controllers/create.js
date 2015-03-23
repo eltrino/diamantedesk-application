@@ -41,6 +41,10 @@ define(['app'], function(App){
                     success : function(){
                       isSuccess = true;
                       App.trigger('ticket:view', resultModel.get('id'));
+                      App.trigger('message:show', {
+                        status:'success',
+                        text: 'Ticket ' + resultModel.get('key') + ' created'
+                      });
                       modalCreateView.$el.modal('hide');
                     }
                   });

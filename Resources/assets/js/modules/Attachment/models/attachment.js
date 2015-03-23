@@ -26,7 +26,6 @@ define([
       },
 
       save : function(options){
-        console.log(options);
         var attr = { attachmentsInput : this.toJSON()},
           settings = _.extend({
             ticket : this.ticket,
