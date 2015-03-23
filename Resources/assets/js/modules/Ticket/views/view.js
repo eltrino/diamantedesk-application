@@ -1,7 +1,7 @@
 define([
   'app',
   'tpl!../templates/view.ejs',
-  'tpl!../templates/missing-view.ejs'], function(App, TicketViewTemplate, missingTicketViewTemplate){
+  'tpl!../templates/empty-view.ejs'], function(App, TicketViewTemplate, missingTicketViewTemplate){
 
   return App.module('Ticket.View', function(View, App, Backbone, Marionette, $, _){
 

@@ -1,7 +1,7 @@
 define([
   'app',
   'tpl!../templates/form.ejs',
-  'tpl!../templates/missing-view.ejs',
+  'tpl!../templates/empty-view.ejs',
   'Common/views/modal',
   'Common/views/form'], function(App, formTemplate, missingTicketViewTemplate, Modal, Form){
 

@@ -2,7 +2,8 @@ define([
   'app',
   'Common/views/pagination',
   'tpl!../templates/list-item.ejs',
-  'tpl!../templates/list.ejs'], function(App,Pagination, listItemTemplate, listTemplate){
+  'tpl!../templates/list.ejs',
+  'tpl!../templates/empty-list.ejs'], function(App,Pagination, listItemTemplate, listTemplate, emptyListTemplate){
 
   return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -24,6 +25,10 @@ define([
         e.preventDefault();
         this.trigger('ticket:view', this.model);
       }
+    });
+
+    List.EmptyView = Marionette.ItemView.extend({
+      template: emptyListTemplate
     });
 
     List.CompositeView = Marionette.CompositeView.extend({

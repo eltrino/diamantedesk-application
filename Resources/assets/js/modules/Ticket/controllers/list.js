@@ -16,7 +16,14 @@ define(['app'], function(App){
         }
 
         request.done(function(ticketCollection){
-          var ticketListView = new List.PaginatedView({
+          var emptyListView, ticketListView;
+          if(ticketCollection.length === 0){
+            emptyListView = new List.EmptyView();
+            App.mainRegion.show(emptyListView);
+            return;
+          }
+
+          ticketListView = new List.PaginatedView({
             collection: ticketCollection
           });
 
