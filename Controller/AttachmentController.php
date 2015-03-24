@@ -15,15 +15,15 @@ class AttachmentController extends Controller
 {
     /**
      * @Route(
-     *      "/download/image/{hash}",
-     *      name="diamante_attachment_image_download",
+     *      "/download/file/{hash}",
+     *      name="diamante_attachment_file_download",
      *      requirements={"hash"="\w+"}
      * )
      *
      * @param string $hash
      * @return BinaryFileResponse
      */
-    public function imageAttachmentAction($hash)
+    public function fileAttachmentAction($hash)
     {
         $attachmentService = $this->get('diamante.attachment.service');
         try {
