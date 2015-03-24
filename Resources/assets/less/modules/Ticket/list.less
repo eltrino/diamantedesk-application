@@ -7,7 +7,29 @@
     width:1%;
     white-space: nowrap;
   }
+  .key {
+    width:1%;
+    white-space: nowrap;
+  }
   .priority, .status {
     width:1%;
+  }
+  td {
+    a {
+      padding: @table-cell-padding;
+      margin: -@table-cell-padding;
+      display: block;
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+  .subject {
+    a {
+      color: @link-color;
+      &:hover {
+        text-decoration: underline;
+        color: @link-hover-color;
+      }
+    }
   }
 }

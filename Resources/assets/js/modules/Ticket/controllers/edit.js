@@ -17,6 +17,8 @@ define(['app'], function(App){
                 title: 'Edit Ticket ' + editTicketModel.get('key')
               });
 
+          App.setTitle(_.template('Edit Ticket: <%=key%> - <%=subject%>')(editTicketModel.toJSON()));
+
           modalEditView.on('show', function(){
             this.$el.modal();
           });
@@ -33,13 +35,15 @@ define(['app'], function(App){
                 patch : true,
                 success : function(resultModel){
                   App.trigger('ticket:view', resultModel.get('id'));
+                  App.trigger('message:show', {
+                    status:'success',
+                    text: 'Ticket ' + resultModel.get('key') + ' updated'
+                  });
                   modalEditView.off('modal:closed');
                   modalEditView.$el.modal('hide');
                 },
                 error : function(){
-                  App.alert({
-                    title: "Edit Ticket Error"
-                  });
+                  App.alert({title: "Edit Ticket Error"});
                 }
               });
             } else {

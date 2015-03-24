@@ -21,10 +21,10 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.subject) {
-          errors.subject = "can't be blank";
+          errors.subject = "Can't be blank";
         }
         if(!attrs.description) {
-          errors.description = "can't be blank";
+          errors.description = "Can't be blank";
         }
         if(!_.isEmpty(errors)){
           return errors;

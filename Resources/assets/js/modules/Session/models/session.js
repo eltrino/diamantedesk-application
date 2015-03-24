@@ -4,6 +4,39 @@ define([
   'User/models/user',
   'helpers/wsse'], function(App, Config, User, Wsse) {
 
+  function getCookie(name) {
+    var matches = document.cookie.match(new RegExp(
+      "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+  }
+  function setCookie(name, value, options) {
+    options = options || {};
+    var expires = options.expires;
+    if (typeof expires == "number" && expires) {
+      var d = new Date();
+      d.setTime(d.getTime() + expires*1000);
+      expires = options.expires = d;
+    }
+    if (expires && expires.toUTCString) {
+      options.expires = expires.toUTCString();
+    }
+    value = encodeURIComponent(value);
+    var updatedCookie = name + "=" + value;
+    for(var propName in options) {
+      updatedCookie += "; " + propName;
+      var propValue = options[propName];
+      if (propValue !== true) {
+        updatedCookie += "=" + propValue;
+      }
+    }
+    document.cookie = updatedCookie;
+  }
+  function deleteCookie(name) {
+    setCookie(name, "", { expires: -1 });
+  }
+
+
   return App.module('Session', function(Session, App, Backbone, Marionette, $, _){
 
     Session.startWithParent = false;
@@ -14,7 +47,7 @@ define([
       url: Config.apiUrl.replace('api/diamante/rest/latest', 'diamantefront') + '/user',
 
       initialize: function(){
-        var savedData = window.localStorage.getItem('authModel') || window.sessionStorage.getItem('authModel');
+        var savedData = window.localStorage.getItem('authModel') || getCookie('authModel');
         if(savedData){
           this.set(JSON.parse(savedData));
         }
@@ -35,10 +68,12 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.email) {
-          errors.email = "login is required";
+          errors.email = "Login is required";
         }
         if(!attrs.password) {
-          errors.password = "password is required";
+          errors.password = "Can't be blank";
+        } else if(attrs.password.length < 6) {
+          errors.password = 'Must be at least six (6) symbols';
         }
         if(!_.isEmpty(errors)){
           return errors;
@@ -63,7 +98,7 @@ define([
         if(this.get('remember')){
           window.localStorage.setItem('authModel', JSON.stringify(this));
         } else {
-          window.sessionStorage.setItem('authModel', JSON.stringify(this));
+          setCookie('authModel', JSON.stringify(this));
         }
         App.trigger('session:login:success');
       },
@@ -188,7 +223,7 @@ define([
         this.clear();
         this.set({ logged_in: false });
         window.localStorage.removeItem('authModel');
-        window.sessionStorage.removeItem('authModel');
+        deleteCookie('authModel');
         App.trigger('session:logout:success');
       },
 

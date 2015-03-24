@@ -4,12 +4,17 @@ define(['app'], function(App){
 
     Create.Controller = function(){
 
-      require(['Ticket/models/ticket', 'Ticket/views/create'], function(Models, CreateView){
+      require([
+        'Ticket/models/ticket',
+        'Ticket/views/create',
+        'Attachment/models/attachment'], function(Models, CreateView, AttachmentModel){
 
         var isSuccess = false,
             newTicketModel = new Models.Model(),
+            attachmentCollection = new AttachmentModel.Collection(),
             newTicketView = new Create.ItemView({
-              model: newTicketModel
+              model: newTicketModel,
+              attachmentCollection : attachmentCollection
             }),
             modalCreateView = new Create.ModalView({
               title: 'Add New Ticket'
@@ -30,9 +35,24 @@ define(['app'], function(App){
             attr.reporter =  'diamante_' + user.get('id');
             newTicketModel.save(attr, {
               success : function(resultModel){
-                isSuccess = true;
-                App.trigger('ticket:view', resultModel.get('id'));
-                modalCreateView.$el.modal('hide');
+                if(attachmentCollection.length){
+                  attachmentCollection.save({
+                    ticket : resultModel,
+                    success : function(){
+                      isSuccess = true;
+                      App.trigger('ticket:view', resultModel.get('id'));
+                      App.trigger('message:show', {
+                        status:'success',
+                        text: 'Ticket ' + resultModel.get('key') + ' created'
+                      });
+                      modalCreateView.$el.modal('hide');
+                    }
+                  });
+                } else {
+                  isSuccess = true;
+                  App.trigger('ticket:view', resultModel.get('id'));
+                  modalCreateView.$el.modal('hide');
+                }
               },
               error : function(){
                 App.alert({
@@ -41,9 +61,16 @@ define(['app'], function(App){
               }
             });
           });
-
         });
 
+        newTicketView.on('attachment:add', function(data){
+          attachmentCollection.add(data);
+        });
+        newTicketView.on('attachment:delete', function(model){
+          attachmentCollection.remove(model);
+        });
+
+        App.debug('log', App.mainRegion.hasView());
         App.dialogRegion.show(modalCreateView);
         modalCreateView.modalBody.show(newTicketView);
 

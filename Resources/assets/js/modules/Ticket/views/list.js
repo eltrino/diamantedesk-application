@@ -2,7 +2,8 @@ define([
   'app',
   'Common/views/pagination',
   'tpl!../templates/list-item.ejs',
-  'tpl!../templates/list.ejs'], function(App,Pagination, listItemTemplate, listTemplate){
+  'tpl!../templates/list.ejs',
+  'tpl!../templates/empty-list.ejs'], function(App,Pagination, listItemTemplate, listTemplate, emptyListTemplate){
 
   return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -20,9 +21,14 @@ define([
         'click': 'viewClicked'
       },
 
-      viewClicked: function(){
+      viewClicked: function(e){
+        e.preventDefault();
         this.trigger('ticket:view', this.model);
       }
+    });
+
+    List.EmptyView = Marionette.ItemView.extend({
+      template: emptyListTemplate
     });
 
     List.CompositeView = Marionette.CompositeView.extend({
@@ -33,11 +39,11 @@ define([
       childView: List.ItemView,
 
       events: {
-        'click th': 'sortHandle'
+        'click .sortable': 'sortHandle'
       },
 
       sortHandle: function(e){
-        var sortKey = e.target.className,
+        var sortKey = e.target.className.replace(' sortable',''),
             order = -1;
         if(this.collection.state.sortKey == sortKey) {
           order = this.collection.state.order > 0 ? -1 : 1;

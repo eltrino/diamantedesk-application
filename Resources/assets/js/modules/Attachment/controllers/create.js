@@ -7,34 +7,15 @@ define(['app'], function(App){
         'Attachment/models/attachment',
         'Attachment/views/dropzone'], function(Models, DropZone){
 
-        var attachmentModel = new Models.Model({},{ ticket: options.ticket }),
-            attachmentCollection = options.collection,
-            dropView = new DropZone.ItemView({ model: attachmentModel });
+        var attachmentCollection = options.collection,
+            dropView = new DropZone.ItemView();
 
         dropView.on('attachment:add', function(data){
-          //data.append('ticketId', options.ticket.id);
-          //attachmentModel.save({},{
-          //  data: data,
-          //  processData: false,
-          //  contentType: false
-          //});
-
-          var attr = {
-            attachmentsInput : data
-          };
-          $.ajax({
-            url:attachmentModel.urlRoot,
-            type:'post',
-            data: attr,
+          var newAttachments = new Models.Collection(data,{ ticket: options.ticket });
+          newAttachments.save({
             success: function(collection){
               attachmentCollection.add(collection, { ticket: options.ticket });
               Create.Controller(options);
-            },
-            error: function(xhr){
-              App.alert({
-                title: "Add Attach Error",
-                xhr : xhr
-              });
             }
           });
         });

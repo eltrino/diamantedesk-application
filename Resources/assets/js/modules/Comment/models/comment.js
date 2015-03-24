@@ -13,8 +13,16 @@ define([
       initialize: function(attr, options){
 
         if(attr && attr.author){
-          App.request('user:model', attr.author).done(function(user){
-            this.set('authorFullName', user.get('firstName') + ' ' + user.get('lastName'));
+          require(['Comment/models/author'], function(Author){
+            var author = new Author.Model({}, { comment : this });
+            author.fetch({
+              success: function(){
+                this.set({
+                  'authorName': author.get('name'),
+                  'authorEmail': author.get('email')
+                });
+              }.bind(this)
+            });
           }.bind(this));
         }
 
@@ -29,7 +37,7 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.content) {
-          errors.content = "can't be blank";
+          errors.content = "Can't be blank";
         }
         if(!_.isEmpty(errors)){
           return errors;

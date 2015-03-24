@@ -21,6 +21,7 @@ define([
 
     regions : {
       headerRegion: '#header',
+      messagesRegion: '#messages',
       mainRegion:   '#content',
       footerRegion: '#footer',
       dialogRegion: '#dialog'
@@ -69,7 +70,12 @@ define([
     this.trigger('history:start');
   });
 
-  require(['User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
+  App.setTitle = function(title){
+    var template = "{title} | " + Config.title;
+    document.title = title ? template.replace('{title}', title) : Config.title;
+  };
+
+  require(['Common', 'User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
     App.start();
   });
 

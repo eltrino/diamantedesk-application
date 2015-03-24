@@ -26,13 +26,13 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: '<%= assetsDir %>',
-          src: [ '**/*', '**/.*','.htaccess', '!less/**' ],
+          src: [ '**/*', '**/.*','.htaccess', '!less/**'],
           dest: '<%= publicDir %>'
         }],
         //pretend: true, // Don't do any disk operations - just write log
         //verbose: true, // Display log messages when copying files
 
-        ignoreInDest: "css/**",
+        ignoreInDest: ['css/**', 'less/**'],
         updateAndDelete: true
       }
     },

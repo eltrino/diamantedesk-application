@@ -2,29 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Diamante</title>
     <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.css') }}" type="text / css"/>
 </head>
 <body>
-<header id="header">
+<header id="header"></header>
 
-</header>
-
-<section id="content" class="container">
-
-    <div class="starter-template">
-        <h1 style="text-align: center;">Loading ...</h1>
+<section id="main" class="container">
+    <div id="messages"></div>
+    <div id="content">
+        <div class="starter-template">
+            <h1 style="text-align: center;">Loading ...</h1>
+        </div>
     </div>
-
 </section>
 
-<footer id="footer">
+<footer id="footer"></footer>
 
-</footer>
-
-<div id="dialog">
-
-</div>
+<div id="dialog"></div>
 
 <script data-main="{{ asset('bundles/diamantefront/js/main.js') }}"
         src="{{ asset('bundles/diamantefront/js/vendor/requirejs/require.js') }}"></script>
@@ -36,7 +31,9 @@
                 basePath : '{{ basePath }}',
                 baseUrl : '{{ baseUrl }}',
                 apiUrl : '{{ apiUrl }}',
-                branchId : {{ branchId }}
+                branchId : {{ branchId }},
+                logo : '{{ basePath }}/bundles/diamantefront/img/logo.png',
+                title : 'Diamante'
             }
         }
     });

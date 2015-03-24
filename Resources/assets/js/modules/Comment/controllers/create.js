@@ -5,22 +5,42 @@ define(['app'], function(App){
     Create.Controller = function(options){
       require([
         'Comment/models/comment',
-        'Comment/views/form'], function(Models, Form){
+        'Comment/models/attachment',
+        'Comment/views/form'], function(CommentModels, AttachmentModels, Form){
 
-        var commentModel = new Models.Model({},{ ticket : options.ticket }),
+        var commentModel = new CommentModels.Model({},{ ticket : options.ticket }),
             commentCollection = options.collection,
-            formView = new Form.ItemView({ model: commentModel });
+            attachmentCollection = new AttachmentModels.Collection(),
+            formView = new Form.LayoutView({ model: commentModel, attachmentCollection: attachmentCollection }),
+            onSuccess = function(model){
+              commentCollection.add(model);
+              App.trigger('message:show', {
+                status:'success',
+                text: 'Comment was posted successfully'
+              });
+              Create.Controller(options);
+            };
 
         formView.on('form:submit', function(data){
           App.request('user:model:current').done(function(user){
             commentModel.set({
-              'author': 'oro_' + user.get('id'),
-              'authorFullName' : user.get('firstName') + ' ' + user.get('lastName')
+              'author': 'diamante_' + user.get('id'),
+              'authorName' : user.get('first_name') + ' ' + user.get('last_name'),
+              'authorEmail' : user.get('email')
             }, { 'silent': true });
             commentModel.save(data, {
               success : function(model){
-                commentCollection.add(model);
-                Create.Controller(options);
+                if(attachmentCollection.length){
+                  attachmentCollection.save({
+                    comment : commentModel,
+                    success : function(data){
+                      model.set('attachments', data);
+                      onSuccess(model);
+                    }
+                  });
+                } else {
+                  onSuccess(model);
+                }
               },
               error : function(model, xhr){
                 App.alert({
@@ -30,6 +50,12 @@ define(['app'], function(App){
               }
             });
           });
+        });
+        formView.on('attachment:add', function(data){
+          attachmentCollection.add(data);
+        });
+        formView.on('attachment:delete', function(model){
+          attachmentCollection.remove(model);
         });
 
         options.parentView.formRegion.show(formView);

@@ -11,6 +11,7 @@ define(['app'], function(App){
           var ticketView = new View.ItemView({
               model : ticketModel
           });
+          App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
           ticketView.on('dom:refresh', function(){
             require(['Comment','Attachment'], function(Comment, Attachment){
               var commentOptions = {
@@ -41,10 +42,24 @@ define(['app'], function(App){
             });
           });
           ticketView.on('ticket:close', function(){
-            ticketModel.save({'status':'closed'}, {patch : true});
+            ticketModel.save({'status':'closed'}, {patch : true, wait: true}).done(
+              function(){
+                App.trigger('message:show', {
+                  status:'success',
+                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Closed"'
+                });
+              }
+            );
           });
           ticketView.on('ticket:open', function(){
-            ticketModel.save({'status':'open'}, {patch : true});
+            ticketModel.save({'status':'open'}, {patch : true, wait: true}).done(
+              function(){
+                App.trigger('message:show', {
+                  status:'success',
+                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Open"'
+                });
+              }
+            );
           });
 
           App.mainRegion.show(ticketView);

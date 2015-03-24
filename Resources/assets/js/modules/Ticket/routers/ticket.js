@@ -16,26 +16,31 @@ define(['app'], function(App){
 
     var API = {
       listTickets: function(){
+        App.setTitle();
         require(['Ticket/controllers/list'], function(List){
           List.Controller();
         });
       },
       viewTicket: function(id){
+        App.setTitle('View Ticket');
         require(['Ticket/controllers/view'], function(View){
           View.Controller(id);
         });
       },
       createTicket: function(){
+        App.setTitle('Create Ticket');
         require(['Ticket/controllers/create'], function(Create){
           Create.Controller();
         });
       },
       editTicket: function(id){
+        App.setTitle('Edit Ticket');
         require(['Ticket/controllers/edit'], function(Edit){
           Edit.Controller(id);
         });
       },
       searchTicket: function(query){
+        App.setTitle('Search Result');
         require(['Ticket/controllers/list'], function(List){
           List.Controller(query);
         });
