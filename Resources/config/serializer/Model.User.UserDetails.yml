@@ -7,8 +7,6 @@ Diamante\DeskBundle\Model\User\UserDetails:
           exclude: true
         lastName:
           exclude: true
-        email:
-          exclude: true
 
     virtual_properties:
         getFullName:
