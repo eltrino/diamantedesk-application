@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Tests\Functional;
+namespace Diamante\DeskBundle\Tests\Functional\Api;
 
 use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
 use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
@@ -78,9 +78,8 @@ class CommentApiTest extends ApiTestCase
 
     public function testAddAttachmentToComment()
     {
-        $attachment = file_get_contents(
-            dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg'
-        );
+        $file = realpath(dirname(__FILE__) . '/../' . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg');
+        $attachment = file_get_contents($file);
         $this->command->urlParameters = array('commentId' => 2);
         $this->command->requestParameters = array(
             'attachmentsInput' => array(
