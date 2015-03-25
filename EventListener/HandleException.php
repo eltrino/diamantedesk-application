@@ -15,7 +15,7 @@
 
 namespace Diamante\ApiBundle\EventListener;
 
-use FOS\RestBundle\Util\Codes;
+use FOS\Rest\Util\Codes;
 use JMS\Serializer\Serializer;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Bridge\Monolog\Logger;

@@ -18,7 +18,7 @@ namespace Diamante\ApiBundle\EventListener;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
-use FOS\RestBundle\Util\Codes;
+use FOS\Rest\Util\Codes;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Bridge\Monolog\Logger;
