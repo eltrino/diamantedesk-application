@@ -36,7 +36,7 @@ php app/console diamante:update
 Configuration
 ------------
 
-For attachment download you should add additional configuration to filewalls section in `app/etc/security.yml`
+For attachment download you should add additional configuration to firewalls section in `app/etc/security.yml`
 
 ```yml
 diamante_attachments_download:
