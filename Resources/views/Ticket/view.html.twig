@@ -35,7 +35,7 @@
                     {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
                     <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
                 </div>
-                <div class="diam-comment-meta">{{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }}</div>
+                <div class="diam-comment-meta">{{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }} {% if comment.private %}<span>private</span>{% endif %}</div>
                 <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
