@@ -6,14 +6,14 @@
 <% } %>
 <% if(typeof authorName !== 'undefined') { %>
 <img src="<%= avatar_url %>?s=32&d=identicon"
-     class="comment-author-image img-circle"
+     class="comment-author-image"
      alt="<%= authorName %>" />
 <strong class="commment-author-name">
     <%= authorName  %>
 </strong>
 <% } else { %>
 <img src="<%= avatar_url %>?s=32&d=mm"
-     class="comment-author-image img-circle"
+     class="comment-author-image"
      alt="Loading..." />
 <strong class="commment-author-name">
   Loading...
