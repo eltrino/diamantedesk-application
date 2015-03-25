@@ -72,6 +72,8 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.notification.delivery.manger"/>
             <argument type="service" id="diamante.notification.email.notifier"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
         </service>
 
         <service id="diamante.ticket.entity.factory" class="%diamante.ticket.entity.factory.class%">
@@ -99,6 +101,9 @@
         <service id="diamante.ticket.api.service" class="%diamante.ticket.service.api.class%" parent="diamante.ticket.service">
             <call method="setApiPagingService">
                 <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+            <call method="setUserDetailsService">
+                <argument type="service" id="diamante.user.details.service"/>
             </call>
         </service>
 
@@ -179,6 +184,9 @@
         <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service">
             <call method="setApiPagingService">
                 <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+            <call method="setUserDetailsService">
+                <argument type="service" id="diamante.user.details.service"/>
             </call>
         </service>
 

@@ -16,7 +16,9 @@ namespace Diamante\DeskBundle\Infrastructure\Attachment\FileStorage;
 
 use Diamante\DeskBundle\Model\Attachment\Services\FileStorageService;
 use Symfony\Component\Filesystem\Filesystem;
-
+/*
+ * @todo this class requires refactoring
+ */
 class LocalFileStorageService implements FileStorageService
 {
     /**

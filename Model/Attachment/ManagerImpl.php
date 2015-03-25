@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Model\Attachment;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Imagine\Image\Box;
 use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
+use Symfony\Bridge\Monolog\Logger;
 
 class ManagerImpl implements Manager
 {
@@ -42,21 +43,29 @@ class ManagerImpl implements Manager
     private $loader;
 
     /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
+    /**
      * @param \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService $fileStorageService
      * @param \Diamante\DeskBundle\Model\Attachment\AttachmentFactory           $factory
      * @param \Diamante\DeskBundle\Model\Shared\Repository                      $repository
      * @param \Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader          $loader
+     * @param \Symfony\Bridge\Monolog\Logger                                    $logger
      */
     public function __construct(
         Services\FileStorageService $fileStorageService,
         AttachmentFactory $factory,
         Repository $repository,
-        FileSystemLoader $loader
+        FileSystemLoader $loader,
+        Logger $logger
     ) {
         $this->fileStorageService = $fileStorageService;
         $this->factory = $factory;
         $this->repository = $repository;
         $this->loader = $loader;
+        $this->logger = $logger;
     }
 
     /**
@@ -168,6 +177,7 @@ class ManagerImpl implements Manager
             $destination = sprintf("%s/%s.%s", $destinationFolder, $hash, self::DEFAULT_THUMB_EXT);
             $thumbnail->save($destination);
         } catch (\Exception $e) {
+            $this->logger->error(sprintf('Attachment directory is not accessible! Reason: %s', $e->getMessage()));
             throw new \RuntimeException('Thumbnail could not be created. ' . $e->getMessage());
         }
     }

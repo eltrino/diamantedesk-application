@@ -72,6 +72,7 @@ class BranchController extends Controller
                 'branchEmailConfiguration' => $branchEmailConfiguration
             ];
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch loading failed: %s', $e->getMessage()));
             return new Response($e->getMessage(), 404);
         }
     }
@@ -93,7 +94,7 @@ class BranchController extends Controller
             });
         } catch (MethodNotAllowedException $e) {
         } catch(\Exception $e) {
-            // @todo log original error
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch creation failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.create.error');
             return $this->redirect(
                 $this->generateUrl(
@@ -166,7 +167,7 @@ class BranchController extends Controller
                 )
             );
         } catch(\Exception $e) {
-            // @todo log original error
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch update failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.save.error');
             return $this->redirect(
                 $this->generateUrl(
@@ -215,6 +216,7 @@ class BranchController extends Controller
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $form->createView());
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch saving failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.save.error');
             $response = array('form' => $form->createView());
         }
@@ -244,6 +246,7 @@ class BranchController extends Controller
             ));
         } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch deletion failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.delete.error');
             return new Response($e->getMessage(), 500);
         }

@@ -133,6 +133,7 @@ class CommentController extends Controller
         } catch (MethodNotAllowedException $e) {
             $response = array('form' => $formView, 'ticket' => $ticket);
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Comment saving failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.comment.messages.create.error');
             $response = array('form' => $formView, 'ticket' => $ticket);
         }
@@ -156,8 +157,8 @@ class CommentController extends Controller
             $this->get('diamante.comment.service')->deleteTicketComment($commentId);
 
             $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
-        } catch (Exception $e) {
-            //TODO: Log original error
+        } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Comment deletion failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.comment.messages.delete.error');
         }
 
@@ -228,8 +229,8 @@ class CommentController extends Controller
         try {
             $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
-        } catch (Exception $e) {
-            //TODO: Log original error
+        } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment deletion failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
         }
 

@@ -27,6 +27,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\User\User;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
@@ -79,6 +80,11 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     private $notifier;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
     public function __construct(
         MessageReferenceRepository $messageReferenceRepository,
         Repository $ticketRepository,
@@ -88,7 +94,8 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         AttachmentManager $attachmentManager,
         EventDispatcher $dispatcher,
         NotificationDeliveryManager $notificationDeliveryManager,
-        Notifier $notifier
+        Notifier $notifier,
+        Logger  $logger
     )
     {
         $this->messageReferenceRepository = $messageReferenceRepository;
@@ -100,6 +107,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $this->dispatcher                 = $dispatcher;
         $this->notificationDeliveryManager = $notificationDeliveryManager;
         $this->notifier                   = $notifier;
+        $this->logger                     = $logger;
     }
 
     /**
@@ -169,6 +177,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             ->getReferenceByMessageId($messageId);
 
         if (is_null($reference)) {
+            $this->logger->error(sprintf('Ticket not found for message: %s', $messageId));
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
 

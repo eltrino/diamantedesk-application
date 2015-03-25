@@ -27,9 +27,9 @@ Diamante\DeskBundle\Model\Ticket\Ticket:
         getAssigneeId:
             serialized_name: assignee
             type: integer
-        getReporterId:
+        getReporter:
             serialized_name: reporter
-            type: integer
+            type: string
         getBranchId:
             serialized_name: branch
             type: integer

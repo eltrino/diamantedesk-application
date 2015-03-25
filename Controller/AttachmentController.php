@@ -15,15 +15,15 @@ class AttachmentController extends Controller
 {
     /**
      * @Route(
-     *      "/download/image/{hash}",
-     *      name="diamante_attachment_image_download",
+     *      "/download/file/{hash}",
+     *      name="diamante_attachment_file_download",
      *      requirements={"hash"="\w+"}
      * )
      *
      * @param string $hash
      * @return BinaryFileResponse
      */
-    public function imageAttachmentAction($hash)
+    public function fileAttachmentAction($hash)
     {
         $attachmentService = $this->get('diamante.attachment.service');
         try {
@@ -32,6 +32,7 @@ class AttachmentController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
             return $response;
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment loading failed: %s', $e->getMessage()));
             throw $this->createNotFoundException('Attachment not found');
         }
     }
@@ -57,6 +58,7 @@ class AttachmentController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
             return $response;
         } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment loading failed: %s', $e->getMessage()));
             throw $this->createNotFoundException('Attachment not found');
         }
     }

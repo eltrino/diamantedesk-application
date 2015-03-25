@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFac
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 use Diamante\DeskBundle\Api\Command;
+use Symfony\Bridge\Monolog\Logger;
 
 class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationService
 {
@@ -38,14 +39,21 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
      */
     private $branchEmailConfigurationFactory;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
     public function __construct(
         BranchEmailConfigurationFactory $branchEmailConfigurationFactory,
         BranchEmailConfigurationRepository $branchEmailConfigurationRepository,
-        Repository $branchRepository
+        Repository $branchRepository,
+        Logger  $logger
     ) {
         $this->branchEmailConfigurationFactory    = $branchEmailConfigurationFactory;
         $this->branchEmailConfigurationRepository = $branchEmailConfigurationRepository;
         $this->branchRepository                   = $branchRepository;
+        $this->logger                             = $logger;
     }
 
     /**
@@ -87,6 +95,7 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
         $branch = $this->branchRepository->get($branchEmailConfigurationCommand->branch);
 
         if (is_null($branch)) {
+            $this->logger->error(sprintf('Failed to load email configuration for branch: %s',$branchEmailConfigurationCommand->branch));
             throw new \RuntimeException('Branch Email Configuration loading failed, branch not found.');
         }
 
