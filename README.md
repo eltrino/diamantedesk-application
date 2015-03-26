@@ -27,7 +27,7 @@ Composer will also install NPM dependencies. If you're installing bundle not thr
 In addition you will need to run DiamanteDesk internal command to deploy for the first time
 
 ```bash
-php app/console diamante:front:build
+php app/console diamante:front:build --with-assets-dependencies
 ```
 
 This will create assets in `@DiamanteFrontBundle/Resources/public`. Assets includes compiled less files and dependencies installed via Bower.
