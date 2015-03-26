@@ -21,7 +21,7 @@
             "url": "https://github.com/eltrino/DiamanteFrontBundle.git"
         }
     ],
-    "require": 
+    "require": { 
         "php": ">=5.4.4",
         "diamante/desk-bundle": "*",
         "eloquent/composer-npm-bridge": "~2"
