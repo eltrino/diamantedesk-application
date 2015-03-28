@@ -11,33 +11,10 @@ body {
   background: #f9f9fb;
 }
 
-.blured {
-  #header, .content, #footer {
-    -webkit-filter: blur(2px);
-    -moz-filter: blur(2px);
-    -ms-filter: blur(2px);
-    -o-filter: blur(2px);
-    filter: blur(2px);
-  }
-}
-
 @import "layout/header";
 @import "layout/messages";
 @import "layout/main";
 @import "layout/footer";
 
-.table {
-  thead {
-    th, td{
-      background: @gray-lighter;
-    }
-  }
-}
-.required {
-  .control-label:after {
-    content: " *";
-    display: inline;
-  }
-}
-
 @import "modules";
+@import "shared";

@@ -30,7 +30,7 @@ define([
               error : function(){}
             }, options);
         if(settings.comment){
-          this.url.replace('{id}', settings.comment.id);
+          this.url = this.url.replace('{id}', settings.comment.id);
         }
         return $.ajax({
           url: this.url,

@@ -14,6 +14,7 @@ define(['app'], function(App){
             destroyAttachments = [];
 
         formView.on('form:submit', function(data){
+          options.parentView.showLoader();
           var request = [],
               addAttachments = new AttachmentModels.Collection(
                 attachmentCollection.filter(function(model){ return model.isNew(); }),
@@ -30,18 +31,24 @@ define(['app'], function(App){
               wait: true,
               success : function(model){
                 require(['Comment/controllers/create'],function(Create){
+                  options.parentView.hideLoader();
                   Create.Controller(options);
                 });
               },
               error : function(model, xhr){
+                options.parentView.hideLoader();
                 App.alert({
                   title: "Create Comment Error",
                   xhr : xhr
                 });
               }
             });
+            if(!commentModel.isValid()){
+              options.parentView.hideLoader();
+            }
           }).fail(function(xhr){
             console.warn(arguments);
+            options.parentView.hideLoader();
             App.alert({
               title: "Edit Attachments Error",
               xhr : xhr

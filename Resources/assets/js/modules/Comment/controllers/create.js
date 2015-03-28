@@ -13,6 +13,7 @@ define(['app'], function(App){
             attachmentCollection = new AttachmentModels.Collection(),
             formView = new Form.LayoutView({ model: commentModel, attachmentCollection: attachmentCollection }),
             onSuccess = function(model){
+              options.parentView.hideLoader();
               commentCollection.add(model);
               App.trigger('message:show', {
                 status:'success',
@@ -22,6 +23,7 @@ define(['app'], function(App){
             };
 
         formView.on('form:submit', function(data){
+          options.parentView.showLoader();
           App.request('user:model:current').done(function(user){
             commentModel.set({
               'author': 'diamante_' + user.get('id'),
@@ -43,12 +45,16 @@ define(['app'], function(App){
                 }
               },
               error : function(model, xhr){
+                options.parentView.hideLoader();
                 App.alert({
                   title: "Create Comment Error",
                   xhr : xhr
                 });
               }
             });
+            if(!commentModel.isValid()){
+              options.parentView.hideLoader();
+            }
           });
         });
         formView.on('attachment:add', function(data){

@@ -42,6 +42,32 @@ define([
           url: this.url,
           type:'post',
           data: attr,
+          xhr: function() {
+            var model = this;
+            var xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener("progress", function(e){
+              var percent = 0;
+              if (e.lengthComputable) {
+                percent = e.loaded / e.total * 100;
+              } else {
+                percent = 100;
+              }
+              model.trigger('progress', 'sending', percent);
+              if(percent === 100) {
+                setTimeout(function(){ model.trigger('progress', 'receiving', 0); }, 600);
+              }
+            }, false);
+            xhr.addEventListener("progress", function(e){
+              var percent = 0;
+              if (e.lengthComputable) {
+                percent = e.loaded / e.total * 100;
+              } else {
+                percent = 100;
+              }
+              model.trigger('progress', 'receiving', percent);
+            }, false);
+            return xhr;
+          }.bind(this),
           success: function(data){
             settings.success(data);
           },

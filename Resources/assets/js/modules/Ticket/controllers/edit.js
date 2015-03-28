@@ -4,6 +4,8 @@ define(['app'], function(App){
 
     Edit.Controller = function(id){
 
+      App.mainRegion.showLoader();
+
       require([
         'Ticket/models/ticket',
         'Ticket/views/edit'], function(Models, EditView){

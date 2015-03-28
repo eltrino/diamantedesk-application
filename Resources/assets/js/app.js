@@ -75,6 +75,8 @@ define([
     document.title = title ? template.replace('{title}', title) : Config.title;
   };
 
+  require(['Common/views/loader']);
+
   require(['Common', 'User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
     App.start();
   });

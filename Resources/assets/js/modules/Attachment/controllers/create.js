@@ -11,7 +11,11 @@ define(['app'], function(App){
             dropView = new DropZone.ItemView();
 
         dropView.on('attachment:add', function(data){
+          dropView.trigger('progress', 'sending', 0);
           var newAttachments = new Models.Collection(data,{ ticket: options.ticket });
+          newAttachments.on('progress', function(state, value){
+            dropView.trigger('progress', state, value);
+          });
           newAttachments.save({
             success: function(collection){
               attachmentCollection.add(collection, { ticket: options.ticket });

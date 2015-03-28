@@ -21,7 +21,13 @@ define([
       className: 'dropzone',
 
       ui: {
-        fileInput: '.dropzone-input'
+        fileInput: '.dropzone-input',
+        readingProgress: '.dropzone-progress-reading',
+        readingProgressBar: '.dropzone-progress-reading .progress-bar',
+        sendingProgress: '.dropzone-progress-sending',
+        sendingProgressBar: '.dropzone-progress-sending .progress-bar',
+        receivingProgress: '.dropzone-progress-receiving',
+        receivingProgressBar: '.dropzone-progress-receiving .progress-bar'
       },
 
       events: {
@@ -31,12 +37,14 @@ define([
       initialize: function(){
         this.onDragStart = this.dragStart.bind(this);
         this.onDragEnd = this.dragEnd.bind(this);
+        this.on('progress', this.setProgress.bind(this));
       },
 
       addFile: function(){
         var files = this.ui.fileInput[0].files,
             data = [],
             ready = 0;
+        this.trigger('progress' , 'reading', 0);
         _.each(files, function(file){
           var reader = new FileReader(),
               i = data.length;
@@ -44,9 +52,13 @@ define([
             filename : file.name
           };
           reader.onloadend = function () {
+            ++ready;
             data[i].content = reader.result.replace(/^data:.+?;base64,/, '');
-            if(files.length == ++ready){
-              this.trigger('attachment:add', data);
+            this.trigger('progress' , 'reading', ready/files.length * 100);
+            if(files.length == ready){
+              setTimeout(function(){
+                this.trigger('attachment:add', data);
+              }.bind(this), 600);
             }
           }.bind(this);
           reader.readAsDataURL(file);
@@ -55,6 +67,21 @@ define([
 
       success: function(){
         this.$el.append(this.ui.fileInput);
+      },
+
+      setProgress: function(state, value){
+        var progress = this.ui[state + 'Progress'],
+            progressBar = this.ui[state + 'ProgressBar'];
+        if(!progress.is(':visible')){
+          progress.show();
+        }
+        progressBar.css('width', value+'%').attr('aria-valuenow', value);
+        if(value == 100) {
+          setTimeout(function(){
+            progress.hide();
+            progressBar.css('width', '0%').attr('aria-valuenow', 0);
+          },500);
+        }
       },
 
       dragStart: function(e){

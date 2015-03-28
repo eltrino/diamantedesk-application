@@ -4,9 +4,7 @@ define([
 
   return App.module('User', function(User, App, Backbone, Marionette, $, _){
 
-    var currentUser,
-        userCache = [],
-        userCacheRequest = [];
+    var currentUser;
 
     User.UserModel = Backbone.Model.extend({
       url : Config.apiUrl + '/desk/users/current',
@@ -46,59 +44,11 @@ define([
           });
         }
         return defer.promise();
-      },
-      getUserModelByName: function(username) {
-        var user = new User.UserModel(),
-            defer = $.Deferred();
-        user.urlRoot = Config.apiUrl + '/users/filter';
-        user.fetch({
-          data : { username: username },
-          success : function(data){
-            defer.resolve(data);
-          },
-          error : function(data){
-            defer.reject(data);
-          },
-          complete : function(){
-            user.urlRoot = Config.apiUrl + '/users/';
-          }
-        });
-        return defer.promise();
-      },
-      getUserModelById : function(id, force){
-        var user = new User.UserModel({id:id}),
-            defer = $.Deferred();
-        if(userCache[id]) {
-          defer.resolve(userCache[id]);
-        }
-        if(!userCacheRequest[id]){
-          userCacheRequest[id] = user;
-          user.fetch({
-            success: function(model){
-              userCache[id] = model;
-              defer.resolve(model);
-            },
-            error: function(){
-              defer.reject();
-            }
-          });
-        } else {
-          userCacheRequest[id].on('change', function(model){ defer.resolve(model); });
-        }
-        return defer.promise();
       }
     };
 
     App.reqres.setHandler('user:model:current', function(){
       return API.getCurrentUserModel();
-    });
-
-    App.reqres.setHandler('user:model:username', function(username){
-      return API.getUserModelByName(username);
-    });
-
-    App.reqres.setHandler('user:model', function(id){
-      return API.getUserModelById(id);
     });
 
   });

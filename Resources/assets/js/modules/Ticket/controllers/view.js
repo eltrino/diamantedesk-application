@@ -4,6 +4,8 @@ define(['app'], function(App){
 
     View.Controller = function(id){
 
+      App.mainRegion.showLoader();
+
       require(['Ticket/models/ticket', 'Ticket/views/view'], function(){
 
         App.request('ticket:model', id).done(function(ticketModel){
@@ -42,6 +44,7 @@ define(['app'], function(App){
             });
           });
           ticketView.on('ticket:close', function(){
+            ticketView.showLoader();
             ticketModel.save({'status':'closed'}, {patch : true, wait: true}).done(
               function(){
                 App.trigger('message:show', {
@@ -52,6 +55,7 @@ define(['app'], function(App){
             );
           });
           ticketView.on('ticket:open', function(){
+            ticketView.showLoader();
             ticketModel.save({'status':'open'}, {patch : true, wait: true}).done(
               function(){
                 App.trigger('message:show', {

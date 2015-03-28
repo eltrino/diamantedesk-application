@@ -11,6 +11,7 @@ define(['app'], function(App){
         });
 
         loginView.on('form:submit', function(data){
+          loginView.showLoader();
           this.model.login(data);
         });
 

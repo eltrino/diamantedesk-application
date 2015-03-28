@@ -1,8 +1,10 @@
-define(['app'], function(App){
+define(['app', 'Common/views/loader'], function(App, loaderView){
 
   return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
     List.Controller = function(query){
+
+      App.mainRegion.showLoader();
 
       require([
         'Ticket/models/ticket',
@@ -28,10 +30,12 @@ define(['app'], function(App){
           });
 
           ticketListView.mainView.on('childview:ticket:view', function(childView, ticketModel){
+            ticketListView.mainView.showLoader();
             App.trigger('ticket:view', ticketModel.get('id'));
           });
 
           ticketListView.mainView.on('ticket:sort', function(sortKey, order){
+            ticketListView.mainView.showLoader();
             ticketCollection.setSorting(sortKey, order);
             ticketCollection.fetch({
               data : ticketCollection.params,
@@ -42,6 +46,7 @@ define(['app'], function(App){
           });
 
           ticketListView.on('page:change', function(page){
+            ticketListView.mainView.showLoader();
             ticketCollection.getPage(page, {
               data : ticketCollection.params,
               success : function(){

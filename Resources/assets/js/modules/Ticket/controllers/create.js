@@ -4,6 +4,8 @@ define(['app'], function(App){
 
     Create.Controller = function(){
 
+      App.mainRegion.showLoader();
+
       require([
         'Ticket/models/ticket',
         'Ticket/views/create',
@@ -31,6 +33,7 @@ define(['app'], function(App){
         });
 
         newTicketView.on('form:submit', function(attr){
+          newTicketView.showLoader();
           App.request('user:model:current').done(function(user){
             attr.reporter =  'diamante_' + user.get('id');
             newTicketModel.save(attr, {
@@ -60,6 +63,9 @@ define(['app'], function(App){
                 });
               }
             });
+            if(!newTicketModel.isValid()){
+              newTicketView.hideLoader();
+            }
           });
         });
 
