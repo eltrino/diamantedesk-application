@@ -24,13 +24,13 @@ composer require diamante/desk-bundle:dev-master
 In addition you will need to run DiamanteDesk internal command to install
 
 ```bash
-php app/console diamante:install
+php app/console diamante:desk:install
 ```
 
 or to update already installed software
 
 ```bash
-php app/console diamante:update
+php app/console diamante:desk:update
 ```
 
 Configuration
