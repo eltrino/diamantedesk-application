@@ -90,7 +90,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     private $diamanteUser;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @var \Diamante\UserBundle\Model\UserDetailsService
      * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
      */
     private $userDetailsService;

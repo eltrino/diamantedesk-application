@@ -39,7 +39,7 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     const DESCRIPTION  = 'Description';
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @var \Diamante\UserBundle\Model\UserDetailsService
      * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
      */
     private $userDetailsService;

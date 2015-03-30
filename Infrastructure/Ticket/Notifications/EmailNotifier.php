@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 
-use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
@@ -25,8 +24,9 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Resolver\ReporterFullNameReso
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetailsService;
+use Diamante\UserBundle\Api\UserDetailsService;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 

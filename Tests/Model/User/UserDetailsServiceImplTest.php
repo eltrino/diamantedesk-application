@@ -12,18 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 21/11/14
- * Time: 7:38 PM
- */
 
 namespace Diamante\DeskBundle\Tests\Model\User;
 
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetailsServiceImpl;
+
+use Diamante\UserBundle\Api\Internal\UserDetailsServiceImpl;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 

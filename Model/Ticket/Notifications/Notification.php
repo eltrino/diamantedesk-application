@@ -32,7 +32,7 @@ class Notification
     private $subject;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\User
+     * @var \Diamante\UserBundle\Model\User
      */
     private $author;
 

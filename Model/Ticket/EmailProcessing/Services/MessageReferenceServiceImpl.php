@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
@@ -26,7 +25,8 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\Source;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 

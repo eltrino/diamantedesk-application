@@ -80,7 +80,7 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::SUBJECT, $ticket->getSubject());
         $this->assertEquals(self::DESCRIPTION, $ticket->getDescription());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Branch\Branch', $ticket->getBranch());
-        $this->assertInstanceOf('\Diamante\DeskBundle\Model\User\User', $ticket->getReporter());
+        $this->assertInstanceOf('\Diamante\UserBundle\Model\User', $ticket->getReporter());
         $this->assertInstanceOf('\Oro\Bundle\UserBundle\Entity\User', $ticket->getAssignee());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Ticket\Priority', $ticket->getPriority());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Ticket\Status', $ticket->getStatus());

@@ -17,10 +17,9 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {

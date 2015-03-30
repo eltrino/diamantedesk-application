@@ -24,8 +24,8 @@ use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetailsService;
+use Diamante\UserBundle\Api\UserDetailsService;
+use Diamante\UserBundle\Model\User;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -447,7 +447,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     }
 
     /**
-     * @param \Diamante\DeskBundle\Model\User\UserDetailsService $detailsService
+     * @param \Diamante\UserBundle\Model\UserDetailsService $detailsService
      */
     public function setUserDetailsService(UserDetailsService $detailsService)
     {

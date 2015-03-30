@@ -32,7 +32,7 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @var \Diamante\UserBundle\Model\UserDetailsService
      * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
      */
     private $userDetailsService;

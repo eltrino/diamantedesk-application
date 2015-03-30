@@ -15,7 +15,6 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
-use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Api\Command\CommentCommand;
@@ -24,7 +23,7 @@ use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\CommentService;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

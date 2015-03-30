@@ -31,7 +31,7 @@ use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
+     * @var \Diamante\UserBundle\Model\UserDetailsService
      * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
      */
     private $userDetailsService;
@@ -86,7 +86,7 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $actualDetails = $this->userDetailsExtension->fetchUserDetails($user);
 
-        $this->assertInstanceOf('\Diamante\DeskBundle\Model\User\UserDetails', $actualDetails);
+        $this->assertInstanceOf('\Diamante\UserBundle\Model\UserDetails', $actualDetails);
         $this->assertNotNull($actualDetails->getId());
         $this->assertNotNull($actualDetails->getType());
         $this->assertEquals(User::TYPE_DIAMANTE, $actualDetails->getType());

@@ -15,7 +15,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Ticket\CommentRepository;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 
 class DoctrineCommentRepository extends DoctrineGenericRepository implements CommentRepository
 {

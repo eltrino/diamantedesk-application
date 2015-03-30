@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
@@ -25,7 +26,7 @@ use Diamante\DeskBundle\Form\Type\AttachmentType;
 use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

@@ -26,7 +26,7 @@ use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 
 class CommandFactory
 {
