@@ -62,6 +62,10 @@ class WsseListener implements ListenerInterface
 
             if ($returnValue instanceof TokenInterface)
             {
+                if (!$returnValue->getUser()->isActive()) {
+                    throw new AuthenticationException();
+                }
+
                 return $this->securityContext->setToken($returnValue);
             }
             else if ($returnValue instanceof Response)
