@@ -25,11 +25,6 @@ class DiamanteUser implements Entity
     protected $id;
 
     /**
-     * @var Contact
-     */
-    protected $contact;
-
-    /**
      * @var string
      */
     protected $email;
@@ -44,28 +39,11 @@ class DiamanteUser implements Entity
      */
     protected $lastName;
 
-    public function __construct($email, Contact $contact = null, $firstName = null, $lastName = null)
+    public function __construct($email, $firstName = null, $lastName = null)
     {
         $this->email     = $email;
-        $this->contact   = $contact;
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
-    }
-
-    /**
-     * @param Contact $contact
-     */
-    public function assignContact(Contact $contact)
-    {
-        $this->contact = $contact;
-    }
-
-    /**
-     * @return Contact
-     */
-    public function getContact()
-    {
-        return $this->contact;
     }
 
     /**

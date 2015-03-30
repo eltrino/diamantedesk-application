@@ -93,7 +93,6 @@ class DiamanteUserService implements UserService
         $user = $this->factory->create(
             $command->username,
             $command->email,
-            $command->contact,
             $command->firstName,
             $command->lastName
         );

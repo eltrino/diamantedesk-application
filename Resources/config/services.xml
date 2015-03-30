@@ -37,6 +37,7 @@
         <parameter key="diamante.user.details.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension</parameter>
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
+        <parameter key="diamante.user.event.listener.class">Diamante\DeskBundle\EventListener\DiamanteUserListener</parameter>
     </parameters>
 
     <services>
@@ -137,5 +138,14 @@
             <argument type="string">%diamante.user.entity.class%</argument>
         </service>
         <!-- repositories end -->
+
+        <service
+                id="diamante.user.event.listener"
+                class="%diamante.user.event.listener.class%"
+                >
+            <argument type="service" id="service_container"/>
+            <tag name="monolog.logger" channel="diamante"/>
+            <tag name="doctrine.event_listener" event="onFlush"/>
+        </service>
     </services>
 </container>
