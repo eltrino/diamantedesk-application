@@ -63,7 +63,7 @@ class DiamanteEmbeddedFormController extends Controller
             $diamanteUserRepository = $this->get('diamante.user.repository');
             $diamanteUser = $diamanteUserRepository->findUserByEmail($data['emailAddress']);
             if (is_null($diamanteUser)) {
-                $diamanteUser = $this->get('diamante.user_factory')->create($data['emailAddress'], $data['emailAddress'], $data['firstName'], $data['lastName']);
+                $diamanteUser = $this->get('diamante.user_factory')->create($data['emailAddress'], $data['firstName'], $data['lastName']);
                 $diamanteUserRepository->store($diamanteUser);
             }
             $reporterId = $diamanteUser->getId();
