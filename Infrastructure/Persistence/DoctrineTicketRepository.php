@@ -20,50 +20,83 @@ use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
+use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
     /**
+     * @var UserStateServiceImpl
+     */
+    private $userState;
+
+    /**
      * Find Ticket by given TicketKey
+     *
      * @param TicketKey $key
+     *
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function getByTicketKey(TicketKey $key)
     {
-        $query = $this->_em
-            ->createQuery("SELECT t FROM DiamanteDeskBundle:Ticket t, DiamanteDeskBundle:Branch b
-                WHERE b.id = t.branch AND b.key = :branchKey AND t.sequenceNumber = :ticketSequenceNumber");
-        $query->setParameters(array(
-                'branchKey' => $key->getBranchKey(),
-                'ticketSequenceNumber' => $key->getTicketSequenceNumber()
-            ));
-        $query->setMaxResults(1);
+        $queryBuilder = $this->_em
+            ->createQueryBuilder()->select(array('t', 'c'))
+            ->from('DiamanteDeskBundle:Ticket', 't')
+            ->from('DiamanteDeskBundle:Branch', 'b')
+            ->leftJoin('t.comments', 'c')
+            ->where('b.id = t.branch')
+            ->andWhere('b.key = :branchKey')
+            ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
+            ->setParameters(
+                array(
+                    'branchKey'            => $key->getBranchKey(),
+                    'ticketSequenceNumber' => $key->getTicketSequenceNumber()
+                )
+            );
 
-        $ticket = $query->getSingleResult();
+        if (!$this->userState->isOroUser()) {
+            $queryBuilder->andWhere('c.private = false');
+        }
+
+        $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
+
         return $ticket;
     }
 
     /**
      * @param UniqueId $uniqueId
+     *
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function getByUniqueId(UniqueId $uniqueId)
     {
-        return $this->findOneBy(array('uniqueId' => $uniqueId));
+        $queryBuilder = $this->_em
+            ->createQueryBuilder()->select(array('t', 'c'))
+            ->from('DiamanteDeskBundle:Ticket', 't')
+            ->leftJoin('t.comments', 'c')
+            ->where('t.uniqueId = :uniqueId')
+            ->setParameter('uniqueId', $uniqueId);
+
+        if (!$this->userState->isOroUser()) {
+            $queryBuilder->andWhere('c.private = false');
+        }
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /**
      * Remove reporter id from ticket table
+     *
      * @param User $user
      */
     public function removeTicketReporter(User $user)
     {
         $query = $this->_em
             ->createQuery("UPDATE DiamanteDeskBundle:Ticket t SET t.reporter = null WHERE t.reporter = :reporter_id");
-        $query->setParameters(array(
+        $query->setParameters(
+            array(
                 'reporter_id' => (string)$user,
-            ));
+            )
+        );
         $query->execute();
     }
 
@@ -78,7 +111,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     {
         $qb = $this->_em->createQueryBuilder();
         $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
-        $offset = ($pagingProperties->getPage()-1) * $pagingProperties->getLimit();
+        $offset = ($pagingProperties->getPage() - 1) * $pagingProperties->getLimit();
 
         $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
 
@@ -107,5 +140,33 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         }
 
         return $result;
+    }
+
+    /**
+     * @param $id
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function get($id)
+    {
+        $queryBuilder = $this->_em
+            ->createQueryBuilder()->select(array('t', 'c'))
+            ->from('DiamanteDeskBundle:Ticket', 't')
+            ->leftJoin('t.comments', 'c')
+            ->where('t.id = :id')
+            ->setParameter('id', $id);
+
+        if (!$this->userState->isOroUser()) {
+            $queryBuilder->andWhere('c.private = false');
+        }
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param UserStateServiceImpl $userState
+     */
+    public function setUserState(UserStateServiceImpl $userState)
+    {
+        $this->userState = $userState;
     }
 }

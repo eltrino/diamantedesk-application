@@ -16,9 +16,88 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Ticket\CommentRepository;
 use Diamante\DeskBundle\Model\User\User;
+use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Doctrine\ORM\Query;
 
 class DoctrineCommentRepository extends DoctrineGenericRepository implements CommentRepository
 {
+    /**
+     * @var UserStateServiceImpl
+     */
+    private $userState;
+
+    /**
+     * @param $id
+     * @return Entity
+     */
+    public function get($id)
+    {
+        $comment = $this->find($id);
+
+        if (!$this->userState->isOroUser() && $comment->isPrivate()) {
+            throw new \RuntimeException('Comment loading failed, comment not found.');
+        }
+
+        return $comment;
+    }
+
+    /**
+     * @return Entity[]
+     */
+    public function getAll()
+    {
+        $queryBuilder = $this->_em
+            ->createQueryBuilder()->select(array('c'))
+            ->from('DiamanteDeskBundle:Comment', 'c');
+
+        if (!$this->userState->isOroUser()) {
+            $queryBuilder->where('c.private = false');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return \Doctrine\Common\Collections\Collection|static
+     * @throws \Exception
+     */
+    public function filter(array $conditions, PagingProperties $pagingProperties)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
+        $offset = ($pagingProperties->getPage()-1) * $pagingProperties->getLimit();
+
+        $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
+
+        foreach ($conditions as $condition) {
+            $whereExpression = $this->buildWhereExpression($qb, $condition);
+            $qb->orWhere($whereExpression);
+        }
+
+        if (!$this->userState->isOroUser()) {
+            $publicComments = sprintf('%s.private = false', self::SELECT_ALIAS);
+            $qb->andWhere($publicComments);
+        }
+
+        $qb->addOrderBy($orderByField, $pagingProperties->getOrder());
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($pagingProperties->getLimit());
+
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_OBJECT);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
     /**
      * Remove author id from comment table
      * @param User $user
@@ -31,5 +110,13 @@ class DoctrineCommentRepository extends DoctrineGenericRepository implements Com
                 'author_id' => (string)$user,
             ));
         $query->execute();
+    }
+
+    /**
+     * @param UserStateServiceImpl $userState
+     */
+    public function setUserState(UserStateServiceImpl $userState)
+    {
+        $this->userState = $userState;
     }
 }

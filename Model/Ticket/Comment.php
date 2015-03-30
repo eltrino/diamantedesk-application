@@ -63,7 +63,12 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
      */
     protected $updatedAt;
 
-    public function __construct($content, $ticket, $author)
+    /**
+     * @var boolean
+     */
+    protected $private;
+
+    public function __construct($content, $ticket, $author, $private = false)
     {
         $this->content = $content;
         $this->ticket = $ticket;
@@ -71,6 +76,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
         $this->attachments = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
+        $this->private = $private;
     }
 
     /**
@@ -146,7 +152,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
         if ($this->content !== $content) {
             $this->raise(
                 new CommentWasUpdated(
-                    $this->ticket->getUniqueId(), $this->ticket->getSubject(), $content
+                    $this->ticket->getUniqueId(), $this->ticket->getSubject(), $content, $this->isPrivate()
                 )
             );
         }
@@ -197,8 +203,18 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     {
         $this->raise(
             new CommentWasDeleted(
-                $this->ticket->getUniqueId(), $this->ticket->getSubject(), $this->content
+                $this->ticket->getUniqueId(), $this->ticket->getSubject(), $this->content, $this->private
             )
         );
+    }
+
+    public function isPrivate()
+    {
+        return $this->private;
+    }
+
+    public function setPrivate($private)
+    {
+        $this->private = $private;
     }
 }

@@ -98,6 +98,7 @@ diamante:
           entity_plural_label: Comments
           ticket_status:       Ticket status
           content:             Content
+          private:             Private
 
           actions:
             edit:              Edit Comment

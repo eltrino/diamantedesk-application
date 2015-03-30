@@ -299,3 +299,10 @@
 .diam-branch-grid .action-cell {
     vertical-align: middle !important;
 }
+
+.diam-comment-meta span {
+    background-color: #bcbcbc;
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: #fff;
+}

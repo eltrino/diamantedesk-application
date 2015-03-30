@@ -17,19 +17,8 @@ namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 use Diamante\DeskBundle\Model\Ticket\Notifications\AttachmentsEvent;
 use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
 
-class CommentWasUpdated extends AbstractTicketEvent implements ChangesProviderEvent, AttachmentsEvent
+class CommentWasUpdated extends AbstractCommentEvent implements ChangesProviderEvent, AttachmentsEvent
 {
-    /**
-     * @var string
-     */
-    private $commentContent;
-
-    public function __construct($id, $subject, $commentContent)
-    {
-        $this->ticketId       = $id;
-        $this->subject        = $subject;
-        $this->commentContent = $commentContent;
-    }
 
     /**
      * @return string
@@ -45,16 +34,6 @@ class CommentWasUpdated extends AbstractTicketEvent implements ChangesProviderEv
     public function getHeaderText()
     {
         return 'Comment was updated';
-    }
-
-    /**
-     * Provide changes of entity of raised event
-     * @param \ArrayAccess $changes
-     * @return void
-     */
-    public function provideChanges(\ArrayAccess $changes)
-    {
-        $changes['Comment'] = $this->commentContent;
     }
 
     /**

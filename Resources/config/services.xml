@@ -36,6 +36,7 @@
         <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\DeskBundle\Search\DiamanteUserSearchHandler</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension</parameter>
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
+        <parameter key="diamante.user_state.service.class">Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl</parameter>
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
     </parameters>
 
@@ -55,6 +56,10 @@
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="diamante.user_factory"/>
+        </service>
+
+        <service id="diamante.user_state.service" class="%diamante.user_state.service.class%">
+            <argument type="service" id="security.context"/>
         </service>
 
         <service id="diamante.contact.service" class="%diamante.contact.service.class%">

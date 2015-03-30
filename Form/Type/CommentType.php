@@ -59,6 +59,15 @@ class CommentType extends AbstractType
                 )
             )->addModelTransformer(new AttachmentTransformer())
         );
+
+        $builder->add(
+            'private',
+            'checkbox',
+            array(
+                'label' => 'diamante.desk.comment.private',
+                'required' => false
+            )
+        );
     }
 
     /**

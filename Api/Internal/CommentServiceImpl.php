@@ -252,12 +252,14 @@ class CommentServiceImpl implements CommentService
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
         $comment->updateContent($command->content);
+        $comment->setPrivate($command->private);
 
         if ($command->attachmentsInput) {
             foreach ($command->attachmentsInput as $each) {
                 $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
             }
         }
+
         $this->commentRepository->store($comment);
 
         $ticket = $comment->getTicket();

@@ -61,4 +61,9 @@ class CommentCommand
      * @Assert\Type(type="string")
      */
     public $ticketStatus;
+
+    /**
+     * @Assert\Type(type="bool")
+     */
+    public $private;
 }
