@@ -586,16 +586,40 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     /**
      * Update single property of the ticket
      *
-     * @param $name
-     * @param $value
+     * @param array $properties
      * @return void
      */
-    public function updateProperty($name, $value)
+    public function updateProperties(array $properties)
     {
-        if (property_exists($this, $name)) {
-            $this->$name = $value;
-        } else {
-            throw new \DomainException(sprintf('Ticket does not have "%s" property.', $name));
+        $hasChanges = false;
+        foreach ($properties as $name => $value) {
+            /**
+             * @todo Not a very good approach in case number of such properties will increase, should be refactored
+             */
+            if ($name == 'status') {
+                $value = new Status($value);
+            } elseif ($name == 'priority') {
+                $value = new Priority($value);
+            } elseif ($name == 'source') {
+                $value = new Source($value);
+            }
+            if (property_exists($this, $name)) {
+                if ($this->$name != $value) {
+                    $hasChanges = true;
+                }
+                $this->$name = $value;
+            } else {
+                throw new \DomainException(sprintf('Ticket does not have "%s" property.', $name));
+            }
+        }
+
+        if ($hasChanges) {
+            $this->raise(
+                new TicketWasUpdated(
+                    (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
+                    (string) $this->priority, (string) $this->status, (string) $this->source
+                )
+            );
         }
     }
 }

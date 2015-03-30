@@ -494,21 +494,9 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
-        foreach ($command->properties as $name => $value) {
-            /**
-             * @todo Not a very good approach in case number of such properties will increase, should be refactored
-             */
-            if ($name == 'status') {
-                $value = new Status($value);
-            } elseif ($name == 'priority') {
-                $value = new Priority($value);
-            } elseif ($name == 'source') {
-                $value = new Source($value);
-            }
-            $ticket->updateProperty($name, $value);
-        }
-
+        $ticket->updateProperties($command->properties);
         $this->ticketRepository->store($ticket);
+        $this->dispatchEvents($ticket);
 
         return $ticket;
     }
