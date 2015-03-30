@@ -54,7 +54,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             );
 
         if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private = false');
+            $queryBuilder->andWhere('c.private is null or c.private = false');
         }
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -77,7 +77,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->setParameter('uniqueId', $uniqueId);
 
         if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private = false');
+            $queryBuilder->andWhere('c.private is null or c.private = false');
         }
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
@@ -156,7 +156,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->setParameter('id', $id);
 
         if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private = false');
+            $queryBuilder->andWhere('c.private is null or c.private = false');
         }
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
