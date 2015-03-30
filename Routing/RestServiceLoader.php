@@ -42,7 +42,10 @@ class RestServiceLoader extends Loader
 
         $reflection = new \ReflectionClass($class);
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
-            $annotation = $this->reader->getMethodAnnotation($reflectionMethod, 'Diamante\\ApiBundle\\Annotation\\ApiDoc');
+            $annotation = $this->reader->getMethodAnnotation(
+                $reflectionMethod,
+                'Diamante\\ApiBundle\\Annotation\\ApiDoc'
+            );
             if ($annotation) {
                 $methods = $annotation->getMethod();
                 if (!is_array($methods)) {
@@ -55,7 +58,15 @@ class RestServiceLoader extends Loader
 
                 $collection->add(
                     $this->routeId($resource, $reflectionMethod->getName()),
-                    new Route($annotation->getUri(), $defaults, [], [], '', [], $methods)
+                    new Route(
+                        $annotation->getUri(),
+                        $defaults,
+                        $annotation->getRouteRequirements(),
+                        [],
+                        '',
+                        [],
+                        $methods
+                    )
                 );
             }
         }
@@ -70,7 +81,8 @@ class RestServiceLoader extends Loader
 
     private function routeId($serviceId, $serviceMethod)
     {
-        return sprintf('%s_%s',
+        return sprintf(
+            '%s_%s',
             str_replace('.', '_', $serviceId),
             strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $serviceMethod))
         );

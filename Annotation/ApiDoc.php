@@ -58,4 +58,20 @@ class ApiDoc extends \Nelmio\ApiDocBundle\Annotation\ApiDoc
     {
         return $this->uri;
     }
+
+    /**
+     * @return array
+     */
+    public function getRouteRequirements()
+    {
+        $requirements = array();
+
+        foreach($this->getRequirements() as $key => $item) {
+            if (array_key_exists('requirement', $item)) {
+                $requirements[$key] = $item['requirement'];
+            }
+        }
+
+        return $requirements;
+    }
 }
