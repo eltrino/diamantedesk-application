@@ -473,7 +473,13 @@ class TicketServiceImpl implements TicketService
      */
     private function dispatchEvents(Ticket $ticket)
     {
-        foreach ($ticket->getRecordedEvents() as $event) {
+        $events = $ticket->getRecordedEvents();
+
+        if (empty($events)) {
+            return;
+        }
+
+        foreach ($events as $event) {
             $this->dispatcher->dispatch($event->getEventName(), $event);
         }
 

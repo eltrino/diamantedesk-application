@@ -27,10 +27,7 @@ class CreateDiamanteUserCommand
      * @var string
      */
     public $email;
-    /**
-     * @var Contact
-     */
-    public $contact;
+
     /**
      * @var string
      */

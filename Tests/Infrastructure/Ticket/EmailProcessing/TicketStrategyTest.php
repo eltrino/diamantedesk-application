@@ -149,21 +149,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue(null));
 
-
-        $contact = new Contact();
-
-        $this->diamanteContactService->expects($this->once())
-            ->method('findEmailOwner')
-            ->with($this->equalTo(self::DUMMY_MESSAGE_FROM))
-            ->will($this->returnValue($contact));
-
-        $diamanteUser = new DiamanteUser('test_email', new Contact(), $dummyFrom->getFirstName(), $dummyFrom->getLastName());
+        $diamanteUser = new DiamanteUser('test_email', $dummyFrom->getFirstName(), $dummyFrom->getLastName());
 
         $this->diamanteUserFactory->expects($this->once())
             ->method('create')
             ->with(
-                $this->equalTo(self::DUMMY_MESSAGE_FROM),
-                new Contact()
+                $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
 
         $this->diamanteUserRepository->expects($this->once())
