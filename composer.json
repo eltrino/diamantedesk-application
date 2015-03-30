@@ -1,0 +1,39 @@
+{
+    "name": "diamante/user-bundle",
+    "description": "DiamanteDesk User bundle",
+    "require": {
+        "beberlei/assert": "2.*",
+        "diamante/email-processing-bundle": "*",
+        "diamante/api-bundle": "*",
+        "diamante/desk-bundle": "*",
+        "diamante/front-bundle": "*",
+        "eltrino/phpunit-mockannotations": "~1.0@dev"
+    },
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrno LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+      "branch-alias": {
+        "dev-master": "1.0.x-dev"
+      }
+    },
+    "autoload": {
+      "psr-0": {
+        "Diamante\\UserBundle": "."
+      }
+    },
+    "target-dir": "Diamante/UserBundle",
+    "repositories": [
+      {
+        "type": "git",
+        "url": "https://github.com/eltrino/DiamanteUserBundle.git"
+      }
+    ],
+    "homepage": "https://github.com/eltrino/DiamanteUserBundle"
+}
