@@ -431,11 +431,11 @@ class TicketServiceImpl implements TicketService
     {
         $attachments = $ticket->getAttachments();
         $ticket->delete();
-        $this->ticketRepository->remove($ticket);
         foreach ($attachments as $attachment) {
             $this->attachmentManager->deleteAttachment($attachment);
         }
         $this->dispatchEvents($ticket);
+        $this->ticketRepository->remove($ticket);
     }
 
     /**

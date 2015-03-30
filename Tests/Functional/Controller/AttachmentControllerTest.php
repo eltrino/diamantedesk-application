@@ -12,14 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DiamanteDeskBundle\Tests\Controller;
+namespace Diamante\DiamanteDeskBundle\Tests\Functional\Controller;
 
-use Diamante\DeskBundle\Model\Ticket\Priority;
-use Diamante\DeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Diamante\DeskBundle\Model\Ticket\Status;
-use Symfony\Component\DomCrawler\Form;
-use Diamante\DeskBundle\Model\User\User;
 
 class AttachmentController extends WebTestCase
 {
@@ -35,7 +30,7 @@ class AttachmentController extends WebTestCase
 
     public function testExistingImage()
     {
-        $hash = 'd455f44372a9b331af3dd889d5d5b60d';
+        $hash = '0b6a8495b50356156408aa35034da503';
         $url = $this->getUrl('diamante_attachment_image_download', ['hash' => $hash]);
         $this->client->request('GET', $url);
 
@@ -57,7 +52,7 @@ class AttachmentController extends WebTestCase
 
     public function testExistingThumbnail()
     {
-        $hash = 'd455f44372a9b331af3dd889d5d5b60d';
+        $hash = '0b6a8495b50356156408aa35034da503';
         $url = $this->getUrl('diamante_attachment_thumbnail_download', ['hash' => $hash]);
         $this->client->request('GET', $url);
 

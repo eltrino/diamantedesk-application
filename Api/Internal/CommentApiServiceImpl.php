@@ -160,18 +160,18 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *
      * @ApiDoc(
      *  description="Returns a comment attachment",
-     *  uri="/comments/{id}/attachments/{a_id}.{_format}",
+     *  uri="/comments/{commentId}/attachments/{attachmentId}.{_format}",
      *  method="GET",
      *  resource=true,
      *  requirements={
      *      {
-     *          "name"="id",
+     *          "name"="commentId",
      *          "dataType"="integer",
      *          "requirement"="\d+",
      *          "description"="Comment Id"
      *      },
      *      {
-     *          "name"="a_id",
+     *          "name"="attachmentId",
      *          "dataType"="integer",
      *          "requirement"="\d+",
      *          "description"="Comment attachment Id"

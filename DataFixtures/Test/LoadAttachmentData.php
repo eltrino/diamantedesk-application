@@ -54,7 +54,7 @@ class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterf
         }
 
         $image = $this->container->get('kernel')
-            ->locateResource('@DiamanteDeskBundle/Tests/Controller/fixture/test.jpg');
+            ->locateResource('@DiamanteDeskBundle/Tests/Functional/fixture/test.jpg');
         $attachment = new Attachment(new File($image), md5($image));
         $manager->persist($attachment);
 
