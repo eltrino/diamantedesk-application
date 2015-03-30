@@ -215,7 +215,7 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     {
         $ticket = $this->createTicket();
         $subject = 'Updated subject';
-        $ticket->updateProperty('subject', $subject);
+        $ticket->updateProperties(['subject' => $subject]);
         $this->assertEquals($subject, $ticket->getSubject());
     }
 
@@ -228,6 +228,6 @@ class TicketTest extends \PHPUnit_Framework_TestCase
     public function thatDoesNotUpdateInvalidProperty()
     {
         $ticket = $this->createTicket();
-        $ticket->updateProperty('invalid_property', 'value');
+        $ticket->updateProperties(['invalid_property' => 'value']);
     }
 }
