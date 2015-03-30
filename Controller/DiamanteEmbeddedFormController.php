@@ -14,6 +14,7 @@
  */
 namespace Diamante\EmbeddedFormBundle\Controller;
 
+use Diamante\UserBundle\Model\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -22,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oro\Bundle\EmbeddedFormBundle\Entity\EmbeddedForm;
 
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
