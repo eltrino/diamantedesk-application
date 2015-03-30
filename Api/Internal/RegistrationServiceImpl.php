@@ -16,11 +16,11 @@ namespace Diamante\FrontBundle\Api\Internal;
 
 use Diamante\ApiBundle\Model\ApiUser\ApiUserFactory;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
-use Diamante\DeskBundle\Model\User\DiamanteUserFactory;
-use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\FrontBundle\Api\Command;
 use Diamante\FrontBundle\Api\RegistrationService;
 use Diamante\FrontBundle\Model\RegistrationMailer;
+use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
+use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 
 class RegistrationServiceImpl implements RegistrationService
 {

@@ -18,11 +18,11 @@ use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Model\ApiUser\ApiUser;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
-use Diamante\DeskBundle\Model\User\DiamanteUser;
-use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\FrontBundle\Api\Command\UpdateUserCommand;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\FrontBundle\Api\CurrentUserService;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 
 
 class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterface

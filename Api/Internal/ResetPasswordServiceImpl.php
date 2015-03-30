@@ -18,12 +18,12 @@ namespace Diamante\FrontBundle\Api\Internal;
 use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserFactory;
 use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
-use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Diamante\FrontBundle\Model\ResetPasswordMailer;
 use Diamante\FrontBundle\Api\ResetPasswordService;
-use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
 use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 
 class ResetPasswordServiceImpl implements ResetPasswordService
 {
