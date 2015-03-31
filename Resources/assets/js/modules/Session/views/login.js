@@ -22,20 +22,6 @@ define([
         };
       },
 
-      modelEvents: {
-        'login:success' : 'loginSuccess',
-        'login:fail' : 'loginFail',
-        'invalid' : 'formDataInvalid'
-      },
-
-      loginSuccess: function(){
-        this.$el.fadeOut();
-      },
-
-      loginFail: function(){
-
-      },
-
       onShow: function(){
         $('body').addClass('auth-page');
       },

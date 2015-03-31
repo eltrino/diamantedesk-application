@@ -1,7 +1,8 @@
 define([
   'app',
   'tpl!../templates/form.ejs',
-  'Common/views/form'], function(App, formTemplate, Form){
+  'Common/views/form',
+  'pwstrength'], function(App, formTemplate, Form){
 
   return App.module('User.Edit', function(Edit, App, Backbone, Marionette, $, _){
 
@@ -16,6 +17,10 @@ define([
 
       click : function(e){
         e.stopPropagation();
+      },
+
+      onShow : function(){
+        this.$(':password').pwstrength();
       }
 
     });
