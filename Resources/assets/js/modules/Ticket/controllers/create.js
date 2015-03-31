@@ -33,7 +33,6 @@ define(['app'], function(App){
         });
 
         newTicketView.on('form:submit', function(attr){
-          newTicketView.showLoader();
           App.request('user:model:current').done(function(user){
             attr.reporter =  'diamante_' + user.get('id');
             newTicketModel.save(attr, {
@@ -54,6 +53,10 @@ define(['app'], function(App){
                 } else {
                   isSuccess = true;
                   App.trigger('ticket:view', resultModel.get('id'));
+                  App.trigger('message:show', {
+                    status:'success',
+                    text: 'Ticket ' + resultModel.get('key') + ' created'
+                  });
                   modalCreateView.$el.modal('hide');
                 }
               },
@@ -63,9 +66,6 @@ define(['app'], function(App){
                 });
               }
             });
-            if(!newTicketModel.isValid()){
-              newTicketView.hideLoader();
-            }
           });
         });
 
