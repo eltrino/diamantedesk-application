@@ -11,7 +11,8 @@ define([
 
       ui : {
         logoutButton : '.js-logout',
-        editButton : '.js-edit-user'
+        editButton : '.js-edit-user',
+        message: '.alert'
       },
 
       events : {
@@ -22,8 +23,13 @@ define([
 
       templateHelpers : function(){
         return {
-          avatar_url : 'http://www.gravatar.com/avatar/' + MD5(this.model.get('email'))
+          avatar_url : 'http://www.gravatar.com/avatar/' + MD5(this.model.get('email')),
+          message : this.message
         };
+      },
+
+      initialize : function(options){
+        this.message = options.message;
       },
 
       logout : function(){
@@ -37,6 +43,11 @@ define([
 
       click : function(e){
         e.stopPropagation();
+      },
+
+      onShow: function(){
+        this.ui.message.hide().slideDown(400)
+          .delay(5000).slideUp(400);
       }
 
     });

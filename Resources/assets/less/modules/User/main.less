@@ -31,3 +31,15 @@
   margin-left: -64 - @grid-gutter-width/2;
   vertical-align: top;
 }
+
+.dropdown-menu {
+  .loader {
+    position: absolute;
+    &:only-child {
+      position: relative;
+      > div {
+        box-shadow: none;
+      }
+    }
+  }
+}

@@ -4,6 +4,8 @@ define(['app'], function(App){
 
     View.Controller = function(options){
 
+      options.parentRegion.showLoader();
+
       require([
         'User/models/user',
         'User/views/view'], function(){
@@ -12,13 +14,13 @@ define(['app'], function(App){
 
         request.done(function(userModel){
           var userView = new View.ItemView({
+            message : options.message,
             model: userModel
           });
 
           userView.on('user:edit', function(){
             App.trigger('user:edit', options);
           });
-
           options.parentRegion.show(userView);
         });
 

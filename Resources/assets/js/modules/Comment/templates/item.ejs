@@ -18,8 +18,8 @@
 <strong class="commment-author-name">
   Loading...
 </strong>
-<% } %> <%= content %>
-<small class="comment-date"><%= created %></small>
+<% } %> answered <%= created_relative %> <small class="comment-date">(<%= created_at %>)</small>
+<div class="comment-content"><%= content %></div>
 <% if(attachments && attachments.length) { %>
 <div class="comment-attachments-block">
   <strong>File attachments:</strong>

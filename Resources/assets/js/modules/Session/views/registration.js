@@ -22,15 +22,6 @@ define([
         };
       },
 
-      modelEvents: {
-        'registration:success' : 'registrationSuccess',
-        'invalid' : 'formDataInvalid'
-      },
-
-      registrationSuccess: function(){
-        this.$el.fadeOut();
-      },
-
       onShow: function(){
         $('body').addClass('auth-page');
       },

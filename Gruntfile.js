@@ -26,13 +26,13 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: '<%= assetsDir %>',
-          src: [ '**/*', '**/.*','.htaccess', '!less/**'],
+          src: [ '**/*', '**/.*','.htaccess', '!less/**', '!less' ],
           dest: '<%= publicDir %>'
         }],
         //pretend: true, // Don't do any disk operations - just write log
         //verbose: true, // Display log messages when copying files
 
-        ignoreInDest: ['css/**', 'less/**'],
+        ignoreInDest: ['css/**', 'less'],
         updateAndDelete: true
       }
     },
@@ -62,12 +62,12 @@ module.exports = function(grunt) {
     'string-replace': {
       dist: {
         files: {
-          '<%= publicDir %>/js/modules/Footer/templates/footer.ejs' : '<%= publicDir %>/js/modules/Footer/templates/footer.ejs'
+          '<%= publicDir %>/js/modules/Footer/templates/footer.ejs' : '<%= assetsDir %>/js/modules/Footer/templates/footer.ejs'
         },
         options: {
           replacements: [{
-            pattern: '<span class="revision">revision</span>',
-            replacement: '<span class="revision"><%= meta.revision %></span>'
+            pattern: '{{revision}}',
+            replacement: '<%= meta.revision %>'
           }]
         }
       }

@@ -20,6 +20,7 @@ require.config({
     "backbone.paginator" : "vendor/backbone.paginator/lib/backbone.paginator",
     "tpl" : "vendor/requirejs-tpl/tpl",
     "bootstrap" : "vendor/bootstrap/dist/js/bootstrap",
+    "moment" : "vendor/moment/min/moment-with-locales",
     "cryptojs.core" : "vendor/dfm-crypto-js/components/core",
     "cryptojs.x64" : "vendor/dfm-crypto-js/components/x64-core",
     "cryptojs.md5" : "vendor/dfm-crypto-js/components/md5",

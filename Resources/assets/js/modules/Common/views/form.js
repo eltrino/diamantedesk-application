@@ -5,7 +5,9 @@ define(['app'], function(App){
     Form.LayoutView = Marionette.LayoutView.extend({
 
       modelEvents: {
-        'invalid' : 'formDataInvalid'
+        'invalid' : 'formDataInvalid',
+        'error' : 'requestReceived',
+        'sync' : 'requestReceived'
       },
 
       ui : {
@@ -17,6 +19,7 @@ define(['app'], function(App){
       },
 
       submitForm: function(e){
+        this.showLoader();
         if(e) {
           e.preventDefault();
         }
@@ -39,6 +42,7 @@ define(['app'], function(App){
 
       formDataInvalid: function (model ,errors){
         App.debug('warn', 'Validation Errors:', errors);
+        this.hideLoader();
         var clearErrors = function(){
           var $form = this.$("form");
           $form.find(".help-block").remove();
@@ -52,6 +56,10 @@ define(['app'], function(App){
         clearErrors.call(this);
         _.each(errors, markErrors, this);
 
+      },
+
+      requestReceived: function(){
+        this.hideLoader();
       }
 
     });

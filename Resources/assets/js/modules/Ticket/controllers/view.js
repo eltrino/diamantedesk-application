@@ -15,7 +15,7 @@ define(['app'], function(App){
           });
           App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
           ticketView.on('dom:refresh', function(){
-            require(['Comment','Attachment'], function(Comment, Attachment){
+            require(['Comment', 'Attachment'], function(Comment, Attachment){
               var commentOptions = {
                     ticket : this.model,
                     parentRegion : this.commentsRegion

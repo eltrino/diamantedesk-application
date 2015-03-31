@@ -1,8 +1,9 @@
 define([
   'app',
   'config',
+  'moment',
   'cryptojs.md5',
-  'tpl!../templates/item.ejs'], function(App, Config, MD5, itemTemplate){
+  'tpl!../templates/item.ejs'], function(App, Config, moment, MD5, itemTemplate){
 
   return App.module('Ticket.View.Comment.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -20,11 +21,13 @@ define([
       templateHelpers: function(){
         return {
           avatar_url : 'http://www.gravatar.com/avatar/' + MD5(this.model.get('authorEmail')),
-          created: new Date(this.model.get('created_at')).toLocaleDateString() + ' ' + new Date(this.model.get('created_at')).toLocaleTimeString(),
           isAuthor: this.model.get('author') === App.session.get('id'),
           attach_link : function(hash){
             return Config.baseUrl.replace('diamantefront','desk') + 'attachments/download/file/' + hash;
-          }
+          },
+          created_relative : moment(this.model.get('created_at')).fromNow(),
+          created_at : moment(this.model.get('created_at')).format('lll')
+          //created_at : moment(this.model.get('created_at')).locale(navigator.language).format('lll')
         };
       },
 

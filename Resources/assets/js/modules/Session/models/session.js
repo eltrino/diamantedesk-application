@@ -68,7 +68,7 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!attrs.email) {
-          errors.email = "Login is required";
+          errors.email = "Can't be blank";
         }
         if(!attrs.password) {
           errors.password = "Can't be blank";
@@ -134,6 +134,7 @@ define([
             }] });
             this.clear();
             App.trigger('session:register:success');
+            App.trigger('session:login');
           }.bind(this),
           error : function(){
             App.trigger('session:register:fail');

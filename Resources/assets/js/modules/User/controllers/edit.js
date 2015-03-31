@@ -16,6 +16,7 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
           });
 
           userView.on('form:submit', function(data){
+            userView.showLoader();
             var _options = {};
             if(data.password){
               data.password = Wsse.encodePassword(data.password);
@@ -29,7 +30,8 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
                 if(data.password){
                   App.session.set('password',data.password);
                 }
-                App.trigger('user:view', options);
+                var opt = _.extend({message: 'User is updated'}, options);
+                App.trigger('user:view', opt);
               },
               error : function(model, xhr){
                 App.alert({

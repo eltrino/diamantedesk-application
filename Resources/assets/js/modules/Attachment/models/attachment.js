@@ -4,6 +4,8 @@ define([
 
   return App.module('Ticket.View.Attachment', function(Attachment, App, Backbone, Marionette, $, _){
 
+    Attachment.startWithParent = false;
+
     Attachment.Model = Backbone.Model.extend({
       urlRoot: Config.apiUrl + '/desk/tickets/{ticketId}/attachments',
 

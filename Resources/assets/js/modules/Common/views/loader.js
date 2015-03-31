@@ -14,6 +14,8 @@ define(['app', 'tpl!../templates/loader.ejs'], function(App, loaderTemplate){
         if(this.hasView()){
           this.$el.prepend(loader);
         } else {
+          this.$el = this.getEl(this.el);
+          this.el = this.$el[0];
           this.$el.html(loader);
         }
       },
