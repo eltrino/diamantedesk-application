@@ -16,7 +16,7 @@
 namespace Diamante\FrontBundle\Tests\Api\Internal;
 
 use Diamante\ApiBundle\Model\ApiUser\ApiUser;
-use Diamante\DeskBundle\Model\User\DiamanteUser;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
@@ -31,8 +31,8 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
     private $resetPasswordService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
      */
     private $diamanteUserRepository;
 
