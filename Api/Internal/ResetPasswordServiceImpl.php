@@ -15,15 +15,15 @@
 
 namespace Diamante\FrontBundle\Api\Internal;
 
-use Diamante\ApiBundle\Entity\ApiUser;
-use Diamante\ApiBundle\Model\ApiUser\ApiUserFactory;
-use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
 use Diamante\FrontBundle\Model\ResetPasswordMailer;
 use Diamante\FrontBundle\Api\ResetPasswordService;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
 use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
+use Diamante\UserBundle\Entity\ApiUser;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
+use Diamante\UserBundle\Model\ApiUser\ApiUserFactory;
+use Diamante\UserBundle\Model\ApiUser\ApiUserRepository;
 
 class ResetPasswordServiceImpl implements ResetPasswordService
 {
