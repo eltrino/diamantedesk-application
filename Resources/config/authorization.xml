@@ -30,7 +30,10 @@
             <argument type="service" id="oro_security.security_facade"/>
         </service>
 
-        <service id="diamante.diamante_authorization.service" class="%diamante.diamante_authorization.service.class%" />
+        <service id="diamante.diamante_authorization.service" class="%diamante.diamante_authorization.service.class%">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="diamante.user.repository" />
+        </service>
 
         <service id="diamante.anonymous_authorization.service" class="%diamante.anonymous_authorization.service.class%" />
 

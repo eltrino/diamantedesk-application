@@ -15,18 +15,42 @@
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 
 class DiamanteAuthorizationImpl implements Authorization
 {
     use AuthorizationImplTrait;
 
     /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
+    /**
+     * @var DiamanteUserRepository
+     */
+    private $diamanteUserRepository;
+
+    /**
      * @var array
      */
-    private $permissionsMap = array(
-        'Diamante\DeskBundle\Entity\Ticket'  => array('VIEW', 'EDIT', 'DELETE'),
-        'Entity:DiamanteDeskBundle:Ticket'   => array('VIEW', 'CREATE'),
-        'Entity:DiamanteDeskBundle:Comment'  => array('CREATE'),
-        'Diamante\DeskBundle\Entity\Comment' => array('VIEW', 'EDIT'),
-    );
+    private $permissionsMap
+        = array(
+            'Diamante\DeskBundle\Entity\Ticket'  => array('VIEW', 'EDIT', 'DELETE'),
+            'Entity:DiamanteDeskBundle:Ticket'   => array('VIEW', 'CREATE'),
+            'Entity:DiamanteDeskBundle:Comment'  => array('CREATE'),
+            'Diamante\DeskBundle\Entity\Comment' => array('VIEW', 'EDIT'),
+        );
+
+    /**
+     * @param DiamanteUserRepository $diamanteUserRepository
+     */
+    public function __construct(
+        SecurityContextInterface $securityContext,
+        DiamanteUserRepository $diamanteUserRepository
+    ) {
+        $this->securityContext = $securityContext;
+        $this->diamanteUserRepository = $diamanteUserRepository;
+    }
 } 
