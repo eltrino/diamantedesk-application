@@ -343,7 +343,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     /**
      * @param UserService $userService
      */
-    public function setUserDetailsService(UserService $userService)
+    public function setUserService(UserService $userService)
     {
         $this->userService = $userService;
     }
