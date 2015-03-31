@@ -12,6 +12,10 @@
         <parameter key="diamante.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\UserBundle\Twig\Extensions\UserDetailsExtension</parameter>
         <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\UserBundle\Search\DiamanteUserSearchHandler</parameter>
+
+        <parameter key="diamante.api.user.entity.class">Diamante\UserBundle\Entity\ApiUser</parameter>
+        <parameter key="diamante.api.user.entity.factory.class">Diamante\UserBundle\Model\ApiUser\ApiUserFactory</parameter>
+        <parameter key="diamante.api.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineApiUserRepository</parameter>
     </parameters>
 
     <services>
@@ -52,5 +56,14 @@
             <tag name="twig.extension"/>
         </service>
 
+        <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.api.user.entity.class%</argument>
+        </service>
+
+        <service id="diamante.api.user.entity.factory" class="%diamante.api.user.entity.factory.class%">
+            <argument type="string">%diamante.api.user.entity.class%</argument>
+        </service>
     </services>
 </container>
