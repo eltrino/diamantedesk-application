@@ -65,7 +65,7 @@ class InstallCommand extends ContainerAwareCommand
         $allMetadata = $em->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($em);
         $entitiesMetadata = array(
-            $em->getClassMetadata(\Diamante\ApiBundle\Entity\ApiUser::getClassName()),
+            $em->getClassMetadata(\Diamante\UserBundle\Entity\ApiUser::getClassName()),
 
         );
 
