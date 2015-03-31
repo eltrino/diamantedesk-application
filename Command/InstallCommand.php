@@ -14,6 +14,7 @@
  */
 namespace Diamante\ApiBundle\Command;
 
+use Diamante\UserBundle\Entity\ApiUser;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -65,7 +66,7 @@ class InstallCommand extends ContainerAwareCommand
         $allMetadata = $em->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($em);
         $entitiesMetadata = array(
-            $em->getClassMetadata(\Diamante\UserBundle\Entity\ApiUser::getClassName()),
+            $em->getClassMetadata(ApiUser::getClassName()),
 
         );
 

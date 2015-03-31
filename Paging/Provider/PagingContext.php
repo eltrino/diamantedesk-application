@@ -16,7 +16,6 @@
 namespace Diamante\ApiBundle\Paging\Provider;
 
 use Symfony\Component\HttpFoundation\HeaderBag;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class PagingContext

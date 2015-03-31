@@ -89,6 +89,7 @@ class WsseListenerTest extends \PHPUnit_Framework_TestCase
             ->with($token)
             ->will($this->returnValue($this->tokenMock));
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->securityContext
             ->expects($this->once())
             ->method('setToken')
