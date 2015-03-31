@@ -11,6 +11,7 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
       initialize: function(options){
         var opt = options || {};
         this.title = opt.title || 'Modal Window';
+        this.submit = opt.submit || 'Save changes';
       },
 
       regions : {
@@ -19,6 +20,7 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
 
       templateHelpers: function(){
         return {
+          submit: this.submit,
           title: this.title
         };
       },
