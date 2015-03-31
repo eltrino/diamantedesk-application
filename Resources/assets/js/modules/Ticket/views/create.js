@@ -52,7 +52,7 @@ define([
               $(this).height(++height);
             }
           }
-        });
+        }).trigger('keyup');
       }
 
     });

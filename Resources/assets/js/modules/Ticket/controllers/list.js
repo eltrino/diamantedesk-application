@@ -18,16 +18,11 @@ define(['app', 'Common/views/loader'], function(App, loaderView){
         }
 
         request.done(function(ticketCollection){
-          var emptyListView, ticketListView;
-          if(ticketCollection.length === 0){
-            emptyListView = new List.EmptyView();
-            App.mainRegion.show(emptyListView);
-            return;
-          }
-
-          ticketListView = new List.PaginatedView({
-            collection: ticketCollection
-          });
+          var emptyListView  = query ? List.EmptySearchView : List.EmptyView,
+              ticketListView = new List.PaginatedView({
+                emptyView: emptyListView,
+                collection: ticketCollection
+              });
 
           ticketListView.mainView.on('childview:ticket:view', function(childView, ticketModel){
             ticketListView.mainView.showLoader();

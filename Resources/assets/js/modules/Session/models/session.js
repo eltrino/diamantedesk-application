@@ -108,7 +108,7 @@ define([
         this.clear();
         this.set({ logged_in: false });
         App.trigger('session:login:fail');
-        App.alert({ title: "Authorization Failed", messages: ["Username or password is wrong"] });
+        App.alert({ title: "Authorization Failed", messages: ["Incorrect email or password"] });
       },
 
       login: function(creds) {

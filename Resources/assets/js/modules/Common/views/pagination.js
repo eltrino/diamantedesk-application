@@ -38,11 +38,13 @@ define([
       initialize: function(options){
 
         this.collection = options.collection;
+        this.emptyView = options.emptyView;
 
         this.pagerView = new Pagination.PagerView({
           model: new Backbone.Model(this.collection.state)
         });
         this.mainView = new this.MainView({
+          emptyView: this.emptyView,
           collection: this.collection
         });
 

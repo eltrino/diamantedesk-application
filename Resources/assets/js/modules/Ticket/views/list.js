@@ -3,7 +3,8 @@ define([
   'Common/views/pagination',
   'tpl!../templates/list-item.ejs',
   'tpl!../templates/list.ejs',
-  'tpl!../templates/empty-list.ejs'], function(App,Pagination, listItemTemplate, listTemplate, emptyListTemplate){
+  'tpl!../templates/empty-search.ejs',
+  'tpl!../templates/empty-list.ejs'], function(App,Pagination, listItemTemplate, listTemplate, emptySearchTemplate, emptyListTemplate){
 
   return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -29,7 +30,19 @@ define([
     });
 
     List.EmptyView = Marionette.ItemView.extend({
-      template: emptyListTemplate
+      template: emptyListTemplate,
+      tagName: 'td',
+      attributes: {
+        'colspan' : 5
+      }
+    });
+
+    List.EmptySearchView = Marionette.ItemView.extend({
+      template: emptySearchTemplate,
+      tagName: 'td',
+      attributes: {
+        'colspan' : 5
+      }
     });
 
     List.CompositeView = Marionette.CompositeView.extend({
