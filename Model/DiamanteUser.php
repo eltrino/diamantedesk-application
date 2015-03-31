@@ -15,7 +15,6 @@
 namespace Diamante\UserBundle\Model;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
-use \OroCRM\Bundle\ContactBundle\Entity\Contact;
 
 class DiamanteUser implements Entity
 {

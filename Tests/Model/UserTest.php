@@ -22,11 +22,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
     const TEST_ID = 1;
 
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
      * @test
      */
     public function testUser()

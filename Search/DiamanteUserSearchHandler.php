@@ -14,7 +14,6 @@
  */
 namespace Diamante\UserBundle\Search;
 
-use Diamante\UserBundle\Api\UserDetailsService;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;

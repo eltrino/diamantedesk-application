@@ -14,8 +14,8 @@
  */
 namespace Diamante\UserBundle\Tests\Infrastructure\Persistence;
 
-use Diamante\ApiBundle\Infrastructure\Persistence\DoctrineApiUserRepository;
 use Diamante\UserBundle\Entity\ApiUser;
+use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineApiUserRepository;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class DoctrineApiUserRepositoryTest extends \PHPUnit_Framework_TestCase
