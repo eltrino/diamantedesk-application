@@ -67,13 +67,17 @@ define([
 
       validate: function(attrs, options){
         var errors = {};
-        if(!attrs.email) {
-          errors.email = "Can't be blank";
+        if(_.indexOf(options.ignore, 'email') === -1){
+          if(!attrs.email) {
+            errors.email = "Can't be blank";
+          }
         }
-        if(!attrs.password) {
-          errors.password = "Can't be blank";
-        } else if(attrs.password.length < 6) {
-          errors.password = 'Must be at least six (6) symbols';
+        if(_.indexOf(options.ignore, 'password') === -1){
+          if(!attrs.password) {
+            errors.password = "Can't be blank";
+          } else if(attrs.password.length < 6) {
+            errors.password = 'Must be at least six (6) symbols';
+          }
         }
         if(!_.isEmpty(errors)){
           return errors;
@@ -144,6 +148,7 @@ define([
       },
 
       confirm: function(hash){
+        var model = this;
         this.url += '/confirm';
         this.set('id', 1);
         this.save({ hash : hash },{
@@ -155,69 +160,78 @@ define([
               status:'success',
               text: 'You may login and use application'}] });
             App.trigger('session:login');
-          }.bind(this),
+          },
           error : function(){
             App.trigger('session:confirm:fail');
             App.alert({ title: 'Email Confirmation Failed', messages: ['Activation code is wrong'] });
             App.trigger('session:registration');
-          }.bind(this),
+          },
           complete : function(){
-            this.url = this.url.replace('/confirm', '');
-            this.clear();
-          }.bind(this)
+            model.url = model.url.replace('/confirm', '');
+            model.clear();
+          }
         });
       },
 
       reset: function(data){
+        var model = this;
         this.url += '/reset';
         this.set('id', 1);
         this.save(data, {
           patch: true,
-          validate: false,
+          ignore: ['password'],
           success : function(){
             App.trigger('session:reset:sent');
             App.alert({ title: 'Password Reset Info', messages: [{
               status:'info',
-              text: 'We have sent you email to ' + this.get('email') + '.<br>' +
+              text: 'We have sent you email to ' + model.get('email') + '.<br>' +
                 'Please click the link in that message to reset your password.'
             }] });
-          }.bind(this),
+            App.trigger('session:login');
+          },
           error : function(){
             App.trigger('session:reset:fail');
             App.alert({ title: 'Password Reset Failed', messages: ['Email not found'] });
-          }.bind(this),
+          },
           complete : function(){
-            this.url = this.url.replace('/reset', '');
-            this.clear();
-          }.bind(this)
+            model.url = model.url.replace('/reset', '');
+            model.clear();
+          }
         });
+        if(!this.isValid()){
+          this.url = this.url.replace('/reset', '');
+        }
       },
 
       newPassword: function(data){
+        var model = this;
         this.url += '/password';
         this.set('id', 1);
         data.password = Wsse.encodePassword(data.password);
         this.save(data, {
           patch: true,
-          validate: false,
+          ignore: ['email'],
           success : function(){
             App.trigger('session:reset:success');
             App.alert({ title: 'Password Reset Success', messages: [{
               status:'success',
               text: 'Password successfully changed, you can use it to login'}] });
             App.trigger('session:password:change');
-          }.bind(this),
+          },
           error : function(){
             App.trigger('session:reset:fail');
             App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'] });
-            this.clear();
+            model.clear();
             App.trigger('session:reset');
-          }.bind(this),
+          },
           complete : function(){
-            this.url = this.url.replace('/password', '');
-            this.clear();
-          }.bind(this)
+            model.url = model.url.replace('/password', '');
+            model.clear();
+          }
         });
+        if(!this.isValid()){
+          this.url = this.url.replace('/password', '');
+        }
       },
 
       logout: function() {
