@@ -14,7 +14,6 @@
  */
 namespace Diamante\EmbeddedFormBundle\Tests\Controller;
 
-use Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\TestFrameworkBundle\Test\Client;
 use Symfony\Component\DomCrawler\Form;
