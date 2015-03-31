@@ -15,7 +15,8 @@ define([
       template: formTemplate,
       className: 'ticket-edit-form',
       onShow : function(){
-        this.$('textarea').keyup(function(){
+        var textarea =  this.$('textarea');
+        textarea.keyup(function(){
           var height = this.clientHeight;
           if(this.clientHeight < this.scrollHeight){
             while(this.clientHeight < this.scrollHeight) {
@@ -23,6 +24,7 @@ define([
             }
           }
         });
+        App.dialogRegion.$el.on('shown.bs.modal', function(){ textarea.keyup(); });
       }
     });
 

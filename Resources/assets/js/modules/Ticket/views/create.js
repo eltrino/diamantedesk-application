@@ -26,7 +26,8 @@ define([
       },
 
       onShow : function(){
-        var formView = this;
+        var formView = this,
+            textarea = this.$('textarea');
 
         require(['Attachment/views/list', 'Attachment/views/dropzone'], function(TicketAttachment, TicketDropZone){
           var listView = new TicketAttachment.CollectionView({ collection: formView.attachmentCollection }),
@@ -45,14 +46,15 @@ define([
 
         });
 
-        formView.$('textarea').keyup(function(){
+        textarea.keyup(function(){
           var height = this.clientHeight;
           if(this.clientHeight < this.scrollHeight){
             while(this.clientHeight < this.scrollHeight) {
               $(this).height(++height);
             }
           }
-        }).trigger('keyup');
+        });
+        App.dialogRegion.$el.on('shown.bs.modal', function(){ textarea.keyup(); });
       }
 
     });
