@@ -57,11 +57,17 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $strategy;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     * @Mock Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
 
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->manager = new MessageProcessingManager($this->context, $this->strategyHolder);
+        $this->manager = new MessageProcessingManager($this->context, $this->strategyHolder, $this->logger);
     }
 
     /**
