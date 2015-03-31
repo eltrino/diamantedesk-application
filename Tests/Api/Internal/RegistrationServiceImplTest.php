@@ -14,10 +14,10 @@
  */
 namespace Diamante\FrontBundle\Tests\Api\Internal;
 
-use Diamante\ApiBundle\Model\ApiUser\ApiUser;
 use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
 use Diamante\FrontBundle\Api\Internal\RegistrationServiceImpl;
+use Diamante\UserBundle\Entity\ApiUser;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -41,14 +41,14 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
     private $diamanteUserRepository;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
      */
     private $apiUserRepository;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserFactory
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserFactory
      */
     private $apiUserFactory;
 

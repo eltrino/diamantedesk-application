@@ -15,7 +15,7 @@
 
 namespace Diamante\FrontBundle\Tests\Api\Internal;
 
-use Diamante\ApiBundle\Model\ApiUser\ApiUser;
+use Diamante\UserBundle\Entity\ApiUser;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl;
@@ -37,14 +37,14 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
     private $diamanteUserRepository;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
      */
     private $apiUserRepository;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserFactory
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserFactory
      */
     private $apiUserFactory;
 
@@ -55,8 +55,8 @@ class ResetPasswordServiceTest extends \PHPUnit_Framework_TestCase
     private $resetPasswordMailer;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUser
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUser
+     * @var \Diamante\UserBundle\Entity\ApiUser
+     * @Mock \Diamante\UserBundle\Entity\ApiUser
      */
     private $apiUser;
 
