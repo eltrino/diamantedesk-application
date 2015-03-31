@@ -13,7 +13,8 @@ define([
 
       templateHelpers: function(){
         return {
-          created: new Date(this.model.get('created_at')).toLocaleDateString()
+          created: new Date(this.model.get('created_at')).toLocaleDateString(),
+          status: this.model.get('status').replace(/_/g,' ')
         };
       },
 

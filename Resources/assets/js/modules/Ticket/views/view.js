@@ -25,6 +25,7 @@ define([
       templateHelpers : function(){
         return {
           created : new Date(this.model.get('created_at')).toLocaleDateString(),
+          status: this.model.get('status').replace(/_/g,' '),
           description : this.model.get('description').replace(/\n/g,'<p></p>')
         };
       },
