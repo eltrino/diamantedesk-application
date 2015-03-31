@@ -23,11 +23,10 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 
 class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase

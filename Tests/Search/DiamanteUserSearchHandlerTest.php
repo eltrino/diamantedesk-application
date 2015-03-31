@@ -12,34 +12,26 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 4/12/14
- * Time: 4:13 PM
- */
 
 namespace Diamante\DeskBundle\Tests\Search;
 
-use Diamante\DeskBundle\Entity\DiamanteUser;
-use Diamante\DeskBundle\Model\User\UserDetails;
-use Diamante\DeskBundle\Search\DiamanteUserSearchHandler;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Model\User;
+use Diamante\UserBundle\Model\UserDetails;
+use Diamante\UserBundle\Search\DiamanteUserSearchHandler;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Diamante\UserBundle\Model\UserDetailsService
-     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     * @var \Diamante\UserBundle\Api\Internal\UserServiceImpl
+     * @Mock \Diamante\UserBundle\Api\Internal\UserServiceImpl
      */
-    private $userDetailsService;
-
+    private $userService;
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
      */
     private $diamanteUserRepository;
 
@@ -59,7 +51,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         MockAnnotations::init($this);
         $this->diamanteUserSearchHandler = new DiamanteUserSearchHandler(
             'diamante_user',
-            $this->userDetailsService,
+            $this->userService,
             $this->diamanteUserRepository,
             $this->userSearchHandler,
             $this->getProperties()
@@ -75,9 +67,9 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $userObj = User::fromString($id);
         $userDetails = $this->createUserDetails(User::TYPE_DIAMANTE);
 
-        $this->userDetailsService
+        $this->userService
             ->expects($this->once())
-            ->method('fetch')
+            ->method('fetchUserDetails')
             ->with($this->equalTo($userObj))
             ->will($this->returnValue($userDetails));
 
@@ -107,6 +99,10 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($query), 1, 10)
             ->will($this->returnValue(array('results' => $this->getOroUsersCollection(), 'more' => false)));
 
+        $this->userService
+            ->expects($this->atLeastOnce())
+            ->method('getGravatarLink');
+
         $result = $this->diamanteUserSearchHandler->search($query, 1, 10);
 
         $this->assertInternalType('array', $result);
@@ -124,6 +120,11 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $expectedDiamanteUsers = 1;
         $expectedOroUsers      = 3;
         $totalExpectedResult   = $expectedDiamanteUsers + $expectedOroUsers;
+
+        $this->userService
+            ->expects($this->once())
+            ->method('getGravatarLink')
+            ->with($this->equalTo('email@host0.com', DiamanteUserSearchHandler::AVATAR_SIZE));
 
         $this->diamanteUserRepository
             ->expects($this->once())
@@ -172,7 +173,7 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $result = array();
 
         for ($i = 0; $i < $size; $i++) {
-            $user = new DiamanteUser("email@host{$i}.com", null, "First {$specificData}", "Last {$specificData}");
+            $user = new DiamanteUser("email@host{$i}.com", "First {$specificData}", "Last {$specificData}");
             $result[] = $user;
         }
 

@@ -12,18 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 21/11/14
- * Time: 7:37 PM
- */
 
 namespace Diamante\DeskBundle\Tests\Model\User;
 
-
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 
 class UserTest extends \PHPUnit_Framework_TestCase
 {

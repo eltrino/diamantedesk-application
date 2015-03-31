@@ -12,45 +12,31 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 4/12/14
- * Time: 4:13 PM
- */
 
 namespace Diamante\DeskBundle\Tests\Twig\Extensions;
 
-
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetails;
-use Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension;
+use Diamante\UserBundle\Model\User;
+use Diamante\UserBundle\Model\UserDetails;
+use Diamante\UserBundle\Twig\Extensions\UserDetailsExtension;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Diamante\UserBundle\Model\UserDetailsService
-     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
-     */
-    private $userDetailsService;
-
-    /**
-     * @var \Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension
+     * @var \Diamante\UserBundle\Twig\Extensions\UserDetailsExtension
      */
     private $userDetailsExtension;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock Diamante\DeskBundle\Model\Shared\UserService
+     * @var \Diamante\UserBundle\Api\Internal\UserServiceImpl
+     * @Mock Diamante\UserBundle\Api\Internal\UserServiceImpl
      */
     private $userService;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->userDetailsExtension = new UserDetailsExtension($this->userDetailsService, $this->userService);
+        $this->userDetailsExtension = new UserDetailsExtension($this->userService);
     }
 
     /**
@@ -78,9 +64,9 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
         $user = User::fromString($id);
         $details = $this->createDummyUserDetails();
 
-        $this->userDetailsService
+        $this->userService
             ->expects($this->once())
-            ->method('fetch')
+            ->method('fetchUserDetails')
             ->with($this->equalTo($user))
             ->will($this->returnValue($details));
 
@@ -103,9 +89,9 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
         $id = 'diamante_1';
         $user = User::fromString($id);
 
-        $this->userDetailsService
+        $this->userService
             ->expects($this->once())
-            ->method('fetch')
+            ->method('fetchUserDetails')
             ->with($this->equalTo($user))
             ->will($this->returnValue(null));
 
@@ -150,28 +136,17 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetGravatarForUser()
     {
-        $user    = User::fromString('diamante_1');
         $details = $this->createDummyUserDetails();
 
-        $this->userDetailsService
+        $this->userService
             ->expects($this->once())
-            ->method('fetch')
-            ->with($this->equalTo($user))
-            ->will($this->returnValue($details));
+            ->method('getGravatarLink')
+            ->with($this->equalTo('email@example.com'), $this->equalTo(58))
+            ->will($this->returnValue(sprintf('http://gravatar.com/avatar/%s.jpg?s=58&d=identicon', $this->getHash($details->getEmail()))));
 
-        $link = $this->userDetailsExtension->getGravatarForUser($user);
+        $link = $this->userDetailsExtension->getGravatarForUser($details->getEmail());
 
         $this->assertEquals(sprintf('http://gravatar.com/avatar/%s.jpg?s=58&d=identicon', $this->getHash($details->getEmail())), $link);
-    }
-
-    /**
-     * @test
-     * @expectedException \Twig_Error_Runtime
-     * @expectedExceptionMessage Invalid user details source is provided. Expected instance of Diamante\DeskBundle\Model\User\User or Diamante\DeskBundle\Model\User\UserDetails, ArrayObject given
-     */
-    public function testGetGravatarForUserThrowsExceptionOnInvalidDataSourceType()
-    {
-        $this->userDetailsExtension->getGravatarForUser(new \ArrayObject());
     }
 
     /**

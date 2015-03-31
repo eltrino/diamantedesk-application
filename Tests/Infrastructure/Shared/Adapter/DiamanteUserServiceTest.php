@@ -14,10 +14,10 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Shared\Adapter;
 
-use Diamante\DeskBundle\Entity\DiamanteUser;
-use Diamante\DeskBundle\Infrastructure\Shared\Adapter\UserServiceImpl;
-use Diamante\DeskBundle\Model\User\DiamanteUserFactory;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Api\Internal\UserServiceImpl;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -33,19 +33,19 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     private $oroUserManager;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
      */
     private $diamanteUserRepository;
 
     /**
-     * @var UserServiceImpl
+     * @var UserService
      */
     private $diamanteUserService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserFactory
-     * @Mock Diamante\DeskBundle\Model\User\DiamanteUserFactory
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserFactory
+     * @Mock Diamante\UserBundle\Infrastructure\DiamanteUserFactory
      */
     private $diamanteUserFactory;
 

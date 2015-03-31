@@ -97,8 +97,8 @@ class BranchApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $entityPersister;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock Diamante\DeskBundle\Model\Shared\UserService
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock Diamante\UserBundle\Api\UserService
      */
     private $userService;
 

@@ -20,9 +20,9 @@ use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
+use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
 
 class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,8 +39,8 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
     private $branchRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock \Diamante\UserBundle\Api\UserService
      */
     private $userService;
 

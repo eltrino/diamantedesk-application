@@ -101,8 +101,8 @@
             <call method="setApiPagingService">
                 <argument type="service" id="diamante.api.paging.service"/>
             </call>
-            <call method="setUserDetailsService">
-                <argument type="service" id="diamante.user.details.service"/>
+            <call method="setUserService">
+                <argument type="service" id="diamante.user.service"/>
             </call>
         </service>
 
@@ -184,8 +184,8 @@
             <call method="setApiPagingService">
                 <argument type="service" id="diamante.api.paging.service"/>
             </call>
-            <call method="setUserDetailsService">
-                <argument type="service" id="diamante.user.details.service"/>
+            <call method="setUserService">
+                <argument type="service" id="diamante.user.service"/>
             </call>
         </service>
 

@@ -15,17 +15,16 @@
 namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence\Doctrine;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener;
-use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
 
 class TicketListenerTest extends \PHPUnit_Framework_TestCase
 {

@@ -24,7 +24,6 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Resolver\ReporterFullNameReso
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\UserBundle\Api\UserDetailsService;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
@@ -77,11 +76,6 @@ class EmailNotifier implements Notifier
      */
     private $senderHost;
 
-    /**
-     * @var UserDetailsService
-     */
-    private $userDetailsService;
-
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
@@ -90,7 +84,6 @@ class EmailNotifier implements Notifier
         MessageReferenceRepository $messageReferenceRepository,
         UserService $userService,
         NameFormatter $nameFormatter,
-        UserDetailsService $userDetailsService,
         $senderEmail,
         $senderHost
     )
@@ -102,7 +95,6 @@ class EmailNotifier implements Notifier
         $this->messageReferenceRepository   = $messageReferenceRepository;
         $this->userService                  = $userService;
         $this->nameFormatter                = $nameFormatter;
-        $this->userDetailsService           = $userDetailsService;
         $this->senderEmail                  = $senderEmail;
         $this->senderHost                   = $senderHost;
     }
@@ -247,7 +239,7 @@ class EmailNotifier implements Notifier
         $changes = $notification->getChangeList();
 
         if (isset($changes['Reporter'])) {
-            $details = $this->userDetailsService->fetch(User::fromString($changes['Reporter']));
+            $details = $this->userService->fetchUserDetails(User::fromString($changes['Reporter']));
             $changes['Reporter'] = $details->getFullName();
         }
 
