@@ -15,7 +15,7 @@
 
 namespace Diamante\UserBundle\Twig\Extensions;
 
-use Diamante\UserBundle\Api\UserDetailsService;
+use Diamante\UserBundle\Api\GravatarProvider;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\User;
@@ -25,11 +25,13 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class UserDetailsExtension extends \Twig_Extension
 {
-    private $userDetailsService;
+    /**
+     * @var \Diamante\UserBundle\Api\UserService
+     */
+    private $userService;
 
-    public function __construct(UserDetailsService $userDetailsService, UserService $userService)
+    public function __construct(UserService $userService)
     {
-        $this->userDetailsService = $userDetailsService;
         $this->userService        = $userService;
     }
 
@@ -66,7 +68,7 @@ class UserDetailsExtension extends \Twig_Extension
         /**
          * @var UserDetails $details
          */
-        $details = $this->userDetailsService->fetch($user);
+        $details = $this->userService->fetchUserDetails($user);
 
         if (empty($details)) {
             throw new \Twig_Error_Runtime('Failed to load user details');
@@ -92,41 +94,18 @@ class UserDetailsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $userDetails
+     * @param string $email
      * @param int $size
      * @param bool $secure
      * @throws \Twig_Error_Runtime
      * @return string
      */
-    public function getGravatarForUser($userDetails, $size = 58, $secure = false)
+    public function getGravatarForUser($email, $size = 58, $secure = false)
     {
-        if (!($userDetails instanceof User) && !($userDetails instanceof UserDetails)) {
-            throw new \Twig_Error_Runtime(
-                sprintf('Invalid user details source is provided. Expected instance of %s, %s given',
-                    join(' or ', [
-                        'Diamante\UserBundle\Model\User',
-                        'Diamante\UserBundle\Model\UserDetails',
-                    ]),
-                    get_class($userDetails)
-                )
-            );
+        if (!$this->userService instanceof GravatarProvider) {
+            throw new \Twig_Error_Runtime('Given user service is not able to provide Gravatar link');
         }
 
-        if (is_object($userDetails) && ($userDetails instanceof User)) {
-            $userDetails = $this->userDetailsService->fetch($userDetails);
-        }
-
-        $email = $userDetails->getEmail();
-        $hash = md5(strtolower(trim($email)));
-        $schema = (bool)$secure ? 'https' : 'http';
-
-        //Query parameters are:
-        // s - size, default oro avatar size is 58px,
-        // d - default image if no configured image found for given hash.
-        // for details see https://en.gravatar.com/site/implement/images/
-
-        $link = sprintf('%s://gravatar.com/avatar/%s.jpg?s=%d&d=identicon', $schema, $hash, (int)$size);
-
-        return $link;
+        return $this->userService->getGravatarLink($email, $size, $secure);
     }
 }

@@ -16,15 +16,17 @@ namespace Diamante\UserBundle\Api\Internal;
 
 
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
+use Diamante\UserBundle\Api\GravatarProvider;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
+use Diamante\UserBundle\Model\UserDetails;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
-class UserServiceImpl implements UserService
+class UserServiceImpl implements UserService, GravatarProvider
 {
     /**
     * @var UserManager
@@ -102,5 +104,47 @@ class UserServiceImpl implements UserService
         $this->diamanteUserRepository->store($user);
 
         return $user->getId();
+    }
+
+    public function fetchUserDetails(User $user)
+    {
+        $loadedUser = $this->getByUser($user);
+
+        if (!$loadedUser) {
+            throw new \RuntimeException('Failed to load details for given user');
+        }
+
+        return new UserDetails(
+            (string)$user,
+            $user->getType(),
+            $loadedUser->getEmail(),
+            $loadedUser->getFirstName(),
+            $loadedUser->getLastName()
+        );
+    }
+
+    /**
+     * @param string $email
+     * @param int    $size
+     * @param bool   $secure
+     * @return string
+     */
+    public function getGravatarLink($email, $size, $secure = false)
+    {
+        if (empty($email)) {
+            throw new \RuntimeException('No email provided to grab Gravatar for');
+        }
+
+        $hash = md5(strtolower(trim($email)));
+        $schema = (bool)$secure ? 'https' : 'http';
+
+        //Query parameters are:
+        // s - size, default oro avatar size is 58px,
+        // d - default image if no configured image found for given hash.
+        // for details see https://en.gravatar.com/site/implement/images/
+
+        $link = sprintf('%s://gravatar.com/avatar/%s.jpg?s=%d&d=identicon', $schema, $hash, (int)$size);
+
+        return $link;
     }
 }

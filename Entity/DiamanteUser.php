@@ -17,7 +17,7 @@ namespace Diamante\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineDiamanteUserRepository")
+ * @ORM\Entity(repositoryClass="Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository")
  * @ORM\Table(name="diamante_user")
  */
 class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser

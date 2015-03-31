@@ -10,7 +10,6 @@
         <parameter key="diamante.user_factory.class">Diamante\UserBundle\Infrastructure\DiamanteUserFactory</parameter>
         <parameter key="diamante.user.service.class">Diamante\UserBundle\Api\Internal\UserServiceImpl</parameter>
         <parameter key="diamante.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository</parameter>
-        <parameter key="diamante.user.details.service.class">Diamante\UserBundle\Api\Internal\UserDetailsServiceImpl</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\UserBundle\Twig\Extensions\UserDetailsExtension</parameter>
         <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\UserBundle\Search\DiamanteUserSearchHandler</parameter>
     </parameters>
@@ -32,13 +31,9 @@
             <argument type="service" id="diamante.user_factory"/>
         </service>
 
-        <service id="diamante.user.details.service" class="%diamante.user.details.service.class%">
-            <argument type="service" id="diamante.user.service"/>
-        </service>
-
         <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
             <argument type="string">Diamante\UserBundle\Model\User\UserDetails</argument>
-            <argument type="service" id="diamante.user.details.service"/>
+            <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="oro_user.autocomplete.user.search_handler"/>
             <argument type="collection">
@@ -53,7 +48,6 @@
         </service>
 
         <service id="diamante.user.details.twig.extension" class="%diamante.user.details.twig.extension.class%">
-            <argument type="service" id="diamante.user.details.service"/>
             <argument type="service" id="diamante.user.service"/>
             <tag name="twig.extension"/>
         </service>
