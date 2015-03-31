@@ -31,18 +31,14 @@ define([
 
     List.EmptyView = Marionette.ItemView.extend({
       template: emptyListTemplate,
-      tagName: 'td',
-      attributes: {
-        'colspan' : 5
-      }
+      tagName: 'tr',
+      className: 'message danger'
     });
 
     List.EmptySearchView = Marionette.ItemView.extend({
       template: emptySearchTemplate,
-      tagName: 'td',
-      attributes: {
-        'colspan' : 5
-      }
+      tagName: 'tr',
+      className: 'message danger'
     });
 
     List.CompositeView = Marionette.CompositeView.extend({
