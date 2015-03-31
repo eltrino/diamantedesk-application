@@ -15,10 +15,8 @@
 namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider;
-use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Diamante\EmailProcessingBundle\Model\Message\MessageSender;
 use Zend\Mail\AddressList;
-use Zend\Mail\Header\ContentTransferEncoding;
 use Zend\Mail\Header\From;
 use Zend\Mail\Header\GenericHeader;
 use Zend\Mail\Header\MessageId;

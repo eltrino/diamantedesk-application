@@ -14,6 +14,7 @@
  */
 namespace Diamante\EmailProcessingBundle\Model\Message;
 
+use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\MessageProcessingException;
 
 interface MessageProvider

@@ -18,6 +18,9 @@ use Diamante\EmailProcessingBundle\Model\Message;
 
 class CompositeStrategy implements Strategy
 {
+    /**
+     * @var Strategy[]
+     */
     private $strategies = array();
 
     /**

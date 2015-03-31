@@ -14,6 +14,8 @@
  */
 namespace Diamante\EmailProcessingBundle\Tests\Infrastructure\Message\Zend;
 
+use InvalidArgumentException;
+
 class ZendImapDummyStorage extends \Zend\Mail\Storage\Imap
 {
     private $messages;
@@ -118,6 +120,6 @@ class ZendImapDummyStorage extends \Zend\Mail\Storage\Imap
                 return $messageId;
             }
         }
-        throw new Exception\InvalidArgumentException('unique id not found');
+        throw new InvalidArgumentException('unique id not found');
     }
 }
