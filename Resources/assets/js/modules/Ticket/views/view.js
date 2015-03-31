@@ -24,7 +24,8 @@ define([
 
       templateHelpers : function(){
         return {
-          created : new Date(this.model.get('created_at')).toLocaleDateString()
+          created : new Date(this.model.get('created_at')).toLocaleDateString(),
+          description : this.model.get('description').replace(/\n/g,'<p></p>')
         };
       },
 
