@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Tests\Model\Attachment;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\ManagerImpl;
-use Diamante\DeskBundle\Tests\Model\Attachment\AttachmentStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class ManagerImplTest extends \PHPUnit_Framework_TestCase

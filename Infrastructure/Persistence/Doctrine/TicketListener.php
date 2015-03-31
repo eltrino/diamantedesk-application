@@ -15,7 +15,6 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence\Doctrine;
 
 use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 

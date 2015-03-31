@@ -59,18 +59,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\Repository
-     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
-     */
-    private $branchRepository;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\TicketFactory
-     * @Mock \Diamante\DeskBundle\Model\Ticket\TicketFactory
-     */
-    private $ticketFactory;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      */

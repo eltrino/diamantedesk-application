@@ -62,12 +62,6 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentManager;
 
     /**
-     * @var \Diamante\DeskBundle\Entity\Ticket
-     * @Mock \Diamante\DeskBundle\Entity\Ticket
-     */
-    private $ticket;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Shared\Repository
      * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */

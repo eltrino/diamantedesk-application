@@ -24,7 +24,6 @@ use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
-use Diamante\UserBundle\Api\UserDetailsService;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 

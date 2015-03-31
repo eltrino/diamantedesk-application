@@ -45,7 +45,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName()),
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\BranchEmailConfiguration::getClassName()),
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\MessageReference::getClassName()),
-            $em->getClassMetadata(\Diamante\DeskBundle\Entity\DiamanteUser::getClassName()),
+            $em->getClassMetadata(\Diamante\UserBundle\Entity\DiamanteUser::getClassName()),
         );
 
         $event->disableListeners();

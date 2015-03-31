@@ -17,9 +17,6 @@ namespace Diamante\DeskBundle\Tests\Validator\Constraints;
 
 use Diamante\DeskBundle\Validator\Constraints\DomainList;
 use Diamante\DeskBundle\Validator\Constraints\DomainListValidator;
-use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Component\Validator\Tests\Constraints\AbstractConstraintValidatorTest;
 
 class DomainListValidatorTest extends AbstractConstraintValidatorTest

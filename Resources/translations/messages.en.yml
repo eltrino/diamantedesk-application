@@ -206,3 +206,6 @@ diamante:
           reporter:            Reporter
           assignee:            Assignee
           key:                 Key
+
+        email:
+          configuration:           Email Configuration

@@ -29,7 +29,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Priority;
-use Diamante\DeskBundle\Model\User\User as User;
+use Diamante\UserBundle\Model\User;
 
 class LoadTicketData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -64,7 +64,7 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
     public function load(ObjectManager $manager)
     {
         $assignee = $this->userRepository->findOneBy(array('id' => 1));
-        $reporter = new User($assignee->getId(), USER::TYPE_ORO);
+        $reporter = new User($assignee->getId(), User::TYPE_ORO);
 
         for ($i = 1; $i <= 10; $i ++) {
             $branch = $this->branchRepository->findOneBy(array('name' => 'branchName' . $i));

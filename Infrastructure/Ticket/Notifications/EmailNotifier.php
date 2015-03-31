@@ -20,13 +20,11 @@ use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceSe
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Resolver\ReporterFullNameResolver;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
-use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 
 class EmailNotifier implements Notifier
@@ -217,7 +215,7 @@ class EmailNotifier implements Notifier
 
     /**
      * @param $user
-     * @return \Diamante\DeskBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
+     * @return \Diamante\UserBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
      */
     private function getUserDependingOnType($user)
     {

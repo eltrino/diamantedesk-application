@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 
-use Doctrine\DBAL\LockMode;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;

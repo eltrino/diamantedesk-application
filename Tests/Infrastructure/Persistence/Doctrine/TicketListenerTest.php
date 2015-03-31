@@ -39,12 +39,6 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $objectManager;
 
-    /**
-     * @var \Doctrine\ORM\Mapping\ClassMetadata
-     * @Mock \Doctrine\ORM\Mapping\ClassMetadata
-     */
-    private $classMetadata;
-
     protected function setUp()
     {
         MockAnnotations::init($this);

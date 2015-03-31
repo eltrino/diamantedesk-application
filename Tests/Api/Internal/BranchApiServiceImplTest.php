@@ -55,46 +55,10 @@ class BranchApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $tagManager;
 
     /**
-     * @var \Diamante\DeskBundle\Tests\Stubs\UploadedFileStub
-     */
-    private $fileMock;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Branch\Logo
-     * @Mock \Diamante\DeskBundle\Model\Branch\Logo
-     */
-    private $logo;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Branch\Branch
-     * @Mock \Diamante\DeskBundle\Model\Branch\Branch
-     */
-    private $branch;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
     private $authorizationService;
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     * @Mock Doctrine\ORM\EntityManager
-     */
-    private $em;
-
-    /**
-     * @var \Doctrine\ORM\UnitOfWork
-     * @Mock \Doctrine\ORM\UnitOfWork
-     */
-    private $unitOfWork;
-
-
-    /**
-     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
-     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
-     */
-    private $entityPersister;
 
     /**
      * @var \Diamante\UserBundle\Api\UserService

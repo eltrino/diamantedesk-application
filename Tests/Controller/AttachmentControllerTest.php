@@ -14,12 +14,7 @@
  */
 namespace Diamante\DiamanteDeskBundle\Tests\Controller;
 
-use Diamante\DeskBundle\Model\Ticket\Priority;
-use Diamante\DeskBundle\Model\Ticket\Source;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Diamante\DeskBundle\Model\Ticket\Status;
-use Symfony\Component\DomCrawler\Form;
-use Diamante\DeskBundle\Model\User\User;
 
 class AttachmentController extends WebTestCase
 {

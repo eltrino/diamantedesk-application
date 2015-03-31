@@ -248,7 +248,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *  }
      * )
      *
-     * @param integer $commentId
+     * @param int $id
      */
     public function deleteTicketComment($id)
     {

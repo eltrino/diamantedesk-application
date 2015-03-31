@@ -26,6 +26,8 @@ class TicketKeyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param $branchKey
+     * @param $ticketSequenceNumber
      * @dataProvider branchKeyProvider
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Branch key should be a not empty string.
@@ -45,6 +47,8 @@ class TicketKeyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param $branchKey
+     * @param $ticketSequenceNumber
      * @dataProvider ticketSequenceNumberProvider
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Ticket number should be an integer value grater than 0.
