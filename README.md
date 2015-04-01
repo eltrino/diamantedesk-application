@@ -10,3 +10,9 @@ Composer installation:
 ```bash
 composer require diamante/user-bundle:dev-master
 ```
+
+After composer will install this bundle, run this command to update application
+
+```bash
+php app/console diamante:user:install
+```
