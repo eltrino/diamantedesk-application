@@ -47,6 +47,7 @@ class MethodParametersTest extends \PHPUnit_Framework_TestCase
             'sub_map' => '1'
         ]);
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->validator->expects($this->once())
             ->method('validate')
             ->will($this->returnValue([]));

@@ -19,14 +19,12 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.api.user.entity.class">Diamante\ApiBundle\Entity\ApiUser</parameter>
-        <parameter key="diamante.api.user.entity.factory.class">Diamante\ApiBundle\Model\ApiUser\ApiUserFactory</parameter>
         <parameter key="diamante.api.routing.rest_service_loader.class">Diamante\ApiBundle\Routing\RestServiceLoader</parameter>
         <parameter key="diamante.api.event_listener.handle_request.class">Diamante\ApiBundle\EventListener\HandleRequest</parameter>
         <parameter key="diamante.api.event_listener.handle_view.class">Diamante\ApiBundle\EventListener\HandleView</parameter>
         <parameter key="diamante.api.event_listener.handle_exception.class">Diamante\ApiBundle\EventListener\HandleException</parameter>
         <parameter key="diamante.api.user.security.provider.class">Diamante\ApiBundle\Security\ApiUserProvider</parameter>
-        <parameter key="diamante.api.user.repository.class">Diamante\ApiBundle\Infrastructure\Persistence\ApiUserRepository</parameter>
+
         <parameter key="diamante.api.headers.container.class">Symfony\Component\HttpFoundation\ResponseHeaderBag</parameter>
         <parameter key="diamante.api.paging.provider.class">Diamante\ApiBundle\Paging\Provider\PagingContextProvider</parameter>
     </parameters>
@@ -60,15 +58,7 @@
             <argument type="service" id="security.authentication.manager" />
         </service>
 
-        <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%"
-                 factory-service = "doctrine.orm.entity_manager"
-                 factory-method  = "getRepository">
-            <argument type="string">%diamante.api.user.entity.class%</argument>
-        </service>
 
-        <service id="diamante.api.user.entity.factory" class="%diamante.api.user.entity.factory.class%">
-            <argument type="string">%diamante.api.user.entity.class%</argument>
-        </service>
 
         <service id="diamante.api.event_listener.handle_request" class="%diamante.api.event_listener.handle_request.class%">
             <argument type="service" id="validator"/>
