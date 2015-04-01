@@ -99,6 +99,7 @@ abstract class AbstractFilterCriteriaProcessor implements FilterCriteriaProcesso
 
     protected function createPagingConfig()
     {
+        $pagingConfig = [];
         foreach ($this->pagingProperties as $propertyName) {
             $pagingConfig[$propertyName] = $this->command->{$propertyName};
         }

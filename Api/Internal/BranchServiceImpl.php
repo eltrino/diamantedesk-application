@@ -21,13 +21,13 @@ use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
 use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\DeskBundle\Model\Shared\UserService;
-use Diamante\DeskBundle\Model\User\User;
 
 class BranchServiceImpl implements BranchService
 {

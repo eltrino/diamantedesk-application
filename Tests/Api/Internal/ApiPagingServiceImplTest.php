@@ -140,6 +140,7 @@ class ApiPagingServiceImplTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(self::DUMMY_PATHINFO));
 
         $this->pagingContext
+            ->expects($this->atLeastOnce())
             ->method('getUriForPath')
             ->will($this->returnValueMap($pathToLinkMapping));
 
@@ -264,6 +265,7 @@ class ApiPagingServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     protected function getLinksString(array $paths)
     {
+        $links = $generatedLinks = [];
         for ($i = 0; $i < count($paths); $i++) {
             $generatedLinks[] = $paths[$i][1];
         }

@@ -28,7 +28,7 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -62,8 +62,8 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $commentFactory;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock Diamante\UserBundle\Api\UserService
      */
     private $userService;
 

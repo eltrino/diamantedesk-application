@@ -23,8 +23,7 @@ use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetailsService;
+use Diamante\UserBundle\Api\UserService;
 
 class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInterface
 {
@@ -36,9 +35,9 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     protected $apiPagingService;
 
     /**
-     * @var UserDetailsService
+     * @var UserService
      */
-    protected $userDetailsService;
+    protected $userService;
 
     /**
      * Load Comment by given comment id
@@ -249,7 +248,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      *  }
      * )
      *
-     * @param integer $commentId
+     * @param int $id
      */
     public function deleteTicketComment($id)
     {
@@ -342,11 +341,11 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
 
 
     /**
-     * @param \Diamante\DeskBundle\Model\User\UserDetailsService $detailsService
+     * @param UserService $userService
      */
-    public function setUserDetailsService(UserDetailsService $detailsService)
+    public function setUserService(UserService $userService)
     {
-        $this->userDetailsService = $detailsService;
+        $this->userService = $userService;
     }
 
     /**
@@ -378,7 +377,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     {
         $comment = parent::loadComment($id);
 
-        $details = $this->userDetailsService->fetch($comment->getAuthor());
+        $details = $this->userService->fetchUserDetails($comment->getAuthor());
 
         return $details;
     }

@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Ticket\CommentRepository;
+use Diamante\UserBundle\Model\User;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;

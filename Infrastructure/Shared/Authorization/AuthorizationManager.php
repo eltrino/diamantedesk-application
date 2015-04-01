@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
-use Diamante\ApiBundle\Model\ApiUser\ApiUser;
+use Diamante\UserBundle\Entity\ApiUser;
 use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;

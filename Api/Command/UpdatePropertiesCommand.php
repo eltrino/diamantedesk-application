@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdatePropertiesCommand

@@ -38,11 +38,6 @@ class FilterUrlGeneratorFactory
     /**
      * @var string;
      */
-    private $userId;
-
-    /**
-     * @var string;
-     */
     private $userFullName;
 
     /**

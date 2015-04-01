@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 

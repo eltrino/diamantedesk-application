@@ -14,9 +14,6 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
-use Diamante\DeskBundle\Api\Command\CreateCommentFromMessageCommand;
-use Diamante\DeskBundle\Api\Command\CreateTicketFromMessageCommand;
-
 interface MessageReferenceService
 {
     /**

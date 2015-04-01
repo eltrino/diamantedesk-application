@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Persistence;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase

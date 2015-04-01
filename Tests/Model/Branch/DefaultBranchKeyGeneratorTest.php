@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator;
 class DefaultBranchKeyGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @param $branchName
      * @dataProvider invalidDataProvider
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Can not generate key from given name. Name should have at list 2 letters.

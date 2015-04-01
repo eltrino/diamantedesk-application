@@ -19,22 +19,14 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante.user.entity.class">Diamante\DeskBundle\Entity\DiamanteUser</parameter>
-        <parameter key="diamante.user_factory.class">Diamante\DeskBundle\Model\User\DiamanteUserFactory</parameter>
-        <parameter key="diamante.user.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteUserService</parameter>
-        <parameter key="diamante.contact.service.class">Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteContactService</parameter>
         <parameter key="diamante.command_factory.class">Diamante\DeskBundle\Form\CommandFactory</parameter>
         <!-- repositories start -->
         <parameter key="diamante.generic.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
-        <parameter key="diamante.user.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineDiamanteUserRepository</parameter>
         <!-- repositories end -->
         <parameter key="diamante.email_processing.form.type.default_branch.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
         <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
         <parameter key="diamante.oro_user.OroUserSubscriber.class">Diamante\DeskBundle\EventListener\OroUserSubscriber</parameter>
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
-        <parameter key="diamante.user.details.service.class">Diamante\DeskBundle\Model\User\UserDetailsServiceImpl</parameter>
-        <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\DeskBundle\Search\DiamanteUserSearchHandler</parameter>
-        <parameter key="diamante.user.details.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\UserDetailsExtension</parameter>
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
         <parameter key="diamante.user_state.service.class">Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl</parameter>
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
@@ -42,36 +34,6 @@
     </parameters>
 
     <services>
-
-        <service id="diamante.user.repository" class="%diamante.user.repository.class%"
-                 factory-service = "doctrine.orm.entity_manager"
-                 factory-method  = "getRepository">
-            <argument type="string">%diamante.user.entity.class%</argument>
-        </service>
-
-        <service id="diamante.user_factory" class="%diamante.user_factory.class%">
-            <argument type="string">%diamante.user.entity.class%</argument>
-        </service>
-
-        <service id="diamante.user.service" class="%diamante.user.service.class%">
-            <argument type="service" id="oro_user.manager"/>
-            <argument type="service" id="diamante.user.repository"/>
-            <argument type="service" id="diamante.user_factory"/>
-        </service>
-
-        <service id="diamante.user_state.service" class="%diamante.user_state.service.class%">
-            <argument type="service" id="security.context"/>
-        </service>
-
-        <service id="diamante.contact.service" class="%diamante.contact.service.class%">
-            <argument type="service" id="orocrm_contact.email.owner.provider"/>
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-        </service>
-
-        <service id="diamante.user.details.service" class="%diamante.user.details.service.class%">
-            <argument type="service" id="diamante.user.service"/>
-        </service>
-
         <service id="diamante.datagrid.extension.formatter.assignee_property" class="Diamante\DeskBundle\Datagrid\AssigneePropertyFormatter">
             <argument type="service" id="translator"/>
             <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
@@ -110,47 +72,8 @@
             <tag name="oro_ui_placeholder.filter"/>
         </service>
 
-        <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
-            <argument type="string">Diamante\DeskBundle\Model\User\UserDetails</argument>
-            <argument type="service" id="diamante.user.details.service"/>
-            <argument type="service" id="diamante.user.repository"/>
-            <argument type="service" id="oro_user.autocomplete.user.search_handler"/>
-            <argument type="collection">
-                <argument type="string">email</argument>
-                <argument type="string">firstName</argument>
-                <argument type="string">lastName</argument>
-                <argument type="string">fullName</argument>
-                <argument type="string">username</argument>
-                <argument type="string">type</argument>
-            </argument>
-            <tag name="oro_form.autocomplete.search_handler" alias="diamante_user" acl_resource="oro_user_user_view"/>
-        </service>
-
-        <service id="diamante.user.details.twig.extension" class="%diamante.user.details.twig.extension.class%">
-            <argument type="service" id="diamante.user.details.service"/>
-            <argument type="service" id="diamante.user.service"/>
-            <tag name="twig.extension"/>
-        </service>
-
         <service id="diamante.api.paging.service" class="%diamante.api.paging.service.class%">
             <argument type="service" id="diamante.api.paging.provider"/>
-        </service>
-
-        <!-- repositories start -->
-        <service id="diamante.diamante_user.repository" class="%diamante.user.repository.class%"
-                 factory-service = "doctrine.orm.entity_manager"
-                 factory-method  = "getRepository">
-            <argument type="string">%diamante.user.entity.class%</argument>
-        </service>
-        <!-- repositories end -->
-
-        <service
-                id="diamante.user.event.listener"
-                class="%diamante.user.event.listener.class%"
-                >
-            <argument type="service" id="service_container"/>
-            <tag name="monolog.logger" channel="diamante"/>
-            <tag name="doctrine.event_listener" event="onFlush"/>
         </service>
     </services>
 </container>

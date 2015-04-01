@@ -22,8 +22,8 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\UserBundle\Model\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
 
 class CommentTest extends \PHPUnit_Framework_TestCase
 {

@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
+use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -25,7 +26,6 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\Comment;
-use Diamante\DeskBundle\Model\User\User;
 
 class LoadCommentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {

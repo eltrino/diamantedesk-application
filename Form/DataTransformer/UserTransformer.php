@@ -12,17 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 20/11/14
- * Time: 1:07 PM
- */
 
 namespace Diamante\DeskBundle\Form\DataTransformer;
 
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 

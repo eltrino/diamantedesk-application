@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Api;
 
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
-use Diamante\DeskBundle\Api\Command\Filter\FilterTicketsCommand;
 use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
@@ -25,6 +24,7 @@ use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
 
 interface TicketService
 {
@@ -67,7 +67,7 @@ interface TicketService
     /**
      * Remove Attachment from Ticket
      * @param RemoveTicketAttachmentCommand $command
-     * @return void
+     * @return TicketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
     public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command);

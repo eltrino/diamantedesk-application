@@ -20,9 +20,9 @@ use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketFactory;
+use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
 
 class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,8 +39,8 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
     private $branchRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock \Diamante\UserBundle\Api\UserService
      */
     private $userService;
 
@@ -80,7 +80,7 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::SUBJECT, $ticket->getSubject());
         $this->assertEquals(self::DESCRIPTION, $ticket->getDescription());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Branch\Branch', $ticket->getBranch());
-        $this->assertInstanceOf('\Diamante\DeskBundle\Model\User\User', $ticket->getReporter());
+        $this->assertInstanceOf('\Diamante\UserBundle\Model\User', $ticket->getReporter());
         $this->assertInstanceOf('\Oro\Bundle\UserBundle\Entity\User', $ticket->getAssignee());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Ticket\Priority', $ticket->getPriority());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Ticket\Status', $ticket->getStatus());

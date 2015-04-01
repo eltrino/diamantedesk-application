@@ -16,8 +16,8 @@ namespace Diamante\DeskBundle\Model\Ticket;
 
 use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Diamante\UserBundle\Model\User;
 
 interface TicketRepository extends Repository, FilterableRepository
 {

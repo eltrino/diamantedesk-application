@@ -26,10 +26,8 @@ use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Diamante\DeskBundle\Entity\Branch;
 
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -185,7 +183,7 @@ class BranchController extends Controller
     /**
      * @param BranchCommand $command
      * @param $callback
-     * @param BranchType | UpdateBranchType $form
+     * @param UpdateBranchType $form
      * @return array
      */
     private function edit(BranchCommand $command, $form, $callback)

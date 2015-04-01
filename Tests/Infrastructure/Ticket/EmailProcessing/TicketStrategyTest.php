@@ -14,11 +14,11 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Message;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
-use Diamante\DeskBundle\Model\User\DiamanteUser;
 use OroCRM\Bundle\ContactBundle\Entity\Contact;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
@@ -53,14 +53,14 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private $branchEmailConfigurationService;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
      */
     private $diamanteUserRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserFactory
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserFactory
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserFactory
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserFactory
      */
     private $diamanteUserFactory;
 
@@ -70,12 +70,6 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $emailProcessingSettings;
 
-    /**
-     * @var \Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteContactService
-     * @Mock \Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteContactService
-     */
-    private $diamanteContactService;
-
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -84,8 +78,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             $this->branchEmailConfigurationService,
             $this->diamanteUserRepository,
             $this->diamanteUserFactory,
-            $this->emailProcessingSettings,
-            $this->diamanteContactService
+            $this->emailProcessingSettings
         );
     }
 

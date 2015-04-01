@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
+use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateTicketCommand
@@ -80,4 +81,9 @@ class UpdateTicketCommand
      * @var \Diamante\DeskBundle\Api\Dto\AttachmentInput
      */
     public $attachmentsInput;
+
+    /**
+     * @var Branch
+     */
+    public $branch;
 }
