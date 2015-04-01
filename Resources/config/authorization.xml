@@ -35,7 +35,10 @@
             <argument type="service" id="diamante.user.repository" />
         </service>
 
-        <service id="diamante.anonymous_authorization.service" class="%diamante.anonymous_authorization.service.class%" />
+        <service id="diamante.anonymous_authorization.service" class="%diamante.anonymous_authorization.service.class%">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="diamante.user.repository" />
+        </service>
 
         <service id="diamante.authorization_manager.service" class="%diamante.authorization_manager.service.class%">
             <argument type="service" id="service_container"/>

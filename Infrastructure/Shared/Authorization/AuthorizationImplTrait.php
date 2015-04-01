@@ -15,8 +15,6 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
-use Diamante\ApiBundle\Entity\ApiUser;
-
 trait AuthorizationImplTrait
 {
     /**
@@ -36,7 +34,7 @@ trait AuthorizationImplTrait
             $user = $this->securityContext->getToken()->getUser();
             $objectOwner = $object->getOwner();
 
-            if ($user instanceof ApiUser && $attributes == 'EDIT' || $attributes == 'DELETE') {
+            if ($attributes == 'EDIT' || $attributes == 'DELETE') {
                 if ($objectOwner->isDiamanteUser()) {
                     $ownerId = $this->diamanteUserRepository->findUserByEmail($user->getUserName())->getId();
 

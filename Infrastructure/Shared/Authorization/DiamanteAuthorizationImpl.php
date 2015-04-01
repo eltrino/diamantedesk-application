@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
+use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
 
 class DiamanteAuthorizationImpl implements Authorization
 {
@@ -28,7 +28,7 @@ class DiamanteAuthorizationImpl implements Authorization
     private $securityContext;
 
     /**
-     * @var DiamanteUserRepository
+     * @var DoctrineDiamanteUserRepository
      */
     private $diamanteUserRepository;
 
@@ -44,11 +44,12 @@ class DiamanteAuthorizationImpl implements Authorization
         );
 
     /**
-     * @param DiamanteUserRepository $diamanteUserRepository
+     * @param DoctrineDiamanteUserRepository $diamanteUserRepository
+     * @param SecurityContextInterface       $securityContext
      */
     public function __construct(
         SecurityContextInterface $securityContext,
-        DiamanteUserRepository $diamanteUserRepository
+        DoctrineDiamanteUserRepository $diamanteUserRepository
     ) {
         $this->securityContext = $securityContext;
         $this->diamanteUserRepository = $diamanteUserRepository;
