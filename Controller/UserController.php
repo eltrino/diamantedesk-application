@@ -6,7 +6,7 @@ use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -81,7 +81,7 @@ class UserController extends FOSRestController
             $this->get('diamante.front.registration.service')->confirm($command);
             $view = $this->view(null, Codes::HTTP_OK);
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Confirmation failed for hash %s', $hash));
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Confirmation failed for hash %s', $command->hash));
             $view = $this->view(null, Codes::HTTP_BAD_REQUEST);
         }
         return $this->response($view);

@@ -52,6 +52,8 @@
             <argument type="service" id="diamante.diamante_user.repository"/>
             <argument type="service" id="diamante.api.user.repository"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
         </service>
 
         <service id="diamante.front.current_user.api.service_diamante" alias="diamante.front.current_user.api.service" />

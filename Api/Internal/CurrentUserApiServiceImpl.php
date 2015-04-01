@@ -23,6 +23,9 @@ use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
 use Diamante\FrontBundle\Api\Command\UpdateUserCommand;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\FrontBundle\Api\CurrentUserService;
+use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
+use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 
 class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterface
@@ -42,14 +45,21 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
      */
     private $authorizationService;
 
+    /**
+     * @var Logger
+     */
+    private $logger;
+
     public function __construct(
         DiamanteUserRepository $diamanteUserRepository,
         ApiUserRepository $apiUserRepository,
-        AuthorizationService $authorizationService
+        AuthorizationService $authorizationService,
+        Logger $logger
     ) {
-        $this->diamanteUserRepository = $diamanteUserRepository;
-        $this->apiUserRepository = $apiUserRepository;
-        $this->authorizationService = $authorizationService;
+        $this->diamanteUserRepository   = $diamanteUserRepository;
+        $this->apiUserRepository        = $apiUserRepository;
+        $this->authorizationService     = $authorizationService;
+        $this->logger                   = $logger;
     }
 
     /**
@@ -62,17 +72,26 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
      *  resource=true,
      *  statusCodes={
      *      200="Returned when successful",
-     *      404="Returned when the user is not found"
+     *      401="Returned when the user is not found"
      *  }
      * )
-     *
-     * @return DiamanteUser
+     * @return \Diamante\DeskBundle\Model\User\DiamanteUser
      */
     public function getCurrentUser()
     {
         $apiUser = $this->authorizationService->getLoggedUser();
-        $diamanteUser = $this->loadDiamanteUser($apiUser);
-        return $diamanteUser;
+
+        if (!$apiUser instanceof ApiUser) {
+            throw new ForbiddenException('Your session seems to be dirty. Please, log out of Diamante Admin and try again');
+        }
+
+        try {
+            $diamanteUser = $this->loadDiamanteUser($apiUser);
+            return $diamanteUser;
+        } catch (\Exception $e) {
+            $this->logger->error('No Diamante User is present for ApiUser provided');
+            throw new AuthenticationException('Attempt of unauthorized access');
+        }
     }
 
 
