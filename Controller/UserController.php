@@ -6,7 +6,7 @@ use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
-use FOS\RestBundle\Util\Codes;
+use FOS\Rest\Util\Codes;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Routing\ClassResourceInterface;
