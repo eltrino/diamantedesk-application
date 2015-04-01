@@ -3,7 +3,7 @@
     "description": "DiamanteDesk User bundle",
     "require": {
         "beberlei/assert": "2.*",
-        "diamante/desk-bundle": "1.0.*@dev"
+        "diamante/desk-bundle": "1.0.*@dev",
         "eltrino/phpunit-mockannotations": "~1.0@dev"
     },
     "license": "OSL-3.0",
