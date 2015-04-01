@@ -19,7 +19,8 @@ define(['app'], function(App){
               attachmentCollection : attachmentCollection
             }),
             modalCreateView = new Create.ModalView({
-              title: 'Add New Ticket'
+              title: 'Add New Ticket',
+              submit: 'Submit'
             });
 
         modalCreateView.on('show', function(){

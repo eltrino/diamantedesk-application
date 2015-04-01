@@ -21,6 +21,7 @@ require.config({
     "tpl" : "vendor/requirejs-tpl/tpl",
     "bootstrap" : "vendor/bootstrap/dist/js/bootstrap",
     "moment" : "vendor/moment/min/moment-with-locales",
+    "pwstrength" : "vendor/pwstrength-bootstrap/dist/pwstrength-bootstrap-1.2.5",
     "cryptojs.core" : "vendor/dfm-crypto-js/components/core",
     "cryptojs.x64" : "vendor/dfm-crypto-js/components/x64-core",
     "cryptojs.md5" : "vendor/dfm-crypto-js/components/md5",

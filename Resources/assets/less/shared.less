@@ -7,7 +7,7 @@
 }
 
 .blured {
-  #header, .content, #footer {
+  #header, #content, #footer {
     -webkit-filter: blur(2px);
     -moz-filter: blur(2px);
     -ms-filter: blur(2px);
@@ -30,6 +30,19 @@
     position: absolute;
   }
 }
+
+.form-group {
+  .progress {
+    margin-top: @line-height-computed;
+  }
+  .password-verdict {
+    display: block;
+    height: @line-height-computed;
+    text-align: center;
+    margin-top: -@line-height-computed * 2;
+  }
+}
+
 .loader {
   position: fixed;
   top:0;

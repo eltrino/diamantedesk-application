@@ -111,6 +111,7 @@ define([
         this.trigger('login:fail');
         this.clear();
         this.set({ logged_in: false });
+        this.trigger('error');
         App.trigger('session:login:fail');
         App.alert({ title: "Authorization Failed", messages: ["Incorrect email or password"] });
       },

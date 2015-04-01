@@ -44,14 +44,16 @@ define(['app'], function(App){
         App.debug('warn', 'Validation Errors:', errors);
         this.hideLoader();
         var clearErrors = function(){
-          var $form = this.$("form");
-          $form.find(".help-block").remove();
-          $form.find(".has-error").removeClass("has-error");
+          var form = this.$("form");
+          form.find(".help-block").remove();
+          form.find(".has-error").removeClass("has-error");
         };
         var markErrors = function(value, key){
-          var $controlGroup = this.$('[name="'+key + '"]').parent();
-          var $errorEl = $("<span>", {class: "help-block", text: value});
-          $controlGroup.append($errorEl).addClass("has-error");
+          var input =  this.$('[name="'+key + '"]'),
+              controlGroup = this.$('[name="'+key + '"]').parent(),
+              errorEl = $("<span>", {class: "help-block", text: value});
+          input.after(errorEl);
+          controlGroup.addClass("has-error");
         };
         clearErrors.call(this);
         _.each(errors, markErrors, this);
