@@ -1083,25 +1083,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $this->ticketRepository->expects($this->once())->method('get')->will($this->returnValue($this->ticket));
 
-        $subject = 'DUMMY_SUBJECT_UPDT';
-        $description = 'DUMMY_DESC_UPDT';
-        $status = 'open';
-        $statusObject = new Status($status);
-        $priority = 'high';
-        $priorityObject = new Priority($priority);
-        $source = 'phone';
-        $sourceObject = new Source($source);
+        $properties = array(
+            'subject'     => 'DUMMY_SUBJECT_UPDT',
+            'description' => 'DUMMY_DESC_UPDT',
+            'status'      => 'open',
+            'priority'    => 'high',
+            'source'      => 'phone'
+        );
 
-        $this->ticket->expects($this->at(0))->method('updateProperty')
-            ->with($this->equalTo('subject'), $this->equalTo($subject));
-        $this->ticket->expects($this->at(1))->method('updateProperty')
-            ->with($this->equalTo('description'), $this->equalTo($description));
-        $this->ticket->expects($this->at(2))->method('updateProperty')
-            ->with($this->equalTo('status'), $this->equalTo($statusObject));
-        $this->ticket->expects($this->at(3))->method('updateProperty')
-            ->with($this->equalTo('priority'), $this->equalTo($priorityObject));
-        $this->ticket->expects($this->at(4))->method('updateProperty')
-            ->with($this->equalTo('source'), $this->equalTo($sourceObject));
+        $this->ticket->expects($this->once())->method('updateProperties')
+            ->with($this->equalTo($properties));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
 
@@ -1111,13 +1102,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $command = new UpdatePropertiesCommand();
         $command->id = 1;
-        $command->properties = [
-            'subject' => $subject,
-            'description' => $description,
-            'status' => $status,
-            'priority' => $priority,
-            'source' => $source
-        ];
+        $command->properties = $properties;
 
         $this->ticketService->updateProperties($command);
     }

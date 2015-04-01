@@ -57,6 +57,12 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
     private $queryBuilder;
 
     /**
+     * @var \Diamante\UserBundle\Api\Internal\UserStateServiceImpl
+     * @Mock \Diamante\UserBundle\Api\Internal\UserStateServiceImpl
+     */
+    private $userState;
+
+    /**
      * @var \Doctrine\ORM\AbstractQuery
      */
     private $searchQuery;
@@ -80,19 +86,188 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->searchQuery = $this->getMockForAbstractClass('\Doctrine\ORM\AbstractQuery', array($this->em));
         $this->classMetadata->name = self::CLASS_NAME;
         $this->repository = new DoctrineTicketRepository($this->em, $this->classMetadata);
+        $this->repository->setUserState($this->userState);
     }
 
-    public function testGetByTicketKey()
-    {
-        $branchKey = 'DB';
-        $ticketSequenceNumber = 123;
+        public function testGetByTicketKey()
+        {
+            $branchKey = 'DB';
+            $ticketSequenceNumber = 123;
 
-        $dql = "SELECT t FROM DiamanteDeskBundle:Ticket t, DiamanteDeskBundle:Branch b
-                WHERE b.id = t.branch AND b.key = :branchKey AND t.sequenceNumber = :ticketSequenceNumber";
+            $branch = new Branch('DB', 'Dummy Branch', 'Description');
+            $ticket = new Ticket(
+                new UniqueId('unique_id'),
+                new TicketSequenceNumber($ticketSequenceNumber),
+                'Subject',
+                'Description',
+                $branch,
+                new User(1, User::TYPE_DIAMANTE),
+                new OroUser(),
+                new Source(Source::WEB),
+                new Priority(Priority::PRIORITY_MEDIUM),
+                new Status(Status::NEW_ONE)
+            );
+
+            $this->em
+                ->expects($this->once())
+                ->method('createQueryBuilder')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('select')
+                ->with($this->equalTo(array('t', 'c')))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->exactly(2))
+                ->method('from')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('leftJoin')
+                ->with($this->equalTo('t.comments'), $this->equalTo('c'))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('where')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->atLeast(2))
+                ->method('andWhere')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('setParameters')
+                ->with(
+                    [
+                        'branchKey'            => $branchKey,
+                        'ticketSequenceNumber' => $ticketSequenceNumber
+                    ]
+                )
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->userState->expects($this->once())
+                ->method('isOroUser')
+                ->will($this->returnValue(true));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('getQuery')
+                ->will($this->returnValue($this->searchQuery));
+
+            $this->em
+                ->expects($this->atLeastOnce())
+                ->method('newHydrator')
+                ->with($this->equalTo(Query::HYDRATE_OBJECT))
+                ->will($this->returnValue($this->objectHydrator));
+
+            $this->objectHydrator
+                ->expects($this->atLeastOnce())
+                ->method('hydrateAll')
+                ->will($this->returnValue($ticket));
+
+            $result = $this->repository->getByTicketKey(new TicketKey($branchKey, $ticketSequenceNumber));
+
+            $this->assertNotNull($result);
+            $this->assertEquals($ticket, $result);
+        }
+
+        public function testGetByTicketUniqueId()
+        {
+            $uniqueId = 'unique_id';
+            $ticketSequenceNumber = 123;
+
+            $branch = new Branch('DB', 'Dummy Branch', 'Description');
+            $ticket = new Ticket(
+                new UniqueId($uniqueId),
+                new TicketSequenceNumber($ticketSequenceNumber),
+                'Subject',
+                'Description',
+                $branch,
+                new User(1, User::TYPE_DIAMANTE),
+                new OroUser(),
+                new Source(Source::WEB),
+                new Priority(Priority::PRIORITY_MEDIUM),
+                new Status(Status::NEW_ONE)
+            );
+
+            $this->em
+                ->expects($this->once())
+                ->method('createQueryBuilder')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('select')
+                ->with($this->equalTo(array('t', 'c')))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('from')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('leftJoin')
+                ->with($this->equalTo('t.comments'), $this->equalTo('c'))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('where')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('setParameter')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->userState->expects($this->once())
+                ->method('isOroUser')
+                ->will($this->returnValue(false));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('andWhere')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('getQuery')
+                ->will($this->returnValue($this->searchQuery));
+
+            $this->em
+                ->expects($this->atLeastOnce())
+                ->method('newHydrator')
+                ->with($this->equalTo(Query::HYDRATE_OBJECT))
+                ->will($this->returnValue($this->objectHydrator));
+
+            $this->objectHydrator
+                ->expects($this->atLeastOnce())
+                ->method('hydrateAll')
+                ->will($this->returnValue($ticket));
+
+            $result = $this->repository->getByUniqueId(new UniqueId($uniqueId));
+
+            $this->assertNotNull($result);
+            $this->assertEquals($ticket, $result);
+        }
+
+    public function testGetByTicketId()
+    {
+        $id = 1;
+        $uniqueId = 'unique_id';
+        $ticketSequenceNumber = 123;
 
         $branch = new Branch('DB', 'Dummy Branch', 'Description');
         $ticket = new Ticket(
-            new UniqueId('unique_id'),
+            new UniqueId($uniqueId),
             new TicketSequenceNumber($ticketSequenceNumber),
             'Subject',
             'Description',
@@ -104,61 +279,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             new Status(Status::NEW_ONE)
         );
 
-        $query = $this->getMockBuilder('\Doctrine\ORM\AbstractQuery')
-            ->disableOriginalConstructor()
-            ->setMethods(array('setParameters', 'getSingleResult', 'setMaxResults'))
-            ->getMockForAbstractClass();
-
-        $this->em->expects($this->once())
-            ->method('createQuery')
-            ->with($this->logicalAnd(
-                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING),
-                $this->stringContains($dql)
-            ))
-            ->will($this->returnValue($query));
-
-        $query->expects($this->once())->method('setParameters')
-            ->with($this->logicalAnd(
-                $this->isType(\PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY),
-                $this->arrayHasKey('branchKey'),
-                $this->arrayHasKey('ticketSequenceNumber'),
-                $this->callback(function($parameters) use ($branchKey, $ticketSequenceNumber) {
-                    return $parameters['branchKey'] == $branchKey
-                            && $parameters['ticketSequenceNumber'] == $ticketSequenceNumber;
-                })
-            ));
-        $query->expects($this->once())->method('setMaxResults')->with(1);
-
-        $query->expects($this->once())->method('getSingleResult')->will($this->returnValue($ticket));
-
-        $result = $this->repository->getByTicketKey(new TicketKey($branchKey, $ticketSequenceNumber));
-
-        $this->assertNotNull($result);
-        $this->assertEquals($ticket, $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testSearch()
-    {
-        $a = new EntityStub();
-        $b = new EntityStub();
-        $a->name = "DUMMY_NAME";
-        $a->status = "new";
-        $a->id = 1;
-        $b->name = "NOT_DUMMY_NAME";
-        $b->status = "closed";
-        $b->id = 2;
-
-        $entities = array($a, $b);
-
-        $pagingConfig = new FilterPagingProperties();
-        $querySearch = 'NAM';
-        $conditions = array(
-            array('status', 'eq', 'new')
-        );
-
         $this->em
             ->expects($this->once())
             ->method('createQueryBuilder')
@@ -167,82 +287,43 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder
             ->expects($this->once())
             ->method('select')
-            ->with($this->equalTo('e'))
+            ->with($this->equalTo(array('t', 'c')))
             ->will($this->returnValue($this->queryBuilder));
 
         $this->queryBuilder
             ->expects($this->once())
             ->method('from')
-            ->with($this->equalTo($this->classMetadata->name), $this->equalTo('e'))
             ->will($this->returnValue($this->queryBuilder));
 
-        $whereExpr = new \Doctrine\ORM\Query\Expr\Comparison('e.status','eq','new');
-
-        $likeExprSubject = new \Doctrine\ORM\Query\Expr\Comparison('e.subject', 'like', '%NAM%');
-        $likeExprDescription = new \Doctrine\ORM\Query\Expr\Comparison('e.description', 'like', '%NAM%');
-        $whereExprOrx = new \Doctrine\ORM\Query\Expr\Orx($likeExprSubject, $likeExprDescription);
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('leftJoin')
+            ->with($this->equalTo('t.comments'), $this->equalTo('c'))
+            ->will($this->returnValue($this->queryBuilder));
 
         $this->queryBuilder
-            ->expects($this->atLeastOnce())
+            ->expects($this->once())
+            ->method('where')
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->queryBuilder
+            ->expects($this->once())
+            ->method('setParameter')
+            ->will($this->returnValue($this->queryBuilder));
+
+        $this->userState->expects($this->once())
+            ->method('isOroUser')
+            ->will($this->returnValue(false));
+
+        $this->queryBuilder
+            ->expects($this->once())
             ->method('andWhere')
-            ->with($this->logicalOr(
-                $this->equalTo($whereExpr),
-                $this->equalTo($whereExprOrx)))
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('addOrderBy')
-            ->with($this->equalTo('e.id'), $this->equalTo($pagingConfig->getOrder()))
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('setFirstResult')
-            ->with($this->equalTo(0))
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('setMaxResults')
-            ->with($this->equalTo($pagingConfig->getLimit()))
             ->will($this->returnValue($this->queryBuilder));
 
         $this->queryBuilder
             ->expects($this->once())
             ->method('getQuery')
             ->will($this->returnValue($this->searchQuery));
-
-        $this->queryBuilder
-            ->expects($this->any())
-            ->method('expr')
-            ->will($this->returnValue($this->expressionBuilder));
-
-        $this->em
-            ->expects($this->any())
-            ->method('getExpressionBuilder')
-            ->will($this->returnValue($this->expressionBuilder));
-
-        $this->expressionBuilder
-            ->expects($this->atLeast(2))
-            ->method('literal')
-            ->with($this->logicalOr(
-                $this->equalTo('new'),
-                $this->equalTo('%'.$querySearch.'%')))
-            ->will($this->returnCallback(array($this, 'literalCallback')));
-
-        $this->expressionBuilder
-            ->expects($this->atLeastOnce())
-            ->method('eq')
-            ->with($this->equalTo('e.status'), $this->equalTo('new'))
-            ->will($this->returnValue($whereExpr));
-
-
-        $this->expressionBuilder
-            ->expects($this->atLeastOnce())
-            ->method('Orx')
-            ->with($this->anything(), $this->anything())
-            ->will($this->returnValue($whereExprOrx));
 
         $this->em
             ->expects($this->atLeastOnce())
@@ -253,15 +334,145 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->objectHydrator
             ->expects($this->atLeastOnce())
             ->method('hydrateAll')
-            ->will($this->returnValue(array($a)));
+            ->will($this->returnValue($ticket));
 
-        $searchedEntities = $this->repository->search($querySearch, $conditions, $pagingConfig);
+        $result = $this->repository->get($id);
 
-        $this->assertNotNull($searchedEntities);
-        $this->assertTrue(is_array($searchedEntities));
-        $this->assertNotEmpty($searchedEntities);
-        $this->assertEquals($a, $searchedEntities[0]);
+        $this->assertNotNull($result);
+        $this->assertEquals($ticket, $result);
     }
+
+        /**
+         * @test
+         */
+        public function testSearch()
+        {
+            $a = new EntityStub();
+            $b = new EntityStub();
+            $a->name = "DUMMY_NAME";
+            $a->status = "new";
+            $a->id = 1;
+            $b->name = "NOT_DUMMY_NAME";
+            $b->status = "closed";
+            $b->id = 2;
+
+            $entities = array($a, $b);
+
+            $pagingConfig = new FilterPagingProperties();
+            $querySearch = 'NAM';
+            $conditions = array(
+                array('status', 'eq', 'new')
+            );
+
+            $this->em
+                ->expects($this->once())
+                ->method('createQueryBuilder')
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('select')
+                ->with($this->equalTo('e'))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('from')
+                ->with($this->equalTo($this->classMetadata->name), $this->equalTo('e'))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $whereExpr = new \Doctrine\ORM\Query\Expr\Comparison('e.status', 'eq', 'new');
+
+            $likeExprSubject = new \Doctrine\ORM\Query\Expr\Comparison('e.subject', 'like', '%NAM%');
+            $likeExprDescription = new \Doctrine\ORM\Query\Expr\Comparison('e.description', 'like', '%NAM%');
+            $whereExprOrx = new \Doctrine\ORM\Query\Expr\Orx($likeExprSubject, $likeExprDescription);
+
+            $this->queryBuilder
+                ->expects($this->atLeastOnce())
+                ->method('andWhere')
+                ->with(
+                    $this->logicalOr(
+                        $this->equalTo($whereExpr),
+                        $this->equalTo($whereExprOrx)
+                    )
+                )
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('addOrderBy')
+                ->with($this->equalTo('e.id'), $this->equalTo($pagingConfig->getOrder()))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('setFirstResult')
+                ->with($this->equalTo(0))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('setMaxResults')
+                ->with($this->equalTo($pagingConfig->getLimit()))
+                ->will($this->returnValue($this->queryBuilder));
+
+            $this->queryBuilder
+                ->expects($this->once())
+                ->method('getQuery')
+                ->will($this->returnValue($this->searchQuery));
+
+            $this->queryBuilder
+                ->expects($this->any())
+                ->method('expr')
+                ->will($this->returnValue($this->expressionBuilder));
+
+            $this->em
+                ->expects($this->any())
+                ->method('getExpressionBuilder')
+                ->will($this->returnValue($this->expressionBuilder));
+
+            $this->expressionBuilder
+                ->expects($this->atLeast(2))
+                ->method('literal')
+                ->with(
+                    $this->logicalOr(
+                        $this->equalTo('new'),
+                        $this->equalTo('%' . $querySearch . '%')
+                    )
+                )
+                ->will($this->returnCallback(array($this, 'literalCallback')));
+
+            $this->expressionBuilder
+                ->expects($this->atLeastOnce())
+                ->method('eq')
+                ->with($this->equalTo('e.status'), $this->equalTo('new'))
+                ->will($this->returnValue($whereExpr));
+
+
+            $this->expressionBuilder
+                ->expects($this->atLeastOnce())
+                ->method('Orx')
+                ->with($this->anything(), $this->anything())
+                ->will($this->returnValue($whereExprOrx));
+
+            $this->em
+                ->expects($this->atLeastOnce())
+                ->method('newHydrator')
+                ->with($this->equalTo(Query::HYDRATE_OBJECT))
+                ->will($this->returnValue($this->objectHydrator));
+
+            $this->objectHydrator
+                ->expects($this->atLeastOnce())
+                ->method('hydrateAll')
+                ->will($this->returnValue(array($a)));
+
+            $searchedEntities = $this->repository->search($querySearch, $conditions, $pagingConfig);
+
+            $this->assertNotNull($searchedEntities);
+            $this->assertTrue(is_array($searchedEntities));
+            $this->assertNotEmpty($searchedEntities);
+            $this->assertEquals($a, $searchedEntities[0]);
+        }
 
     public function literalCallback($data)
     {
