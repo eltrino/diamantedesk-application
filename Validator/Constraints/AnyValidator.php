@@ -25,6 +25,8 @@ class AnyValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        $violationsBefore = $this->context->getViolations()->getIterator()->getArrayCopy();
+
         if (null === $value) {
             return;
         }
@@ -36,13 +38,17 @@ class AnyValidator extends ConstraintValidator
             $validator->validate($value, $constraintEntity);
         }
 
-        $violationsCount = $this->context->getViolations()->count();
-        if (count($constraint->constraints) == $violationsCount) {
+        $violationsAfter = $this->context->getViolations()->getIterator()->getArrayCopy();
+
+        if (count($constraint->constraints) == (count($violationsAfter) - count($violationsBefore))) {
             $this->context->addViolation($constraint->message);
-        } else {
-            for ($i = 0; $i < $violationsCount; $i++) {
-                $this->context->getViolations()->remove($i);
-            }
+            return;
+        }
+
+        $diff = array_diff_assoc($violationsAfter, $violationsBefore);
+
+        foreach ($diff as $key=>$value) {
+            $this->context->getViolations()->remove($key);
         }
     }
 }

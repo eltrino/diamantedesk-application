@@ -37,7 +37,7 @@ class CreateTicketCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @Assert\Type(type="string")
+     * @Assert\Type(type="print")
      */
     public $subject;
 
@@ -45,7 +45,7 @@ class CreateTicketCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @Assert\Type(type="string")
+     * @Assert\Type(type="print")
      */
     public $description;
 
