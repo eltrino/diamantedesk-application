@@ -27,7 +27,8 @@
         "oro/crm": "1.4.*",
         "beberlei/assert": "2.*",
         "diamante/email-processing-bundle": "1.0.*@dev",
-        "diamante/api-bundle": "1.0.*@dev"
+        "diamante/api-bundle": "1.0.*@dev",
+        "diamante/user-bundle": "1.0.*@dev"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"
