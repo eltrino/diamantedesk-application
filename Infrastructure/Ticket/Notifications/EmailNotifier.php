@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 
+use Diamante\ApiBundle\Entity\ApiUser;
 use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
@@ -21,13 +22,11 @@ use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceSe
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Resolver\ReporterFullNameResolver;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\User\UserDetailsService;
-use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 
 class EmailNotifier implements Notifier
@@ -229,13 +228,14 @@ class EmailNotifier implements Notifier
      */
     private function getUserDependingOnType($user)
     {
-        if ($user instanceof User) {
-            if ($user->isDiamanteUser()) {
-                $user = $this->userService->getByUser($user);
-            }
+        if ($user instanceof ApiUser) {
+            $userId = $this->userService->verifyDiamanteUserExists($user->getEmail());
+            $user = empty($userId) ? $user : new User($userId, User::TYPE_DIAMANTE);
         }
 
-        return $user;
+        $result = $this->userService->getByUser($user);
+
+        return $result;
     }
 
     /**
@@ -267,7 +267,6 @@ class EmailNotifier implements Notifier
 
         if (empty($name)) {
             $format = $this->nameFormatter->getNameFormat();
-            $user   = $this->getUserDependingOnType($ticket->getReporter());
 
             $name = str_replace(
                 array('%first_name%','%last_name%','%prefix%','%middle_name%','%suffix%'),
