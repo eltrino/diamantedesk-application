@@ -18,9 +18,9 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Diamante\UserBundle\Api\Internal\UserStateServiceImpl;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
-use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {

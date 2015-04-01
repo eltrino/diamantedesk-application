@@ -92,7 +92,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->diamanteUser = new DiamanteUser('reporter@host.com');
+        $this->diamanteUser = new DiamanteUser('reporter@host.com', 'First', 'Last');
     }
 
     public function testNotify()
@@ -102,8 +102,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $assignee = new User();
         $assignee->setId(2);
         $assignee->setEmail('assignee@host.com');
-        $author = new User();
-        $author->setId(3);
+        $author = new UserAdapter(1, UserAdapter::TYPE_DIAMANTE);
         $branch = new Branch('KEY', 'Name', 'Description');
         $ticket = new Ticket(
             $ticketUniqueId, new TicketSequenceNumber(1), 'Subject', 'Description', $branch, $reporter, $assignee,
@@ -115,18 +114,16 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 
         $message = new \Swift_Message();
 
-        $this->nameFormatter->expects($this->once())->method('format')->with($author)->will($this->returnValue('First Last'));
+        $this->nameFormatter->expects($this->once())->method('format')->with($this->diamanteUser)->will($this->returnValue('First Last'));
         $this->mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
         $this->ticketRepository->expects($this->once())->method('getByUniqueId')->with($ticketUniqueId)
             ->will($this->returnValue($ticket));
 
-        $this->userService->expects($this->any())->method('getByUser')->will(
-            $this->returnValueMap(array(
-                array(new UserAdapter($author->getId(), UserAdapter::TYPE_ORO), $author),
-                array($reporter, $this->diamanteUser),
-                array(new UserAdapter($assignee->getId(), UserAdapter::TYPE_ORO), $assignee)
-            ))
-        );
+        $this->userService
+            ->expects($this->any())
+            ->method('getByUser')
+            ->with($this->equalTo($author))
+            ->will($this->returnValue($this->diamanteUser));
 
         $this->templateResolver->expects($this->any())->method('resolve')->will(
             $this->returnValueMap(array(

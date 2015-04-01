@@ -31,7 +31,7 @@ class AttachmentController extends WebTestCase
     public function testExistingImage()
     {
         $hash = '0b6a8495b50356156408aa35034da503';
-        $url = $this->getUrl('diamante_attachment_image_download', ['hash' => $hash]);
+        $url = $this->getUrl('diamante_attachment_file_download', ['hash' => $hash]);
         $this->client->request('GET', $url);
 
         $response = $this->client->getResponse();
@@ -41,7 +41,7 @@ class AttachmentController extends WebTestCase
     public function testNonExistingImage()
     {
         $hash = '975cc79b61456be582e289c4e40fdd33';
-        $url = $this->getUrl('diamante_attachment_image_download', ['hash' => $hash]);
+        $url = $this->getUrl('diamante_attachment_file_download', ['hash' => $hash]);
 
         $crawler = $this->client->request('GET', $url);
 

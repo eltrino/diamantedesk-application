@@ -43,11 +43,17 @@ class TicketNotificationsSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $configManager;
 
+    /**
+     * @var \Diamante\UserBundle\Api\Internal\UserStateServiceImpl
+     * @Mock \Diamante\UserBundle\Api\Internal\UserStateServiceImpl
+     */
+    private $stateService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
         $this->subscriber = new TicketNotificationsSubscriber(
-            $this->securityFacade, $this->notificationDeliveryManager, $this->configManager
+            $this->securityFacade, $this->notificationDeliveryManager, $this->configManager, $this->stateService
         );
     }
 

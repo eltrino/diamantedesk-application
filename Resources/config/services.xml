@@ -28,9 +28,7 @@
         <parameter key="diamante.oro_user.OroUserSubscriber.class">Diamante\DeskBundle\EventListener\OroUserSubscriber</parameter>
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
-        <parameter key="diamante.user_state.service.class">Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl</parameter>
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
-        <parameter key="diamante.user.event.listener.class">Diamante\DeskBundle\EventListener\DiamanteUserListener</parameter>
     </parameters>
 
     <services>

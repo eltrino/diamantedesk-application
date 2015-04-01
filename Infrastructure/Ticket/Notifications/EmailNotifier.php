@@ -24,8 +24,10 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Entity\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class EmailNotifier implements Notifier
 {
@@ -219,6 +221,10 @@ class EmailNotifier implements Notifier
      */
     private function getUserDependingOnType($user)
     {
+        if ($user instanceof OroUser) {
+            return $user;
+        }
+
         if ($user instanceof ApiUser) {
             $userId = $this->userService->verifyDiamanteUserExists($user->getEmail());
             $user = empty($userId) ? $user : new User($userId, User::TYPE_DIAMANTE);
