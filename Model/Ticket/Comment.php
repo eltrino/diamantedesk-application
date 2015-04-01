@@ -21,8 +21,8 @@ use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToComment;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
+use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 
 class Comment extends DomainEventProvider implements Entity, AttachmentHolder
@@ -112,7 +112,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
-     * @return \Oro\Bundle\UserBundle\Entity\User
+     * @return \Diamante\UserBundle\Model\User
      */
     public function getAuthor()
     {

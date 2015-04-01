@@ -16,9 +16,9 @@ namespace Diamante\DeskBundle\Model\Ticket;
 
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Diamante\DeskBundle\Model\Shared\UserService;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
 
 class CommonTicketBuilder implements TicketBuilder
 {

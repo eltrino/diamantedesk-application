@@ -14,15 +14,14 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
-use Diamante\DeskBundle\Infrastructure\Shared\Adapter\DiamanteContactService;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
-use Diamante\DeskBundle\Model\User\DiamanteUserFactory;
-use Diamante\DeskBundle\Model\User\DiamanteUserRepository;
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
+use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
+use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
+use Diamante\UserBundle\Model\User;
 
 class TicketStrategy implements Strategy
 {
@@ -52,31 +51,23 @@ class TicketStrategy implements Strategy
     private $emailProcessingSettings;
 
     /**
-     * @var DiamanteContactService
-     */
-    private $diamanteContactService;
-
-    /**
      * @param MessageReferenceService $messageReferenceService
      * @param BranchEmailConfigurationService $branchEmailConfigurationService
      * @param DiamanteUserRepository $diamanteUserRepository
      * @param DiamanteUserFactory $diamanteUserFactory
      * @param SystemSettings $settings
-     * @param DiamanteContactService $diamanteContactService
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 BranchEmailConfigurationService $branchEmailConfigurationService,
                                 DiamanteUserRepository $diamanteUserRepository,
                                 DiamanteUserFactory $diamanteUserFactory,
-                                SystemSettings $settings,
-                                DiamanteContactService $diamanteContactService)
+                                SystemSettings $settings)
     {
         $this->messageReferenceService         = $messageReferenceService;
         $this->branchEmailConfigurationService = $branchEmailConfigurationService;
         $this->diamanteUserRepository          = $diamanteUserRepository;
         $this->diamanteUserFactory             = $diamanteUserFactory;
         $this->emailProcessingSettings         = $settings;
-        $this->diamanteContactService          = $diamanteContactService;
     }
 
     /**
@@ -89,9 +80,8 @@ class TicketStrategy implements Strategy
         $type = User::TYPE_DIAMANTE;
 
         if (is_null($diamanteUser)) {
-            $contact = $this->diamanteContactService->findEmailOwner($email);
             $sender = $message->getFrom();
-            $diamanteUser = $this->diamanteUserFactory->create($email, $contact, $sender->getFirstName(), $sender->getLastName());
+            $diamanteUser = $this->diamanteUserFactory->create($email, $sender->getFirstName(), $sender->getLastName());
 
             $this->diamanteUserRepository->store($diamanteUser);
             $type = User::TYPE_DIAMANTE;

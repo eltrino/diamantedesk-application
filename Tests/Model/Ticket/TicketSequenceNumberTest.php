@@ -26,6 +26,7 @@ class TicketSequenceNumberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param $value
      * @dataProvider dataProvider
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Number can be an integer and greater than 0 or null.

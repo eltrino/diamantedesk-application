@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
@@ -25,15 +25,13 @@ use Diamante\DeskBundle\Form\Type\AttachmentType;
 use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +39,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
-use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -399,7 +396,6 @@ class TicketController extends Controller
      *      name="diamante_ticket_create_attach_post",
      *      requirements={"id"="\d+"}
      * )
-     * @Template
      *
      * @param int $id
      * @return Response
@@ -463,7 +459,6 @@ class TicketController extends Controller
      *      name="diamante_ticket_attachment_remove",
      *      requirements={"ticketId"="\d+", "attachId"="\d+"}
      * )
-     * @Template
      *
      * @param int $ticketId
      * @param int $attachId

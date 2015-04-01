@@ -14,18 +14,15 @@
  */
 namespace Diamante\DeskBundle\Tests\Api\Internal;
 
-use Diamante\DeskBundle\Api\Command\Filter\FilterBranchesCommand;
 use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Internal\BranchServiceImpl;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
+use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\User\User;
 
 class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -86,27 +83,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $authorizationService;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
-     * @Mock Doctrine\ORM\EntityManager
-     */
-    private $em;
-
-    /**
-     * @var \Doctrine\ORM\UnitOfWork
-     * @Mock \Doctrine\ORM\UnitOfWork
-     */
-    private $unitOfWork;
-
-
-    /**
-     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
-     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
-     */
-    private $entityPersister;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock Diamante\DeskBundle\Model\Shared\UserService
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock Diamante\UserBundle\Api\UserService
      */
     private $userService;
 

@@ -69,8 +69,8 @@ class UserValidatorTest extends \PHPUnit_Framework_TestCase
         return [
             ['oro_1'],
             ['diamante_1'],
-            [new \Diamante\DeskBundle\Model\User\User(1, 'oro')],
-            [new \Diamante\DeskBundle\Model\User\User(1, 'diamante')]
+            [new \Diamante\UserBundle\Model\User(1, 'oro')],
+            [new \Diamante\UserBundle\Model\User(1, 'diamante')]
         ];
     }
 

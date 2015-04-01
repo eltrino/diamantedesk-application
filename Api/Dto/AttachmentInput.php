@@ -14,6 +14,8 @@
  */
 namespace Diamante\DeskBundle\Api\Dto;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class AttachmentInput
 {
     /**
@@ -60,7 +62,7 @@ class AttachmentInput
         return $this->content;
     }
 
-    public static function createFromUploadedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile)
+    public static function createFromUploadedFile(UploadedFile $uploadedFile)
     {
         $dto = new self();
         $dto->setFilename($uploadedFile->getClientOriginalName());

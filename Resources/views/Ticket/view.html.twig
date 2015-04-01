@@ -19,7 +19,7 @@
                     {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
                 {% else %}
                     {% set author = author.firstName ~ ' ' ~ author.lastName %}
-                    {% set avatar = get_gravatar(comment.author) %}
+                    {% set avatar = get_gravatar(comment.author.email) %}
                 {% endif %}
             {% endif %}
             <li class="diam-comment">

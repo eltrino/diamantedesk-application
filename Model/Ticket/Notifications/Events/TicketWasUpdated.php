@@ -24,7 +24,7 @@ class TicketWasUpdated extends AbstractTicketEvent implements ChangesProviderEve
     private $description;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\User
+     * @var \Diamante\UserBundle\Model\User
      */
     private $reporter;
 

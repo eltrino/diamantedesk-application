@@ -14,9 +14,9 @@
  */
 namespace Diamante\DeskBundle\EventListener;
 
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\User;
-use Diamante\DeskBundle\Model\User\DiamanteUser;
-use Diamante\DeskBundle\Model\User\User as UserModel;
+use Diamante\UserBundle\Model\User as UserModel;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;

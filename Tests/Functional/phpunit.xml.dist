@@ -16,6 +16,8 @@
     <testsuites>
         <testsuite name="DiamanteDesk Functional Test Suite">
             <directory suffix="Test.php">.</directory>
+            <directory suffix="Test.php">Api</directory>
+            <directory suffix="Test.php">Controller</directory>
         </testsuite>
     </testsuites>
 

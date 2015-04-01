@@ -15,27 +15,20 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
-use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Entity\Ticket;
-use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Form\Type\CommentType;
-use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
-use Diamante\DeskBundle\Form\CommandFactory;
-use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\CommentService;
-use Diamante\DeskBundle\Model\User\User;
+use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
-use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
@@ -211,7 +204,6 @@ class CommentController extends Controller
      *      name="diamante_ticket_comment_attachment_remove",
      *      requirements={"commentId"="\d+", "attachId"="\d+"}
      * )
-     * @Template
      *
      * @param integer $commentId
      * @param integer $attachId

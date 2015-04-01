@@ -14,21 +14,20 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 
-use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Resolver\ReporterFullNameResolver;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetailsService;
-use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Entity\ApiUser;
+use Diamante\UserBundle\Model\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class EmailNotifier implements Notifier
 {
@@ -77,11 +76,6 @@ class EmailNotifier implements Notifier
      */
     private $senderHost;
 
-    /**
-     * @var UserDetailsService
-     */
-    private $userDetailsService;
-
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
@@ -90,7 +84,6 @@ class EmailNotifier implements Notifier
         MessageReferenceRepository $messageReferenceRepository,
         UserService $userService,
         NameFormatter $nameFormatter,
-        UserDetailsService $userDetailsService,
         $senderEmail,
         $senderHost
     )
@@ -102,7 +95,6 @@ class EmailNotifier implements Notifier
         $this->messageReferenceRepository   = $messageReferenceRepository;
         $this->userService                  = $userService;
         $this->nameFormatter                = $nameFormatter;
-        $this->userDetailsService           = $userDetailsService;
         $this->senderEmail                  = $senderEmail;
         $this->senderHost                   = $senderHost;
     }
@@ -225,17 +217,22 @@ class EmailNotifier implements Notifier
 
     /**
      * @param $user
-     * @return \Diamante\DeskBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
+     * @return \Diamante\UserBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
      */
     private function getUserDependingOnType($user)
     {
-        if ($user instanceof User) {
-            if ($user->isDiamanteUser()) {
-                $user = $this->userService->getByUser($user);
-            }
+        if ($user instanceof OroUser) {
+            return $user;
         }
 
-        return $user;
+        if ($user instanceof ApiUser) {
+            $userId = $this->userService->verifyDiamanteUserExists($user->getEmail());
+            $user = empty($userId) ? $user : new User($userId, User::TYPE_DIAMANTE);
+        }
+
+        $result = $this->userService->getByUser($user);
+
+        return $result;
     }
 
     /**
@@ -247,7 +244,7 @@ class EmailNotifier implements Notifier
         $changes = $notification->getChangeList();
 
         if (isset($changes['Reporter'])) {
-            $details = $this->userDetailsService->fetch(User::fromString($changes['Reporter']));
+            $details = $this->userService->fetchUserDetails(User::fromString($changes['Reporter']));
             $changes['Reporter'] = $details->getFullName();
         }
 
@@ -267,7 +264,6 @@ class EmailNotifier implements Notifier
 
         if (empty($name)) {
             $format = $this->nameFormatter->getNameFormat();
-            $user   = $this->getUserDependingOnType($ticket->getReporter());
 
             $name = str_replace(
                 array('%first_name%','%last_name%','%prefix%','%middle_name%','%suffix%'),

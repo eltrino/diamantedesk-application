@@ -23,7 +23,7 @@ class MyOpenTicketsFilterUrlGenerator extends AbstractFilterUrlGenerator impleme
 
     /**
      * @param $defaultPerPage
-     * @param $userId
+     * @param $userFullName
      * @param $status
      */
     public function __construct($defaultPerPage, $userFullName, $status)

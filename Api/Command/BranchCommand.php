@@ -16,7 +16,6 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
@@ -102,7 +101,7 @@ class BranchCommand implements Taggable
     }
 
     /**
-     * @param $branchEmailConfigurationCommand
+     * @param $branchEmailConfiguration
      */
     public function setBranchEmailConfiguration($branchEmailConfiguration)
     {

@@ -25,9 +25,10 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
-use Diamante\DeskBundle\Model\User\User as DiamanteUser;
+use Diamante\UserBundle\Model\User as UserAdapter;
 
 class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,8 +63,8 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     private $messageReferenceRepository;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock \Diamante\UserBundle\Api\UserService
      */
     private $userService;
 
@@ -84,31 +85,24 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     private $senderHost = 'host.com';
 
     /**
-     * @var \Diamante\DeskBundle\Entity\DiamanteUser
-     * @Mock \Diamante\DeskBundle\Entity\DiamanteUser
+     * @var \Diamante\UserBundle\Model\DiamanteUser
      */
     private $diamanteUser;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
-     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
-     */
-    private $userDetailsService;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
+        $this->diamanteUser = new DiamanteUser('reporter@host.com', 'First', 'Last');
     }
 
     public function testNotify()
     {
         $ticketUniqueId = UniqueId::generate();
-        $reporter = new DiamanteUser(1, DiamanteUser::TYPE_DIAMANTE);
+        $reporter = new UserAdapter(1, UserAdapter::TYPE_DIAMANTE);
         $assignee = new User();
         $assignee->setId(2);
         $assignee->setEmail('assignee@host.com');
-        $author = new User();
-        $author->setId(3);
+        $author = new UserAdapter(1, UserAdapter::TYPE_DIAMANTE);
         $branch = new Branch('KEY', 'Name', 'Description');
         $ticket = new Ticket(
             $ticketUniqueId, new TicketSequenceNumber(1), 'Subject', 'Description', $branch, $reporter, $assignee,
@@ -120,23 +114,16 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 
         $message = new \Swift_Message();
 
-        $this->nameFormatter->expects($this->once())->method('format')->with($author)->will($this->returnValue('First Last'));
+        $this->nameFormatter->expects($this->once())->method('format')->with($this->diamanteUser)->will($this->returnValue('First Last'));
         $this->mailer->expects($this->once())->method('createMessage')->will($this->returnValue($message));
         $this->ticketRepository->expects($this->once())->method('getByUniqueId')->with($ticketUniqueId)
             ->will($this->returnValue($ticket));
 
-        $this->diamanteUser
-            ->expects($this->atLeastOnce())
-            ->method('getEmail')
-            ->will($this->returnValue('reporter@host.com'));
-
-        $this->userService->expects($this->any())->method('getByUser')->will(
-            $this->returnValueMap(array(
-                array(new DiamanteUser($author->getId(), DiamanteUser::TYPE_ORO), $author),
-                array($reporter, $this->diamanteUser),
-                array(new DiamanteUser($assignee->getId(), DiamanteUser::TYPE_ORO), $assignee)
-            ))
-        );
+        $this->userService
+            ->expects($this->any())
+            ->method('getByUser')
+            ->with($this->equalTo($author))
+            ->will($this->returnValue($this->diamanteUser));
 
         $this->templateResolver->expects($this->any())->method('resolve')->will(
             $this->returnValueMap(array(
@@ -186,7 +173,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 
         $notifier = new EmailNotifier(
             $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository,
-            $this->messageReferenceRepository, $this->userService, $this->nameFormatter, $this->userDetailsService,
+            $this->messageReferenceRepository, $this->userService, $this->nameFormatter,
             $this->senderEmail, $this->senderHost
         );
 

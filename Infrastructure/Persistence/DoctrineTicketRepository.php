@@ -17,10 +17,10 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Diamante\UserBundle\Api\Internal\UserStateServiceImpl;
+use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
-use Diamante\DeskBundle\Infrastructure\User\UserStateServiceImpl;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -54,7 +54,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             );
 
         if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private = false');
+            $queryBuilder->andWhere('c.private is null or c.private = false');
         }
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -77,7 +77,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->setParameter('uniqueId', $uniqueId);
 
         if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private = false');
+            $queryBuilder->andWhere('c.private is null or c.private = false');
         }
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
@@ -156,7 +156,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->setParameter('id', $id);
 
         if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private = false');
+            $queryBuilder->andWhere('c.private is null or c.private = false');
         }
 
         return $queryBuilder->getQuery()->getOneOrNullResult();

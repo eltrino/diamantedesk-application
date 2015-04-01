@@ -15,7 +15,6 @@
 namespace Diamante\DeskBundle\Model\Branch\EmailProcessing;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Branch\Branch;
 
 class BranchEmailConfiguration implements Entity

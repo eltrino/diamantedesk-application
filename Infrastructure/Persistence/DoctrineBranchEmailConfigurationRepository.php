@@ -16,7 +16,6 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 
 class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericRepository

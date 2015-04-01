@@ -24,8 +24,8 @@ use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetailsService;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -35,9 +35,9 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     private $apiPagingService;
 
     /**
-     * @var UserDetailsService
+     * @var UserService
      */
-    private $userDetailsService;
+    private $userService;
 
     use ApiServiceImplTrait;
 
@@ -447,11 +447,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     }
 
     /**
-     * @param \Diamante\DeskBundle\Model\User\UserDetailsService $detailsService
+     * @param UserService $userService
      */
-    public function setUserDetailsService(UserDetailsService $detailsService)
+    public function setUserService(UserService $userService)
     {
-        $this->userDetailsService = $detailsService;
+        $this->userService = $userService;
     }
 
     /**
@@ -482,7 +482,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function getReporterForTicket($id)
     {
         $ticket = parent::loadTicket($id);
-        $details = $this->userDetailsService->fetch($ticket->getReporter());
+        $details = $this->userService->fetchUserDetails($ticket->getReporter());
 
         return $details;
     }
@@ -520,7 +520,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
 
         if (!empty($assignee)) {
             $assigneeAdapter = new User($assignee->getId(), User::TYPE_ORO);
-            $details = $this->userDetailsService->fetch($assigneeAdapter);
+            $details = $this->userService->fetchUserDetails($assigneeAdapter);
         }
 
         return $details;

@@ -28,8 +28,8 @@ use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\DeskBundle\Model\User\User;
-use Diamante\DeskBundle\Model\User\UserDetails;
+use Diamante\UserBundle\Model\User;
+use Diamante\UserBundle\Model\UserDetails;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -39,10 +39,10 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     const DESCRIPTION  = 'Description';
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\UserDetailsService
-     * @Mock Diamante\DeskBundle\Model\User\UserDetailsService
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock Diamante\UserBundle\Api\UserService
      */
-    private $userDetailsService;
+    private $userService;
 
     /**
      * @var TicketApiServiceImpl
@@ -62,12 +62,6 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentManager;
 
     /**
-     * @var \Diamante\DeskBundle\Entity\Ticket
-     * @Mock \Diamante\DeskBundle\Entity\Ticket
-     */
-    private $ticket;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Shared\Repository
      * @Mock \Diamante\DeskBundle\Model\Shared\Repository
      */
@@ -78,12 +72,6 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      */
     private $ticketBuilder;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Shared\UserService
-     * @Mock \Diamante\DeskBundle\Model\Shared\UserService
-     */
-    private $userService;
 
     /**
      * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
@@ -184,9 +172,9 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->markTestIncomplete("This test should be completed after DIAM-553");
 
-        $this->userDetailsService
+        $this->userService
             ->expects($this->atLeastOnce())
-            ->method('fetch')
+            ->method('fetchUserDetails')
             ->with($this->createDiamanteUser())
             ->will($this->returnValue($this->createUserDetails()));
 

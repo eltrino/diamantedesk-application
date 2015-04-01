@@ -28,8 +28,8 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
+use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Diamante\DeskBundle\Model\User\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class Ticket extends DomainEventProvider implements Entity, AttachmentHolder

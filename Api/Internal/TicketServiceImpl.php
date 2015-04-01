@@ -32,11 +32,11 @@ use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
-use Diamante\DeskBundle\Model\Shared\UserService;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
-use Diamante\DeskBundle\Model\User\User;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
@@ -473,7 +473,13 @@ class TicketServiceImpl implements TicketService
      */
     private function dispatchEvents(Ticket $ticket)
     {
-        foreach ($ticket->getRecordedEvents() as $event) {
+        $events = $ticket->getRecordedEvents();
+
+        if (empty($events)) {
+            return;
+        }
+
+        foreach ($events as $event) {
             $this->dispatcher->dispatch($event->getEventName(), $event);
         }
 

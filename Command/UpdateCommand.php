@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Command;
 
-use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

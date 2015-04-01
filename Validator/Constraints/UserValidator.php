@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Diamante\DeskBundle\Model\User\User as UserModel;
+use Diamante\UserBundle\Model\User as UserModel;
 
 class UserValidator extends ConstraintValidator
 {

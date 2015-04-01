@@ -16,7 +16,6 @@ namespace Diamante\DeskBundle\Form\Type;
 
 use Diamante\DeskBundle\Api\BranchService;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Intl\Intl;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DefaultBranchType extends AbstractType
