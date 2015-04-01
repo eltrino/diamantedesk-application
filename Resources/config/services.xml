@@ -16,6 +16,8 @@
         <parameter key="diamante.api.user.entity.class">Diamante\UserBundle\Entity\ApiUser</parameter>
         <parameter key="diamante.api.user.entity.factory.class">Diamante\UserBundle\Model\ApiUser\ApiUserFactory</parameter>
         <parameter key="diamante.api.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineApiUserRepository</parameter>
+        <parameter key="diamante.user.event.listener.class">Diamante\UserBundle\EventListener\DiamanteUserListener</parameter>
+        <parameter key="diamante.user_state.service.class">Diamante\UserBundle\Api\Internal\UserStateServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -65,5 +67,19 @@
         <service id="diamante.api.user.entity.factory" class="%diamante.api.user.entity.factory.class%">
             <argument type="string">%diamante.api.user.entity.class%</argument>
         </service>
+
+        <service id="diamante.user_state.service" class="%diamante.user_state.service.class%">
+            <argument type="service" id="security.context"/>
+        </service>
+
+        <service
+                id="diamante.user.event.listener"
+                class="%diamante.user.event.listener.class%"
+                >
+            <argument type="service" id="service_container"/>
+            <tag name="monolog.logger" channel="diamante"/>
+            <tag name="doctrine.event_listener" event="onFlush"/>
+        </service>
+
     </services>
 </container>
