@@ -49,7 +49,7 @@
         </service>
 
         <service id="diamante.front.current_user.api.service" class="%diamante.front.current_user.api.service.class%">
-            <argument type="service" id="diamante.diamante_user.repository"/>
+            <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="diamante.api.user.repository"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="monolog.logger.diamante"/>

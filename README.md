@@ -41,7 +41,7 @@ php app/console assets:install
 Configuration
 ------------
 
-Frontend will be accessible through http://app/diamantefront url. This url should not be covered by standard Oro Platfrom authentication. You should add additional configuration to filewalls section in `app/etc/security.yml`
+Frontend will be accessible through http://app/diamantefront url. This url should not be covered by standard Oro Platfrom authentication. You should add additional configuration to firewalls section in `app/etc/security.yml`
 
 ```yml
 front_diamante:

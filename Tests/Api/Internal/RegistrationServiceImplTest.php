@@ -14,11 +14,11 @@
  */
 namespace Diamante\FrontBundle\Tests\Api\Internal;
 
-use Diamante\ApiBundle\Model\ApiUser\ApiUser;
-use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
 use Diamante\FrontBundle\Api\Internal\RegistrationServiceImpl;
+use Diamante\UserBundle\Entity\ApiUser;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -29,26 +29,26 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
     private $service;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserFactory
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserFactory
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserFactory
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserFactory
      */
     private $diamanteUserFactory;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
      */
     private $diamanteUserRepository;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
      */
     private $apiUserRepository;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserFactory
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserFactory
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserFactory
      */
     private $apiUserFactory;
 
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
         $diamanteUser = $this->createDiamanteUser();
 
         $this->diamanteUserFactory->expects($this->once())->method('create')
-            ->with($diamanteUser->getEmail(), null, $diamanteUser->getFirstName(), $diamanteUser->getLastName())
+            ->with($diamanteUser->getEmail(), $diamanteUser->getFirstName(), $diamanteUser->getLastName())
             ->will($this->returnValue($diamanteUser));
 
         $this->apiUserFactory->expects($this->once())->method('create')

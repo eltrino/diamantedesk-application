@@ -14,10 +14,10 @@
  */
 namespace Diamante\FrontBundle\Tests\Api\Internal;
 
-use Diamante\ApiBundle\Model\ApiUser\ApiUser;
-use Diamante\DeskBundle\Model\User\DiamanteUser;
 use Diamante\FrontBundle\Api\Command\UpdateUserCommand;
 use Diamante\FrontBundle\Api\Internal\CurrentUserApiServiceImpl;
+use Diamante\UserBundle\Entity\ApiUser;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -28,14 +28,14 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $service;
 
     /**
-     * @var \Diamante\DeskBundle\Model\User\DiamanteUserRepository
-     * @Mock \Diamante\DeskBundle\Model\User\DiamanteUserRepository
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
      */
     private $diamanteUserRepository;
 
     /**
-     * @var \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
-     * @Mock \Diamante\ApiBundle\Model\ApiUser\ApiUserRepository
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
      */
     private $apiUserRepository;
 

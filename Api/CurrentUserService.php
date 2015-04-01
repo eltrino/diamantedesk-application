@@ -14,6 +14,8 @@
  */
 namespace Diamante\FrontBundle\Api;
 
+use Diamante\UserBundle\Entity\DiamanteUser;
+
 interface CurrentUserService
 {
     /**
