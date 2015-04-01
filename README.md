@@ -7,7 +7,7 @@ app/config/security.yml
 
 Change corresponding part of security.yml file to this one:
 
-```
+```yaml
     providers:
         chain_provider:
             chain:
