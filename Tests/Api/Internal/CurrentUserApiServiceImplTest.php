@@ -45,13 +45,20 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $authorizationService;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     * @Mock \Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
         $this->service = new CurrentUserApiServiceImpl(
             $this->diamanteUserRepository,
             $this->apiUserRepository,
-            $this->authorizationService
+            $this->authorizationService,
+            $this->logger
         );
     }
 
@@ -114,8 +121,8 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage User loading failed, user not found.
+     * @expectedException \Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @expectedExceptionMessage Attempt of unauthorized access
      */
     public function testGetCurrentUserWithNoDiamanteUser()
     {
