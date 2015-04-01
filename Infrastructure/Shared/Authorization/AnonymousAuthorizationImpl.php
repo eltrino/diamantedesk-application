@@ -15,11 +15,23 @@
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
 
 class AnonymousAuthorizationImpl implements Authorization
 {
 
     use AuthorizationImplTrait;
+
+    /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
+    /**
+     * @var DoctrineDiamanteUserRepository
+     */
+    private $diamanteUserRepository;
 
     /**
      * @var array
@@ -28,4 +40,15 @@ class AnonymousAuthorizationImpl implements Authorization
         'Entity:DiamanteDeskBundle:Ticket'   => array('CREATE'),
     );
 
+    /**
+     * @param DoctrineDiamanteUserRepository $diamanteUserRepository
+     * @param SecurityContextInterface       $securityContext
+     */
+    public function __construct(
+        SecurityContextInterface $securityContext,
+        DoctrineDiamanteUserRepository $diamanteUserRepository
+    ) {
+        $this->securityContext = $securityContext;
+        $this->diamanteUserRepository = $diamanteUserRepository;
+    }
 } 

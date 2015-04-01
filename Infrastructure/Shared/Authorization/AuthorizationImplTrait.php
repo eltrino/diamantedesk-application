@@ -17,10 +17,10 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 trait AuthorizationImplTrait
 {
-
     /**
      * @param $attributes
      * @param $object
+     *
      * @return bool|mixed
      */
     public function isGranted($attributes, $object)
@@ -31,11 +31,26 @@ trait AuthorizationImplTrait
 
         if (is_object($object)) {
             $objectIdentity = get_class($object);
+            $user = $this->securityContext->getToken()->getUser();
+            $objectOwner = $object->getOwner();
+
+            if ($attributes == 'EDIT' || $attributes == 'DELETE') {
+                if ($objectOwner->isDiamanteUser()) {
+                    $ownerId = $this->diamanteUserRepository->findUserByEmail($user->getUserName())->getId();
+
+                    if ($ownerId != $objectOwner->getId()) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
         }
 
         if (is_string($object)) {
             $objectIdentity = $object;
         }
+
 
         if (array_key_exists($objectIdentity, $this->permissionsMap)) {
             if (in_array($attributes, $this->permissionsMap[$objectIdentity])) {
@@ -45,5 +60,4 @@ trait AuthorizationImplTrait
 
         return false;
     }
-
 }
