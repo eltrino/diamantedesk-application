@@ -126,26 +126,26 @@ define([
       },
 
       register: function(creds) {
-        if(creds.password){
+        if(this.set(creds, {validate: true})){
           creds.password = Wsse.encodePassword(creds.password);
-        }
-        this.save(creds,{
-          success : function(){
-            App.alert({ title: 'Registration Success', messages: [{
-              status: 'success',
-              text: 'Thank you. <br>' +
+          this.save(creds,{
+            success : function(){
+              App.alert({ title: 'Registration Success', messages: [{
+                status: 'success',
+                text: 'Thank you. <br>' +
                 'We have sent you email to ' + this.get('email') + '.<br>'+
                 'Please click the link in that message to activate your account.'
-            }] });
-            this.clear();
-            App.trigger('session:register:success');
-            App.trigger('session:login');
-          }.bind(this),
-          error : function(){
-            App.trigger('session:register:fail');
-            App.alert({ title: "Registration Failed" });
-          }
-        });
+              }] });
+              this.clear();
+              App.trigger('session:register:success');
+              App.trigger('session:login');
+            }.bind(this),
+            error : function(){
+              App.trigger('session:register:fail');
+              App.alert({ title: "Registration Failed" });
+            }
+          });
+        }
       },
 
       confirm: function(hash){
@@ -208,29 +208,31 @@ define([
         var model = this;
         this.url += '/password';
         this.set('id', 1);
-        data.password = Wsse.encodePassword(data.password);
-        this.save(data, {
-          patch: true,
-          ignore: ['email'],
-          success : function(){
-            App.trigger('session:reset:success');
-            App.alert({ title: 'Password Reset Success', messages: [{
-              status:'success',
-              text: 'Password successfully changed, you can use it to login'}] });
-            App.trigger('session:password:change');
-          },
-          error : function(){
-            App.trigger('session:reset:fail');
-            App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'] });
-            model.clear();
-            App.trigger('session:reset');
-          },
-          complete : function(){
-            model.url = model.url.replace('/password', '');
-            model.clear();
-          }
-        });
-        if(!this.isValid()){
+        if(this.set(data, {validate: true, ignore: ['email']})){
+          data.password = Wsse.encodePassword(data.password);
+          this.save(data, {
+            patch: true,
+            ignore: ['email'],
+            success : function(){
+              App.trigger('session:reset:success');
+              App.alert({ title: 'Password Reset Success', messages: [{
+                status:'success',
+                text: 'Password successfully changed, you can use it to login'}] });
+              App.trigger('session:password:change');
+              App.trigger('session:login');
+            },
+            error : function(){
+              App.trigger('session:reset:fail');
+              App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'] });
+              model.clear();
+              App.trigger('session:reset');
+            },
+            complete : function(){
+              model.url = model.url.replace('/password', '');
+              model.clear();
+            }
+          });
+        } else {
           this.url = this.url.replace('/password', '');
         }
       },
