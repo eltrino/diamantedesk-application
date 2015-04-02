@@ -20,13 +20,14 @@ define(['app', 'Common/views/loader'], function(App, loaderView){
         request.done(function(ticketCollection){
           var emptyListView  = query ? List.EmptySearchView : List.EmptyView,
               ticketListView = new List.PaginatedView({
+                isSearch: !!query,
                 emptyView: emptyListView,
                 collection: ticketCollection
               });
 
           ticketListView.mainView.on('childview:ticket:view', function(childView, ticketModel){
             ticketListView.mainView.showLoader();
-            App.trigger('ticket:view', ticketModel.get('id'));
+            App.trigger('ticket:view', ticketModel.get('id'), query);
           });
 
           ticketListView.mainView.on('ticket:sort', function(sortKey, order){

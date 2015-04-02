@@ -2,7 +2,7 @@ define(['app'], function(App){
 
   return App.module('Ticket.View', function(View, App, Backbone, Marionette, $, _){
 
-    View.Controller = function(id){
+    View.Controller = function(id, query){
 
       App.mainRegion.showLoader();
 
@@ -11,8 +11,9 @@ define(['app'], function(App){
         App.request('ticket:model', id).done(function(ticketModel){
 
           var ticketView = new View.ItemView({
-              model : ticketModel
-          });
+                model : ticketModel,
+                query : query
+              });
           App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
           ticketView.on('dom:refresh', function(){
             require(['Comment', 'Attachment'], function(Comment, Attachment){

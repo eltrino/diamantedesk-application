@@ -21,10 +21,10 @@ define(['app'], function(App){
           List.Controller();
         });
       },
-      viewTicket: function(id){
+      viewTicket: function(id, query){
         App.setTitle('View Ticket');
         require(['Ticket/controllers/view'], function(View){
-          View.Controller(id);
+          View.Controller(id, query);
         });
       },
       createTicket: function(){
@@ -53,10 +53,10 @@ define(['app'], function(App){
       API.listTickets();
     });
 
-    App.on('ticket:view', function(id){
+    App.on('ticket:view', function(id, query){
       App.debug('info', 'Event "ticket:view" fired');
       App.navigate("tickets/" + id);
-      API.viewTicket(id);
+      API.viewTicket(id, query);
     });
 
     App.on('ticket:create', function(){

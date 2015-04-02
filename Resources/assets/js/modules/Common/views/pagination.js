@@ -43,10 +43,7 @@ define([
         this.pagerView = new Pagination.PagerView({
           model: new Backbone.Model(this.collection.state)
         });
-        this.mainView = new this.MainView({
-          emptyView: this.emptyView,
-          collection: this.collection
-        });
+        this.mainView = new this.MainView(options);
 
         this.listenTo(this.pagerView, 'page:change', function(page){
           this.trigger('page:change', page);
