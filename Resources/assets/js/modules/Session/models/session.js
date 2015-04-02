@@ -215,11 +215,9 @@ define([
             ignore: ['email'],
             success : function(){
               App.trigger('session:reset:success');
-              App.alert({ title: 'Password Reset Success', messages: [{
-                status:'success',
-                text: 'Password successfully changed, you can use it to login'}] });
               App.trigger('session:password:change');
               App.trigger('session:login');
+              App.trigger('message:show',{ status: 'success', text:'Password successfully changed, you can use it to login'});
             },
             error : function(){
               App.trigger('session:reset:fail');
