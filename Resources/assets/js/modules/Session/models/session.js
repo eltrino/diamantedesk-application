@@ -57,7 +57,7 @@ define([
             401: function () {
               if(App.getCurrentRoute() !== 'login'){
                 this.logout();
-                App.alert({ title: "Authorization Required", messages: ["this action require authorization"] });
+                App.alert({ title: "Authorization Required", messages: ["This action require authorization"] });
                 App.trigger('session:login', { return_path: App.getCurrentRoute() });
               }
             }.bind(this)
