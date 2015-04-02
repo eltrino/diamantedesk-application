@@ -14,6 +14,7 @@
   .priority, .status {
     width:1%;
     text-transform: capitalize;
+    white-space: nowrap;
   }
   td {
     a {
@@ -24,7 +25,8 @@
       text-decoration: none;
     }
   }
-  .subject {
+  .subject,
+  .message {
     a {
       color: @link-color;
       &:hover {
@@ -37,6 +39,9 @@
     text-align: center;
     td {
       padding: @table-cell-padding * 2;
+    }
+    a {
+      display: inline;
     }
   }
 }

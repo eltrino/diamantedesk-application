@@ -68,10 +68,16 @@ define(['app'], function(App){
 
           App.mainRegion.show(ticketView);
 
-        }).fail(function(){
-
-          var missingView = new View.MissingView();
-          App.mainRegion.show(missingView);
+        }).fail(function(model, xhr){
+          if(xhr.status === 500){
+            App.trigger('message:show', {
+              status: 'error',
+              text: xhr.responseJSON.message
+            });
+            App.mainRegion.hideLoader();
+          } else {
+            App.mainRegion.show(new View.MissingView());
+          }
 
         });
 

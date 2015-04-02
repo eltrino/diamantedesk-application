@@ -103,8 +103,8 @@ define([
           success: function(data){
             defer.resolve(data);
           },
-          error: function(){
-            defer.reject();
+          error: function(model, xhr, options){
+            defer.reject(model, xhr, options);
           }
         });
         return defer.promise();

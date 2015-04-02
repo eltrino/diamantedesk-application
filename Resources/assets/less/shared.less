@@ -20,11 +20,11 @@
   .control-label:after {
     content: " *";
     display: inline;
+    color: @state-danger-text;
   }
 }
 
 .starter-loader {
-  font-size: 2em;
   .loader {
     background: none;
     position: absolute;
@@ -44,6 +44,7 @@
 }
 
 .loader {
+  font-size: 1.3em;
   position: fixed;
   top:0;
   bottom:0;
@@ -55,10 +56,16 @@
   > div {
     display: inline-block;
     vertical-align: middle;
-    padding: @grid-gutter-width /2;
+    padding: 1em;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 0 2px rgba(8,8,8,.3);
+  }
+  &:only-child {
+    > div {
+      background: transparent;
+      box-shadow: none;
+    }
   }
   &:before {
     content: "";
