@@ -6,17 +6,16 @@
     <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.css') }}" type="text/css"/>
 </head>
 <body>
-<header id="header"></header>
-
-<section id="main" class="container">
-    <div id="messages"></div>
-    <div id="content">
-        <div class="loader"><div><i class="fa fa-cog fa-spin"></i> <strong>Loading...</strong></div></div>
-    </div>
-</section>
-
-<footer id="footer"></footer>
-
+<div class="wrap">
+    <header id="header"></header>
+    <section id="main" class="container">
+        <div id="messages"></div>
+        <div id="content">
+            <div class="loader"><div><i class="fa fa-cog fa-spin"></i> <strong>Loading...</strong></div></div>
+        </div>
+    </section>
+    <footer id="footer"></footer>
+</div>
 <div id="dialog"></div>
 
 <script data-main="{{ asset('bundles/diamantefront/js/main.js') }}"
