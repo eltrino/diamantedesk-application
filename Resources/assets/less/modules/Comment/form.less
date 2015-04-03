@@ -1,0 +1,17 @@
+#comments-form {
+  position: relative;
+  .loader {
+    position: absolute;
+  }
+}
+.comments-form {
+  textarea {
+    resize: vertical;
+  }
+  .dropzone {
+    margin-bottom: 15px;
+    @media (min-width: @screen-md-min) {
+      width: percentage((6 / @grid-columns));
+    }
+  }
+}
