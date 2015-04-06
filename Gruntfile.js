@@ -13,6 +13,7 @@
  */
 module.exports = function(grunt) {
 
+  require('time-grunt')(grunt);
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
@@ -51,6 +52,40 @@ module.exports = function(grunt) {
       }
     },
 
+    cssmin: {
+      main: {
+        files: {
+          '<%= publicDir %>/css/main.min.css': '<%= publicDir %>/css/main.css'
+        }
+      }
+    },
+
+    requirejs: {
+      main: {
+        options: {
+          baseUrl: "<%= assetsDir %>/js/",
+          optimize: "uglify",
+          findNestedDependencies: true,
+          wrapShim: true,
+          name: "main",
+          mainConfigFile: "<%= assetsDir %>/js/main.js",
+          out: "<%= assetsDir %>/js/main.built.js"
+        }
+      }
+    },
+
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      main : [
+        'Gruntfile.js',
+        '<%=assetsDir%>/js/**/*.js',
+        '!<%=assetsDir%>/js/main.built.js',
+        '!<%=assetsDir%>/js/vendor/**'
+      ]
+    },
+
     revision: {
       options: {
         property: 'meta.revision',
@@ -82,16 +117,19 @@ module.exports = function(grunt) {
       },
       main: {
         files: '<%= assetsDir %>/**',
-        tasks: ['sync', 'revision', 'string-replace']
+        tasks: ['js', 'sync', 'html']
       },
       less : {
         files: '<%= lessDir %>/**',
-        tasks: ['less']
+        tasks: ['css']
       }
     }
 
   });
 
-  grunt.registerTask('default', ['sync', 'less', 'revision', 'string-replace']);
+  grunt.registerTask('js', ['jshint', 'requirejs']);
+  grunt.registerTask('css', ['less', 'cssmin']);
+  grunt.registerTask('html', ['revision', 'string-replace']);
+  grunt.registerTask('default', ['js','sync', 'css', 'html']);
 
 };

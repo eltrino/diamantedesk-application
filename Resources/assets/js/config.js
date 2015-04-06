@@ -5,12 +5,6 @@ define(function(localRequire, exports, module){
 
   require.config({
     urlArgs: Config.isDev ? "bust=" + (new Date()).getTime() : ''
-    //"packages": [
-    //  {
-    //    name: 'PackageName',
-    //    location: 'modules/PackageName'
-    //  }
-    //]
   });
 
   return Config;

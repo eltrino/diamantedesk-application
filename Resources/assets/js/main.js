@@ -74,8 +74,6 @@ require.config({
       exports: "CryptoJS.enc.Base64"
     }
   },
-
-
   "packages": [
     {
       name: 'Common',
@@ -110,6 +108,5 @@ require.config({
       location: 'modules/Attachment'
     }
   ],
-
   deps : ["app"]
 });
