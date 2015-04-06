@@ -18,7 +18,7 @@ define([
             author.fetch({
               success: function(){
                 this.set({
-                  'authorName': author.get('first_name') + ' ' + author.get('last_name'),
+                  'authorName': jQuery.trim(author.get('first_name') + ' ' + author.get('last_name')),
                   'authorEmail': author.get('email')
                 });
               }.bind(this)

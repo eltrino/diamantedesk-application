@@ -16,6 +16,20 @@ define([
         'click': 'viewClicked'
       },
 
+      templateHelpers : function(){
+        var email = this.model.get('email'),
+            fullname = [];
+        if(this.model.get('first_name')) {
+          fullname.push(this.model.get('first_name'));
+        }
+        if(this.model.get('last_name')) {
+          fullname.push(this.model.get('last_name'));
+        }
+        return {
+          fullName : fullname.length ? fullname.join(' ') : email
+        };
+      },
+
       viewClicked : function(){
         this.trigger('user:view');
       }
