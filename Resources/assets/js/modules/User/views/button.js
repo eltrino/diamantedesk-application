@@ -30,7 +30,12 @@ define([
         };
       },
 
+      initialize: function(){
+        this.listenTo(this.model, 'change', this.render );
+      },
+
       viewClicked : function(){
+        this.dropdownRegion.showLoader();
         this.trigger('user:view');
       }
     });
