@@ -32,7 +32,7 @@ class BranchControllerTest extends WebTestCase
     {
         $this->initClient(
             array(),
-            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('akolomiec', 'akolomiec'), array('HTTP_X-CSRF-Header' => 1))
         );
         $this->imagesDirectory = realpath($this->client->getKernel()->getRootDir() . '/../web')
             . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'diamante' . DIRECTORY_SEPARATOR . 'branch'

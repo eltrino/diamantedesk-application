@@ -18,7 +18,7 @@ use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
 use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 use FOS\Rest\Util\Codes;
 
-class BranchApiTest extends ApiTestCase
+class OroBranchApiTest extends ApiTestCase
 {
     /**
      * @var ApiCommand
@@ -31,17 +31,9 @@ class BranchApiTest extends ApiTestCase
         $this->command = new ApiCommand();
     }
 
-    public function testListBranches()
-    {
-        $this->getAll('diamante_branch_api_service_oro_list_all_branches');
-    }
-
-    public function testGetBranch()
-    {
-        $this->command->urlParameters = array('id' => 1);
-        $this->get('diamante_branch_api_service_oro_get_branch', $this->command);
-    }
-
+    /**
+     * @return int
+     */
     public function testCreateBranch()
     {
         $this->command->requestParameters = array(
@@ -50,12 +42,35 @@ class BranchApiTest extends ApiTestCase
             'tags'        => array('Test Tag'),
             'key'         => 'BRANCHTEST'
         );
-        $this->post('diamante_branch_api_service_oro_create_branch', $this->command);
+        $response = $this->post('diamante_branch_api_service_oro_create_branch', $this->command);
+
+        return $this->getArray($response)['id'];
     }
 
-    public function testUpdateBranch()
+    public function testListBranches()
     {
-        $this->command->urlParameters = array('id' => 2);
+        $this->getAll('diamante_branch_api_service_oro_list_all_branches');
+    }
+
+    /**
+     * @depends testCreateBranch
+     *
+     * @param int $id
+     */
+    public function testGetBranch($id)
+    {
+        $this->command->urlParameters = array('id' => $id);
+        $this->get('diamante_branch_api_service_oro_get_branch', $this->command);
+    }
+
+    /**
+     * @depends testCreateBranch
+     *
+     * @param int $id
+     */
+    public function testUpdateBranch($id)
+    {
+        $this->command->urlParameters = array('id' => $id);
         $this->command->requestParameters = array(
             'name'        => 'Test Branch PUT',
             'description' => 'Test Description',
@@ -63,14 +78,19 @@ class BranchApiTest extends ApiTestCase
         );
         $this->put('diamante_branch_api_service_oro_update_properties', $this->command);
 
-        $this->command->urlParameters = array('id' => 3);
+        $this->command->urlParameters = array('id' => $id);
         $this->command->requestParameters['name'] = 'Test Branch PATCH';
         $this->patch('diamante_branch_api_service_oro_update_properties', $this->command);
     }
 
-    public function testDeleteBranch()
+    /**
+     * @depends testCreateBranch
+     *
+     * @param int $id
+     */
+    public function testDeleteBranch($id)
     {
-        $this->command->urlParameters = array('id' => 1);
+        $this->command->urlParameters = array('id' => $id);
         $this->delete('diamante_branch_api_service_oro_delete_branch', $this->command);
         $this->get('diamante_branch_api_service_oro_get_branch', $this->command, Codes::HTTP_NOT_FOUND);
     }
