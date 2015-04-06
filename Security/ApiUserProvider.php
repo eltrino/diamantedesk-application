@@ -15,12 +15,12 @@
 
 namespace Diamante\ApiBundle\Security;
 
+use Diamante\UserBundle\Entity\ApiUser;
+use Diamante\UserBundle\Model\ApiUser\ApiUserRepository;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Diamante\ApiBundle\Model\ApiUser\ApiUserRepository;
-use Diamante\ApiBundle\Model\ApiUser\ApiUser;
 
 class ApiUserProvider implements UserProviderInterface
 {

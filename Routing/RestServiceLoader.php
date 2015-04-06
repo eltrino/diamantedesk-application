@@ -20,7 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Doctrine\Common\Annotations\Reader;
-use Diamante\ApiBundle\Annotation\ApiDoc;
 
 class RestServiceLoader extends Loader
 {

@@ -48,6 +48,7 @@ class RestServiceLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testAnnotatedMethods()
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->container->expects($this->once())->method('get')->with($this->equalTo('fixture.service'))
             ->will($this->returnValue(new Service()));
 

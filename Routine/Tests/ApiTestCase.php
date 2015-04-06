@@ -26,51 +26,124 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected $client;
 
+    /**
+     * @var bool
+     */
+    protected $isDiamante;
+
+    /**
+     * @var string
+     */
+    protected $oroUsername;
+
+    /**
+     * @var string
+     */
+    protected $oroApiKey;
+
+    /**
+     * @var string
+     */
+    protected $diamanteEmail;
+
     public function setUp()
     {
-        $this->initClient(
-            array(),
-            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
-        );
+        $this->oroUsername = 'admin';
+        $this->oroApiKey = 'api_key';
+        $this->diamanteEmail = 'admin@eltrino.com';
+        static::$kernel = static::createKernel();
+        static::$kernel->boot();
+        $this->initClient();
     }
 
-    public function getAll($url)
+    /**
+     * @param string $url
+     * @param int    $code
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getAll($url, $code = Codes::HTTP_OK)
     {
-        return $this->request('GET', $url, Codes::HTTP_OK);
+        return $this->request('GET', $url, $code);
     }
 
+    /**
+     * @param string     $url
+     * @param ApiCommand $command
+     * @param int        $code
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function get($url, ApiCommand $command, $code = Codes::HTTP_OK)
     {
         return $this->request('GET', $url, $code, $command->urlParameters);
     }
 
-    public function post($url, ApiCommand $command)
+    /**
+     * @param string     $url
+     * @param ApiCommand $command
+     * @param int        $code
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function post($url, ApiCommand $command, $code = Codes::HTTP_CREATED)
     {
-        return $this->request('POST', $url, Codes::HTTP_CREATED, $command->urlParameters, $command->requestParameters);
+        return $this->request('POST', $url, $code, $command->urlParameters, $command->requestParameters);
     }
 
-    public function put($url, ApiCommand $command)
+    /**
+     * @param string     $url
+     * @param ApiCommand $command
+     * @param int        $code
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function put($url, ApiCommand $command, $code = Codes::HTTP_OK)
     {
-        return $this->request('PUT', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
+        return $this->request('PUT', $url, $code, $command->urlParameters, $command->requestParameters);
     }
 
-    public function patch($url, ApiCommand $command)
+    /**
+     * @param string     $url
+     * @param ApiCommand $command
+     * @param int        $code
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patch($url, ApiCommand $command, $code = Codes::HTTP_OK)
     {
-        return $this->request('PATCH', $url, Codes::HTTP_OK, $command->urlParameters, $command->requestParameters);
+        return $this->request('PATCH', $url, $code, $command->urlParameters, $command->requestParameters);
     }
 
-    public function delete($url, ApiCommand $command)
+    /**
+     * @param string     $url
+     * @param ApiCommand $command
+     * @param int        $code
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function delete($url, ApiCommand $command, $code = Codes::HTTP_NO_CONTENT)
     {
         return $this->request(
             'DELETE',
             $url,
-            Codes::HTTP_NO_CONTENT,
+            $code,
             $command->urlParameters,
             array(),
             'assertEmptyResponseStatusCodeEquals'
         );
     }
 
+    /**
+     * @param string $method
+     * @param string $url
+     * @param int    $code
+     * @param array  $urlParameters
+     * @param array  $requestParameters
+     * @param string $assert
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     protected function request(
         $method,
         $url,
@@ -79,14 +152,81 @@ abstract class ApiTestCase extends WebTestCase
         $requestParameters = array(),
         $assert = 'assertJsonResponseStatusCodeEquals'
     ) {
+        $server = $this->generateWsse();
+        $this->client->setServerParameters($server);
         $this->client->request(
             $method,
             $this->getUrl($url, $urlParameters),
             $requestParameters
         );
         $result = $this->client->getResponse();
-        call_user_func(array($this, $assert), $result, $code);
+        $this->$assert($result, $code);
 
         return $result;
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *
+     * @return array
+     */
+    public function getArray($response)
+    {
+        return self::jsonToArray($response->getContent());
+    }
+
+    /**
+     * @return array
+     */
+    private function generateWsse()
+    {
+        if ($this->isDiamante) {
+            return $this->generateDiamanteWsseAuthHeader($this->diamanteEmail);
+        } else {
+            return $this->generateWsseAuthHeader($this->oroUsername, $this->oroApiKey);
+        }
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return array
+     */
+    private function generateDiamanteWsseAuthHeader($email)
+    {
+        $created = date('c');
+        $prefix = gethostname();
+        $nonce = base64_encode(substr(md5(uniqid($prefix . '_', true)), 0, 16));
+        $user = static::$kernel->getContainer()
+            ->get('diamante.api.user.repository')
+            ->findUserByEmail($email);
+
+        if (null === $user) {
+            throw new \InvalidArgumentException(sprintf('User "%s" does not exist', $email));
+        }
+
+        $secret = $user->getPassword();
+
+        $passwordDigest = base64_encode(
+            sha1(
+                sprintf(
+                    '%s%s%s',
+                    base64_decode($nonce),
+                    $created,
+                    $secret
+                ),
+                true
+            )
+        );
+
+        return array(
+            'HTTP_X-WSSE' => sprintf(
+                'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"',
+                $email,
+                $passwordDigest,
+                $nonce,
+                $created
+            )
+        );
     }
 }
