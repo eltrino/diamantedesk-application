@@ -48,12 +48,12 @@ abstract class ApiTestCase extends WebTestCase
 
     public function setUp()
     {
-        $this->oroUsername = 'akolomiec';
-        $this->oroApiKey = 'ab5e3d92cc673112f99c13d5b20e9f6df8da83d2';
-        $this->diamanteEmail = 'kolomiyets.alexandr@gmail.com';
+        $this->oroUsername = 'admin';
+        $this->oroApiKey = 'api_key';
+        $this->diamanteEmail = 'admin@eltrino.com';
         static::$kernel = static::createKernel();
         static::$kernel->boot();
-        $this->initClient(array(), array());
+        $this->initClient();
     }
 
     /**
