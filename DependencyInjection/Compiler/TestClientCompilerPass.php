@@ -9,7 +9,9 @@ class TestClientCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('test.client');
-        $definition->setClass('Symfony\Bundle\FrameworkBundle\Client');
+        if ($container->has('test.client')) {
+            $definition = $container->getDefinition('test.client');
+            $definition->setClass('Symfony\Bundle\FrameworkBundle\Client');
+        }
     }
 }
