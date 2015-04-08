@@ -9,8 +9,7 @@ define([
     User.UserModel = Backbone.Model.extend({
       url : Config.apiUrl + '/desk/users/current',
       validate: function(attrs, options){
-        var errors = {},
-            required = _.omit(attrs, Object.keys(options.ignore));
+        var errors = {};
         if(!attrs.email) {
           errors.email = "Can't be blank";
         }

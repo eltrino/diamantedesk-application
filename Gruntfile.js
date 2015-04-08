@@ -33,7 +33,7 @@ module.exports = function(grunt) {
         //pretend: true, // Don't do any disk operations - just write log
         //verbose: true, // Display log messages when copying files
 
-        ignoreInDest: ['css/**', 'less'],
+        ignoreInDest: ['css/**', 'less', 'js/main.built.js'],
         updateAndDelete: true
       }
     },
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
           wrapShim: true,
           name: "main",
           mainConfigFile: "<%= assetsDir %>/js/main.js",
-          out: "<%= assetsDir %>/js/main.built.js"
+          out: "<%= publicDir %>/js/main.built.js"
         }
       }
     },
@@ -117,7 +117,7 @@ module.exports = function(grunt) {
       },
       main: {
         files: '<%= assetsDir %>/**',
-        tasks: ['js', 'sync', 'html']
+        tasks: ['sync', 'html']
       },
       less : {
         files: '<%= lessDir %>/**',

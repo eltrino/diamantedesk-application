@@ -17,7 +17,6 @@ define(['app'], function(App){
             message : options.message,
             model: userModel
           });
-
           userView.on('user:edit', function(){
             App.trigger('user:edit', options);
           });

@@ -16,7 +16,7 @@ define(['app'], function(App){
           });
 
           userButton.on('user:view', function(){
-            App.trigger('user:view',{
+            App.trigger('user:view', {
               parentRegion: userButton.dropdownRegion
             });
           });

@@ -11,27 +11,28 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
         var request = App.request('user:model:current');
 
         request.done(function(userModel){
-          var userView = new Edit.ItemView({
+          var userEditView = new Edit.ItemView({
             model: userModel
           });
 
-          userView.on('form:submit', function(data){
-            userView.showLoader();
-            var _options = {};
+          userEditView.on('form:submit', function(data){
+            var ignore = [];
             if(data.password){
               data.password = Wsse.encodePassword(data.password);
             } else {
               delete data.password;
-              _options.ignore = ['password'];
+              ignore = ['password'];
             }
-            this.model.save(data, _.extend(_options,{
+            this.model.save(data,{
+              ignore: ignore,
               patch: true,
               success : function(){
                 if(data.password){
-                  App.session.set('password',data.password);
+                  App.session.set('password', data.password);
                 }
-                var opt = _.extend({message: 'User is updated'}, options);
-                App.trigger('user:view', opt);
+                options.message = 'User is updated';
+                console.log(options.parentRegion);
+                App.trigger('user:view', options);
               },
               error : function(model, xhr){
                 App.alert({
@@ -39,10 +40,10 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
                   xhr : xhr
                 });
               }
-            }));
+            });
           });
 
-          options.parentRegion.show(userView);
+          options.parentRegion.show(userEditView);
         });
 
       });

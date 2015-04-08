@@ -16,6 +16,10 @@ define([
         'click': 'viewClicked'
       },
 
+      modelEvents : {
+        'change' : 'updateFullName'
+      },
+
       templateHelpers : function(){
         var email = this.model.get('email'),
             fullname = [];
@@ -30,8 +34,8 @@ define([
         };
       },
 
-      initialize: function(){
-        this.listenTo(this.model, 'change', this.render );
+      updateFullName: function(){
+        this.$('.user-name').text(this.templateHelpers().fullName);
       },
 
       viewClicked : function(){
