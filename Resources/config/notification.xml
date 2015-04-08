@@ -39,6 +39,7 @@
             <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="oro_locale.formatter.name"/>
+            <argument type="service" id="diamante.user.repository"/>
             <argument>%mailer_user%</argument>
             <argument>%mailer_host%</argument>
         </service>

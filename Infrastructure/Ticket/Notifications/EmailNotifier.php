@@ -28,6 +28,7 @@ use Diamante\UserBundle\Entity\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 
 class EmailNotifier implements Notifier
 {
@@ -76,6 +77,11 @@ class EmailNotifier implements Notifier
      */
     private $senderHost;
 
+    /**
+     * @var DiamanteUserRepository
+     */
+    private $diamanteUserRepository;
+
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
@@ -84,6 +90,7 @@ class EmailNotifier implements Notifier
         MessageReferenceRepository $messageReferenceRepository,
         UserService $userService,
         NameFormatter $nameFormatter,
+        DiamanteUserRepository $diamanteUserRepository,
         $senderEmail,
         $senderHost
     )
@@ -95,6 +102,7 @@ class EmailNotifier implements Notifier
         $this->messageReferenceRepository   = $messageReferenceRepository;
         $this->userService                  = $userService;
         $this->nameFormatter                = $nameFormatter;
+        $this->diamanteUserRepository       = $diamanteUserRepository;
         $this->senderEmail                  = $senderEmail;
         $this->senderHost                   = $senderHost;
     }
@@ -259,7 +267,13 @@ class EmailNotifier implements Notifier
      */
     private function getFormattedUserName(Notification $notification, Ticket $ticket)
     {
-        $user = $this->getUserDependingOnType($notification->getAuthor());
+        $author = $notification->getAuthor();
+        if(is_null($author)) {
+            $reporterId = $ticket->getReporter()->getId();
+            $user = $this->diamanteUserRepository->get($reporterId);
+        } else {
+            $user = $this->getUserDependingOnType($author);
+        }
         $name = $this->nameFormatter->format($user);
 
         if (empty($name)) {

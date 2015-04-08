@@ -84,7 +84,6 @@ class TicketStrategy implements Strategy
             $diamanteUser = $this->diamanteUserFactory->create($email, $sender->getFirstName(), $sender->getLastName());
 
             $this->diamanteUserRepository->store($diamanteUser);
-            $type = User::TYPE_DIAMANTE;
         }
 
         $reporterId = $diamanteUser->getId();
