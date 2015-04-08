@@ -186,6 +186,10 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $author = User::fromString($authorId);
         $content = $this->cleanupCommentsContent($content);
 
+        if (empty($content)) {
+            return;
+        }
+
         $comment = $this->commentFactory->create($content, $ticket, $author);
 
         if ($attachments) {
