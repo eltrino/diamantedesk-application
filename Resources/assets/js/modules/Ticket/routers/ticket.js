@@ -65,9 +65,9 @@ define(['app'], function(App){
       API.createTicket();
     });
 
-    App.on('ticket:edit', function(id){
+    App.on('ticket:edit', function(id, key){
       App.debug('info', 'Event "ticket:edit" fired');
-      App.navigate('tickets/'+ id + '/edit');
+      App.navigate('tickets/'+ key + '/edit');
       API.editTicket(id);
     });
 

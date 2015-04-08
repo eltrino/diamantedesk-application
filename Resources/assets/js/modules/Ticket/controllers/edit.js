@@ -26,7 +26,7 @@ define(['app'], function(App){
           });
 
           modalEditView.on('modal:closed', function(){
-            App.trigger('ticket:view', editTicketModel.get('id'));
+            App.trigger('ticket:view', editTicketModel.get('key'));
           });
 
           editTicketView.on('form:submit', function(data){
@@ -36,7 +36,7 @@ define(['app'], function(App){
               this.model.save(attrs,{
                 patch : true,
                 success : function(resultModel){
-                  App.trigger('ticket:view', resultModel.get('id'));
+                  App.trigger('ticket:view', resultModel.get('key'));
                   App.trigger('message:show', {
                     status:'success',
                     text: 'Ticket ' + resultModel.get('key') + ' updated'

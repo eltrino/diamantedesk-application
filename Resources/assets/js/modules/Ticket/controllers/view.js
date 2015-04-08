@@ -14,7 +14,9 @@ define(['app'], function(App){
                 model : ticketModel,
                 query : query
               });
+
           App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
+
           ticketView.on('dom:refresh', function(){
             require(['Comment', 'Attachment'], function(Comment, Attachment){
               var commentOptions = {
@@ -38,12 +40,14 @@ define(['app'], function(App){
 
             }.bind(this));
           });
+
           ticketView.on('destroy', function(){
             require(['Comment', 'Attachment'], function(Comment, Attachment){
               Comment.stop();
               Attachment.stop();
             });
           });
+
           ticketView.on('ticket:close', function(){
             ticketView.showLoader();
             ticketModel.save({'status':'closed'}, {patch : true, wait: true}).done(
@@ -55,6 +59,7 @@ define(['app'], function(App){
               }
             );
           });
+
           ticketView.on('ticket:open', function(){
             ticketView.showLoader();
             ticketModel.save({'status':'open'}, {patch : true, wait: true}).done(
@@ -70,6 +75,7 @@ define(['app'], function(App){
           App.mainRegion.show(ticketView);
 
         }).fail(function(model, xhr){
+
           if(xhr.status === 500){
             App.trigger('message:show', {
               status: 'error',

@@ -43,7 +43,7 @@ define(['app'], function(App){
                     ticket : resultModel,
                     success : function(){
                       isSuccess = true;
-                      App.trigger('ticket:view', resultModel.get('id'));
+                      App.trigger('ticket:view', resultModel.get('key'));
                       App.trigger('message:show', {
                         status:'success',
                         text: 'Ticket ' + resultModel.get('key') + ' created'
@@ -53,7 +53,7 @@ define(['app'], function(App){
                   });
                 } else {
                   isSuccess = true;
-                  App.trigger('ticket:view', resultModel.get('id'));
+                  App.trigger('ticket:view', resultModel.get('key'));
                   App.trigger('message:show', {
                     status:'success',
                     text: 'Ticket ' + resultModel.get('key') + ' created'

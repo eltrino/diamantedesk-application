@@ -27,7 +27,7 @@ define(['app', 'Common/views/loader'], function(App, loaderView){
 
           ticketListView.mainView.on('childview:ticket:view', function(childView, ticketModel){
             ticketListView.mainView.showLoader();
-            App.trigger('ticket:view', ticketModel.get('id'), query);
+            App.trigger('ticket:view', ticketModel.get('key'), query);
           });
 
           ticketListView.mainView.on('ticket:sort', function(sortKey, order){

@@ -52,7 +52,7 @@ define([
 
       editTicket : function(e){
         e.preventDefault();
-        App.trigger('ticket:edit', this.model.get('id'));
+        App.trigger('ticket:edit', this.model.get('id'), this.model.get('key'));
       },
 
       resolveTicket : function(e){

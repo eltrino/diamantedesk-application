@@ -31,7 +31,6 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
                   App.session.set('password', data.password);
                 }
                 options.message = 'User is updated';
-                console.log(options.parentRegion);
                 App.trigger('user:view', options);
               },
               error : function(model, xhr){
