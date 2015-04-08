@@ -32,8 +32,12 @@ class UserStateServiceImpl implements UserStateService
 
     public function isOroUser()
     {
-        $oroUser = $this->securityContext->getToken()->getUser();
+        $token = $this->securityContext->getToken();
 
-        return $oroUser instanceof User;
+        if (!$token) {
+            return false;
+        }
+
+        return $token->getUser() instanceof User;
     }
 }
