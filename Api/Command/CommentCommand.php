@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Diamante\DeskBundle\Validator\Constraints\Any;
 
 class CommentCommand
 {
@@ -27,7 +28,7 @@ class CommentCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @Assert\Type(type="string")
+     * @Any({@Assert\Type(type="integer"), @Assert\Type(type="string")})
      */
     public $content;
 
