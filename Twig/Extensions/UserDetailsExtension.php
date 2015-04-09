@@ -51,14 +51,30 @@ class UserDetailsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'fetch_user_details' => new \Twig_Function_Method($this, 'fetchUserDetails', array('is_safe' => array('html'))),
-            'fetch_oro_user' => new \Twig_Function_Method($this, 'fetchOroUser', array('is_safe' => array('html'))),
-            'get_gravatar' => new \Twig_Function_Method($this, 'getGravatarForUser', array('is_safe' => array('html'))),
+            'fetch_user_details' => new \Twig_Function_Method(
+                $this,
+                'fetchUserDetails',
+                array('is_safe' => array('html'))
+            ),
+            'fetch_oro_user' => new \Twig_Function_Method(
+                $this, 'fetchOroUser', array('is_safe' => array('html'))
+            ),
+            'fetch_diamante_user' => new \Twig_Function_Method(
+                $this,
+                'fetchDiamanteUser',
+                array('is_safe' => array('html'))
+            ),
+            'get_gravatar' => new \Twig_Function_Method(
+                $this,
+                'getGravatarForUser',
+                array('is_safe' => array('html'))
+            ),
         ];
     }
 
     /**
      * @param User $user
+     *
      * @return UserDetails
      *
      * @throws \Twig_Error_Runtime
@@ -79,24 +95,30 @@ class UserDetailsExtension extends \Twig_Extension
 
     /**
      * @param User $user
-     * @return DiamanteUser|OroUser
-     * @throws \Twig_Error_Runtime
+     *
+     * @return bool|OroUser
      */
     public function fetchOroUser(User $user)
     {
-        $oroUser = $this->userService->getByUser($user);
+        return $this->userService->getOroUser($user);
+    }
 
-        if (empty($oroUser)) {
-            throw new \Twig_Error_Runtime('Failed to load user');
-        }
-
-        return $oroUser;
+    /**
+     * @param User $user
+     *
+     * @return DiamanteUser
+     * @throws \Twig_Error_Runtime
+     */
+    public function fetchDiamanteUser(User $user)
+    {
+        return $this->userService->getDiamanteUser($user);
     }
 
     /**
      * @param string $email
-     * @param int $size
-     * @param bool $secure
+     * @param int    $size
+     * @param bool   $secure
+     *
      * @throws \Twig_Error_Runtime
      * @return string
      */

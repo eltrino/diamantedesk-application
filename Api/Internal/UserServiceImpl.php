@@ -29,8 +29,8 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 class UserServiceImpl implements UserService, GravatarProvider
 {
     /**
-    * @var UserManager
-    */
+     * @var UserManager
+     */
     private $oroUserManager;
 
     /**
@@ -46,8 +46,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
         DiamanteUserFactory $factory
-    )
-    {
+    ) {
         $this->oroUserManager         = $userManager;
         $this->diamanteUserRepository = $diamanteUserRepository;
         $this->factory                = $factory;
@@ -55,6 +54,7 @@ class UserServiceImpl implements UserService, GravatarProvider
 
     /**
      * @param User $user
+     *
      * @return DiamanteUser|OroUser
      */
     public function getByUser(User $user)
@@ -73,7 +73,44 @@ class UserServiceImpl implements UserService, GravatarProvider
     }
 
     /**
+     * @param User $user
+     *
+     * @return bool|OroUser
+     */
+    public function getOroUser(User $user)
+    {
+        $user = $this->getByUser($user);
+
+        if ($user instanceof DiamanteUser) {
+            $user = $this->oroUserManager->findUserByEmail($user->getEmail());
+
+            if (!$user) {
+                return false;
+            }
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool|DiamanteUser
+     */
+    public function getDiamanteUser(User $user)
+    {
+        $user = $this->diamanteUserRepository->get($user->getId());
+
+        if(!$user) {
+            return false;
+        }
+
+        return $user;
+    }
+
+    /**
      * @param string $email
+     *
      * @return int|null
      */
     public function verifyDiamanteUserExists($email)
@@ -89,6 +126,7 @@ class UserServiceImpl implements UserService, GravatarProvider
 
     /**
      * @param \Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand $command
+     *
      * @return int
      */
     public function createDiamanteUser(CreateDiamanteUserCommand $command)
@@ -127,6 +165,7 @@ class UserServiceImpl implements UserService, GravatarProvider
      * @param string $email
      * @param int    $size
      * @param bool   $secure
+     *
      * @return string
      */
     public function getGravatarLink($email, $size, $secure = false)

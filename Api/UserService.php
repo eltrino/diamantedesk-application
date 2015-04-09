@@ -38,4 +38,18 @@ interface UserService
      * @return mixed
      */
     public function fetchUserDetails(User $user);
+
+    /**
+     * Retrieve Oro User object
+     * @param \Diamante\UserBundle\Model\User $user
+     * @return bool|OroUser
+     */
+    public function getOroUser(User $user);
+
+    /**
+     * Retrieve Diamante User object
+     * @param \Diamante\UserBundle\Model\User $user
+     * @return bool|DiamanteUser
+     */
+    public function getDiamanteUser(User $user);
 }
