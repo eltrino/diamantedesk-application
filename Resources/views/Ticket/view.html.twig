@@ -13,13 +13,14 @@
             {% set imagePath = '' %}
             {% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
             {% if comment.author %}
-                {% set author = fetch_oro_user(comment.author) %}
-                {% if comment.author.isOroUser %}
-                    {% set author = author|oro_format_name %}
-                    {% set avatar = oro_configured_image_url(fetch_oro_user(comment.author), 'avatar') %}
-                {% else %}
-                    {% set author = author.firstName ~ ' ' ~ author.lastName %}
-                    {% set avatar = get_gravatar(comment.author.email) %}
+                {% set oroUser = fetch_oro_user(comment.author) %}
+                {% set diamanteUser = fetch_diamante_user(comment.author) %}
+                {% if oroUser %}
+                    {% set author = oroUser|oro_format_name %}
+                    {% set avatar = oro_configured_image_url(oroUser, 'avatar') %}
+                {% elseif diamanteUser %}
+                    {% set author = diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName %}
+                    {% set avatar = get_gravatar(diamanteUser.email) %}
                 {% endif %}
             {% endif %}
             <li class="diam-comment">
