@@ -68,7 +68,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
      */
     protected $private;
 
-    public function __construct($content, $ticket, $author, $private = false)
+    public function __construct($content, $ticket, $author, $private)
     {
         $this->content = $content;
         $this->ticket = $ticket;
