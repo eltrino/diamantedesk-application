@@ -159,7 +159,7 @@ class CommentServiceImpl implements CommentService
 
         $author = User::fromString($command->author);
 
-        $comment = $this->commentFactory->create($command->content, $ticket, $author);
+        $comment = $this->commentFactory->create($command->content, $ticket, $author, $command->private);
 
         if ($command->attachmentsInput) {
             foreach ($command->attachmentsInput as $each) {

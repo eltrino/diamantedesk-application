@@ -18,8 +18,8 @@ use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 
 class CommentFactory extends AbstractEntityFactory
 {
-    public function create($content, Ticket $ticket, $author)
+    public function create($content, Ticket $ticket, $author, $private)
     {
-        return new $this->entityClassName($content, $ticket, $author);
+        return new $this->entityClassName($content, $ticket, $author, $private);
     }
 }
