@@ -75,6 +75,12 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     private $nameFormatter;
 
     /**
+     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
+     */
+    private $diamanteUserRepository;
+
+    /**
      * @var string
      */
     private $senderEmail = 'sender@host.com';
@@ -174,7 +180,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $notifier = new EmailNotifier(
             $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository,
             $this->messageReferenceRepository, $this->userService, $this->nameFormatter,
-            $this->senderEmail, $this->senderHost
+            $this->diamanteUserRepository, $this->senderEmail, $this->senderHost
         );
 
         $notifier->notify($notification);
