@@ -66,5 +66,5 @@ class CommentCommand
     /**
      * @Assert\Type(type="bool")
      */
-    public $private;
+    public $private = false;
 }
