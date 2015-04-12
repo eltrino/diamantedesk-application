@@ -126,26 +126,20 @@ define([
       },
 
       register: function(creds) {
+        var defer = $.Deferred();
         if(this.set(creds, {validate: true})){
           creds.password = Wsse.encodePassword(creds.password);
           this.save(creds,{
-            success : function(){
-              App.alert({ title: 'Registration Success', messages: [{
-                status: 'success',
-                text: 'Thank you. <br>' +
-                'We have sent you email to ' + this.get('email') + '.<br>'+
-                'Please click the link in that message to activate your account.'
-              }] });
-              this.clear();
-              App.trigger('session:register:success');
-              App.trigger('session:login');
-            }.bind(this),
-            error : function(){
-              App.trigger('session:register:fail');
-              App.alert({ title: "Registration Failed" });
+            success : function(model){
+              defer.resolve(model);
+              model.clear();
+            },
+            error : function(model, xhr){
+              defer.reject(model, xhr);
             }
           });
         }
+        return defer.promise();
       },
 
       confirm: function(hash){
@@ -175,24 +169,18 @@ define([
       },
 
       reset: function(data){
-        var model = this;
+        var model = this,
+            defer = $.Deferred();
         this.url += '/reset';
         this.set('id', 1);
         this.save(data, {
           patch: true,
           ignore: ['password'],
           success : function(){
-            App.trigger('session:reset:sent');
-            App.alert({ title: 'Password Reset Info', messages: [{
-              status:'info',
-              text: 'We have sent you email to ' + model.get('email') + '.<br>' +
-                'Please click the link in that message to reset your password.'
-            }] });
-            App.trigger('session:login');
+            defer.resolve(model);
           },
-          error : function(){
-            App.trigger('session:reset:fail');
-            App.alert({ title: 'Password Reset Failed', messages: ['Email not found'] });
+          error : function(model, xhr){
+            defer.reject(model, xhr);
           },
           complete : function(){
             model.url = model.url.replace('/reset', '');
@@ -202,6 +190,7 @@ define([
         if(!this.isValid()){
           this.url = this.url.replace('/reset', '');
         }
+        return defer.promise();
       },
 
       newPassword: function(data){

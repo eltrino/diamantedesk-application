@@ -72,6 +72,10 @@ class RegistrationServiceImpl implements RegistrationService
             ->create($command->email, $command->firstName, $command->lastName);
         $apiUser = $this->apiUserFactory->create($command->email, $command->password);
 
+        if($this->diamanteUserRepository->findUserByEmail($command->email)){
+            throw new \RuntimeException('An account with this email address already exists');
+        }
+
         $this->diamanteUserRepository->store($diamanteUser);
         $this->apiUserRepository->store($apiUser);
 

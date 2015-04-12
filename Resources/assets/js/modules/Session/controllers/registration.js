@@ -11,8 +11,19 @@ define(['app'], function(App){
         });
 
         registrationView.on('form:submit', function(data){
-          this.model.register(data);
-          this.trigger('session:login');
+          this.model.register(data).
+            done(function(model){
+              App.alert({ title: 'Registration Success', messages: [{
+                status: 'success',
+                text: 'Thank you. <br>' +
+                'We have sent you email to ' + model.get('email') + '.<br>'+
+                'Please click the link in that message to activate your account.'
+              }] });
+              App.trigger('session:login');
+            }).
+            fail(function(model, xhr){
+              App.alert({ title: "Registration Failed", xhr: xhr });
+            });
         });
 
         App.mainRegion.show(registrationView);

@@ -18,7 +18,18 @@ define(['app'], function(App){
           if(hash){
             this.model.newPassword(data);
           } else {
-            this.model.reset(data);
+            this.model.reset(data).
+              done(function(model){
+                App.alert({ title: 'Password Reset Info', messages: [{
+                  status:'info',
+                  text: 'We have sent you email to ' + model.get('email') + '.<br>' +
+                  'Please click the link in that message to reset your password.'
+                }] });
+                App.trigger('session:login');
+              }).
+              fail(function(model, xhr){
+                App.alert({ title: 'Password Reset Failed', xhr: xhr });
+              });
           }
         });
 
