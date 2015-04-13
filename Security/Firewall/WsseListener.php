@@ -63,7 +63,7 @@ class WsseListener implements ListenerInterface
             if ($returnValue instanceof TokenInterface)
             {
                 if (!$returnValue->getUser()->isActive()) {
-                    throw new AuthenticationException();
+                    throw new AuthenticationException("Your account is not activated yet, please check your email and confirm registration.\n If you didn't receive your verification email, please click here.");
                 }
 
                 return $this->securityContext->setToken($returnValue);
@@ -74,7 +74,7 @@ class WsseListener implements ListenerInterface
             }
 
         } catch (AuthenticationException $failed) {
-             $response = new Response();
+             $response = new Response(json_encode(['message' => $failed->getMessage()]));
              $response->setStatusCode(401);
              $event->setResponse($response);
         }
