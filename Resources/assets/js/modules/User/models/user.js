@@ -34,12 +34,12 @@ define([
           defer.resolve(currentUser);
         } else {
           user.fetch({
-            success : function(data){
+            success : function(model){
               currentUser = user.clone();
-              defer.resolve(data);
+              defer.resolve(model);
             },
-            error : function(data){
-              defer.reject(data);
+            error : function(model, xhr){
+              defer.reject(model, xhr);
             }
           });
         }

@@ -22,6 +22,7 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
         if(_.isString(this.messages)){
           this.messages = [ this.messages ];
         }
+        this.messages = _.map(this.messages, function(text){ return text.replace(/\n/g, '<br />');});
       },
 
       templateHelpers: function(){

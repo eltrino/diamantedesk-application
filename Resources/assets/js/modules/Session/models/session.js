@@ -107,13 +107,13 @@ define([
         App.trigger('session:login:success');
       },
 
-      loginFail: function(){
+      loginFail: function(data, xhr){
         this.trigger('login:fail');
         this.clear();
         this.set({ logged_in: false });
         this.trigger('error');
         App.trigger('session:login:fail');
-        App.alert({ title: "Authorization Failed", messages: ["Incorrect email or password"] });
+        App.alert({ title: "Authorization Failed", messages: ["Incorrect email or password"], xhr: xhr });
       },
 
       login: function(creds) {
