@@ -16,18 +16,26 @@ define(['app'], function(App){
 
         resetView.on('form:submit', function(data){
           if(hash){
-            this.model.newPassword(data);
+            this.model.newPassword(data)
+              .done(function(){
+                App.trigger('session:login');
+                App.trigger('message:show',{ status: 'success', text:'Password successfully changed, you can use it to login'});
+              })
+              .fail(function(){
+                App.trigger('session:reset');
+                App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'] });
+              });
           } else {
-            this.model.reset(data).
-              done(function(model){
+            this.model.reset(data)
+              .done(function(model){
                 App.alert({ title: 'Password Reset Info', messages: [{
                   status:'info',
                   text: 'We have sent you email to ' + model.get('email') + '.<br>' +
                   'Please click the link in that message to reset your password.'
                 }] });
                 App.trigger('session:login');
-              }).
-              fail(function(model, xhr){
+              })
+              .fail(function(model, xhr){
                 App.alert({ title: 'Password Reset Failed', xhr: xhr });
               });
           }

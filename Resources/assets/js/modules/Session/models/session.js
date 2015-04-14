@@ -98,7 +98,6 @@ define([
           id: data.id,
           logged_in: true
         });
-        this.trigger('login:success');
         if(this.get('remember')){
           window.localStorage.setItem('authModel', JSON.stringify(this));
         } else {
@@ -108,7 +107,6 @@ define([
       },
 
       loginFail: function(data, xhr){
-        this.trigger('login:fail');
         this.clear();
         this.set({ logged_in: false });
         this.trigger('error');
@@ -143,23 +141,18 @@ define([
       },
 
       confirm: function(hash){
-        var model = this;
+        var model = this,
+            defer = $.Deferred();
         this.url += '/confirm';
         this.set('id', 1);
         this.save({ hash : hash },{
           patch: true,
           validate: false,
           success : function(){
-            App.trigger('session:confirm:success');
-            App.alert({ title: 'Email Confirmation Success', messages: [{
-              status:'success',
-              text: 'You may login and use application'}] });
-            App.trigger('session:login');
+            defer.resolve(model);
           },
-          error : function(){
-            App.trigger('session:confirm:fail');
-            App.alert({ title: 'Email Confirmation Failed', messages: ['Activation code is wrong'] });
-            App.trigger('session:registration');
+          error : function(model, xhr){
+            defer.reject(model, xhr);
           },
           complete : function(){
             model.url = model.url.replace('/confirm', '');
@@ -194,7 +187,8 @@ define([
       },
 
       newPassword: function(data){
-        var model = this;
+        var model = this,
+            defer = $.Deferred();
         this.url += '/password';
         this.set('id', 1);
         if(this.set(data, {validate: true, ignore: ['email']})){
@@ -203,16 +197,11 @@ define([
             patch: true,
             ignore: ['email'],
             success : function(){
-              App.trigger('session:reset:success');
-              App.trigger('session:password:change');
-              App.trigger('session:login');
-              App.trigger('message:show',{ status: 'success', text:'Password successfully changed, you can use it to login'});
+              defer.resolve(model);
             },
             error : function(){
-              App.trigger('session:reset:fail');
-              App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'] });
               model.clear();
-              App.trigger('session:reset');
+              defer.reject(model, xhr);
             },
             complete : function(){
               model.url = model.url.replace('/password', '');
@@ -222,6 +211,7 @@ define([
         } else {
           this.url = this.url.replace('/password', '');
         }
+        return defer.promise();
       },
 
       logout: function() {
