@@ -111,16 +111,24 @@ define([
         this.set({ logged_in: false });
         this.trigger('error');
         App.trigger('session:login:fail');
-        App.alert({ title: "Authorization Failed", messages: ["Incorrect email or password"], xhr: xhr });
       },
 
       login: function(creds) {
+        var model = this,
+            defer = $.Deferred();
         if(creds.password){
           creds.password = Wsse.encodePassword(creds.password);
         }
         if(this.set(creds, {validate: true})){
-          this.getAuth().done(this.loginSuccess.bind(this)).fail(this.loginFail.bind(this));
+          this.getAuth().done(function(data){
+            model.loginSuccess(data);
+            defer.resolve(data);
+          }).fail(function(data, xhr){
+            model.loginFail(data, xhr);
+            defer.reject(data, xhr);
+          });
         }
+        return defer.promise();
       },
 
       register: function(creds) {

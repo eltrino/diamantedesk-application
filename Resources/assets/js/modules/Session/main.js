@@ -9,15 +9,15 @@ define([
   App.on('before:start',function(){
     Session.start();
     App.session = new Session.SessionModel();
-    App.session.getAuth().fail(function(){
+    App.session.getAuth().done(function(){
+      App.trigger('session:login:success');
+    }).fail(function(){
       App.on('history:start', function(){
         var path = App.getCurrentRoute().replace(/\/.+?$/,'/:hash');
         if(!_.has(routes, path)){
-          App.trigger('session:login', {return_path: path});
+          App.trigger('session:login', { return_path: App.getCurrentRoute() });
         }
       });
-    }).done(function(){
-      App.trigger('session:login:success');
     });
   });
 
