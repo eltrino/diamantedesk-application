@@ -21,6 +21,8 @@ use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\UserBundle\Api\Internal\UserStateServiceImpl;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -28,6 +30,17 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      * @var UserStateServiceImpl
      */
     private $userState;
+
+    /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
+
+    /**
+     * @var DiamanteUserRepository
+     */
+    private $diamanteUserRepository;
 
     /**
      * Find Ticket by given TicketKey
@@ -163,10 +176,55 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     }
 
     /**
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return \Doctrine\Common\Collections\Collection|static
+     * @throws \Exception
+     */
+    public function filter(array $conditions, PagingProperties $pagingProperties)
+    {
+        $qb = $this->createFilterQuery($conditions, $pagingProperties);
+
+        if (!$this->userState->isOroUser()) {
+            $email = $this->securityContext->getToken()->getUser()->getEmail();
+            $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
+            $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
+            $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
+                ->setParameter('reporter', $user);
+        }
+
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_OBJECT);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param UserStateServiceImpl $userState
      */
     public function setUserState(UserStateServiceImpl $userState)
     {
         $this->userState = $userState;
+    }
+
+    /**
+     * @param SecurityContextInterface $securityContext
+     */
+    public function setSecurityContext(SecurityContextInterface $securityContext)
+    {
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @param DiamanteUserRepository $diamanteUserRepository
+     */
+    public function setDiamanteUserRepository(DiamanteUserRepository $diamanteUserRepository)
+    {
+        $this->diamanteUserRepository = $diamanteUserRepository;
     }
 }
