@@ -25,4 +25,12 @@ class FileSystemAttachmentLoader extends FileSystemLoader
         $this->formats = array();
         $this->rootPath = '';
     }
+
+    /**
+     * @return ImagineInterface
+     */
+    public function getImagine()
+    {
+        return $this->imagine;
+    }
 }
