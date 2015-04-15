@@ -66,7 +66,8 @@ class LoadCommentData extends AbstractFixture implements ContainerAwareInterface
                 $comment = new Comment(
                     'commentContent' . $i . '-' . $j,
                     $ticket,
-                    new User($author->getId(), User::TYPE_ORO)
+                    new User($author->getId(), User::TYPE_ORO),
+                    false
                 );
                 $manager->persist($comment);
             }
