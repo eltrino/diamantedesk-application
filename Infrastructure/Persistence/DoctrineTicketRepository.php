@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\UserBundle\Api\Internal\UserStateServiceImpl;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -185,8 +186,9 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     {
         $qb = $this->createFilterQuery($conditions, $pagingProperties);
 
-        if (!$this->userState->isOroUser()) {
-            $email = $this->securityContext->getToken()->getUser()->getEmail();
+        $user = $this->securityContext->getToken()->getUser();
+        if ($user instanceof ApiUser) {
+            $email = $user->getEmail();
             $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
             $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
             $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
