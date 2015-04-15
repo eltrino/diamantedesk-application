@@ -508,6 +508,23 @@ class TicketServiceImpl implements TicketService
     }
 
     /**
+     * Update certain properties of the Ticket by key
+     * @param Command\UpdatePropertiesCommand $command
+     * @return Ticket
+     */
+    public function updatePropertiesByKey(Command\UpdatePropertiesCommand $command)
+    {
+        /**
+         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
+         */
+        $ticket = $this->loadTicketByKey($command->key);
+        $command->id = $ticket->getId();
+
+        return $this->updateProperties($command);
+    }
+
+
+    /**
      * @return TicketRepository
      */
     protected function getTicketRepository()
