@@ -224,11 +224,14 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $content = quoted_printable_decode($content);
 
         $position = strpos($content, self::DELIMITER_LINE);
-        if ($position === FALSE) {
-            return $content;
+        if ($position !== false) {
+            $content = substr($content, 0, $position);
         }
 
-        return substr($content, 0, $position);
+        $regexp = '/(>+\s>+\s|\s)On\s+\w+,\s+\w+\s+\d+,\s+\d+\s+at\s+\d+:\d+\s+\w+,.*?wrote:\s|(>*\s*){0,}$/is';
+        $content = preg_replace($regexp, '', $content);
+
+        return $content;
     }
 
     /**
