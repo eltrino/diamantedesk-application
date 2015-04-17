@@ -24,6 +24,7 @@ use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
+use Diamante\DeskBundle\Entity\Ticket;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -67,11 +68,11 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
                 )
             );
 
-        if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private is null or c.private = false');
-        }
-
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        if (!$this->userState->isOroUser() && !is_null($ticket)) {
+            $this->removePrivateComments($ticket);
+        }
 
         return $ticket;
     }
@@ -90,11 +91,13 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->where('t.uniqueId = :uniqueId')
             ->setParameter('uniqueId', $uniqueId);
 
-        if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private is null or c.private = false');
+        $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        if (!$this->userState->isOroUser() && !is_null($ticket)) {
+            $this->removePrivateComments($ticket);
         }
 
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        return $ticket;
     }
 
     /**
@@ -169,11 +172,13 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->where('t.id = :id')
             ->setParameter('id', $id);
 
-        if (!$this->userState->isOroUser()) {
-            $queryBuilder->andWhere('c.private is null or c.private = false');
+        $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        if (!$this->userState->isOroUser() && !is_null($ticket)) {
+            $this->removePrivateComments($ticket);
         }
 
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        return $ticket;
     }
 
     /**
@@ -228,5 +233,21 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     public function setDiamanteUserRepository(DiamanteUserRepository $diamanteUserRepository)
     {
         $this->diamanteUserRepository = $diamanteUserRepository;
+    }
+
+    /**
+     * @param Ticket $ticket
+     */
+    private function removePrivateComments(Ticket $ticket)
+    {
+        $comments = $ticket->getComments();
+        $commentsList = $comments->toArray();
+        $comments->clear();
+        foreach($commentsList as $comment) {
+            if(!$comment->isPrivate()) {
+                $comments->add($comment);
+            }
+        }
+        $comments->takeSnapshot();
     }
 }
