@@ -9,7 +9,7 @@
         {% for key, value in changes %}
         <ul>
             <li>
-                <b>{{ key }}: </b>{{ value }}
+                <b>{{ key }}: </b>{{ value|nl2br }}
             </li>
         </ul>
         {% endfor %}
