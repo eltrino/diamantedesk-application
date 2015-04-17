@@ -148,6 +148,7 @@ datagrid:
             columns:
                 key:
                   data_name: key
+                  apply_callback: Diamante\DeskBundle\Datagrid\SortHelper::getKeySortingFunction
                 subject:
                   data_name: i.subject
                 branchName:
