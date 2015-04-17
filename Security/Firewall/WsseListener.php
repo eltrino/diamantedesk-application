@@ -16,6 +16,7 @@ namespace Diamante\ApiBundle\Security\Firewall;
 
 use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
@@ -28,14 +29,17 @@ class WsseListener implements ListenerInterface
 {
     protected $securityContext;
     protected $authenticationManager;
+    protected $logger;
 
     public function __construct(
         SecurityContextInterface $securityContext,
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        Logger  $logger
     )
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
+        $this->logger = $logger;
     }
 
     public function handle(GetResponseEvent $event)
@@ -74,9 +78,10 @@ class WsseListener implements ListenerInterface
             }
 
         } catch (AuthenticationException $failed) {
-             $response = new Response();
-             $response->setStatusCode(401);
-             $event->setResponse($response);
+            $this->logger->error(sprintf("Authentication failed for user %s. Reason: %s", $token->getUser(), $failed->getMessage()));
+            $response = new Response();
+            $response->setStatusCode(401);
+            $event->setResponse($response);
         }
     }
 }
