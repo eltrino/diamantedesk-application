@@ -200,7 +200,7 @@ class EmailNotifier implements Notifier
      */
     private function decorateMessageSubject($subject, Ticket $ticket)
     {
-        return sprintf('%s %s', (string)$ticket->getKey(), $subject);
+        return sprintf('[%s] %s', (string)$ticket->getKey(), $subject);
     }
 
     /**
