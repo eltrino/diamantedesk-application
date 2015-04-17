@@ -34,9 +34,15 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
     const CLASS_NAME = 'DUMMY_CLASS_NAME';
 
     /**
-     * @var DoctrineTicketRepository;
+     * @var DoctrineTicketRepository
      */
     private $repository;
+
+    /**
+     * @var DoctrineTicketRepository
+     * @Mock DoctrineTicketRepository
+     */
+    private $ticketRepository;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -228,15 +234,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
                 ->method('setParameter')
                 ->will($this->returnValue($this->queryBuilder));
 
-            $this->userState->expects($this->once())
-                ->method('isOroUser')
-                ->will($this->returnValue(false));
-
-            $this->queryBuilder
-                ->expects($this->once())
-                ->method('andWhere')
-                ->will($this->returnValue($this->queryBuilder));
-
             $this->queryBuilder
                 ->expects($this->once())
                 ->method('getQuery')
@@ -252,6 +249,13 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
                 ->expects($this->atLeastOnce())
                 ->method('hydrateAll')
                 ->will($this->returnValue($ticket));
+
+            $this->userState->expects($this->once())
+                ->method('isOroUser')
+                ->will($this->returnValue(true));
+//
+//            $this->userState->expects($this->once())
+//                ->method('removePrivateComments');
 
             $result = $this->repository->getByUniqueId(new UniqueId($uniqueId));
 
@@ -311,15 +315,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             ->method('setParameter')
             ->will($this->returnValue($this->queryBuilder));
 
-        $this->userState->expects($this->once())
-            ->method('isOroUser')
-            ->will($this->returnValue(false));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('andWhere')
-            ->will($this->returnValue($this->queryBuilder));
-
         $this->queryBuilder
             ->expects($this->once())
             ->method('getQuery')
@@ -335,6 +330,10 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             ->expects($this->atLeastOnce())
             ->method('hydrateAll')
             ->will($this->returnValue($ticket));
+
+        $this->userState->expects($this->once())
+            ->method('isOroUser')
+            ->will($this->returnValue(true));
 
         $result = $this->repository->get($id);
 
