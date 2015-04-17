@@ -25,6 +25,7 @@ use Diamante\UserBundle\Model\User;
 use Diamante\UserBundle\Model\UserDetails;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Oro\Bundle\AttachmentBundle\Manager\AttachmentManager;
 
 class UserServiceImpl implements UserService, GravatarProvider
 {
@@ -42,14 +43,21 @@ class UserServiceImpl implements UserService, GravatarProvider
      */
     private $factory;
 
+    /**
+     * @var AttachmentManager
+     */
+    protected $attachmentManager;
+
     function __construct(
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
-        DiamanteUserFactory $factory
+        DiamanteUserFactory $factory,
+        AttachmentManager $attachmentManager
     ) {
         $this->oroUserManager         = $userManager;
         $this->diamanteUserRepository = $diamanteUserRepository;
         $this->factory                = $factory;
+        $this->attachmentManager      = $attachmentManager;
     }
 
     /**
@@ -152,12 +160,18 @@ class UserServiceImpl implements UserService, GravatarProvider
             throw new \RuntimeException('Failed to load details for given user');
         }
 
+        $userAvatarUrl = null;
+        if ($user->getType() == User::TYPE_ORO) {
+            $userAvatarUrl = $this->attachmentManager->getFilteredImageUrl($loadedUser->getAvatar(), 'avatar_med');
+        }
+
         return new UserDetails(
             (string)$user,
             $user->getType(),
             $loadedUser->getEmail(),
             $loadedUser->getFirstName(),
-            $loadedUser->getLastName()
+            $loadedUser->getLastName(),
+            $userAvatarUrl
         );
     }
 

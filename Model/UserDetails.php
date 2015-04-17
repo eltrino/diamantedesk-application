@@ -43,14 +43,20 @@ class UserDetails
      */
     protected $lastName;
 
+    /**
+     * @var null|string
+     */
+    protected $avatar;
 
-    public function __construct($id, $type, $email, $firstName, $lastName)
+
+    public function __construct($id, $type, $email, $firstName, $lastName, $avatar = null)
     {
         $this->id           = $id;
         $this->type         = $type;
         $this->email        = $email;
         $this->firstName    = $firstName;
         $this->lastName     = $lastName;
+        $this->avatar       = $avatar;
     }
 
     /**
@@ -99,5 +105,13 @@ class UserDetails
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
     }
 } 
