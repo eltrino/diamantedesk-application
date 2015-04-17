@@ -24,7 +24,7 @@ use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
-use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
