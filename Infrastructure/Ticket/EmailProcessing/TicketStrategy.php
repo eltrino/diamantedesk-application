@@ -16,12 +16,14 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
+use Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class TicketStrategy implements Strategy
 {
@@ -34,6 +36,11 @@ class TicketStrategy implements Strategy
      * @var BranchEmailConfigurationService
      */
     private $branchEmailConfigurationService;
+
+    /**
+     * @var TicketNotificationsSubscriber
+     */
+    private $ticketNotificationsSubscriber;
 
     /**
      * @var DiamanteUserRepository
@@ -51,23 +58,34 @@ class TicketStrategy implements Strategy
     private $emailProcessingSettings;
 
     /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
      * @param MessageReferenceService $messageReferenceService
      * @param BranchEmailConfigurationService $branchEmailConfigurationService
      * @param DiamanteUserRepository $diamanteUserRepository
      * @param DiamanteUserFactory $diamanteUserFactory
      * @param SystemSettings $settings
+     * @param TicketNotificationsSubscriber $ticketNotificationsSubscriber
+     * @param EventDispatcher $eventDispatcher
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 BranchEmailConfigurationService $branchEmailConfigurationService,
                                 DiamanteUserRepository $diamanteUserRepository,
                                 DiamanteUserFactory $diamanteUserFactory,
-                                SystemSettings $settings)
+                                SystemSettings $settings,
+                                TicketNotificationsSubscriber $ticketNotificationsSubscriber,
+                                EventDispatcher $eventDispatcher)
     {
         $this->messageReferenceService         = $messageReferenceService;
         $this->branchEmailConfigurationService = $branchEmailConfigurationService;
         $this->diamanteUserRepository          = $diamanteUserRepository;
         $this->diamanteUserFactory             = $diamanteUserFactory;
         $this->emailProcessingSettings         = $settings;
+        $this->ticketNotificationsSubscriber   = $ticketNotificationsSubscriber;
+        $this->eventDispatcher                 = $eventDispatcher;
     }
 
     /**
@@ -99,6 +117,13 @@ class TicketStrategy implements Strategy
             $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
                 $message->getContent(), $reporter, $assigneeId, $attachments);
         } else {
+            $this->eventDispatcher->removeListener(
+                'commentWasAddedToTicket',
+                array(
+                    $this->ticketNotificationsSubscriber,
+                    'processEvent'
+                )
+            );
             $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
                 $message->getReference(), $attachments);
         }
