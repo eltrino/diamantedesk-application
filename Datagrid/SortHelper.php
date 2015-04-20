@@ -31,7 +31,7 @@ class SortHelper
      *
      * @return array
      */
-    public function getKeySortingFunction()
+    public static function getKeySortingFunction()
     {
         return array(self::CURRENT_CLASS_NAME, self::APPLY_SORTING_FUNCTION_NAME);
     }
@@ -43,7 +43,7 @@ class SortHelper
      * @param $sortKey
      * @param $direction
      */
-    public function applySorting(OrmDatasource $dataSource, $sortKey, $direction)
+    public static function applySorting(OrmDatasource $dataSource, $sortKey, $direction)
     {
         $qb = $dataSource->getQueryBuilder();
         $qb->addOrderBy(self::SORT_BRANCH_KEY, $direction);
