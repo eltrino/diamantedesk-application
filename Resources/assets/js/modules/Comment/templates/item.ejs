@@ -1,24 +1,15 @@
-<% if(isAuthor) {%>
+<% if(is_author) {%>
 <ul class="comment-tools pull-right">
     <li><button class="btn btn-link js-edit-comment" title="Edit Comment"><i class="fa fa-pencil"></i></button></li>
     <li><button class="btn btn-link js-delete-comment" title="Delete Comment"><i class="fa fa-times"></i></button></li>
 </ul>
 <% } %>
-<% if(typeof authorName !== 'undefined') { %>
-<img src="<%= avatar_url %>?s=32&d=identicon"
+<img src="<%= avatar_url %>"
      class="comment-author-image"
-     alt="<%= authorName %>" />
+     alt="<%= author_name %>" />
 <strong class="commment-author-name">
-    <%= authorName  %>
-</strong>
-<% } else { %>
-<img src="<%= avatar_url %>?s=32&d=mm"
-     class="comment-author-image"
-     alt="Loading..." />
-<strong class="commment-author-name">
-  Loading...
-</strong>
-<% } %> answered <%= created_relative %> <small class="comment-date">(<%= created_at %>)</small>
+    <%= author_name  %>
+</strong> answered <%= created_relative %> <small class="comment-date">(<%= created_at %>)</small>
 <div class="comment-content"><%= content %></div>
 <% if(attachments && attachments.length) { %>
 <div class="comment-attachments-block">

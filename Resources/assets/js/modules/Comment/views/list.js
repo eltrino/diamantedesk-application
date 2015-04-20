@@ -17,10 +17,19 @@ define([
       },
 
       templateHelpers: function(){
+        var author = this.model.get('authorModel'),
+            avatar_url, author_name;
+        if(author){
+          avatar_url = author.get('avatar') || 'http://www.gravatar.com/avatar/'+ MD5(author.get('email')) +'?s=32&d=identicon';
+          author_name = author.get('name') || author.get('email');
+        } else {
+          avatar_url = 'http://www.gravatar.com/avatar/undefined?s=32&d=mm';
+          author_name = 'Loading...';
+        }
         return {
-          avatar_url : 'http://www.gravatar.com/avatar/' + MD5(this.model.get('authorEmail')),
-          isAuthor: this.model.get('author') === App.session.get('id'),
-          authorName : this.model.get('authorName') || this.model.get('authorEmail'),
+          is_author: this.model.get('author') === App.session.get('id'),
+          avatar_url : avatar_url,
+          author_name : author_name,
           attach_link : function(hash){
             return Config.baseUrl.replace('diamantefront','desk') + 'attachments/download/file/' + hash;
           },
@@ -28,6 +37,7 @@ define([
           created_relative : moment(this.model.get('created_at')).fromNow(),
           created_at : moment(this.model.get('created_at')).format('lll')
         };
+
       },
 
       ui: {

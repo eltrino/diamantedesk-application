@@ -25,9 +25,7 @@ define(['app'], function(App){
           formView.showLoader();
           App.request('user:model:current').done(function(user){
             commentModel.set({
-              'author': 'diamante_' + user.get('id'),
-              'authorName' : user.get('first_name') + ' ' + user.get('last_name'),
-              'authorEmail' : user.get('email')
+              'author': 'diamante_' + user.get('id')
             }, { 'silent': true });
             commentModel.save(data, {
               success : function(model){
@@ -42,6 +40,7 @@ define(['app'], function(App){
                 } else {
                   onSuccess(model);
                 }
+                model.fetchAuthor();
               },
               error : function(model, xhr){
                 formView.hideLoader();

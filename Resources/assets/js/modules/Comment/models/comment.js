@@ -11,21 +11,7 @@ define([
       },
 
       initialize: function(attr, options){
-
-        if(attr && attr.author){
-          require(['Comment/models/author'], function(Author){
-            var author = new Author.Model({}, { comment : this });
-            author.fetch({
-              success: function(){
-                this.set({
-                  'authorName': jQuery.trim(author.get('first_name') + ' ' + author.get('last_name')),
-                  'authorEmail': author.get('email')
-                });
-              }.bind(this)
-            });
-          }.bind(this));
-        }
-
+        this.fetchAuthor();
         if(options.ticket){
           this.set({
             ticket : options.ticket.get('id'),
@@ -42,7 +28,25 @@ define([
         if(!_.isEmpty(errors)){
           return errors;
         }
+      },
+
+      fetchAuthor : function(){
+        var model = this,
+            author;
+        if(model.get('author')){
+          require(['Comment/models/author'], function(Author){
+            author = new Author.Model({}, { comment : model });
+            author.fetch({
+              success: function(){
+                model.set({
+                  'authorModel': author
+                });
+              }
+            });
+          });
+        }
       }
+
     });
 
     Comment.Collection = Backbone.Collection.extend({
