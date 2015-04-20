@@ -112,6 +112,8 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
             $messageContent = $this->getMessageContentDecoded($imapMessage);
         }
 
+        $messageContent = preg_replace("/\s\r\n/",' ',$messageContent);
+
         return $messageContent;
     }
 
