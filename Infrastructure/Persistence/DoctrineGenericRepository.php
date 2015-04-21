@@ -71,9 +71,28 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
      */
     public function filter(array $conditions, PagingProperties $pagingProperties)
     {
+        $qb = $this->createFilterQuery($conditions, $pagingProperties);
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_OBJECT);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function createFilterQuery(array $conditions, PagingProperties $pagingProperties)
+    {
         $qb = $this->_em->createQueryBuilder();
         $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
-        $offset = ($pagingProperties->getPage()-1) * $pagingProperties->getLimit();
+        $offset = ($pagingProperties->getPage() - 1) * $pagingProperties->getLimit();
 
         $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
 
@@ -86,15 +105,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
         $qb->setFirstResult($offset);
         $qb->setMaxResults($pagingProperties->getLimit());
 
-        $query = $qb->getQuery();
-
-        try {
-            $result = $query->getResult(Query::HYDRATE_OBJECT);
-        } catch (\Exception $e) {
-            $result = null;
-        }
-
-        return $result;
+        return $qb;
     }
 
     /**

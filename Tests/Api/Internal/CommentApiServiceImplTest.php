@@ -141,8 +141,8 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
     public function testCommentsFiltered()
     {
         $comments = array(
-            new Comment("DUMMY_CONTENT_1", $this->_dummyTicket, $this->createAuthor()),
-            new Comment("DUMMY_CONTENT_2", $this->_dummyTicket, $this->createAuthor()),
+            new Comment("DUMMY_CONTENT_1", $this->_dummyTicket, $this->createAuthor(), false),
+            new Comment("DUMMY_CONTENT_2", $this->_dummyTicket, $this->createAuthor(), false),
         );
 
         $command = new FilterCommentsCommand();

@@ -33,7 +33,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
     {
         $ticket = $this->createTicket();
         $creator = $this->createDiamanteUser();
-        $comment = new Comment(self::COMMENT_CONTENT, $ticket, $creator);
+        $comment = new Comment(self::COMMENT_CONTENT, $ticket, $creator, false);
 
         $this->assertEquals(self::COMMENT_CONTENT, $comment->getContent());
         $this->assertEquals($ticket, $comment->getTicket());
@@ -53,7 +53,8 @@ class CommentTest extends \PHPUnit_Framework_TestCase
         $comment = new Comment(
             self::COMMENT_CONTENT,
             $this->createTicket(),
-            $this->createDiamanteUser()
+            $this->createDiamanteUser(),
+            false
         );
 
         return $comment;

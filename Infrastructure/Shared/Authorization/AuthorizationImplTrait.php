@@ -34,7 +34,7 @@ trait AuthorizationImplTrait
             $user = $this->securityContext->getToken()->getUser();
             $objectOwner = $object->getOwner();
 
-            if ($attributes == 'EDIT' || $attributes == 'DELETE') {
+            if ($attributes == 'EDIT' || $attributes == 'DELETE' || $attributes == 'VIEW') {
                 if ($objectOwner->isDiamanteUser()) {
                     $ownerId = $this->diamanteUserRepository->findUserByEmail($user->getUserName())->getId();
 
