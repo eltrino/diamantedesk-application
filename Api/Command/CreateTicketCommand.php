@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 use Diamante\DeskBundle\Validator\Constraints\User;
+use Diamante\DeskBundle\Validator\Constraints\PrintType;
 
 class CreateTicketCommand
 {
@@ -37,7 +38,7 @@ class CreateTicketCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @Assert\Type(type="print")
+     * @PrintType()
      */
     public $subject;
 
@@ -45,7 +46,7 @@ class CreateTicketCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @Assert\Type(type="print")
+     * @PrintType()
      */
     public $description;
 
