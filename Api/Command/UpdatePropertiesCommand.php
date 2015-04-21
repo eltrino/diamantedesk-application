@@ -19,10 +19,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UpdatePropertiesCommand
 {
     /**
-     * @Assert\NotNull()
      * @Assert\Type(type="integer")
      */
     public $id;
+
+    /**
+     * @Assert\Regex(
+     *    pattern = "/^[A-Z]+\-[0-9]+$/",
+     *    message = "Ticket Key must approach to pattern 'BranchKey-TicketId'"
+     * )
+     * @Assert\Type(type="string")
+     * @Assert\Length(min = 3)
+     */
+    public $key;
 
     /**
      * @Assert\NotNull()

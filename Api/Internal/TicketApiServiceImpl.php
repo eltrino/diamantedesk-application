@@ -340,13 +340,13 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      *          "name"="id",
      *          "dataType"="integer",
      *          "requirement"="\d+",
-     *          "description"="Branch Id"
+     *          "description"="Ticket Id"
      *      }
      *  },
      *  statusCodes={
      *      200="Returned when successful",
      *      403="Returned when the user is not authorized to update ticket",
-     *      404="Returned when the branch is not found"
+     *      404="Returned when the ticket is not found"
      *  }
      * )
      *
@@ -356,6 +356,39 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function updateProperties(Command\UpdatePropertiesCommand $command)
     {
         return parent::updateProperties($command);
+    }
+
+    /**
+     * Update certain properties of the Ticket by key
+     *
+     * @ApiDoc(
+     *  description="Update ticket by key",
+     *  uri="/tickets/{key}.{_format}",
+     *  method={
+     *      "PUT",
+     *      "PATCH"
+     *  },
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="key",
+     *          "dataType"="string",
+     *          "description"="Ticket Key"
+     *      }
+     *  },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to update ticket",
+     *      404="Returned when the ticket is not found"
+     *  }
+     * )
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
+    public function updatePropertiesByKey(Command\UpdatePropertiesCommand $command)
+    {
+        return parent::updatePropertiesByKey($command);
     }
 
     /**
