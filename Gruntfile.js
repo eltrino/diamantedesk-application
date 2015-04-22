@@ -54,6 +54,9 @@ module.exports = function(grunt) {
 
     cssmin: {
       main: {
+        options: {
+          advanced: false
+        },
         files: {
           '<%= publicDir %>/css/main.min.css': '<%= publicDir %>/css/main.css'
         }
@@ -110,7 +113,7 @@ module.exports = function(grunt) {
 
     watch: {
       css: {
-        files: ['<%= publicDir %>/css/main.css'],
+        files: ['<%= publicDir %>/css/main.css', '<%= publicDir %>/css/main.min.css'],
         options: {
           livereload: true
         }
