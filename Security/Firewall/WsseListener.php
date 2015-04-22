@@ -79,12 +79,9 @@ class WsseListener implements ListenerInterface
 
         } catch (AuthenticationException $failed) {
             $this->logger->error(sprintf("Authentication failed for user %s. Reason: %s", $token->getUser(), $failed->getMessage()));
-            $response = new Response();
+            $response = new Response(json_encode(['message' => $failed->getMessage()]));
             $response->setStatusCode(401);
             $event->setResponse($response);
-             $response = new Response(json_encode(['message' => $failed->getMessage()]));
-             $response->setStatusCode(401);
-             $event->setResponse($response);
         }
     }
 }
