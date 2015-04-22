@@ -4,6 +4,8 @@ define([
 
   return App.module('Ticket.View.Comment', function(Comment, App, Backbone, Marionette, $, _){
 
+    var trim = $.trim;
+
     Comment.Model = Backbone.Model.extend({
       urlRoot: Config.apiUrl + '/desk/comments',
       defaults: {
@@ -22,7 +24,7 @@ define([
 
       validate: function(attrs, options){
         var errors = {};
-        if(!attrs.content) {
+        if(!trim(attrs.content)) {
           errors.content = "Can't be blank";
         }
         if(!_.isEmpty(errors)){

@@ -5,7 +5,8 @@ define([
 
   return App.module("Ticket", function(Ticket, App, Backbone, Marionette, $, _){
 
-    var PARAM_TRIM_RE = /[\s'"]/g,
+    var trim = $.trim,
+        PARAM_TRIM_RE = /[\s'"]/g,
         URL_TRIM_RE = /[<>\s'"]/g;
 
     Ticket.Model = Backbone.Model.extend({
@@ -27,10 +28,10 @@ define([
       },
       validate: function(attrs, options){
         var errors = {};
-        if(!attrs.subject) {
+        if(!trim(attrs.subject)) {
           errors.subject = "Can't be blank";
         }
-        if(!attrs.description) {
+        if(!trim(attrs.description)) {
           errors.description = "Can't be blank";
         }
         if(!_.isEmpty(errors)){
