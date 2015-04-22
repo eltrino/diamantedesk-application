@@ -22,7 +22,6 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
         if(_.isString(this.messages)){
           this.messages = [ this.messages ];
         }
-        this.messages = _.map(this.messages, function(text){ return text.replace(/\n/g, '<br />');});
       },
 
       templateHelpers: function(){
@@ -46,12 +45,13 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
                 message.status_icon = 'exclamation-circle';
                 break;
             }
+            message.text = message.text.replace(/\n/g, '<br />');
             return message;
           } else {
             return {
               status_class: 'danger',
               status_icon: 'exclamation-circle',
-              text: message
+              text: message.replace(/\n/g, '<br />')
             };
           }
         });
