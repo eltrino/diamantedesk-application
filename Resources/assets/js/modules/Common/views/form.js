@@ -50,10 +50,11 @@ define(['app'], function(App){
         };
         var markErrors = function(value, key){
           var input =  this.$('[name="'+key + '"]'),
-              controlGroup = this.$('[name="'+key + '"]').parent(),
+              controlGroup = input.parent(),
               errorEl = $("<span>", {class: "help-block", text: value});
           input.after(errorEl);
           controlGroup.addClass("has-error");
+          input.change(function(){ errorEl.remove(); controlGroup.removeClass("has-error"); });
         };
         clearErrors.call(this);
         _.each(errors, markErrors, this);
