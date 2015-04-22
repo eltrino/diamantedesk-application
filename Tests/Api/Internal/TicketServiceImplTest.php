@@ -1107,6 +1107,42 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->updateProperties($command);
     }
 
+    public function testUpdatePropertiesByKey()
+    {
+        $this->ticketRepository->expects($this->once())->method('get')->will($this->returnValue($this->ticket));
+
+        $properties = array(
+            'subject'     => 'DUMMY_SUBJECT_UPDT_BY_KEY',
+            'description' => 'DUMMY_DESC_UPDT_BY_KEY',
+            'status'      => 'open',
+            'priority'    => 'high',
+            'source'      => 'phone'
+        );
+
+        $this->ticket->expects($this->once())->method('updateProperties')
+            ->with($this->equalTo($properties));
+
+        $this->ticket->expects($this->once())->method('getId')
+            ->will($this->returnValue(1));
+
+        $this->ticketRepository->expects($this->once())->method('getByTicketKey')
+            ->with(new TicketKey('DT', 1))
+            ->will($this->returnValue($this->ticket));
+
+        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+
+        $this->authorizationService->expects($this->any())->method('isActionPermitted')
+            ->with($this->anything(), $this->equalTo($this->ticket))
+            ->will($this->returnValue(true));
+
+        $command = new UpdatePropertiesCommand();
+        $command->key = static::DUMMY_TICKET_KEY;
+        $command->properties = $properties;
+
+        $this->ticketService->updatePropertiesByKey($command);
+    }
+
+
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Ticket loading failed, ticket not found.
