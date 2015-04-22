@@ -50,7 +50,7 @@ define(['app'], function(App){
         if(App.session.get('logged_in')){
           App.navigate('');
         } else {
-          require(['modules/Session/controllers/confirm'], function(hash){
+          require(['modules/Session/controllers/confirm'], function(){
             Session.ConfirmController(hash);
           });
         }

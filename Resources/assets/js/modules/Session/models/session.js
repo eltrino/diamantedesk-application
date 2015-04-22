@@ -167,6 +167,7 @@ define([
             model.clear();
           }
         });
+        return defer.promise();
       },
 
       reset: function(data){

@@ -4,7 +4,7 @@ define(['app'], function(App){
 
     Session.ConfirmController = function(hash){
 
-      this.model.confirm(hash)
+      App.session.confirm(hash)
         .done(function(){
           App.alert({ title: 'Email Confirmation Success', messages: [{
             status: 'success',
