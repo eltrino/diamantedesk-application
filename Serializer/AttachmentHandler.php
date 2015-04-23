@@ -2,15 +2,17 @@
 
 namespace Diamante\DeskBundle\Serializer;
 
-use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl;
+use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Model\Attachment\ManagerImpl;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonSerializationVisitor;
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use JMS\Serializer\Metadata\PropertyMetadata;
+use JMS\Serializer\XmlSerializationVisitor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class AttachmentHandler implements SubscribingHandlerInterface
 {
@@ -59,15 +61,63 @@ class AttachmentHandler implements SubscribingHandlerInterface
                 'type' => 'Diamante\\DeskBundle\\Entity\\Attachment',
                 'method' => 'serializeToJson',
             ),
+            array(
+                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'format' => 'xml',
+                'type' => 'Diamante\\DeskBundle\\Entity\\Attachment',
+                'method' => 'serializeToXml',
+            ),
         );
     }
 
+    /**
+     * @param JsonSerializationVisitor $visitor
+     * @param Attachment $attachment
+     * @param array $type
+     * @param Context $context
+     *
+     * @return array|\ArrayObject|mixed
+     */
     public function serializeToJson(
         JsonSerializationVisitor $visitor,
         Attachment $attachment,
         array $type,
         Context $context
     ) {
+        $data = $this->getAttachmentData($attachment);
+
+        return $visitor->visitArray($data, $type, $context);
+    }
+
+    /**
+     * @param XmlSerializationVisitor $visitor
+     * @param Attachment $attachment
+     * @param array $type
+     * @param Context $context
+     *
+     * @return array|\ArrayObject|mixed
+     */
+    public function serializeToXml(
+        XmlSerializationVisitor $visitor,
+        Attachment $attachment,
+        array $type,
+        Context $context
+    ) {
+        $data = $this->getAttachmentData($attachment);
+
+        /** @var PropertyMetadata $metadata */
+        $metadata = $visitor->getCurrentMetadata();
+        $metadata->xmlKeyValuePairs = true;
+
+        $visitor->visitArray($data, $type, $context);
+    }
+
+    /**
+     * @param Attachment $attachment
+     * @return array
+     */
+    private function getAttachmentData(Attachment $attachment)
+    {
         try {
             $thumbnail = $this->attachmentService->getThumbnail($attachment->getHash());
         } catch (FileNotFoundException $e) {
@@ -94,7 +144,7 @@ class AttachmentHandler implements SubscribingHandlerInterface
             ];
         }
 
-        return $visitor->visitArray($data, $type, $context);
+        return $data;
     }
 
 }
