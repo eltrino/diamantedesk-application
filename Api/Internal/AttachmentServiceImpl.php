@@ -59,7 +59,7 @@ class AttachmentServiceImpl implements AttachmentService
     {
         $file = $this->getByHash($hash);
         $location = dirname($file->getFile()->getPathname());
-        $filename = sprintf('%s/thumbnail/%s.png', $location, $hash);
+        $filename = sprintf('%s/thumbnails/%s.png', $location, $hash);
 
         return new File($filename);
     }
