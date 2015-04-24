@@ -38,7 +38,7 @@ class ManagerImpl implements Manager
      */
     private $repository;
     /**
-     * @var \Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader
+     * @var \Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader
      */
     private $loader;
 
@@ -164,7 +164,7 @@ class ManagerImpl implements Manager
      */
     protected function createThumbnail(File $file, $hash, $fileNamePrefix)
     {
-        $image = $this->loader->find($file->getPathname());
+        $image = $this->loader->getImagine()->open($file->getPathname());
         $thumbnail = $image->thumbnail(new Box(100,100));
 
         $destinationFolder = sprintf('%s/thumbnails', $this->getDestination($fileNamePrefix));

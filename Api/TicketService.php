@@ -129,4 +129,11 @@ interface TicketService
      * @param Command\UpdatePropertiesCommand $command
      */
     public function updateProperties(Command\UpdatePropertiesCommand $command);
+
+    /**
+     * Update certain properties of the ticket by key
+     *
+     * @param Command\UpdatePropertiesCommand $command
+     */
+    public function updatePropertiesByKey(Command\UpdatePropertiesCommand $command);
 }

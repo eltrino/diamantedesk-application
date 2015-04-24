@@ -107,6 +107,24 @@ class DiamanteTicketApiTest extends ApiTestCase
      * @depends testCreateTicket
      *
      * @param array $ticket
+     */
+    public function testUpdateTicketByKey($ticket)
+    {
+        $this->command->urlParameters = array('key' => $ticket['key']);
+        $this->command->requestParameters = array(
+            'subject' => 'Test Ticket Updated PUT by key'
+        );
+        $this->put('diamante_ticket_api_service_diamante_update_properties_by_key', $this->command);
+
+        $this->command->urlParameters = array('key' => $ticket['key']);
+        $this->command->requestParameters['subject'] = 'Test Ticket Updated PATCH by key';
+        $this->patch('diamante_ticket_api_service_diamante_update_properties_by_key', $this->command);
+    }
+
+    /**
+     * @depends testCreateTicket
+     *
+     * @param array $ticket
      *
      * @return array
      */

@@ -28,6 +28,7 @@
         <parameter key="diamante.attachment.imagine_data_loader.class">Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
         <parameter key="diamante.attachment.service.class">Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl</parameter>
         <parameter key="diamante.attachment.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineAttachmentRepository</parameter>
+        <parameter key="diamante.attachment.serialize.handler.class">Diamante\DeskBundle\Serializer\AttachmentHandler</parameter>
     </parameters>
 
     <services>
@@ -65,6 +66,13 @@
         <service id="diamante.attachment.service" class="%diamante.attachment.service.class%">
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.attachment.repository"/>
+        </service>
+
+        <service id="diamante.attachment.serialize.handler" class="%diamante.attachment.serialize.handler.class%">
+            <argument type="service" id="diamante.attachment.service"/>
+            <argument type="service" id="diamante.attachment.manager"/>
+            <argument type="service" id="service_container"/>
+            <tag name="jms_serializer.subscribing_handler" connection="default"/>
         </service>
     </services>
 </container>

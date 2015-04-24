@@ -70,6 +70,18 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $emailProcessingSettings;
 
+    /**
+     * @var \Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber
+     * @Mock \Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber
+     */
+    private $ticketNotificationsSubscriber;
+
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $eventDispatcher;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -78,7 +90,9 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             $this->branchEmailConfigurationService,
             $this->diamanteUserRepository,
             $this->diamanteUserFactory,
-            $this->emailProcessingSettings
+            $this->emailProcessingSettings,
+            $this->ticketNotificationsSubscriber,
+            $this->eventDispatcher
         );
     }
 

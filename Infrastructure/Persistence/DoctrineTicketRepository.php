@@ -191,6 +191,8 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     {
         $qb = $this->createFilterQuery($conditions, $pagingProperties);
 
+        $qb->resetDQLPart('orderBy');
+
         $user = $this->securityContext->getToken()->getUser();
         if ($user instanceof ApiUser) {
             $email = $user->getEmail();
@@ -204,9 +206,89 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         try {
             $result = $query->getResult(Query::HYDRATE_OBJECT);
+            $result = $this->applyResultOrder($result, $pagingProperties);
         } catch (\Exception $e) {
             $result = null;
         }
+
+        return $result;
+    }
+
+    /**
+     * Sorting the mysql result.
+     * Implemented because Doctrine ORM not support select from subQuery
+     *
+     * @param $result
+     * @param PagingProperties $pagingProperties
+     * @return array
+     */
+    public function applyResultOrder($result, PagingProperties $pagingProperties)
+    {
+        if (!$result || empty($result)) {
+            return $result;
+        }
+
+        usort($result,
+            function ($a, $b) use ($pagingProperties) {
+
+                $reflectionA = new \ReflectionClass($a);
+                $reflectionB = new \ReflectionClass($b);
+
+                $sortBy = $pagingProperties->getSort();
+                $orderBy = $pagingProperties->getOrder();
+
+                if (!$reflectionA->getProperty($sortBy) || !$reflectionB->getProperty($sortBy)) {
+                    return 0;
+                }
+
+                $propertyA = $reflectionA->getProperty($sortBy);
+                $propertyB = $reflectionB->getProperty($sortBy);
+
+                $propertyA->setAccessible(true);
+                $propertyB->setAccessible(true);
+
+                $valueA = $propertyA->getValue($a);
+                $valueB = $propertyB->getValue($b);
+
+                if (is_object($valueA) && is_object($valueB)) {
+                    if ($valueA instanceof \DateTime && $valueB instanceof \DateTime) {
+                        $valueA = $valueA->getTimestamp();
+                        $valueB = $valueB->getTimestamp();
+                    } else {
+                        $valueA = $valueA->getValue();
+                        $valueB = $valueB->getValue();
+                    }
+                }
+
+                if ($valueB == $valueA) {
+                    return 0;
+                }
+
+                if (is_int($valueA) && is_int($valueB)) {
+                    if ($orderBy == 'DESC') {
+                        return $valueA > $valueB;
+                    } else {
+                        return $valueA < $valueB;
+                    }
+                }
+
+                if (is_string($valueA) || is_string($valueB)) {
+
+                    $sortableArray = array($valueA, $valueB);
+                    $originalSortableArray = $sortableArray;
+
+                    asort($sortableArray);
+
+                    if ($orderBy == 'DESC') {
+                        return $sortableArray !== $originalSortableArray;
+                    } else {
+                        return $sortableArray === $originalSortableArray;
+                    }
+                }
+
+                return 0;
+            }
+        );
 
         return $result;
     }
