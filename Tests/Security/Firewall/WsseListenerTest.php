@@ -16,6 +16,7 @@ namespace Diamante\ApiBundle\Tests\Security\Firewall;
 
 use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 use Diamante\ApiBundle\Security\Firewall\WsseListener;
+use Diamante\UserBundle\Model\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class WsseListenerTest extends \PHPUnit_Framework_TestCase
@@ -60,6 +61,18 @@ class WsseListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $response;
 
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     * @Mock \Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
+
+    /**
+     * @var \Diamante\UserBundle\Entity\ApiUser
+     * @Mock \Diamante\UserBundle\Entity\ApiUser
+     */
+    private $userMock;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -69,7 +82,7 @@ class WsseListenerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getRequest')
             ->will($this->returnValue($this->request));
-        $this->wsseListener = new WsseListener($this->securityContext, $this->authenticationManager);
+        $this->wsseListener = new WsseListener($this->securityContext, $this->authenticationManager, $this->logger);
     }
 
     /**
@@ -82,6 +95,16 @@ class WsseListenerTest extends \PHPUnit_Framework_TestCase
         $token->setAttribute('digest','admin');
         $token->setAttribute('nonce','admin');
         $token->setAttribute('created','2010-12-12 20:00:00');
+
+        $this->tokenMock
+            ->expects($this->atLeastOnce())
+            ->method('getUser')
+            ->will($this->returnValue($this->userMock));
+
+        $this->userMock
+            ->expects($this->once())
+            ->method('isActive')
+            ->will($this->returnValue(true));
 
         $this->authenticationManager
             ->expects($this->once())
