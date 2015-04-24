@@ -105,28 +105,9 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->userService
             ->expects($this->once())
-            ->method('getByUser')
+            ->method('getOroUser')
             ->with($this->equalTo($user))
             ->will($this->returnValue(new \Oro\Bundle\UserBundle\Entity\User()));
-
-        $this->userDetailsExtension->fetchOroUser($user);
-    }
-
-    /**
-     * @test
-     * @expectedException \Twig_Error_Runtime
-     * @expectedExceptionMessage Failed to load user
-     */
-    public function testExceptionIsThrownIfNoOroUserExists()
-    {
-        $id = 'oro_1';
-        $user = User::fromString($id);
-
-        $this->userService
-            ->expects($this->once())
-            ->method('getByUser')
-            ->with($this->equalTo($user))
-            ->will($this->returnValue(null));
 
         $this->userDetailsExtension->fetchOroUser($user);
     }
