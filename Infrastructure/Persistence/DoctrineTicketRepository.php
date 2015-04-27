@@ -187,7 +187,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
-    public function filter(array $conditions, PagingProperties $pagingProperties)
+    public function filter(array &$conditions, PagingProperties $pagingProperties)
     {
         $qb = $this->createFilterQuery($conditions, $pagingProperties);
 
@@ -200,6 +200,8 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
             $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
                 ->setParameter('reporter', $user);
+
+            $conditions[] = ['reporter', 'eq', $user];
         }
 
         $query = $qb->getQuery();

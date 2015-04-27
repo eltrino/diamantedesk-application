@@ -69,7 +69,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
-    public function filter(array $conditions, PagingProperties $pagingProperties)
+    public function filter(array &$conditions, PagingProperties $pagingProperties)
     {
         $qb = $this->createFilterQuery($conditions, $pagingProperties);
         $query = $qb->getQuery();

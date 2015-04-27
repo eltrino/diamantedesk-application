@@ -24,7 +24,7 @@ interface FilterableRepository
      * @param PagingProperties $pagingProperties
      * @return Entity[]
      */
-    public function filter(array $criteria, PagingProperties $pagingProperties);
+    public function filter(array &$criteria, PagingProperties $pagingProperties);
 
     /**
      * @param array $criteria
