@@ -65,7 +65,7 @@ class DoctrineCommentRepository extends DoctrineGenericRepository implements Com
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
-    public function filter(array $conditions, PagingProperties $pagingProperties)
+    public function filter(array &$conditions, PagingProperties $pagingProperties)
     {
         $qb = $this->_em->createQueryBuilder();
         $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
