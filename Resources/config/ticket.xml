@@ -29,6 +29,7 @@
         <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
         <parameter key="diamante.ticket.service.api.class">Diamante\DeskBundle\Api\Internal\TicketApiServiceImpl</parameter>
         <parameter key="diamante.ticket.internal.grid_filters_service.class">Diamante\DeskBundle\Api\Internal\TicketGridFiltersService</parameter>
+        <parameter key="diamante.ticket.search.prepare_result_item.listener.class">Diamante\DeskBundle\EventListener\Search\PrepareResultItemListener</parameter>
 <!-- filters -->
         <parameter key="diamante.filter.entity.class">Diamante\DeskBundle\Entity\Filter</parameter>
         <parameter key="diamante.ticket.filter_url_generator_factory.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorFactory</parameter>
@@ -116,6 +117,13 @@
                  class="%diamante.ticket.internal.grid_filters_service.class%">
             <argument type="service" id="service_container"/>
             <argument type="service" id="diamante.filter.repository"/>
+        </service>
+
+        <service id="diamante.ticket.search.prepare_result_item.listener" class="%diamante.ticket.search.prepare_result_item.listener.class%">
+            <tag name="kernel.event_listener" event="oro_search.prepare_result_item" method="process"/>
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="oro_search.mapper"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
 
 <!-- filters -->
