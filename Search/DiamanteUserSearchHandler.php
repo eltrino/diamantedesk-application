@@ -182,9 +182,7 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
             if ($type === User::TYPE_DIAMANTE) {
                 $converted['avatar'] = $this->userService->getGravatarLink($converted['email'], self::AVATAR_SIZE);
             } else {
-                if (isset($user['avatar'])) {
-                    $converted['avatar'] = $user['avatar'];
-                }
+                $converted['avatar'] = $this->getPropertyValue('avatar', $user);
             }
 
             $result[] = $converted;
