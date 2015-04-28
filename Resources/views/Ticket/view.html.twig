@@ -37,7 +37,7 @@
                     <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
                 </div>
                 <div class="diam-comment-meta">{{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }} {% if comment.private %}<span>private</span>{% endif %}</div>
-                <div class="diam-comment-content">{{ comment.content|escape('html')|nl2br }}</div>
+                <div class="diam-comment-content">{{ comment.content|raw }}</div>
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
                         <strong class="diam-comment-attachments-title">{{ 'diamante.desk.attachment.entity_plural_label'|trans }}:</strong>
@@ -277,7 +277,7 @@
     'title': 'diamante.desk.common.description'|trans,
     'subblocks': [{
     'title': null,
-    'data': [entity.description|escape('html')|nl2br]
+    'data': [entity.description]
     }]
     }]
     ) %}

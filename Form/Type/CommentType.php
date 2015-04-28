@@ -39,7 +39,7 @@ class CommentType extends AbstractType
 
         $builder->add(
             'content',
-            'textarea',
+            'oro_rich_text',
             array(
                 'label' => 'diamante.desk.comment.content',
                 'required' => true,

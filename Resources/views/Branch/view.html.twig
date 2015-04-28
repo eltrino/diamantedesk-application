@@ -74,7 +74,7 @@
         }]
     %}
 
-    {% set description = entity.description|escape('html')|nl2br %}
+    {% set description = entity.description %}
     {% set noDescription %}
     <span>{{ 'diamante.desk.common.no_description'|trans }}</span>
     {% endset %}
