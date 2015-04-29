@@ -63,17 +63,17 @@ define([
     return Backbone.history.fragment;
   };
 
+  App.setTitle = function(title){
+    var template = "{title} | " + Config.title;
+    document.title = title ? template.replace('{title}', title) : Config.title;
+  };
+
   App.on('before:start', function(){ });
 
   App.on('start', function(){
     Backbone.history.start();
     this.trigger('history:start');
   });
-
-  App.setTitle = function(title){
-    var template = "{title} | " + Config.title;
-    document.title = title ? template.replace('{title}', title) : Config.title;
-  };
 
   require(['Common/views/loader']);
 

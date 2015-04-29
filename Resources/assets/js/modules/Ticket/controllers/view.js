@@ -2,7 +2,7 @@ define(['app'], function(App){
 
   return App.module('Ticket.View', function(View, App, Backbone, Marionette, $, _){
 
-    View.Controller = function(id, query){
+    View.Controller = function(id, backUrl){
 
       App.mainRegion.showLoader();
 
@@ -12,7 +12,7 @@ define(['app'], function(App){
 
           var ticketView = new View.ItemView({
                 model : ticketModel,
-                query : query
+                backUrl : backUrl
               });
 
           App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));

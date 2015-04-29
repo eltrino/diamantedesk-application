@@ -60,6 +60,38 @@ define([
         this.params = { subject : query };
       },
 
+      setParams: function(params) {
+        if(params.search){
+          this.params = { subject : params.search };
+        }
+        if(params.page){
+          this.state.currentPage = params.page;
+        }
+        if(params.sort){
+          this.state.sortKey = params.sort;
+        }
+        if(params.order){
+          this.state.order = (params.order === 'asc') ? -1 : 1;
+        }
+      },
+
+      getParams: function(){
+        var str = [];
+        if(this.params && this.params.subject){
+          str.push('/search/' + this.params.subject);
+        }
+        if(this.state.currentPage && this.state.currentPage !== 1){
+          str.push('/page/' + this.state.currentPage);
+        }
+        if(this.state.sortKey){
+          str.push('/sort/' + this.state.sortKey);
+        }
+        if(this.state.order && this.state.order !== -1){
+          str.push('/order/desc');
+        }
+        return str.join('');
+      },
+
       parseState: function(resp, queryParams, state, options){
         return { totalRecords: parseInt(options.xhr.getResponseHeader("X-Total"), 10) };
       },
@@ -90,12 +122,10 @@ define([
     });
 
     var API = {
-      getTicketCollection: function(query) {
+      getTicketCollection: function(params) {
         var tickets = new Ticket.Collection(),
             defer = $.Deferred();
-        if(query){
-          tickets.setFilter(query);
-        }
+        tickets.setParams(params);
         tickets.fetch({
           data : tickets.params,
           success : function(data){
@@ -120,12 +150,8 @@ define([
       }
     };
 
-    App.reqres.setHandler("ticket:collection", function(){
-      return API.getTicketCollection();
-    });
-
-    App.reqres.setHandler("ticket:collection:search", function(query){
-      return API.getTicketCollection(query);
+    App.reqres.setHandler("ticket:collection", function(params){
+      return API.getTicketCollection(params);
     });
 
     App.reqres.setHandler("ticket:model", function(id){

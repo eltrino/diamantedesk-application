@@ -66,13 +66,13 @@ module.exports = function(grunt) {
     requirejs: {
       main: {
         options: {
-          baseUrl: "<%= assetsDir %>/js/",
-          optimize: "uglify",
+          baseUrl: '<%= assetsDir %>/js/',
+          optimize: 'uglify',
           findNestedDependencies: true,
           wrapShim: true,
-          name: "main",
-          mainConfigFile: "<%= assetsDir %>/js/main.js",
-          out: "<%= publicDir %>/js/main.built.js"
+          name: 'main',
+          mainConfigFile: '<%= assetsDir %>/js/main.js',
+          out: '<%= publicDir %>/js/main.built.js'
         }
       }
     },

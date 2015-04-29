@@ -6,19 +6,24 @@ define(['app'], function(App){
 
     Ticket.Router = Marionette.AppRouter.extend({
       appRoutes: {
-        'tickets' : 'listTickets',
+        'tickets(/search/:search)(/page/:page)(/sort/:sort)(/order/:order)' : 'listTickets',
         'tickets/create' : 'createTicket',
         'tickets/:id' : 'viewTicket',
-        'tickets/:id/edit' : 'editTicket',
-        'tickets/search/:query' : 'searchTicket'
+        'tickets/:id/edit' : 'editTicket'
       }
     });
 
     var API = {
-      listTickets: function(){
+      listTickets: function(search, page, sort, order){
+        var params = {
+          search: search,
+          page: ~~page,
+          sort: sort,
+          order: order
+        };
         App.setTitle();
         require(['Ticket/controllers/list'], function(List){
-          List.Controller();
+          List.Controller(params);
         });
       },
       viewTicket: function(id, query){
@@ -38,12 +43,6 @@ define(['app'], function(App){
         require(['Ticket/controllers/edit'], function(Edit){
           Edit.Controller(id);
         });
-      },
-      searchTicket: function(query){
-        App.setTitle('Search Result');
-        require(['Ticket/controllers/list'], function(List){
-          List.Controller(query);
-        });
       }
     };
 
@@ -53,10 +52,10 @@ define(['app'], function(App){
       API.listTickets();
     });
 
-    App.on('ticket:view', function(id, query){
+    App.on('ticket:view', function(id, backUrl){
       App.debug('info', 'Event "ticket:view" fired');
       App.navigate("tickets/" + id);
-      API.viewTicket(id, query);
+      API.viewTicket(id, backUrl);
     });
 
     App.on('ticket:create', function(){
@@ -71,11 +70,11 @@ define(['app'], function(App){
       API.editTicket(id);
     });
 
-    App.on('ticket:search', function(query){
+    App.on('ticket:search', function(search){
       App.debug('info', 'Event "ticket:search" fired');
-      if(query){
-        App.navigate('tickets/search/' + query);
-        API.searchTicket(query);
+      if(search){
+        App.navigate('tickets/search/' + search);
+        API.listTickets(search);
       } else {
         App.trigger('ticket:list');
       }
@@ -87,7 +86,10 @@ define(['app'], function(App){
       });
 
       Backbone.history.on("route", function(router, route, param){
-        if(route === "searchTicket"){
+        if(route === "listTickets"){
+          App.Header.on('start', function(){
+            App.Header.trigger('set:search', param[0]);
+          });
           App.Header.trigger('set:search', param[0]);
         } else {
           App.Header.trigger('set:search', null);

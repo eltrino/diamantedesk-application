@@ -9,11 +9,11 @@ define([
 
     Header.on('start', function () {
       var headerView = new HeaderView.LayoutView(Config);
-      Header.on('set:search', function(query){
-        headerView.ui.searchInput.val(query);
-      });
       App.trigger('user:render', { parentRegion: headerView.profileRegion });
       App.headerRegion.show(headerView);
+      Header.on('set:search', function(search){
+        headerView.ui.searchInput.val(search);
+      });
     });
 
     App.on('session:login:success', function(){
