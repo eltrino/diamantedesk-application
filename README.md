@@ -12,7 +12,7 @@ Installation
 Add as dependency in composer
 
 ```bash
-composer require diamante/embedded-form:dev-master
+composer require diamante/embeddedform-bundle:dev-master
 ```
 
 Installation requires additional migration you should run

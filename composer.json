@@ -1,5 +1,5 @@
 {
-    "name": "diamante/embedded-form-bundle",
+    "name": "diamante/embeddedform-bundle",
     "description": "DiamanteDesk Embedded Form Bundle",
     "homepage": "https://github.com/eltrino/DiamanteEmbeddedFormBundle",
     "license": "OSL-3.0",
@@ -36,8 +36,5 @@
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
-    },
-    "replace": {
-        "eltrino/diamantedesk-embedded-form-bundle":"1.*"
     }
 }
