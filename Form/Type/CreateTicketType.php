@@ -48,7 +48,7 @@ class CreateTicketType extends AbstractType
 
         $builder->add(
             'description',
-            'textarea',
+            'oro_rich_text',
             array(
                 'label' => 'diamante.desk.common.description',
                 'required' => true,
