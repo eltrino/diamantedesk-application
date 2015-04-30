@@ -27,7 +27,8 @@
         "beberlei/assert": "2.*",
         "zendframework/zend-mail": "2.*",
         "ezyang/htmlpurifier": "4.6.0",
-        "bordeux/email-cleaner": "dev-master"
+        "bordeux/email-cleaner": "dev-master",
+        "michelf/php-markdown": "~1.4"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"
