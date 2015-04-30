@@ -25,7 +25,8 @@
         "php": ">=5.4.4",
         "oro/platform": "1.4.*",
         "beberlei/assert": "2.*",
-        "zendframework/zend-mail": "2.*"
+        "zendframework/zend-mail": "2.*",
+        "bordeux/email-cleaner": "dev-master"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"

@@ -17,12 +17,14 @@ namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Diamante\EmailProcessingBundle\Model\MessageProcessingException;
+use Diamante\EmailProcessingBundle\Model\Service\EmailFilterService;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
 
 class ImapMessageProvider extends AbstractMessageProvider implements MessageProvider
 {
     const BATCH_SIZE_OF_MESSAGES_IN_BYTES = 20000000;
     const NAME_OF_FOLDER_OF_PROCESSED_MESSAGES = 'Processed';
+    const DEFAULT_USED_ENCODING = 'UTF-8';
 
     /**
      * @var \Zend\Mail\Storage\Imap
@@ -102,9 +104,12 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
             foreach (new \RecursiveIteratorIterator($imapMessage) as $part) {
                 $headers = $part->getHeaders();
                 if ($headers->get('contenttype')) {
-                    if ($headers->get('contenttype')->getType() == \Zend\Mime\Mime::TYPE_TEXT) {
+                    $type = $headers->get('contenttype')->getType();
+                    if ($type == \Zend\Mime\Mime::TYPE_HTML) {
                         $messageContent = $this->getMessageContentDecoded($part);
                         break;
+                    } elseif ($type == \Zend\Mime\Mime::TYPE_TEXT) {
+                        $messageContent = $this->getMessageContentDecoded($part);
                     }
                 }
             }
@@ -112,7 +117,8 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
             $messageContent = $this->getMessageContentDecoded($imapMessage);
         }
 
-        $messageContent = preg_replace("/\s\r\n/",' ',$messageContent);
+        $emailFilter = new EmailFilterService($messageContent);
+        $messageContent = $emailFilter->recognizeUsefulContent();
 
         return $messageContent;
     }
@@ -233,9 +239,26 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
         $decodedContent = $content;
 
         if ($headers->has('Content-Transfer-Encoding')) {
-            $encoding = $headers->get('contenttransferencoding')->getFieldValue();
-            if ($encoding == 'base64') {
-                $decodedContent = base64_decode($content);
+            $contentEncoding = $headers->get('contenttransferencoding')->getFieldValue();
+            switch ($contentEncoding) {
+                case 'base64':
+                    $decodedContent = base64_decode($content);
+                    break;
+                case 'quoted-printable':
+                    $decodedContent = quoted_printable_decode($content);
+                    break;
+                default:
+                    $decodedContent = $content;
+            }
+        }
+
+        if ($headers->has('Content-Type')) {
+            /** @var \Zend\Mail\Header\ContentType $contentType */
+            $contentType = $headers->get('contenttype');
+            if ($charset = $contentType->getParameter('charset')) {
+                if ($decodedCharsetContent = iconv($charset, static::DEFAULT_USED_ENCODING, $decodedContent)) {
+                    $decodedContent = $decodedCharsetContent;
+                }
             }
         }
 

@@ -22,6 +22,7 @@
         <parameter key="diamante.email_processing.context.class">Diamante\EmailProcessingBundle\Model\Processing\Context</parameter>
         <parameter key="diamante.email_processing.strategy_holder.class">Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder</parameter>
         <parameter key="diamante.email_processing.service.class">Diamante\EmailProcessingBundle\Api\Impl\EmailProcessingServiceImpl</parameter>
+        <parameter key="diamante.email_processing.filter.service.class">Diamante\EmailProcessingBundle\Model\Service\EmailFilterService</parameter>
         <parameter key="diamante.email_processing.mail_system_settings.class">Diamante\EmailProcessingBundle\Model\Mail\SystemSettings</parameter>
         <parameter key="diamante.email_processing.message_processing_manager.class">Diamante\EmailProcessingBundle\Model\Service\MessageProcessingManager</parameter>
         <parameter key="diamante.email_processing.zend_imap_message_provider.factory.class">Diamante\EmailProcessingBundle\Infrastructure\Message\ZendImapMessageProviderFactory</parameter>
@@ -35,6 +36,8 @@
 
         <service id="diamante.email_processing.zend_imap_message_provider.factory" class="%diamante.email_processing.zend_imap_message_provider.factory.class%"/>
         <service id="diamante.email_processing.zend_raw_message_provider.factory" class="%diamante.email_processing.zend_raw_message_provider.factory.class%"/>
+
+        <service id="diamante.email_processing.filter.service" class="%diamante.email_processing.filter.service.class%"/>
 
         <service id="diamante.email_processing.message_processing_manager" class="%diamante.email_processing.message_processing_manager.class%">
             <argument type="service" id="diamante.email_processing.context"/>

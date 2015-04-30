@@ -52,7 +52,13 @@ class MessageSender
         if (!empty($name)) {
             $name = $this->canonicalizeName($name);
 
-            list($firstName, $lastName) = explode(" ", $name);
+            if (strpos($name," ")) {
+                list($firstName, $lastName) = explode(" ", $name);
+            } else {
+                $firstName = $name;
+                $lastName = "";
+            }
+
             $this->firstName = $firstName;
             $this->lastName  = $lastName;
         }
