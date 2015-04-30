@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\EmailProcessingBundle\Model\Service\EmailFilterService;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bridge\Monolog\Logger;
@@ -184,7 +185,8 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $ticket = $reference->getTicket();
 
         $author = User::fromString($authorId);
-        $content = $this->cleanupCommentsContent($content);
+        $emailFilterService = new EmailFilterService($content);
+        $content = $emailFilterService->cleanUpCommentContent();
 
         if (empty($content)) {
             return;
@@ -211,27 +213,6 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     {
         $messageReference = new MessageReference($messageId, $ticket);
         $this->messageReferenceRepository->store($messageReference);
-    }
-
-    /**
-     * Remove everything after first delimiter in message content
-     *
-     * @param string $content
-     * @return string
-     */
-    private function cleanupCommentsContent($content)
-    {
-        $content = quoted_printable_decode($content);
-
-        $position = strpos($content, self::DELIMITER_LINE);
-        if ($position !== false) {
-            $content = substr($content, 0, $position);
-        }
-
-        $regexp = '/(>+\s>+\s|\s)On\s+\w+,\s+\w+\s+\d+,\s+\d+\s+at\s+\d+:\d+\s+\w+,.*?wrote:\s|(>*\s*){0,}$/is';
-        $content = preg_replace($regexp, '', $content);
-
-        return $content;
     }
 
     /**
