@@ -96,6 +96,14 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
         $items = array();
 
         $diamanteUsers = $this->diamanteUserRepository->searchByInput($query, $this->properties);
+
+        if ($searchById) {
+            $idParts = explode(User::DELIMITER, $query);
+            if (count($idParts) === 2) {
+                $query = $idParts[1];
+            }
+        }
+
         $oroUsers      = $this->oroUserSearchHandler->search($query, $page, $perPage, $searchById);
 
         if (!empty($diamanteUsers)) {
