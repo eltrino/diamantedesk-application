@@ -249,8 +249,13 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
                 $propertyA->setAccessible(true);
                 $propertyB->setAccessible(true);
 
-                $valueA = $propertyA->getValue($a);
-                $valueB = $propertyB->getValue($b);
+                if('key' == $sortBy) {
+                    $valueA = (string)$a->getKey();
+                    $valueB = (string)$b->getKey();
+                } else {
+                    $valueA = $propertyA->getValue($a);
+                    $valueB = $propertyB->getValue($b);
+                }
 
                 if (is_object($valueA) && is_object($valueB)) {
                     if ($valueA instanceof \DateTime && $valueB instanceof \DateTime) {
@@ -267,7 +272,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
                 }
 
                 if (is_int($valueA) && is_int($valueB)) {
-                    if ($orderBy == 'DESC') {
+                    if ($orderBy == 'desc') {
                         return $valueA > $valueB;
                     } else {
                         return $valueA < $valueB;
@@ -281,7 +286,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
                     asort($sortableArray);
 
-                    if ($orderBy == 'DESC') {
+                    if ($orderBy == 'desc') {
                         return $sortableArray !== $originalSortableArray;
                     } else {
                         return $sortableArray === $originalSortableArray;
