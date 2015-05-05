@@ -25,7 +25,6 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\Source;
-use Diamante\EmailProcessingBundle\Model\Service\EmailFilterService;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bridge\Monolog\Logger;
@@ -185,8 +184,6 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $ticket = $reference->getTicket();
 
         $author = User::fromString($authorId);
-        $emailFilterService = new EmailFilterService($content);
-        $content = $emailFilterService->cleanUpCommentContent();
 
         if (empty($content)) {
             return;
