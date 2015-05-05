@@ -1,4 +1,18 @@
 <?php
+
+/*
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ *
+ * Licensed under the Open Software License (OSL 3.0).
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://opensource.org/licenses/osl-3.0.php
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@eltrino.com so we can send you a copy immediately.
+ */
 namespace Diamante\EmailProcessingBundle\Model\Service;
 
 use Diamante\EmailProcessingBundle\Model\Service\EmailFilter\Thunderbird\MozCiteFilter;
@@ -98,43 +112,13 @@ class EmailFilterService
 
         if ($this->isHtml($content)) {
             $content = $this->HTMLPurifier->purify($content);
-        } else {
-            $content = $this->markdown->defaultTransform($content);
-        }
-
-        return $content;
-    }
-
-    /**
-     * @param $content string
-     * @return string
-     */
-    public function cleanUpTicketContent($content = null)
-    {
-        if (!$content) {
-            $content = $this->getContent();
-        }
-
-        return $content;
-    }
-
-    /**
-     * @param $content string
-     * @return string
-     */
-    public function cleanUpCommentContent($content = null)
-    {
-        if (!$content) {
-            $content = $this->getContent();
-        }
-
-        if ($this->isHtml($content)) {
             $content = $this->removeReplies($content);
         } else {
             $position = strpos($content, self::DELIMITER_LINE);
             if ($position !== false) {
                 $content = substr($content, 0, $position);
             }
+            $content = $this->markdown->defaultTransform($content);
         }
 
         return $content;
