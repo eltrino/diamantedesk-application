@@ -19,6 +19,10 @@
         {
             "type": "git",
             "url": "https://github.com/eltrino/DiamanteApiBundle.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/orocrm/composer.git"
         }
     ],
     "require": {
