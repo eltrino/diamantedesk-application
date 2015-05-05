@@ -16,7 +16,7 @@ namespace Diamante\ApiBundle\Routine\Tests;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\TestFrameworkBundle\Test\Client;
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 
 abstract class ApiTestCase extends WebTestCase
