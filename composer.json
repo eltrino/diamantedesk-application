@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": ">=5.4.4",
-        "oro/platform": "1.4.*",
+        "oro/platform": "1.7.*",
         "nelmio/api-doc-bundle": "*",
         "friendsofsymfony/rest-bundle": "0.12.*",
         "jms/serializer-bundle": "*",
