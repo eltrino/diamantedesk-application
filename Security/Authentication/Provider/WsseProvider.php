@@ -94,7 +94,7 @@ class WsseProvider implements AuthenticationProviderInterface
             return $authenticatedToken;
         }
         $this->logger->error(sprintf('Attempt of unauthorized access for user: %s', $token->getUsername()));
-        throw new AuthenticationException('The WSSE authentication failed.');
+        throw new AuthenticationException(' Incorrect email or password.');
     }
 
     /**
