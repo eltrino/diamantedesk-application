@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
 
-use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
+use Diamante\EmailProcessingBundle\Model\Service\EmailFilterService;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
@@ -40,9 +40,9 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     public function thatCommentContainsOnlyLastResponse()
     {
         $rawComment = self::DUMMY_COMMENT_CONTENT
-            . MessageReferenceServiceImpl::DELIMITER_LINE
+            . EmailFilterService::DELIMITER_LINE
             . self::DUMMY_COMMENT_CONTENT
-            . MessageReferenceServiceImpl::DELIMITER_LINE
+            . EmailFilterService::DELIMITER_LINE
             . self::DUMMY_COMMENT_CONTENT;
 
         $this->emailFilterService
