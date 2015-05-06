@@ -112,6 +112,7 @@ class CreateTicketType extends AbstractType
                     'label'    => 'diamante.desk.attributes.source',
                     'required' => true,
                     'choices'  => $sources,
+                    'preferred_choices' => ['web'],
                 )
             )
                 ->addModelTransformer($sourceTransformer)
