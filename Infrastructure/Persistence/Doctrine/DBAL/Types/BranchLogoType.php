@@ -20,7 +20,8 @@ use Diamante\DeskBundle\Model\Branch\Logo;
 
 class BranchLogoType extends StringType
 {
-     const BRANCH_LOGO = 'branch_logo';
+    const BRANCH_LOGO = 'branch_logo';
+    const DELIMITER = '|';
 
     /**
      * Gets the name of this type.
@@ -49,7 +50,8 @@ class BranchLogoType extends StringType
     {
         $object = null;
         if (!empty($value)) {
-            $object = new Logo($value);
+            list($name, $originalName) = explode(self::DELIMITER, $value);
+            $object = new Logo($name, $originalName);
         }
         return $object;
     }
@@ -68,7 +70,16 @@ class BranchLogoType extends StringType
         if (false === ($value instanceof Logo)) {
             throw new \RuntimeException("Variable type validation failed, value should be a Logo type");
         }
-        return parent::convertToDatabaseValue($value->getName(), $platform);
+
+        $logo = null;
+        $name = $value->getName();
+        $originalName = $value->getOriginalName();
+
+        if ($name && $originalName) {
+            $logo = $name . self::DELIMITER . $originalName;
+        }
+
+        return parent::convertToDatabaseValue($logo, $platform);
     }
 
     public function canRequireSQLConversion()

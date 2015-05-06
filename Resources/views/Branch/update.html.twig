@@ -14,10 +14,12 @@
                 </div>
             {% endif %}
 
-        {% if form.vars.value.logo%}
+        {% set logoFile = form.vars.value.logo %}
+        {% if logoFile and logoFile.name is not empty %}
             <div id="branch-image-block" class="well well-small oro_attachment_file">
                 <span class="filename">
-                    <img src="{{ form.vars.value.logo.pathname | imagine_filter('branch_logo_preview') }}" alt="branch logo preview" />
+                    <img src="{{ form.vars.value.logo.pathname | imagine_filter('branch_logo_preview') }}"  alt="{{ form.vars.value.logo.originalName }}" />
+                    {{ form.vars.value.logo.originalName }}
                 </span>
 
                 {{ form_row(form.removeLogo) }}

@@ -29,12 +29,19 @@ class Logo
     private $pathname;
 
     /**
-     * @param string $name
+     * @var string
      */
-    public function __construct($name = null)
+    private $originalName;
+
+    /**
+     * @param string $name
+     * @param string $originalName
+     */
+    public function __construct($name = null, $originalName = null)
     {
         $this->name     = $name;
         $this->pathname = self::PATH_TO_LOGO_DIR . $name;
+        $this->originalName = $originalName;
     }
 
     /**
@@ -53,6 +60,15 @@ class Logo
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Returns filename with extension
+     * @return string
+     */
+    public function getOriginalName()
+    {
+        return $this->originalName;
     }
 
     /**

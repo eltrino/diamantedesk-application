@@ -34,22 +34,32 @@ class BranchFactory extends AbstractEntityFactory
     /**
      * Create Branch
      *
-     * @param string $name
-     * @param string $description
-     * @param null|string $key
-     * @param null|User $defaultAssignee
-     * @param null|\SplFileInfo $logo
+     * @param string                     $name
+     * @param string                     $description
+     * @param null|string                $key
+     * @param null|User                  $defaultAssignee
+     * @param null|\SplFileInfo          $logo
+     * @param string|null                $originalName
      * @param null|array|ArrayCollection $tags
+     *
      * @return Branch
      */
-    public function create($name, $description, $key = null, User $defaultAssignee = null, \SplFileInfo $logo = null, $tags = null)
-    {
+    public function create(
+        $name,
+        $description,
+        $key = null,
+        User $defaultAssignee = null,
+        \SplFileInfo $logo = null,
+        $originalName = null,
+        $tags = null
+    ) {
         if ($logo) {
-            $logo = new Logo($logo->getFilename());
+            $logo = new Logo($logo->getFilename(), $originalName);
         }
         if (is_null($key) || empty($key)) {
             $key = $this->branchKeyGenerator->generate($name);
         }
+
         return new $this->entityClassName($key, $name, $description, $defaultAssignee, $logo, $tags);
     }
 }
