@@ -49,13 +49,20 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $diamanteUserFactory;
 
+    /**
+     * @var \Oro\Bundle\AttachmentBundle\Manager\AttachmentManager
+     * @Mock Oro\Bundle\AttachmentBundle\Manager\AttachmentManager
+     */
+    private $attachmentManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
         $this->diamanteUserService = new UserServiceImpl(
             $this->oroUserManager,
             $this->diamanteUserRepository,
-            $this->diamanteUserFactory
+            $this->diamanteUserFactory,
+            $this->attachmentManager
         );
     }
 
