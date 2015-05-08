@@ -53,7 +53,7 @@ define([
       },
 
       sortHandle: function(e){
-        var sortKey = e.target.className.replace(' sortable',''),
+        var sortKey = e.currentTarget.className.replace(' sortable',''),
             order = -1;
         if(this.collection.state.sortKey == sortKey) {
           order = this.collection.state.order > 0 ? -1 : 1;

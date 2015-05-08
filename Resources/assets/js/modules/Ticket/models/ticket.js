@@ -46,8 +46,8 @@ define([
 
       state: {
         pageSize: 10,
-        sortKey: 'createdAt',
-        order: -1
+        sortKey: 'key',
+        order: 1
       },
 
       queryParams: {
@@ -86,8 +86,12 @@ define([
         if(this.state.sortKey){
           str.push('/sort/' + this.state.sortKey);
         }
-        if(this.state.order && this.state.order !== -1){
-          str.push('/order/desc');
+        if(this.state.order){
+          if(this.state.order === 1){
+            str.push('/order/desc');
+          } else {
+            str.push('/order/asc');
+          }
         }
         return str.join('');
       },
@@ -161,4 +165,3 @@ define([
   });
 
 });
-
