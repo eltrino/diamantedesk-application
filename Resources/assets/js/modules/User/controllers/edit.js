@@ -17,29 +17,32 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
 
           userEditView.on('form:submit', function(data){
             var ignore = [];
-            if(data.password){
-              data.password = Wsse.encodePassword(data.password);
-            } else {
+            if(!data.password){
               delete data.password;
               ignore = ['password'];
             }
-            this.model.save(data,{
-              ignore: ignore,
-              patch: true,
-              success : function(){
-                if(data.password){
-                  App.session.set('password', data.password);
-                }
-                options.message = 'User is updated';
-                App.trigger('user:view', options);
-              },
-              error : function(model, xhr){
-                App.alert({
-                  title: "Edit User Error",
-                  xhr : xhr
-                });
+            if(this.model.set(data, {ignore: ignore, validate: true})){
+              if(data.password) {
+                data.password = Wsse.encodePassword(data.password);
               }
-            });
+              this.model.save(data,{
+                ignore: ignore,
+                patch: true,
+                success : function(){
+                  if(data.password){
+                    App.session.update({ password : data.password });
+                  }
+                  options.message = 'User is updated';
+                  App.trigger('user:view', options);
+                },
+                error : function(model, xhr){
+                  App.alert({
+                    title: "Edit User Error",
+                    xhr : xhr
+                  });
+                }
+              });
+            }
           });
 
           options.parentRegion.show(userEditView);

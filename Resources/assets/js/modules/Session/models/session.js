@@ -241,11 +241,18 @@ define([
           defer.reject();
         }
         return defer.promise();
+      },
+
+      update: function(attr){
+        this.set(attr);
+        if(window.localStorage.getItem('authModel')){
+          window.localStorage.setItem('authModel', JSON.stringify(this));
+        } else {
+          setCookie('authModel', JSON.stringify(this));
+        }
       }
 
     });
-
-
 
   });
 
