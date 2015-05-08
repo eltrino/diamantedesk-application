@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-class TicketHistory
+use Diamante\DeskBundle\Model\Shared\Entity;
+
+class TicketHistory implements Entity
 {
     /**
      * @var integer
