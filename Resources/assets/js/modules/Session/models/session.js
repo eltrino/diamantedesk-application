@@ -10,6 +10,7 @@ define([
     ));
     return matches ? decodeURIComponent(matches[1]) : undefined;
   }
+
   function setCookie(name, value, options) {
     options = options || {};
     var expires = options.expires;
@@ -32,8 +33,13 @@ define([
     }
     document.cookie = updatedCookie;
   }
+
   function deleteCookie(name) {
     setCookie(name, "", { expires: -1 });
+  }
+
+  function validateEmail(email) {
+    return !!String(email).match(/^\s*[\w\-\+_]+(?:\.[\w\-\+_]+)*@[\w\-\+_]+\.[\w\-\+_]+(?:\.[\w‌​\-\+_]+)*\s*$/);
   }
 
 
@@ -71,12 +77,15 @@ define([
         var errors = {};
         if(_.indexOf(options.ignore, 'email') === -1){
           if(!trim(attrs.email)) {
-            errors.email = "Can't be blank";
+            errors.email = 'Can\'t be blank';
+          }
+          if(!validateEmail(attrs.email)){
+            errors.email = '"' + attrs.email + '" is not a valid email';
           }
         }
         if(_.indexOf(options.ignore, 'password') === -1){
           if(!trim(attrs.password)) {
-            errors.password = "Can't be blank";
+            errors.password = 'Can\'t be blank';
           } else if(attrs.password.length < 6) {
             errors.password = 'Must be at least six (6) symbols';
           }
