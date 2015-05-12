@@ -31,7 +31,7 @@ class ReporterSelectType extends DiamanteUserSelectType
                     'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig'
                 ),
                 'transformer' => new UserTransformer(),
-                'grid_name' => 'users-select-grid',
+                'grid_name' => 'diamante-reporter-select-grid',
                 'autocomplete_alias' => 'diamante_user'
             )
         );
