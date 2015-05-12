@@ -218,11 +218,6 @@
             <tag name="form.type" alias="diamante_user_select"/>
         </service>
 
-        <service id="diamante.form.type.jqueryselect2_hidden" class="Diamante\DeskBundle\Form\Type\DiamanteJquerySelect2HiddenType">
-            <argument type="service" id="oro_form.autocomplete.search_registry"/>
-            <tag name="form.type" alias="diamante_jqueryselect2_hidden"/>
-
-        </service>
 <!-- repositories start -->
         <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"

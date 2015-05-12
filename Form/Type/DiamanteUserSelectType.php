@@ -13,13 +13,6 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
  
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 20/11/14
- * Time: 12:37 PM
- */
-
 namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -43,7 +36,7 @@ class DiamanteUserSelectType extends AbstractType
 
     public function getParent()
     {
-        return 'diamante_jqueryselect2_hidden';
+        return 'oro_entity_create_or_select_inline';
     }
 
     /**
