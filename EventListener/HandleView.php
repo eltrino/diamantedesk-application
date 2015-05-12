@@ -100,10 +100,12 @@ class HandleView
         $context = SerializationContext::create()->setGroups(['Default', 'entity']);
         if (is_null($data)) {
             $body = '';
+            $httpCode = Codes::HTTP_NO_CONTENT;
         } else {
             $body = $this->serializer->serialize($data, $format, $context);
+            $httpCode = Codes::HTTP_OK;
         }
-        return new Response($body, Codes::HTTP_OK);
+        return new Response($body, $httpCode);
     }
 
     /**
@@ -145,10 +147,12 @@ class HandleView
         $context = SerializationContext::create()->setGroups(['Default', 'entity']);
         if (is_null($data)) {
             $body = '';
+            $httpCode = Codes::HTTP_NO_CONTENT;
         } else {
             $body = $this->serializer->serialize($data, $format, $context);
+            $httpCode = Codes::HTTP_OK;
         }
-        return new Response($body, Codes::HTTP_OK);
+        return new Response($body, $httpCode);
     }
 
     /**
