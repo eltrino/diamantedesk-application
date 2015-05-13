@@ -94,7 +94,7 @@ class TicketServiceImpl implements TicketService
     private $notifier;
 
     /**
-     * @var Notifier
+     * @var DoctrineGenericRepository
      */
     private $ticketHistoryRepository;
 
