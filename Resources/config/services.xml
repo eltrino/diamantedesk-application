@@ -29,12 +29,19 @@
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
+        <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
     </parameters>
 
     <services>
         <service id="diamante.datagrid.extension.formatter.assignee_property" class="Diamante\DeskBundle\Datagrid\AssigneePropertyFormatter">
             <argument type="service" id="translator"/>
             <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
+        </service>
+
+        <service id="diamante_deskbundle.datagrid.combined_users_datasource" class="%diamante.datagrid.combined_users_datasource.class%">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument id="oro_datagrid.event.dispatcher" type="service"/>
+            <tag name="oro_datagrid.datasource" type="diamante_combined_users_datasource"/>
         </service>
 
         <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">

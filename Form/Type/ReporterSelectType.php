@@ -12,18 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
- 
-/**
- * Created by PhpStorm.
- * User: s3nt1nel
- * Date: 20/11/14
- * Time: 12:35 PM
- */
 
 namespace Diamante\DeskBundle\Form\Type;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Diamante\DeskBundle\Form\DataTransformer\UserTransformer;
 
 class ReporterSelectType extends DiamanteUserSelectType
 {
@@ -36,6 +30,8 @@ class ReporterSelectType extends DiamanteUserSelectType
                     'result_template_twig'    => 'DiamanteDeskBundle:Search:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig'
                 ),
+                'transformer' => new UserTransformer(),
+                'grid_name' => 'diamante-reporter-select-grid',
                 'autocomplete_alias' => 'diamante_user'
             )
         );
