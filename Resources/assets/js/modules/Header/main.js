@@ -16,8 +16,16 @@ define([
       });
     });
 
+    Header.on('stop', function () {
+      Header.off('set:search');
+    });
+
     App.on('session:login:success', function(){
       Header.start();
+    });
+
+    App.on('session:logout:success', function(){
+      Header.stop();
     });
 
   });
