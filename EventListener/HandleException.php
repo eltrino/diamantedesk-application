@@ -21,17 +21,36 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class HandleException
 {
 
+    /**
+     * @var Serializer
+     */
     private $serializer;
 
-    public function __construct(Serializer $serializer)
+    /**
+     * @var $container
+     */
+    private $container;
+
+    /**
+     * @param Serializer         $serializer
+     * @param ContainerInterface $container
+     */
+    public function __construct(Serializer $serializer, ContainerInterface $container)
     {
         $this->serializer = $serializer;
+        $this->container = $container;
     }
 
+    /**
+     * @param GetResponseForExceptionEvent $event
+     */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $request = $event->getRequest();
@@ -46,6 +65,15 @@ class HandleException
                 $this->serializer->serialize(['error' => $exception->getMessage()],
                     $request->getRequestFormat()), Codes::HTTP_FORBIDDEN
             ));
+        } else if ($exception instanceof TicketMovedException) {
+            $event->setResponse(
+                new RedirectResponse(
+                    $this->container->get('router')->generate(
+                        'diamante_ticket_api_service_diamante_load_ticket_by_key',
+                        ['key' => $exception->getTicketKey()]
+                    ), Codes::HTTP_MOVED_PERMANENTLY
+                )
+            );
         } else if ($exception instanceof \RuntimeException) {
             $event->setResponse(new Response(
                 $this->serializer->serialize(['error' => $exception->getMessage()],

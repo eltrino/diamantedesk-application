@@ -78,6 +78,7 @@
 
         <service id="diamante.api.event_listener.handle_exception" class="%diamante.api.event_listener.handle_exception.class%">
             <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="service_container"/>
             <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
         </service>
 
