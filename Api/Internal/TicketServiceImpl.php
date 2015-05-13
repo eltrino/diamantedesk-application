@@ -42,6 +42,9 @@ use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Entity\TicketHistory;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 
 class TicketServiceImpl implements TicketService
 {
@@ -90,6 +93,11 @@ class TicketServiceImpl implements TicketService
      */
     private $notifier;
 
+    /**
+     * @var DoctrineGenericRepository
+     */
+    private $ticketHistoryRepository;
+
     public function __construct(TicketRepository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketBuilder $ticketBuilder,
@@ -98,7 +106,8 @@ class TicketServiceImpl implements TicketService
                                 AuthorizationService $authorizationService,
                                 EventDispatcher $dispatcher,
                                 NotificationDeliveryManager $notificationDeliveryManager,
-                                Notifier $notifier
+                                Notifier $notifier,
+                                DoctrineGenericRepository $ticketHistoryRepository
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
@@ -109,6 +118,7 @@ class TicketServiceImpl implements TicketService
         $this->dispatcher = $dispatcher;
         $this->notificationDeliveryManager = $notificationDeliveryManager;
         $this->notifier = $notifier;
+        $this->ticketHistoryRepository = $ticketHistoryRepository;
     }
 
     /**
@@ -130,9 +140,18 @@ class TicketServiceImpl implements TicketService
      */
     public function loadTicketByKey($key)
     {
-        $ticketKey = TicketKey::from($key);
-        $ticket = $this->loadTicketByTicketKey($ticketKey);
+        $ticketHistory = $this->ticketHistoryRepository->findOneByTicketKey($key);
+        if ($ticketHistory) {
+            $ticket = $this->ticketRepository->get($ticketHistory->getTicketId());
+            $currentKey = (string)$ticket->getKey();
+            throw new TicketMovedException($currentKey);
+        } else {
+            $ticketKey = TicketKey::from($key);
+            $ticket = $this->loadTicketByTicketKey($ticketKey);
+        }
+
         $this->isGranted('VIEW', $ticket);
+
         return $ticket;
     }
 
@@ -367,6 +386,7 @@ class TicketServiceImpl implements TicketService
     public function moveTicket(MoveTicketCommand $command)
     {
         $ticket = $this->loadTicketById($command->id);
+        $this->ticketHistoryRepository->store(new TicketHistory($ticket->getId(), $ticket->getKey()));
         $ticket->move($command->branch);
         $this->ticketRepository->store($ticket);
         $this->dispatchEvents($ticket);

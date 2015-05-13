@@ -115,6 +115,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $notifier;
 
+    /**
+     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
+     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
+     */
+    private $ticketHistoryRepository;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -130,7 +136,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->authorizationService,
             $this->dispatcher,
             $this->notificationDeliveryManager,
-            $this->notifier
+            $this->notifier,
+            $this->ticketHistoryRepository
         );
     }
 

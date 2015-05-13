@@ -21,6 +21,7 @@
     <parameters>
         <parameter key="diamante.ticket.entity.class">Diamante\DeskBundle\Entity\Ticket</parameter>
         <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
+        <parameter key="diamante.ticket_history.entity.class">Diamante\DeskBundle\Entity\TicketHistory</parameter>
         <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
         <parameter key="diamante.comment.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineCommentRepository</parameter>
         <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
@@ -98,6 +99,7 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.notification.delivery.manger"/>
             <argument type="service" id="diamante.notification.email.notifier"/>
+            <argument type="service" id="diamante.ticket_history.repository"/>
         </service>
 
         <service id="diamante.ticket.api.service" class="%diamante.ticket.service.api.class%" parent="diamante.ticket.service">
@@ -250,6 +252,11 @@
                 factory-service = "doctrine.orm.entity_manager"
                 factory-method  = "getRepository">
             <argument type="string">%diamante.ticket.email_processing_message_reference.entity.class%</argument>
+        </service>
+        <service id="diamante.ticket_history.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket_history.entity.class%</argument>
         </service>
 <!-- repositories end -->
     </services>
