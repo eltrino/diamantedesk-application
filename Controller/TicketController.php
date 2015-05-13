@@ -43,6 +43,7 @@ use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 
 /**
  * @Route("tickets")
@@ -92,6 +93,13 @@ class TicketController extends Controller
             $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
 
             return ['entity'  => $ticket];
+        } catch (TicketMovedException $e) {
+            return $this->redirect(
+                $this->generateUrl(
+                    'diamante_ticket_view',
+                    array('key' => $e->getTicketKey())
+                )
+            );
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(sprintf('Ticket loading failed: %s', $e->getMessage()));
             $this->addErrorMessage('Ticket loading failed, ticket not found');
@@ -258,14 +266,14 @@ class TicketController extends Controller
      */
     public function updateAction($key)
     {
-        $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
-
-        $command = $this->get('diamante.command_factory')
-            ->createUpdateTicketCommand($ticket);
-        $response = null;
-        $form = $this->createForm(new UpdateTicketType(), $command);
-
         try {
+            $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
+
+            $command = $this->get('diamante.command_factory')
+                ->createUpdateTicketCommand($ticket);
+            $response = null;
+            $form = $this->createForm(new UpdateTicketType(), $command);
+
             $formView = $form->createView();
             $formView->children['attachmentsInput']->vars = array_replace(
                 $formView->children['attachmentsInput']->vars,
@@ -278,6 +286,13 @@ class TicketController extends Controller
             $ticket = $this->get('diamante.ticket.service')->updateTicket($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
             $response = $this->getSuccessSaveResponse($ticket);
+        } catch (TicketMovedException $e) {
+            return $this->redirect(
+                $this->generateUrl(
+                    'diamante_ticket_update',
+                    array('key' => $e->getTicketKey())
+                )
+            );
         } catch (MethodNotAllowedException $e) {
             $response = array(
                 'form' => $formView,
