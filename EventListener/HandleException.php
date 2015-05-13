@@ -15,10 +15,12 @@
 
 namespace Diamante\ApiBundle\EventListener;
 
+use Diamante\DeskBundle\Model\Entity\Exception;
 use FOS\RestBundle\Util\Codes;
 use JMS\Serializer\Serializer;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
@@ -60,26 +62,58 @@ class HandleException
         }
 
         $exception = $event->getException();
-        if ($exception instanceof ForbiddenException) {
-            $event->setResponse(new Response(
-                $this->serializer->serialize(['error' => $exception->getMessage()],
-                    $request->getRequestFormat()), Codes::HTTP_FORBIDDEN
-            ));
-        } else if ($exception instanceof TicketMovedException) {
-            $event->setResponse(
-                new RedirectResponse(
-                    $this->container->get('router')->generate(
-                        'diamante_ticket_api_service_diamante_load_ticket_by_key',
-                        ['key' => $exception->getTicketKey()]
-                    ), Codes::HTTP_MOVED_PERMANENTLY
-                )
-            );
-        } else if ($exception instanceof \RuntimeException) {
-            $event->setResponse(new Response(
-                $this->serializer->serialize(['error' => $exception->getMessage()],
-                    $request->getRequestFormat()), Codes::HTTP_NOT_FOUND
-            ));
+        $event->setResponse(
+            $this->getFormattedResponse($request, $exception, $this->getStatusCode($exception))
+        );
+    }
+
+    /**
+     * @param \Exception $exception
+     * @return int
+     */
+    protected function getStatusCode(\Exception $exception)
+    {
+        switch (true) {
+            case $exception instanceof TicketMovedException:
+                return Codes::HTTP_MOVED_PERMANENTLY;
+
+            case $exception instanceof ForbiddenException:
+                return Codes::HTTP_FORBIDDEN;
+
+            case $exception instanceof Exception\EntityNotFoundException:
+                return Codes::HTTP_NOT_FOUND;
+
+            case $exception instanceof Exception\ValidationException:
+                return Codes::HTTP_BAD_REQUEST;
+
+            case $exception instanceof \RuntimeException:
+                return Codes::HTTP_NOT_FOUND;
+
+            default:
+                return Codes::HTTP_INTERNAL_SERVER_ERROR;
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param $exception
+     * @param $httpCode
+     * @return Response
+     */
+    protected function getFormattedResponse(Request $request, $exception, $httpCode)
+    {
+        if (Codes::HTTP_MOVED_PERMANENTLY == $httpCode) {
+            return new RedirectResponse(
+                $this->container->get('router')->generate(
+                    'diamante_ticket_api_service_diamante_load_ticket_by_key',
+                    ['key' => $exception->getTicketKey()]
+                ), $httpCode
+            );
+        }
+        return new Response(
+            $this->serializer->serialize(['error' => $exception->getMessage()],
+                $request->getRequestFormat()), $httpCode
+        );
     }
 
 } 
