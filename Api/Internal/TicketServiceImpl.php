@@ -44,6 +44,7 @@ use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketHistory;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 
 class TicketServiceImpl implements TicketService
 {
@@ -139,9 +140,18 @@ class TicketServiceImpl implements TicketService
      */
     public function loadTicketByKey($key)
     {
-        $ticketKey = TicketKey::from($key);
-        $ticket = $this->loadTicketByTicketKey($ticketKey);
+        $ticketHistory = $this->ticketHistoryRepository->findOneByTicketKey($key);
+        if ($ticketHistory) {
+            $ticket = $this->ticketRepository->get($ticketHistory->getTicketId());
+            $currentKey = (string)$ticket->getKey();
+            throw new TicketMovedException($currentKey);
+        } else {
+            $ticketKey = TicketKey::from($key);
+            $ticket = $this->loadTicketByTicketKey($ticketKey);
+        }
+
         $this->isGranted('VIEW', $ticket);
+
         return $ticket;
     }
 
