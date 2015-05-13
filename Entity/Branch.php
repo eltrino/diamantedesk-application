@@ -57,7 +57,7 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      *
      * @var string $description
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=65535, nullable=true)
      */
     protected $description;
 
