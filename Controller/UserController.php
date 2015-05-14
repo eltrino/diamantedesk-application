@@ -2,10 +2,12 @@
 
 namespace Diamante\FrontBundle\Controller;
 
+use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\FrontBundle\Api\Command\ChangePasswordCommand;
 use Diamante\FrontBundle\Api\Command\ConfirmCommand;
 use Diamante\FrontBundle\Api\Command\RegisterCommand;
 use Diamante\FrontBundle\Api\Command\ResetPasswordCommand;
+use Diamante\FrontBundle\Api\Command\SendConfirmCommand;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -132,6 +134,32 @@ class UserController extends FOSRestController
         } catch (\Exception $e) {
             $view = $this->view(null, Codes::HTTP_NOT_FOUND);
         }
+        return $this->response($view);
+    }
+
+    /**
+     * Send email for user confirmation
+     *
+     * @Patch("/user/sendConfirmation")
+     * @ApiDoc(
+     *      description="Send email for user confirmation",
+     *      resource=true
+     * )
+     */
+    public function sendConfirmAction()
+    {
+        $command = new SendConfirmCommand();
+        $command->email = $this->getRequest()->get('email');
+
+        try {
+            $this->get('diamante.front.send_confirm.service')->send($command);
+            $view = $this->view(null, Codes::HTTP_OK);
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view(null, Codes::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            $view = $this->view(null, Codes::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
         return $this->response($view);
     }
 
