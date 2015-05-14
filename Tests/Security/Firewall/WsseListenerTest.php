@@ -73,6 +73,12 @@ class WsseListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $userMock;
 
+    /**
+     * @var \JMS\Serializer\Serializer
+     * @Mock \JMS\Serializer\Serializer
+     */
+    private $serializer;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -82,7 +88,7 @@ class WsseListenerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getRequest')
             ->will($this->returnValue($this->request));
-        $this->wsseListener = new WsseListener($this->securityContext, $this->authenticationManager, $this->logger);
+        $this->wsseListener = new WsseListener($this->serializer, $this->securityContext, $this->authenticationManager, $this->logger);
     }
 
     /**
