@@ -33,7 +33,7 @@ class CommandProperties
         foreach ($properties as $property) {
             if (isset($values[$property->name])) {
                 $value = $values[$property->name];
-                if (is_numeric($value)) {
+                if ($this->getPropertyType($property) == 'integer' && is_numeric($value)) {
                     $value = $value * 1;
                 }
                 $this->object->{$property->name} = $value;
@@ -41,5 +41,12 @@ class CommandProperties
         }
 
         return $this->object;
+    }
+
+    protected function getPropertyType(\ReflectionProperty $property)
+    {
+        $docComment = $property->getDocComment();
+        preg_match("/type=\"(.*?)\"/", $docComment, $ms);
+        return count($ms) > 1 ? $ms[1] : null;
     }
 } 
