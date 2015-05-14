@@ -24,19 +24,24 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use JMS\Serializer\Serializer;
+use FOS\RestBundle\Util\Codes;
 
 class WsseListener implements ListenerInterface
 {
+    protected $serializer;
     protected $securityContext;
     protected $authenticationManager;
     protected $logger;
 
     public function __construct(
+        Serializer $serializer,
         SecurityContextInterface $securityContext,
         AuthenticationManagerInterface $authenticationManager,
         Logger  $logger
     )
     {
+        $this->serializer = $serializer;
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->logger = $logger;
@@ -67,7 +72,7 @@ class WsseListener implements ListenerInterface
             if ($returnValue instanceof TokenInterface)
             {
                 if (!$returnValue->getUser()->isActive()) {
-                    throw new AuthenticationException("Your account is not activated yet, please check your email and confirm registration.\n If you didn't receive your verification email, please click here.");
+                    throw new AuthenticationException("Your account is not activated yet, please check your email and confirm registration. If you didn't receive your verification email, please click here.");
                 }
 
                 return $this->securityContext->setToken($returnValue);
@@ -79,8 +84,10 @@ class WsseListener implements ListenerInterface
 
         } catch (AuthenticationException $failed) {
             $this->logger->error(sprintf("Authentication failed for user %s. Reason: %s", $token->getUser(), $failed->getMessage()));
-            $response = new Response(json_encode(['message' => $failed->getMessage()]));
-            $response->setStatusCode(401);
+            $response = new Response(
+                $this->serializer->serialize(['message' => $failed->getMessage()],
+                    $request->getRequestFormat()), Codes::HTTP_UNAUTHORIZED
+            );
             $event->setResponse($response);
         }
     }

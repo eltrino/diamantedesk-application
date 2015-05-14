@@ -54,6 +54,7 @@
 
         <service id="wsse.security.authentication.listener"
                  class="Diamante\ApiBundle\Security\Firewall\WsseListener" public="false">
+            <argument type="service" id="jms_serializer"/>
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.authentication.manager" />
             <argument type="service" id="monolog.logger.diamante"/>
