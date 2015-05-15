@@ -251,7 +251,7 @@ class EmailNotifier implements Notifier
     {
         $changes = $notification->getChangeList();
 
-        if (isset($changes['Reporter'])) {
+        if (isset($changes['Reporter']) && strpos($changes['Reporter'], '_')) {
             $details = $this->userService->fetchUserDetails(User::fromString($changes['Reporter']));
             $changes['Reporter'] = $details->getFullName();
         }
