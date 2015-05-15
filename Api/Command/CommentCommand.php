@@ -28,7 +28,7 @@ class CommentCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @Any({@Assert\Type(type="integer"), @Assert\Type(type="string")})
+     * @Assert\Type(type="string")
      */
     public $content;
 
