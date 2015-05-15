@@ -46,7 +46,7 @@ class CreateTicketCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @PrintType()
+     * @Assert\Type(type="string")
      */
     public $description;
 

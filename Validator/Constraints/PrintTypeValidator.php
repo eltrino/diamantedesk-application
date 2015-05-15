@@ -29,9 +29,6 @@ class PrintTypeValidator extends ConstraintValidator
             return;
         }
 
-        //TODO: This should be done in cleanup method.
-        $value = preg_replace('/[\x00-\x1F\x80-\x9F]/u', '', $value);
-
         if(!preg_match('/[\x00-\x1F\x80-\x9F]/u', $value)) {
             return;
         }
