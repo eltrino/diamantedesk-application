@@ -1,9 +1,17 @@
 diamante:
     desk:
         branch:
-          entity_label:        Branch
-          entity_plural_label: Branches
-          details:             Branch Details
+          entity_label:               Branch
+          entity_plural_label:        Branches
+          details:                    Branch Details
+          created_at.label:           Created At
+          description.label:          Description
+          id.label:                   Branch Id
+          key.label:                  Branch Key
+          logo.label:                 Branch Logo
+          name.label:                 Branch Name
+          updated_at.label:           Updated At
+          default_assignee.label:     Default Assignee
 
           columns:
             logo:              Logo
@@ -35,10 +43,25 @@ diamante:
             default:           Current branch is configured as a default for Email Processing and can't be deleted.
 
         ticket:
-          entity_label:        Ticket
-          entity_plural_label: Tickets
-          details:             Ticket Details
-          all:                 All Tickets
+          entity_label:               Ticket
+          entity_plural_label:        Tickets
+          details:                    Ticket Details
+          all:                        All Tickets
+          created_at.label:           Created At
+          description.label:          Description
+          id.label:                   Ticket Id
+          priority.label:             Priority
+          reporter.label:             Reporter
+          assignee.label:             Asigner
+          branch.label:               Branch
+          comments.label:             Comments
+          sequence_number.label:      Sequence Number
+          source.label:               Source
+          status.label:               Status
+          subject.label:              Subject
+          unique_id.label:            Unique Id
+          updated_at.label:           Updated At
+
           columns:
             key:               Key
             subject:           Subject
