@@ -33,7 +33,8 @@ class CommandProperties
         foreach ($properties as $property) {
             if (isset($values[$property->name])) {
                 $value = $values[$property->name];
-                if ($this->getPropertyType($property) == 'integer' && is_numeric($value)) {
+                $propertyType = $this->getPropertyType($property);
+                if (($propertyType == 'integer' || $propertyType == 'int') && is_numeric($value)) {
                     $value = $value * 1;
                 }
                 $this->object->{$property->name} = $value;
