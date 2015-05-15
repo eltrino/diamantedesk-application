@@ -80,7 +80,7 @@ class TicketController extends Controller
      * @Route(
      *      "/view/{key}",
      *      name="diamante_ticket_view",
-     *      requirements={"key"="[A-Z]+-\d+"}
+     *      requirements={"key"=".*-\d+"}
      * )
      * @Template
      *
@@ -256,7 +256,7 @@ class TicketController extends Controller
      * @Route(
      *      "/update/{key}",
      *      name="diamante_ticket_update",
-     *      requirements={"key"="[A-Z]+-\d+"}
+     *      requirements={"key"=".*-\d+"}
      * )
      *
      * @Template("DiamanteDeskBundle:Ticket:update.html.twig")
@@ -318,7 +318,7 @@ class TicketController extends Controller
      * @Route(
      *      "/delete/{key}",
      *      name="diamante_ticket_delete",
-     *      requirements={"key"="[A-Z]+-\d+"}
+     *      requirements={"key"=".*-\d+"}
      * )
      *
      * @param string $key

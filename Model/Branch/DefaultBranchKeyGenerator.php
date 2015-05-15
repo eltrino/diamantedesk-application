@@ -24,21 +24,23 @@ class DefaultBranchKeyGenerator implements BranchKeyGenerator
      */
     public function generate($name)
     {
+        mb_internal_encoding('UTF-8');
+
         if (false === $this->validate($name)) {
             throw new \InvalidArgumentException('Can not generate key from given name. Name should have at list 2 letters.');
         }
 
-        $name = preg_replace('/[^a-zA-Z\s]/', '', $name);
+        $name = preg_replace('/[^a-zA-Z\p{Cyrillic}\s]/u', '', $name);
         $name = trim($name);
         $parts = explode(' ', $name);
         if (count($parts) == 1) {
-            $length = strlen($name) < 4 ? strlen($name) : 4;
-            return strtoupper(substr($name, 0, $length));
+            $length = mb_strlen($name) < 4 ? mb_strlen($name) : 4;
+            return mb_strtoupper(mb_substr($name, 0, $length));
         }
 
         $key = '';
         foreach ($parts as $part) {
-            $key .= strtoupper(substr($part, 0, 1));
+            $key .= mb_strtoupper(mb_substr($part, 0, 1));
         }
         return $key;
     }
@@ -50,8 +52,8 @@ class DefaultBranchKeyGenerator implements BranchKeyGenerator
      */
     private function validate($name)
     {
-        $name = preg_replace('/[^a-zA-Z]/', '', $name);
-        if (strlen($name) < 2) {
+        $name = preg_replace('/[^a-zA-Z\p{Cyrillic}]/u', '', $name);
+        if (mb_strlen($name) < 2) {
             return false;
         }
         return true;
