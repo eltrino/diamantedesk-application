@@ -69,9 +69,11 @@ class Branch implements Entity, Taggable
 
     public function __construct($key, $name, $description, User $defaultAssignee = null, Logo $logo = null, $tags = null)
     {
-        if (strtoupper($key) != $key) {
-            $key = strtoupper($key);
+        mb_internal_encoding('UTF-8');
+        if (mb_strtoupper($key) != $key) {
+            $key = mb_strtoupper($key);
         }
+
         $this->key = $key;
         $this->name = $name;
         $this->description = $description;
