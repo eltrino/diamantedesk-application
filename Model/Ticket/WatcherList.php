@@ -9,17 +9,17 @@ class WatcherList implements Entity
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var Ticket
      */
-    private $ticket;
+    protected $ticket;
 
     /**
      * @var string
      */
-    private $userType;
+    protected $userType;
 
 
     public function __construct($ticket, $userType)

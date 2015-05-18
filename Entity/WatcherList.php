@@ -9,7 +9,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
  * WatcherList
  *
  * @ORM\Table(name="diamante_watcher_list")
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Entity\WatcherListRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineWatcherListRepository")
  * @Config(
  *      defaultValues={
  *          "security"={
@@ -29,7 +29,7 @@ class WatcherList extends \Diamante\DeskBundle\Model\Ticket\WatcherList
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var Ticket
@@ -37,14 +37,14 @@ class WatcherList extends \Diamante\DeskBundle\Model\Ticket\WatcherList
      * @ORM\ManyToOne(targetEntity="Ticket", cascade={"persist"})
      * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $ticket;
+    protected $ticket;
 
     /**
      * @var string
      *
      * @ORM\Column(name="user_type", type="string", length=255, nullable=false)
      */
-    private $userType;
+    protected $userType;
 
     public static function getClassName()
     {
