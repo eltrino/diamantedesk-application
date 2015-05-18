@@ -183,10 +183,11 @@ define([
 
       reset: function(data){
         var model = this,
-            defer = $.Deferred();
+            defer = $.Deferred(),
+            isValid = false;
         this.url += '/reset';
         this.set('id', 1);
-        this.save(data, {
+        isValid = this.save(data, {
           patch: true,
           ignore: ['password'],
           success : function(){
@@ -200,7 +201,7 @@ define([
             model.clear();
           }
         });
-        if(!this.isValid()){
+        if(!isValid){
           this.url = this.url.replace('/reset', '');
         }
         return defer.promise();
