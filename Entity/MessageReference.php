@@ -41,7 +41,7 @@ class MessageReference extends \Diamante\DeskBundle\Model\Ticket\EmailProcessing
     /**
      * @var Ticket
      *
-     * @ORM\ManyToOne(targetEntity="Ticket")
+     * @ORM\ManyToOne(targetEntity="Ticket", cascade={"persist"})
      * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $ticket;
