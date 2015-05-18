@@ -2,7 +2,7 @@ define(['app'], function(App){
 
   return App.module('Ticket.Edit', function(Edit, App, Backbone, Marionette, $, _){
 
-    Edit.Controller = function(id){
+    Edit.Controller = function(key){
 
       App.mainRegion.showLoader();
 
@@ -10,7 +10,7 @@ define(['app'], function(App){
         'Ticket/models/ticket',
         'Ticket/views/edit'], function(Models, EditView){
 
-        App.request('ticket:model', id).done(function(editTicketModel){
+        App.request('ticket:model', key).done(function(editTicketModel){
 
           var editTicketView = new Edit.ItemView({
                 model: editTicketModel
