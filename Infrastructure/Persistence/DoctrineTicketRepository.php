@@ -191,8 +191,6 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     {
         $qb = $this->createFilterQuery($conditions, $pagingProperties);
 
-        $qb->resetDQLPart('orderBy');
-
         $user = $this->securityContext->getToken()->getUser();
         if ($user instanceof ApiUser) {
             $email = $user->getEmail();
@@ -208,7 +206,6 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         try {
             $result = $query->getResult(Query::HYDRATE_OBJECT);
-            $result = $this->applyResultOrder($result, $pagingProperties);
         } catch (\Exception $e) {
             $result = null;
         }
