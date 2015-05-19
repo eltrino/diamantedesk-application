@@ -38,10 +38,10 @@ define(['app'], function(App){
           Create.Controller();
         });
       },
-      editTicket: function(id){
+      editTicket: function(key){
         App.setTitle('Edit Ticket');
         require(['Ticket/controllers/edit'], function(Edit){
-          Edit.Controller(id);
+          Edit.Controller(key);
         });
       }
     };
@@ -64,10 +64,10 @@ define(['app'], function(App){
       API.createTicket();
     });
 
-    App.on('ticket:edit', function(id, key){
+    App.on('ticket:edit', function(key){
       App.debug('info', 'Event "ticket:edit" fired');
       App.navigate('tickets/'+ key + '/edit');
-      API.editTicket(id);
+      API.editTicket(key);
     });
 
     App.on('ticket:search', function(search){
