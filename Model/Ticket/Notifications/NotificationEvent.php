@@ -21,6 +21,11 @@ interface NotificationEvent extends DomainEvent
     /**
      * @return string
      */
+    public function getAggregateId();
+
+    /**
+     * @return string
+     */
     public function getHeaderText();
 
     /**
