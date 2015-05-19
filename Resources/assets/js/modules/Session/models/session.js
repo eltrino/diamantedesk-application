@@ -76,11 +76,11 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(_.indexOf(options.ignore, 'email') === -1){
-          if(!trim(attrs.email)) {
-            errors.email = 'Can\'t be blank';
-          }
           if(!validateEmail(attrs.email)){
             errors.email = '"' + attrs.email + '" is not a valid email';
+          }
+          if(!trim(attrs.email)) {
+            errors.email = 'Can\'t be blank';
           }
         }
         if(_.indexOf(options.ignore, 'password') === -1){
