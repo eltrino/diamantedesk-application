@@ -221,6 +221,7 @@ diamante:
           no_description:      No description
           delete_confirmation: Confirm Deletion
           filters:             Filters
+          watchers:            Watchers
 
         forms:
           name:                Name

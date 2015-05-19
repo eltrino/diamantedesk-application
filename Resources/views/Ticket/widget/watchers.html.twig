@@ -1,0 +1,17 @@
+{% import 'OroUIBundle::macros.html.twig' as ui %}
+
+<div class="widget-content">
+    <ul class="unstyled clearfix">
+        {% for watcher in watchers %}
+            <li class="diam-attachment">
+                {% set oroUser = fetch_oro_user(watcher) %}
+                {% set diamanteUser = fetch_diamante_user(watcher) %}
+                {% if oroUser %}
+                    {{ oroUser|oro_format_name }}
+                {% elseif diamanteUser %}
+                    {{ diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>

@@ -656,6 +656,33 @@ class TicketController extends Controller
     }
 
     /**
+     * @Route(
+     *       "/watchers/ticket/{ticketId}",
+     *      name="diamante_ticket_watchers",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/watchers.html.twig")
+     *
+     * @param int $ticketId
+     * @return array
+     */
+    public function watchers($ticketId)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+        $watchers = $this->get('diamante.watcher_list.repository')->findByTicket($ticket);
+
+        $users = [];
+
+        foreach ($watchers as $watcher) {
+            $users[] = User::fromString($watcher->getUserType());
+        }
+
+        return [
+            'watchers' => $users,
+        ];
+    }
+
+    /**
      * @param Form $form
      * @throws MethodNotAllowedException
      * @throws ValidatorException
