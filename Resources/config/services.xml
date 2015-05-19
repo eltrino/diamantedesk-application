@@ -53,6 +53,9 @@
             <argument type="service" id="diamante.api.user.repository"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="monolog.logger.diamante"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="diamante.notification.delivery.manger"/>
+            <argument type="service" id="diamante.notification.user.email.notifier"/>
             <tag name="monolog.logger" channel="diamante"/>
         </service>
 
