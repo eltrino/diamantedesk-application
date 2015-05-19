@@ -130,6 +130,7 @@ module.exports = function(grunt) {
 
   });
 
+  grunt.registerTask('watch', ['watch']);
   grunt.registerTask('js', ['jshint', 'requirejs']);
   grunt.registerTask('css', ['less', 'cssmin']);
   grunt.registerTask('html', ['revision', 'string-replace']);

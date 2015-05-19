@@ -25,6 +25,7 @@
         <parameter key="diamante.front.registration.service.class">Diamante\FrontBundle\Api\Internal\RegistrationServiceImpl</parameter>
         <parameter key="diamante.front.registration.mailer.class">Diamante\FrontBundle\Infrastructure\RegistrationMailer</parameter>
         <parameter key="diamante.front.current_user.api.service.class">Diamante\FrontBundle\Api\Internal\CurrentUserApiServiceImpl</parameter>
+        <parameter key="diamante.front.send_confirm.service.class">Diamante\FrontBundle\Api\Internal\SendConfirmationServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -70,6 +71,10 @@
             <argument>%mailer_user%</argument>
             <argument type="string">DiamanteFrontBundle:ResetPassword/email:reset.html.twig</argument>
             <argument type="string">DiamanteFrontBundle:ResetPassword/email:reset.txt.twig</argument>
+        </service>
+        <service id="diamante.front.send_confirm.service" class="%diamante.front.send_confirm.service.class%">
+            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.front.registration.mailer"/>
         </service>
     </services>
 </container>

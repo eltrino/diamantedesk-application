@@ -52,6 +52,10 @@ define([
       return API.getCurrentUserModel();
     });
 
+    App.on('session:logout:success', function(){
+      currentUser = null;
+    });
+
   });
 
 });

@@ -19,13 +19,8 @@ define([
         source: 'web',
         branch: Config.branchId
       },
-      url: function(){
-        if(this.get('key') && this.isNew()){
-          return this.urlRoot + '/' + this.get('key');
-        } else {
-          return Backbone.Model.prototype.url.call(this);
-        }
-      },
+      idAttribute: 'key',
+
       validate: function(attrs, options){
         var errors = {};
         if(!trim(attrs.subject)) {
@@ -138,9 +133,8 @@ define([
         });
         return defer.promise();
       },
-      getTicketModel: function(id) {
-        var attr = _.isNumber(id) ? { id:id } : { key:id },
-            ticket = new Ticket.Model(attr),
+      getTicketModel: function(key) {
+        var ticket = new Ticket.Model({ key:key }),
             defer = $.Deferred();
         ticket.fetch({
           success: function(data){
