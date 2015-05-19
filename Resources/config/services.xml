@@ -17,7 +17,10 @@
         <parameter key="diamante.api.user.entity.factory.class">Diamante\UserBundle\Model\ApiUser\ApiUserFactory</parameter>
         <parameter key="diamante.api.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineApiUserRepository</parameter>
         <parameter key="diamante.user.event.listener.class">Diamante\UserBundle\EventListener\DiamanteUserListener</parameter>
+        <parameter key="diamante.notification.api_user.subscriber.class">Diamante\UserBundle\EventListener\ApiUserNotificationsSubscriber</parameter>
         <parameter key="diamante.user_state.service.class">Diamante\UserBundle\Api\Internal\UserStateServiceImpl</parameter>
+        <parameter key="diamante.notification.user.email.notifier.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailNotifier</parameter>
+        <parameter key="diamante.user.notification.template_resolver.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailTemplateResolver</parameter>
     </parameters>
 
     <services>
@@ -81,5 +84,23 @@
             <tag name="doctrine.event_listener" event="onFlush"/>
         </service>
 
+        <service id="diamante.notification.api_user.subscriber" class="%diamante.notification.api_user.subscriber.class%">
+            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="diamante.notification.delivery.manger"/>
+            <argument type="service" id="oro_config.global"/>
+            <tag name="diamante.notification_subscriber" />
+        </service>
+
+        <service id="diamante.user.notification.template_resolver" class="%diamante.user.notification.template_resolver.class%"/>
+
+        <service id="diamante.notification.user.email.notifier" class="%diamante.notification.user.email.notifier.class%">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="mailer"/>
+            <argument type="service" id="diamante.user.notification.template_resolver"/>
+            <argument type="service" id="diamante.user.service"/>
+            <argument type="service" id="oro_locale.formatter.name"/>
+            <argument type="service" id="oro_config.global"/>
+            <argument>%mailer_user%</argument>
+        </service>
     </services>
 </container>
