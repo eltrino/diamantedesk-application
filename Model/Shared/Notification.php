@@ -12,15 +12,17 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket\Notifications;
+namespace Diamante\DeskBundle\Model\Shared;
 
-use Diamante\DeskBundle\Model\Shared\Notification;
-
-interface Notifier
+interface Notification
 {
     /**
-     * @param Notification $notification
-     * @return void
+     * @return string
      */
-    public function notify(Notification $notification);
+    public function getHeaderText();
+
+    /**
+     * @return int
+     */
+    public function getAuthor();
 }

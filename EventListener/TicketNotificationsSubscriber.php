@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\EventListener;
 
 use Diamante\DeskBundle\Model\Ticket\Notifications\AttachmentsEvent;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+use Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationEvent;
 use Diamante\DeskBundle\Model\Ticket\Notifications\CommentsEvent;
@@ -107,7 +107,7 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
 
         $user = $this->securityFacade->getLoggedUser();
 
-        $notification = new Notification(
+        $notification = new TicketNotification(
             $event->getAggregateId(), $user, $event->getHeaderText(),
             $event->getSubject(), $changeList, $attachments
         );
