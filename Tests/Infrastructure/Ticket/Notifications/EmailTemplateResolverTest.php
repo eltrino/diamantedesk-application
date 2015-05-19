@@ -15,8 +15,8 @@
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\Notifications;
 
 use Diamante\DeskBundle\Infrastructure\Ticket\Notifications\EmailTemplateResolver;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+use Diamante\DeskBundle\Model\Shared\Email\TemplateResolver;
+use Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification;
 
 class EmailTemplateResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +26,7 @@ class EmailTemplateResolverTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolve()
     {
-        $notification = new Notification(
+        $notification = new TicketNotification(
             'unique_id', 1, 'Header', 'Subject', new \ArrayIterator(array('key' => 'value')), array('file.ext')
         );
 

@@ -80,7 +80,7 @@ class TicketNotificationsSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->notificationDeliveryManager->expects($this->once())->method('add')
             ->with(
                 $this->logicalAnd(
-                    $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\Notifications\Notification'),
+                    $this->isInstanceOf('\Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification'),
                     $this->attributeEqualTo('ticketUniqueId', $event->getAggregateId()),
                     $this->attributeEqualTo('author', $user),
                     $this->attributeEqualTo('headerText', $event->getHeaderText()),
