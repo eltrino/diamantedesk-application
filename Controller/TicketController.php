@@ -26,6 +26,7 @@ use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
 use Diamante\UserBundle\Model\User;
+use Rhumsaa\Uuid\Console\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -596,6 +597,62 @@ class TicketController extends Controller
             'ticket' => $ticket,
             'attachments' => $ticket->getAttachments()
         ];
+    }
+
+    /**
+     * @Route(
+     *       "/watch/ticket/{ticketId}",
+     *      name="diamante_ticket_watch",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     *
+     * @param int $ticketId
+     * @return RedirectResponse
+     */
+    public function watchAction($ticketId)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+        $watcherService = $this->get('diamante.ticket.watcher_list.service');
+
+        $user = new User($this->getUser()->getId(), User::TYPE_ORO);
+
+        $watcherService->addWatcher($ticket, $user);
+
+        $this->addSuccessMessage('diamante.desk.watcher.messages.watch.success');
+        $response = $this->redirect($this->generateUrl(
+            'diamante_ticket_view',
+            array('key' => $ticket->getKey())
+        ));
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *       "/unwatch/ticket/{ticketId}",
+     *      name="diamante_ticket_unwatch",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     *
+     * @param int $ticketId
+     * @return RedirectResponse
+     */
+    public function unwatchAction($ticketId)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+        $watcherService = $this->get('diamante.ticket.watcher_list.service');
+
+        $user = new User($this->getUser()->getId(), User::TYPE_ORO);
+
+        $watcherService->removeWatcher($ticket, $user);
+
+        $this->addSuccessMessage('diamante.desk.watcher.messages.unwatch.success');
+        $response = $this->redirect($this->generateUrl(
+            'diamante_ticket_view',
+            array('key' => $ticket->getKey())
+        ));
+
+        return $response;
     }
 
     /**

@@ -83,6 +83,8 @@ diamante:
             create:            Create Ticket
             change_status:     Change status
             move:              Move
+            watch:             Watch
+            unwatch:           Un-watch
 
           messages:
             create:
@@ -190,6 +192,13 @@ diamante:
           messages:
             granted:
               error:           Not enough permissions.
+
+        watcher:
+          messages:
+            watch:
+              success:         Now you watching the ticket.
+            unwatch:
+              success:         You successfully unsubscribe from watching of ticket
 
         ui:
           create:              Create

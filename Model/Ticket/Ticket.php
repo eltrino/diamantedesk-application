@@ -107,6 +107,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $attachments;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $watcherList;
+
+    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -150,6 +155,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->assignee = $assignee;
         $this->comments  = new ArrayCollection();
         $this->attachments = new ArrayCollection();
+        $this->watcherList = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
@@ -497,6 +503,15 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Retrieves ticket watchers
+     * @return ArrayCollection
+     */
+    public function getWatcherList()
+    {
+        return $this->watcherList;
     }
 
     /**

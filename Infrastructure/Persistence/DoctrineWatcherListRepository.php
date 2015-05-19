@@ -22,14 +22,35 @@ use Doctrine\ORM\Query;
 class DoctrineWatcherListRepository extends DoctrineGenericRepository implements WatcherListRepository
 {
 
+    /**
+     * @param Ticket $ticket
+     * @return array
+     */
     public function findByTicket(Ticket $ticket)
     {
-        return $this->findBy(array('ticket' => $ticket->getId()));
+        return $this->findBy(['ticket' => $ticket->getId()]);
     }
 
+    /**
+     * @param User $user
+     * @return array
+     */
     public function findByUser(User $user)
     {
-        return $this->findBy(array('userType' => (string)$user));
+        return $this->findBy(['userType' => (string)$user]);
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @param User $user
+     * @return null|object
+     */
+    public function findOne(Ticket $ticket, User $user)
+    {
+        return $this->findOneBy([
+            'userType' => (string)$user,
+            'ticket' => $ticket->getId()
+        ]);
     }
 
 }

@@ -106,6 +106,35 @@
             });
         })
     </script>
+
+    {% set isWatching = 0 %}
+    {% for list in entity.watcherList %}
+        {% set watcherId = list.userType|replace({'oro_': ''}) %}
+        {% if watcherId == app.user.id %}
+            {% set isWatching = 1 %}
+        {% endif %}
+    {% endfor %}
+
+    {% if isWatching == 1 %}
+        {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
+            {{ UI.button({
+                'path': path('diamante_ticket_unwatch', { 'ticketId': entity.id }),
+                'iCss': 'icon-eye-close',
+                'title': 'diamante.desk.ticket.actions.unwatch'|trans,
+                'label': 'diamante.desk.ticket.actions.unwatch'|trans
+            }) }}
+        {% endif %}
+    {% else %}
+        {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
+            {{ UI.button({
+                'path': path('diamante_ticket_watch', { 'ticketId': entity.id }),
+                'iCss': 'icon-eye-open',
+                'title': 'diamante.desk.ticket.actions.watch'|trans,
+                'label': 'diamante.desk.ticket.actions.watch'|trans
+            }) }}
+        {% endif %}
+    {% endif %}
+
     {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
         {% set changeStatusTitle = 'diamante.desk.ticket.actions.change_status'|trans %}
         {{ UI.clientButton({

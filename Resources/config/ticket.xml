@@ -23,6 +23,7 @@
         <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
         <parameter key="diamante.ticket_history.entity.class">Diamante\DeskBundle\Entity\TicketHistory</parameter>
         <parameter key="diamante.watcher_list.entity.class">Diamante\DeskBundle\Entity\WatcherList</parameter>
+        <parameter key="diamante.watcher_list.service.class">Diamante\DeskBundle\Api\Internal\WatchersServiceImpl</parameter>
         <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
         <parameter key="diamante.comment.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineCommentRepository</parameter>
         <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
@@ -219,6 +220,10 @@
 
         <service id="diamante.form.type.user_select" class="Diamante\DeskBundle\Form\Type\DiamanteUserSelectType">
             <tag name="form.type" alias="diamante_user_select"/>
+        </service>
+
+        <service id="diamante.ticket.watcher_list.service" class="%diamante.watcher_list.service.class%">
+            <argument type="service" id="diamante.watcher_list.repository"/>
         </service>
 
 <!-- repositories start -->
