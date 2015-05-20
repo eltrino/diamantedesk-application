@@ -25,7 +25,7 @@ class UpdatePropertiesCommand
 
     /**
      * @Assert\Regex(
-     *    pattern = "/^[A-Z]+\-[0-9]+$/",
+     *    pattern = "/^[A-Z\p{Cyrillic}]+\-[0-9]+$/u",
      *    message = "Ticket Key must approach to pattern 'BranchKey-TicketId'"
      * )
      * @Assert\Type(type="string")
