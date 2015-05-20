@@ -41,8 +41,6 @@ trait AuthorizationImplTrait
                     if ($ownerId != $objectOwner->getId()) {
                         return false;
                     }
-                } else {
-                    return false;
                 }
             }
         }
