@@ -73,6 +73,30 @@ class UserServiceImpl implements UserService, GravatarProvider
     }
 
     /**
+     * @param $email
+     *
+     * @return bool
+     */
+    public function isOroUser($email)
+    {
+        $user = $this->oroUserManager->findUserByEmail($email);
+
+        if(!$user) {
+            $user = $this->diamanteUserRepository->findUserByEmail($email);
+        }
+
+        if (!$user) {
+            throw new \RuntimeException('User loading failed. User with this email doesn\'t exists');
+        }
+
+        if ($user instanceof OroUser) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param User $user
      *
      * @return bool|OroUser
