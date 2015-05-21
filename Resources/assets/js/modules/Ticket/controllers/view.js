@@ -76,12 +76,19 @@ define(['app'], function(App){
 
         }).fail(function(model, xhr){
 
+          var link, key;
+
           if(xhr.status === 500){
             App.trigger('message:show', {
               status: 'error',
               text: xhr.responseJSON.message
             });
             App.mainRegion.hideLoader();
+          } else if (xhr.status === 301) {
+            link = document.createElement('a');
+            link.href = xhr.getResponseHeader('X-Location');
+            key = link.href.replace(model.urlRoot,'').replace('/','');
+            App.trigger('ticket:view', key, backUrl);
           } else {
             App.mainRegion.show(new View.MissingView());
           }
