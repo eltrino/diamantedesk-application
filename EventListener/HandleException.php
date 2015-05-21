@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class HandleException
@@ -103,12 +102,13 @@ class HandleException
     protected function getFormattedResponse(Request $request, $exception, $httpCode)
     {
         if (Codes::HTTP_MOVED_PERMANENTLY == $httpCode) {
-            return new RedirectResponse(
+            $response = new Response(null, $httpCode);
+            $response->headers->set('X-Location',
                 $this->container->get('router')->generate(
                     'diamante_ticket_api_service_diamante_load_ticket_by_key',
                     ['key' => $exception->getTicketKey()]
-                ), $httpCode
-            );
+                ));
+            return $response;
         }
         return new Response(
             $this->serializer->serialize(['error' => $exception->getMessage()],
