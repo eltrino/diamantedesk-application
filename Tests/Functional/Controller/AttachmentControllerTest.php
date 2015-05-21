@@ -12,16 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DiamanteDeskBundle\Tests\Functional\Controller;
+namespace Diamante\DeskBundle\Tests\Functional\Controller;
 
-use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-
-class AttachmentController extends WebTestCase
+class AttachmentController extends AbstractController
 {
-    /**
-     * @var \Oro\Bundle\TestFrameworkBundle\Test\Client
-     */
-    protected $client;
 
     public function setUp()
     {
