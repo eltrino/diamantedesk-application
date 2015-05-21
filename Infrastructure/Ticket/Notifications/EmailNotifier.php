@@ -114,9 +114,14 @@ class EmailNotifier implements Notifier
     public function notify(Notification $notification)
     {
         $ticket = $this->loadTicket($notification);
-        $message = $this->message($notification, $ticket);
+        $changeList = $this->postProcessChangesList($notification);
+        $recipientsEmails = $this->resolveRecipientsEmails($ticket);
 
-        $this->mailer->send($message);
+        foreach ($recipientsEmails as $email) {
+            $isOroUser = $this->userService->isOroUser($email);
+            $message = $this->message($notification, $ticket, $isOroUser, $email, $changeList);
+            $this->mailer->send($message);
+        }
 
         $reference = new MessageReference($message->getId(), $ticket);
         $this->messageReferenceRepository->store($reference);
@@ -125,10 +130,13 @@ class EmailNotifier implements Notifier
     /**
      * @param Notification $notification
      * @param Ticket       $ticket
+     * @param bool         $isOroUser
+     * @param array        $recipientEmail
+     * @param              $changeList
      *
      * @return \Swift_Message
      */
-    private function message(Notification $notification, Ticket $ticket)
+    private function message(Notification $notification, Ticket $ticket, $isOroUser, $recipientEmail, $changeList)
     {
         $userFormattedName = $this->getFormattedUserName($notification, $ticket);
 
@@ -136,14 +144,12 @@ class EmailNotifier implements Notifier
         $message = $this->mailer->createMessage();
         $message->setSubject($this->decorateMessageSubject($notification->getSubject(), $ticket));
         $message->setFrom($this->senderEmail, $userFormattedName);
-        $message->setTo($this->resolveRecipientsEmails($ticket));
+        $message->setTo($recipientEmail);
         $message->setReplyTo($this->senderEmail);
 
         $headers = $message->getHeaders();
         $headers->addTextHeader('In-Reply-To', $this->inReplyToHeader($notification));
         $headers->addIdHeader('References', $this->referencesHeader($ticket));
-
-        $changeList = $this->postProcessChangesList($notification);
 
         $options = array(
             'changes'       => $changeList,
@@ -151,6 +157,8 @@ class EmailNotifier implements Notifier
             'user'          => $userFormattedName,
             'header'        => $notification->getHeaderText(),
             'delimiter'     => MessageReferenceServiceImpl::DELIMITER_LINE,
+            'isOroUser'     => $isOroUser,
+            'ticketKey'     => $ticket->getKey()
         );
 
         $txtTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);
