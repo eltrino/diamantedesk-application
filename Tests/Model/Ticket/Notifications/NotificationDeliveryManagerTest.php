@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Model\Ticket\Notifications;
 
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+use Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -33,7 +33,7 @@ class NotificationDeliveryManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeliver()
     {
-        $notification = new Notification(
+        $notification = new TicketNotification(
             'unique_id', 1, 'Header', 'Subject', new \ArrayIterator(array('key' => 'value')), array('file.ext')
         );
 

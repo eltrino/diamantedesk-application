@@ -76,7 +76,7 @@
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.notification.delivery.manger"/>
-            <argument type="service" id="diamante.notification.email.notifier"/>
+            <argument type="service" id="diamante.notification.ticket.email.notifier"/>
             <argument type="service" id="monolog.logger.diamante"/>
             <tag name="monolog.logger" channel="diamante"/>
         </service>
@@ -100,7 +100,7 @@
             <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.notification.delivery.manger"/>
-            <argument type="service" id="diamante.notification.email.notifier"/>
+            <argument type="service" id="diamante.notification.ticket.email.notifier"/>
             <argument type="service" id="diamante.ticket_history.repository"/>
         </service>
 
@@ -191,7 +191,7 @@
             <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.notification.delivery.manger"/>
-            <argument type="service" id="diamante.notification.email.notifier"/>
+            <argument type="service" id="diamante.notification.ticket.email.notifier"/>
         </service>
 
         <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service">
