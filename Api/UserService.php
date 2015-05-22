@@ -52,4 +52,10 @@ interface UserService
      * @return bool|DiamanteUser
      */
     public function getDiamanteUser(User $user);
+
+    /**
+     * @param string $email
+     * @return int|null
+     */
+    public function verifyDiamanteUserExists($email);
 }
