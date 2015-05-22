@@ -51,6 +51,23 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $dispatcher;
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager
+     */
+    private $notificationDeliveryManager;
+
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
+     */
+    private $notifier;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -58,7 +75,10 @@ class CurrentUserApiServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->diamanteUserRepository,
             $this->apiUserRepository,
             $this->authorizationService,
-            $this->logger
+            $this->logger,
+            $this->dispatcher,
+            $this->notificationDeliveryManager,
+            $this->notifier
         );
     }
 
