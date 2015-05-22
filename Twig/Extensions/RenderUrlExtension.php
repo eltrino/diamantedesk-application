@@ -64,16 +64,10 @@ class RenderUrlExtension extends \Twig_Extension
      */
     public function renderUrl($key, $isOroUser)
     {
-        if ($isOroUser) {
-            $route = 'diamante_ticket_view';
-            $url = $this->router->generate($route, ['key' => $key], Router::ABSOLUTE_URL);
-        } else {
-            $url = sprintf(
-                '%s://%s/diamantefront/#tickets/%s',
-                $this->router->getContext()->getScheme(),
-                $this->router->getContext()->getHost(),
-                $key
-            );
+        $route = 'diamante_ticket_view';
+        $url = $this->router->generate($route, ['key' => $key], Router::ABSOLUTE_URL);
+        if (!$isOroUser) {
+            $url = str_replace('desk/tickets/view', 'diamantefront/#tickets', $url);
         }
 
         return $url;
