@@ -14,11 +14,17 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 
-use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+use Diamante\DeskBundle\Model\Shared\Email\TemplateResolver;
+use Diamante\DeskBundle\Model\Shared\Notification;
 
 class EmailTemplateResolver implements TemplateResolver
 {
+    /**
+     * @param Notification $notification
+     * @param int                $type
+     *
+     * @return string
+     */
     public function resolve(Notification $notification, $type = self::TYPE_TXT)
     {
         $template = null;

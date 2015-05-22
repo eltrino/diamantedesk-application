@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Model\Ticket\Notifications;
 
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+use Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification;
 
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         $changes['change_1'] = '1';
         $changes['change_2'] = '2';
         $attachments = array('file.jpg', 'doc.pdf');
-        $notification = new Notification(
+        $notification = new TicketNotification(
             'unique_id', 'author@email.com', 'Header Text', 'Subject', $changes, $attachments
         );
 
