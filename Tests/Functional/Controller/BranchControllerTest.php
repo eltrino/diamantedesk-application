@@ -12,20 +12,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DiamanteDeskBundle\Tests\Functional\Controller;
+namespace Diamante\DeskBundle\Tests\Functional\Controller;
 
 use Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator;
-use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Bundle\TestFrameworkBundle\Test\Client;
 use Symfony\Component\DomCrawler\Form;
 
-class BranchControllerTest extends WebTestCase
+class BranchControllerTest extends AbstractController
 {
-    /**
-     * @var Client
-     */
-    protected  $client;
-
     protected $imagesDirectory;
 
     public function setUp()
@@ -170,7 +163,7 @@ class BranchControllerTest extends WebTestCase
 
     private function chooseBranchFromGrid()
     {
-        $response = $this->client->requestGrid(
+        $response = $this->requestGrid(
             'diamante-branch-grid'
         );
 
