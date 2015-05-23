@@ -59,8 +59,10 @@ class WsseListener implements ListenerInterface
             return;
         }
 
+        $user = $matches[1];
+
         $token = new WsseToken();
-        $token->setUser($matches[1]);
+        $token->setUser($user);
 
         $token->setAttribute('digest', $matches[2]);
         $token->setAttribute('nonce', $matches[3]);
@@ -72,8 +74,10 @@ class WsseListener implements ListenerInterface
             if ($returnValue instanceof TokenInterface)
             {
                 if (!$returnValue->getUser()->isActive()) {
-                    throw new AuthenticationException("Your account is not activated yet, please check your email and confirm registration. If you didn't receive your verification email, please click here.");
-                }
+                    throw new AuthenticationException(
+                        "Your account is not activated yet, please check your email and confirm registration.".
+                        "If you didn't receive your verification email, please <a href=\"#reconfirm/$user\">click here.</a>");
+                    }
 
                 return $this->securityContext->setToken($returnValue);
             }
