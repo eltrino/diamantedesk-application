@@ -10,6 +10,7 @@ define(['app'], function(App){
         'logout' : 'logout',
         'registration': 'registration',
         'confirm/:hash': 'confirm',
+        'reconfirm/:email': 'reconfirm',
         'resetpassword': 'reset',
         'newpassword/:hash': 'newPassword'
       }
@@ -52,6 +53,16 @@ define(['app'], function(App){
         } else {
           require(['modules/Session/controllers/confirm'], function(){
             Session.ConfirmController(hash);
+          });
+        }
+      },
+
+      reconfirm: function(email){
+        if(App.session.get('logged_in')){
+          App.navigate('');
+        } else {
+          require(['modules/Session/controllers/confirm'], function(){
+            Session.ReConfirmController(email);
           });
         }
       },

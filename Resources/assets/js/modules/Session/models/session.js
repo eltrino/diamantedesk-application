@@ -177,6 +177,28 @@ define([
         return defer.promise();
       },
 
+      reconfirm: function(email){
+        var model = this,
+            defer = $.Deferred();
+        this.url += '/sendConfirmation';
+        this.set('id', 1);
+        this.save({ email : email },{
+          patch: true,
+          validate: false,
+          success : function(){
+            defer.resolve(model);
+          },
+          error : function(model, xhr){
+            defer.reject(model, xhr);
+          },
+          complete : function(){
+            model.url = model.url.replace('/sendConfirmation', '');
+            model.clear();
+          }
+        });
+        return defer.promise();
+      },
+
       reset: function(data){
         var model = this,
             defer = $.Deferred(),
