@@ -57,11 +57,6 @@ class Message
     /**
      * @var array
      */
-    private $recipients;
-
-    /**
-     * @var array
-     */
     private $attachments;
 
     /**
@@ -69,32 +64,21 @@ class Message
      * @param $messageId
      * @param $subject
      * @param $content
-     * @param MessageSender $from
+     * @param $from
      * @param $to
      * @param null $reference
      * @param array $attachments
-     * @param $recipients
      */
-    public function __construct(
-        $uniqueId,
-        $messageId,
-        $subject,
-        $content,
-        MessageSender $from,
-        $to,
-        $reference = null,
-        array $attachments = null,
-        $recipients = null
-    ) {
-        $this->uniqueId = $uniqueId;
-        $this->messageId = $messageId;
-        $this->subject = $subject;
-        $this->content = $content;
-        $this->from = $from;
-        $this->to = $to;
-        $this->reference = $reference;
+    public function __construct($uniqueId, $messageId, $subject, $content, MessageSender $from, $to, $reference = null, array $attachments = null)
+    {
+        $this->uniqueId    = $uniqueId;
+        $this->messageId   = $messageId;
+        $this->subject     = $subject;
+        $this->content     = $content;
+        $this->from        = $from;
+        $this->to          = $to;
+        $this->reference   = $reference;
         $this->attachments = $attachments;
-        $this->recipients = $recipients;
     }
 
     /**
@@ -164,34 +148,5 @@ class Message
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments[] = $attachment;
-    }
-
-    /**
-     * Retrieve emails of recipients
-     *
-     * @return array|null
-     */
-    public function getRecipients()
-    {
-        return $this->recipients;
-    }
-
-    /**
-     * Add recipient/recipients to the message
-     *
-     * @param $recipients
-     */
-    public function addRecipients($recipients)
-    {
-        if (!is_array($recipients)) {
-            $recipients = [$recipients];
-        }
-
-        foreach ($recipients as $recipient) {
-            $this->recipients[] = $recipient;
-        }
-
-        $this->recipients = array_unique($this->recipients);
-
     }
 }

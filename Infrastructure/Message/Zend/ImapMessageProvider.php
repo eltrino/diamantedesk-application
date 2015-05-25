@@ -69,10 +69,9 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
                 $messageTo          = $this->processTo($headers);
                 $messageReference   = $this->processMessageReference($headers);
                 $messageAttachments = $this->processAttachments($imapMessage);
-                $recipients         = $this->processRecipients($headers);
 
                 $messages[] = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
-                    $messageFrom, $messageTo, $messageReference, $messageAttachments, $recipients);
+                    $messageFrom, $messageTo, $messageReference, $messageAttachments);
             }
         } catch (\Exception $e) {
             throw new MessageProcessingException($e->getMessage());

@@ -15,7 +15,6 @@
 namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
 
 use Diamante\EmailProcessingBundle\Model\Message\MessageSender;
-use Diamante\EmailProcessingBundle\Model\Message\MessageRecipient;
 
 abstract class AbstractMessageProvider
 {
@@ -54,31 +53,6 @@ abstract class AbstractMessageProvider
     {
         $messageTo = $headers->get('to')->getAddressList()->key();
         return $messageTo;
-    }
-
-    /**
-     * @param $headers
-     * @return string
-     */
-    public function processRecipients($headers)
-    {
-        $processAddressTypes = ['to', 'cc', 'from'];
-        $recipients = [];
-
-        foreach ($processAddressTypes as $type) {
-            if (!$headers->get($type)) {
-                continue;
-            }
-            /**
-             * @var string $email
-             * @var \Zend\Mail\Address $address
-             */
-            foreach ($headers->get($type)->getAddressList() as $email => $address) {
-                $recipients[] = new MessageRecipient($address->getEmail(), null);
-            }
-        }
-
-        return $recipients;
     }
 
     /**
