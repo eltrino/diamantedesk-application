@@ -12,21 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DiamanteDeskBundle\Tests\Functional\Controller;
+namespace Diamante\DeskBundle\Tests\Functional\Controller;
 
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\UserBundle\Model\User;
-use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Symfony\Component\DomCrawler\Form;
 
-class TicketControllerTest extends WebTestCase
+class TicketControllerTest extends AbstractController
 {
-    /**
-     * @var \Oro\Bundle\TestFrameworkBundle\Test\Client
-     */
-    protected $client;
 
     public function setUp()
     {
@@ -272,7 +267,7 @@ class TicketControllerTest extends WebTestCase
 
     private function chooseBranchFromGrid()
     {
-        $response = $this->client->requestGrid(
+        $response = $this->requestGrid(
             'diamante-branch-grid'
         );
 
@@ -284,7 +279,7 @@ class TicketControllerTest extends WebTestCase
 
     private function chooseTicketFromGrid()
     {
-        $response = $this->client->requestGrid(
+        $response = $this->requestGrid(
             'diamante-ticket-grid'
         );
 

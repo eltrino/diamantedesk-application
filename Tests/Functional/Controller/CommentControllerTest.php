@@ -16,13 +16,12 @@
  * @todo finish up this test
  */
 
-namespace Diamante\DiamanteDeskBundle\Tests\Functional\Controller;
+namespace Diamante\DeskBundle\Tests\Functional\Controller;
 
-use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Symfony\Component\DomCrawler\Form;
 
-class CommentControllerTest extends WebTestCase
+class CommentControllerTest extends AbstractController
 {
     public function setUp()
     {
@@ -114,7 +113,7 @@ class CommentControllerTest extends WebTestCase
 
     private function chooseTicket()
     {
-        $response = $this->client->requestGrid(
+        $response = $this->requestGrid(
             'diamante-ticket-grid'
         );
 

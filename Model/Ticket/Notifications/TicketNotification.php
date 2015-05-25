@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
-class Notification
+use Diamante\DeskBundle\Model\Shared\Notification;
+
+class TicketNotification implements Notification
 {
     /**
      * @var string
