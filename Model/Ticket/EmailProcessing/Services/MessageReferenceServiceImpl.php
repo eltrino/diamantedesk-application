@@ -169,7 +169,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $authorId
      * @param $messageId
      * @param array $attachments
-     * @return void
+     * @return Ticket|null
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
     {
@@ -186,7 +186,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $author = User::fromString($authorId);
 
         if (empty($content)) {
-            return;
+            return null;
         }
 
         $comment = $this->commentFactory->create($content, $ticket, $author);
@@ -198,6 +198,8 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
         $this->dispatchEvents($ticket);
+
+        return $ticket;
     }
 
     /**

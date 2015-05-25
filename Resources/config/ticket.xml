@@ -64,6 +64,8 @@
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <argument type="service" id="diamante.notification.ticket.subscriber"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="diamante.ticket.watcher_list.service"/>
+            <argument type="service" id="oro_user.manager"/>
             <tag name="email_processing.strategy" />
         </service>
 

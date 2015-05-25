@@ -39,7 +39,6 @@ interface MessageReferenceService
      * @param $authorId
      * @param $messageId
      * @param array $attachments
-     * @return void
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null);
 }

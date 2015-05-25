@@ -14,15 +14,18 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\DeskBundle\Api\Internal\WatchersServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
 use Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
+use Oro\Bundle\UserBundle\Entity\UserManager as OroUserManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class TicketStrategy implements Strategy
@@ -63,6 +66,16 @@ class TicketStrategy implements Strategy
     private $eventDispatcher;
 
     /**
+     * @var WatchersServiceImpl
+     */
+    private $watchersService;
+
+    /**
+     * @var OroUserManager
+     */
+    private $oroUserManager;
+
+    /**
      * @param MessageReferenceService $messageReferenceService
      * @param BranchEmailConfigurationService $branchEmailConfigurationService
      * @param DiamanteUserRepository $diamanteUserRepository
@@ -70,6 +83,8 @@ class TicketStrategy implements Strategy
      * @param SystemSettings $settings
      * @param TicketNotificationsSubscriber $ticketNotificationsSubscriber
      * @param EventDispatcher $eventDispatcher
+     * @param WatchersServiceImpl $watchersService
+     * @param OroUserManager $oroUserManager
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 BranchEmailConfigurationService $branchEmailConfigurationService,
@@ -77,7 +92,9 @@ class TicketStrategy implements Strategy
                                 DiamanteUserFactory $diamanteUserFactory,
                                 SystemSettings $settings,
                                 TicketNotificationsSubscriber $ticketNotificationsSubscriber,
-                                EventDispatcher $eventDispatcher)
+                                EventDispatcher $eventDispatcher,
+                                WatchersServiceImpl $watchersService,
+                                OroUserManager $oroUserManager)
     {
         $this->messageReferenceService         = $messageReferenceService;
         $this->branchEmailConfigurationService = $branchEmailConfigurationService;
@@ -86,6 +103,8 @@ class TicketStrategy implements Strategy
         $this->emailProcessingSettings         = $settings;
         $this->ticketNotificationsSubscriber   = $ticketNotificationsSubscriber;
         $this->eventDispatcher                 = $eventDispatcher;
+        $this->watchersService                 = $watchersService;
+        $this->oroUserManager                  = $oroUserManager;
     }
 
     /**
@@ -114,8 +133,8 @@ class TicketStrategy implements Strategy
             $branchId = $this->getAppropriateBranch($message->getFrom()->getEmail(), $message->getTo());
             $assigneeId = $this->branchEmailConfigurationService->getBranchDefaultAssignee($branchId);
 
-            $this->messageReferenceService->createTicket($message->getMessageId(), $branchId, $message->getSubject(),
-                $message->getContent(), $reporter, $assigneeId, $attachments);
+            $ticket = $this->messageReferenceService->createTicket($message->getMessageId(), $branchId,
+                $message->getSubject(), $message->getContent(), $reporter, $assigneeId, $attachments);
         } else {
             $this->eventDispatcher->removeListener(
                 'commentWasAddedToTicket',
@@ -124,9 +143,11 @@ class TicketStrategy implements Strategy
                     'processEvent'
                 )
             );
-            $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
+            $ticket = $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
                 $message->getReference(), $attachments);
         }
+
+        $this->processWatchers($message, $ticket);
     }
 
     /**
@@ -150,5 +171,38 @@ class TicketStrategy implements Strategy
         }
 
         return $branchId;
+    }
+
+    /**
+     * @param Message $message
+     * @param Ticket $ticket
+     */
+    private function processWatchers(Message $message, $ticket)
+    {
+        if (!$ticket) {
+            return;
+        }
+
+        /** @var Message\MessageRecipient $recipient */
+        foreach ($message->getRecipients() as $recipient) {
+
+            $email = $recipient->getEmail();
+
+            $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
+            $oroUser = $this->oroUserManager->findUserByEmail($email);
+
+            if ($oroUser) {
+                $user = new User($oroUser->getId(), User::TYPE_ORO);
+            } elseif ($diamanteUser) {
+                $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
+            } else {
+                $diamanteUser = $this->diamanteUserFactory->create($email, $recipient->getFirstName(),
+                    $recipient->getLastName());
+                $this->diamanteUserRepository->store($diamanteUser);
+                $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
+            }
+
+            $this->watchersService->addWatcher($ticket, $user);
+        }
     }
 }
