@@ -35,7 +35,8 @@
                     {% endif %}
 
                     <div style="margin-top: 15px; font-size: 14px; font-weight: 200; line-height: 18px;">
-                        <a href="{{ render_ticket_url(ticketKey, isOroUser) }}">View this ticket {{ ticketKey }} in DiamanteDesk</a>
+                        View this ticket <a href="{{ render_ticket_url(ticketKey, isOroUser) }}">{{ ticketKey }}</a> in
+                        DiamanteDesk
                     </div>
 
                     {% if attachments %}
