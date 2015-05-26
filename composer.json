@@ -30,8 +30,8 @@
         "oro/platform": "1.7.*",
         "nelmio/api-doc-bundle": "*",
         "jms/serializer-bundle": "*",
-        "diamante/desk-bundle": "1.0.*@dev",
-        "diamante/user-bundle": "1.0.*@dev"
+        "diamante/desk-bundle": "dev-master",
+        "diamante/user-bundle": "dev-master"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"
