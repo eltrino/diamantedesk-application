@@ -28,8 +28,8 @@
     "require": { 
         "php": ">=5.4.4",
         "oro/platform": "1.7.*",
-        "diamante/api-bundle": "1.0.*@dev",
-        "diamante/desk-bundle": "1.0.*@dev",
+        "diamante/api-bundle": "dev-master",
+        "diamante/desk-bundle": "dev-master",
         "eloquent/composer-npm-bridge": "~2"
     },
     "minimum-stability": "dev",
