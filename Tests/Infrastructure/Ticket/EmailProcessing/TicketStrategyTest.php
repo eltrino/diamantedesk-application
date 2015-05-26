@@ -95,6 +95,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $oroUserManager;
 
+    /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -107,7 +113,8 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             $this->ticketNotificationsSubscriber,
             $this->eventDispatcher,
             $this->watcherService,
-            $this->oroUserManager
+            $this->oroUserManager,
+            $this->configManager
         );
     }
 

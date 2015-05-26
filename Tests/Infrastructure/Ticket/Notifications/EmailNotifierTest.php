@@ -81,6 +81,12 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     private $diamanteUserRepository;
 
     /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
+    /**
      * @var string
      */
     private $senderEmail = 'sender@host.com';
@@ -202,7 +208,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $notifier = new EmailNotifier(
             $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository,
             $this->messageReferenceRepository, $this->userService, $this->nameFormatter,
-            $this->diamanteUserRepository, $this->senderEmail, $this->senderHost
+            $this->diamanteUserRepository, $this->configManager, $this->senderHost
         );
 
         $notifier->notify($notification);
@@ -312,7 +318,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         $notifier = new EmailNotifier(
             $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository,
             $this->messageReferenceRepository, $this->userService, $this->nameFormatter,
-            $this->diamanteUserRepository, $this->senderEmail, $this->senderHost
+            $this->diamanteUserRepository, $this->configManager, $this->senderHost
         );
 
         $notifier->notify($notification);
