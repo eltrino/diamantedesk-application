@@ -61,13 +61,19 @@ class WatchersSubscriber implements EventSubscriberInterface
      */
     private function getMemberList(Ticket $ticket, AbstractTicketEvent $event)
     {
-        $assignee = new User($ticket->getAssignee()->getId(), User::TYPE_ORO);
+        $members = [];
 
-        if ($event->getEventName() == 'ticketAssigneeWasChanged') {
-            return [$assignee];
+        if ($ticket->getAssignee()) {
+            $members[] = new User($ticket->getAssignee()->getId(), User::TYPE_ORO);
         }
 
-        return [$ticket->getReporter(), $assignee];
+        if ($event->getEventName() == 'ticketAssigneeWasChanged') {
+            return $members;
+        }
+
+        $members[] = $ticket->getReporter();
+
+        return $members;
     }
 
 }
