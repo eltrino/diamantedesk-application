@@ -201,6 +201,29 @@
             }
         }) }}
 
+        {{ UI.clientButton({
+        'dataUrl': path('diamante_add_watcher', { 'ticketId': entity.id }),
+        'aCss': 'no-hash',
+        'iCss': 'icon-plus',
+        'dataId': entity.id,
+        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'label' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'widget' : {
+        'type' : 'dialog',
+        'multiple' : true,
+        'reload-grid-name' : '',
+        'options' : {
+        'alias': 'status-dialog',
+        'stateEnabled' : false,
+        'dialogOptions' : {
+        'resizable' : false,
+        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'width': 520
+        }
+        }
+        }
+        }) }}
+
         {% set assignTitle = 'diamante.desk.ticket.actions.assign'|trans %}
         {{ UI.clientButton({
             'dataUrl': path('diamante_ticket_assign', { 'id': entity.id }),

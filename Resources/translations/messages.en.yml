@@ -85,6 +85,7 @@ diamante:
             move:              Move
             watch:             Watch
             unwatch:           Un-watch
+            add_watcher:       Add Watcher
 
           messages:
             create:
@@ -106,6 +107,9 @@ diamante:
             move:
               error:           Error occured while trying to move ticket.
               success:         Ticket successfully moved.
+            watch:
+              error:           Error occured while trying to add watcher.
+              success:         Watcher successfully added.
             get:
               error:           Ticket loading failed, ticket not found.
               attachment:
@@ -239,6 +243,7 @@ diamante:
           source:              Source
           reporter:            Reporter
           assignee:            Assignee
+          watcher:             Watcher
           key:                 Key
 
         email:
