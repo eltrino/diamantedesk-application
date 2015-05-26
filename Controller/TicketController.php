@@ -45,6 +45,7 @@ use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Diamante\DeskBundle\Form\Type\AddWatcherType;
 
 /**
  * @Route("tickets")
@@ -199,6 +200,55 @@ class TicketController extends Controller
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(sprintf('Move ticket failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.ticket.messages.move.error');
+            $response['reload_page'] = true;
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/watcher/ticket/{ticketId}",
+     *      name="diamante_add_watcher",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/add_watcher.html.twig")
+     *
+     * @param int $ticketId
+     * @return array
+     */
+    public function addWatcherAction($ticketId)
+    {
+        $response = array();
+        try {
+            $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+            $command = $this->get('diamante.command_factory')
+                ->addWatcherCommand($ticket);
+            $form = $this->createForm(new AddWatcherType(), $command);
+
+            if (!$this->getRequest()->get('no_redirect')) {
+                return array('form' => $form->createView());
+
+            }
+            $this->handle($form);
+            $watcherService = $this->get('diamante.ticket.watcher_list.service');
+
+            $watcherService->addWatcher($ticket, $command->watcher);
+            $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
+            $response = array('reload_page' => true);
+        } catch (TicketNotFoundException $e) {
+            $this->container->get('monolog.logger.diamante')->error(
+                sprintf('Add watcher to ticket failed: %s', $e->getMessage())
+            );
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $url = $this->generateUrl('diamante_ticket_list');
+            $response = array('reload_page' => true, 'redirect' => $url);
+        } catch (MethodNotAllowedException $e) {
+        } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(
+                sprintf('Add watcher to ticket failed: %s', $e->getMessage())
+            );
+            $this->addErrorMessage('diamante.desk.ticket.messages.watch.error');
             $response['reload_page'] = true;
         }
 
