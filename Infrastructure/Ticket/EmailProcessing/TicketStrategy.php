@@ -25,11 +25,15 @@ use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\UserBundle\Entity\UserManager as OroUserManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class TicketStrategy implements Strategy
 {
+
+    const EMAIL_NOTIFIER_CONFIG_PATH = 'oro_notification.email_notification_sender_email';
+
     /**
      * @var MessageReferenceService
      */
@@ -76,6 +80,11 @@ class TicketStrategy implements Strategy
     private $oroUserManager;
 
     /**
+     * @var ConfigManager
+     */
+    private $configManager;
+
+    /**
      * @param MessageReferenceService $messageReferenceService
      * @param BranchEmailConfigurationService $branchEmailConfigurationService
      * @param DiamanteUserRepository $diamanteUserRepository
@@ -85,6 +94,7 @@ class TicketStrategy implements Strategy
      * @param EventDispatcher $eventDispatcher
      * @param WatchersServiceImpl $watchersService
      * @param OroUserManager $oroUserManager
+     * @param ConfigManager $configManager
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 BranchEmailConfigurationService $branchEmailConfigurationService,
@@ -94,7 +104,8 @@ class TicketStrategy implements Strategy
                                 TicketNotificationsSubscriber $ticketNotificationsSubscriber,
                                 EventDispatcher $eventDispatcher,
                                 WatchersServiceImpl $watchersService,
-                                OroUserManager $oroUserManager)
+                                OroUserManager $oroUserManager,
+                                ConfigManager $configManager)
     {
         $this->messageReferenceService         = $messageReferenceService;
         $this->branchEmailConfigurationService = $branchEmailConfigurationService;
@@ -105,6 +116,7 @@ class TicketStrategy implements Strategy
         $this->eventDispatcher                 = $eventDispatcher;
         $this->watchersService                 = $watchersService;
         $this->oroUserManager                  = $oroUserManager;
+        $this->configManager                   = $configManager;
     }
 
     /**
@@ -187,6 +199,10 @@ class TicketStrategy implements Strategy
         foreach ($message->getRecipients() as $recipient) {
 
             $email = $recipient->getEmail();
+
+            if ($email == $this->configManager->get(self::EMAIL_NOTIFIER_CONFIG_PATH)) {
+                continue;
+            }
 
             $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
             $oroUser = $this->oroUserManager->findUserByEmail($email);

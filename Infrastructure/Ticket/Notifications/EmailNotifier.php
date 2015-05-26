@@ -27,11 +27,15 @@ use Diamante\UserBundle\Entity\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\Notification;
 
 class EmailNotifier implements Notifier
 {
+
+    const EMAIL_NOTIFIER_CONFIG_PATH = 'oro_notification.email_notification_sender_email';
+
     /**
      * @var \Twig_Environment
      */
@@ -68,9 +72,9 @@ class EmailNotifier implements Notifier
     private $nameFormatter;
 
     /**
-     * @var string
+     * @var ConfigManager
      */
-    private $senderEmail;
+    private $configManager;
 
     /**
      * @var string
@@ -91,7 +95,7 @@ class EmailNotifier implements Notifier
         UserService $userService,
         NameFormatter $nameFormatter,
         DiamanteUserRepository $diamanteUserRepository,
-        $senderEmail,
+        ConfigManager $configManager,
         $senderHost
     )
     {
@@ -103,7 +107,7 @@ class EmailNotifier implements Notifier
         $this->userService                  = $userService;
         $this->nameFormatter                = $nameFormatter;
         $this->diamanteUserRepository       = $diamanteUserRepository;
-        $this->senderEmail                  = $senderEmail;
+        $this->configManager                = $configManager;
         $this->senderHost                   = $senderHost;
     }
 
@@ -138,14 +142,15 @@ class EmailNotifier implements Notifier
      */
     private function message(Notification $notification, Ticket $ticket, $isOroUser, $recipientEmail, $changeList)
     {
+        $senderEmail = $this->configManager->get(self::EMAIL_NOTIFIER_CONFIG_PATH);
         $userFormattedName = $this->getFormattedUserName($notification, $ticket);
 
         /** @var \Swift_Message $message */
         $message = $this->mailer->createMessage();
         $message->setSubject($this->decorateMessageSubject($notification->getSubject(), $ticket));
-        $message->setFrom($this->senderEmail, $userFormattedName);
+        $message->setFrom($senderEmail, $userFormattedName);
         $message->setTo($recipientEmail);
-        $message->setReplyTo($this->senderEmail);
+        $message->setReplyTo($senderEmail);
 
         $headers = $message->getHeaders();
         $headers->addTextHeader('In-Reply-To', $this->inReplyToHeader($notification));
