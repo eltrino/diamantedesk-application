@@ -1,0 +1,93 @@
+{
+    "name": "oro/platform-application",
+    "description": "Oro Platform Empty Application",
+    "homepage": "https://github.com/orocrm/platform-application.git",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    },
+    "repositories": [
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/diamanteemailprocessingbundle.git",
+          "branch": "master"
+        },
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/diamanteembeddedformbundle.git",
+          "branch": "master"
+        },
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/diamantedeskbundle.git",
+          "branch": "master"
+        },
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/diamanteapibundle.git",
+          "branch": "master"
+        },
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/diamantefrontbundle.git",
+          "branch": "master"
+        },
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/DiamanteUserBundle.git",
+          "branch": "master"
+        },
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/diamanteinstallerbundle.git",
+          "branch": "master"
+        },
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/eltrino/diamantedistributionbundle.git",
+          "branch": "master"
+        },
+        {
+            "type": "composer",
+            "url": "http://packagist.orocrm.com"
+        }
+    ],
+    "require": {
+        "oro/platform": "1.7.*",
+        "diamante/desk-bundle": "dev-master",
+        "diamante/front-bundle": "dev-master",
+        "diamante/distribution-bundle": "dev-master",
+        "diamante/embedded-form-bundle": "dev-master"
+    },
+    "config": {
+        "component-dir": "web/bundles/components"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setPermissions",
+            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::installAssets"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setPermissions",
+            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::installAssets"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "web",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "symfony-assets-install": "symlink"
+    }
+}
