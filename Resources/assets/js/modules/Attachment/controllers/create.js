@@ -19,6 +19,10 @@ define(['app'], function(App){
           newAttachments.save({
             success: function(collection){
               attachmentCollection.add(collection, { ticket: options.ticket });
+              App.trigger('message:show', {
+                status:'success',
+                text: 'Files attached successfully'
+              });
               Create.Controller(options);
             }
           });

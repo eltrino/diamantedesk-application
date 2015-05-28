@@ -3,23 +3,26 @@ define(['app', 'tpl!../templates/message.ejs'], function(App, massageTemplate){
   return App.module('Common.Message', function(Message, App, Backbone, Marionette, $, _){
 
     var _status = {
-      'error' : {
-        status_class : 'danger',
-        status_icon : 'exclamation-circle'
-      },
-      'success' : {
-        status_class : 'success',
-        status_icon : 'check-circle'
-      },
-      'info' : {
-        status_class : 'info',
-        status_icon : 'info-circle'
-      },
-      'warning' : {
-        status_class : 'warning',
-        status_icon : 'exclamation-circle'
-      }
-    };
+          'error' : {
+            status_class : 'danger',
+            status_icon : 'exclamation-circle'
+          },
+          'success' : {
+            status_class : 'success',
+            status_icon : 'check-circle'
+          },
+          'info' : {
+            status_class : 'info',
+            status_icon : 'info-circle'
+          },
+          'warning' : {
+            status_class : 'warning',
+            status_icon : 'exclamation-circle'
+          }
+        },
+        w = window,
+        doc = document.documentElement,
+        body = $('body')[0];
 
     Message.View = Marionette.ItemView.extend({
       template : massageTemplate,
@@ -50,9 +53,35 @@ define(['app', 'tpl!../templates/message.ejs'], function(App, massageTemplate){
       },
 
       onShow: function(){
-        this.$el.hide().slideDown(400)
-          .delay(5000).slideUp(400, function(){
+        var fixedElem = this.$el.clone(),
+            headerHeight = App.headerRegion.$el.height(),
+            elemBottom = this.$el.offset().top + this.$el.height(),
+            inView = true,
+            checkPosition = function() {
+              var scrollTop = w.pageYOffset || doc.scrollTop || body.scrollTop,
+                  topOffset = scrollTop + headerHeight;
+              if(topOffset > elemBottom){
+                inView = false;
+                if(!fixedElem.is(':visible')){
+                  fixedElem.fadeIn(400);
+                }
+              } else {
+                inView = true;
+                if(fixedElem.is(':visible')){
+                  fixedElem.fadeOut(400);
+                }
+              }
+            }.bind(this);
+
+        fixedElem.addClass('fixed-messages').hide().insertAfter(this.$el);
+
+        $(w).on('resize scroll', checkPosition);
+        checkPosition();
+
+        this.$el.hide().slideDown(inView ? 400 : 0)
+          .delay(5000).slideUp(inView ? 400 : 0, function(){
             this.destroy();
+            fixedElem.fadeOut(400, function(){ this.remove(); });
           }.bind(this));
       }
 
