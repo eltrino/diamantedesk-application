@@ -2,5 +2,7 @@
     <li><button class="btn btn-link js-delete-attachment" title="Delete Comment"><i class="fa
     fa-times"></i></button></li>
 </ul>
+<% if (typeof(thumbnails) !== 'undefined') { %>
+    <img src="<%= thumbnails.url %>" alt="<%= file.filename %>"><br>
+<% } %>
 <a href="<%= file.url %>" title="Download: <%= file.filename %>"><%= file.filename %></a>
-
