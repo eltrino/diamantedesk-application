@@ -40,6 +40,9 @@ class WatchersSubscriber implements EventSubscriberInterface
                 $watchersService->addWatcher($ticket, $user);
             }
         }
+
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em->clear();
     }
 
     /**

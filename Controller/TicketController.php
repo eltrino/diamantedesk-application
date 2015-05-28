@@ -719,11 +719,10 @@ class TicketController extends Controller
     public function watchers($ticketId)
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
-        $watchers = $this->get('diamante.watcher_list.repository')->findByTicket($ticket);
 
         $users = [];
 
-        foreach ($watchers as $watcher) {
+        foreach ($ticket->getWatcherList() as $watcher) {
             $users[] = User::fromString($watcher->getUserType());
         }
 
