@@ -24,6 +24,7 @@
         <parameter key="diamante.ticket_history.entity.class">Diamante\DeskBundle\Entity\TicketHistory</parameter>
         <parameter key="diamante.watcher_list.entity.class">Diamante\DeskBundle\Entity\WatcherList</parameter>
         <parameter key="diamante.watcher_list.service.class">Diamante\DeskBundle\Api\Internal\WatchersServiceImpl</parameter>
+        <parameter key="diamante.watcher.service.api.class">Diamante\DeskBundle\Api\Internal\WatchersApiServiceImpl</parameter>
         <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
         <parameter key="diamante.comment.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineCommentRepository</parameter>
         <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
@@ -231,7 +232,13 @@
 
         <service id="diamante.ticket.watcher_list.service" class="%diamante.watcher_list.service.class%">
             <argument type="service" id="diamante.watcher_list.repository"/>
+            <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="oro_user.manager"/>
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.user_factory" />
         </service>
+
+        <service id="diamante.watcher.service.api" class="%diamante.watcher.service.api.class%" parent="diamante.ticket.watcher_list.service"/>
 
 <!-- repositories start -->
         <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"

@@ -16,10 +16,14 @@
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\WatchersService;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineWatcherListRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Entity\WatcherList;
+use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
+use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
+use Oro\Bundle\UserBundle\Entity\UserManager;
 
 class WatchersServiceImpl implements WatchersService
 {
@@ -29,10 +33,38 @@ class WatchersServiceImpl implements WatchersService
      */
     protected $watcherListRepository;
 
+    /**
+     * @var DoctrineDiamanteUserRepository
+     */
+    protected $diamanteUserRepository;
+
+    /**
+     * @var UserManager
+     */
+    protected $userManager;
+
+    /**
+     * @var DoctrineTicketRepository
+     */
+    protected $ticketRepository;
+
+    /**
+     * @var DiamanteUserFactory
+     */
+    protected $diamanteUserFactory;
+
     public function __construct(
-        DoctrineWatcherListRepository $watcherListRepository
+        DoctrineWatcherListRepository $watcherListRepository,
+        DoctrineDiamanteUserRepository $diamanteUserRepository,
+        UserManager $userManager,
+        DoctrineTicketRepository $ticketRepository,
+        DiamanteUserFactory $diamanteUserFactory
     ) {
-        $this->watcherListRepository = $watcherListRepository;
+        $this->watcherListRepository  = $watcherListRepository;
+        $this->diamanteUserRepository = $diamanteUserRepository;
+        $this->userManager            = $userManager;
+        $this->ticketRepository       = $ticketRepository;
+        $this->diamanteUserFactory    = $diamanteUserFactory;
     }
 
     /**
