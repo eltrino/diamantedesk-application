@@ -55,7 +55,7 @@
         }
     ],
     "require": {
-        "diamante/distribution-bundle": "self.version",
+        "diamante/distribution-bundle": "self.version"
     },
     "config": {
         "component-dir": "web/bundles/components"
