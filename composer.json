@@ -55,11 +55,7 @@
         }
     ],
     "require": {
-        "oro/platform": "1.7.*",
-        "diamante/desk-bundle": "dev-master",
-        "diamante/front-bundle": "dev-master",
-        "diamante/distribution-bundle": "dev-master",
-        "diamante/embedded-form-bundle": "dev-master"
+        "diamante/distribution-bundle": "self.version",
     },
     "config": {
         "component-dir": "web/bundles/components"
