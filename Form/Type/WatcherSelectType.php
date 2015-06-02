@@ -18,8 +18,9 @@ namespace Diamante\DeskBundle\Form\Type;
 use Diamante\DeskBundle\Entity\Ticket;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Diamante\DeskBundle\Form\DataTransformer\UserTransformer;
+use Symfony\Component\Form\AbstractType;
 
-class WatcherSelectType extends DiamanteUserSelectType
+class WatcherSelectType extends AbstractType
 {
     /**
      * @param OptionsResolverInterface $resolver
@@ -46,5 +47,10 @@ class WatcherSelectType extends DiamanteUserSelectType
     public function getName()
     {
         return 'diamante_watcher_select';
+    }
+
+    public function getParent()
+    {
+        return 'oro_entity_create_or_select_inline';
     }
 } 

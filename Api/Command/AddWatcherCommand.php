@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Diamante\DeskBundle\Validator\Constraints\Any;
 use Diamante\DeskBundle\Validator\Constraints\User;
 
 class AddWatcherCommand
@@ -29,7 +30,7 @@ class AddWatcherCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
-     * @User()
+     * @Any({@Assert\Email(), @Assert\Type(type="object")})
      */
     public $watcher;
 }

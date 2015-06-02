@@ -9,7 +9,11 @@
                 {% if oroUser %}
                     {{ oroUser|oro_format_name }}
                 {% elseif diamanteUser %}
-                    {{ diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName }}
+                    {% if diamanteUser.firstName is null and diamanteUser.lastName is null %}
+                        {{ diamanteUser.email }}
+                    {% else %}
+                        {{ diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName }}
+                    {% endif %}
                 {% endif %}
             </li>
         {% endfor %}
