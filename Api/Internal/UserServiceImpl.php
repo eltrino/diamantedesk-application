@@ -81,7 +81,7 @@ class UserServiceImpl implements UserService, GravatarProvider
     }
 
     /**
-     * @param $email
+     * @param string $email
      *
      * @return bool
      */
@@ -185,8 +185,9 @@ class UserServiceImpl implements UserService, GravatarProvider
         }
 
         $userAvatarUrl = null;
-        if ($user->getType() == User::TYPE_ORO && $loadedUser->getAvatar() !== null) {
-            $userAvatarUrl = $this->attachmentManager->getFilteredImageUrl($loadedUser->getAvatar(), 'avatar_med');
+        $avatar = $loadedUser->getAvatar();
+        if ($user->getType() == User::TYPE_ORO && !empty($avatar->getOriginalFilename())) {
+            $userAvatarUrl = $this->attachmentManager->getFilteredImageUrl($avatar, 'avatar_med');
         }
 
         return new UserDetails(
