@@ -42,4 +42,13 @@ interface WatchersService
      * @return void
      */
     public function removeWatcher(Ticket $ticket, User $user);
+
+    /**
+     * Return watchers list
+     *
+     * @param Ticket $ticket
+     *
+     * @return array
+     */
+    public function getWatchers(Ticket $ticket);
 }

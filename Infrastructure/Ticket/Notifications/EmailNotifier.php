@@ -31,6 +31,7 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\Notification;
 use Oro\Bundle\UserBundle\Entity\UserManager;
+use Diamante\DeskBundle\Api\WatchersService;
 
 class EmailNotifier implements Notifier
 {
@@ -93,6 +94,11 @@ class EmailNotifier implements Notifier
     private $oroUserManager;
 
     /**
+     * @var WatchersService
+     */
+    private $watchersService;
+
+    /**
      * @param \Twig_Environment          $twig
      * @param \Swift_Mailer              $mailer
      * @param TemplateResolver           $templateResolver
@@ -103,6 +109,7 @@ class EmailNotifier implements Notifier
      * @param DiamanteUserRepository     $diamanteUserRepository
      * @param ConfigManager              $configManager
      * @param UserManager                $userManager
+     * @param WatchersService            $watchersService
      * @param string                     $senderHost
      */
     public function __construct(
@@ -116,6 +123,7 @@ class EmailNotifier implements Notifier
         DiamanteUserRepository $diamanteUserRepository,
         ConfigManager $configManager,
         UserManager $userManager,
+        WatchersService $watchersService,
         $senderHost
     )
     {
@@ -129,6 +137,7 @@ class EmailNotifier implements Notifier
         $this->diamanteUserRepository       = $diamanteUserRepository;
         $this->configManager                = $configManager;
         $this->oroUserManager               = $userManager;
+        $this->watchersService              = $watchersService;
         $this->senderHost                   = $senderHost;
     }
 
@@ -139,10 +148,9 @@ class EmailNotifier implements Notifier
     public function notify(Notification $notification)
     {
         $ticket = $this->loadTicket($notification);
-        $watcherList = $ticket->getWatcherList()->getValues();
         $changeList = $this->postProcessChangesList($notification);
 
-        foreach ($watcherList as $watcher) {
+        foreach ($this->watchersService->getWatchers($ticket) as $watcher) {
             $userType = $watcher->getUserType();
             $user = User::fromString($userType);
             $isOroUser = $user->isOroUser();

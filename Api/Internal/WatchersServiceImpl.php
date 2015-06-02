@@ -94,4 +94,15 @@ class WatchersServiceImpl implements WatchersService
         }
     }
 
+    /**
+     * Return watchers list
+     *
+     * @param Ticket $ticket
+     *
+     * @return array
+     */
+    public function getWatchers(Ticket $ticket)
+    {
+        return $ticket->getWatcherList()->getValues();
+    }
 }
