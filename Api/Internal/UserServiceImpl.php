@@ -81,30 +81,6 @@ class UserServiceImpl implements UserService, GravatarProvider
     }
 
     /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    public function isOroUser($email)
-    {
-        $user = $this->oroUserManager->findUserByEmail($email);
-
-        if(!$user) {
-            $user = $this->diamanteUserRepository->findUserByEmail($email);
-        }
-
-        if (!$user) {
-            throw new \RuntimeException('User loading failed. User with this email doesn\'t exists');
-        }
-
-        if ($user instanceof OroUser) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param User $user
      *
      * @return bool|OroUser
@@ -185,9 +161,8 @@ class UserServiceImpl implements UserService, GravatarProvider
         }
 
         $userAvatarUrl = null;
-        $avatar = $loadedUser->getAvatar();
-        if ($user->getType() == User::TYPE_ORO && !empty($avatar->getOriginalFilename())) {
-            $userAvatarUrl = $this->attachmentManager->getFilteredImageUrl($avatar, 'avatar_med');
+        if ($user->getType() == User::TYPE_ORO && !empty($loadedUser->getAvatar()->getOriginalFilename())) {
+            $userAvatarUrl = $this->attachmentManager->getFilteredImageUrl($loadedUser->getAvatar(), 'avatar_med');
         }
 
         return new UserDetails(
