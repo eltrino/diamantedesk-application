@@ -228,7 +228,7 @@ diamante:
           priority:            Priority
           source:              Source
           reporter:            Reporter
-          assignee:            Assignee
+          default_assignee:    Default Assignee
           key:                 Key
 
         email:
