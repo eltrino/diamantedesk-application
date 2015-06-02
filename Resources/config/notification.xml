@@ -43,6 +43,7 @@
             <argument type="service" id="oro_locale.formatter.name"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="oro_config.global"/>
+            <argument type="service" id="oro_user.manager"/>
             <argument>%mailer_host%</argument>
         </service>
 

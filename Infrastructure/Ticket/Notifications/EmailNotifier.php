@@ -30,6 +30,7 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\Notification;
+use Oro\Bundle\UserBundle\Entity\UserManager;
 
 class EmailNotifier implements Notifier
 {
@@ -86,6 +87,24 @@ class EmailNotifier implements Notifier
      */
     private $diamanteUserRepository;
 
+    /**
+     * @var UserManager
+     */
+    private $oroUserManager;
+
+    /**
+     * @param \Twig_Environment          $twig
+     * @param \Swift_Mailer              $mailer
+     * @param TemplateResolver           $templateResolver
+     * @param TicketRepository           $ticketRepository
+     * @param MessageReferenceRepository $messageReferenceRepository
+     * @param UserService                $userService
+     * @param NameFormatter              $nameFormatter
+     * @param DiamanteUserRepository     $diamanteUserRepository
+     * @param ConfigManager              $configManager
+     * @param UserManager                $userManager
+     * @param string                     $senderHost
+     */
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
@@ -96,6 +115,7 @@ class EmailNotifier implements Notifier
         NameFormatter $nameFormatter,
         DiamanteUserRepository $diamanteUserRepository,
         ConfigManager $configManager,
+        UserManager $userManager,
         $senderHost
     )
     {
@@ -108,6 +128,7 @@ class EmailNotifier implements Notifier
         $this->nameFormatter                = $nameFormatter;
         $this->diamanteUserRepository       = $diamanteUserRepository;
         $this->configManager                = $configManager;
+        $this->oroUserManager               = $userManager;
         $this->senderHost                   = $senderHost;
     }
 
@@ -118,12 +139,19 @@ class EmailNotifier implements Notifier
     public function notify(Notification $notification)
     {
         $ticket = $this->loadTicket($notification);
+        $watcherList = $ticket->getWatcherList()->getValues();
         $changeList = $this->postProcessChangesList($notification);
-        $recipientsEmails = $this->resolveRecipientsEmails($ticket);
 
-        foreach ($recipientsEmails as $email) {
-            $isOroUser = $this->userService->isOroUser($email);
-            $message = $this->message($notification, $ticket, $isOroUser, $email, $changeList);
+        foreach ($watcherList as $watcher) {
+            $userType = $watcher->getUserType();
+            $user = User::fromString($userType);
+            $isOroUser = $user->isOroUser();
+            if($isOroUser) {
+                $loadedUser = $this->oroUserManager->findUserBy(['id' => $user->getId()]);
+            } else {
+                $loadedUser = $this->diamanteUserRepository->get($user->getId());
+            }
+            $message = $this->message($notification, $ticket, $isOroUser, $loadedUser->getEmail(), $changeList);
             $this->mailer->send($message);
         }
 
@@ -135,7 +163,7 @@ class EmailNotifier implements Notifier
      * @param Notification $notification
      * @param Ticket       $ticket
      * @param bool         $isOroUser
-     * @param array        $recipientEmail
+     * @param string       $recipientEmail
      * @param              $changeList
      *
      * @return \Swift_Message
@@ -173,26 +201,6 @@ class EmailNotifier implements Notifier
         $message->addPart($this->twig->render($htmlTemplate, $options), 'text/html');
 
         return $message;
-    }
-
-    /**
-     * @param Ticket $ticket
-     * @return array
-     */
-    private function resolveRecipientsEmails(Ticket $ticket)
-    {
-        $emails = array();
-        $reporter = $ticket->getReporter();
-        $reporter = $this->userService->getByUser($reporter);
-        $assignee = $ticket->getAssignee();
-
-        $emails[] = $reporter->getEmail();
-
-        if ($assignee) {
-            $emails[] = $assignee->getEmail();
-        }
-
-        return $emails;
     }
 
     /**
@@ -267,7 +275,9 @@ class EmailNotifier implements Notifier
         $changes = $notification->getChangeList();
 
         if (isset($changes['Reporter']) && strpos($changes['Reporter'], '_')) {
-            $details = $this->userService->fetchUserDetails(User::fromString($changes['Reporter']));
+            $r = $changes['Reporter'];
+            $u = User::fromString($r);
+            $details = $this->userService->fetchUserDetails($u);
             $changes['Reporter'] = $details->getFullName();
         }
 
