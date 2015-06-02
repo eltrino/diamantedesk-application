@@ -46,6 +46,7 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Diamante\DeskBundle\Form\Type\AddWatcherType;
+use Diamante\UserBundle\Entity\DiamanteUser;
 
 /**
  * @Route("tickets")
@@ -231,9 +232,15 @@ class TicketController extends Controller
 
             }
             $this->handle($form);
-            $watcherService = $this->get('diamante.ticket.watcher_list.service');
 
-            $watcherService->addWatcher($ticket, $command->watcher);
+            if(is_string($command->watcher)) {
+                $user = new DiamanteUser($command->watcher);
+                $this->get('diamante.user.repository')->store($user);
+                $command->watcher = new User($user->getId(), User::TYPE_DIAMANTE);
+            }
+
+            $this->get('diamante.ticket.watcher_list.service')
+                ->addWatcher($ticket, $command->watcher);
             $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
             $response = array('reload_page' => true);
         } catch (TicketNotFoundException $e) {
