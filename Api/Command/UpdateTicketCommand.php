@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Diamante\DeskBundle\Entity\Branch;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateTicketCommand
@@ -86,4 +87,9 @@ class UpdateTicketCommand
      * @var Branch
      */
     public $branch;
+
+    /**
+     * @Assert\Type(type="array")
+     */
+    public $tags;
 }

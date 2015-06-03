@@ -1,4 +1,5 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroTagBundle:Form:fields.html.twig'] %}
 {% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
 {% set formAction = path('diamante_ticket_create')  %}
 {% block head_script %}
@@ -42,7 +43,8 @@
                     form_row(form.source),
                     form_row(form.reporter),
                     form_row(form.assignee),
-                    form_row(form.attachmentsInput)
+                    form_row(form.attachmentsInput),
+                    form_row(form.tags)
                 ]
             }
         ]

@@ -18,6 +18,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class CommonTicketBuilder implements TicketBuilder
@@ -86,6 +87,11 @@ class CommonTicketBuilder implements TicketBuilder
      * @var Status
      */
     private $status;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $tags;
 
     public function __construct(TicketFactory $factory, Repository $branchRepository, UserService $userService)
     {
@@ -203,6 +209,17 @@ class CommonTicketBuilder implements TicketBuilder
     }
 
     /**
+     * @param array|ArrayCollection|null $tags
+     * @return $this
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+        return $this;
+    }
+
+
+    /**
      * @return void
      */
     private function initializeDefaultValues()
@@ -226,6 +243,10 @@ class CommonTicketBuilder implements TicketBuilder
         if (is_null($this->status)) {
             $this->status = new Status(Status::NEW_ONE);
         }
+
+        if (is_null($this->tags)) {
+            $this->tags = new ArrayCollection();
+        }
     }
 
     /**
@@ -241,7 +262,7 @@ class CommonTicketBuilder implements TicketBuilder
                 ->create(
                     $this->uniqueId, $this->sequenceNumber, $this->subject, $this->description,
                     $this->branch, $this->reporter, $this->assignee,
-                    $this->priority, $this->source, $this->status
+                    $this->priority, $this->source, $this->status, $this->tags
                 );
 
         $this->clearBuilderValues();
@@ -264,5 +285,6 @@ class CommonTicketBuilder implements TicketBuilder
         $this->priority = null;
         $this->source = null;
         $this->status = null;
+        $this->tags = null;
     }
 } 
