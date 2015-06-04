@@ -238,7 +238,7 @@ define([
             success : function(){
               defer.resolve(model);
             },
-            error : function(){
+            error : function(model, xhr){
               model.clear();
               defer.reject(model, xhr);
             },

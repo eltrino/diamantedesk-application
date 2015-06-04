@@ -21,9 +21,9 @@ define(['app'], function(App){
                 App.trigger('session:login');
                 App.trigger('message:show',{ status: 'success', text:'Password successfully changed, you can use it to login'});
               })
-              .fail(function(){
+              .fail(function(data, xhr){
                 App.trigger('session:reset');
-                App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'] });
+                App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'], xhr:xhr });
               });
           } else {
             this.model.reset(data)

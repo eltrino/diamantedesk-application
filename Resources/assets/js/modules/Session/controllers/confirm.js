@@ -31,7 +31,7 @@ define(['app'], function(App){
           App.trigger('session:login');
         })
         .fail(function(model, xhr){
-          //App.alert({ title: 'Email Confirmation Failed', messages: ['Activation code is wrong'] });
+          App.alert({ title: 'Email Confirmation Failed', messages: ['Activation code is wrong'] });
           App.trigger('session:registration');
         });
 
