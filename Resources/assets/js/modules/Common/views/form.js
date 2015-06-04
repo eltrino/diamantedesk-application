@@ -20,11 +20,13 @@ define(['app', 'config', 'tinymce'], function(App, Config){
       },
 
       ui : {
-        'submitButton' : '.js-submit'
+        'submitButton' : '.js-submit',
+        'form': 'form'
       },
 
       events: {
-        'click @ui.submitButton' : 'submitForm'
+        'click @ui.submitButton' : 'submitForm',
+        'submit @ui.form' : 'submitForm'
       },
 
       submitForm: function(e){
@@ -75,10 +77,11 @@ define(['app', 'config', 'tinymce'], function(App, Config){
       },
 
       onShow: function() {
-        if(this.$('textarea').tinymce()){
-          console.dir(this.$('textarea').tinymce().remove());
+        var textarea = this.$('textarea');
+        if(textarea.tinymce()){
+          textarea.tinymce().remove();
         }
-        this.$('textarea').tinymce(tinymce_options);
+        textarea.tinymce(tinymce_options);
       }
 
     });
