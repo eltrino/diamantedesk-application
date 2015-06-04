@@ -25,6 +25,7 @@ use Doctrine\ORM\Query;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -189,18 +190,23 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      */
     public function filter(array &$conditions, PagingProperties $pagingProperties)
     {
-        $qb = $this->createFilterQuery($conditions, $pagingProperties);
-
         $user = $this->securityContext->getToken()->getUser();
-        if ($user instanceof ApiUser) {
-            $email = $user->getEmail();
-            $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
-            $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
-            $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
-                ->setParameter('reporter', $user);
-
-            $conditions[] = ['reporter', 'eq', $user];
+        if (!$user instanceof ApiUser) {
+            return [];
         }
+
+        if('key' == $pagingProperties->getSort()) {
+            $qb = $this->orderByTicketKey($conditions, $pagingProperties);
+        } else {
+            $qb = $this->createFilterQuery($conditions, $pagingProperties);
+        }
+        $email = $user->getEmail();
+        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
+        $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
+        $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
+            ->setParameter('reporter', $user);
+
+        $conditions[] = ['reporter', 'eq', $user];
 
         $query = $qb->getQuery();
 
@@ -214,6 +220,33 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     }
 
     /**
+     * @param array $conditions
+     * @param PagingProperties $pagingProperties
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function orderByTicketKey(array $conditions, PagingProperties $pagingProperties)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $offset = ($pagingProperties->getPage() - 1) * $pagingProperties->getLimit();
+
+        $qb->select(self::SELECT_ALIAS)
+            ->addSelect('CONCAT(b.key, \'-\', ' . self::SELECT_ALIAS . '.sequenceNumber) AS HIDDEN ticketKey')
+            ->from('DiamanteDeskBundle:Ticket', self::SELECT_ALIAS)
+            ->join(self::SELECT_ALIAS . '.branch', 'b');
+
+        foreach ($conditions as $condition) {
+            $whereExpression = $this->buildWhereExpression($qb, $condition);
+            $qb->andWhere($whereExpression);
+        }
+
+        $qb->addOrderBy('ticketKey', $pagingProperties->getOrder());
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($pagingProperties->getLimit());
+
+        return $qb;
+    }
+
+    /**
      * Sorting the mysql result.
      * Implemented because Doctrine ORM not support select from subQuery
      *
@@ -221,7 +254,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      * @param PagingProperties $pagingProperties
      * @return array
      */
-    public function applyResultOrder($result, PagingProperties $pagingProperties)
+    public function sortByKey($result, PagingProperties $pagingProperties)
     {
         if (!$result || empty($result)) {
             return $result;
@@ -246,35 +279,35 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
                 $propertyA->setAccessible(true);
                 $propertyB->setAccessible(true);
 
-                if('key' == $sortBy) {
+//                if('key' == $sortBy) {
                     $valueA = (string)$a->getKey();
                     $valueB = (string)$b->getKey();
-                } else {
-                    $valueA = $propertyA->getValue($a);
-                    $valueB = $propertyB->getValue($b);
-                }
+//                } else {
+//                    $valueA = $propertyA->getValue($a);
+//                    $valueB = $propertyB->getValue($b);
+//                }
 
-                if (is_object($valueA) && is_object($valueB)) {
-                    if ($valueA instanceof \DateTime && $valueB instanceof \DateTime) {
-                        $valueA = $valueA->getTimestamp();
-                        $valueB = $valueB->getTimestamp();
-                    } else {
-                        $valueA = $valueA->getValue();
-                        $valueB = $valueB->getValue();
-                    }
-                }
+//                if (is_object($valueA) && is_object($valueB)) {
+//                    if ($valueA instanceof \DateTime && $valueB instanceof \DateTime) {
+//                        $valueA = $valueA->getTimestamp();
+//                        $valueB = $valueB->getTimestamp();
+//                    } else {
+//                        $valueA = $valueA->getValue();
+//                        $valueB = $valueB->getValue();
+//                    }
+//                }
 
-                if ($valueB == $valueA) {
-                    return 0;
-                }
+//                if ($valueB == $valueA) {
+//                    return 0;
+//                }
 
-                if (is_int($valueA) && is_int($valueB)) {
-                    if ($orderBy == 'desc') {
-                        return $valueA > $valueB;
-                    } else {
-                        return $valueA < $valueB;
-                    }
-                }
+//                if (is_int($valueA) && is_int($valueB)) {
+//                    if ($orderBy == 'desc') {
+//                        return $valueA > $valueB;
+//                    } else {
+//                        return $valueA < $valueB;
+//                    }
+//                }
 
                 if (is_string($valueA) || is_string($valueB)) {
 

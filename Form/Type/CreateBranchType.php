@@ -73,7 +73,7 @@ class CreateBranchType extends AbstractType
             'defaultAssignee',
             'diamante_assignee_select',
             array(
-                'label'    => 'diamante.desk.attributes.assignee',
+                'label'    => 'diamante.desk.attributes.default_assignee',
                 'required' => false
             )
         );

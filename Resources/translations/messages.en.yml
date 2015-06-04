@@ -242,6 +242,7 @@ diamante:
           priority:            Priority
           source:              Source
           reporter:            Reporter
+          default_assignee:    Default Assignee
           assignee:            Assignee
           watcher:             Watcher
           key:                 Key
