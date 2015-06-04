@@ -1,4 +1,13 @@
-define(['app'], function(App){
+define(['app', 'config', 'tinymce'], function(App, Config){
+
+  var tinymce_options = {
+    menubar : false,
+    resize: true,
+    autoresize_bottom_margin: 0,
+    plugins: ['textcolor', 'code', 'link', 'autoresize'],
+    toolbar: ['undo redo | bold italic underline | forecolor backcolor | bullist numlist | link | code'],
+    content_css: Config.basePath + '/bundles/diamantefront/css/wysiwyg.css'
+  };
 
   return App.module('Common.Form', function(Form, App, Backbone, Marionette, $, _){
 
@@ -63,6 +72,13 @@ define(['app'], function(App){
 
       requestReceived: function(){
         this.hideLoader();
+      },
+
+      onShow: function() {
+        if(this.$('textarea').tinymce()){
+          console.dir(this.$('textarea').tinymce().remove());
+        }
+        this.$('textarea').tinymce(tinymce_options);
       }
 
     });

@@ -22,6 +22,7 @@ require.config({
     "bootstrap" : "vendor/bootstrap/dist/js/bootstrap",
     "moment" : "vendor/moment/min/moment-with-locales",
     "pwstrength" : "vendor/pwstrength-bootstrap/dist/pwstrength-bootstrap-1.2.5",
+    "tinymce" : "vendor/tinymce/jquery.tinymce.min",
     "cryptojs.core" : "vendor/dfm-crypto-js/components/core",
     "cryptojs.x64" : "vendor/dfm-crypto-js/components/x64-core",
     "cryptojs.md5" : "vendor/dfm-crypto-js/components/md5",
@@ -50,6 +51,28 @@ require.config({
     "bootstrap" : {
       deps : ["jquery"]
     },
+    "tinymce" : {
+      deps : [
+        "jquery",
+        "Tinymce/tinymce",
+        "Tinymce/plugins/code/plugin",
+        "Tinymce/plugins/link/plugin",
+        "Tinymce/plugins/textcolor/plugin",
+        "Tinymce/plugins/autoresize/plugin"
+      ]
+    },
+    "Tinymce/plugins/code/plugin" : {
+      deps : [ "Tinymce/tinymce"]
+    },
+    "Tinymce/plugins/link/plugin" : {
+      deps : [ "Tinymce/tinymce"]
+    },
+    "Tinymce/plugins/textcolor/plugin" : {
+      deps : [ "Tinymce/tinymce"]
+    },
+    "Tinymce/plugins/autoresize/plugin" : {
+      deps : [ "Tinymce/tinymce"]
+    },
     "cryptojs.core" : {
       exports: "CryptoJS"
     },
@@ -75,6 +98,10 @@ require.config({
     }
   },
   "packages": [
+    {
+      name: 'Tinymce',
+      location: 'vendor/tinymce'
+    },
     {
       name: 'Common',
       location: 'modules/Common'

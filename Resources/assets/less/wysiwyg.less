@@ -1,0 +1,15 @@
+@bootstrap_path : "../js/vendor/bootstrap/less";
+@import "@{bootstrap_path}/variables";
+@import "variables";
+@import "@{bootstrap_path}/mixins/text-emphasis";
+@import "@{bootstrap_path}/mixins/text-overflow";
+@import "@{bootstrap_path}/mixins/background-variant";
+@import "@{bootstrap_path}/type";
+
+body {
+  font-family: @font-family-sans-serif;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  color: @text-color;
+  background-color: @body-bg;
+}

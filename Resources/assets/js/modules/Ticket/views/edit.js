@@ -13,19 +13,7 @@ define([
 
     Edit.ItemView = Form.ItemView.extend({
       template: formTemplate,
-      className: 'ticket-edit-form',
-      onShow : function(){
-        var textarea =  this.$('textarea');
-        textarea.keyup(function(){
-          var height = this.clientHeight;
-          if(this.clientHeight < this.scrollHeight){
-            while(this.clientHeight < this.scrollHeight) {
-              $(this).height(++height);
-            }
-          }
-        });
-        App.dialogRegion.$el.on('shown.bs.modal', function(){ textarea.keyup(); });
-      }
+      className: 'ticket-edit-form'
     });
 
     Edit.ModalView = Modal.LayoutView.extend({

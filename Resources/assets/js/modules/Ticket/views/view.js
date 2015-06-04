@@ -27,7 +27,6 @@ define([
         return {
           created : new Date(this.model.get('created_at')).toLocaleDateString(),
           status: this.model.get('status').replace(/_/g,' '),
-          description : this.model.get('description').toString().replace(/\n/g,'<br />'),
           back_url: this.backUrl ? '#tickets' + this.backUrl : '#tickets'
         };
       },

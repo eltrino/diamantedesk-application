@@ -36,6 +36,9 @@ define([
           formView.dropRegion.show(dropZone);
 
         });
+
+        CommonForm.LayoutView.prototype.onShow.call(this);
+
       }
     });
 

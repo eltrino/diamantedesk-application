@@ -19,6 +19,7 @@ define(['app'], function(App){
                 status:'success',
                 text: 'Comment was posted successfully'
               });
+              formView.destroy();
               Create.Controller(options);
             };
         formView.on('form:submit', function(data){

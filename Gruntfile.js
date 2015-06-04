@@ -49,6 +49,11 @@ module.exports = function(grunt) {
         files: {
           '<%= publicDir %>/css/main.css': '<%= lessDir %>/main.less'
         }
+      },
+      wysiwyg: {
+        files: {
+          '<%= publicDir %>/css/wysiwyg.css': '<%= lessDir %>/wysiwyg.less'
+        }
       }
     },
 
