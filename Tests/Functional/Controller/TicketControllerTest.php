@@ -265,6 +265,28 @@ class TicketControllerTest extends AbstractController
         $this->assertEquals(404, $viewResponse->getStatusCode());
     }
 
+    public function testWatch()
+    {
+        $ticket = $this->chooseTicketFromGrid();
+        $ticketWatchUrl = $this->getUrl('diamante_ticket_watch', ['ticketId' => $ticket['id']]);
+
+        $this->client->followRedirects(true);
+        $crawler = $this->client->request('GET', $ticketWatchUrl);
+
+        $this->assertContains("Now you watching the ticket.", $crawler->html());
+    }
+
+    public function testUnWatch()
+    {
+        $ticket = $this->chooseTicketFromGrid();
+        $ticketWatchUrl = $this->getUrl('diamante_ticket_unwatch', ['ticketId' => $ticket['id']]);
+
+        $this->client->followRedirects(true);
+        $crawler = $this->client->request('GET', $ticketWatchUrl);
+
+        $this->assertContains("You successfully unsubscribe from watching of ticket", $crawler->html());
+    }
+
     private function chooseBranchFromGrid()
     {
         $response = $this->requestGrid(

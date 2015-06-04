@@ -30,9 +30,10 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
-class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
+class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Taggable
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
@@ -107,6 +108,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     protected $attachments;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $watcherList;
+
+    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -115,6 +121,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @var \DateTime
      */
     protected $updatedAt;
+
+    /**
+     * @var ArrayCollection
+     */
+    protected $tags;
 
     /**
      * @param UniqueId $uniqueId
@@ -127,6 +138,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
      * @param Source $source
      * @param Priority $priority
      * @param Status $status
+     * @param ArrayCollection $tags
      */
     public function __construct(
         UniqueId $uniqueId,
@@ -137,7 +149,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         OroUser $assignee = null,
         Source $source,
         Priority $priority,
-        Status $status
+        Status $status,
+        $tags = null
     ) {
         $this->uniqueId = $uniqueId;
         $this->sequenceNumber = $sequenceNumber;
@@ -150,9 +163,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         $this->assignee = $assignee;
         $this->comments  = new ArrayCollection();
         $this->attachments = new ArrayCollection();
+        $this->watcherList = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
+        $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
 
 
         $this->raise(
@@ -357,6 +372,40 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         return 'Reporter';
     }
 
+    /**
+     * Returns the unique taggable resource identifier
+     *
+     * @return string
+     */
+    public function getTaggableId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Returns the collection of tags for this Taggable entity
+     *
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+        return $this->tags;
+    }
+
+    /**
+     * Set tag collection
+     *
+     * @param $tags
+     * @return $this
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
@@ -497,6 +546,15 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Retrieves ticket watchers
+     * @return ArrayCollection
+     */
+    public function getWatcherList()
+    {
+        return $this->watcherList;
     }
 
     /**
