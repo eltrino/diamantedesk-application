@@ -19,10 +19,5 @@ interface DomainEvent
     /**
      * @return string
      */
-    public function getAggregateId();
-
-    /**
-     * @return string
-     */
     public function getEventName();
 }

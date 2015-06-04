@@ -14,6 +14,8 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
+use Diamante\DeskBundle\Model\Shared\Notification;
+
 interface Notifier
 {
     /**

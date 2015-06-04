@@ -17,8 +17,8 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\Notifications;
 use Diamante\DeskBundle\Infrastructure\Ticket\Notifications\EmailNotifier;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+use Diamante\DeskBundle\Model\Shared\Email\TemplateResolver;
+use Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -45,8 +45,8 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
     private $mailer;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver
-     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver
+     * @var \Diamante\DeskBundle\Model\Shared\Email\TemplateResolver
+     * @Mock \Diamante\DeskBundle\Model\Shared\Email\TemplateResolver
      */
     private $templateResolver;
 
@@ -114,7 +114,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
             $ticketUniqueId, new TicketSequenceNumber(1), 'Subject', 'Description', $branch, $reporter, $assignee,
             new Source(Source::WEB), new Priority(Priority::PRIORITY_MEDIUM), new Status(Status::NEW_ONE)
         );
-        $notification = new Notification(
+        $notification = new TicketNotification(
             (string)$ticketUniqueId,
             $author,
             'Header',
@@ -221,7 +221,7 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
             $ticketUniqueId, new TicketSequenceNumber(1), 'Subject', 'Description', $branch, $reporter, $assignee,
             new Source(Source::WEB), new Priority(Priority::PRIORITY_MEDIUM), new Status(Status::NEW_ONE)
         );
-        $notification = new Notification(
+        $notification = new TicketNotification(
             (string)$ticketUniqueId,
             $author,
             'Header',

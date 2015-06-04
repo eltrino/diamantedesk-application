@@ -17,8 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\Notifications;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Email\TemplateResolver;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notification;
+use Diamante\DeskBundle\Model\Shared\Email\TemplateResolver;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
@@ -29,6 +28,7 @@ use Diamante\UserBundle\Model\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
+use Diamante\DeskBundle\Model\Shared\Notification;
 
 class EmailNotifier implements Notifier
 {
@@ -124,6 +124,8 @@ class EmailNotifier implements Notifier
 
     /**
      * @param Notification $notification
+     * @param Ticket       $ticket
+     *
      * @return \Swift_Message
      */
     private function message(Notification $notification, Ticket $ticket)
