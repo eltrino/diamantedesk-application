@@ -132,7 +132,7 @@ class UserController extends FOSRestController
             $resetService->changePassword($command);
             $view = $this->view(null, Codes::HTTP_OK);
         } catch (\Exception $e) {
-            $view = $this->view(null, Codes::HTTP_NOT_FOUND);
+            $view = $this->view(['message' => $e->getMessage()], Codes::HTTP_NOT_FOUND);
         }
         return $this->response($view);
     }
