@@ -24,8 +24,7 @@
     "require": {
         "php": ">=5.4.4",
         "oro/platform": "1.7.*",
-        "oro/crm": "1.7.*",
-        "diamante/desk-bundle": "dev-master"
+        "oro/crm": "1.7.*"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"
