@@ -23,5 +23,8 @@
     "moment": "~2.9.0",
     "pwstrength-bootstrap": "~1.2.5",
     "tinymce": "~4.1.10"
+  },
+  "resolutions": {
+    "underscore": "1.6.0"
   }
 }
