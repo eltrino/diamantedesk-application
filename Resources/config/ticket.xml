@@ -109,6 +109,9 @@
             <call method="setUserService">
                 <argument type="service" id="diamante.user.service"/>
             </call>
+            <call method="setBranchRepository">
+                <argument type="service" id="diamante.branch.repository"/>
+            </call>
         </service>
 
         <service id="diamante.ticket.api.service_diamante" alias="diamante.ticket.api.service" />
