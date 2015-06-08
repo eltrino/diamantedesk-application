@@ -109,7 +109,7 @@ class ResetPasswordServiceImpl implements ResetPasswordService
         $apiUser = $this->apiUserRepository->findUserByHash($command->hash);
 
         if (is_null($apiUser)) {
-            throw new \RuntimeException('This password reset code is invalid.');
+            throw new \RuntimeException('Your password reset link has expired.');
         }
 
         $apiUser->changePassword($command->password);
