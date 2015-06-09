@@ -33,7 +33,7 @@ class TicketFactory extends AbstractEntityFactory
         Priority $priority,
         Source $source,
         Status $status,
-        ArrayCollection $tags
+        $tags = null
     ) {
         return new $this->entityClassName(
             $uniqueId, $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status, $tags
