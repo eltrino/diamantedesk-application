@@ -161,7 +161,8 @@ class UserServiceImpl implements UserService, GravatarProvider
         }
 
         $userAvatarUrl = null;
-        if ($user->getType() == User::TYPE_ORO && !empty($loadedUser->getAvatar()->getOriginalFilename())) {
+        $originalFilename = $loadedUser->getAvatar()->getOriginalFilename();
+        if ($user->getType() == User::TYPE_ORO && !empty($originalFilename)) {
             $userAvatarUrl = $this->attachmentManager->getFilteredImageUrl($loadedUser->getAvatar(), 'avatar_med');
         }
 
