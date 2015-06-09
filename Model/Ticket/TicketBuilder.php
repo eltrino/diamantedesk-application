@@ -71,6 +71,12 @@ interface TicketBuilder
     public function setStatus($status);
 
     /**
+     * @param array|\Doctrine\Common\Collections\ArrayCollection|null $tags
+     * @return $this
+     */
+    public function setTags($tags);
+
+    /**
      * Builds Ticket object and unset all previously defined values
      * @return Ticket
      */

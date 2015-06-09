@@ -45,6 +45,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Oro\Bundle\TagBundle\Entity\TagManager;
 
 class TicketServiceImpl implements TicketService
 {
@@ -98,6 +99,11 @@ class TicketServiceImpl implements TicketService
      */
     private $ticketHistoryRepository;
 
+    /**
+     * @var TagManager
+     */
+    private $tagManager;
+
     public function __construct(TicketRepository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketBuilder $ticketBuilder,
@@ -107,7 +113,8 @@ class TicketServiceImpl implements TicketService
                                 EventDispatcher $dispatcher,
                                 NotificationDeliveryManager $notificationDeliveryManager,
                                 Notifier $notifier,
-                                DoctrineGenericRepository $ticketHistoryRepository
+                                DoctrineGenericRepository $ticketHistoryRepository,
+                                TagManager $tagManager
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
@@ -119,6 +126,7 @@ class TicketServiceImpl implements TicketService
         $this->notificationDeliveryManager = $notificationDeliveryManager;
         $this->notifier = $notifier;
         $this->ticketHistoryRepository = $ticketHistoryRepository;
+        $this->tagManager = $tagManager;
     }
 
     /**
@@ -150,6 +158,7 @@ class TicketServiceImpl implements TicketService
             $ticket = $this->loadTicketByTicketKey($ticketKey);
         }
 
+        $this->tagManager->loadTagging($ticket);
         $this->isGranted('VIEW', $ticket);
 
         return $ticket;
@@ -290,7 +299,8 @@ class TicketServiceImpl implements TicketService
             ->setAssigneeId($command->assignee)
             ->setPriority($command->priority)
             ->setSource($command->source)
-            ->setStatus($command->status);
+            ->setStatus($command->status)
+            ->setTags($command->tags);
 
         $ticket = $this->ticketBuilder->build();
 
@@ -301,6 +311,7 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+        $this->tagManager->saveTagging($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
@@ -354,6 +365,11 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+        $this->tagManager->deleteTaggingByParams($ticket->getTags(), get_class($ticket), $ticket->getId());
+        $tags = $command->tags;
+        $tags['owner'] = $tags['all'];
+        $ticket->setTags($tags);
+        $this->tagManager->saveTagging($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;

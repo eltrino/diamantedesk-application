@@ -70,6 +70,7 @@ class CommandFactory
         $command->priority = $ticket->getPriority();
         $command->branch = $ticket->getBranch();
         $command->source = $ticket->getSource();
+        $command->tags = $ticket->getTags();
 
         return $command;
     }

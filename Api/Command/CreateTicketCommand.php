@@ -19,8 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 use Diamante\DeskBundle\Validator\Constraints\User;
 use Diamante\DeskBundle\Validator\Constraints\PrintType;
+use Oro\Bundle\TagBundle\Entity\Taggable;
 
-class CreateTicketCommand
+class CreateTicketCommand implements Taggable
 {
     /**
      * @var int|null
