@@ -173,10 +173,10 @@ class EmailNotifier implements Notifier
         $reporter = $this->userService->getByUser($reporter);
         $assignee = $ticket->getAssignee();
 
-        $emails[] = $reporter->getEmail();
+        $emails[$reporter->getEmail()] = $reporter->getFullName();
 
         if ($assignee) {
-            $emails[] = $assignee->getEmail();
+            $emails[$assignee->getEmail()] = $assignee->getFirstName() . ' ' . $assignee->getLastName();
         }
 
         return $emails;
@@ -287,6 +287,8 @@ class EmailNotifier implements Notifier
                 $format
             );
         }
+
+        $name = preg_replace('/\s+/', ' ',$name);
 
         return trim($name);
     }
