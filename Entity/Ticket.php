@@ -156,6 +156,11 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     protected $source;
 
+    /**
+     * @var ArrayCollection
+     */
+    protected $tags;
+
     public static function getClassName()
     {
         return __CLASS__;
