@@ -21,6 +21,7 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Diamante\UserBundle\Model\UserDetails;
 use Oro\Bundle\UserBundle\Entity\UserManager;
@@ -199,5 +200,16 @@ class UserServiceImpl implements UserService, GravatarProvider
         $link = sprintf('%s://gravatar.com/avatar/%s.jpg?s=%d&d=identicon', $schema, $hash, (int)$size);
 
         return $link;
+    }
+
+    /**
+     * @param ApiUser $apiUser
+     * @return DiamanteUser|null
+     */
+    public function getUserFromApiUser(ApiUser $apiUser)
+    {
+        return $this->diamanteUserRepository->findUserByEmail(
+            $apiUser->getEmail()
+        );
     }
 }

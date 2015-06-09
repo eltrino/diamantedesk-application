@@ -15,6 +15,7 @@
 namespace Diamante\UserBundle\Api;
 
 use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -58,4 +59,10 @@ interface UserService
      * @return int|null
      */
     public function verifyDiamanteUserExists($email);
+
+    /**
+     * @param ApiUser $user
+     * @return DiamanteUser|null
+     */
+    public function getUserFromApiUser(ApiUser $user);
 }
