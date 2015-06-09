@@ -63,12 +63,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
     private $queryBuilder;
 
     /**
-     * @var \Diamante\UserBundle\Api\Internal\UserStateServiceImpl
-     * @Mock \Diamante\UserBundle\Api\Internal\UserStateServiceImpl
-     */
-    private $userState;
-
-    /**
      * @var \Doctrine\ORM\AbstractQuery
      */
     private $searchQuery;
@@ -92,7 +86,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->searchQuery = $this->getMockForAbstractClass('\Doctrine\ORM\AbstractQuery', array($this->em));
         $this->classMetadata->name = self::CLASS_NAME;
         $this->repository = new DoctrineTicketRepository($this->em, $this->classMetadata);
-        $this->repository->setUserState($this->userState);
     }
 
         public function testGetByTicketKey()
@@ -122,18 +115,12 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             $this->queryBuilder
                 ->expects($this->once())
                 ->method('select')
-                ->with($this->equalTo(array('t', 'c')))
+                ->with($this->equalTo('t'))
                 ->will($this->returnValue($this->queryBuilder));
 
             $this->queryBuilder
                 ->expects($this->exactly(2))
                 ->method('from')
-                ->will($this->returnValue($this->queryBuilder));
-
-            $this->queryBuilder
-                ->expects($this->once())
-                ->method('leftJoin')
-                ->with($this->equalTo('t.comments'), $this->equalTo('c'))
                 ->will($this->returnValue($this->queryBuilder));
 
             $this->queryBuilder
@@ -156,10 +143,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
                     ]
                 )
                 ->will($this->returnValue($this->queryBuilder));
-
-            $this->userState->expects($this->once())
-                ->method('isOroUser')
-                ->will($this->returnValue(true));
 
             $this->queryBuilder
                 ->expects($this->once())
@@ -210,18 +193,12 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             $this->queryBuilder
                 ->expects($this->once())
                 ->method('select')
-                ->with($this->equalTo(array('t', 'c')))
+                ->with($this->equalTo('t'))
                 ->will($this->returnValue($this->queryBuilder));
 
             $this->queryBuilder
                 ->expects($this->once())
                 ->method('from')
-                ->will($this->returnValue($this->queryBuilder));
-
-            $this->queryBuilder
-                ->expects($this->once())
-                ->method('leftJoin')
-                ->with($this->equalTo('t.comments'), $this->equalTo('c'))
                 ->will($this->returnValue($this->queryBuilder));
 
             $this->queryBuilder
@@ -249,13 +226,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
                 ->expects($this->atLeastOnce())
                 ->method('hydrateAll')
                 ->will($this->returnValue($ticket));
-
-            $this->userState->expects($this->once())
-                ->method('isOroUser')
-                ->will($this->returnValue(true));
-//
-//            $this->userState->expects($this->once())
-//                ->method('removePrivateComments');
 
             $result = $this->repository->getByUniqueId(new UniqueId($uniqueId));
 
@@ -291,18 +261,12 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->queryBuilder
             ->expects($this->once())
             ->method('select')
-            ->with($this->equalTo(array('t', 'c')))
+            ->with($this->equalTo('t'))
             ->will($this->returnValue($this->queryBuilder));
 
         $this->queryBuilder
             ->expects($this->once())
             ->method('from')
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('leftJoin')
-            ->with($this->equalTo('t.comments'), $this->equalTo('c'))
             ->will($this->returnValue($this->queryBuilder));
 
         $this->queryBuilder
@@ -330,10 +294,6 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
             ->expects($this->atLeastOnce())
             ->method('hydrateAll')
             ->will($this->returnValue($ticket));
-
-        $this->userState->expects($this->once())
-            ->method('isOroUser')
-            ->will($this->returnValue(true));
 
         $result = $this->repository->get($id);
 

@@ -16,15 +16,17 @@
 namespace Diamante\DeskBundle\Model\Shared;
 
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 
 interface FilterableRepository
 {
     /**
      * @param array $criteria
      * @param PagingProperties $pagingProperties
+     * @param ApiUser $user
      * @return Entity[]
      */
-    public function filter(array &$criteria, PagingProperties $pagingProperties);
+    public function filter(array &$criteria, PagingProperties $pagingProperties, $user = null);
 
     /**
      * @param array $criteria

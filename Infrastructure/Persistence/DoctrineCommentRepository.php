@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Model\Ticket\CommentRepository;
 use Diamante\UserBundle\Api\Internal\UserStateServiceImpl;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
@@ -62,10 +63,11 @@ class DoctrineCommentRepository extends DoctrineGenericRepository implements Com
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
+     * @param ApiUser $user
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
-    public function filter(array &$conditions, PagingProperties $pagingProperties)
+    public function filter(array &$conditions, PagingProperties $pagingProperties, $user = null)
     {
         $qb = $this->_em->createQueryBuilder();
         $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());

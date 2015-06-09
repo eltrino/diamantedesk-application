@@ -430,7 +430,10 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $criteria = $criteriaProcessor->getCriteria();
         $pagingProperties = $criteriaProcessor->getPagingProperties();
         $repository = $this->getTicketRepository();
-        $tickets = $repository->filter($criteria, $pagingProperties);
+
+        $apiUser = $this->getAuthorizationService()->getLoggedUser();
+        $user = $this->userService->getUserFromApiUser($apiUser);
+        $tickets = $repository->filter($criteria, $pagingProperties, $user);
 
         try {
             $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);

@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 
 class DoctrineGenericRepository extends EntityRepository implements Repository, FilterableRepository
 {
@@ -66,10 +67,11 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
+     * @param ApiUser $user
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
-    public function filter(array &$conditions, PagingProperties $pagingProperties)
+    public function filter(array &$conditions, PagingProperties $pagingProperties, $user = null)
     {
         $qb = $this->createFilterQuery($conditions, $pagingProperties);
         $query = $qb->getQuery();

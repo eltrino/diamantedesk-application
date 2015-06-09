@@ -228,15 +228,6 @@
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">
             <argument type="string">%diamante.ticket.entity.class%</argument>
-            <call method="setUserState">
-                <argument type="service" id="diamante.user_state.service" />
-            </call>
-            <call method="setSecurityContext">
-                <argument type="service" id="security.context" />
-            </call>
-            <call method="setDiamanteUserRepository">
-                <argument type="service" id="diamante.user.repository" />
-            </call>
         </service>
         <service id="diamante.comment.repository" class="%diamante.comment.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"
