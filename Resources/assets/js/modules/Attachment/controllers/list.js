@@ -13,6 +13,12 @@ define(['app'], function(App){
       attachmentCollectionView.on('childview:attachment:delete', function(childView, attachmentModel){
         attachmentModel.destroy({
           wait: true,
+          success: function(){
+            App.trigger('message:show', {
+              status:'success',
+              text: 'File deleted successfully'
+            });
+          },
           error : function(model, xhr){
             App.alert({
               title: "Delete Attachment Error",
