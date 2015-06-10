@@ -161,10 +161,9 @@ class EmailNotifier implements Notifier
             }
             $message = $this->message($notification, $ticket, $isOroUser, $loadedUser->getEmail(), $changeList);
             $this->mailer->send($message);
+            $reference = new MessageReference($message->getId(), $ticket);
+            $this->messageReferenceRepository->store($reference);
         }
-
-        $reference = new MessageReference($message->getId(), $ticket);
-        $this->messageReferenceRepository->store($reference);
     }
 
     /**
