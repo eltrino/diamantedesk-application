@@ -75,7 +75,7 @@ class WsseListener implements ListenerInterface
             {
                 if (!$returnValue->getUser()->isActive()) {
                     throw new AuthenticationException(
-                        "Your account is not activated yet, please check your email and confirm registration.".
+                        "Your account is not activated yet, please check your email and confirm registration.\n".
                         "If you didn't receive your verification email, please <a href=\"#reconfirm/$user\">click here.</a>");
                     }
 
