@@ -1,6 +1,5 @@
 <% _.each(items, function(message){ %>
 <div class="alert alert-<%= status_class(message.status) %>" role="alert">
-  <i class="fa fa-<%= status_icon(message.status) %>"></i>&nbsp;
-  <%= message.text %>
+  <i class="fa fa-<%= status_icon(message.status) %>"></i>&nbsp;<%= message.text %>
 </div>
 <% }); %>
