@@ -31,6 +31,7 @@
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
         <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
         <parameter key="diamante.render.url.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderUrlExtension</parameter>
+        <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Api\Internal\ReportServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -86,5 +87,8 @@
             <argument type="service" id="router"/>
             <tag name="twig.extension"/>
         </service>
+
+        <service id="diamante.report.service" class="%diamante.report.service.class%"/>
+
     </services>
 </container>
