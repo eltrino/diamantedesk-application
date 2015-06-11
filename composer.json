@@ -1,54 +1,20 @@
 {
-    "name": "diamante/application",
+    "name": "diamantedesk/application",
     "description": "DiamanteDesk Application",
-    "homepage": "https://github.com/eltrino/diamante-application.git",
-    "license": "MIT",
+    "homepage": "https://github.com/eltrino/diamantedesk-application.git",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrino LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
     "autoload": {
         "psr-0": {
             "": "src/"
         }
     },
     "repositories": [
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/diamanteemailprocessingbundle.git",
-          "branch": "master"
-        },
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/diamanteembeddedformbundle.git",
-          "branch": "master"
-        },
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/diamantedeskbundle.git",
-          "branch": "master"
-        },
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/diamanteapibundle.git",
-          "branch": "master"
-        },
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/diamantefrontbundle.git",
-          "branch": "master"
-        },
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/DiamanteUserBundle.git",
-          "branch": "master"
-        },
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/diamanteinstallerbundle.git",
-          "branch": "master"
-        },
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/eltrino/diamantedistributionbundle.git",
-          "branch": "master"
-        },
         {
             "type": "composer",
             "url": "http://packagist.orocrm.com"
