@@ -13,11 +13,11 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\Report\Api;
+namespace Diamante\DeskBundle\Report\Infrastructure;
 
 /**
  * Interface ReportService
- * @package Diamante\DeskBundle\Report\Api
+ * @package Diamante\DeskBundle\Report\Infrastructure
  */
 interface ReportService
 {
@@ -33,4 +33,10 @@ interface ReportService
      * @return array
      */
     public function getConfig($reportId = null);
+
+    /**
+     * @param $reportId
+     * @return mixed
+     */
+    public function build($reportId);
 }

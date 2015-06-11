@@ -31,7 +31,9 @@
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
         <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
         <parameter key="diamante.render.url.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderUrlExtension</parameter>
-        <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Api\Internal\ReportServiceImpl</parameter>
+        <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportServiceImpl</parameter>
+        <parameter key="diamante.report.builder.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportBuilderImpl</parameter>
+        <parameter key="diamante.report.chart_type_provider.class">Diamante\DeskBundle\Report\ChartTypeProvider</parameter>
     </parameters>
 
     <services>
@@ -88,7 +90,16 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="diamante.report.service" class="%diamante.report.service.class%"/>
+        <service id="diamante.report.service" class="%diamante.report.service.class%">
+            <argument type="service" id="diamante.report.builder"/>
+        </service>
+
+        <service id="diamante.report.builder" class="%diamante.report.builder.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="diamante.report.chart_type_provider"/>
+        </service>
+
+        <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>
 
     </services>
 </container>

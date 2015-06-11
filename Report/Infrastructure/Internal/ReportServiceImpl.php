@@ -13,9 +13,10 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\Report\Api\Internal;
+namespace Diamante\DeskBundle\Report\Infrastructure\Internal;
 
-use Diamante\DeskBundle\Report\Api\ReportService;
+use Diamante\DeskBundle\Report\Infrastructure\ReportBuilder;
+use Diamante\DeskBundle\Report\Infrastructure\ReportService;
 use Oro\Component\Config\CumulativeResourceInfo;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
@@ -28,6 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ReportServiceImpl implements ReportService
 {
     const FILE_PATH = 'Resources/config/reports.yml';
+
     const CONFIG_ID = 'diamante_report';
 
     /**
@@ -35,8 +37,15 @@ class ReportServiceImpl implements ReportService
      */
     private $config;
 
-    public function __construct()
-    {
+    /**
+     * @var ReportBuilder
+     */
+    protected $reportBuilder;
+
+    public function __construct(
+        ReportBuilder $reportBuilder
+    ) {
+        $this->reportBuilder = $reportBuilder;
         $this->readConfig();
     }
 
@@ -50,7 +59,11 @@ class ReportServiceImpl implements ReportService
             return $this->config;
         }
 
-        return $this->config[$reportId];
+        if (isset($this->config[$reportId])) {
+            return $this->config[$reportId];
+        }
+
+        return [];
     }
 
     /**
@@ -83,5 +96,16 @@ class ReportServiceImpl implements ReportService
         $this->config = $config;
 
         return $this;
+    }
+
+    public function build($reportId)
+    {
+        $config = $this->getConfig($reportId);
+
+        if (empty($config)) {
+            throw new \RuntimeException(sprintf("Configuration for report %s not found", $reportId));
+        }
+
+        return $this->reportBuilder->build($config, $reportId);
     }
 }
