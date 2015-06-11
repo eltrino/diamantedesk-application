@@ -58,11 +58,7 @@ class WatchersApiServiceImpl extends WatchersServiceImpl implements RestServiceI
         $watchers = [];
         foreach ($ticket->getWatcherList() as $watcher) {
             $user = User::fromString($watcher->getUserType());
-            if ($user->isOroUser()) {
-                $watchers[] = $this->userManager->findUserBy(['id'=>$user->getId()]);
-            } elseif ($user->isDiamanteUser()) {
-                $watchers[] = $this->diamanteUserRepository->get($user->getId());
-            }
+            $watchers[] = $this->userService->fetchUserDetails($user);
         }
         return $watchers;
     }

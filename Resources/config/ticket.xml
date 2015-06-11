@@ -236,6 +236,7 @@
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.user_factory" />
+            <argument type="service" id="diamante.user.service" />
         </service>
 
         <service id="diamante.watcher.service.api" class="%diamante.watcher.service.api.class%" parent="diamante.ticket.watcher_list.service"/>

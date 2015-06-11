@@ -24,6 +24,7 @@ use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\UserBundle\Entity\UserManager;
+use Diamante\UserBundle\Api\UserService;
 
 class WatchersServiceImpl implements WatchersService
 {
@@ -53,18 +54,25 @@ class WatchersServiceImpl implements WatchersService
      */
     protected $diamanteUserFactory;
 
+    /**
+     * @var UserService
+     */
+    protected $userService;
+
     public function __construct(
         DoctrineWatcherListRepository $watcherListRepository,
         DoctrineDiamanteUserRepository $diamanteUserRepository,
         UserManager $userManager,
         DoctrineTicketRepository $ticketRepository,
-        DiamanteUserFactory $diamanteUserFactory
+        DiamanteUserFactory $diamanteUserFactory,
+        UserService $userService
     ) {
         $this->watcherListRepository  = $watcherListRepository;
         $this->diamanteUserRepository = $diamanteUserRepository;
         $this->userManager            = $userManager;
         $this->ticketRepository       = $ticketRepository;
         $this->diamanteUserFactory    = $diamanteUserFactory;
+        $this->userService            = $userService;
     }
 
     /**
