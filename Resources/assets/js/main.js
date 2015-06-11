@@ -58,7 +58,8 @@ require.config({
         "Tinymce/plugins/code/plugin",
         "Tinymce/plugins/link/plugin",
         "Tinymce/plugins/textcolor/plugin",
-        "Tinymce/plugins/autoresize/plugin"
+        "Tinymce/plugins/autoresize/plugin",
+        "Tinymce/themes/modern/theme"
       ]
     },
     "Tinymce/plugins/code/plugin" : {
@@ -71,6 +72,9 @@ require.config({
       deps : [ "Tinymce/tinymce"]
     },
     "Tinymce/plugins/autoresize/plugin" : {
+      deps : [ "Tinymce/tinymce"]
+    },
+    "Tinymce/themes/modern/theme" : {
       deps : [ "Tinymce/tinymce"]
     },
     "cryptojs.core" : {
