@@ -214,6 +214,27 @@ class EmailNotifier implements Notifier
      * @param Ticket $ticket
      * @return array
      */
+
+    private function resolveRecipientsEmails(Ticket $ticket)
+    {
+        $emails = array();
+        $reporter = $ticket->getReporter();
+        $reporter = $this->userService->getByUser($reporter);
+        $assignee = $ticket->getAssignee();
+
+        $emails[$reporter->getEmail()] = $reporter->getFullName();
+
+        if ($assignee) {
+            $emails[$assignee->getEmail()] = $assignee->getFirstName() . ' ' . $assignee->getLastName();
+        }
+
+        return $emails;
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @return array
+     */
     private function referencesHeader(Ticket $ticket)
     {
         $ids = array();
@@ -317,6 +338,8 @@ class EmailNotifier implements Notifier
                 $format
             );
         }
+
+        $name = preg_replace('/\s+/', ' ',$name);
 
         return trim($name);
     }

@@ -36,6 +36,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -166,6 +167,9 @@ class TicketServiceImpl implements TicketService
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->removePrivateComments($ticket);
+
         return $ticket;
     }
 
@@ -176,10 +180,14 @@ class TicketServiceImpl implements TicketService
      */
     private function loadTicketById($id)
     {
+        /** @var \Diamante\DeskBundle\Model\Ticket\Ticket $ticket */
         $ticket = $this->ticketRepository->get($id);
         if (is_null($ticket)) {
             throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
+
+        $this->removePrivateComments($ticket);
+
         return $ticket;
     }
 
@@ -550,5 +558,35 @@ class TicketServiceImpl implements TicketService
     protected function getTicketRepository()
     {
         return $this->ticketRepository;
+    }
+
+    /**
+     * @return AuthorizationService
+     */
+    protected function getAuthorizationService()
+    {
+        return $this->authorizationService;
+    }
+
+    /**
+     * @param Ticket $ticket
+     */
+    private function removePrivateComments(Ticket $ticket)
+    {
+        $user = $this->authorizationService->getLoggedUser();
+
+        if (!$user instanceof ApiUser) {
+            return;
+        }
+
+        $comments = $ticket->getComments();
+        $commentsList = $comments->toArray();
+        $comments->clear();
+        foreach($commentsList as $comment) {
+            if(!$comment->isPrivate()) {
+                $comments->add($comment);
+            }
+        }
+        $comments->takeSnapshot();
     }
 }

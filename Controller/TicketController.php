@@ -293,8 +293,13 @@ class TicketController extends Controller
         try {
             $this->handle($form);
 
-            $branchAssigneeId = $command->branch->getDefaultAssignee()->getId();
-            $command->assignee = $command->assignee ? $command->assignee->getId() : $branchAssigneeId;
+            $branchAssignee = $command->branch->getDefaultAssignee();
+            if ($command->assignee) {
+                $command->assignee = $command->assignee->getId();
+            } elseif ($branchAssignee) {
+                $command->assignee = $branchAssignee->getId();
+            }
+
             $command->branch = $command->branch->getId();
 
             $ticket = $this->get('diamante.ticket.service')->createTicket($command);
