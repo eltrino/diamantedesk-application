@@ -2,8 +2,8 @@
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
-{% oro_title_set({params : {"%ticket.key%": entity.key, "%ticket.subject%": entity.subject}}) %}
-{% macro renderComments(entity) %}
+{% oro_title_set({params : {"%ticket.key%": ticketKey, "%ticket.subject%": entity.subject}}) %}
+{% macro renderComments(entity, ticketKey) %}
     {% set comments = entity.comments %}
     {% import 'OroUIBundle::macros.html.twig' as UI %}
 
@@ -29,7 +29,7 @@
                     <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
                 {% endif %}
                 {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': entity.key|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': ticketKey|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
@@ -142,7 +142,7 @@
 
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
-            'path': path('diamante_ticket_update', {'key': entity.key|trim}),
+            'path': path('diamante_ticket_update', {'key': ticketKey|trim}),
             'iCss': 'icon-edit',
             'title': 'diamante.desk.ticket.actions.edit'|trans,
             'label': 'diamante.desk.ui.edit'|trans
@@ -209,7 +209,7 @@
 
     {% if resource_granted('DELETE', entity) %}
         {{ UI.deleteButton({
-            'dataUrl': path('diamante_ticket_delete', {'key': entity.key|trim}),
+            'dataUrl': path('diamante_ticket_delete', {'key': ticketKey|trim}),
             'dataRedirect': path('diamante_ticket_list'),
             'aCss': 'no-hash remove-button',
             'dataId': entity.id,
@@ -227,7 +227,7 @@
         'entity': entity,
         'indexPath': path('diamante_branch_view', {'id': entity.branch.id}),
         'indexLabel': entity.branchName,
-        'entityTitle': entity.key ~ ' ' ~ entity.subject|default('diamante.desk.common.not_available'|trans),
+        'entityTitle': ticketKey ~ ' ' ~ entity.subject|default('diamante.desk.common.not_available'|trans),
         'hasAvatar': true,
         'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
     }
@@ -296,7 +296,7 @@
     'title' : 'diamante.desk.comment.entity_plural_label'|trans,
     'subblocks': [{
     'title' : null,
-    'data' : [_self.renderComments(entity)],
+    'data' : [_self.renderComments(entity, ticketKey)],
     'useSpan': false
     }]
     }]

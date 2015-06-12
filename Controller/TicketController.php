@@ -92,7 +92,7 @@ class TicketController extends Controller
         try {
             $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
 
-            return ['entity'  => $ticket];
+            return ['entity'  => $ticket, 'ticketKey' => (string)$ticket->getKey()];
         } catch (TicketMovedException $e) {
             return $this->redirect(
                 $this->generateUrl(
