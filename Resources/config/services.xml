@@ -83,6 +83,11 @@
             <argument type="service" id="diamante.api.paging.provider"/>
         </service>
 
+        <service id="diamante.render.url.twig.extension" class="%diamante.render.url.twig.extension.class%">
+            <argument type="service" id="router"/>
+            <tag name="twig.extension"/>
+        </service>
+
         <service id="diamante.render.tag.twig.extension" class="%diamante.render.tag.twig.extension.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="oro_tag.tag.manager"/>
