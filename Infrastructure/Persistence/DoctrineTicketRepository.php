@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
+use Diamante\UserBundle\Model\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
 
@@ -162,12 +163,12 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             $qb = $this->createFilterQuery($conditions, $pagingProperties);
         }
 
-        $user = new User($user->getId(), User::TYPE_DIAMANTE);
-
-        $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
-            ->setParameter('reporter', $user);
-
-        $conditions[] = ['reporter', 'eq', $user];
+        if ($user instanceof DiamanteUser) {
+            $user = new User($user->getId(), User::TYPE_DIAMANTE);
+            $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
+                ->setParameter('reporter', $user);
+            $conditions[] = ['reporter', 'eq', $user];
+        }
 
         $query = $qb->getQuery();
 

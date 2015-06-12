@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Diamante\DeskBundle\Model\Shared\Repository;
 
@@ -431,8 +432,12 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $pagingProperties = $criteriaProcessor->getPagingProperties();
         $repository = $this->getTicketRepository();
 
-        $apiUser = $this->getAuthorizationService()->getLoggedUser();
-        $user = $this->userService->getUserFromApiUser($apiUser);
+        $user = $this->getAuthorizationService()->getLoggedUser();
+
+        if ($user instanceof ApiUser) {
+            $user = $this->userService->getUserFromApiUser($user);
+        }
+
         $tickets = $repository->filter($criteria, $pagingProperties, $user);
 
         try {
