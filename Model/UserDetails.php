@@ -64,7 +64,7 @@ class UserDetails
      */
     public function getFullName()
     {
-        return $this->firstName . ' ' . $this->lastName;
+        return trim($this->firstName . ' ' . $this->lastName);
     }
 
     /**
