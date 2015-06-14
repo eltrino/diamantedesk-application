@@ -19,7 +19,7 @@
       <li>
         <a href="<%= attachment.file.url %>" title="Download: <%= attachment.file.filename %>">
           <% if(attachment.thumbnails) { %>
-            <img src="<%= attachment.thumbnails.url %>" title="Preview of attachment.file.filename">
+            <img src="<%= attachment.thumbnails.url %>" title="Preview of <%= attachment.file.filename %>">
             <br>
           <% } %>
           <%= attachment.file.filename %>

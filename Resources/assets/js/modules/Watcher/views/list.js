@@ -9,10 +9,22 @@ define([
       className: 'watchers-item',
       template: itemTemplate,
 
+      ui: {
+        "deleteButton": '.js-watcher-delete'
+      },
+
+      events: {
+        'click @ui.deleteButton' : 'deleteWatcher'
+      },
+
+      deleteWatcher: function(e){
+        e.preventDefault();
+        this.trigger('watcher:delete', this.model);
+      },
+
       templateHelpers: function(){
-        var username = $.trim(this.model.get('first_name') + ' ' + this.model.get('last_name'));
         return {
-          username :  username || this.model.get('email')
+          username :  this.model.get('name') || this.model.get('email')
         };
       }
 
