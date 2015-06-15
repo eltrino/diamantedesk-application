@@ -16,6 +16,21 @@ oro_menu_config:
             route: diamante_ticket_list
             extras:
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
+
+        #reports
+
+        diamante_report_list:
+            label: 'Reports'
+            uri: '#'
+
+        diamante_report_test:
+            label: 'Test Report'
+            route: diamante_report_view
+            routeParameters:
+                id: 'test_report'
+            extras:
+                routes: ['diamante_report_*']
+
     tree:
         application_menu:
             children:
@@ -23,6 +38,9 @@ oro_menu_config:
                     children:
                         diamante_branch_list: ~
                         diamante_ticket_list: ~
+                        diamante_report_list:
+                            children:
+                                diamante_report_test: ~
 
 oro_titles:
     diamante_branch_list: ~
