@@ -42,18 +42,45 @@ class ReportController extends Controller
             $data = $this->get('diamante.report.service')->build($id);
             return ['data' => $data];
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Report build failed: %s',
-                $e->getMessage()));
-            $this->addErrorMessage('Report build failed');
-            return new Response($e->getMessage(), 404);
+            return $this->throwException($e);
         }
     }
 
-    private function addErrorMessage($message)
+    /**
+     * @Route(
+     *      "/data/{id}/{_format}",
+     *      name="diamante_report_getdata",
+     *      requirements={"_format"="json"},
+     *      defaults={"_format" = "json"}
+     * )
+     *
+     * @param string $id
+     * @param string $_format
+     * @return array
+     *
+     */
+    public function getDataAction($id, $_format)
     {
+        try {
+            $data = $this->get('diamante.report.service')->build($id);
+            return new Response($this->get('serializer')->serialize($data, $_format), 200);
+        } catch (\Exception $e) {
+            return $this->throwException($e);
+        }
+    }
+
+    /**
+     * @param $e
+     * @return Response
+     */
+    private function throwException(\Exception $e)
+    {
+        $this->container->get('monolog.logger.diamante')->error(sprintf('Report build failed: %s',
+            $e->getMessage()));
         $this->get('session')->getFlashBag()->add(
             'error',
-            $this->get('translator')->trans($message)
+            $this->get('translator')->trans($e->getMessage())
         );
+        return new Response($e->getMessage(), 404);
     }
 }
