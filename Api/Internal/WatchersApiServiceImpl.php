@@ -111,6 +111,7 @@ class WatchersApiServiceImpl extends WatchersServiceImpl implements RestServiceI
         }
 
         parent::addWatcher($ticket, $user);
+        return $this->userService->fetchUserDetails($user);
     }
 
     /**
