@@ -15,8 +15,6 @@
 
 namespace Diamante\UserBundle\Api\Command;
 
-use OroCRM\Bundle\ContactBundle\Entity\Contact;
-
 class CreateDiamanteUserCommand
 {
     /**
@@ -27,10 +25,6 @@ class CreateDiamanteUserCommand
      * @var string
      */
     public $email;
-    /**
-     * @var Contact
-     */
-    public $contact;
     /**
      * @var string
      */
