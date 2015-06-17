@@ -1,0 +1,4 @@
+diamante_automation_bundle:
+        resource: "@DiamanteAutomationBundle/Controller/"
+        type:     annotation
+        prefix:   /automation
