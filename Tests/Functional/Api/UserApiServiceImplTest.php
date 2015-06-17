@@ -16,6 +16,7 @@ namespace Diamante\UserBundle\Tests\Functional\Api;
 
 use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
 use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
+use FOS\RestBundle\Util\Codes;
 
 class UserApiServiceImplTest extends ApiTestCase
 {
@@ -42,6 +43,30 @@ class UserApiServiceImplTest extends ApiTestCase
         ];
         $response = $this->post('diamante_user_api_service_create_diamante_user', $this->command);
 
+        return $this->getArray($response);
+    }
+
+    /**
+     * @depends testCreateDiamanteUser
+     *
+     * @param array $userData
+     * @return array
+     */
+    public function testGetExistingUser($userData)
+    {
+        $this->command->urlParameters = ['email'  => $userData['email']];
+        $response =  $this->get('diamante_user_api_service_get_user', $this->command);
+        return $this->getArray($response);
+    }
+
+
+    /**
+     * @return array
+     */
+    public function testGetNotExistingUser()
+    {
+        $this->command->urlParameters = ['email'  => 'not-existing-email-address@test-server.local'];
+        $response =  $this->get('diamante_user_api_service_get_user', $this->command, Codes::HTTP_NOT_FOUND);
         return $this->getArray($response);
     }
 }
