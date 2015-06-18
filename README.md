@@ -25,7 +25,7 @@ Add additional configuration to `app/etc/security.yml`:
             wsse_diamante_api:              true
 ```
 
-## Usage
+### Usage ###
 
 For example, you have a service defined in configuration with "entities.service.id" id. To expose it as RESTful API:
 
