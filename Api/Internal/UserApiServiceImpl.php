@@ -84,4 +84,25 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
 
         return parent::getDiamanteUser(new User($userId, User::TYPE_ORO));
     }
+
+    /**
+     * Retrieves all Diamante Users
+     *
+     * @ApiDoc(
+     *  description="Returns diamante users",
+     *  uri="/users.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      403="Returned when the user is not authorized to view diamante users"
+     *  }
+     * )
+     *
+     * @return array
+     */
+    public function getUsers()
+    {
+        return $this->diamanteUserRepository->getAll();
+    }
 }

@@ -69,4 +69,13 @@ class UserApiServiceImplTest extends ApiTestCase
         $response =  $this->get('diamante_user_api_service_get_user', $this->command, Codes::HTTP_NOT_FOUND);
         return $this->getArray($response);
     }
+
+    /**
+     * @return array
+     */
+    public function testGetUsers()
+    {
+        $response =  $this->get('diamante_user_api_service_get_users', $this->command);
+        return $this->getArray($response);
+    }
 }
