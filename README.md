@@ -2,7 +2,7 @@
 
 EmbeddedForm bundle extends **OroEmbeddedFormBundle** functionality. It is required to add an additional form type and a controller in order to create a ticket from the third party.  
 
-For more information about the **Embedded Form**, please see **Oro/Bundle/EmbeddedFormBundle/README.md**
+For more information about the **Embedded Form**, please see **Oro/Bundle/EmbeddedFormBundle/README.md**.
 
 ### Requirements ###
 
