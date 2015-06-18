@@ -1,36 +1,36 @@
-DiamanteEmbeddedForm
-========================
+# DiamanteDesk EmbeddedForm Bundle #
 
-This bundle extends OroEmbeddedFormBundle functionality. It needs for add additional form's type and controller for 
-create ticket from third party sites.  
+EmbeddedForm bundle extends **OroEmbeddedFormBundle** functionality. It is required to add an additional form type and a controller in order to create a ticket from the third party.  
 
-For more information about Embedded Form look at Oro/Bundle/EmbeddedFormBundle/README.md
+For more information about the **Embedded Form**, please see **Oro/Bundle/EmbeddedFormBundle/README.md**
 
-Installation
-------------
+### Requirements ###
 
-Add as dependency in composer
+DiamanteDesk supports OroCRM version 1.7+.
+
+### Installation ###
+
+Add as dependency in composer:
 
 ```bash
 composer require diamante/embeddedform-bundle:dev-master
 ```
 
-Installation requires additional migration you should run
+Installation requires additional migration:
 
 ```bash
 php app/console oro:migration:load
 ```
 
-You should install assets. It should be done through standard Symfony way
+You should install assets. It should be done in a standard way through Simfony:
 
 ```bash
 php app/console assets:install
 ```
 
-Configuration
-------------
+### Configuration ###
 
-Diamante Embedded Form url should not be covered by standard Oro Platfrom authentication. You should add additional configuration to filewalls section in `app/etc/security.yml`
+Diamante Embedded Form URL should not be covered by the standard Oro Platfrom authentication. You should add additional configuration to filewalls section in `app/etc/security.yml`:
 
 ```yml
 diamante_embedded_form:
