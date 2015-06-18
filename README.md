@@ -12,7 +12,7 @@ DiamanteDesk supports OroCRM version 1.7+.
 
 ### Installation ###
 
-Add as dependency in composer
+Add as dependency in composer:
 
 ```bash
 composer require diamante/desk-bundle:dev-master
