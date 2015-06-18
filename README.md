@@ -1,13 +1,16 @@
-DiamanteDesk Api Bundle
-========================
+# DiamanteDesk API Bundle #
 
-This bundle provides extended authentication required for DiamanteDesk API and a way to expose services and its methods as RESTful API.
+API bundle provides extended authentication required for DiamanteDesk API and a way to expose services and their methods as RESTful API.
 
-## Configuration
+### Requirements ###
 
-Add additional configuration in `app/etc/security.yml`
+DiamanteDesk supports OroCRM version 1.7+.
 
-- to section providers
+### Configuration ###
+
+Add additional configuration to `app/etc/security.yml`:
+
+- to section providers:
 ```yaml
         diamante_api_user:
             id:                             diamante.api.user.security.provider
@@ -24,10 +27,10 @@ Add additional configuration in `app/etc/security.yml`
 
 ## Usage
 
-For example you have service defined in configuration with id "entities.service.id". To expose it as RESTful API you will need 
+For example, you have a service defined in configuration with "entities.service.id" id. To expose it as RESTful API:
 
-- it should implement interface \Diamante\ApiBundle\Routing\RestServiceInterface
-- methods to expose should be public and annotated with \Diamante\ApiBundle\Annotation\ApiDoc
+- it should implement the following interface \Diamante\ApiBundle\Routing\RestServiceInterface
+- the following methods should be public and annotated with \Diamante\ApiBundle\Annotation\ApiDoc:
 
 ```php
     /**
@@ -44,7 +47,7 @@ For example you have service defined in configuration with id "entities.service.
      * @return Entities[]
      */
 ```
-- specify service in routing configuration
+- specify service in routing configuration:
 
 ```
     entities_service:
@@ -59,7 +62,7 @@ For example you have service defined in configuration with id "entities.service.
         _format:  json
 ```
 
-After this your service will be available as
+After all the steps are completed, your service shall be available at:
  
  ```
  GET http://host/api/rest/latest/example/entities
