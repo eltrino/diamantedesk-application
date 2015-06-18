@@ -4,7 +4,7 @@ DiamanteDesk software extends base OroCRM functionality. Its main purpose is to 
 
 Using this comprehensive help desk it is now possible to create support tickets within the CRM and associate them with any customer from the system. In DiamanteDesk tickets can be assigned to specific users and grouped into Branches. This option allows grouping tickets related to a certain customer.
 
-Currently, DiamanteDesk software in alpha version. Eltrino team is making efforts to improve and increase the amount of features available to user.
+Currently, DiamanteDesk software is in alpha version. Eltrino team is making efforts to improve and increase the amount of features available to a user.
 
 ### Requirements ###
 
