@@ -34,6 +34,7 @@
         <service id="diamante.ticket.notification.template_resolver" class="%diamante.ticket.notification.template_resolver.class%"/>
 
         <service id="diamante.notification.ticket.email.notifier" class="%diamante.notification.ticket.email.notifier.class%">
+            <argument type="service" id="service_container"/>
             <argument type="service" id="twig"/>
             <argument type="service" id="mailer"/>
             <argument type="service" id="diamante.ticket.notification.template_resolver"/>
