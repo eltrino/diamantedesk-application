@@ -22,8 +22,13 @@ process:
         configure:          Configuration
         schema:             Database initialization
         setup:              Administration setup
+        deskinstall:        DiamanteDesk installation
         final:              Finish
 
     button:
         next:               Next
         refresh:            Refresh
+
+diamante_installer:
+    step:
+        install:                DiamanteDesk installation
