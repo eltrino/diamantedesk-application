@@ -12,3 +12,6 @@ Diamante\DeskBundle\Model\Ticket\Comment:
         getAuthorId:
             serialized_name: author
             type: integer
+        getAuthorType:
+            serialized_name: author_type
+            type: string
