@@ -42,7 +42,7 @@ class WatchersSubscriber implements EventSubscriberInterface
         }
 
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->clear();
+//        $em->clear();
     }
 
     /**

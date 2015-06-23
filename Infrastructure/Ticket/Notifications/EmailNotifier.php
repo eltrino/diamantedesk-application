@@ -157,8 +157,11 @@ class EmailNotifier implements Notifier
      */
     public function notify(Notification $notification)
     {
-        $this->container->enterScope('request');
-        $this->container->set('request', new Request(), 'request');
+        if (!$this->container->isScopeActive('request')) {
+            $this->container->enterScope('request');
+            $this->container->set('request', new Request(), 'request');
+        }
+
         $ticket = $this->loadTicket($notification);
         $changeList = $this->postProcessChangesList($notification);
 
