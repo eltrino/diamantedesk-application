@@ -397,6 +397,12 @@ class TicketServiceImpl implements TicketService
         $this->ticketHistoryRepository->store(new TicketHistory($ticket->getId(), $ticket->getKey()));
         $ticket->move($command->branch);
         $this->ticketRepository->store($ticket);
+
+        //Remove old key from history to prevent loop redirects
+        if ($oldHistory = $this->ticketHistoryRepository->findOneByTicketKey($ticket->getKey())) {
+            $this->ticketHistoryRepository->remove($oldHistory);
+        }
+
         $this->dispatchEvents($ticket);
     }
 
