@@ -1,6 +1,6 @@
 # DiamanteDesk Front Bundle #
 
-DiamanteDeskFrontBundle is a part of DiamanteDesk system. This software extends its base functionality with frontend UI available for customers, allowing customers to submit and monitor status of their tickets through web.
+DiamanteDeskFrontBundle is a part of DiamanteDesk system. This software extends its base functionality with frontend UI available for customers, allowing them to submit and monitor status of their tickets through web.
 
 ### Requirements ###
 
@@ -77,4 +77,4 @@ Application uses **Bower** to manage all asset dependencies, which will be insta
 
 Composer installs all NPM dependencies during package installation. This is done through `eloquent/composer-npm-bridge`.
 
-All dependencies specified in `@DiamanteFrontBundle/packages.json` and installed in `@DiamanteFrontBundle/node_modules` folder. To update them manually or reinstall, you should use `npm update` or `npm install` inside `@DiamanteFrontBundle` folder.
+All dependencies specified in `@DiamanteFrontBundle/packages.json` and installed in `@DiamanteFrontBundle/node_modules` folder. To update them manually or reinstall, you should use `npm update` or `npm install` in the `@DiamanteFrontBundle` folder.
