@@ -46,9 +46,15 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Doctrine\ORM\EntityManager;
 
 class TicketServiceImpl implements TicketService
 {
+    /**
+     * @var EntityManager
+     */
+    protected $em;
+
     /**
      * @var TicketRepository
      */
@@ -99,7 +105,21 @@ class TicketServiceImpl implements TicketService
      */
     private $ticketHistoryRepository;
 
-    public function __construct(TicketRepository $ticketRepository,
+    /**
+     * @param EntityManager               $em
+     * @param TicketRepository            $ticketRepository
+     * @param Repository                  $branchRepository
+     * @param TicketBuilder               $ticketBuilder
+     * @param AttachmentManager           $attachmentManager
+     * @param UserService                 $userService
+     * @param AuthorizationService        $authorizationService
+     * @param EventDispatcher             $dispatcher
+     * @param NotificationDeliveryManager $notificationDeliveryManager
+     * @param Notifier                    $notifier
+     * @param DoctrineGenericRepository   $ticketHistoryRepository
+     */
+    public function __construct(EntityManager $em,
+                                TicketRepository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
@@ -110,6 +130,7 @@ class TicketServiceImpl implements TicketService
                                 Notifier $notifier,
                                 DoctrineGenericRepository $ticketHistoryRepository
     ) {
+        $this->em = $em;
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
         $this->ticketBuilder = $ticketBuilder;
@@ -309,6 +330,7 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+        $this->em->detach($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;

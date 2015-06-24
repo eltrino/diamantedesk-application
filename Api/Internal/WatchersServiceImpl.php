@@ -25,9 +25,14 @@ use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUser
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Diamante\UserBundle\Api\UserService;
+use Doctrine\ORM\EntityManager;
 
 class WatchersServiceImpl implements WatchersService
 {
+    /**
+     * @var EntityManager
+     */
+    protected $em;
 
     /**
      * @var DoctrineWatcherListRepository
@@ -60,6 +65,7 @@ class WatchersServiceImpl implements WatchersService
     protected $userService;
 
     public function __construct(
+        EntityManager $em,
         DoctrineWatcherListRepository $watcherListRepository,
         DoctrineDiamanteUserRepository $diamanteUserRepository,
         UserManager $userManager,
@@ -67,6 +73,7 @@ class WatchersServiceImpl implements WatchersService
         DiamanteUserFactory $diamanteUserFactory,
         UserService $userService
     ) {
+        $this->em                     = $em;
         $this->watcherListRepository  = $watcherListRepository;
         $this->diamanteUserRepository = $diamanteUserRepository;
         $this->userManager            = $userManager;
@@ -84,6 +91,7 @@ class WatchersServiceImpl implements WatchersService
         $watcher = $this->watcherListRepository->findOne($ticket, $user);
 
         if (!$watcher) {
+            $ticket = $this->em->merge($ticket);
             $watcher = new WatcherList($ticket, $user);
             $this->watcherListRepository->store($watcher);
         }

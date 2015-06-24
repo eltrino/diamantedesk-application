@@ -72,6 +72,7 @@
         </service>
 
         <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
             <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.ticket.builder"/>
@@ -96,6 +97,7 @@
         </service>
 
         <service id="diamante.ticket.service" class="%diamante.ticket.service.class%">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.ticket.builder"/>
@@ -234,6 +236,7 @@
         </service>
 
         <service id="diamante.ticket.watcher_list.service" class="%diamante.watcher_list.service.class%">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
             <argument type="service" id="diamante.watcher_list.repository"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="oro_user.manager"/>
