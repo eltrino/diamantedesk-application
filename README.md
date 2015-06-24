@@ -13,7 +13,7 @@ Add as dependency in composer:
 ```bash
 composer require diamante/email-processing-bundle:dev-master
 ```
-### Usage ###
+### Configuration ###
 
 To start email processing, run this command on your console:
 ```bash
