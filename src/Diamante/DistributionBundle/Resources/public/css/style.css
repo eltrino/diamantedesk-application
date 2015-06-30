@@ -1,0 +1,146 @@
+/*
+#d7e3a2
+*/
+
+.header, header {
+  background: #50828e;
+}
+
+.logo img {
+  height: 28px;
+}
+
+.table, table.table {
+  table-layout: fixed;
+}
+
+.wrapper > .content {
+  border:none;
+  box-shadow: 0 0 3px 1px rgba(225,225,225, .8);
+}
+
+.progress-bar{
+  border-radius: 7px 7px 0 0;
+}
+
+.progress-bar ul {
+  display: table;
+  background: none;
+  position: relative;
+}
+.progress-bar ul:after {
+  content: "";
+  background: #d7e3a2;
+  height: 4px;
+  position: absolute;
+  z-index: 1;
+  width:99%;
+  left:0;
+  top: 14px;
+}
+.progress-bar li {
+  display: table-cell;
+}
+
+.progress-bar,
+.progress-bar li:first-child:before,
+.progress-bar li:last-child:before,
+.button-set{
+  background: #50828e;
+}
+
+.progress-bar li:first-child:before,
+.progress-bar li:last-child:before{
+  content: "";
+  position: absolute;
+  width:40%;
+  height: 50%;
+  z-index: 2;
+}
+.progress-bar li:first-child:before {
+  left:0;
+}
+.progress-bar li:last-child:before {
+  right:0;
+}
+
+
+.progress-bar span {
+  color:#d7e3a2;
+  margin-top: 5px;
+}
+
+.progress-bar .step {
+  width:25px;
+  height: 25px;
+  line-height: 25px;
+  border-radius: 50%;
+  margin: 0;
+  background: #d7e3a2;
+  color:#50828e;
+}
+
+.progress-bar .active .step {
+  border-color:#d7e3a2;
+  border-width:4px;
+  color:#d7e3a2;
+  background: #50828e;
+}
+
+
+.button-set{
+  border-radius: 0 0 7px 7px;
+}
+.well .button-set {
+  margin: 0 -30px -30px;
+}
+
+.button {
+  background: #d7e3a2;
+  color:#50828e;
+  border:none;
+  height:32px;
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, .2);
+}
+a.button {
+  height: 32px;
+}
+.button:hover, .button:focus {
+  background: #d7e3a2;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, .5);
+}
+
+.button.disabled, .button.disabled:hover, .button.disabled:focus {
+  border:none;
+  background: #d7e3a2;
+  cursor: no-drop;
+  color: rgba(80, 130, 142, .5);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, .2);
+}
+.icon-reset:before,
+.next span:after,
+.back span:before{
+  background-size: cover;
+}
+.icon-reset:before {
+  background-image: url('../img/refresh.svg');
+}
+
+.next span:after {
+  width:14px;
+  height: 14px;
+  margin: 10px 0 0 5px;
+  background-image: url('../img/chevron-right.svg');
+}
+.back span:before {
+  content: "";
+  float: left;
+  width:14px;
+  height: 14px;
+  margin: 10px 5px 0 0;
+  background-image: url('../img/chevron-left.svg');
+}
+
+.button.disabled span:after, .button.disabled:before, .button.disabled[class^=icon-]:before {
+  opacity: .5;
+}

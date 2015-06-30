@@ -1,0 +1,16 @@
+diamante_installer:
+  step:
+    install: DiamanteDesk installation
+
+process:
+    step:
+        diamanteinstall:
+            header: Diamante Desk Installation
+        installation:
+            diamante-install: Install Diamante Desk
+            diamante-front-build: Build Diamante Front
+            diamante-front-assets-install: Install Diamante Front Assets
+            diamante-user-install: Install Diamante User
+        check:
+            table:
+                diamante: DiamanteDesk Requirements
