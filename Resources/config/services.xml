@@ -107,7 +107,5 @@
         </service>
 
         <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>
-
->>>>>>> 1.1
     </services>
 </container>
