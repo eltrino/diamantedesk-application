@@ -1,0 +1,11 @@
+reports:
+    test_report:
+        chart:
+            type: line-chart
+            x-axis: day
+            y-axis: count_per_day
+        source:
+            type: dql
+            dql: "SELECT date(t.createdAt) as day, count(t.createdAt) as count_per_day FROM Diamante\\DeskBundle\\Entity\\Ticket t group by day"
+            repository: "\Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository::getDataForChart"
+

@@ -18,32 +18,13 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
-use Diamante\UserBundle\Api\Internal\UserStateServiceImpl;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
+use Diamante\UserBundle\Model\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
-use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
-    /**
-     * @var UserStateServiceImpl
-     */
-    private $userState;
-
-    /**
-     * @var SecurityContextInterface
-     */
-    private $securityContext;
-
-
-    /**
-     * @var DiamanteUserRepository
-     */
-    private $diamanteUserRepository;
 
     /**
      * Find Ticket by given TicketKey
@@ -55,10 +36,9 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     public function getByTicketKey(TicketKey $key)
     {
         $queryBuilder = $this->_em
-            ->createQueryBuilder()->select(array('t', 'c'))
+            ->createQueryBuilder()->select('t')
             ->from('DiamanteDeskBundle:Ticket', 't')
             ->from('DiamanteDeskBundle:Branch', 'b')
-            ->leftJoin('t.comments', 'c')
             ->where('b.id = t.branch')
             ->andWhere('b.key = :branchKey')
             ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
@@ -71,10 +51,6 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
 
-        if (!$this->userState->isOroUser() && !is_null($ticket)) {
-            $this->removePrivateComments($ticket);
-        }
-
         return $ticket;
     }
 
@@ -86,17 +62,12 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     public function getByUniqueId(UniqueId $uniqueId)
     {
         $queryBuilder = $this->_em
-            ->createQueryBuilder()->select(array('t', 'c'))
+            ->createQueryBuilder()->select('t')
             ->from('DiamanteDeskBundle:Ticket', 't')
-            ->leftJoin('t.comments', 'c')
             ->where('t.uniqueId = :uniqueId')
             ->setParameter('uniqueId', $uniqueId);
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
-
-        if (!$this->userState->isOroUser() && !is_null($ticket)) {
-            $this->removePrivateComments($ticket);
-        }
 
         return $ticket;
     }
@@ -166,18 +137,13 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      */
     public function get($id)
     {
-        $queryBuilder = $this->_em
-            ->createQueryBuilder()->select(array('t', 'c'))
+        $ticket = $this->_em
+            ->createQueryBuilder()->select('t')
             ->from('DiamanteDeskBundle:Ticket', 't')
-            ->leftJoin('t.comments', 'c')
             ->where('t.id = :id')
-            ->setParameter('id', $id);
-
-        $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
-
-        if (!$this->userState->isOroUser() && !is_null($ticket)) {
-            $this->removePrivateComments($ticket);
-        }
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         return $ticket;
     }
@@ -185,28 +151,24 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
+     * @param ApiUser $user
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
-    public function filter(array &$conditions, PagingProperties $pagingProperties)
+    public function filter(array &$conditions, PagingProperties $pagingProperties, $user = null)
     {
-        $user = $this->securityContext->getToken()->getUser();
-        if (!$user instanceof ApiUser) {
-            return [];
-        }
-
         if('key' == $pagingProperties->getSort()) {
             $qb = $this->orderByTicketKey($conditions, $pagingProperties);
         } else {
             $qb = $this->createFilterQuery($conditions, $pagingProperties);
         }
-        $email = $user->getEmail();
-        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
-        $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
-        $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
-            ->setParameter('reporter', $user);
 
-        $conditions[] = ['reporter', 'eq', $user];
+        if ($user instanceof DiamanteUser) {
+            $user = new User($user->getId(), User::TYPE_DIAMANTE);
+            $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
+                ->setParameter('reporter', $user);
+            $conditions[] = ['reporter', 'eq', $user];
+        }
 
         $query = $qb->getQuery();
 
@@ -279,35 +241,8 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
                 $propertyA->setAccessible(true);
                 $propertyB->setAccessible(true);
 
-//                if('key' == $sortBy) {
-                    $valueA = (string)$a->getKey();
-                    $valueB = (string)$b->getKey();
-//                } else {
-//                    $valueA = $propertyA->getValue($a);
-//                    $valueB = $propertyB->getValue($b);
-//                }
-
-//                if (is_object($valueA) && is_object($valueB)) {
-//                    if ($valueA instanceof \DateTime && $valueB instanceof \DateTime) {
-//                        $valueA = $valueA->getTimestamp();
-//                        $valueB = $valueB->getTimestamp();
-//                    } else {
-//                        $valueA = $valueA->getValue();
-//                        $valueB = $valueB->getValue();
-//                    }
-//                }
-
-//                if ($valueB == $valueA) {
-//                    return 0;
-//                }
-
-//                if (is_int($valueA) && is_int($valueB)) {
-//                    if ($orderBy == 'desc') {
-//                        return $valueA > $valueB;
-//                    } else {
-//                        return $valueA < $valueB;
-//                    }
-//                }
+                $valueA = (string)$a->getKey();
+                $valueB = (string)$b->getKey();
 
                 if (is_string($valueA) || is_string($valueB)) {
 
@@ -330,43 +265,4 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         return $result;
     }
 
-    /**
-     * @param UserStateServiceImpl $userState
-     */
-    public function setUserState(UserStateServiceImpl $userState)
-    {
-        $this->userState = $userState;
-    }
-
-    /**
-     * @param SecurityContextInterface $securityContext
-     */
-    public function setSecurityContext(SecurityContextInterface $securityContext)
-    {
-        $this->securityContext = $securityContext;
-    }
-
-    /**
-     * @param DiamanteUserRepository $diamanteUserRepository
-     */
-    public function setDiamanteUserRepository(DiamanteUserRepository $diamanteUserRepository)
-    {
-        $this->diamanteUserRepository = $diamanteUserRepository;
-    }
-
-    /**
-     * @param Ticket $ticket
-     */
-    private function removePrivateComments(Ticket $ticket)
-    {
-        $comments = $ticket->getComments();
-        $commentsList = $comments->toArray();
-        $comments->clear();
-        foreach($commentsList as $comment) {
-            if(!$comment->isPrivate()) {
-                $comments->add($comment);
-            }
-        }
-        $comments->takeSnapshot();
-    }
 }

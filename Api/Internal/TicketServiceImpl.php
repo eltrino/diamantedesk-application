@@ -36,6 +36,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
@@ -46,9 +47,15 @@ use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Oro\Bundle\TagBundle\Entity\TagManager;
+use Doctrine\ORM\EntityManager;
 
 class TicketServiceImpl implements TicketService
 {
+    /**
+     * @var EntityManager
+     */
+    protected $em;
+
     /**
      * @var TicketRepository
      */
@@ -104,7 +111,22 @@ class TicketServiceImpl implements TicketService
      */
     private $tagManager;
 
-    public function __construct(TicketRepository $ticketRepository,
+    /**
+     * @param EntityManager               $em
+     * @param TicketRepository            $ticketRepository
+     * @param Repository                  $branchRepository
+     * @param TicketBuilder               $ticketBuilder
+     * @param AttachmentManager           $attachmentManager
+     * @param UserService                 $userService
+     * @param AuthorizationService        $authorizationService
+     * @param EventDispatcher             $dispatcher
+     * @param NotificationDeliveryManager $notificationDeliveryManager
+     * @param Notifier                    $notifier
+     * @param DoctrineGenericRepository   $ticketHistoryRepository
+     * @param TagManager                  $tagManager
+     */
+    public function __construct(EntityManager $em,
+                                TicketRepository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
@@ -116,6 +138,7 @@ class TicketServiceImpl implements TicketService
                                 DoctrineGenericRepository $ticketHistoryRepository,
                                 TagManager $tagManager
     ) {
+        $this->em = $em;
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
         $this->ticketBuilder = $ticketBuilder;
@@ -175,6 +198,9 @@ class TicketServiceImpl implements TicketService
         if (is_null($ticket)) {
             throw new \RuntimeException('Ticket loading failed, ticket not found.');
         }
+
+        $this->removePrivateComments($ticket);
+
         return $ticket;
     }
 
@@ -185,10 +211,14 @@ class TicketServiceImpl implements TicketService
      */
     private function loadTicketById($id)
     {
+        /** @var \Diamante\DeskBundle\Model\Ticket\Ticket $ticket */
         $ticket = $this->ticketRepository->get($id);
         if (is_null($ticket)) {
             throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
+
+        $this->removePrivateComments($ticket);
+
         return $ticket;
     }
 
@@ -312,6 +342,7 @@ class TicketServiceImpl implements TicketService
 
         $this->ticketRepository->store($ticket);
         $this->tagManager->saveTagging($ticket);
+        $this->em->detach($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
@@ -566,5 +597,35 @@ class TicketServiceImpl implements TicketService
     protected function getTicketRepository()
     {
         return $this->ticketRepository;
+    }
+
+    /**
+     * @return AuthorizationService
+     */
+    protected function getAuthorizationService()
+    {
+        return $this->authorizationService;
+    }
+
+    /**
+     * @param Ticket $ticket
+     */
+    private function removePrivateComments(Ticket $ticket)
+    {
+        $user = $this->authorizationService->getLoggedUser();
+
+        if (!$user instanceof ApiUser) {
+            return;
+        }
+
+        $comments = $ticket->getComments();
+        $commentsList = $comments->toArray();
+        $comments->clear();
+        foreach($commentsList as $comment) {
+            if(!$comment->isPrivate()) {
+                $comments->add($comment);
+            }
+        }
+        $comments->takeSnapshot();
     }
 }

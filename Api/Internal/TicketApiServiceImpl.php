@@ -25,7 +25,9 @@ use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
+use Diamante\DeskBundle\Model\Shared\Repository;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -38,6 +40,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * @var UserService
      */
     private $userService;
+
+    /**
+     * @var Repository
+     */
+    private $branchRepository;
 
     use ApiServiceImplTrait;
 
@@ -189,7 +196,14 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      */
     public function createTicket(CreateTicketCommand $command)
     {
+        if (empty($command->assignee)) {
+            $branch = $this->branchRepository->get((integer)$command->branch);
+            if ($branch) {
+                $command->assignee = $branch->getDefaultAssignee()->getId();
+            }
+        }
         $this->prepareAttachmentInput($command);
+
         return parent::createTicket($command);
     }
 
@@ -417,7 +431,14 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $criteria = $criteriaProcessor->getCriteria();
         $pagingProperties = $criteriaProcessor->getPagingProperties();
         $repository = $this->getTicketRepository();
-        $tickets = $repository->filter($criteria, $pagingProperties);
+
+        $user = $this->getAuthorizationService()->getLoggedUser();
+
+        if ($user instanceof ApiUser) {
+            $user = $this->userService->getUserFromApiUser($user);
+        }
+
+        $tickets = $repository->filter($criteria, $pagingProperties, $user);
 
         try {
             $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
@@ -485,6 +506,14 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function setUserService(UserService $userService)
     {
         $this->userService = $userService;
+    }
+
+    /**
+     * @param Repository $branchRepository
+     */
+    public function setBranchRepository(Repository $branchRepository)
+    {
+        $this->branchRepository = $branchRepository;
     }
 
     /**

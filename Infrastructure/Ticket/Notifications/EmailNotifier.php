@@ -32,11 +32,18 @@ use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\Notification;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Diamante\DeskBundle\Api\WatchersService;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+use Symfony\Component\HttpFoundation\Request;
 
 class EmailNotifier implements Notifier
 {
 
     const EMAIL_NOTIFIER_CONFIG_PATH = 'oro_notification.email_notification_sender_email';
+
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * @var \Twig_Environment
@@ -99,6 +106,7 @@ class EmailNotifier implements Notifier
     private $watchersService;
 
     /**
+     * @param Container                  $container
      * @param \Twig_Environment          $twig
      * @param \Swift_Mailer              $mailer
      * @param TemplateResolver           $templateResolver
@@ -110,9 +118,10 @@ class EmailNotifier implements Notifier
      * @param ConfigManager              $configManager
      * @param UserManager                $userManager
      * @param WatchersService            $watchersService
-     * @param string                     $senderHost
+     * @param                            $senderHost
      */
     public function __construct(
+        Container $container,
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
         TemplateResolver $templateResolver,
@@ -127,6 +136,7 @@ class EmailNotifier implements Notifier
         $senderHost
     )
     {
+        $this->container                    = $container;
         $this->twig                         = $twig;
         $this->mailer                       = $mailer;
         $this->templateResolver             = $templateResolver;
@@ -147,6 +157,11 @@ class EmailNotifier implements Notifier
      */
     public function notify(Notification $notification)
     {
+        if (!$this->container->isScopeActive('request')) {
+            $this->container->enterScope('request');
+            $this->container->set('request', new Request(), 'request');
+        }
+
         $ticket = $this->loadTicket($notification);
         $changeList = $this->postProcessChangesList($notification);
 
@@ -208,6 +223,27 @@ class EmailNotifier implements Notifier
         $message->addPart($this->twig->render($htmlTemplate, $options), 'text/html');
 
         return $message;
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @return array
+     */
+
+    private function resolveRecipientsEmails(Ticket $ticket)
+    {
+        $emails = array();
+        $reporter = $ticket->getReporter();
+        $reporter = $this->userService->getByUser($reporter);
+        $assignee = $ticket->getAssignee();
+
+        $emails[$reporter->getEmail()] = $reporter->getFullName();
+
+        if ($assignee) {
+            $emails[$assignee->getEmail()] = $assignee->getFirstName() . ' ' . $assignee->getLastName();
+        }
+
+        return $emails;
     }
 
     /**
@@ -317,6 +353,8 @@ class EmailNotifier implements Notifier
                 $format
             );
         }
+
+        $name = preg_replace('/\s+/', ' ',$name);
 
         return trim($name);
     }

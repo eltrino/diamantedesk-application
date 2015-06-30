@@ -296,7 +296,7 @@ class TicketController extends Controller
             $branchAssignee = $command->branch->getDefaultAssignee();
             if ($command->assignee) {
                 $command->assignee = $command->assignee->getId();
-            } elseif($branchAssignee) {
+            } elseif ($branchAssignee) {
                 $command->assignee = $branchAssignee->getId();
             }
 

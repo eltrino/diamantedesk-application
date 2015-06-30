@@ -249,3 +249,5 @@ diamante:
 
         email:
           configuration:           Email Configuration
+        dashboard:
+          support.label: Support Dashboard
