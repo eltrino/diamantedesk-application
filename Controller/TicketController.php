@@ -736,9 +736,9 @@ class TicketController extends Controller
 
         $users = [];
 
-//        foreach ($ticket->getWatcherList() as $watcher) {
-//            $users[] = User::fromString($watcher->getUserType());
-//        }
+        foreach ($ticket->getWatcherList() as $watcher) {
+            $users[] = User::fromString($watcher->getUserType());
+        }
 
         return [
             'watchers' => $users,
