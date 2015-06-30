@@ -10,6 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__ . '/../app/OroRequirements.php';
+require_once __DIR__ . '/../app/DiamanteDeskRequirements.php';
 require_once __DIR__ . '/../app/autoload.php';
 
 // check for installed system
@@ -41,6 +42,7 @@ if (file_exists($paramFile)) {
  */
 $locale           = 'en';
 $collection       = new OroRequirements();
+$diamanteDeskCollection = new DiamanteDeskRequirements();
 $translator       = new Translator($locale);
 $majorProblems    = $collection->getFailedRequirements();
 $minorProblems    = $collection->getFailedRecommendations();
@@ -184,6 +186,7 @@ function iterateRequirements(array $collection)
                     'mandatory' => $collection->getMandatoryRequirements(),
                     'php'       => $collection->getPhpIniRequirements(),
                     'oro'       => $collection->getOroRequirements(),
+                    'diamante'  => $diamanteDeskCollection->getDiamanteDeskRequirements(),
                     'cli'       => $collection->getCliRequirements(),
                     'optional'  => $collection->getRecommendations(),
                 );

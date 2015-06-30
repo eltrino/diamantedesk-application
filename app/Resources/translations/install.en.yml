@@ -19,6 +19,7 @@ process:
                 optional:   Optional recommendations
                 check:      Check
                 cli:        PHP CLI
+                diamante:   Diamantedesk requirements
         configure:          Configuration
         schema:             Database initialization
         setup:              Administration setup
