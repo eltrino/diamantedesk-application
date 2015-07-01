@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9628befbcc4abc512a919a01be0cf517",
+    "hash": "b40adeb0c7f684f68fb617fe9112919f",
     "packages": [
         {
             "name": "a2lix/translation-form-bundle",
@@ -690,16 +690,12 @@
             "target-dir": "Diamante/ApiBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eltrino/DiamanteApiBundle.git",
-                "reference": "1563bc3763e26a4d07850bf6ab6607d3971066ad"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteApiBundle/zipball/1563bc3763e26a4d07850bf6ab6607d3971066ad",
-                "reference": "1563bc3763e26a4d07850bf6ab6607d3971066ad",
-                "shasum": ""
+                "url": "https://bitbucket.org/eltrino/diamanteapibundle.git",
+                "reference": "8864a0f2de41a7f6059011a2fed072395bea090e"
             },
             "require": {
+                "diamante/desk-bundle": "dev-master",
+                "diamante/user-bundle": "dev-master",
                 "jms/serializer-bundle": "*",
                 "nelmio/api-doc-bundle": "*",
                 "oro/platform": "1.7.*",
@@ -719,7 +715,6 @@
                     "Diamante\\ApiBundle": "."
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -731,7 +726,7 @@
             ],
             "description": "DiamanteDesk Api Bundle",
             "homepage": "https://github.com/eltrino/DiamanteApiBundle",
-            "time": "2015-06-09 12:02:10"
+            "time": "2015-06-18 10:42:57"
         },
         {
             "name": "diamante/desk-bundle",
@@ -739,17 +734,14 @@
             "target-dir": "Diamante/DeskBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eltrino/DiamanteDeskBundle.git",
-                "reference": "4f6dd872d4f1e77cfe7c845bf563f406a0038add"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteDeskBundle/zipball/4f6dd872d4f1e77cfe7c845bf563f406a0038add",
-                "reference": "4f6dd872d4f1e77cfe7c845bf563f406a0038add",
-                "shasum": ""
+                "url": "https://bitbucket.org/eltrino/diamantedeskbundle.git",
+                "reference": "cb06ac998563348edb941ff6a5afa8563e4a9b6e"
             },
             "require": {
                 "beberlei/assert": "2.*",
+                "diamante/api-bundle": "dev-master",
+                "diamante/email-processing-bundle": "dev-master",
+                "diamante/user-bundle": "dev-master",
                 "oro/platform": "1.7.*",
                 "php": ">=5.4.4"
             },
@@ -770,7 +762,6 @@
                     "Diamante\\DeskBundle": "."
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -782,60 +773,7 @@
             ],
             "description": "DiamanteDesk Bundle",
             "homepage": "https://github.com/eltrino/DiamanteDeskBundle",
-            "time": "2015-06-09 11:48:59"
-        },
-        {
-            "name": "diamante/distribution-bundle",
-            "version": "dev-master",
-            "target-dir": "Diamante/DistributionBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eltrino/DiamanteDistributionBundle.git",
-                "reference": "f064647eefa6bde72b7f10ab2afa006ca9706c49"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteDistributionBundle/zipball/f064647eefa6bde72b7f10ab2afa006ca9706c49",
-                "reference": "f064647eefa6bde72b7f10ab2afa006ca9706c49",
-                "shasum": ""
-            },
-            "require": {
-                "diamante/api-bundle": "dev-master",
-                "diamante/desk-bundle": "dev-master",
-                "diamante/email-processing-bundle": "dev-master",
-                "diamante/embeddedform-bundle": "dev-master",
-                "diamante/front-bundle": "dev-master",
-                "diamante/user-bundle": "dev-master",
-                "oro/platform": "1.7.*",
-                "php": ">=5.4.4"
-            },
-            "replace": {
-                "diamante/installer-bundle": "*"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Diamante\\DistributionBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Eltrino LLC",
-                    "homepage": "http://eltrino.com"
-                }
-            ],
-            "description": "DiamanteDesk Distribution Bundle",
-            "homepage": "https://github.com/eltrino/DiamanteDistributionBundle",
-            "time": "2015-06-08 12:08:01"
+            "time": "2015-06-30 15:25:54"
         },
         {
             "name": "diamante/email-processing-bundle",
@@ -843,14 +781,8 @@
             "target-dir": "Diamante/EmailProcessingBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eltrino/DiamanteEmailProcessingBundle.git",
-                "reference": "63c3fec16bdaa972001427ee70054571c316c125"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteEmailProcessingBundle/zipball/63c3fec16bdaa972001427ee70054571c316c125",
-                "reference": "63c3fec16bdaa972001427ee70054571c316c125",
-                "shasum": ""
+                "url": "https://bitbucket.org/eltrino/diamanteemailprocessingbundle.git",
+                "reference": "7128ef95b4dc40e714bee6cec1f3a45d54fa3488"
             },
             "require": {
                 "beberlei/assert": "2.*",
@@ -878,7 +810,6 @@
                     "Diamante\\EmailProcessingBundle": "."
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -890,55 +821,7 @@
             ],
             "description": "DiamanteDesk Email Processing Bundle",
             "homepage": "https://github.com/eltrino/DiamanteEmailProcessingBundle",
-            "time": "2015-06-08 10:38:37"
-        },
-        {
-            "name": "diamante/embeddedform-bundle",
-            "version": "dev-master",
-            "target-dir": "Diamante/EmbeddedFormBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eltrino/DiamanteEmbeddedFormBundle.git",
-                "reference": "3892e0457633c0279e44da5dcd3658a7c309a7a9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteEmbeddedFormBundle/zipball/3892e0457633c0279e44da5dcd3658a7c309a7a9",
-                "reference": "3892e0457633c0279e44da5dcd3658a7c309a7a9",
-                "shasum": ""
-            },
-            "require": {
-                "oro/crm": "1.7.*",
-                "oro/platform": "1.7.*",
-                "php": ">=5.4.4"
-            },
-            "require-dev": {
-                "eltrino/phpunit-mockannotations": "*"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Diamante\\EmbeddedFormBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Eltrino LLC",
-                    "homepage": "http://eltrino.com"
-                }
-            ],
-            "description": "DiamanteDesk Embedded Form Bundle",
-            "homepage": "https://github.com/eltrino/DiamanteEmbeddedFormBundle",
-            "time": "2015-06-05 10:11:01"
+            "time": "2015-06-24 08:01:20"
         },
         {
             "name": "diamante/front-bundle",
@@ -946,16 +829,12 @@
             "target-dir": "Diamante/FrontBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eltrino/DiamanteFrontBundle.git",
-                "reference": "ba97346ef78c7b2ee189279ef1f1291ef2b76c7d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteFrontBundle/zipball/ba97346ef78c7b2ee189279ef1f1291ef2b76c7d",
-                "reference": "ba97346ef78c7b2ee189279ef1f1291ef2b76c7d",
-                "shasum": ""
+                "url": "https://bitbucket.org/eltrino/diamantefrontbundle.git",
+                "reference": "063cb7ae2a0c69ff0fb9fa4945ea0bd7f34fb3c8"
             },
             "require": {
+                "diamante/api-bundle": "dev-master",
+                "diamante/desk-bundle": "dev-master",
                 "eloquent/composer-npm-bridge": "~2",
                 "oro/platform": "1.7.*",
                 "php": ">=5.4.4"
@@ -971,7 +850,6 @@
                     "Diamante\\FrontBundle\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -983,7 +861,7 @@
             ],
             "description": "DiamanteDesk Front Bundle",
             "homepage": "https://github.com/eltrino/DiamanteFrontBundle",
-            "time": "2015-06-09 12:13:31"
+            "time": "2015-06-30 15:25:54"
         },
         {
             "name": "diamante/user-bundle",
@@ -991,17 +869,12 @@
             "target-dir": "Diamante/UserBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eltrino/DiamanteUserBundle.git",
-                "reference": "1c45ceb54da773ad3fb7c936a786da6667d3fbdf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteUserBundle/zipball/1c45ceb54da773ad3fb7c936a786da6667d3fbdf",
-                "reference": "1c45ceb54da773ad3fb7c936a786da6667d3fbdf",
-                "shasum": ""
+                "url": "https://bitbucket.org/eltrino/DiamanteUserBundle.git",
+                "reference": "6a3b4bc583765234582b3015f27755d7666bbeef"
             },
             "require": {
-                "beberlei/assert": "2.*"
+                "beberlei/assert": "2.*",
+                "diamante/desk-bundle": "dev-master"
             },
             "require-dev": {
                 "eltrino/phpunit-mockannotations": "~1.0@dev"
@@ -1017,7 +890,6 @@
                     "Diamante\\UserBundle": "."
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -1029,20 +901,20 @@
             ],
             "description": "DiamanteDesk User bundle",
             "homepage": "https://github.com/eltrino/DiamanteUserBundle",
-            "time": "2015-06-08 12:43:28"
+            "time": "2015-06-18 13:31:53"
         },
         {
             "name": "doctrine/annotations",
-            "version": "v1.2.4",
+            "version": "v1.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "b5202eb9e83f8db52e0e58867e0a46e63be8332e"
+                "reference": "f4a91702ca3cd2e568c3736aa031ed00c3752af4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/b5202eb9e83f8db52e0e58867e0a46e63be8332e",
-                "reference": "b5202eb9e83f8db52e0e58867e0a46e63be8332e",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/f4a91702ca3cd2e568c3736aa031ed00c3752af4",
+                "reference": "f4a91702ca3cd2e568c3736aa031ed00c3752af4",
                 "shasum": ""
             },
             "require": {
@@ -1097,7 +969,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2014-12-23 22:40:37"
+            "time": "2015-06-17 12:21:22"
         },
         {
             "name": "doctrine/cache",
@@ -3190,20 +3062,20 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "2465fe486c864e30badaa4d005ebdf89dbc503f3"
+                "reference": "7dfe4f1db8a62be3dd35710efce663537d515653"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/2465fe486c864e30badaa4d005ebdf89dbc503f3",
-                "reference": "2465fe486c864e30badaa4d005ebdf89dbc503f3",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/7dfe4f1db8a62be3dd35710efce663537d515653",
+                "reference": "7dfe4f1db8a62be3dd35710efce663537d515653",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.3.2"
             },
             "require-dev": {
                 "json-schema/json-schema-test-suite": "1.1.0",
@@ -3252,7 +3124,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2015-03-27 16:41:39"
+            "time": "2015-06-14 20:01:28"
         },
         {
             "name": "knplabs/gaufrette",
@@ -3502,7 +3374,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "KnpLabs",
+                    "name": "Knplabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -3589,16 +3461,16 @@
         },
         {
             "name": "kriswallsmith/buzz",
-            "version": "v0.14",
+            "version": "v0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/Buzz.git",
-                "reference": "f802a9b9d01b53496f50c9c5e09b5c779cbbd300"
+                "reference": "d4041666c3ffb379af02a92dabe81c904b35fab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/f802a9b9d01b53496f50c9c5e09b5c779cbbd300",
-                "reference": "f802a9b9d01b53496f50c9c5e09b5c779cbbd300",
+                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/d4041666c3ffb379af02a92dabe81c904b35fab8",
+                "reference": "d4041666c3ffb379af02a92dabe81c904b35fab8",
                 "shasum": ""
             },
             "require": {
@@ -3633,7 +3505,7 @@
                 "curl",
                 "http client"
             ],
-            "time": "2015-06-02 16:48:29"
+            "time": "2015-06-25 17:26:56"
         },
         {
             "name": "leafo/lessphp",
@@ -4225,60 +4097,17 @@
             "time": "2013-06-30 16:44:31"
         },
         {
-            "name": "oro/crm",
-            "version": "1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/orocrm/crm.git",
-                "reference": "ee45f7418378afb435855716239392606094ff18"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/orocrm/crm/zipball/ee45f7418378afb435855716239392606094ff18",
-                "reference": "ee45f7418378afb435855716239392606094ff18",
-                "shasum": ""
-            },
-            "require": {
-                "oro/platform": "1.7.*",
-                "php": ">=5.4.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "OroCRM\\Bundle": "src/"
-                }
-            },
-            "notification-url": "http://packagist.orocrm.com/downloads/",
-            "license": [
-                "OSL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Oro, Inc",
-                    "homepage": "http://www.orocrm.com"
-                }
-            ],
-            "description": "OroCRM",
-            "homepage": "https://github.com/orocrm/crm.git",
-            "time": "2015-04-28 19:43:17"
-        },
-        {
             "name": "oro/doctrine-extensions",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orocrm/doctrine-extensions.git",
-                "reference": "4999ed64a294ad1027464e9660c36ee11b69852d"
+                "reference": "5f68bd9ac40b60cdcafbc9c1378fa3018706de5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orocrm/doctrine-extensions/zipball/4999ed64a294ad1027464e9660c36ee11b69852d",
-                "reference": "4999ed64a294ad1027464e9660c36ee11b69852d",
+                "url": "https://api.github.com/repos/orocrm/doctrine-extensions/zipball/5f68bd9ac40b60cdcafbc9c1378fa3018706de5f",
+                "reference": "5f68bd9ac40b60cdcafbc9c1378fa3018706de5f",
                 "shasum": ""
             },
             "require": {
@@ -4319,20 +4148,20 @@
                 "postgresql",
                 "type"
             ],
-            "time": "2015-04-06 18:01:25"
+            "time": "2015-06-15 12:54:44"
         },
         {
             "name": "oro/platform",
-            "version": "1.7.0",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orocrm/platform.git",
-                "reference": "a7ce7fa789e7cddd846acdd6e93d5439a2e0453d"
+                "reference": "373af839eeba6d9a59ad721230a60394d2e1a0d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orocrm/platform/zipball/a7ce7fa789e7cddd846acdd6e93d5439a2e0453d",
-                "reference": "a7ce7fa789e7cddd846acdd6e93d5439a2e0453d",
+                "url": "https://api.github.com/repos/orocrm/platform/zipball/373af839eeba6d9a59ad721230a60394d2e1a0d8",
+                "reference": "373af839eeba6d9a59ad721230a60394d2e1a0d8",
                 "shasum": ""
             },
             "require": {
@@ -4422,7 +4251,7 @@
             ],
             "description": "Business Application Platform (BAP)",
             "homepage": "https://github.com/orocrm/platform.git",
-            "time": "2015-04-28 19:00:57"
+            "time": "2015-06-16 12:32:41"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -4525,16 +4354,16 @@
         },
         {
             "name": "piwik/device-detector",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/piwik/device-detector.git",
-                "reference": "c1b651af61aed864e793fe5896f1976aa06b939c"
+                "reference": "e755813db54fb94d31436efce7fc9840b6038c8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piwik/device-detector/zipball/c1b651af61aed864e793fe5896f1976aa06b939c",
-                "reference": "c1b651af61aed864e793fe5896f1976aa06b939c",
+                "url": "https://api.github.com/repos/piwik/device-detector/zipball/e755813db54fb94d31436efce7fc9840b6038c8b",
+                "reference": "e755813db54fb94d31436efce7fc9840b6038c8b",
                 "shasum": ""
             },
             "require": {
@@ -4572,7 +4401,7 @@
                 "parser",
                 "useragent"
             ],
-            "time": "2015-05-31 20:06:34"
+            "time": "2015-06-23 21:25:52"
         },
         {
             "name": "psr/log",
@@ -4747,12 +4576,12 @@
             "version": "2.7.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ramsey/uuid.git",
+                "url": "https://github.com/ramsey/rhumsaa-uuid.git",
                 "reference": "eb1d371067aa8c2b83d6691837ee4896a6f76a44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/eb1d371067aa8c2b83d6691837ee4896a6f76a44",
+                "url": "https://api.github.com/repos/ramsey/rhumsaa-uuid/zipball/eb1d371067aa8c2b83d6691837ee4896a6f76a44",
                 "reference": "eb1d371067aa8c2b83d6691837ee4896a6f76a44",
                 "shasum": ""
             },
@@ -4811,20 +4640,20 @@
         },
         {
             "name": "robloach/component-installer",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobLoach/component-installer.git",
-                "reference": "9ebfe24d48b08ce63cf377d719e4ad045e057855"
+                "reference": "6f654095da6e364261093c2d9ca416e1027d0169"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/9ebfe24d48b08ce63cf377d719e4ad045e057855",
-                "reference": "9ebfe24d48b08ce63cf377d719e4ad045e057855",
+                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/6f654095da6e364261093c2d9ca416e1027d0169",
+                "reference": "6f654095da6e364261093c2d9ca416e1027d0169",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "1.0.0",
+                "composer-plugin-api": "^1.0",
                 "kriswallsmith/assetic": "1.*",
                 "php": ">=5.3.2"
             },
@@ -4855,7 +4684,7 @@
                 }
             ],
             "description": "Allows installation of Components via Composer.",
-            "time": "2015-06-08 13:01:20"
+            "time": "2015-06-18 13:02:30"
         },
         {
             "name": "seld/jsonlint",
@@ -6398,10 +6227,16 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "diamante/distribution-bundle": 20
+        "diamante/desk-bundle": 20,
+        "diamante/user-bundle": 20,
+        "diamante/api-bundle": 20,
+        "diamante/front-bundle": 20,
+        "diamante/email-processing-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.4.4"
+    },
     "platform-dev": []
 }
