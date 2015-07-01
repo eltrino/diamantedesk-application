@@ -165,15 +165,45 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         if ($user instanceof DiamanteUser) {
             $user = new User($user->getId(), User::TYPE_DIAMANTE);
-            $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter')
-                ->setParameter('reporter', $user);
-            $conditions[] = ['reporter', 'eq', $user];
+            $qb->addSelect('w')
+                ->join(self::SELECT_ALIAS . '.watcherList', 'w')
+                ->andWhere('w.userType = :watcher')
+                ->setParameter('watcher', $user);
+            $conditions[] = ['w', 'userType', 'eq', $user];
         }
 
         $query = $qb->getQuery();
 
         try {
             $result = $query->getResult(Query::HYDRATE_OBJECT);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $criteria
+     * @return int
+     */
+    public function count(array $criteria)
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb->select($qb->expr()->count(self::SELECT_ALIAS))
+            ->from($this->_entityName, self::SELECT_ALIAS)
+            ->join(self::SELECT_ALIAS . '.watcherList', 'w');
+
+        foreach ($criteria as $condition) {
+            $whereExpression = $this->buildWhereExpression($qb, $condition);
+            $qb->orWhere($whereExpression);
+        }
+
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_SINGLE_SCALAR);
         } catch (\Exception $e) {
             $result = null;
         }
