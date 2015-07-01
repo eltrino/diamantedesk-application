@@ -113,8 +113,9 @@ class BuildCommand extends ContainerAwareCommand
         }
 
         $process = new Process($command, $this->bundleDir);
+        $logger = $this->getContainer()->get('monolog.logger.diamante');
 
-        $result = $process->run(function ($type, $buffer) use ($output) {
+        $result = $process->run(function ($type, $buffer) use ($output, $logger) {
             if (Process::ERR != $type) {
                 if ($output->getVerbosity() > 1) {
                     $output->write($buffer);
@@ -122,12 +123,14 @@ class BuildCommand extends ContainerAwareCommand
             } else {
                 if ($output->getVerbosity() > 1) {
                     $output->write('<error>' . $buffer . '<error>');
+                    $logger->get('monolog.logger.diamante')->error($buffer);
                 }
             }
         });
 
         if ($result) {
             $output->writeln("<error>Failed</error>");
+            $this->getContainer()->get('monolog.logger.diamante')->error($process->getErrorOutput());
         } else {
             $output->writeln("Done");
         }
