@@ -20,11 +20,17 @@
             "url": "http://packagist.orocrm.com"
         }
     ],
-    "require": {
-        "diamante/distribution-bundle": "dev-master"
-    },
     "config": {
         "component-dir": "web/bundles/components"
+    },
+    "require":{
+      "php": ">=5.4.4",
+      "oro/platform": "1.7.*",
+      "diamante/desk-bundle": "dev-master",
+      "diamante/user-bundle": "dev-master",
+      "diamante/api-bundle": "dev-master",
+      "diamante/front-bundle": "dev-master",
+      "diamante/email-processing-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
