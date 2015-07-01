@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b40adeb0c7f684f68fb617fe9112919f",
+    "hash": "6f784d54c2cab66c9ac866f6afe601e1",
     "packages": [
         {
             "name": "a2lix/translation-form-bundle",
@@ -690,8 +690,14 @@
             "target-dir": "Diamante/ApiBundle",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/eltrino/diamanteapibundle.git",
+                "url": "https://github.com/eltrino/DiamanteApiBundle.git",
                 "reference": "8864a0f2de41a7f6059011a2fed072395bea090e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eltrino/DiamanteApiBundle/zipball/8864a0f2de41a7f6059011a2fed072395bea090e",
+                "reference": "8864a0f2de41a7f6059011a2fed072395bea090e",
+                "shasum": ""
             },
             "require": {
                 "diamante/desk-bundle": "dev-master",
@@ -715,6 +721,7 @@
                     "Diamante\\ApiBundle": "."
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -734,8 +741,14 @@
             "target-dir": "Diamante/DeskBundle",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/eltrino/diamantedeskbundle.git",
+                "url": "https://github.com/eltrino/DiamanteDeskBundle.git",
                 "reference": "cb06ac998563348edb941ff6a5afa8563e4a9b6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eltrino/DiamanteDeskBundle/zipball/cb06ac998563348edb941ff6a5afa8563e4a9b6e",
+                "reference": "cb06ac998563348edb941ff6a5afa8563e4a9b6e",
+                "shasum": ""
             },
             "require": {
                 "beberlei/assert": "2.*",
@@ -762,6 +775,7 @@
                     "Diamante\\DeskBundle": "."
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -781,8 +795,14 @@
             "target-dir": "Diamante/EmailProcessingBundle",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/eltrino/diamanteemailprocessingbundle.git",
+                "url": "https://github.com/eltrino/DiamanteEmailProcessingBundle.git",
                 "reference": "7128ef95b4dc40e714bee6cec1f3a45d54fa3488"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eltrino/DiamanteEmailProcessingBundle/zipball/7128ef95b4dc40e714bee6cec1f3a45d54fa3488",
+                "reference": "7128ef95b4dc40e714bee6cec1f3a45d54fa3488",
+                "shasum": ""
             },
             "require": {
                 "beberlei/assert": "2.*",
@@ -810,6 +830,7 @@
                     "Diamante\\EmailProcessingBundle": "."
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -829,8 +850,14 @@
             "target-dir": "Diamante/FrontBundle",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/eltrino/diamantefrontbundle.git",
-                "reference": "063cb7ae2a0c69ff0fb9fa4945ea0bd7f34fb3c8"
+                "url": "https://github.com/eltrino/DiamanteFrontBundle.git",
+                "reference": "59b3b852a64d2b027a86eeb457c3a309fd97407c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eltrino/DiamanteFrontBundle/zipball/59b3b852a64d2b027a86eeb457c3a309fd97407c",
+                "reference": "59b3b852a64d2b027a86eeb457c3a309fd97407c",
+                "shasum": ""
             },
             "require": {
                 "diamante/api-bundle": "dev-master",
@@ -850,6 +877,7 @@
                     "Diamante\\FrontBundle\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],
@@ -861,7 +889,7 @@
             ],
             "description": "DiamanteDesk Front Bundle",
             "homepage": "https://github.com/eltrino/DiamanteFrontBundle",
-            "time": "2015-06-30 15:25:54"
+            "time": "2015-07-01 16:15:11"
         },
         {
             "name": "diamante/user-bundle",
@@ -869,8 +897,14 @@
             "target-dir": "Diamante/UserBundle",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/eltrino/DiamanteUserBundle.git",
+                "url": "https://github.com/eltrino/DiamanteUserBundle.git",
                 "reference": "6a3b4bc583765234582b3015f27755d7666bbeef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eltrino/DiamanteUserBundle/zipball/6a3b4bc583765234582b3015f27755d7666bbeef",
+                "reference": "6a3b4bc583765234582b3015f27755d7666bbeef",
+                "shasum": ""
             },
             "require": {
                 "beberlei/assert": "2.*",
@@ -890,6 +924,7 @@
                     "Diamante\\UserBundle": "."
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0"
             ],

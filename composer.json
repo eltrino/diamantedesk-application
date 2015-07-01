@@ -26,24 +26,22 @@
     "require":{
       "php": ">=5.4.4",
       "oro/platform": "1.7.*",
-      "diamante/desk-bundle": "dev-master",
-      "diamante/user-bundle": "dev-master",
-      "diamante/api-bundle": "dev-master",
-      "diamante/front-bundle": "dev-master",
-      "diamante/email-processing-bundle": "dev-master"
+      "diamante/desk-bundle": "self.version",
+      "diamante/user-bundle": "self.version",
+      "diamante/api-bundle": "self.version",
+      "diamante/front-bundle": "self.version",
+      "diamante/email-processing-bundle": "self.version"
     },
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setPermissions",
             "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::installAssets"
         ],
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setPermissions",
             "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::installAssets"
         ]
