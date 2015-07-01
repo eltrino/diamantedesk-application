@@ -1,16 +1,17 @@
 <?php
 
-require_once dirname(__FILE__).'/SymfonyRequirements.php';
+require_once dirname(__FILE__).'/DiamanteDeskRequirements.php';
+require_once dirname(__FILE__).'/autoload.php';
 
-$symfonyRequirements = new SymfonyRequirements();
+$diamanteDeskRequirements = new DiamanteDeskRequirements();
 
-$iniPath = $symfonyRequirements->getPhpIniConfigPath();
+$iniPath = $diamanteDeskRequirements->getPhpIniConfigPath();
 
-echo "********************************\n";
-echo "*                              *\n";
-echo "*  Symfony requirements check  *\n";
-echo "*                              *\n";
-echo "********************************\n\n";
+echo "*************************************\n";
+echo "*                                   *\n";
+echo "*  DiamanteDesk requirements check  *\n";
+echo "*                                   *\n";
+echo "*************************************\n\n";
 
 echo $iniPath ? sprintf("* Configuration file used by PHP: %s\n\n", $iniPath) : "* WARNING: No configuration file (php.ini) used by PHP!\n\n";
 
@@ -26,7 +27,7 @@ echo "*  from your web server using the web/config.php script.\n";
 echo_title('Mandatory requirements');
 
 $checkPassed = true;
-foreach ($symfonyRequirements->getRequirements() as $req) {
+foreach ($diamanteDeskRequirements->getRequirements() as $req) {
     /** @var $req Requirement */
     echo_requirement($req);
     if (!$req->isFulfilled()) {
@@ -36,7 +37,7 @@ foreach ($symfonyRequirements->getRequirements() as $req) {
 
 echo_title('Optional recommendations');
 
-foreach ($symfonyRequirements->getRecommendations() as $req) {
+foreach ($diamanteDeskRequirements->getRecommendations() as $req) {
     echo_requirement($req);
 }
 

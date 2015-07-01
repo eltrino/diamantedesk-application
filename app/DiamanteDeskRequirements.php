@@ -1,13 +1,14 @@
 <?php
 
-require_once __DIR__ . '/SymfonyRequirements.php';
+require_once __DIR__ . '/OroRequirements.php';
 
 use Symfony\Component\Process\ProcessBuilder;
+use Oro\Bundle\InstallerBundle\Process\PhpExecutableFinder;
 
 /**
  * This class specifies all requirements that are necessary to run the DiamanteDesk Application.
  */
-class DiamanteDeskRequirements extends SymfonyRequirements
+class DiamanteDeskRequirements extends OroRequirements
 {
 
     public function __construct()
@@ -37,7 +38,7 @@ class DiamanteDeskRequirements extends SymfonyRequirements
     }
 
     /**
-     * Adds an DiamanteDesk specific requirement.
+     * Adds an Oro specific requirement.
      *
      * @param Boolean     $fulfilled Whether the requirement is fulfilled
      * @param string      $testMessage The message for testing the requirement
@@ -50,7 +51,7 @@ class DiamanteDeskRequirements extends SymfonyRequirements
     }
 
     /**
-     * Get the list of DiamanteDesk specific requirements
+     * Get the list of Oro specific requirements
      *
      * @return array
      */
@@ -62,14 +63,6 @@ class DiamanteDeskRequirements extends SymfonyRequirements
                 return $requirement instanceof DiamanteDeskRequirement;
             }
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRequirements()
-    {
-        return parent::getRequirements();
     }
 
     /**
@@ -112,6 +105,38 @@ class DiamanteDeskRequirements extends SymfonyRequirements
         return $isInstalled;
     }
 
+    /**
+     * @return null|string
+     */
+    protected function checkCliRequirements()
+    {
+        $finder = new PhpExecutableFinder();
+        $command = sprintf(
+            '%s %scheck.php',
+            $finder->find(),
+            __DIR__ . DIRECTORY_SEPARATOR
+        );
+
+        exec($command, $output, $exitCode);
+
+        if ($exitCode) {
+            return $this->getErrorMessage($output);
+        }
+
+        return $exitCode;
+    }
+
+    private function getErrorMessage($output)
+    {
+        $message = '';
+        foreach ($output as $line) {
+            preg_match('/^warning|error.*/is', $line, $matches);
+            if(!empty($matches)) {
+                $message .= $matches[0] . PHP_EOL;
+            }
+        }
+        return $message;
+    }
 }
 
 class DiamanteDeskRequirement extends Requirement
