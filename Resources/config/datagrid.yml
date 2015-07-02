@@ -284,3 +284,8 @@ datagrid:
         extends: users-select-grid
         source:
             type: diamante_combined_users_datasource
+
+    diamante-watcher-select-grid:
+        extends: users-select-grid
+        source:
+            type: diamante_combined_users_datasource
