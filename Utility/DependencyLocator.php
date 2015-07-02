@@ -29,7 +29,7 @@ class DependencyLocator
                 continue;
             }
 
-            $this->ensureDependencyOperational($possibleLocation, $probe));
+            $this->ensureDependencyOperational($possibleLocation, $probe);
 
             if (!$this->resolved) {
                 $possibleLocation = null;
