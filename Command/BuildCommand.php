@@ -75,7 +75,7 @@ class BuildCommand extends ContainerAwareCommand
             return self::RETURN_CODE_NO_TOOLS;
         }
 
-        if ($input->getOption('with-assets-dependencies')) {
+        if ($input->getParameterOption('--with-assets-dependencies')) {
             $output->write("Installing assets dependencies ...");
             $this->executeProcess(sprintf('%s install', $bower), $output);
             $output->write("Updating assets dependencies ...");
