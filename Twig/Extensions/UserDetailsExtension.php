@@ -69,6 +69,11 @@ class UserDetailsExtension extends \Twig_Extension
                 'getGravatarForUser',
                 array('is_safe' => array('html'))
             ),
+            'render_user_name' => new \Twig_Function_Method(
+                $this,
+                'renderUserName',
+                array('is_safe' => array('html'))
+            ),
         ];
     }
 
@@ -112,6 +117,20 @@ class UserDetailsExtension extends \Twig_Extension
     public function fetchDiamanteUser(User $user)
     {
         return $this->userService->getDiamanteUser($user);
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     */
+    public function renderUserName(User $user)
+    {
+        $userDetails = $this->userService->fetchUserDetails($user);
+        if ($userDetails->getFirstName() || $userDetails->getLastName()) {
+            return $userDetails->getFullName();
+        } else {
+            return $userDetails->getEmail();
+        }
     }
 
     /**

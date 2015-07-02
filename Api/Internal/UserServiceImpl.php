@@ -151,6 +151,10 @@ class UserServiceImpl implements UserService, GravatarProvider
         return $user->getId();
     }
 
+    /**
+     * @param User $user
+     * @return UserDetails
+     */
     public function fetchUserDetails(User $user)
     {
         $loadedUser = $this->getByUser($user);

@@ -17,6 +17,7 @@ namespace Diamante\UserBundle\Api;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
+use Diamante\UserBundle\Model\UserDetails;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 /**
@@ -36,7 +37,7 @@ interface UserService
     /**
      * Retrieve User details as object
      * @param \Diamante\UserBundle\Model\User $user
-     * @return mixed
+     * @return UserDetails
      */
     public function fetchUserDetails(User $user);
 
