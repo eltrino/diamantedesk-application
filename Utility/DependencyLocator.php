@@ -18,6 +18,12 @@ class DependencyLocator
 
     protected $resolved = false;
 
+    /**
+     * @param        $dependency
+     * @param string $probe
+     *
+     * @return string|bool
+     */
     public function locate($dependency, $probe = self::PROBE_VERSION_LONG)
     {
         $possibleLocation = null;
@@ -35,9 +41,10 @@ class DependencyLocator
                 $possibleLocation = null;
             }
 
+            return $possibleLocation;
         }
 
-        return $possibleLocation;
+        return false;
     }
 
     protected function ensureDependencyOperational($object, $probe = self::PROBE_VERSION_LONG)
