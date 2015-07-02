@@ -27,10 +27,7 @@ class AddWatcherCommand
     public $id;
 
     /**
-     * @Assert\NotNull(
-     *              message="This is a required field"
-     * )
-     * @Any({@Assert\Email(), @Assert\Type(type="object")})
+     * @Any({@Assert\Email(), @Assert\Type(type="object"), @Assert\Null()})
      */
     public $watcher;
 }

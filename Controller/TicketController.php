@@ -239,9 +239,11 @@ class TicketController extends Controller
                 $command->watcher = new User($user->getId(), User::TYPE_DIAMANTE);
             }
 
-            $this->get('diamante.ticket.watcher_list.service')
-                ->addWatcher($ticket, $command->watcher);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
+            if ($command->watcher) {
+                $this->get('diamante.ticket.watcher_list.service')
+                    ->addWatcher($ticket, $command->watcher);
+                $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
+            }
             $response = array('reload_page' => true);
         } catch (TicketNotFoundException $e) {
             $this->container->get('monolog.logger.diamante')->error(
