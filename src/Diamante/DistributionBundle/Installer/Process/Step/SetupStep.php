@@ -15,17 +15,14 @@ use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdministrationSetupStep extends AbstractStep
+class SetupStep extends AbstractStep
 {
     public function displayAction(ProcessContextInterface $context)
     {
         $form = $this->createForm('diamante_installer_setup');
 
-        /** @var ConfigManager $configManager */
-        $configManager = $this->get('oro_config.global');
-
-        $form->get('organization_name')->setData($configManager->get('oro_ui.organization_name'));
-        $form->get('application_url')->setData($configManager->get('oro_ui.application_url'));
+        $form->get('organization_name')->setData('Diamante');
+        $form->get('application_url')->setData('http://localhost/diamante');
 
         return $this->render(
             'DiamanteDistributionBundle:Process/Step:setup.html.twig',
@@ -82,7 +79,7 @@ class AdministrationSetupStep extends AbstractStep
         }
 
         return $this->render(
-            'OroInstallerBundle:Process/Step:setup.html.twig',
+            'DiamanteDistributionBundle:Process/Step:setup.html.twig',
             array(
                 'form' => $form->createView()
             )

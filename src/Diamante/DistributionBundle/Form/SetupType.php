@@ -90,6 +90,6 @@ class SetupType extends AbstractType
 
     public function getName()
     {
-        return 'oro_installer_setup';
+        return 'diamante_installer_setup';
     }
 }

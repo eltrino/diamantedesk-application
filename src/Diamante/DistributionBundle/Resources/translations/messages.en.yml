@@ -5,12 +5,28 @@ diamante_installer:
 process:
     step:
         diamanteinstall:
-            header: Diamante Desk Installation
+            header: DiamanteDesk Installation
         installation:
-            diamante-install: Install Diamante Desk
-            diamante-front-build: Build Diamante Front
-            diamante-front-assets-install: Install Diamante Front Assets
-            diamante-user-install: Install Diamante User
+            cache:                          Clear cache before database initialization
+            clear-config:                   Clear entities cache
+            clear-extend:                   Clear extended entities data
+            schema-drop:                    Drop current schema
+            schema-update:                  Schema update
+            fixtures:                       Load fixtures
+            workflows:                      Load workflow definitions
+            processes:                      Load processes configuration
+            diamante-install:               Install DiamanteDesk
+            diamante-front-build:           Build Diamante Front
+            diamante-front-assets-install:  Install DiamanteDesk Front Assets
+            diamante-user-install:          Install DiamanteDesk User
+            navigation:                     Init navigation
+            js-routing:                     Dump JS routing
+            localization:                   Dump localization
+            assets:                         Install assets
+            assetic:                        Dump assetic
+            translation:                    Prepare translations
+            requirejs:                      Optimize JS resources (optional)
+            finish:                         Clear cache to finalize installation
         check:
             table:
                 diamante: DiamanteDesk Requirements

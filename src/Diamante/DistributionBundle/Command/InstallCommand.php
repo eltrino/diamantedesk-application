@@ -47,7 +47,7 @@ class InstallCommand extends ContainerAwareCommand
             $this->runExistingCommand('oro:install', $output, array('--timeout' => 0));
             $this->runExistingCommand('diamante:desk:install', $output);
             $this->runExistingCommand('diamante:user:install', $output);
-            $this->runExistingCommand('diamante:front:build', $output, array('--with-assets-dependencies'));
+            $this->runExistingCommand('diamante:front:build', $output, array('--with-assets-dependencies' => true));
             $this->runExistingCommand('oro:assets:install', $output, array(
                 'target' => './',
                 '--exclude' => $this->listBundlesToExcludeInAssetsInstall()
@@ -71,7 +71,7 @@ class InstallCommand extends ContainerAwareCommand
      */
     protected function checkStep(OutputInterface $output)
     {
-        $output->writeln('<info>Oro requirements check:</info>');
+        $output->writeln('<info>Diamante requirements check:</info>');
 
         if (!class_exists('OroRequirements')) {
             require_once $this->getContainer()->getParameter('kernel.root_dir')
