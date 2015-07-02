@@ -32,6 +32,9 @@
         "diamante/desk-bundle": "dev-master",
         "eloquent/composer-npm-bridge": "~2"
     },
+    "require-dev": {
+        "eltrino/phpunit-mockannotations": "*"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
