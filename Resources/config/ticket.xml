@@ -109,6 +109,7 @@
             <argument type="service" id="diamante.notification.ticket.email.notifier"/>
             <argument type="service" id="diamante.ticket_history.repository"/>
             <argument type="service" id="oro_tag.tag.manager"/>
+            <argument type="service" id="oro_security.security_facade"/>
         </service>
 
         <service id="diamante.ticket.api.service" class="%diamante.ticket.service.api.class%" parent="diamante.ticket.service">

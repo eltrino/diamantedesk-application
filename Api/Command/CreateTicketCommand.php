@@ -89,7 +89,7 @@ class CreateTicketCommand implements Taggable
     public $attachmentsInput;
 
     /**
-     * @Assert\Type(type="array")
+     * @Any({@Assert\Type(type="array"), @Assert\Type(type="object")})
      */
     public $tags;
 

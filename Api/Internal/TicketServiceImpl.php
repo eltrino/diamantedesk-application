@@ -48,6 +48,7 @@ use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Doctrine\ORM\EntityManager;
+use Oro\Bundle\SecurityBundle\SecurityFacade;
 
 class TicketServiceImpl implements TicketService
 {
@@ -112,6 +113,11 @@ class TicketServiceImpl implements TicketService
     private $tagManager;
 
     /**
+     * @var SecurityFacade
+     */
+    protected $securityFacade;
+
+    /**
      * @param EntityManager               $em
      * @param TicketRepository            $ticketRepository
      * @param Repository                  $branchRepository
@@ -136,7 +142,8 @@ class TicketServiceImpl implements TicketService
                                 NotificationDeliveryManager $notificationDeliveryManager,
                                 Notifier $notifier,
                                 DoctrineGenericRepository $ticketHistoryRepository,
-                                TagManager $tagManager
+                                TagManager $tagManager,
+                                SecurityFacade $securityFacade
     ) {
         $this->em = $em;
         $this->ticketRepository = $ticketRepository;
@@ -150,6 +157,7 @@ class TicketServiceImpl implements TicketService
         $this->notifier = $notifier;
         $this->ticketHistoryRepository = $ticketHistoryRepository;
         $this->tagManager = $tagManager;
+        $this->securityFacade = $securityFacade;
     }
 
     /**
@@ -181,7 +189,10 @@ class TicketServiceImpl implements TicketService
             $ticket = $this->loadTicketByTicketKey($ticketKey);
         }
 
-        $this->tagManager->loadTagging($ticket);
+        if ($this->securityFacade->getOrganization()) {
+            $this->tagManager->loadTagging($ticket);
+        }
+
         $this->isGranted('VIEW', $ticket);
 
         return $ticket;
@@ -341,7 +352,11 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
-        $this->tagManager->saveTagging($ticket);
+
+        if ($this->securityFacade->getOrganization()) {
+            $this->tagManager->saveTagging($ticket);
+        }
+
         $this->em->detach($ticket);
         $this->dispatchEvents($ticket);
 
