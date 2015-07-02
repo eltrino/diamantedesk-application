@@ -39,12 +39,13 @@ class DependencyLocator
 
             if (!$this->resolved) {
                 $possibleLocation = null;
+                continue;
             }
 
-            return $possibleLocation;
+            break;
         }
 
-        return false;
+        return $possibleLocation;
     }
 
     protected function ensureDependencyOperational($object, $probe = self::PROBE_VERSION_LONG)
