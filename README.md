@@ -1,4 +1,4 @@
-# DiamanteDesk Platform Application #
+# DiamanteDesk Application #
 
 **DiamanteDesk** is a customer service software that is designed to help big and small companies to really listen to their customers and convert their feedback into valuable experience. Our team is ready to go extra mile to improve customer support experience of your service.
 
