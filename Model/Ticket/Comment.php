@@ -128,6 +128,14 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     }
 
     /**
+     * @return string
+     */
+    public function getAuthorType()
+    {
+        return $this->author->getType();
+    }
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt()

@@ -24,6 +24,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Entity\ApiUser;
+use Diamante\UserBundle\Model\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
@@ -237,7 +238,11 @@ class EmailNotifier implements Notifier
         $reporter = $this->userService->getByUser($reporter);
         $assignee = $ticket->getAssignee();
 
-        $emails[$reporter->getEmail()] = $reporter->getFullName();
+        if ($reporter instanceof DiamanteUser) {
+            $emails[$reporter->getEmail()] = $reporter->getFullName();
+        } else {
+            $emails[$reporter->getEmail()] = $reporter->getFirstName() . ' ' . $reporter->getLastName();
+        }
 
         if ($assignee) {
             $emails[$assignee->getEmail()] = $assignee->getFirstName() . ' ' . $assignee->getLastName();

@@ -198,7 +198,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     {
         if (empty($command->assignee)) {
             $branch = $this->branchRepository->get((integer)$command->branch);
-            if ($branch) {
+            if ($branch && $branch->getDefaultAssignee()) {
                 $command->assignee = $branch->getDefaultAssignee()->getId();
             }
         }

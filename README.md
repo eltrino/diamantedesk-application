@@ -1,42 +1,38 @@
-DiamanteDesk
-========================
+# DiamanteDesk Bundle #
 
-This software extends base OroCRM functionality. Integrates support system for customers in your CRM system.
+DiamanteDesk software extends base OroCRM functionality. Its main purpose is to integrate customer support system into the Client's CRM system.
 
-Now you're able to create support ticket within your CRM and associate them with any customer from your system. Tickets could be assigned to users and grouped in Branches. This allows you organize tickets related to your certain customer in one group.
+Using this comprehensive help desk, it is now possible to create support tickets within the CRM and associate them with any customer from the system. In DiamanteDesk, tickets can be assigned to specific users and grouped into Branches. This option allows grouping tickets related to a certain customer.
 
-At this moment software in alpha version. Eltrino Team working forward to improve and increase amount of features available to user.
+Currently, DiamanteDesk software is in alpha version. Eltrino team is making efforts to improve and increase the amount of features available to a user.
 
-Requirements
-------------
+### Requirements ###
 
-DiamanteDesk supports OroCRM version 1.4+
+DiamanteDesk supports OroCRM version 1.7+.
 
-Installation
-------------
+### Installation ###
 
-Add as dependency in composer
+Add as dependency in composer:
 
 ```bash
 composer require diamante/desk-bundle:dev-master
 ```
 
-In addition you will need to run DiamanteDesk internal command to install
+In addition, you will need to run DiamanteDesk internal command to install the software:
 
 ```bash
 php app/console diamante:desk:install
 ```
 
-or to update already installed software
+And here is a command that updates already installed software:
 
 ```bash
 php app/console diamante:desk:update
 ```
 
-Configuration
-------------
+### Configuration ###
 
-For attachment download you should add additional configuration to firewalls section in `app/etc/security.yml`
+To download the attachment, add additional configuration to firewalls section in `app/etc/security.yml`
 
 ```yml
 diamante_attachments_download:
