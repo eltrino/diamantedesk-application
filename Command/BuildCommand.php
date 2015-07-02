@@ -90,6 +90,8 @@ class BuildCommand extends ContainerAwareCommand
             sprintf('%s sync --assets-dir=%s --public-dir=%s', $grunt, $assetsDir, $publicDir),
             sprintf('%s less --assets-dir=%s --public-dir=%s', $grunt, $assetsDir, $publicDir)
         ], $output);
+
+        return 0;
     }
 
     /**
@@ -123,7 +125,7 @@ class BuildCommand extends ContainerAwareCommand
             } else {
                 if ($output->getVerbosity() > 1) {
                     $output->write('<error>' . $buffer . '<error>');
-                    $logger->get('monolog.logger.diamante')->error($buffer);
+                    $logger->error($buffer);
                 }
             }
         });
@@ -131,6 +133,7 @@ class BuildCommand extends ContainerAwareCommand
         if ($result) {
             $output->writeln("<error>Failed</error>");
             $this->getContainer()->get('monolog.logger.diamante')->error($process->getErrorOutput());
+            throw new \RuntimeException('Building Diamante Front failed');
         } else {
             $output->writeln("Done");
         }

@@ -16,6 +16,8 @@ class DependencyLocator
         '/opt/local/bin',
     ];
 
+    protected $resolved = false;
+
     public function locate($dependency, $probe = self::PROBE_VERSION_LONG)
     {
         $possibleLocation = null;
@@ -27,9 +29,12 @@ class DependencyLocator
                 continue;
             }
 
-            if (!$this->ensureDependencyOperational($possibleLocation, $probe)) {
-                continue;
+            $this->ensureDependencyOperational($possibleLocation, $probe));
+
+            if (!$this->resolved) {
+                $possibleLocation = null;
             }
+
         }
 
         return $possibleLocation;
@@ -42,9 +47,9 @@ class DependencyLocator
         $process = new Process($command);
 
         if ($process->run() > 0) {
-            return false;
+            $this->resolved = false;
         }
 
-        return true;
+        $this->resolved = true;
     }
 }
