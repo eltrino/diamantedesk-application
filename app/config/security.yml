@@ -60,12 +60,12 @@ security:
             anonymous:      true
 
         front_diamante:
-            pattern:        ^/diamantefront
+            pattern:        ^/portal
             provider:       chain_provider
             anonymous:      true
 
         front_diamante_reset_password:
-            pattern:        ^/diamantefront/password/*
+            pattern:        ^/portal/password/*
             provider:       chain_provider
             anonymous:      true
 
