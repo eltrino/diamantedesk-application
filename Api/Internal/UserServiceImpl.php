@@ -33,23 +33,23 @@ class UserServiceImpl implements UserService, GravatarProvider
     /**
      * @var UserManager
      */
-    private $oroUserManager;
+    protected $oroUserManager;
 
     /**
      * @var DiamanteUserRepository
      */
-    private $diamanteUserRepository;
+    protected $diamanteUserRepository;
     /**
      * @var DiamanteUserFactory
      */
-    private $factory;
+    protected $factory;
 
     /**
      * @var AttachmentManager
      */
     protected $attachmentManager;
 
-    function __construct(
+    public function __construct(
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
         DiamanteUserFactory $factory,
@@ -141,9 +141,7 @@ class UserServiceImpl implements UserService, GravatarProvider
     public function createDiamanteUser(CreateDiamanteUserCommand $command)
     {
         $user = $this->factory->create(
-            $command->username,
             $command->email,
-            $command->contact,
             $command->firstName,
             $command->lastName
         );

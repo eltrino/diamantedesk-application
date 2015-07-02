@@ -1,0 +1,10 @@
+diamante_user_api:
+    resource:     diamante.user.api_service
+    type:         diamante_rest_service
+    prefix:       /api/rest/{version}/desk/
+    requirements:
+        version:  latest|v1
+        _format:  xml|json
+    defaults:
+        version:  latest
+        _format:  json

@@ -9,6 +9,7 @@
         <parameter key="diamante.user.entity.class">Diamante\UserBundle\Entity\DiamanteUser</parameter>
         <parameter key="diamante.user_factory.class">Diamante\UserBundle\Infrastructure\DiamanteUserFactory</parameter>
         <parameter key="diamante.user.service.class">Diamante\UserBundle\Api\Internal\UserServiceImpl</parameter>
+        <parameter key="diamante.user.api_service.class">Diamante\UserBundle\Api\Internal\UserApiServiceImpl</parameter>
         <parameter key="diamante.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\UserBundle\Twig\Extensions\UserDetailsExtension</parameter>
         <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\UserBundle\Search\DiamanteUserSearchHandler</parameter>
@@ -103,5 +104,8 @@
             <argument type="service" id="oro_config.global"/>
             <argument>%mailer_user%</argument>
         </service>
+
+        <service id="diamante.user.api_service" class="%diamante.user.api_service.class%" parent="diamante.user.service"/>
+
     </services>
 </container>

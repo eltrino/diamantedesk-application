@@ -1,17 +1,20 @@
-DiamanteDesk User Bundle
-========================
+# DiamanteDesk User Bundle #
 
-This bundle is **required** for DiamanteDesk to operate. It contains User Entity.
+User bundle is **required** for the proper work of DiamanteDesk as it contains User Entity.
 
-###Installation###
+### Requirements ###
 
-Composer installation: 
+DiamanteDesk supports OroCRM version 1.7+.
+
+### Installation ###
+
+Add as dependency in composer: 
 
 ```bash
 composer require diamante/user-bundle:dev-master
 ```
 
-After composer will install this bundle, run this command to update application
+After composer installs this bundle, run this command to update the application:
 
 ```bash
 php app/console diamante:user:install
