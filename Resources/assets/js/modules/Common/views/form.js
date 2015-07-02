@@ -6,6 +6,7 @@ define(['app', 'config', 'tinymce'], function(App, Config){
     autoresize_bottom_margin: 0,
     plugins: ['textcolor', 'code', 'link', 'autoresize'],
     toolbar: ['undo redo | bold italic underline | forecolor backcolor | bullist numlist | link | code'],
+    skin_url: Config.basePath + '/bundles/diamantefront/js/vendor/tinymce/skins/lightgray',
     content_css: Config.basePath + '/bundles/diamantefront/css/wysiwyg.css'
   };
 
