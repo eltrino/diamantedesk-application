@@ -36,11 +36,11 @@ php app/console assets:install
 
 ### Configuration ###
 
-Frontend is accessible at http://app/diamantefront url. This url should not be covered by standard Oro Platfrom authentication. You should add additional configuration to firewalls section in `app/etc/security.yml`:
+Frontend is accessible at http://app/portal url. This url should not be covered by standard Oro Platfrom authentication. You should add additional configuration to firewalls section in `app/etc/security.yml`:
 
 ```yml
 front_diamante:
-    pattern:        ^/diamantefront
+    pattern:        ^/portal
     provider:       chain_provider
     anonymous:      true
 ```
@@ -49,7 +49,7 @@ In order to reset and update password url you should use anonymous user. Add the
 
 ```yml
 front_diamante_reset_password:
-    pattern:        ^/diamantefront/password/*
+    pattern:        ^/portal/password/*
     provider:       chain_provider
     anonymous:      true
 ```

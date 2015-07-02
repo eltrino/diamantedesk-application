@@ -133,7 +133,7 @@ class BuildCommand extends ContainerAwareCommand
         if ($result) {
             $output->writeln("<error>Failed</error>");
             $this->getContainer()->get('monolog.logger.diamante')->error($process->getErrorOutput());
-            throw new \RuntimeException('Building Diamante Front failed');
+            throw new \RuntimeException('Building DiamanteDesk Portal failed');
         } else {
             $output->writeln("Done");
         }
