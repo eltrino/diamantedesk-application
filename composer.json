@@ -30,7 +30,8 @@
       "diamante/user-bundle": "self.version",
       "diamante/api-bundle": "self.version",
       "diamante/front-bundle": "self.version",
-      "diamante/email-processing-bundle": "self.version"
+      "diamante/email-processing-bundle": "self.version",
+      "diamante/embeddedform-bundle": "self.version"
     },
     "scripts": {
         "post-install-cmd": [

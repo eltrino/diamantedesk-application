@@ -52,6 +52,8 @@ class SchemaStep extends AbstractStep
                 );
             case 'diamante-user-install':
                 return $this->handleAjaxAction('diamante:user:install');
+            case 'diamante-embeddedform-install':
+                return $this->handleAjaxAction('diamante:embeddedform:install');
             case 'navigation':
                 return $this->handleAjaxAction('oro:navigation:init');
             case 'js-routing':

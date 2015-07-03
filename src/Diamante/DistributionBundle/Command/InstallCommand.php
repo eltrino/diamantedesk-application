@@ -47,6 +47,7 @@ class InstallCommand extends ContainerAwareCommand
             $this->runExistingCommand('oro:install', $output, array('--timeout' => 0));
             $this->runExistingCommand('diamante:desk:install', $output);
             $this->runExistingCommand('diamante:user:install', $output);
+            $this->runExistingCommand('diamante:embeddedform:install', $output);
             $this->runExistingCommand('diamante:front:build', $output, array('--with-assets-dependencies' => true));
             $this->runExistingCommand('oro:assets:install', $output, array(
                 'target' => './',
