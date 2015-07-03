@@ -12,6 +12,8 @@ oro_menu_config:
             extras:
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
                 position: 90
+        dashboard_tab:
+            display: false
         activities_tab:
             display: false
         reports_tab:
