@@ -32,6 +32,10 @@
       {
         "type": "git",
         "url": "https://github.com/eltrino/DiamanteUserBundle.git"
+      },
+      {
+        "type": "git",
+        "url": "https://github.com/orocrm/composer.git"
       }
     ],
     "homepage": "https://github.com/eltrino/DiamanteUserBundle"
