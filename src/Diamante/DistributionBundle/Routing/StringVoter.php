@@ -38,6 +38,8 @@ class StringVoter extends Voter
             'oro_default',
             'oro_dashboard_itemized_widget',
             'oro_activity_list_widget_activities',
+            'oro_translation_jstranslation',
+            'oro_form_autocomplete_search',
 
             //@TODO:REMOVE THESE ON RELEASE
             'oro_email_dashboard_recent_emails',
