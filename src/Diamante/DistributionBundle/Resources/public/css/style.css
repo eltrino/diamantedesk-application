@@ -27,6 +27,7 @@
   display: table;
   background: none;
   position: relative;
+  width: 100%;
 }
 .progress-bar ul:after {
   content: "";
@@ -127,12 +128,22 @@ a.button {
 }
 .icon-reset:before,
 .next span:after,
-.back span:before{
+.back span:before,
+.icon-settings:before {
   background-size: cover;
 }
+.icon-settings:before,
 .icon-reset:before {
+  width: 18px;
+  height: 18px;
   margin: 10px 5px 0 0;
+}
+.icon-reset:before {
   background-image: url('../img/refresh.svg');
+}
+
+.icon-settings:before {
+  background-image: url('../img/cog.svg');
 }
 
 .next span:after {
