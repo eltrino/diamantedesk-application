@@ -6,7 +6,7 @@
         "diamante/desk-bundle": "dev-master"
     },
     "require-dev": {
-      "eltrino/phpunit-mockannotations": "~1.0@dev"
+      "eltrino/phpunit-mockannotations": "*"
     },
     "license": "OSL-3.0",
     "authors": [
