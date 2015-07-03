@@ -47,6 +47,9 @@ class StringVoter extends Voter
             'oro_shortcut_actionslist',
             'oro_platform_system_info',
 
+            // Api
+            'oro_api_get_users',
+
             //@TODO:REMOVE THESE ON RELEASE
             'oro_email_dashboard_recent_emails',
             'oro_calendar_dashboard_my_calendar',
