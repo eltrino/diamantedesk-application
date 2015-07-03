@@ -14,6 +14,8 @@ class DependencyLocator
         '/usr/bin',
         '/usr/sbin',
         '/opt/local/bin',
+        '/bin',
+        '/sbin'
     ];
 
     protected $resolved = false;
@@ -32,6 +34,7 @@ class DependencyLocator
             $possibleLocation = sprintf('%s/%s', $path, $dependency);
 
             if (!file_exists($possibleLocation) || !is_executable($possibleLocation)) {
+                $possibleLocation = null;
                 continue;
             }
 
