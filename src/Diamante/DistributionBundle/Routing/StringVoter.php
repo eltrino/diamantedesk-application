@@ -40,6 +40,12 @@ class StringVoter extends Voter
             'oro_activity_list_widget_activities',
             'oro_translation_jstranslation',
             'oro_form_autocomplete_search',
+            'oro_search_results',
+            'oro_pinbar_help',
+            'oro_email_user_emails',
+            'oro_calendar_view_default',
+            'oro_shortcut_actionslist',
+            'oro_platform_system_info',
 
             //@TODO:REMOVE THESE ON RELEASE
             'oro_email_dashboard_recent_emails',

@@ -14,6 +14,8 @@ oro_menu_config:
                 position: 90
         dashboard_tab:
             display: false
+        oro_calendar_view_default:
+            display: false
         activities_tab:
             display: false
         reports_tab:
