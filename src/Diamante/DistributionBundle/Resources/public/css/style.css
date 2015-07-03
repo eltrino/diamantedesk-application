@@ -30,7 +30,7 @@
 }
 .progress-bar ul:after {
   content: "";
-  background: #d7e3a2;
+  background: #f6fbff;
   height: 4px;
   position: absolute;
   z-index: 1;
@@ -44,9 +44,8 @@
 
 .progress-bar,
 .progress-bar li:first-child:before,
-.progress-bar li:last-child:before,
-.button-set{
-  background: #50828e;
+.progress-bar li:last-child:before{
+  background: #50818e;
 }
 
 .progress-bar li:first-child:before,
@@ -66,7 +65,7 @@
 
 
 .progress-bar span {
-  color:#d7e3a2;
+  color:#f6fbff;
   margin-top: 5px;
 }
 
@@ -76,15 +75,19 @@
   line-height: 25px;
   border-radius: 50%;
   margin: 0;
-  background: #d7e3a2;
+  background: #f6fbff;
   color:#50828e;
 }
 
 .progress-bar .active .step {
-  border-color:#d7e3a2;
+  border-color:#f6fbff;
   border-width:4px;
-  color:#d7e3a2;
+  color:#f6fbff;
   background: #50828e;
+}
+
+.progress-bar .active span {
+  margin-top: 1px;
 }
 
 
@@ -96,25 +99,30 @@
 }
 
 .button {
-  background: #d7e3a2;
-  color:#50828e;
+  background: #50828e;
+  color:#f6fbff;
+  text-transform: uppercase;
   border:none;
-  height:32px;
+  border-radius: 20px;
+  padding: 0 20px;
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, .2);
 }
+.button,
 a.button {
-  height: 32px;
+  line-height: 40px;
+  height: 40px;
+  font-weight: normal;
 }
 .button:hover, .button:focus {
-  background: #d7e3a2;
+  background: #50828e;
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, .5);
 }
 
 .button.disabled, .button.disabled:hover, .button.disabled:focus {
   border:none;
-  background: #d7e3a2;
+  background: rgba(80, 130, 142, .5);
+  color: rgba(246, 251, 255, .5);
   cursor: no-drop;
-  color: rgba(80, 130, 142, .5);
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, .2);
 }
 .icon-reset:before,
@@ -123,13 +131,14 @@ a.button {
   background-size: cover;
 }
 .icon-reset:before {
+  margin: 10px 5px 0 0;
   background-image: url('../img/refresh.svg');
 }
 
 .next span:after {
   width:14px;
   height: 14px;
-  margin: 10px 0 0 5px;
+  margin: 14px 0 0 5px;
   background-image: url('../img/chevron-right.svg');
 }
 .back span:before {
@@ -137,7 +146,7 @@ a.button {
   float: left;
   width:14px;
   height: 14px;
-  margin: 10px 5px 0 0;
+  margin: 14px 5px 0 0;
   background-image: url('../img/chevron-left.svg');
 }
 

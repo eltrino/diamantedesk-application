@@ -1,5 +1,6 @@
 {% block progress %}
 {% set step = step is defined ? step|lower : 'configure' %}
+
 <div class="progress-bar">
     <ul>
         <li{% if step == 'check' %} class="active"{% endif %}>
@@ -18,12 +19,8 @@
             <strong class="step">4</strong>
             <span>{{ 'process.step.setup.header'|trans }}</span>
         </li>
-        <li{% if step == 'diamanteInstallation' %} class="active"{% endif %}>
-            <strong class="step">5</strong>
-            <span>{{ 'diamante_installer.step.install'|trans }}</span>
-        </li>
         <li{% if step == 'final' %} class="active"{% endif %}>
-            <strong class="step">6</strong>
+            <strong class="step">5</strong>
             <span>{{ 'process.step.final.header'|trans }}</span>
         </li>
     </ul>

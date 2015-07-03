@@ -84,12 +84,10 @@ function iterateRequirements(array $collection)
     <title><?php echo $translator->trans('title'); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="bundles/oroinstaller/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="bundles/diamantedistribution/css/style.css" />
     <script type="text/javascript" src="bundles/oroinstaller/lib/jquery-2.0.3.min.js"></script>
     <script type="text/javascript">
         $(function() {
-            $('.progress-bar li:last-child em.fix-bg').width($('.progress-bar li:last-child').width() / 2);
-            $('.progress-bar li:first-child em.fix-bg').width($('.progress-bar li:first-child').width() / 2);
-
             var splash = $('div.start-box'),
                 body = $('body'),
                 winHeight = $(window).height();
@@ -117,34 +115,31 @@ function iterateRequirements(array $collection)
 </head>
 <body>
 <header class="header">
-    <h1 class="logo"><?php echo $translator->trans('title'); ?></h1>
+        <h1 class="logo">
+            <img src="bundles/diamantedistribution/img/logo.svg" alt="<?php echo $translator->trans('title'); ?>"/>
+        </h1>
 </header>
 <div class="wrapper">
     <div class="content">
         <div class="progress-bar">
             <ul>
                 <li class="active">
-                    <em class="fix-bg">&nbsp;</em>
                     <strong class="step">1</strong>
                     <span><?php echo $translator->trans('process.step.check.header'); ?></span>
                 </li>
                 <li>
-                    <em class="fix-bg">&nbsp;</em>
                     <strong class="step">2</strong>
                     <span><?php echo $translator->trans('process.step.configure'); ?></span>
                 </li>
                 <li>
-                    <em class="fix-bg">&nbsp;</em>
                     <strong class="step">3</strong>
                     <span><?php echo $translator->trans('process.step.schema'); ?></span>
                 </li>
                 <li>
-                    <em class="fix-bg">&nbsp;</em>
                     <strong class="step">4</strong>
                     <span><?php echo $translator->trans('process.step.setup'); ?></span>
                 </li>
                 <li>
-                    <em class="fix-bg">&nbsp;</em>
                     <strong class="step">5</strong>
                     <span><?php echo $translator->trans('process.step.final'); ?></span>
                 </li>
@@ -213,7 +208,7 @@ function iterateRequirements(array $collection)
                         <span><?php echo $translator->trans('process.button.refresh'); ?></span>
                     </a>
                 <?php endif; ?>
-                <a href="<?php echo count($majorProblems) ? 'javascript: void(0);' : 'app.php/installer'; ?>" class="button next <?php echo count($majorProblems) ? 'disabled' : 'primary'; ?>">
+                <a href="<?php echo count($majorProblems) ? 'javascript: void(0);' : 'installer'; ?>" class="button next <?php echo count($majorProblems) ? 'disabled' : 'primary'; ?>">
                     <span><?php echo $translator->trans('process.button.next'); ?></span>
                 </a>
             </div>
