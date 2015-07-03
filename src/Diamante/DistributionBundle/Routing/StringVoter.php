@@ -46,6 +46,7 @@ class StringVoter extends Voter
             'oro_calendar_view_default',
             'oro_shortcut_actionslist',
             'oro_platform_system_info',
+            'oro_datagrid_mass_action',
 
             // Api
             'oro_api_get_users',
