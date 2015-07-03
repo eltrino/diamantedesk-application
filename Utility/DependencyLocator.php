@@ -59,6 +59,7 @@ class DependencyLocator
 
         if ($process->run() > 0) {
             $this->resolved = false;
+            return;
         }
 
         $this->resolved = true;
