@@ -133,7 +133,7 @@ function iterateRequirements(array $collection)
                 </li>
                 <li>
                     <strong class="step">3</strong>
-                    <span><?php echo $translator->trans('process.step.schema'); ?></span>
+                    <span><?php echo $translator->trans('process.step.diamanteinstall'); ?></span>
                 </li>
                 <li>
                     <strong class="step">4</strong>

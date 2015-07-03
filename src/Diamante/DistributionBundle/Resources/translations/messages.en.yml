@@ -1,11 +1,7 @@
-diamante_installer:
-  step:
-    install: DiamanteDesk installation
-
 process:
     step:
         diamanteinstall:
-            header: DiamanteDesk Installation
+            header: Initialization
         installation:
             cache:                          Clear cache before database initialization
             clear-config:                   Clear entities cache
@@ -29,4 +25,6 @@ process:
             finish:                         Clear cache to finalize installation
         check:
             table:
-                diamante: DiamanteDesk Requirements
+                diamante:                   DiamanteDesk Requirements
+        final:
+            content:                        You're lucky to start using DiamanteDesk right away.<br>If you're looking for some help or need some support please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you're our Enterprise client.

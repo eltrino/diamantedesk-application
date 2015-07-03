@@ -21,7 +21,7 @@ process:
                 cli:        PHP CLI
                 diamante:   Diamantedesk requirements
         configure:          Configuration
-        schema:             DiamanteDesk installation
+        diamanteinstall:    Initialization
         setup:              Administration setup
         final:              Finish
 
