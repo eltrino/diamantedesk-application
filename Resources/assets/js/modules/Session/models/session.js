@@ -52,7 +52,7 @@ define([
 
     Session.SessionModel = Backbone.Model.extend({
 
-      url: Config.apiUrl.replace('api/diamante/rest/latest', 'diamantefront') + '/user',
+      url: Config.apiUrl.replace('api/diamante/rest/latest', 'portal') + '/user',
 
       initialize: function(){
         var savedData = window.localStorage.getItem('authModel') || getCookie('authModel');
