@@ -80,10 +80,17 @@ class BuildCommand extends ContainerAwareCommand
 
         $assetsDir = $this->bundleDir . 'Resources/assets';
         $publicDir = $this->bundleDir . 'Resources/public';
+        $gruntFile = $this->bundleDir . 'Gruntfile.js';
 
         $output->write("Building application ...");
         $this->executeProcess([
-            sprintf('%s --assets-dir=%s --public-dir=%s', 'grunt', $assetsDir, $publicDir)
+            sprintf('%s --assets-dir=%s --public-dir=%s --base=%s --gruntfile=%s',
+                'grunt',
+                $assetsDir,
+                $publicDir,
+                $this->bundleDir,
+                $gruntFile
+            )
         ], $output);
 
         return 0;
