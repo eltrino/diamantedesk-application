@@ -39,7 +39,7 @@ define([
   }
 
   function validateEmail(email) {
-    return !!String(email).match(/^\s*[\w\-\+_]+(?:\.[\w\-\+_]+)*@[\w\-\+_]+\.[\w\-\+_]+(?:\.[\w‌​\-\+_]+)*\s*$/);
+    return !!String(email).match(/^\s*[\w\-\+_]+(?:\.[\w\-\+_]+)*@[\w\-\+_]+\.[\w\-\+_]+(?:\.[\w\-\+_]+)*\s*$/);
   }
 
 
