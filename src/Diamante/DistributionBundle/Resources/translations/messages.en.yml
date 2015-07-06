@@ -12,8 +12,8 @@ process:
             workflows:                      Load workflow definitions
             processes:                      Load processes configuration
             diamante-install:               Install DiamanteDesk
-            diamante-front-build:           Build Diamante Front
-            diamante-front-assets-install:  Install DiamanteDesk Front Assets
+            diamante-front-build:           Build DiamanteDesk Portal
+            diamante-front-assets-install:  Install DiamanteDesk Portal Assets
             diamante-user-install:          Install DiamanteDesk User
             diamante-embeddedform-install:  Install DiamanteDesk Embedded Forms
             navigation:                     Init navigation
