@@ -29,9 +29,9 @@
         "php": ">=5.4.4",
         "oro/platform": "1.7.*",
         "beberlei/assert": "2.*",
-        "diamante/email-processing-bundle": "dev-master",
-        "diamante/api-bundle": "dev-master",
-        "diamante/user-bundle": "dev-master"
+        "diamante/email-processing-bundle": "self.version",
+        "diamante/api-bundle": "self.version",
+        "diamante/user-bundle": "self.version"
     },
     "require-dev": {
         "eltrino/phpunit-mockannotations": "*"
