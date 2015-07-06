@@ -3,7 +3,7 @@
     "description": "DiamanteDesk User bundle",
     "require": {
         "beberlei/assert": "2.*",
-        "diamante/desk-bundle": "dev-master"
+        "diamante/desk-bundle": "self.version"
     },
     "require-dev": {
       "eltrino/phpunit-mockannotations": "*"
