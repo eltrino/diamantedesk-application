@@ -53,4 +53,17 @@ class DoctrineWatcherListRepository extends DoctrineGenericRepository implements
         ]);
     }
 
+    /**
+     * @param User $user
+     * @return integer
+     */
+    public function removeByUser(User $user)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->delete('DiamanteDeskBundle:WatcherList', 'w')
+            ->where($qb->expr()->eq('w.userType', ':userType'))
+            ->setParameter(':userType', $user);
+
+        return $qb->getQuery()->execute();
+    }
 }

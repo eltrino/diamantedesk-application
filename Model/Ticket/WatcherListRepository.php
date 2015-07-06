@@ -33,4 +33,10 @@ interface WatcherListRepository extends Repository
      * @return null|object
      */
     public function findOne(Ticket $ticket, User $user);
+
+    /**
+     * @param User $user
+     * @return integer
+     */
+    public function removeByUser(User $user);
 }

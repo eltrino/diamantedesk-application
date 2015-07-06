@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\CommentRepository;
 use Diamante\UserBundle\Model\User;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineWatcherListRepository;
 
 class ReporterService {
     /**
@@ -30,12 +31,23 @@ class ReporterService {
     private $commentRepository;
 
     /**
-     * @param TicketRepository $ticketRepository
-     * @param CommentRepository $commentRepository
+     * @var DoctrineWatcherListRepository
      */
-    public function __construct(TicketRepository $ticketRepository, CommentRepository $commentRepository) {
+    private $watcherListRepository;
+
+    /**
+     * @param TicketRepository              $ticketRepository
+     * @param CommentRepository             $commentRepository
+     * @param DoctrineWatcherListRepository $watcherListRepository
+     */
+    public function __construct(
+        TicketRepository $ticketRepository,
+        CommentRepository $commentRepository,
+        DoctrineWatcherListRepository $watcherListRepository
+    ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
+        $this->watcherListRepository  = $watcherListRepository;
     }
 
     /**
@@ -43,6 +55,7 @@ class ReporterService {
      */
     public function cleanupUser(User $user)
     {
+        $this->watcherListRepository->removeByUser($user);
         $this->ticketRepository->removeTicketReporter($user);
         $this->commentRepository->removeCommentAuthor($user);
     }

@@ -63,6 +63,7 @@
         <service id="diamante.user_cleanup.service" class="%diamante.user_cleanup.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.comment.repository"/>
+            <argument type="service" id="diamante.watcher_list.repository"/>
         </service>
 
         <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>
