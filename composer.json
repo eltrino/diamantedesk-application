@@ -29,7 +29,7 @@
         "php": ">=5.4.4",
         "oro/platform": "1.7.*",
         "beberlei/assert": "2.*",
-        "zendframework/zend-mail": "2.*",
+        "zendframework/zend-mail": "2.1.*",
         "ezyang/htmlpurifier": "4.6.0",
         "bordeux/email-cleaner": "dev-master",
         "michelf/php-markdown": "~1.4"
