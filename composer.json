@@ -3,10 +3,10 @@
     "description": "DiamanteDesk User bundle",
     "require": {
         "beberlei/assert": "2.*",
-        "diamante/desk-bundle": "dev-master"
+        "diamante/desk-bundle": "self.version"
     },
     "require-dev": {
-      "eltrino/phpunit-mockannotations": "~1.0@dev"
+      "eltrino/phpunit-mockannotations": "*"
     },
     "license": "OSL-3.0",
     "authors": [
@@ -32,6 +32,10 @@
       {
         "type": "git",
         "url": "https://github.com/eltrino/DiamanteUserBundle.git"
+      },
+      {
+        "type": "git",
+        "url": "https://github.com/orocrm/composer.git"
       }
     ],
     "homepage": "https://github.com/eltrino/DiamanteUserBundle"
