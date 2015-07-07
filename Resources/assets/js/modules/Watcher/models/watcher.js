@@ -14,7 +14,6 @@ define([
       urlRoot: Config.apiUrl + '/desk/tickets/{ticketId}/watchers',
 
       initialize: function(attr, options){
-        console.log(attr,options);
         if(options.ticket){
           this.urlRoot = this.urlRoot.replace('{ticketId}', options.ticket.get('id'));
         }
