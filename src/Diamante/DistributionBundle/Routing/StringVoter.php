@@ -48,6 +48,10 @@ class StringVoter extends Voter
             'oro_platform_system_info',
             'oro_datagrid_mass_action',
 
+            //Embedded Forms
+            'oro_embedded_form_list',
+            'oro_embedded_form_create',
+
             // Api
             'oro_api_get_users',
 

@@ -1,5 +1,11 @@
 oro_menu_config:
     items:
+        embedded_forms:
+            label: 'oro.embeddedform.entity_plural_label'
+            route: 'oro_embedded_form_list'
+            extras:
+                position:   20
+                routes:     ['oro_embedded_form_*']
         diamante_branch_list:
             label: 'Branches'
             route: diamante_branch_list
@@ -41,6 +47,9 @@ oro_menu_config:
                         user_create: ~
                         user_groups: ~
                         user_roles: ~
+                    integrations_submenu:
+                      children:
+                        embedded_forms: ~
                     oro_platform_system_info: ~
 
 
