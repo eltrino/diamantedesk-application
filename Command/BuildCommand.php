@@ -63,13 +63,9 @@ class BuildCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dependencies = ['grunt', 'bower'];
-        $resolved     = $this->locateDependencies($dependencies);
 
-        $grunt = array_key_exists('grunt', $resolved) ? $resolved['grunt'] : null;
-        $bower = array_key_exists('bower', $resolved) ? $resolved['bower'] : null;
-
-        if (is_null($grunt) || is_null($bower)
+        if (!$this->isCommandSuccess('grunt --version')
+            || !$this->isCommandSuccess('bower --version')
         ) {
             $output->writeln('<error>For full functionality of this bundle, you should install grunt-cli, bower globally using npm.</error>');
             return self::RETURN_CODE_NO_TOOLS;
@@ -77,18 +73,24 @@ class BuildCommand extends ContainerAwareCommand
 
         if ($input->getParameterOption('--with-assets-dependencies')) {
             $output->write("Installing assets dependencies ...");
-            $this->executeProcess(sprintf('%s install', $bower), $output);
+            $this->executeProcess('bower install', $output);
             $output->write("Updating assets dependencies ...");
-            $this->executeProcess(sprintf('%s update', $bower), $output);
+            $this->executeProcess('bower update', $output);
         }
 
         $assetsDir = $this->bundleDir . 'Resources/assets';
         $publicDir = $this->bundleDir . 'Resources/public';
+        $gruntFile = $this->bundleDir . 'Gruntfile.js';
 
         $output->write("Building application ...");
         $this->executeProcess([
-            sprintf('%s sync --assets-dir=%s --public-dir=%s', $grunt, $assetsDir, $publicDir),
-            sprintf('%s less --assets-dir=%s --public-dir=%s', $grunt, $assetsDir, $publicDir)
+            sprintf('%s --assets-dir=%s --public-dir=%s --base=%s --gruntfile=%s',
+                'grunt',
+                $assetsDir,
+                $publicDir,
+                $this->bundleDir,
+                $gruntFile
+            )
         ], $output);
 
         return 0;
@@ -133,7 +135,7 @@ class BuildCommand extends ContainerAwareCommand
         if ($result) {
             $output->writeln("<error>Failed</error>");
             $this->getContainer()->get('monolog.logger.diamante')->error($process->getErrorOutput());
-            throw new \RuntimeException('Building Diamante Front failed');
+            throw new \RuntimeException('Building DiamanteDesk Portal failed');
         } else {
             $output->writeln("Done");
         }
@@ -155,21 +157,5 @@ class BuildCommand extends ContainerAwareCommand
         }
 
         return true;
-    }
-
-    protected function locateDependencies($dependencies)
-    {
-        $locator = new DependencyLocator();
-        $locatedDependencies = [];
-        if (!is_array($dependencies)) {
-            $dependencies = array($dependencies);
-        }
-
-        foreach ($dependencies as $dependency) {
-                $result = $locator->locate($dependency);
-                $locatedDependencies[$dependency] = $result;
-        }
-
-        return $locatedDependencies;
     }
 }

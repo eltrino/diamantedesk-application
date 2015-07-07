@@ -28,9 +28,12 @@
     "require": { 
         "php": ">=5.4.4",
         "oro/platform": "1.7.*",
-        "diamante/api-bundle": "dev-master",
-        "diamante/desk-bundle": "dev-master",
+        "diamante/api-bundle": "self.version",
+        "diamante/desk-bundle": "self.version",
         "eloquent/composer-npm-bridge": "~2"
+    },
+    "require-dev": {
+        "eltrino/phpunit-mockannotations": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

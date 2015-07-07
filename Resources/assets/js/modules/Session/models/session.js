@@ -39,7 +39,7 @@ define([
   }
 
   function validateEmail(email) {
-    return !!String(email).match(/^\s*[\w\-\+_]+(?:\.[\w\-\+_]+)*@[\w\-\+_]+\.[\w\-\+_]+(?:\.[\w‌​\-\+_]+)*\s*$/);
+    return !!String(email).match(/^\s*[\w\-\+_]+(?:\.[\w\-\+_]+)*@[\w\-\+_]+\.[\w\-\+_]+(?:\.[\w\-\+_]+)*\s*$/);
   }
 
 
@@ -52,7 +52,7 @@ define([
 
     Session.SessionModel = Backbone.Model.extend({
 
-      url: Config.apiUrl.replace('api/diamante/rest/latest', 'diamantefront') + '/user',
+      url: Config.apiUrl.replace('api/diamante/rest/latest', 'portal') + '/user',
 
       initialize: function(){
         var savedData = window.localStorage.getItem('authModel') || getCookie('authModel');

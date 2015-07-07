@@ -1,15 +1,15 @@
 diamante_front_bundle:
     resource:     "@DiamanteFrontBundle/Controller/IndexController.php"
     type:         annotation
-    prefix:       /diamantefront
+    prefix:       /portal
 
 diamante_front:
-    path:         /diamantefront
+    path:         /portal
 
 diamante_front_user:
     resource:     "@DiamanteFrontBundle/Controller/UserController.php"
     type:         rest
-    prefix:       /diamantefront
+    prefix:       /portal
 
 diamante_front_api_user:
     resource:     diamante.front.current_user.api.service_diamante
