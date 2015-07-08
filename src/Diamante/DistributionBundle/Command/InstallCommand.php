@@ -14,21 +14,35 @@
  */
 namespace Diamante\DistributionBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\TableHelper;
+use Oro\Bundle\InstallerBundle\Command\InstallCommand as OroInstallCommand;
+use Oro\Bundle\InstallerBundle\CommandExecutor;
+use Oro\Bundle\InstallerBundle\Command\Provider\InputOptionProvider;
+use Symfony\Component\Console\Input\InputOption;
 
-class InstallCommand extends ContainerAwareCommand
+class InstallCommand extends OroInstallCommand
 {
+    /**
+     * @var CommandExecutor
+     */
+    protected $commandExecutor;
+
     /**
      * Configures the current command.
      */
     protected function configure()
     {
         $this->setName('diamante:install')
-            ->setDescription('Install Diamante Desk Bundles');
+            ->setDescription('Install Diamante Desk Bundles')
+            ->addOption('application-url', null, InputOption::VALUE_OPTIONAL, 'Application URL')
+            ->addOption('organization-name', null, InputOption::VALUE_OPTIONAL, 'Organization name')
+            ->addOption('user-name', null, InputOption::VALUE_OPTIONAL, 'User name')
+            ->addOption('user-email', null, InputOption::VALUE_OPTIONAL, 'User email')
+            ->addOption('user-firstname', null, InputOption::VALUE_OPTIONAL, 'User first name')
+            ->addOption('user-lastname', null, InputOption::VALUE_OPTIONAL, 'User last name')
+            ->addOption('user-password', null, InputOption::VALUE_OPTIONAL, 'User password');
     }
 
     /**
@@ -44,15 +58,17 @@ class InstallCommand extends ContainerAwareCommand
             ->info(sprintf('DiamanteDesk installation started at %s', date('Y-m-d H:i:s')));
         try {
             $this->checkStep($output);
-            $this->runExistingCommand('oro:install', $output, array('--timeout' => 0));
+            $this->oroInit($output, $input);
+            $this->oroInstall($input, $output);
             $this->runExistingCommand('diamante:desk:install', $output);
             $this->runExistingCommand('diamante:user:install', $output);
             $this->runExistingCommand('diamante:embeddedform:install', $output);
             $this->runExistingCommand('diamante:front:build', $output, array('--with-assets-dependencies' => true));
             $this->runExistingCommand('oro:assets:install', $output, array(
-                'target' => './',
-                '--exclude' => $this->listBundlesToExcludeInAssetsInstall()
-            ));
+                    'target' => './',
+                    '--exclude' => $this->listBundlesToExcludeInAssetsInstall()
+                ));
+            $this->oroAdministrationSetup($output);
         } catch (\Exception $e) {
             $this->getContainer()->get('monolog.logger.diamante')
                 ->error(sprintf('Installation failed with error: %s', $e->getMessage()));
@@ -62,6 +78,79 @@ class InstallCommand extends ContainerAwareCommand
         $this->getContainer()->get('monolog.logger.diamante')
             ->info(sprintf('DiamanteDesk installation finished at %s', date('Y-m-d H:i:s')));
         return 0;
+    }
+
+    protected function oroInit($output, $input)
+    {
+        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
+
+        $this->commandExecutor = new CommandExecutor(
+            $input->hasOption('env') ? $input->getOption('env') : null,
+            $output,
+            $this->getApplication(),
+            $this->getContainer()->get('oro_cache.oro_data_cache_manager')
+        );
+        $this->commandExecutor->setDefaultTimeout(0);
+    }
+
+    protected function oroInstall(InputInterface $input, OutputInterface $output)
+    {
+        $this->prepareStep($this->commandExecutor)
+            ->loadDataStep($this->commandExecutor, $output)
+            ->finalStep($this->commandExecutor, $output, $input);
+    }
+
+    /**
+     * @param CommandExecutor $commandExecutor
+     * @param OutputInterface $output
+     *
+     * @return InstallCommand
+     */
+    protected function loadDataStep(CommandExecutor $commandExecutor, OutputInterface $output)
+    {
+        $output->writeln('<info>Setting up database.</info>');
+
+        $commandExecutor
+            ->runCommand(
+                'oro:migration:load',
+                [
+                    '--force'             => true,
+                    '--process-isolation' => true,
+                    '--timeout'           => $commandExecutor->getDefaultTimeout()
+                ]
+            )
+            ->runCommand(
+                'oro:workflow:definitions:load',
+                [
+                    '--process-isolation' => true,
+                ]
+            )
+            ->runCommand(
+                'oro:process:configuration:load',
+                [
+                    '--process-isolation' => true
+                ]
+            )
+            ->runCommand(
+                'oro:migration:data:load',
+                [
+                    '--process-isolation' => true,
+                    '--no-interaction'    => true,
+                ]
+            );
+
+        $output->writeln('');
+
+        return $this;
+    }
+
+    protected function oroAdministrationSetup(OutputInterface $output)
+    {
+        $output->writeln('<info>Administration setup.</info>');
+
+        $this->updateSystemSettings();
+        $this->updateOrganization($this->commandExecutor);
+        $this->updateUser($this->commandExecutor);
     }
 
     /**
@@ -108,39 +197,6 @@ class InstallCommand extends ContainerAwareCommand
         $output->writeln('');
 
         return $this;
-    }
-
-    /**
-     * Render requirements table
-     *
-     * @param array           $collection
-     * @param string          $header
-     * @param OutputInterface $output
-     */
-    protected function renderTable(array $collection, $header, OutputInterface $output)
-    {
-        /** @var TableHelper $table */
-        $table = $this->getHelperSet()->get('table');
-
-        $table
-            ->setHeaders(array('Check  ', $header))
-            ->setRows(array());
-
-        /** @var \Requirement $requirement */
-        foreach ($collection as $requirement) {
-            if ($requirement->isFulfilled()) {
-                $table->addRow(array('OK', $requirement->getTestMessage()));
-            } else {
-                $table->addRow(
-                    array(
-                        $requirement->isOptional() ? 'WARNING' : 'ERROR',
-                        $requirement->getHelpText()
-                    )
-                );
-            }
-        }
-
-        $table->render($output);
     }
 
     /**
