@@ -116,7 +116,8 @@ class InstallCommand extends OroInstallCommand
                 [
                     '--force'             => true,
                     '--process-isolation' => true,
-                    '--timeout'           => $commandExecutor->getDefaultTimeout()
+                    '--timeout'           => $commandExecutor->getDefaultTimeout(),
+                    '--exclude'           => array('DiamanteEmbeddedFormBundle')
                 ]
             )
             ->runCommand(
