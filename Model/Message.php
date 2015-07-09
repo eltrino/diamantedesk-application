@@ -60,17 +60,32 @@ class Message
     private $attachments;
 
     /**
-     * @param $uniqueId
-     * @param $messageId
-     * @param $subject
-     * @param $content
-     * @param $from
-     * @param $to
-     * @param null $reference
-     * @param array $attachments
+     * @var bool
      */
-    public function __construct($uniqueId, $messageId, $subject, $content, MessageSender $from, $to, $reference = null, array $attachments = null)
-    {
+    private $isFailed;
+
+    /**
+     * @param               $uniqueId
+     * @param               $messageId
+     * @param               $subject
+     * @param               $content
+     * @param MessageSender $from
+     * @param               $to
+     * @param null          $reference
+     * @param array         $attachments
+     * @param bool          $isFailed
+     */
+    public function __construct(
+        $uniqueId,
+        $messageId,
+        $subject,
+        $content,
+        MessageSender $from,
+        $to,
+        $reference = null,
+        array $attachments = null,
+        $isFailed = false
+    ) {
         $this->uniqueId    = $uniqueId;
         $this->messageId   = $messageId;
         $this->subject     = $subject;
@@ -79,6 +94,7 @@ class Message
         $this->to          = $to;
         $this->reference   = $reference;
         $this->attachments = $attachments;
+        $this->isFailed    = $isFailed;
     }
 
     /**
@@ -145,8 +161,19 @@ class Message
         return $this->attachments;
     }
 
+    /**
+     * @param Attachment $attachment
+     */
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments[] = $attachment;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFailed()
+    {
+        return $this->isFailed;
     }
 }

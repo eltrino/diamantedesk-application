@@ -50,7 +50,10 @@ class MessageProcessingManager implements ManagerInterface
             foreach($strategies as $strategy) {
                 $this->processingContext->setStrategy($strategy);
                 try {
-                    $this->processingContext->execute($message);
+                    if (!$message->isFailed()) {
+                        $this->processingContext->execute($message);
+                    }
+
                     if (false === isset($messagesToMove[$message->getUniqueId()])) {
                         $messagesToMove[$message->getUniqueId()] = $message;
                     }
