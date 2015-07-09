@@ -21,6 +21,7 @@ use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
+use Symfony\Component\HttpFoundation\Request;
 
 class DiamanteEmbeddedFormBundle implements Migration, ExtendExtensionAwareInterface
 {
@@ -40,6 +41,10 @@ class DiamanteEmbeddedFormBundle implements Migration, ExtendExtensionAwareInter
      */
     public function up(Schema $schema, QueryBag $queries)
     {
+        if (!$this->isExecutedFromInstallCommand()) {
+            return;
+        }
+
         $this->extendExtension->addManyToOneRelation(
             $schema,
             'oro_embedded_form',
@@ -48,5 +53,25 @@ class DiamanteEmbeddedFormBundle implements Migration, ExtendExtensionAwareInter
             'name',
             ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM, 'is_extend' => true]]
         );
+    }
+
+    /**
+     * @return bool
+     */
+    private function isExecutedFromInstallCommand()
+    {
+        $request = Request::createFromGlobals();
+        $args = $request->server->get('argv');
+
+        if (!is_array($args)) {
+            // Executed from diamantedesk-application
+            return true;
+        } elseif (isset($args[1])) {
+            // Executed from install command
+            return $args[1] === 'diamante:embeddedform:install';
+        }
+
+        // Executed from oro:migration:load
+        return false;
     }
 }
