@@ -30,9 +30,16 @@ use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\Notification;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+use Symfony\Component\HttpFoundation\Request;
 
 class EmailNotifier implements Notifier
 {
+    /**
+     * @var Container
+     */
+    private $container;
+
     /**
      * @var \Twig_Environment
      */
@@ -83,7 +90,21 @@ class EmailNotifier implements Notifier
      */
     private $diamanteUserRepository;
 
+    /**
+     * @param Container                  $container
+     * @param \Twig_Environment          $twig
+     * @param \Swift_Mailer              $mailer
+     * @param TemplateResolver           $templateResolver
+     * @param TicketRepository           $ticketRepository
+     * @param MessageReferenceRepository $messageReferenceRepository
+     * @param UserService                $userService
+     * @param NameFormatter              $nameFormatter
+     * @param DiamanteUserRepository     $diamanteUserRepository
+     * @param                            $senderEmail
+     * @param                            $senderHost
+     */
     public function __construct(
+        Container $container,
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
         TemplateResolver $templateResolver,
@@ -96,6 +117,7 @@ class EmailNotifier implements Notifier
         $senderHost
     )
     {
+        $this->container                    = $container;
         $this->twig                         = $twig;
         $this->mailer                       = $mailer;
         $this->templateResolver             = $templateResolver;
@@ -114,6 +136,11 @@ class EmailNotifier implements Notifier
      */
     public function notify(Notification $notification)
     {
+        if (!$this->container->isScopeActive('request')) {
+            $this->container->enterScope('request');
+            $this->container->set('request', new Request(), 'request');
+        }
+
         $ticket = $this->loadTicket($notification);
         $message = $this->message($notification, $ticket);
 
