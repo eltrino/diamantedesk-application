@@ -60,14 +60,12 @@ class InstallCommand extends OroInstallCommand
             $this->checkStep($output);
             $this->oroInit($output, $input);
             $this->oroInstall($input, $output);
+            $this->runExistingCommand('cache:clear', $output);
             $this->runExistingCommand('diamante:desk:install', $output);
             $this->runExistingCommand('diamante:user:install', $output);
             $this->runExistingCommand('diamante:embeddedform:install', $output);
             $this->runExistingCommand('diamante:front:build', $output, array('--with-assets-dependencies' => true));
-            $this->runExistingCommand('oro:assets:install', $output, array(
-                    'target' => './',
-                    '--exclude' => $this->listBundlesToExcludeInAssetsInstall()
-                ));
+            $this->runExistingCommand('oro:assets:install', $output);
             $this->oroAdministrationSetup($output);
         } catch (\Exception $e) {
             $this->getContainer()->get('monolog.logger.diamante')
@@ -98,6 +96,72 @@ class InstallCommand extends OroInstallCommand
         $this->prepareStep($this->commandExecutor)
             ->loadDataStep($this->commandExecutor, $output)
             ->finalStep($this->commandExecutor, $output, $input);
+    }
+
+    /**
+     * @param CommandExecutor $commandExecutor
+     * @param OutputInterface $output
+     * @param InputInterface $input
+     * @return InstallCommand
+     */
+    protected function finalStep(CommandExecutor $commandExecutor, OutputInterface $output, InputInterface $input)
+    {
+        $output->writeln('<info>Preparing application.</info>');
+
+        $assetsOptions = array(
+            '--exclude' => array('OroInstallerBundle')
+        );
+        if ($input->hasOption('symlink') && $input->getOption('symlink')) {
+            $assetsOptions['--symlink'] = true;
+        }
+
+        $commandExecutor
+            ->runCommand(
+                'oro:navigation:init',
+                array(
+                    '--process-isolation' => true,
+                )
+            )
+            ->runCommand(
+                'fos:js-routing:dump',
+                array(
+                    '--target'            => 'web/js/routes.js',
+                    '--process-isolation' => true,
+                )
+            )
+            ->runCommand('oro:localization:dump')
+            ->runCommand(
+                'oro:assets:install',
+                $assetsOptions
+            )
+            ->runCommand(
+                'assetic:dump',
+                array(
+                    '--process-isolation' => true,
+                )
+            )
+            ->runCommand(
+                'oro:translation:dump',
+                array(
+                    '--process-isolation' => true,
+                )
+            )
+            ->runCommand(
+                'oro:requirejs:build',
+                array(
+                    '--ignore-errors'     => true,
+                    '--process-isolation' => true,
+                )
+            );
+
+        // run installer scripts
+        $this->processInstallerScripts($output, $commandExecutor);
+
+        $this->updateInstalledFlag(date('c'));
+
+        $output->writeln('');
+
+        return $this;
     }
 
     /**
