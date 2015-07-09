@@ -47,6 +47,7 @@ class StringVoter extends Voter
             'oro_shortcut_actionslist',
             'oro_platform_system_info',
             'oro_datagrid_mass_action',
+            'oro_tag_search',
 
             //Embedded Forms
             'oro_embedded_form_list',
