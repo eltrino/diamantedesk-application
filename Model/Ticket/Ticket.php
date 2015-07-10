@@ -357,6 +357,16 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
         return 'Reporter';
     }
 
+
+    /**
+     * Stub logo method
+     * @return null
+     */
+    public function getLogo()
+    {
+        return null;
+    }
+
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
