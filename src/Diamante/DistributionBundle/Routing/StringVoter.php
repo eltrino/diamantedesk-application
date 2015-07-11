@@ -60,6 +60,7 @@ class StringVoter extends Voter
 
             // Api
             'oro_api_get_users',
+            'nelmio_api_doc_index',
 
             //@TODO:REMOVE THESE ON RELEASE
             'oro_email_dashboard_recent_emails',
