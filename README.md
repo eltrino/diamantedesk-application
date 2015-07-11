@@ -6,7 +6,7 @@ Basically, DiamanteDesk is a ticket system with 3 channels enabling communicatio
 
 ### Installation ###
 
-To istall DiamanteDesk, follow this [link](http://docs.diamantedesk.com/en/latest/installation-guide/installation/).
+To install DiamanteDesk, follow this [link](http://docs.diamantedesk.com/en/latest/installation-guide/installation/).
 
 ### Usage ###
 
