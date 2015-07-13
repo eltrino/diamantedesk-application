@@ -59,6 +59,7 @@ class StringVoter extends Voter
             'oro_embedded_form_create',
             'oro_embedded_form_view',
             'oro_embedded_form_delete',
+            'oro_embedded_form_default_data',
 
             // Api
             'oro_api_get_users',
