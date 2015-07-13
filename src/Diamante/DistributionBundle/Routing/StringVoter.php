@@ -55,11 +55,16 @@ class StringVoter extends Voter
             'orocrm_task_user_tasks',
 
             //Embedded Forms
+            'diamante_embedded_form_submit',
             'oro_embedded_form_list',
             'oro_embedded_form_create',
             'oro_embedded_form_view',
             'oro_embedded_form_delete',
             'oro_embedded_form_default_data',
+            'oro_embedded_form_submit',
+            'oro_embedded_form_success',
+            'oro_embedded_form_update',
+            'oro_embedded_form_info',
 
             // Api
             'oro_api_get_users',
