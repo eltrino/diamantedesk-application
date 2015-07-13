@@ -98,8 +98,6 @@ function iterateRequirements(array $collection)
     <link rel="icon" type="image/png" href="bundles/diamantedistribution/img/ico/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="bundles/diamantedistribution/img/ico/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/png" href="bundles/diamantedistribution/img/ico/favicon-194x194.png" sizes="194x194" />
-    <link rel="icon" type="image/png" href="bundles/diamantedistribution/img/ico/favicon-194x194.png" sizes="194x194" />
-    <link rel="icon" type="image/png" href="bundles/diamantedistribution/img/ico/favicon-194x194.png" sizes="194x194" />
 
     <meta name="application-name" content="<?php echo $translator->trans('title'); ?>"/>
     <meta name="msapplication-TileColor" content="#f6fbff" />

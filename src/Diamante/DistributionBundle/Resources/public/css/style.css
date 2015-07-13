@@ -115,6 +115,7 @@ a.button {
   font-weight: normal;
 }
 .button:hover, .button:focus {
+  outline: none;
   background: #50828e;
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, .5);
 }
