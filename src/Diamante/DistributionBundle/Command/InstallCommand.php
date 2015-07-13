@@ -226,7 +226,7 @@ class InstallCommand extends OroInstallCommand
      */
     protected function checkStep(OutputInterface $output)
     {
-        $output->writeln('<info>Diamante requirements check:</info>');
+        $output->writeln('<info>Requirements check:</info>');
 
         if (!class_exists('OroRequirements')) {
             require_once $this->getContainer()->getParameter('kernel.root_dir')
