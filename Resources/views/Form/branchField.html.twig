@@ -7,8 +7,7 @@
             function (EmbeddedFormWatcher) {
                 new EmbeddedFormWatcher({
                     formTypeFieldId: {{ form.formType.vars.id|json_encode|raw }},
-                    branchFieldId: {{ form.branch.vars.id|json_encode|raw }},
-                    channelFieldId: {{ form.dataChannel.vars.id|json_encode|raw }}
+                    branchFieldId: {{ form.branch.vars.id|json_encode|raw }}
                 }).startWatching();
             });
 </script>

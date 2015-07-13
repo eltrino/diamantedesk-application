@@ -21,8 +21,9 @@ use Oro\Bundle\EmbeddedFormBundle\Form\Type\EmbeddedFormInterface;
 use Oro\Bundle\EmbeddedFormBundle\Form\Type\CustomLayoutFormInterface;
 
 use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInterface, CustomLayoutFormInterface
+class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInterface
 {
     /**
      * {@inheritdoc}
@@ -209,13 +210,5 @@ CSS;
     public function getDefaultSuccessMessage()
     {
         return '<p>Ticket has been placed successfully.</p>{back_link}';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormLayout()
-    {
-        return 'DiamanteEmbeddedFormBundle::embeddedForm.html.twig';
     }
 }

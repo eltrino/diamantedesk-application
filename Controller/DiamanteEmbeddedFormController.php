@@ -52,8 +52,8 @@ class DiamanteEmbeddedFormController extends Controller
 
         $command = new EmbeddedTicketCommand();
 
-        $formType = new DiamanteEmbeddedFormType();
-        $form = $this->createForm($formType, $command);
+        $formManager = $this->get('oro_embedded_form.manager');
+        $form        = $formManager->createForm($formEntity->getFormType());
 
         if (in_array($this->getRequest()->getMethod(), ['POST', 'PUT'])) {
 
@@ -75,6 +75,8 @@ class DiamanteEmbeddedFormController extends Controller
             $command->source = Source::WEB;
             $command->status = Status::NEW_ONE;
             $command->branch = $formEntity->getBranch();
+            $command->subject = $data['subject'];
+            $command->description = $data['description'];
             if ($formEntity->getBranch() && $formEntity->getBranch()->getDefaultAssignee()) {
                 $assignee = $formEntity->getBranch()->getDefaultAssignee();
             } else {
@@ -102,14 +104,24 @@ class DiamanteEmbeddedFormController extends Controller
             array('full_name' => 'diamante_embedded_form[attachmentsInput][]')
         );
 
-        $this->render(
-            'OroEmbeddedFormBundle:EmbedForm:form.html.twig',
+
+        // TODO: Next code should be refactored.
+        // TODO: Should be changed due to new EmbeddedFormBundle requirements
+        $formResponse = $this->render(
+            'DiamanteEmbeddedFormBundle::embeddedForm.html.twig',
             [
                 'form'             => $formView,
-                'formEntity'       => $formEntity,
-                'customFormLayout' => $formType->getFormLayout()
-            ],
-            $response
+                'formEntity'       => $formEntity
+            ]
+        );
+
+        $layoutManager = $this->get('oro_embedded_form.embed_form_layout_manager');
+        $layoutContent = $layoutManager->getLayout($formEntity, $form)->render();
+
+        $replaceString = '<div id="page">';
+
+        $response->setContent(
+            str_replace($replaceString, $replaceString . $formResponse->getContent(), $layoutContent)
         );
 
         return $response;
