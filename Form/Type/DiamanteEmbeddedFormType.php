@@ -154,6 +154,7 @@ body {
 }
 
 .row-group input[type="text"],
+.row-group input[type="email"],
 .row-group textarea,
 .row-group button {
     box-sizing: border-box;
@@ -167,7 +168,8 @@ body {
     background-color: #fff;
 }
 
-.row-group input[type="text"] {
+.row-group input[type="text"],
+.row-group input[type="email"] {
     display: block;
     width: 100%;
     height: 26px;
