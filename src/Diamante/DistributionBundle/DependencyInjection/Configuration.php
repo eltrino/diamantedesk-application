@@ -4,6 +4,7 @@ namespace Diamante\DistributionBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Oro\Bundle\ConfigBundle\DependencyInjection\SettingsBuilder;
 
 /**
  * This is the class that validates and merges configuration from your app/config files
@@ -17,12 +18,20 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('diamante_distribution');
-
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
+        
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('diamante_distribution');
+
+        SettingsBuilder::append(
+            $rootNode,
+            [
+                'organization_name'  => ['value' => 'Diamante'],
+                'application_url'   => ['value' => 'http://localhost/diamante/']
+            ]
+        );
 
         return $treeBuilder;
     }

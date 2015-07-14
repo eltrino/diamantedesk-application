@@ -21,6 +21,7 @@ use Oro\Bundle\InstallerBundle\Command\InstallCommand as OroInstallCommand;
 use Oro\Bundle\InstallerBundle\CommandExecutor;
 use Oro\Bundle\InstallerBundle\Command\Provider\InputOptionProvider;
 use Symfony\Component\Console\Input\InputOption;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
 class InstallCommand extends OroInstallCommand
 {
@@ -216,6 +217,96 @@ class InstallCommand extends OroInstallCommand
         $this->updateSystemSettings();
         $this->updateOrganization($this->commandExecutor);
         $this->updateUser($this->commandExecutor);
+    }
+
+    /**
+     * Update the organization
+     *
+     * @param CommandExecutor $commandExecutor
+     */
+    protected function updateOrganization(CommandExecutor $commandExecutor)
+    {
+        /** @var ConfigManager $configManager */
+        $configManager             = $this->getContainer()->get('oro_config.global');
+        $defaultOrganizationName   = $configManager->get('diamante_distribution.organization_name');
+        $organizationNameValidator = function ($value) use (&$defaultOrganizationName) {
+            $len = strlen(trim($value));
+            if ($len === 0 && empty($defaultOrganizationName)) {
+                throw new \Exception('The organization name must not be empty');
+            }
+            if ($len > 15) {
+                throw new \Exception('The organization name must be not more than 15 characters long');
+            }
+            return $value;
+        };
+
+        $options = [
+            'organization-name' => [
+                'label'                  => 'Organization name',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$organizationNameValidator],
+                'defaultValue'           => $defaultOrganizationName,
+            ]
+        ];
+
+        $commandParameters = [];
+        foreach ($options as $optionName => $optionData) {
+            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $optionData['defaultValue'],
+                $optionData['askMethod'],
+                $optionData['additionalAskArguments']
+            );
+        }
+
+        $commandExecutor->runCommand(
+            'oro:organization:update',
+            array_merge(
+                [
+                    'organization-name' => 'default',
+                    '--process-isolation' => true,
+                ],
+                $commandParameters
+            )
+        );
+    }
+
+    /**
+     * Update system settings such as app url, company name and short name
+     */
+    protected function updateSystemSettings()
+    {
+        /** @var ConfigManager $configManager */
+        $configManager = $this->getContainer()->get('oro_config.global');
+        $options       = [
+            'application-url' => [
+                'label'                  => 'Application URL',
+                'config_key'             => 'diamante_distribution.application_url',
+                'askMethod'              => 'ask',
+                'additionalAskArguments' => [],
+            ]
+        ];
+
+        foreach ($options as $optionName => $optionData) {
+            $configKey    = $optionData['config_key'];
+            $defaultValue = $configManager->get($configKey);
+
+            $value = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $defaultValue,
+                $optionData['askMethod'],
+                $optionData['additionalAskArguments']
+            );
+
+            // update setting if it's not empty and not equal to default value
+            if (!empty($value) && $value !== $defaultValue) {
+                $configManager->set($configKey, $value);
+            }
+        }
+
+        $configManager->flush();
     }
 
     /**
