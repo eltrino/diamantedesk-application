@@ -61,6 +61,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
     public function remove(Entity $entity)
     {
         $this->_em->remove($entity);
+        $this->clearSearchIndex($entity);
         $this->_em->flush($entity);
     }
 
@@ -159,5 +160,22 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
         }
 
         return $result;
+    }
+
+    /**
+     * Refresh search indexes to prevent transaction rollback
+     *
+     * @param Entity $entity
+     */
+    public function clearSearchIndex(Entity $entity)
+    {
+        $searchItems = $this->_em->getRepository('OroSearchBundle:Item')->findBy(
+            ['entity' => get_class($entity), 'recordId' => $entity->getId()]
+        );
+
+        foreach ($searchItems as $item) {
+            $this->_em->remove($item);
+        }
+
     }
 }
