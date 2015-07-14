@@ -475,7 +475,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder
 
     /**
      * @param OroUser $newAssignee
-     * @retur void
+     * @return void
      */
     private function processAssign(OroUser $newAssignee)
     {
