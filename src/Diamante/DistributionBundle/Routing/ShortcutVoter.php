@@ -16,13 +16,34 @@
 namespace Diamante\DistributionBundle\Routing;
 
 /**
- * Class Voter
+ * Class ShortcutVoter
  *
  * @package Diamante\DistributionBundle\Routing
  */
-abstract class Voter implements VoterInterface
+class ShortcutVoter extends Voter
 {
-    const TYPE_STRING = 'string';
-    const TYPE_REGEXP = 'regexp';
-    const TYPE_SHORTCUT = 'shortcut';
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return Voter::TYPE_SHORTCUT;
+    }
+
+    /**
+     * @return array
+     */
+    public function getListedItems()
+    {
+        return [
+            'diamante_branch_list',
+            'diamante_ticket_list',
+            'embedded_forms',
+            'shortcut_list_users',
+            'shortcut_new_user',
+            'system_configuration',
+            'user_groups',
+            'user_roles'
+        ];
+    }
 }

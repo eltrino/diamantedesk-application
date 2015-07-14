@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="diamante.distribution.api.restriction.listener.class">Diamante\DistributionBundle\EventListener\OroApiCallRestrictionListener</parameter>
+        <parameter key="diamante.distribution.shortcut.listener.class">Diamante\DistributionBundle\EventListener\ShortcutListener</parameter>
         <parameter key="diamante.distribution.voter.provider.class">Diamante\DistributionBundle\Routing\RoutingVoterProvider</parameter>
         <parameter key="oro_installer.scenario.class">Diamante\DistributionBundle\Installer\Process\InstallerScenario</parameter>
         <parameter key="diamante.setup.form.class">Diamante\DistributionBundle\Form\SetupType</parameter>
@@ -19,14 +20,25 @@
             <tag name="monolog.logger" channel="diamante"/>
         </service>
 
+        <service id="diamante.distribution.shortcut.listener" class="%diamante.distribution.shortcut.listener.class%">
+            <argument type="service" id="diamante.distribution.voter.provider"/>
+            <tag name="kernel.event_listener" event="kernel.view" method="onKernelView"/>
+        </service>
+
         <service id="diamante.distribution.voter.provider" class="%diamante.distribution.voter.provider.class%"/>
 
         <service id="diamante.distribution.voter.string" class="Diamante\DistributionBundle\Routing\StringVoter">
             <tag name='diamante.routing.voter'/>
         </service>
+
         <service id="diamante.distribution.voter.regexp" class="Diamante\DistributionBundle\Routing\RegexpVoter">
             <tag name='diamante.routing.voter'/>
         </service>
+
+        <service id="diamante.distribution.voter.shortcut" class="Diamante\DistributionBundle\Routing\ShortcutVoter">
+            <tag name='diamante.routing.voter'/>
+        </service>
+
         <service id="diamante_installer_setup" class="%diamante.setup.form.class%">
             <argument type="string">Oro\Bundle\UserBundle\Entity\User</argument>
             <tag name="form.type" alias="diamante_installer_setup"/>
