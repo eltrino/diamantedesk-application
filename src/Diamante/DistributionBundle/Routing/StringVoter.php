@@ -48,6 +48,7 @@ class StringVoter extends Voter
             'oro_platform_system_info',
             'oro_datagrid_mass_action',
             'oro_tag_search',
+            'oro_security_access_levels',
 
             //OroUserBundle
             'oro_activity_list_api_get_list',
