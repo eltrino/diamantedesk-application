@@ -33,6 +33,12 @@ use Diamante\UserBundle\Model\User as UserAdapter;
 class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @Mock \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+
+    /**
      * @var \Twig_Environment
      * @Mock \Twig_Environment
      */
@@ -200,9 +206,9 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         );
 
         $notifier = new EmailNotifier(
-            $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository,
-            $this->messageReferenceRepository, $this->userService, $this->nameFormatter,
-            $this->diamanteUserRepository, $this->senderEmail, $this->senderHost
+            $this->container, $this->twig, $this->mailer, $this->templateResolver,
+            $this->ticketRepository, $this->messageReferenceRepository, $this->userService,
+            $this->nameFormatter, $this->diamanteUserRepository, $this->senderEmail, $this->senderHost
         );
 
         $notifier->notify($notification);
@@ -310,9 +316,9 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
         );
 
         $notifier = new EmailNotifier(
-            $this->twig, $this->mailer, $this->templateResolver, $this->ticketRepository,
-            $this->messageReferenceRepository, $this->userService, $this->nameFormatter,
-            $this->diamanteUserRepository, $this->senderEmail, $this->senderHost
+            $this->container, $this->twig, $this->mailer, $this->templateResolver,
+            $this->ticketRepository, $this->messageReferenceRepository, $this->userService,
+            $this->nameFormatter, $this->diamanteUserRepository, $this->senderEmail, $this->senderHost
         );
 
         $notifier->notify($notification);
