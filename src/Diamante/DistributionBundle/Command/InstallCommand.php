@@ -66,7 +66,8 @@ class InstallCommand extends OroInstallCommand
             $this->runExistingCommand('diamante:user:install', $output);
             $this->runExistingCommand('diamante:embeddedform:install', $output);
             $this->runExistingCommand('diamante:front:build', $output, array('--with-assets-dependencies' => true));
-            $this->runExistingCommand('oro:assets:install', $output);
+            $this->runExistingCommand('assets:install', $output);
+            $this->runExistingCommand('assetic:dump', $output, array('--process-isolation' => true));
             $this->oroAdministrationSetup($output);
         } catch (\Exception $e) {
             $this->getContainer()->get('monolog.logger.diamante')
@@ -131,16 +132,6 @@ class InstallCommand extends OroInstallCommand
                 )
             )
             ->runCommand('oro:localization:dump')
-            ->runCommand(
-                'oro:assets:install',
-                $assetsOptions
-            )
-            ->runCommand(
-                'assetic:dump',
-                array(
-                    '--process-isolation' => true,
-                )
-            )
             ->runCommand(
                 'oro:translation:dump',
                 array(
