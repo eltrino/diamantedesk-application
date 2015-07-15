@@ -169,7 +169,11 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
      */
     public function clearSearchIndex(Entity $entity)
     {
-        $searchItems = $this->_em->getRepository('OroSearchBundle:Item')->findBy(
+        $searchRepository = $this->_em->getRepository('OroSearchBundle:Item');
+        if (!$searchRepository) {
+            return;
+        }
+        $searchItems = $searchRepository->findBy(
             ['entity' => get_class($entity), 'recordId' => $entity->getId()]
         );
 
