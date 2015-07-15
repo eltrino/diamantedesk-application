@@ -26,8 +26,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 class UserRoleListener
 {
 
-    const DIAMANTE_NAMESPACE_PREFIX = 'Diamante';
-
     /**
      * @var array
      */
