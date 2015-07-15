@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="diamante.distribution.api.restriction.listener.class">Diamante\DistributionBundle\EventListener\OroApiCallRestrictionListener</parameter>
         <parameter key="diamante.distribution.shortcut.listener.class">Diamante\DistributionBundle\EventListener\ShortcutListener</parameter>
+        <parameter key="diamante.distribution.user_role.listener.class">Diamante\DistributionBundle\EventListener\UserRoleListener</parameter>
         <parameter key="diamante.distribution.voter.provider.class">Diamante\DistributionBundle\Routing\RoutingVoterProvider</parameter>
         <parameter key="oro_installer.scenario.class">Diamante\DistributionBundle\Installer\Process\InstallerScenario</parameter>
         <parameter key="diamante.setup.form.class">Diamante\DistributionBundle\Form\SetupType</parameter>
@@ -22,6 +23,10 @@
 
         <service id="diamante.distribution.shortcut.listener" class="%diamante.distribution.shortcut.listener.class%">
             <argument type="service" id="diamante.distribution.voter.provider"/>
+            <tag name="kernel.event_listener" event="kernel.view" method="onKernelView"/>
+        </service>
+
+        <service id="diamante.distribution.user_role.listener" class="%diamante.distribution.user_role.listener.class%">
             <tag name="kernel.event_listener" event="kernel.view" method="onKernelView"/>
         </service>
 
