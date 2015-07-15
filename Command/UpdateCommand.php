@@ -51,14 +51,6 @@ class UpdateCommand extends AbstractCommand
             $output->write("Updating navigation..." . "\n");
             $this->updateNavigation($output);
             $output->writeln("Done" . "\n");
-
-            $output->write("Installing assets..." . "\n");
-            $this->assetsInstall($output);
-            $this->asseticDump($output, array(
-                '--no-debug' => true,
-            ));
-            $output->writeln("Done" . "\n");
-
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;

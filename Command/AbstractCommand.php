@@ -95,25 +95,6 @@ abstract class AbstractCommand extends ContainerAwareCommand
     }
 
     /**
-     * Install assets
-     * @param OutputInterface $output
-     */
-    protected function assetsInstall(OutputInterface $output)
-    {
-        $this->runExistingCommand('oro:assets:install', $output, array('target' => './'));
-    }
-
-    /**
-     * Dump assetic
-     * @param OutputInterface $output
-     * @param array $params
-     */
-    protected function asseticDump(OutputInterface $output, array $params = array())
-    {
-        $this->runExistingCommand('assetic:dump', $output, $params);
-    }
-
-    /**
      * Update oro navigation
      * @param OutputInterface $output
      */

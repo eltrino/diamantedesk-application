@@ -30,6 +30,12 @@ And here is a command that updates already installed software:
 php app/console diamante:desk:update
 ```
 
+After *install* or *update* commands the last thing which should be done is assets installation. It should be done in Symfony in a standard way:
+
+```bash
+php app/console assets:install
+```
+
 ### Configuration ###
 
 To download the attachment, add additional configuration to firewalls section in `app/etc/security.yml`

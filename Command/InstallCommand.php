@@ -89,15 +89,6 @@ class InstallCommand extends AbstractCommand
             $output->write("Loading migration data" . "\n");
             $this->loadDataFixtures($output);
             $output->writeln("Done" . "\n");
-
-            $output->write("Installing assets..." . "\n");
-            $this->assetsInstall($output);
-
-            $this->asseticDump($output, array(
-                '--no-debug' => true,
-            ));
-            $output->writeln("Done" . "\n");
-
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return 255;
