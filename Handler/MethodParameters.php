@@ -25,6 +25,23 @@ class MethodParameters
     private $validator;
     private $data = [];
 
+    /**
+     * @var string
+     */
+    private static $allowedTags = '<br><br/><a><b><u><i><p><img><img/><h1><h1><h1><h2><h3><h4><h5><h6><h7>';
+
+    /**
+     * @var array
+     */
+    private static $fieldsToFilter = [
+        'name',
+        'subject',
+        'description',
+        'comment',
+        'content'
+    ];
+
+
     public function __construct(\ReflectionMethod $method, Validator $validator)
     {
         $this->method = $method;
@@ -48,6 +65,7 @@ class MethodParameters
             if ($parameter->getClass()) {
                 $mapper = new CommandProperties($parameter->getClass());
                 $command = $mapper->map($this->data);
+                $command = $this->filterInput($command);
 
                 $errors = $this->validator->validate($command);
 
@@ -74,5 +92,22 @@ class MethodParameters
             $result[$key] = $value;
         }
         return $result;
+    }
+
+    /**
+     * Filter command properties from not allowed scripts, tags, etc.
+     *
+     * @param $input mixed|string
+     * @return string
+     */
+    private function filterInput($input)
+    {
+        foreach (static::$fieldsToFilter as $field) {
+            if (property_exists($input, $field)) {
+                $input->$field = strip_tags($input->$field, static::$allowedTags);
+            }
+        }
+
+        return $input;
     }
 } 
