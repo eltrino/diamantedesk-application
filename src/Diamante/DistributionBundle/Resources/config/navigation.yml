@@ -28,6 +28,8 @@ oro_menu_config:
             display: false
         system_tab:
             display: false
+        oro_platform_system_info:
+            display: false
         diamante_config_tab:
           label: 'System'
           uri: '#'
