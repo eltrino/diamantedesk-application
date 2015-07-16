@@ -22,8 +22,8 @@ class LineChart extends AbstractChart
         $extractedData = [];
         foreach ($records as $record) {
             $extractedData[] = [
-                'x' => $record[$xPropertyName],
-                'y' => $record[$yPropertyName],
+                'x' => is_object($record[$xPropertyName]) ? (string)$record[$xPropertyName] : $record[$xPropertyName],
+                'y' => is_object($record[$yPropertyName]) ? (string)$record[$yPropertyName] : $record[$yPropertyName],
             ];
         }
 

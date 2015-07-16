@@ -14,7 +14,9 @@ class ChartTypeProvider
      * @var array
      */
     protected $charts = [
-        'line-chart' => 'LineChart',
+        'line-chart'        => 'LineChart',
+        'bar-chart'         => 'BarChart',
+        'grouped-bar-chart' => 'GroupedBarChart',
     ];
 
     /**
