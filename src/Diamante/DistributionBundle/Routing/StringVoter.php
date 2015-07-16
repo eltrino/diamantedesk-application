@@ -49,6 +49,7 @@ class StringVoter extends Voter
             'oro_datagrid_mass_action',
             'oro_tag_search',
             'oro_security_access_levels',
+            'oro_translation_available_translations',
 
             //OroUserBundle
             'oro_activity_list_api_get_list',
