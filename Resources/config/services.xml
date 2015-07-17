@@ -30,6 +30,11 @@
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
         <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
+        <parameter key="diamante.render.url.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderUrlExtension</parameter>
+        <parameter key="diamante.render.tag.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderTagExtension</parameter>
+        <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportServiceImpl</parameter>
+        <parameter key="diamante.report.builder.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportBuilderImpl</parameter>
+        <parameter key="diamante.report.chart_type_provider.class">Diamante\DeskBundle\Report\ChartTypeProvider</parameter>
     </parameters>
 
     <services>
@@ -58,6 +63,7 @@
         <service id="diamante.user_cleanup.service" class="%diamante.user_cleanup.service.class%">
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.comment.repository"/>
+            <argument type="service" id="diamante.watcher_list.repository"/>
         </service>
 
         <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>
@@ -80,5 +86,27 @@
         <service id="diamante.api.paging.service" class="%diamante.api.paging.service.class%">
             <argument type="service" id="diamante.api.paging.provider"/>
         </service>
+
+        <service id="diamante.render.url.twig.extension" class="%diamante.render.url.twig.extension.class%">
+            <argument type="service" id="router"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.render.tag.twig.extension" class="%diamante.render.tag.twig.extension.class%">
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="oro_tag.tag.manager"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.report.service" class="%diamante.report.service.class%">
+            <argument type="service" id="diamante.report.builder"/>
+        </service>
+
+        <service id="diamante.report.builder" class="%diamante.report.builder.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="diamante.report.chart_type_provider"/>
+        </service>
+
+        <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>
     </services>
 </container>

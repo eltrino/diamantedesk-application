@@ -57,6 +57,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketService;
 
     /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketRepository
      */
@@ -121,6 +127,18 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $ticketHistoryRepository;
 
+    /**
+     * @var \Oro\Bundle\TagBundle\Entity\TagManager
+     * @Mock \Oro\Bundle\TagBundle\Entity\TagManager
+     */
+    private $tagManager;
+
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -128,6 +146,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->notificationDeliveryManager = new NotificationDeliveryManager();
 
         $this->ticketService = new TicketServiceImpl(
+            $this->em,
             $this->ticketRepository,
             $this->branchRepository,
             $this->ticketBuilder,
@@ -137,7 +156,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher,
             $this->notificationDeliveryManager,
             $this->notifier,
-            $this->ticketHistoryRepository
+            $this->ticketHistoryRepository,
+            $this->tagManager,
+            $this->securityFacade
         );
     }
 

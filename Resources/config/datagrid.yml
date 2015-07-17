@@ -125,7 +125,10 @@ datagrid:
             key:
                 label:   diamante.desk.ticket.columns.key
             subject:
-                label:   diamante.desk.ticket.columns.subject
+                label: diamante.desk.ticket.columns.subject
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
             branchName:
                 label:   diamante.desk.ticket.columns.branch
             assigneeFullName:
@@ -278,6 +281,11 @@ datagrid:
                 link:          delete_link
 
     diamante-reporter-select-grid:
+        extends: users-select-grid
+        source:
+            type: diamante_combined_users_datasource
+
+    diamante-watcher-select-grid:
         extends: users-select-grid
         source:
             type: diamante_combined_users_datasource

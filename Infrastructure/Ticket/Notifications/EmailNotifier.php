@@ -28,13 +28,19 @@ use Diamante\UserBundle\Model\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\LocaleBundle\Formatter\NameFormatter;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\DeskBundle\Model\Shared\Notification;
+use Oro\Bundle\UserBundle\Entity\UserManager;
+use Diamante\DeskBundle\Api\WatchersService;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Symfony\Component\HttpFoundation\Request;
 
 class EmailNotifier implements Notifier
 {
+
+    const EMAIL_NOTIFIER_CONFIG_PATH = 'oro_notification.email_notification_sender_email';
+
     /**
      * @var Container
      */
@@ -76,9 +82,9 @@ class EmailNotifier implements Notifier
     private $nameFormatter;
 
     /**
-     * @var string
+     * @var ConfigManager
      */
-    private $senderEmail;
+    private $configManager;
 
     /**
      * @var string
@@ -91,6 +97,16 @@ class EmailNotifier implements Notifier
     private $diamanteUserRepository;
 
     /**
+     * @var UserManager
+     */
+    private $oroUserManager;
+
+    /**
+     * @var WatchersService
+     */
+    private $watchersService;
+
+    /**
      * @param Container                  $container
      * @param \Twig_Environment          $twig
      * @param \Swift_Mailer              $mailer
@@ -100,7 +116,9 @@ class EmailNotifier implements Notifier
      * @param UserService                $userService
      * @param NameFormatter              $nameFormatter
      * @param DiamanteUserRepository     $diamanteUserRepository
-     * @param                            $senderEmail
+     * @param ConfigManager              $configManager
+     * @param UserManager                $userManager
+     * @param WatchersService            $watchersService
      * @param                            $senderHost
      */
     public function __construct(
@@ -113,7 +131,9 @@ class EmailNotifier implements Notifier
         UserService $userService,
         NameFormatter $nameFormatter,
         DiamanteUserRepository $diamanteUserRepository,
-        $senderEmail,
+        ConfigManager $configManager,
+        UserManager $userManager,
+        WatchersService $watchersService,
         $senderHost
     )
     {
@@ -126,7 +146,9 @@ class EmailNotifier implements Notifier
         $this->userService                  = $userService;
         $this->nameFormatter                = $nameFormatter;
         $this->diamanteUserRepository       = $diamanteUserRepository;
-        $this->senderEmail                  = $senderEmail;
+        $this->configManager                = $configManager;
+        $this->oroUserManager               = $userManager;
+        $this->watchersService              = $watchersService;
         $this->senderHost                   = $senderHost;
     }
 
@@ -142,36 +164,48 @@ class EmailNotifier implements Notifier
         }
 
         $ticket = $this->loadTicket($notification);
-        $message = $this->message($notification, $ticket);
+        $changeList = $this->postProcessChangesList($notification);
 
-        $this->mailer->send($message);
-
-        $reference = new MessageReference($message->getId(), $ticket);
-        $this->messageReferenceRepository->store($reference);
+        foreach ($this->watchersService->getWatchers($ticket) as $watcher) {
+            $userType = $watcher->getUserType();
+            $user = User::fromString($userType);
+            $isOroUser = $user->isOroUser();
+            if($isOroUser) {
+                $loadedUser = $this->oroUserManager->findUserBy(['id' => $user->getId()]);
+            } else {
+                $loadedUser = $this->diamanteUserRepository->get($user->getId());
+            }
+            $message = $this->message($notification, $ticket, $isOroUser, $loadedUser->getEmail(), $changeList);
+            $this->mailer->send($message);
+            $reference = new MessageReference($message->getId(), $ticket);
+            $this->messageReferenceRepository->store($reference);
+        }
     }
 
     /**
      * @param Notification $notification
      * @param Ticket       $ticket
+     * @param bool         $isOroUser
+     * @param string       $recipientEmail
+     * @param              $changeList
      *
      * @return \Swift_Message
      */
-    private function message(Notification $notification, Ticket $ticket)
+    private function message(Notification $notification, Ticket $ticket, $isOroUser, $recipientEmail, $changeList)
     {
+        $senderEmail = $this->configManager->get(self::EMAIL_NOTIFIER_CONFIG_PATH);
         $userFormattedName = $this->getFormattedUserName($notification, $ticket);
 
         /** @var \Swift_Message $message */
         $message = $this->mailer->createMessage();
         $message->setSubject($this->decorateMessageSubject($notification->getSubject(), $ticket));
-        $message->setFrom($this->senderEmail, $userFormattedName);
-        $message->setTo($this->resolveRecipientsEmails($ticket));
-        $message->setReplyTo($this->senderEmail);
+        $message->setFrom($senderEmail, $userFormattedName);
+        $message->setTo($recipientEmail);
+        $message->setReplyTo($senderEmail);
 
         $headers = $message->getHeaders();
         $headers->addTextHeader('In-Reply-To', $this->inReplyToHeader($notification));
         $headers->addIdHeader('References', $this->referencesHeader($ticket));
-
-        $changeList = $this->postProcessChangesList($notification);
 
         $options = array(
             'changes'       => $changeList,
@@ -179,6 +213,8 @@ class EmailNotifier implements Notifier
             'user'          => $userFormattedName,
             'header'        => $notification->getHeaderText(),
             'delimiter'     => MessageReferenceServiceImpl::DELIMITER_LINE,
+            'isOroUser'     => $isOroUser,
+            'ticketKey'     => $ticket->getKey()
         );
 
         $txtTemplate = $this->templateResolver->resolve($notification, TemplateResolver::TYPE_TXT);
@@ -194,6 +230,7 @@ class EmailNotifier implements Notifier
      * @param Ticket $ticket
      * @return array
      */
+
     private function resolveRecipientsEmails(Ticket $ticket)
     {
         $emails = array();
@@ -286,7 +323,9 @@ class EmailNotifier implements Notifier
         $changes = $notification->getChangeList();
 
         if (isset($changes['Reporter']) && strpos($changes['Reporter'], '_')) {
-            $details = $this->userService->fetchUserDetails(User::fromString($changes['Reporter']));
+            $r = $changes['Reporter'];
+            $u = User::fromString($r);
+            $details = $this->userService->fetchUserDetails($u);
             $changes['Reporter'] = $details->getFullName();
         }
 

@@ -1,0 +1,20 @@
+reports:
+    test_report:
+        chart:
+            type: line-chart
+            x-axis: day
+            y-axis: count_per_day
+        source:
+            type: dql
+            dql: "SELECT date(t.createdAt) as day, count(t.createdAt) as count_per_day FROM Diamante\\DeskBundle\\Entity\\Ticket t group by day"
+            #repository: "\Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository::getDataForChart"
+
+    tickets_by_priority:
+        chart:
+            type: bar-chart
+            y-axis: value
+            x-axis: priority
+        source:
+            type: dql
+            dql: "SELECT t.priority, count(t.priority) as value FROM Diamante\\DeskBundle\\Entity\\Ticket t group by t.priority"
+

@@ -1,0 +1,5 @@
+{% for tag in tags %}
+    {% if tag.name is defined %}
+        <span class="ticket-tag-inline">{{ tag.name }}</span>
+    {% endif %}
+{% endfor %}

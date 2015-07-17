@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 use Diamante\UserBundle\Model\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class TicketFactory extends AbstractEntityFactory
@@ -31,10 +32,11 @@ class TicketFactory extends AbstractEntityFactory
         OroUser $assignee = null,
         Priority $priority,
         Source $source,
-        Status $status
+        Status $status,
+        $tags = null
     ) {
         return new $this->entityClassName(
-            $uniqueId, $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
+            $uniqueId, $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status, $tags
         );
     }
 }

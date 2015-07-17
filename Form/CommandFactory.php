@@ -27,9 +27,16 @@ use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\UserBundle\Model\User;
+use Diamante\DeskBundle\Api\Command\AddWatcherCommand;
 
 class CommandFactory
 {
+    /**
+     * @param Branch $branch
+     * @param User   $reporter
+     *
+     * @return CreateTicketCommand
+     */
     public function createCreateTicketCommand(Branch $branch = null, User $reporter = null)
     {
         $command = new CreateTicketCommand();
@@ -45,6 +52,11 @@ class CommandFactory
         return $command;
     }
 
+    /**
+     * @param Ticket $ticket
+     *
+     * @return UpdateTicketCommand
+     */
     public function createUpdateTicketCommand(Ticket $ticket)
     {
         $command = new UpdateTicketCommand();
@@ -58,10 +70,16 @@ class CommandFactory
         $command->priority = $ticket->getPriority();
         $command->branch = $ticket->getBranch();
         $command->source = $ticket->getSource();
+        $command->tags = $ticket->getTags();
 
         return $command;
     }
 
+    /**
+     * @param Ticket $ticket
+     *
+     * @return AssigneeTicketCommand
+     */
     public function createAssigneeTicketCommand(Ticket $ticket)
     {
         $command = new AssigneeTicketCommand();
@@ -71,6 +89,11 @@ class CommandFactory
         return $command;
     }
 
+    /**
+     * @param Ticket $ticket
+     *
+     * @return MoveTicketCommand
+     */
     public function createMoveTicketCommand(Ticket $ticket)
     {
         $command = new MoveTicketCommand();
@@ -80,6 +103,24 @@ class CommandFactory
         return $command;
     }
 
+    /**
+     * @param Ticket $ticket
+     *
+     * @return AddWatcherCommand
+     */
+    public function addWatcherCommand(Ticket $ticket)
+    {
+        $command = new AddWatcherCommand();
+        $command->id = $ticket->getId();
+
+        return $command;
+    }
+
+    /**
+     * @param Ticket $ticket
+     *
+     * @return AddTicketAttachmentCommand
+     */
     public function createAddTicketAttachmentCommand(Ticket $ticket)
     {
         $command = new AddTicketAttachmentCommand();

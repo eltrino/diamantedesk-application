@@ -31,6 +31,99 @@ class TicketControllerTest extends AbstractController
         );
     }
 
+    public function testDelete()
+    {
+        $ticket        = $this->chooseTicketFromGrid();
+        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('key' => $ticket['key']));
+        $this->client->followRedirects(false);
+
+        $crawler       = $this->client->request('GET', $ticketDeleteUrl);
+        $response      = $this->client->getResponse();
+
+        $this->client->request(
+            'GET',
+            $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']))
+        );
+        $viewResponse = $this->client->getResponse();
+
+        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(404, $viewResponse->getStatusCode());
+    }
+
+    public function testCreateTicketWithTag()
+    {
+        $branch = $this->chooseBranchFromGrid();
+        $crawler = $this->client->request(
+            'GET', $this->getUrl('diamante_ticket_create',  array('id' => $branch['id']))
+        );
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Save and Close')->form();
+
+        $form['diamante_ticket_form[branch]']      = $branch['id'];
+        $form['diamante_ticket_form[subject]']     = 'Test Ticket';
+        $form['diamante_ticket_form[description]'] = 'Test Description';
+        $form['diamante_ticket_form[status]']      = Status::OPEN;
+        $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_LOW;
+        $form['diamante_ticket_form[source]']      = Source::PHONE;
+        $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
+        $form['diamante_ticket_form[assignee]']    = 1;
+        $form['diamante_ticket_form[tags][autocomplete]']    = '';
+        $form['diamante_ticket_form[tags][all]']    = '[{"id":"test_tag","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_form[tags][owner]']    = '[{"id":"test_tag","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $this->client->followRedirects(true);
+
+        $crawler  = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Ticket successfully created.", $crawler->html());
+    }
+
+    public function testUpdateTag()
+    {
+        $ticket = $this->chooseTicketFromGrid();
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
+        $crawler = $this->client->request('GET', $ticketUpdateUrl);
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Save and Close')->form();
+        $form['diamante_ticket_form[tags][autocomplete]'] = '';
+        $form['diamante_ticket_form[tags][all]']
+            = '[{"name":"test tag 1","id":9,"url":"/tag/search/9","owner":false,"moreOwners":false,"notSaved":false},{"name":"test tag 2","id":11,"url":"/tag/search/11","owner":false,"moreOwners":false,"notSaved":false},{"id":"test_tag_3","name":"test tag 3","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_form[tags][owner]']
+            = '[{"id":"test tag 3","name":"test tag 3","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+
+        $this->client->followRedirects(true);
+
+        $crawler = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Ticket successfully saved.", $crawler->html());
+    }
+
+    public function testDeleteTag()
+    {
+        $ticket = $this->chooseTicketFromGrid();
+        $ticketUpdateUrl = $this->getUrl('diamante_ticket_update', array('key' => $ticket['key']));
+        $crawler = $this->client->request('GET', $ticketUpdateUrl);
+
+        /** @var Form $form */
+        $form = $crawler->selectButton('Save and Close')->form();
+        $form['diamante_ticket_form[tags][autocomplete]'] = '';
+        $form['diamante_ticket_form[tags][all]'] = '[]';
+        $form['diamante_ticket_form[tags][owner]'] = '[]';
+
+        $this->client->followRedirects(true);
+
+        $crawler = $this->client->submit($form);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains("Ticket successfully saved.", $crawler->html());
+    }
+
     public function testCreateWithoutBranchId()
     {
         $crawler = $this->client->request(
@@ -246,23 +339,26 @@ class TicketControllerTest extends AbstractController
         $this->assertContains("Ticket successfully created.", $crawler->html());
     }
 
-    public function testDelete()
+    public function testWatch()
     {
-        $ticket        = $this->chooseTicketFromGrid();
-        $ticketDeleteUrl = $this->getUrl('diamante_ticket_delete', array('key' => $ticket['key']));
-        $this->client->followRedirects(false);
+        $ticket = $this->chooseTicketFromGrid();
+        $ticketWatchUrl = $this->getUrl('diamante_ticket_watch', ['ticketId' => $ticket['id']]);
 
-        $crawler       = $this->client->request('GET', $ticketDeleteUrl);
-        $response      = $this->client->getResponse();
+        $this->client->followRedirects(true);
+        $crawler = $this->client->request('GET', $ticketWatchUrl);
 
-        $this->client->request(
-            'GET',
-            $this->getUrl('diamante_ticket_view', array('key' => $ticket['key']))
-        );
-        $viewResponse = $this->client->getResponse();
+        $this->assertContains("Now you watching the ticket.", $crawler->html());
+    }
 
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertEquals(404, $viewResponse->getStatusCode());
+    public function testUnWatch()
+    {
+        $ticket = $this->chooseTicketFromGrid();
+        $ticketWatchUrl = $this->getUrl('diamante_ticket_unwatch', ['ticketId' => $ticket['id']]);
+
+        $this->client->followRedirects(true);
+        $crawler = $this->client->request('GET', $ticketWatchUrl);
+
+        $this->assertContains("You successfully unsubscribe from watching of ticket", $crawler->html());
     }
 
     private function chooseBranchFromGrid()

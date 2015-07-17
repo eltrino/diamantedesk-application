@@ -46,9 +46,17 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Oro\Bundle\TagBundle\Entity\TagManager;
+use Doctrine\ORM\EntityManager;
+use Oro\Bundle\SecurityBundle\SecurityFacade;
 
 class TicketServiceImpl implements TicketService
 {
+    /**
+     * @var EntityManager
+     */
+    protected $em;
+
     /**
      * @var TicketRepository
      */
@@ -99,7 +107,32 @@ class TicketServiceImpl implements TicketService
      */
     private $ticketHistoryRepository;
 
-    public function __construct(TicketRepository $ticketRepository,
+    /**
+     * @var TagManager
+     */
+    private $tagManager;
+
+    /**
+     * @var SecurityFacade
+     */
+    protected $securityFacade;
+
+    /**
+     * @param EntityManager               $em
+     * @param TicketRepository            $ticketRepository
+     * @param Repository                  $branchRepository
+     * @param TicketBuilder               $ticketBuilder
+     * @param AttachmentManager           $attachmentManager
+     * @param UserService                 $userService
+     * @param AuthorizationService        $authorizationService
+     * @param EventDispatcher             $dispatcher
+     * @param NotificationDeliveryManager $notificationDeliveryManager
+     * @param Notifier                    $notifier
+     * @param DoctrineGenericRepository   $ticketHistoryRepository
+     * @param TagManager                  $tagManager
+     */
+    public function __construct(EntityManager $em,
+                                TicketRepository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
@@ -108,8 +141,11 @@ class TicketServiceImpl implements TicketService
                                 EventDispatcher $dispatcher,
                                 NotificationDeliveryManager $notificationDeliveryManager,
                                 Notifier $notifier,
-                                DoctrineGenericRepository $ticketHistoryRepository
+                                DoctrineGenericRepository $ticketHistoryRepository,
+                                TagManager $tagManager,
+                                SecurityFacade $securityFacade
     ) {
+        $this->em = $em;
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
         $this->ticketBuilder = $ticketBuilder;
@@ -120,6 +156,8 @@ class TicketServiceImpl implements TicketService
         $this->notificationDeliveryManager = $notificationDeliveryManager;
         $this->notifier = $notifier;
         $this->ticketHistoryRepository = $ticketHistoryRepository;
+        $this->tagManager = $tagManager;
+        $this->securityFacade = $securityFacade;
     }
 
     /**
@@ -149,6 +187,10 @@ class TicketServiceImpl implements TicketService
         } else {
             $ticketKey = TicketKey::from($key);
             $ticket = $this->loadTicketByTicketKey($ticketKey);
+        }
+
+        if ($this->securityFacade->getOrganization()) {
+            $this->tagManager->loadTagging($ticket);
         }
 
         $this->isGranted('VIEW', $ticket);
@@ -298,7 +340,8 @@ class TicketServiceImpl implements TicketService
             ->setAssigneeId($command->assignee)
             ->setPriority($command->priority)
             ->setSource($command->source)
-            ->setStatus($command->status);
+            ->setStatus($command->status)
+            ->setTags($command->tags);
 
         $ticket = $this->ticketBuilder->build();
 
@@ -309,6 +352,12 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+
+        if ($this->securityFacade->getOrganization()) {
+            $this->tagManager->saveTagging($ticket);
+        }
+
+        $this->em->detach($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
@@ -362,6 +411,11 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+        $this->tagManager->deleteTaggingByParams($ticket->getTags(), get_class($ticket), $ticket->getId());
+        $tags = $command->tags;
+        $tags['owner'] = $tags['all'];
+        $ticket->setTags($tags);
+        $this->tagManager->saveTagging($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;

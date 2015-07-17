@@ -71,7 +71,7 @@ class PrepareResultItemListener
 
         $item->setRecordUrl($url);
 
-        $title = $entity->getKey() . static::TITLE_PART_SEPARATOR . $item->getRecordTitle();
+        $title = $entity->getKey() . static::TITLE_PART_SEPARATOR . $entity->getSubject();
         $item->setRecordTitle($title);
     }
 }

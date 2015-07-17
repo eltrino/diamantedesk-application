@@ -23,6 +23,7 @@
         <parameter key="diamante.notification.ticket.email.notifier.class">Diamante\DeskBundle\Infrastructure\Ticket\Notifications\EmailNotifier</parameter>
         <parameter key="diamante.ticket.notification.template_resolver.class">Diamante\DeskBundle\Infrastructure\Ticket\Notifications\EmailTemplateResolver</parameter>
         <parameter key="diamante.notification.ticket.subscriber.class">Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber</parameter>
+        <parameter key="diamante.ticket.watchers.subscriber.class">Diamante\DeskBundle\EventListener\WatchersSubscriber</parameter>
         <parameter key="diamante.notification.api_user.subscriber.class">Diamante\DeskBundle\EventListener\ApiUserNotificationsSubscriber</parameter>
     </parameters>
 
@@ -42,7 +43,9 @@
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="oro_locale.formatter.name"/>
             <argument type="service" id="diamante.user.repository"/>
-            <argument>%mailer_user%</argument>
+            <argument type="service" id="oro_config.global"/>
+            <argument type="service" id="oro_user.manager"/>
+            <argument type="service" id="diamante.ticket.watcher_list.service"/>
             <argument>%mailer_host%</argument>
         </service>
 
@@ -52,6 +55,11 @@
             <argument type="service" id="diamante.notification.delivery.manger"/>
             <argument type="service" id="oro_config.global"/>
             <argument type="service" id="diamante.user_state.service"/>
+            <tag name="diamante.notification_subscriber" priority="-1" />
+        </service>
+
+        <service id="diamante.ticket.watchers.subscriber" class="%diamante.ticket.watchers.subscriber.class%">
+            <argument type="service" id="service_container"/>
             <tag name="diamante.notification_subscriber" />
         </service>
         <!-- subscribers end -->

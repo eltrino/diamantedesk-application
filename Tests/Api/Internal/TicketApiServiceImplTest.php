@@ -39,6 +39,12 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     const DESCRIPTION  = 'Description';
 
     /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
      * @var \Diamante\UserBundle\Api\UserService
      * @Mock Diamante\UserBundle\Api\UserService
      */
@@ -108,6 +114,18 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $ticketHistoryRepository;
 
+    /**
+     * @var \Oro\Bundle\TagBundle\Entity\TagManager
+     * @Mock \Oro\Bundle\TagBundle\Entity\TagManager
+     */
+    private $tagManager;
+
+    /**
+     * @var \Oro\Bundle\SecurityBundle\SecurityFacade
+     * @Mock \Oro\Bundle\SecurityBundle\SecurityFacade
+     */
+    private $securityFacade;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -115,6 +133,7 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->notificationDeliveryManager = new NotificationDeliveryManager();
 
         $this->ticketService = new TicketApiServiceImpl(
+            $this->em,
             $this->ticketRepository,
             $this->branchRepository,
             $this->ticketBuilder,
@@ -124,7 +143,9 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher,
             $this->notificationDeliveryManager,
             $this->notifier,
-            $this->ticketHistoryRepository
+            $this->ticketHistoryRepository,
+            $this->tagManager,
+            $this->securityFacade
         );
 
         $this->ticketService->setApiPagingService($this->apiPagingService);

@@ -1,0 +1,11 @@
+{% import 'OroUIBundle::macros.html.twig' as ui %}
+
+<div class="widget-content">
+    <ul class="unstyled clearfix">
+        {% for watcher in watchers %}
+            <li class="diam-attachment">
+                {{ render_user_name(watcher) }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>

@@ -106,6 +106,35 @@
             });
         })
     </script>
+
+    {% set isWatching = 0 %}
+    {% for list in entity.watcherList %}
+        {% set watcherId = list.userType|replace({'oro_': ''}) %}
+        {% if watcherId == app.user.id %}
+            {% set isWatching = 1 %}
+        {% endif %}
+    {% endfor %}
+
+    {% if isWatching == 1 %}
+        {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
+            {{ UI.button({
+                'path': path('diamante_ticket_unwatch', { 'ticketId': entity.id }),
+                'iCss': 'icon-eye-close',
+                'title': 'diamante.desk.ticket.actions.unwatch'|trans,
+                'label': 'diamante.desk.ticket.actions.unwatch'|trans
+            }) }}
+        {% endif %}
+    {% else %}
+        {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
+            {{ UI.button({
+                'path': path('diamante_ticket_watch', { 'ticketId': entity.id }),
+                'iCss': 'icon-eye-open',
+                'title': 'diamante.desk.ticket.actions.watch'|trans,
+                'label': 'diamante.desk.ticket.actions.watch'|trans
+            }) }}
+        {% endif %}
+    {% endif %}
+
     {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
         {% set changeStatusTitle = 'diamante.desk.ticket.actions.change_status'|trans %}
         {{ UI.clientButton({
@@ -170,6 +199,29 @@
                     }
                 }
             }
+        }) }}
+
+        {{ UI.clientButton({
+        'dataUrl': path('diamante_add_watcher', { 'ticketId': entity.id }),
+        'aCss': 'no-hash',
+        'iCss': 'icon-plus',
+        'dataId': entity.id,
+        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'label' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'widget' : {
+        'type' : 'dialog',
+        'multiple' : true,
+        'reload-grid-name' : '',
+        'options' : {
+        'alias': 'status-dialog',
+        'stateEnabled' : false,
+        'dialogOptions' : {
+        'resizable' : false,
+        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'width': 520
+        }
+        }
+        }
         }) }}
 
         {% set assignTitle = 'diamante.desk.ticket.actions.assign'|trans %}
@@ -250,11 +302,19 @@
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
     {% set attachmentListWidget %}
         {{ oro_widget_render({
             'widgetType': 'block',
             'url': path('diamante_ticket_widget_attachment_list', {id: entity.id})
+        }) }}
+    {% endset %}
+
+    {% set WatchersListWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('diamante_ticket_watchers', {ticketId: entity.id})
         }) }}
     {% endset %}
 
@@ -267,7 +327,10 @@
     {
     'title': 'diamante.desk.ticket.details'|trans,
     'data' : dataSubBlocks
-    }
+    },
+    {
+    'title': 'diamante.desk.common.watchers'|trans,
+    'data' : [WatchersListWidget]}
     ]
     }
     ]

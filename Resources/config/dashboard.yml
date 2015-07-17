@@ -1,0 +1,4 @@
+oro_dashboard_config:
+    dashboards:
+        diamante_support:
+            twig: OroDashboardBundle:Index:default.html.twig

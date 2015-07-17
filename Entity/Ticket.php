@@ -127,6 +127,14 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     protected $attachments;
 
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="WatcherList", mappedBy="ticket", cascade={"persist", "remove"})
+     */
+    protected $watcherList;
+
     /**
      * @var \DateTime
      *
@@ -147,6 +155,11 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @ORM\Column(type="source")
      */
     protected $source;
+
+    /**
+     * @var ArrayCollection
+     */
+    protected $tags;
 
     public static function getClassName()
     {

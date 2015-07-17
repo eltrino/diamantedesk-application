@@ -26,6 +26,7 @@ use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
 use Diamante\UserBundle\Model\User;
+use Rhumsaa\Uuid\Console\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -44,6 +45,8 @@ use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Diamante\DeskBundle\Form\Type\AddWatcherType;
+use Diamante\UserBundle\Entity\DiamanteUser;
 
 /**
  * @Route("tickets")
@@ -206,6 +209,63 @@ class TicketController extends Controller
 
     /**
      * @Route(
+     *      "/watcher/ticket/{ticketId}",
+     *      name="diamante_add_watcher",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/add_watcher.html.twig")
+     *
+     * @param int $ticketId
+     * @return array
+     */
+    public function addWatcherAction($ticketId)
+    {
+        $response = array();
+        try {
+            $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+            $command = $this->get('diamante.command_factory')
+                ->addWatcherCommand($ticket);
+            $form = $this->createForm(new AddWatcherType(), $command);
+
+            if (!$this->getRequest()->get('no_redirect')) {
+                return array('form' => $form->createView());
+
+            }
+            $this->handle($form);
+
+            if(is_string($command->watcher)) {
+                $user = new DiamanteUser($command->watcher);
+                $this->get('diamante.user.repository')->store($user);
+                $command->watcher = new User($user->getId(), User::TYPE_DIAMANTE);
+            }
+
+            if ($command->watcher) {
+                $this->get('diamante.ticket.watcher_list.service')
+                    ->addWatcher($ticket, $command->watcher);
+                $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
+            }
+            $response = array('reload_page' => true);
+        } catch (TicketNotFoundException $e) {
+            $this->container->get('monolog.logger.diamante')->error(
+                sprintf('Add watcher to ticket failed: %s', $e->getMessage())
+            );
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $url = $this->generateUrl('diamante_ticket_list');
+            $response = array('reload_page' => true, 'redirect' => $url);
+        } catch (MethodNotAllowedException $e) {
+        } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(
+                sprintf('Add watcher to ticket failed: %s', $e->getMessage())
+            );
+            $this->addErrorMessage('diamante.desk.ticket.messages.watch.error');
+            $response['reload_page'] = true;
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
      *      "/create/{id}",
      *      name="diamante_ticket_create",
      *      requirements={"id" = "\d+"},
@@ -273,6 +333,7 @@ class TicketController extends Controller
     public function updateAction($key)
     {
         try {
+            $r = $this->getRequest();
             $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
 
             $command = $this->get('diamante.command_factory')
@@ -601,6 +662,88 @@ class TicketController extends Controller
         return [
             'ticket' => $ticket,
             'attachments' => $ticket->getAttachments()
+        ];
+    }
+
+    /**
+     * @Route(
+     *       "/watch/ticket/{ticketId}",
+     *      name="diamante_ticket_watch",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     *
+     * @param int $ticketId
+     * @return RedirectResponse
+     */
+    public function watchAction($ticketId)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+        $watcherService = $this->get('diamante.ticket.watcher_list.service');
+
+        $user = new User($this->getUser()->getId(), User::TYPE_ORO);
+
+        $watcherService->addWatcher($ticket, $user);
+
+        $this->addSuccessMessage('diamante.desk.watcher.messages.watch.success');
+        $response = $this->redirect($this->generateUrl(
+            'diamante_ticket_view',
+            array('key' => $ticket->getKey())
+        ));
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *       "/unwatch/ticket/{ticketId}",
+     *      name="diamante_ticket_unwatch",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     *
+     * @param int $ticketId
+     * @return RedirectResponse
+     */
+    public function unwatchAction($ticketId)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+        $watcherService = $this->get('diamante.ticket.watcher_list.service');
+
+        $user = new User($this->getUser()->getId(), User::TYPE_ORO);
+
+        $watcherService->removeWatcher($ticket, $user);
+
+        $this->addSuccessMessage('diamante.desk.watcher.messages.unwatch.success');
+        $response = $this->redirect($this->generateUrl(
+            'diamante_ticket_view',
+            array('key' => $ticket->getKey())
+        ));
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *       "/watchers/ticket/{ticketId}",
+     *      name="diamante_ticket_watchers",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/watchers.html.twig")
+     *
+     * @param int $ticketId
+     * @return array
+     */
+    public function watchers($ticketId)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+
+        $users = [];
+
+        foreach ($ticket->getWatcherList() as $watcher) {
+            $users[] = User::fromString($watcher->getUserType());
+        }
+
+        return [
+            'watchers' => $users,
         ];
     }
 

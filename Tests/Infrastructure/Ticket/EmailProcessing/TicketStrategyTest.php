@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\User;
@@ -82,6 +83,24 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $eventDispatcher;
 
+    /**
+     * @var \Diamante\DeskBundle\Api\Internal\WatchersServiceImpl
+     * @Mock \Diamante\DeskBundle\Api\Internal\WatchersServiceImpl
+     */
+    private $watcherService;
+
+    /**
+     * @var \Oro\Bundle\UserBundle\Entity\UserManager
+     * @Mock \Oro\Bundle\UserBundle\Entity\UserManager
+     */
+    private $oroUserManager;
+
+    /**
+     * @var \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     * @Mock \Oro\Bundle\ConfigBundle\Config\ConfigManager
+     */
+    private $configManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -92,7 +111,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             $this->diamanteUserFactory,
             $this->emailProcessingSettings,
             $this->ticketNotificationsSubscriber,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            $this->watcherService,
+            $this->oroUserManager,
+            $this->configManager
         );
     }
 

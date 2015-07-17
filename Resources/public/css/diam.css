@@ -306,3 +306,10 @@
     border-radius: 2px;
     color: #fff;
 }
+
+.ticket-tag-inline {
+    padding: 3px;
+    background-color: #EDD0CD;
+    border-radius: 5px;
+    border: 1px solid #BAA09D;
+}

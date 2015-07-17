@@ -47,6 +47,12 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $messageReferenceService;
 
     /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
      * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
      */
@@ -129,6 +135,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         MockAnnotations::init($this);
 
         $this->messageReferenceService = new MessageReferenceServiceImpl(
+            $this->em,
             $this->messageReferenceRepository,
             $this->ticketRepository,
             $this->ticketBuilder,

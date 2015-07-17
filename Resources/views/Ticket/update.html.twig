@@ -1,5 +1,5 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
-{% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
 {% oro_title_set({params : {"%ticket.subject%": form.vars.value.subject }}) %}
 {% set formAction = path('diamante_ticket_update', { 'key': form.vars.value.key }) %}
 {% block head_script %}
@@ -49,7 +49,8 @@
                     form_row(form.source),
                     form_row(form.reporter),
                     form_row(form.assignee),
-                    form_row(form.attachmentsInput)
+                    form_row(form.attachmentsInput),
+                    form_row(form.tags)
                 ]
             }
         ]

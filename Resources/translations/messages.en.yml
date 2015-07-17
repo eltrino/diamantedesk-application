@@ -83,6 +83,9 @@ diamante:
             create:            Create Ticket
             change_status:     Change status
             move:              Move
+            watch:             Watch
+            unwatch:           Un-watch
+            add_watcher:       Add Watcher
 
           messages:
             create:
@@ -104,6 +107,9 @@ diamante:
             move:
               error:           Error occured while trying to move ticket.
               success:         Ticket successfully moved.
+            watch:
+              error:           Error occured while trying to add watcher.
+              success:         Watcher successfully added.
             get:
               error:           Ticket loading failed, ticket not found.
               attachment:
@@ -191,6 +197,13 @@ diamante:
             granted:
               error:           Not enough permissions.
 
+        watcher:
+          messages:
+            watch:
+              success:         Now you watching the ticket.
+            unwatch:
+              success:         You successfully unsubscribe from watching of ticket
+
         ui:
           create:              Create
           ok:                  Ok
@@ -212,6 +225,7 @@ diamante:
           no_description:      No description
           delete_confirmation: Confirm Deletion
           filters:             Filters
+          watchers:            Watchers
 
         forms:
           name:                Name
@@ -230,7 +244,10 @@ diamante:
           reporter:            Reporter
           default_assignee:    Default Assignee
           assignee:            Assignee
+          watcher:             Watcher
           key:                 Key
 
         email:
           configuration:           Email Configuration
+        dashboard:
+          support.label: Support Dashboard

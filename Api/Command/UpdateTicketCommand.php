@@ -15,9 +15,11 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Diamante\DeskBundle\Entity\Branch;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Oro\Bundle\TagBundle\Entity\Taggable;
 
-class UpdateTicketCommand
+class UpdateTicketCommand implements Taggable
 {
     /**
      * @Assert\NotNull()
@@ -86,4 +88,48 @@ class UpdateTicketCommand
      * @var Branch
      */
     public $branch;
+
+    /**
+     * @Assert\Type(type="array")
+     */
+    public $tags;
+
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
+
+    /**
+     * Returns the unique taggable resource identifier
+     *
+     * @return string
+     */
+    public function getTaggableId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set tag collection
+     *
+     * @param $tags
+     * @return $this
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Returns the collection of tags for this Taggable entity
+     *
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
 }

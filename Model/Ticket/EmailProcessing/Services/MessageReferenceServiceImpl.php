@@ -29,11 +29,17 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Doctrine\ORM\EntityManager;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
     const DELIMITER_LINE = '[[ Please reply above this line ]]';
     const EMPTY_SUBJECT_PLACEHOLDER = '[No Subject]';
+
+    /**
+     * @var EntityManager
+     */
+    protected $em;
 
     /**
      * @var MessageReferenceRepository
@@ -85,7 +91,21 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     private $logger;
 
+    /**
+     * @param EntityManager               $em
+     * @param MessageReferenceRepository  $messageReferenceRepository
+     * @param Repository                  $ticketRepository
+     * @param TicketBuilder               $ticketBuilder
+     * @param CommentFactory              $commentFactory
+     * @param UserService                 $userService
+     * @param AttachmentManager           $attachmentManager
+     * @param EventDispatcher             $dispatcher
+     * @param NotificationDeliveryManager $notificationDeliveryManager
+     * @param Notifier                    $notifier
+     * @param Logger                      $logger
+     */
     public function __construct(
+        EntityManager $em,
         MessageReferenceRepository $messageReferenceRepository,
         Repository $ticketRepository,
         TicketBuilder $ticketBuilder,
@@ -98,16 +118,17 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         Logger  $logger
     )
     {
-        $this->messageReferenceRepository = $messageReferenceRepository;
-        $this->ticketRepository           = $ticketRepository;
-        $this->ticketBuilder              = $ticketBuilder;
-        $this->commentFactory             = $commentFactory;
-        $this->userService                = $userService;
-        $this->attachmentManager          = $attachmentManager;
-        $this->dispatcher                 = $dispatcher;
+        $this->em                          = $em;
+        $this->messageReferenceRepository  = $messageReferenceRepository;
+        $this->ticketRepository            = $ticketRepository;
+        $this->ticketBuilder               = $ticketBuilder;
+        $this->commentFactory              = $commentFactory;
+        $this->userService                 = $userService;
+        $this->attachmentManager           = $attachmentManager;
+        $this->dispatcher                  = $dispatcher;
         $this->notificationDeliveryManager = $notificationDeliveryManager;
-        $this->notifier                   = $notifier;
-        $this->logger                     = $logger;
+        $this->notifier                    = $notifier;
+        $this->logger                      = $logger;
     }
 
     /**
@@ -145,6 +166,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         }
         $this->ticketRepository->store($ticket);
         $this->createMessageReference($messageId, $ticket);
+        $this->em->detach($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
@@ -169,7 +191,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $authorId
      * @param $messageId
      * @param array $attachments
-     * @return void
+     * @return Ticket|null
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
     {
@@ -186,7 +208,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $author = User::fromString($authorId);
 
         if (empty($content)) {
-            return;
+            return null;
         }
 
         $comment = $this->commentFactory->create($content, $ticket, $author);
@@ -198,6 +220,8 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
         $this->dispatchEvents($ticket);
+
+        return $ticket;
     }
 
     /**
