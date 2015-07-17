@@ -851,12 +851,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eltrino/DiamanteEmbeddedFormBundle.git",
-                "reference": "c42a0188b91546e5f92dda6ac8858f16f0749e46"
+                "reference": "0cc08b41fde56c64bfd7edb2b2f119c815a64263"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eltrino/DiamanteEmbeddedFormBundle/zipball/c42a0188b91546e5f92dda6ac8858f16f0749e46",
-                "reference": "c42a0188b91546e5f92dda6ac8858f16f0749e46",
+                "url": "https://api.github.com/repos/eltrino/DiamanteEmbeddedFormBundle/zipball/0cc08b41fde56c64bfd7edb2b2f119c815a64263",
+                "reference": "0cc08b41fde56c64bfd7edb2b2f119c815a64263",
                 "shasum": ""
             },
             "require": {
