@@ -18,7 +18,7 @@ define(['app'], function(App){
           App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
 
           ticketView.on('dom:refresh', function(){
-            require(['Comment', 'Attachment'], function(Comment, Attachment){
+            require(['Comment', 'Attachment', 'Watcher'], function(Comment, Attachment, Watcher){
               var commentOptions = {
                     ticket : this.model,
                     parentRegion : this.commentsRegion
@@ -26,6 +26,10 @@ define(['app'], function(App){
                   attachmentOptions = {
                     ticket : this.model,
                     parentRegion : this.attachmentsRegion
+                  },
+                  watcherOptions = {
+                    ticket : this.model,
+                    parentRegion : this.watchersRegion
                   };
               if(Comment.ready){
                 Comment.render(commentOptions);
@@ -37,14 +41,20 @@ define(['app'], function(App){
               } else {
                 Attachment.start(attachmentOptions);
               }
+              if(Watcher.ready){
+                Watcher.render(watcherOptions);
+              } else {
+                Watcher.start(watcherOptions);
+              }
 
             }.bind(this));
           });
 
           ticketView.on('destroy', function(){
-            require(['Comment', 'Attachment'], function(Comment, Attachment){
+            require(['Comment', 'Attachment', 'Watcher'], function(Comment, Attachment, Watcher){
               Comment.stop();
               Attachment.stop();
+              Watcher.stop();
             });
           });
 

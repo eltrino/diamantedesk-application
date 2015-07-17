@@ -137,6 +137,10 @@ require.config({
     {
       name: 'Attachment',
       location: 'modules/Attachment'
+    },
+    {
+      name: 'Watcher',
+      location: 'modules/Watcher'
     }
   ],
   deps : ["app"]

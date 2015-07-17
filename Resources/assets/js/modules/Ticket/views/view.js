@@ -20,7 +20,8 @@ define([
 
       regions : {
         commentsRegion : '#comments',
-        attachmentsRegion : '#attachments'
+        attachmentsRegion : '#attachments',
+        watchersRegion : '#watchers'
       },
 
       templateHelpers : function(){
