@@ -55,6 +55,9 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         },
-        "symfony-assets-install": "symlink"
+        "symfony-assets-install": "symlink",
+        "branch-alias": {
+            "dev-master": "1.1.x-dev"
+        }
     }
 }
