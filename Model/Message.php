@@ -57,6 +57,11 @@ class Message
     /**
      * @var array
      */
+    private $recipients;
+
+    /**
+     * @var array
+     */
     private $attachments;
 
     /**
@@ -74,6 +79,7 @@ class Message
      * @param null          $reference
      * @param array         $attachments
      * @param bool          $isFailed
+     * @param array         $recipients
      */
     public function __construct(
         $uniqueId,
@@ -84,7 +90,8 @@ class Message
         $to,
         $reference = null,
         array $attachments = null,
-        $isFailed = false
+        $isFailed = false,
+        $recipients = null
     ) {
         $this->uniqueId    = $uniqueId;
         $this->messageId   = $messageId;
@@ -95,6 +102,7 @@ class Message
         $this->reference   = $reference;
         $this->attachments = $attachments;
         $this->isFailed    = $isFailed;
+        $this->recipients  = $recipients;
     }
 
     /**
@@ -175,5 +183,33 @@ class Message
     public function isFailed()
     {
         return $this->isFailed;
+    }
+
+    /**
+     * Retrieve emails of recipients
+     *
+     * @return array|null
+     */
+    public function getRecipients()
+    {
+        return $this->recipients;
+    }
+
+    /**
+     * Add recipient/recipients to the message
+     *
+     * @param $recipients
+     */
+    public function addRecipients($recipients)
+    {
+        if (!is_array($recipients)) {
+            $recipients = [$recipients];
+        }
+
+        foreach ($recipients as $recipient) {
+            $this->recipients[] = $recipient;
+        }
+
+        $this->recipients = array_unique($this->recipients);
     }
 }

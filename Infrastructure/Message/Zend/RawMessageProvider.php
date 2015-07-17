@@ -62,9 +62,10 @@ class RawMessageProvider extends AbstractMessageProvider implements MessageProvi
         $messageTo          = $this->processTo($headers);
         $messageReference   = $this->processMessageReference($headers);
         $messageAttachments = $this->processAttachments($zendMailMessage);
+        $recipients          = $this->processRecipients($headers);
 
         $message = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
-            $messageFrom, $messageTo, $messageReference, $messageAttachments);
+            $messageFrom, $messageTo, $messageReference, $messageAttachments, $recipients);
         return array($message);
     }
 

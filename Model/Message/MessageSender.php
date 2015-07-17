@@ -50,6 +50,7 @@ class MessageSender
     protected function parseName($name)
     {
         if (!empty($name)) {
+            $name = trim($name, "\"");
             $name = $this->canonicalizeName($name);
 
             if (strpos($name," ")) {
@@ -59,8 +60,8 @@ class MessageSender
                 $lastName = "";
             }
 
-            $this->firstName = $firstName;
-            $this->lastName  = $lastName;
+            $this->firstName = ucfirst($firstName);
+            $this->lastName  = ucfirst($lastName);
         }
     }
 
