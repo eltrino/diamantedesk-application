@@ -48,22 +48,30 @@ class ReportController extends Controller
 
     /**
      * @Route(
-     *      "/data/{id}/{_format}",
-     *      name="diamante_report_getdata",
-     *      requirements={"_format"="json"},
-     *      defaults={"_format" = "json"}
+     *      "/widget/{id}",
+     *      name="diamante_report_widget"
      * )
      *
      * @param string $id
-     * @param string $_format
      * @return array
-     *
      */
-    public function getDataAction($id, $_format)
+    public function getWidgetAction($id)
     {
         try {
-            $data = $this->get('diamante.report.service')->build($id);
-            return new Response($this->get('serializer')->serialize($data, $_format), 200);
+            $manager = $this->get('oro_dashboard.widget_configs');
+
+            $params = array_merge(
+                [
+                    'data' => $this->get('diamante.report.service')->build($id)
+                ],
+                $manager->getWidgetAttributesForTwig($id)
+            );
+
+            return $this->render(
+                'DiamanteDeskBundle:Dashboard:widget.html.twig',
+                $params
+            );
+
         } catch (\Exception $e) {
             return $this->throwException($e);
         }

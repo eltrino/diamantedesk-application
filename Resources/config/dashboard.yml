@@ -1,4 +1,19 @@
 oro_dashboard_config:
+    widgets:
+        tickets_by_priority:
+            label:      Tickets By priority
+            route:      diamante_report_widget
+            route_parameters: { id: tickets_by_priority }
+            description: Tickets By priority
+            icon:       bundles/orodashboard/img/quick_launchpad.png
+
+        test_report:
+            label:      Test Widget
+            route:      diamante_report_widget
+            route_parameters: { id: test_report }
+            description: Test Widget
+            icon:       bundles/orodashboard/img/quick_launchpad.png
+
     dashboards:
         diamante_support:
             twig: OroDashboardBundle:Index:default.html.twig
