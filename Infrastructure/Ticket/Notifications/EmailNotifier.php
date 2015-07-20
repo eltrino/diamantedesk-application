@@ -166,6 +166,7 @@ class EmailNotifier implements Notifier
         $ticket = $this->loadTicket($notification);
         $changeList = $this->postProcessChangesList($notification);
 
+
         foreach ($this->watchersService->getWatchers($ticket) as $watcher) {
             $userType = $watcher->getUserType();
             $user = User::fromString($userType);
@@ -175,6 +176,11 @@ class EmailNotifier implements Notifier
             } else {
                 $loadedUser = $this->diamanteUserRepository->get($user->getId());
             }
+
+            if(!$isOroUser && $notification->isTagUpdated()) {
+                continue;
+            }
+
             $message = $this->message($notification, $ticket, $isOroUser, $loadedUser->getEmail(), $changeList);
             $this->mailer->send($message);
             $reference = new MessageReference($message->getId(), $ticket);
@@ -206,6 +212,10 @@ class EmailNotifier implements Notifier
         $headers = $message->getHeaders();
         $headers->addTextHeader('In-Reply-To', $this->inReplyToHeader($notification));
         $headers->addIdHeader('References', $this->referencesHeader($ticket));
+
+        if ($notification->isCreated() && !$isOroUser) {
+            unset($changeList['Tags']);
+        }
 
         $options = array(
             'changes'       => $changeList,
@@ -328,6 +338,8 @@ class EmailNotifier implements Notifier
             $details = $this->userService->fetchUserDetails($u);
             $changes['Reporter'] = $details->getFullName();
         }
+
+        $changes['Tags'] = implode(', ', $changes['Tags']);
 
         return $changes;
     }

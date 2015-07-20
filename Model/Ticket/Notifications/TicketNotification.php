@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
 use Diamante\DeskBundle\Model\Shared\Notification;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
 class TicketNotification implements Notification
 {
@@ -48,8 +49,28 @@ class TicketNotification implements Notification
      */
     private $attachments;
 
+    /**
+     * @var Events\AbstractTicketEvent
+     */
+    private $event;
+
+    /**
+     * @param                            $ticketUniqueId
+     * @param                            $author
+     * @param                            $headerText
+     * @param                            $subject
+     * @param \ArrayAccess               $changeList
+     * @param array                      $attachments
+     * @param Events\AbstractTicketEvent $event
+     */
     public function __construct(
-        $ticketUniqueId, $author, $headerText, $subject, \ArrayAccess $changeList, $attachments = array()
+        $ticketUniqueId,
+        $author,
+        $headerText,
+        $subject,
+        \ArrayAccess $changeList,
+        $attachments = array(),
+        Events\AbstractTicketEvent $event
     ) {
         $this->ticketUniqueId = $ticketUniqueId;
         $this->author = $author;
@@ -57,6 +78,7 @@ class TicketNotification implements Notification
         $this->subject = $subject;
         $this->changeList = $changeList;
         $this->attachments = $attachments;
+        $this->event = $event;
     }
 
     /**
@@ -105,5 +127,21 @@ class TicketNotification implements Notification
     public function getAttachments()
     {
         return $this->attachments;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCreated()
+    {
+        return $this->event instanceof Events\TicketWasCreated;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTagUpdated()
+    {
+        return $this->event instanceof Events\TicketTagWasUpdated;
     }
 }

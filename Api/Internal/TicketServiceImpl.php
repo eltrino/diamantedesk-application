@@ -401,7 +401,8 @@ class TicketServiceImpl implements TicketService
             new Priority($command->priority),
             new Status($command->status),
             new Source($command->source),
-            $assignee
+            $assignee,
+            $command->tags
         );
 
         if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {

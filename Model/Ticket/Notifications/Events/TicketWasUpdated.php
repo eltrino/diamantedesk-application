@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
 
 use Diamante\DeskBundle\Model\Ticket\Notifications\AttachmentsEvent;
 use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
+
 class TicketWasUpdated extends AbstractTicketEvent implements ChangesProviderEvent, AttachmentsEvent
 {
     /**
@@ -48,8 +49,31 @@ class TicketWasUpdated extends AbstractTicketEvent implements ChangesProviderEve
      */
     private $attachments;
 
-    public function __construct($id, $subject, $description, $reporter, $priority, $status, $source)
-    {
+    /**
+     * @var array
+     */
+    private $tags;
+
+    /**
+     * @param       $id
+     * @param       $subject
+     * @param       $description
+     * @param       $reporter
+     * @param       $priority
+     * @param       $status
+     * @param       $source
+     * @param array $tags
+     */
+    public function __construct(
+        $id,
+        $subject,
+        $description,
+        $reporter,
+        $priority,
+        $status,
+        $source,
+        array $tags
+    ) {
         $this->ticketId          = $id;
         $this->subject           = $subject;
         $this->description       = $description;
@@ -57,6 +81,7 @@ class TicketWasUpdated extends AbstractTicketEvent implements ChangesProviderEve
         $this->priority          = $priority;
         $this->status            = $status;
         $this->source            = $source;
+        $this->tags              = $tags['all'];
     }
 
     /**
@@ -88,6 +113,7 @@ class TicketWasUpdated extends AbstractTicketEvent implements ChangesProviderEve
         $changes['Priority']    = $this->priority;
         $changes['Status']      = $this->status;
         $changes['Source']      = $this->source;
+        $changes['Tags']        = $this->tags;
     }
 
     /**
