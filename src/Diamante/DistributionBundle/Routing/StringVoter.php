@@ -55,6 +55,7 @@ class StringVoter extends Voter
             'oro_activity_list_api_get_list',
             'oro_comment_form',
             'orocrm_task_user_tasks',
+            'oro_api_delete_user',
 
             //Dashboard
             'oro_dashboard_index',
