@@ -137,7 +137,7 @@ class CommentController extends Controller
      * @Route(
      *      "/delete/ticket/{ticketKey}/comment/{commentId}",
      *      name="diamante_comment_delete",
-     *      requirements={"ticketKey"="[A-Z]+-\d+", "commentId"="\d+"}
+     *      requirements={"ticketKey"=".*-\d+", "commentId"="\d+"}
      * )
      *
      * @param string $ticketKey
