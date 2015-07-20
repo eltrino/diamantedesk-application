@@ -97,7 +97,7 @@ define(['app'], function(App){
           } else if (xhr.status === 301) {
             link = document.createElement('a');
             link.href = xhr.getResponseHeader('X-Location');
-            key = link.href.replace(model.urlRoot,'').replace('/','');
+            key = decodeURIComponent(link.href.replace(model.urlRoot,'').replace('/',''));
             App.trigger('message:show', {
               status:'info',
               text: 'This ticket was moved, so we automatically redirected you there'
