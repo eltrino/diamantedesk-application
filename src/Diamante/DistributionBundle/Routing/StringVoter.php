@@ -61,8 +61,10 @@ class StringVoter extends Voter
             'oro_dashboard_index',
             'oro_dashboard_view',
             'oro_dashboard_configure',
+            'oro_dashboard_update',
             'oro_api_post_dashboard_widget_add_widget',
             'oro_api_put_dashboard_widget_positions',
+            'oro_api_delete_dashboard_widget',
 
             //Embedded Forms
             'diamante_embedded_form_submit',
