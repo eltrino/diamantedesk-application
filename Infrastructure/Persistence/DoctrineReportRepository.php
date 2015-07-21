@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class DoctrineReportRepository
@@ -34,9 +35,15 @@ class DoctrineReportRepository
      */
     private $driver;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    public function __construct(EntityManager $entityManager, ContainerInterface $container)
     {
         $this->em = $entityManager;
+        $this->container = $container;
         $this->driver = $this->em->getConnection()->getDriver()->getName();
     }
 
@@ -45,18 +52,88 @@ class DoctrineReportRepository
      */
     public function getTimeOfResponseReportData()
     {
-        $dateDiffExpression = '0';
-
-        switch ($this->driver) {
-            case 'pdo_mysql':
-                $dateDiffExpression = 's.c_created_at - t.created_at';
-                break;
-            case 'pdo_pgsql':
-                $dateDiffExpression = 'EXTRACT(EPOCH FROM (s.c_created_at - t.created_at))';
-                break;
+        $route = $this->container->get('request')->get('_route');
+        if ($route === 'diamante_report_widget') {
+            $sql = $this->getWidgetReportSql();
+        } else {
+            $sql = $this->getOriginalReportSql();
         }
 
-        $sql = "
+        return $this->execute($sql);
+    }
+
+    protected function getOriginalReportSql()
+    {
+        $dateDiffExpression = $this->getDateDiffExpression();
+        return
+            "
+SELECT
+  '0-1' AS data_range,
+  count(t.id) as data_count,
+  DATE(t.created_at) as data_date
+FROM
+  diamante_ticket t
+  INNER JOIN (SELECT
+                min(c.created_at) AS c_created_at,
+                c.ticket_id       AS subquery_ticket_id
+              FROM diamante_comment c
+              GROUP BY c.ticket_id) s
+    ON (t.id = s.subquery_ticket_id)
+WHERE {$dateDiffExpression} BETWEEN 0 AND 3600
+GROUP BY DATE(t.created_at)
+
+UNION SELECT
+        '1-8' AS data_range,
+        count(t.id) as data_count,
+        DATE(t.created_at) as data_date
+      FROM
+        diamante_ticket t
+        INNER JOIN (SELECT
+                      min(c.created_at) AS c_created_at,
+                      c.ticket_id       AS subquery_ticket_id
+                    FROM diamante_comment c
+                    GROUP BY c.ticket_id) s
+          ON (t.id = s.subquery_ticket_id)
+      WHERE {$dateDiffExpression} BETWEEN 3600 AND 3600 * 8
+      GROUP BY DATE(t.created_at)
+
+UNION SELECT
+        '8-24' AS data_range,
+        count(t.id) as data_count,
+        DATE(t.created_at) as data_date
+      FROM
+        diamante_ticket t
+        INNER JOIN (SELECT
+                      min(c.created_at) AS c_created_at,
+                      c.ticket_id       AS subquery_ticket_id
+                    FROM diamante_comment c
+                    GROUP BY c.ticket_id) s
+          ON (t.id = s.subquery_ticket_id)
+      WHERE {$dateDiffExpression} BETWEEN 3600 * 8 AND 3600 * 24
+      GROUP BY DATE(t.created_at)
+
+UNION SELECT
+        'more 24' AS data_range,
+        count(t.id) as data_count,
+        DATE(t.created_at) as data_date
+      FROM
+        diamante_ticket t
+        INNER JOIN (SELECT
+                      min(c.created_at) AS c_created_at,
+                      c.ticket_id       AS subquery_ticket_id
+                    FROM diamante_comment c
+                    GROUP BY c.ticket_id) s
+          ON (t.id = s.subquery_ticket_id)
+      WHERE {$dateDiffExpression} > 3600 * 24
+      GROUP BY DATE(t.created_at)
+";
+    }
+
+    protected function getWidgetReportSql()
+    {
+        $dateDiffExpression = $this->getDateDiffExpression();
+        return
+            "
 SELECT
   '0-1' AS data_range,
   count(t.id) as data_count
@@ -110,8 +187,6 @@ UNION SELECT
           ON (t.id = s.subquery_ticket_id)
       WHERE {$dateDiffExpression} > 3600 * 24
 ";
-
-        return $this->execute($sql);
     }
 
     /**
@@ -124,5 +199,20 @@ UNION SELECT
         $stmt = $this->em->getConnection()->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+    private function getDateDiffExpression()
+    {
+        $dateDiffExpression = '0';
+
+        switch ($this->driver) {
+            case 'pdo_mysql':
+                $dateDiffExpression = 's.c_created_at - t.created_at';
+                break;
+            case 'pdo_pgsql':
+                $dateDiffExpression = 'EXTRACT(EPOCH FROM (s.c_created_at - t.created_at))';
+                break;
+        }
+        return $dateDiffExpression;
     }
 }

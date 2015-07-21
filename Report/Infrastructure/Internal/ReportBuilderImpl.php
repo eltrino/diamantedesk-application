@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\QueryException;
 use Rhumsaa\Uuid\Console\Exception;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\Exception\RuntimeException;
 
 
@@ -46,12 +47,19 @@ class ReportBuilderImpl implements ReportBuilder
      */
     protected $chartTypeProvider;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     public function __construct(
         EntityManager $entityManager,
-        ChartTypeProvider $chartTypeProvider
+        ChartTypeProvider $chartTypeProvider,
+        ContainerInterface $container
     ) {
         $this->entityManager = $entityManager;
         $this->chartTypeProvider = $chartTypeProvider;
+        $this->container = $container;
     }
 
     /**
@@ -150,7 +158,7 @@ class ReportBuilderImpl implements ReportBuilder
             throw new \RuntimeException('Repository or action not found');
         }
 
-        $repository = new $class($this->entityManager);
+        $repository = new $class($this->entityManager, $this->container);
 
         return $repository->$action();
     }
