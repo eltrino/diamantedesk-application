@@ -18,6 +18,29 @@ oro_menu_config:
             extras:
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
                 position: 90
+
+        diamante_report_list:
+            label: 'Reports'
+            uri: '#'
+            extras:
+                position: 95
+
+        diamante_report_tickets_by_priority:
+            label: 'Tickets By priority'
+            route: diamante_report_view
+            routeParameters:
+                id: 'tickets_by_priority'
+            extras:
+                routes: ['diamante_report_*']
+
+        diamante_report_time_of_response:
+            label: 'Time Of Response'
+            route: diamante_report_view
+            routeParameters:
+                id: 'time_of_response'
+            extras:
+                routes: ['diamante_report_*']
+
 #        dashboard_tab:
 #            display: false
         oro_calendar_view_default:
@@ -40,6 +63,10 @@ oro_menu_config:
             children:
                 diamante_branch_list: ~
                 diamante_ticket_list: ~
+                diamante_report_list:
+                    children:
+                        diamante_report_tickets_by_priority: ~
+                        diamante_report_time_of_response: ~
                 diamante_config_tab:
                   children:
                     system_configuration: ~
