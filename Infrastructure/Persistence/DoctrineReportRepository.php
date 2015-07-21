@@ -40,7 +40,7 @@ class DoctrineReportRepository
         $this->driver = $this->em->getConnection()->getDriver()->getName();
     }
 
-    protected function getTimeOfResponseReportData()
+    public function getTimeOfResponseReportData()
     {
         $dateDiffExpression = $this->getDateDiffExpression();
         return $this->execute("
@@ -50,7 +50,7 @@ class DoctrineReportRepository
         UNION SELECT 'more 24' AS data_range, count(t.id) as data_count, DATE(t.created_at) as data_date FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} > 3600 * 24 GROUP BY DATE(t.created_at)");
     }
 
-    protected function getTimeOfResponseReportWidgetData()
+    public function getTimeOfResponseReportWidgetData()
     {
         $dateDiffExpression = $this->getDateDiffExpression();
         return $this->execute("
