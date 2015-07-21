@@ -18,7 +18,10 @@ namespace Diamante\DeskBundle\Report\Infrastructure\Internal;
 use Diamante\DeskBundle\Report\ChartTypeProvider;
 use Diamante\DeskBundle\Report\Infrastructure\ReportBuilder;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\QueryException;
+use Rhumsaa\Uuid\Console\Exception;
+use Symfony\Component\Process\Exception\RuntimeException;
 
 
 /**
@@ -100,7 +103,7 @@ class ReportBuilderImpl implements ReportBuilder
         }
 
         if ($config['type'] == static::TYPE_REPOSITORY) {
-            if (!isset($config['dql'])) {
+            if (!isset($config['repository'])) {
                 $message = sprintf("Parameter 'repository' is not defined in source for report %s", $reportId);
                 throw new \RuntimeException($message);
             }
@@ -133,14 +136,23 @@ class ReportBuilderImpl implements ReportBuilder
     }
 
     /**
-     * TODO: implement method
-     *
      * @param $config
      * @return array
      */
     protected function buildFromRepository($config)
     {
-        return [];
+        if (!strpos($config['repository'],'::')) {
+            throw new \RuntimeException('Action in repository is not defined');
+        }
+
+        list($class, $action) = explode('::', $config['repository']);
+        if (!is_callable(array($class, $action))) {
+            throw new \RuntimeException('Repository or action not found');
+        }
+
+        $repository = new $class($this->entityManager);
+
+        return $repository->$action();
     }
 
 

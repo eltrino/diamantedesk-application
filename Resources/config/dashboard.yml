@@ -14,6 +14,13 @@ oro_dashboard_config:
             description: Test Widget
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
+        time_of_response:
+            label:      Time Of Response
+            route:      diamante_report_widget
+            route_parameters: { id: time_of_response }
+            description: Test Widget
+            icon:       bundles/orodashboard/img/quick_launchpad.png
+
     dashboards:
         diamante_support:
             twig: OroDashboardBundle:Index:default.html.twig
