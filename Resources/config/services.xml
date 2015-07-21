@@ -105,7 +105,6 @@
         <service id="diamante.report.builder" class="%diamante.report.builder.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="diamante.report.chart_type_provider"/>
-            <argument type="service" id="service_container"/>
         </service>
 
         <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>

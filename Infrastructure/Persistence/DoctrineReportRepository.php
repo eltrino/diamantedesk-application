@@ -35,37 +35,16 @@ class DoctrineReportRepository
      */
     private $driver;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    public function __construct(EntityManager $entityManager, ContainerInterface $container)
+    public function __construct(EntityManager $entityManager)
     {
         $this->em = $entityManager;
-        $this->container = $container;
         $this->driver = $this->em->getConnection()->getDriver()->getName();
     }
 
-    /**
-     * @return array
-     */
-    public function getTimeOfResponseReportData()
-    {
-        $route = $this->container->get('request')->get('_route');
-        if ($route === 'diamante_report_widget') {
-            $sql = $this->getWidgetReportSql();
-        } else {
-            $sql = $this->getOriginalReportSql();
-        }
-
-        return $this->execute($sql);
-    }
-
-    protected function getOriginalReportSql()
+   protected function getTimeOfResponseReportWidgetData()
     {
         $dateDiffExpression = $this->getDateDiffExpression();
-        return
+        return $this->execute(
             "
 SELECT
   '0-1' AS data_range,
@@ -126,13 +105,13 @@ UNION SELECT
           ON (t.id = s.subquery_ticket_id)
       WHERE {$dateDiffExpression} > 3600 * 24
       GROUP BY DATE(t.created_at)
-";
+");
     }
 
-    protected function getWidgetReportSql()
+    protected function getTimeOfResponseReportData()
     {
         $dateDiffExpression = $this->getDateDiffExpression();
-        return
+        return $this->execute(
             "
 SELECT
   '0-1' AS data_range,
@@ -186,7 +165,7 @@ UNION SELECT
                     GROUP BY c.ticket_id) s
           ON (t.id = s.subquery_ticket_id)
       WHERE {$dateDiffExpression} > 3600 * 24
-";
+");
     }
 
     /**

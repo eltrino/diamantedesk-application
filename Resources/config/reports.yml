@@ -1,13 +1,4 @@
 reports:
-    test_report:
-        chart:
-            type: line-chart
-            x-axis: day
-            y-axis: count_per_day
-        source:
-            type: dql
-            dql: "SELECT date(t.createdAt) as day, count(t.createdAt) as count_per_day FROM Diamante\\DeskBundle\\Entity\\Ticket t group by day"
-
     tickets_by_priority:
         chart:
             type: bar-chart
@@ -25,3 +16,13 @@ reports:
         source:
             type: repository
             repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTimeOfResponseReportData"
+
+    time_of_response_widget:
+        chart:
+            type: bar-chart
+            y-axis: data_count
+            x-axis: data_range
+        source:
+            type: repository
+            repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTimeOfResponseReportWidgetData"
+

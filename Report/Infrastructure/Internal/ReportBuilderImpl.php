@@ -47,19 +47,12 @@ class ReportBuilderImpl implements ReportBuilder
      */
     protected $chartTypeProvider;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     public function __construct(
         EntityManager $entityManager,
-        ChartTypeProvider $chartTypeProvider,
-        ContainerInterface $container
+        ChartTypeProvider $chartTypeProvider
     ) {
         $this->entityManager = $entityManager;
         $this->chartTypeProvider = $chartTypeProvider;
-        $this->container = $container;
     }
 
     /**
@@ -158,7 +151,7 @@ class ReportBuilderImpl implements ReportBuilder
             throw new \RuntimeException('Repository or action not found');
         }
 
-        $repository = new $class($this->entityManager, $this->container);
+        $repository = new $class($this->entityManager);
 
         return $repository->$action();
     }

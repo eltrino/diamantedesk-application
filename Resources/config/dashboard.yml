@@ -7,17 +7,10 @@ oro_dashboard_config:
             description: Tickets By priority
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
-        test_report:
-            label:      Test Widget
-            route:      diamante_report_widget
-            route_parameters: { id: test_report }
-            description: Test Widget
-            icon:       bundles/orodashboard/img/quick_launchpad.png
-
-        time_of_response:
+        time_of_response_widget:
             label:      Time Of Response
             route:      diamante_report_widget
-            route_parameters: { id: time_of_response }
+            route_parameters: { id: time_of_response_widget }
             description: Test Widget
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
