@@ -213,7 +213,7 @@ class EmailNotifier implements Notifier
         $headers->addTextHeader('In-Reply-To', $this->inReplyToHeader($notification));
         $headers->addIdHeader('References', $this->referencesHeader($ticket));
 
-        if (empty($changeList['Tags']) || $notification->isCreated() && !$isOroUser) {
+        if (isset($changeList['Tags']) && (empty($changeList['Tags']) || $notification->isCreated() && !$isOroUser)) {
             unset($changeList['Tags']);
         }
 
@@ -339,7 +339,9 @@ class EmailNotifier implements Notifier
             $changes['Reporter'] = $details->getFullName();
         }
 
-        $changes['Tags'] = implode(', ', $changes['Tags']['all']);
+        if (isset($changes['Tags']['all'])) {
+            $changes['Tags'] = implode(', ', $changes['Tags']['all']);
+        }
 
         return $changes;
     }

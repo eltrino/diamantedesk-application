@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
 use Diamante\DeskBundle\Model\Shared\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events;
+use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationEvent;
 
 class TicketNotification implements Notification
 {
@@ -55,13 +56,13 @@ class TicketNotification implements Notification
     private $event;
 
     /**
-     * @param                            $ticketUniqueId
-     * @param                            $author
-     * @param                            $headerText
-     * @param                            $subject
-     * @param \ArrayAccess               $changeList
-     * @param array                      $attachments
-     * @param Events\AbstractTicketEvent $event
+     * @param                   $ticketUniqueId
+     * @param                   $author
+     * @param                   $headerText
+     * @param                   $subject
+     * @param \ArrayAccess      $changeList
+     * @param array             $attachments
+     * @param NotificationEvent $event
      */
     public function __construct(
         $ticketUniqueId,
@@ -70,7 +71,7 @@ class TicketNotification implements Notification
         $subject,
         \ArrayAccess $changeList,
         $attachments = array(),
-        Events\AbstractTicketEvent $event
+        NotificationEvent $event
     ) {
         $this->ticketUniqueId = $ticketUniqueId;
         $this->author = $author;

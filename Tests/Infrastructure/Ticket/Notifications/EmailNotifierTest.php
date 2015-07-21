@@ -33,6 +33,8 @@ use Diamante\DeskBundle\Entity\WatcherList;
 
 class EmailNotifierTest extends \PHPUnit_Framework_TestCase
 {
+    use \Diamante\DeskBundle\Tests\EventListener\EventTrait;
+
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      * @Mock \Symfony\Component\DependencyInjection\ContainerInterface
@@ -145,7 +147,8 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
             'Header',
             'Subject',
             new \ArrayIterator(array('key' => 'value')),
-            array('file.ext')
+            array('file.ext'),
+            $this->event()
         );
 
         $message = new \Swift_Message();
@@ -261,7 +264,8 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
             'Header',
             'Subject',
             new \ArrayIterator(array('key' => 'value')),
-            array('file.ext')
+            array('file.ext'),
+            $this->event()
         );
 
         $message = new \Swift_Message();
@@ -378,7 +382,8 @@ class EmailNotifierTest extends \PHPUnit_Framework_TestCase
             'Header',
             'Subject',
             new \ArrayIterator(array('key' => 'value')),
-            array('file.ext')
+            array('file.ext'),
+            $this->event()
         );
 
         $message = new \Swift_Message();

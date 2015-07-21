@@ -18,6 +18,8 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification;
 
 class NotificationTest extends \PHPUnit_Framework_TestCase
 {
+    use \Diamante\DeskBundle\Tests\EventListener\EventTrait;
+
     public function testCreate()
     {
         $changes = new \ArrayIterator();
@@ -25,7 +27,7 @@ class NotificationTest extends \PHPUnit_Framework_TestCase
         $changes['change_2'] = '2';
         $attachments = array('file.jpg', 'doc.pdf');
         $notification = new TicketNotification(
-            'unique_id', 'author@email.com', 'Header Text', 'Subject', $changes, $attachments
+            'unique_id', 'author@email.com', 'Header Text', 'Subject', $changes, $attachments, $this->event()
         );
 
         $this->assertEquals('unique_id', $notification->getTicketUniqueId());

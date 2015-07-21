@@ -20,6 +20,8 @@ use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class NotificationDeliveryManagerTest extends \PHPUnit_Framework_TestCase
 {
+    use \Diamante\DeskBundle\Tests\EventListener\EventTrait;
+
     /**
      * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
      * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
@@ -34,7 +36,13 @@ class NotificationDeliveryManagerTest extends \PHPUnit_Framework_TestCase
     public function testDeliver()
     {
         $notification = new TicketNotification(
-            'unique_id', 1, 'Header', 'Subject', new \ArrayIterator(array('key' => 'value')), array('file.ext')
+            'unique_id',
+            1,
+            'Header',
+            'Subject',
+            new \ArrayIterator(array('key' => 'value')),
+            array('file.ext'),
+            $this->event()
         );
 
         $manager = new NotificationDeliveryManager();

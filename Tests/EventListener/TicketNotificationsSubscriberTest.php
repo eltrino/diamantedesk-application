@@ -20,6 +20,8 @@ use Oro\Bundle\UserBundle\Entity\User;
 
 class TicketNotificationsSubscriberTest extends \PHPUnit_Framework_TestCase
 {
+    use EventTrait;
+
     /**
      * @var TicketNotificationsSubscriber
      */
@@ -96,17 +98,5 @@ class TicketNotificationsSubscriberTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->subscriber->processEvent($event);
-    }
-
-    private function event()
-    {
-        $attachments = array('file.ext');
-        $changes = array('Description' => 'New Description');
-        $aggregateId = '1g2';
-        $eventName = 'DummyEventName';
-        $headerTxt = 'Text description about event';
-        $subject = 'Dummy Subject';
-
-        return new Event($attachments, $changes, $aggregateId, $eventName, $headerTxt, $subject);
     }
 }

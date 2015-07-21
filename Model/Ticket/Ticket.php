@@ -441,7 +441,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
      */
     public function update(
         $subject, $description, User $reporter, Priority $priority,
-        Status $status, Source $source, OroUser $assignee = null, $tags
+        Status $status, Source $source, OroUser $assignee = null, $tags = null
     ) {
         $hasChanges = false;
         $tagChanges = false;
@@ -700,7 +700,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
             $this->raise(
                 new TicketWasUpdated(
                     (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
-                    (string) $this->priority, (string) $this->status, (string) $this->source
+                    (string) $this->priority, (string) $this->status, (string) $this->source, $this->tags
                 )
             );
         }

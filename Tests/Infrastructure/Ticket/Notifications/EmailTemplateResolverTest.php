@@ -20,6 +20,8 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\TicketNotification;
 
 class EmailTemplateResolverTest extends \PHPUnit_Framework_TestCase
 {
+    use \Diamante\DeskBundle\Tests\EventListener\EventTrait;
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Give type is invalid.
@@ -27,7 +29,13 @@ class EmailTemplateResolverTest extends \PHPUnit_Framework_TestCase
     public function testResolve()
     {
         $notification = new TicketNotification(
-            'unique_id', 1, 'Header', 'Subject', new \ArrayIterator(array('key' => 'value')), array('file.ext')
+            'unique_id',
+            1,
+            'Header',
+            'Subject',
+            new \ArrayIterator(array('key' => 'value')),
+            array('file.ext'),
+            $this->event()
         );
 
         $resolver = new EmailTemplateResolver();
