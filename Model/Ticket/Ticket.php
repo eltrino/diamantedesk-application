@@ -441,7 +441,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
      */
     public function update(
         $subject, $description, User $reporter, Priority $priority,
-        Status $status, Source $source, OroUser $assignee = null, array $tags
+        Status $status, Source $source, OroUser $assignee = null, $tags
     ) {
         $hasChanges = false;
         $tagChanges = false;

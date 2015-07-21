@@ -61,21 +61,21 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
     private $attachments;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $tags;
 
     /**
-     * @param       $id
-     * @param       $branchName
-     * @param       $subject
-     * @param       $description
-     * @param       $reporter
-     * @param       $assigneeFullName
-     * @param       $priority
-     * @param       $status
-     * @param       $source
-     * @param array $tags
+     * @param $id
+     * @param $branchName
+     * @param $subject
+     * @param $description
+     * @param $reporter
+     * @param $assigneeFullName
+     * @param $priority
+     * @param $status
+     * @param $source
+     * @param $tags
      */
     public function __construct(
         $id,
@@ -87,7 +87,7 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
         $priority,
         $status,
         $source,
-        array $tags
+        $tags
     ) {
         $this->ticketId         = $id;
         $this->branchName       = $branchName;
@@ -99,7 +99,7 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
         $this->status           = $status;
         $this->source           = $source;
         $this->attachments      = array();
-        $this->tags             = $tags['all'];
+        $this->tags             = $tags;
     }
 
     /**
@@ -133,6 +133,7 @@ class TicketWasCreated extends AbstractTicketEvent implements ChangesProviderEve
         $changes['Priority']    = $this->priority;
         $changes['Status']      = $this->status;
         $changes['Source']      = $this->source;
+        $changes['Tags']      = $this->tags;
     }
 
     /**
