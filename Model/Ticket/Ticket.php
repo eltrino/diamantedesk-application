@@ -28,6 +28,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
+use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketTagWasUpdated;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
@@ -180,7 +181,8 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
                 $this->getAssigneeFullName(),
                 (string) $this->priority,
                 (string) $this->status,
-                (string) $this->source
+                (string) $this->source,
+                $this->tags
             )
         );
     }
@@ -435,17 +437,24 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
      * @param Status $status
      * @param Source $source
      * @param OroUser|null $assignee
+     * @param array $tags
      */
     public function update(
         $subject, $description, User $reporter, Priority $priority,
-        Status $status, Source $source, OroUser $assignee = null
+        Status $status, Source $source, OroUser $assignee = null, array $tags
     ) {
         $hasChanges = false;
+        $tagChanges = false;
+
         if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter
             || $this->assignee != $assignee || $this->priority->getValue() !== $priority->getValue()
             || $this->status->notEquals($status) || $this->source->getValue() !== $source->getValue()
         ) {
             $hasChanges = true;
+        }
+
+        if (count($this->tags->getValues()) != count($tags['all'])) {
+            $tagChanges = true;
         }
 
         $this->subject     = $subject;
@@ -467,9 +476,16 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
             $this->raise(
                 new TicketWasUpdated(
                     (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
-                    (string) $this->priority, (string) $this->status, (string) $this->source
+                    (string) $this->priority, (string) $this->status, (string) $this->source, $tags
                 )
             );
+        } elseif ($tagChanges) {
+                $this->raise(
+                    new TicketTagWasUpdated(
+                        (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
+                        (string) $this->priority, (string) $this->status, (string) $this->source, $tags
+                    )
+                );
         }
     }
 

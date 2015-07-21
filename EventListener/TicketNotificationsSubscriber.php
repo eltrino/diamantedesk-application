@@ -48,17 +48,18 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
     private $userState;
 
     private static $events = array(
-        'ticketWasCreated' => 'processEvent',
-        'ticketWasUpdated' => 'processEvent',
-        'attachmentWasAddedToTicket' => 'processEvent',
-        'ticketStatusWasChanged'     => 'processEvent',
-        'ticketAssigneeWasChanged'   => 'processEvent',
-        'ticketWasUnassigned'        => 'processEvent',
-        'commentWasAddedToTicket'     => 'processEvent',
-        'commentWasUpdated'           => 'processEvent',
-        'attachmentWasAddedToComment' => 'processEvent',
-        'ticketWasDeleted'            => 'processEvent',
-        'commentWasDeleted'           => 'processEvent',
+        'ticketWasCreated'               => 'processEvent',
+        'ticketWasUpdated'               => 'processEvent',
+        'ticketTagWasUpdated'            => 'processEvent',
+        'attachmentWasAddedToTicket'     => 'processEvent',
+        'ticketStatusWasChanged'         => 'processEvent',
+        'ticketAssigneeWasChanged'       => 'processEvent',
+        'ticketWasUnassigned'            => 'processEvent',
+        'commentWasAddedToTicket'        => 'processEvent',
+        'commentWasUpdated'              => 'processEvent',
+        'attachmentWasAddedToComment'    => 'processEvent',
+        'ticketWasDeleted'               => 'processEvent',
+        'commentWasDeleted'              => 'processEvent',
         'attachmentWasDeletedFromTicket' => 'processEvent'
     );
 
@@ -109,7 +110,7 @@ class TicketNotificationsSubscriber implements EventSubscriberInterface
 
         $notification = new TicketNotification(
             $event->getAggregateId(), $user, $event->getHeaderText(),
-            $event->getSubject(), $changeList, $attachments
+            $event->getSubject(), $changeList, $attachments, $event
         );
 
         $this->manager->add($notification);
