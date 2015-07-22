@@ -57,6 +57,14 @@ oro_menu_config:
             extras:
                 routes: ['diamante_report_*']
 
+        diamante_report_tickets_timeline:
+            label: 'Tickets TimeLine'
+            route: diamante_report_view
+            routeParameters:
+                id: 'tickets_timeline'
+            extras:
+                routes: ['diamante_report_*']
+
 #        dashboard_tab:
 #            display: false
         oro_calendar_view_default:
@@ -85,6 +93,7 @@ oro_menu_config:
                         diamante_report_time_of_response: ~
                         diamante_report_tickets_by_channels: ~
                         diamante_report_tickets_by_branch: ~
+                        diamante_report_tickets_timeline: ~
                 diamante_config_tab:
                   children:
                     system_configuration: ~
