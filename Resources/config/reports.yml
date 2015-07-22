@@ -26,3 +26,11 @@ reports:
             type: repository
             repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTimeOfResponseReportWidgetData"
 
+    tickets_by_channels_widget:
+        chart:
+            type: pie-chart
+            label: label
+            data: data
+        source:
+            type: dql
+            dql: "select t.source as label, count(t.source) as data from  Diamante\\DeskBundle\\Entity\\Ticket t GROUP BY t.source"

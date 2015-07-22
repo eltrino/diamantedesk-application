@@ -14,9 +14,10 @@ class ChartTypeProvider
      * @var array
      */
     protected $charts = [
-        'line-chart'        => 'LineChart',
-        'bar-chart'         => 'BarChart',
-        'grouped-bar-chart' => 'GroupedBarChart',
+        'line-chart'         => 'LineChart',
+        'bar-chart'          => 'BarChart',
+        'grouped-bar-chart'  => 'GroupedBarChart',
+        'pie-chart'          => 'PieChart',
     ];
 
     /**

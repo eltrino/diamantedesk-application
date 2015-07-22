@@ -14,6 +14,13 @@ oro_dashboard_config:
             description: Test Widget
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
+        tickets_by_channels_widget:
+            label:      Tickets by Channels
+            route:      diamante_report_widget
+            route_parameters: { id: tickets_by_channels_widget }
+            description: Test Widget
+            icon:       bundles/orodashboard/img/quick_launchpad.png
+
     dashboards:
         diamante_support:
             twig: OroDashboardBundle:Index:default.html.twig
