@@ -3,7 +3,7 @@ define([
   'config'], function(App, Config){
 
   function validateEmail(email) {
-    return !!String(email).match(/^\s*[\w\-\+_]+(?:\.[\w\-\+_]+)*@[\w\-\+_]+\.[\w\-\+_]+(?:\.[\w‌​\-\+_]+)*\s*$/);
+    return !!String(email).match(/^\s*[\w\-\+_]+(?:\.[\w\-\+_]+)*@[\w\-\+_]+\.[\w\-\+_]+(?:\.[\w\-\+_]+)*\s*$/);
   }
 
   return App.module('Ticket.View.Watcher', function(Watcher, App, Backbone, Marionette, $, _){
