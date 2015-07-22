@@ -28,6 +28,13 @@ oro_dashboard_config:
             description: Tickets by Branch
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
+        tickets_timeline:
+            label:      Tickets TimeLine
+            route:      diamante_report_widget
+            route_parameters: { id: tickets_timeline }
+            description: Tickets TimeLine
+            icon:       bundles/orodashboard/img/quick_launchpad.png
+
     dashboards:
         diamante_support:
             twig: OroDashboardBundle:Index:default.html.twig
