@@ -23,6 +23,7 @@
         <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
         <parameter key="diamante.ticket_history.entity.class">Diamante\DeskBundle\Entity\TicketHistory</parameter>
         <parameter key="diamante.watcher_list.entity.class">Diamante\DeskBundle\Entity\WatcherList</parameter>
+        <parameter key="diamante.ticket_timeline.entity.class">Diamante\DeskBundle\Entity\TicketTimeline</parameter>
         <parameter key="diamante.watcher_list.service.class">Diamante\DeskBundle\Api\Internal\WatchersServiceImpl</parameter>
         <parameter key="diamante.watcher.service.api.class">Diamante\DeskBundle\Api\Internal\WatchersApiServiceImpl</parameter>
         <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
@@ -282,6 +283,11 @@
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">
             <argument type="string">%diamante.watcher_list.entity.class%</argument>
+        </service>
+        <service id="diamante.ticket_timeline.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket_timeline.entity.class%</argument>
         </service>
 <!-- repositories end -->
     </services>
