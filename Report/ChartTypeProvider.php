@@ -17,6 +17,7 @@ class ChartTypeProvider
         'line-chart'         => 'LineChart',
         'bar-chart'          => 'BarChart',
         'grouped-bar-chart'  => 'GroupedBarChart',
+        'grouped-line-chart' => 'GroupedLineChart',
         'pie-chart'          => 'PieChart',
     ];
 
