@@ -44,3 +44,14 @@ reports:
         source:
             type: dql
             dql: "select t.source as label, count(t.source) as data from  Diamante\\DeskBundle\\Entity\\Ticket t GROUP BY t.source"
+
+    tickets_by_branch:
+        chart:
+            type: grouped-line-chart
+            x-axis: day
+            y-axis: data
+            group: branch
+        source:
+            type: dql
+            dql: "select date(t.createdAt) as day, b.name as branch, count(t.branch) as data from Diamante\\DeskBundle\\Entity\\Ticket t LEFT JOIN Diamante\\DeskBundle\\Entity\\Branch b WITH b.id = t.branch GROUP BY t.branch, day"
+
