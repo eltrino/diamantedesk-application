@@ -64,3 +64,16 @@ reports:
             type: dql
             dql: "select b.name as branch, count(t.branch) as data from Diamante\\DeskBundle\\Entity\\Ticket t LEFT JOIN Diamante\\DeskBundle\\Entity\\Branch b WITH b.id = t.branch GROUP BY t.branch"
 
+    tickets_timeline:
+        chart:
+            type: grouped-line-chart
+            x-axis: day
+            y-axis:
+                items:
+                    - new
+                    - solved
+                    - closed
+                    - reopen
+        source:
+            type: dql
+            dql: "select date(ttl.date) as day, ttl.new, ttl.solved, ttl.closed, ttl.reopen from Diamante\\DeskBundle\\Entity\\TicketTimeline ttl GROUP BY day"
