@@ -19,6 +19,14 @@ use Diamante\DeskBundle\Model\Shared\Entity;
 class TicketTimeline implements Entity
 {
     /**
+     * @param \DateTime $date
+     */
+    public function __construct(\DateTime $date)
+    {
+        $this->setDate($date);
+    }
+
+    /**
      * @var integer
      */
     protected $id;

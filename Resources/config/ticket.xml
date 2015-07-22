@@ -24,6 +24,7 @@
         <parameter key="diamante.ticket_history.entity.class">Diamante\DeskBundle\Entity\TicketHistory</parameter>
         <parameter key="diamante.watcher_list.entity.class">Diamante\DeskBundle\Entity\WatcherList</parameter>
         <parameter key="diamante.ticket_timeline.entity.class">Diamante\DeskBundle\Entity\TicketTimeline</parameter>
+        <parameter key="diamante.report.timeline_service.class">Diamante\DeskBundle\Api\Internal\ReportTimelineServiceImpl</parameter>
         <parameter key="diamante.watcher_list.service.class">Diamante\DeskBundle\Api\Internal\WatchersServiceImpl</parameter>
         <parameter key="diamante.watcher.service.api.class">Diamante\DeskBundle\Api\Internal\WatchersApiServiceImpl</parameter>
         <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
@@ -247,6 +248,8 @@
             <argument type="service" id="diamante.user_factory" />
             <argument type="service" id="diamante.user.service" />
         </service>
+
+        <service id="diamante.report.timeline_service" class="%diamante.report.timeline_service.class%"/>
 
         <service id="diamante.watcher.service.api" class="%diamante.watcher.service.api.class%" parent="diamante.ticket.watcher_list.service"/>
 

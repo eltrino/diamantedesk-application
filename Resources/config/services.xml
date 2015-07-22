@@ -26,6 +26,7 @@
         <parameter key="diamante.email_processing.form.type.default_branch.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
         <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
         <parameter key="diamante.oro_user.OroUserSubscriber.class">Diamante\DeskBundle\EventListener\OroUserSubscriber</parameter>
+        <parameter key="diamante.doctrine_on_flush_subscriber.class">Diamante\DeskBundle\EventListener\DoctrineOnFlushSubscriber</parameter>
         <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
         <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
@@ -56,6 +57,11 @@
         </service>
 
         <service id="diamante.event_listener.oro_user_listener" class="%diamante.oro_user.OroUserSubscriber.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_subscriber" connection="default"/>
+        </service>
+
+        <service id="diamante.event_listener.doctrine_on_flush" class="%diamante.doctrine_on_flush_subscriber.class%">
             <argument type="service" id="service_container"/>
             <tag name="doctrine.event_subscriber" connection="default"/>
         </service>
