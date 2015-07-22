@@ -55,3 +55,12 @@ reports:
             type: dql
             dql: "select date(t.createdAt) as day, b.name as branch, count(t.branch) as data from Diamante\\DeskBundle\\Entity\\Ticket t LEFT JOIN Diamante\\DeskBundle\\Entity\\Branch b WITH b.id = t.branch GROUP BY t.branch, day"
 
+    tickets_by_branch_widget:
+        chart:
+            type: bar-chart
+            y-axis: data
+            x-axis: branch
+        source:
+            type: dql
+            dql: "select b.name as branch, count(t.branch) as data from Diamante\\DeskBundle\\Entity\\Ticket t LEFT JOIN Diamante\\DeskBundle\\Entity\\Branch b WITH b.id = t.branch GROUP BY t.branch"
+

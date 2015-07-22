@@ -11,14 +11,21 @@ oro_dashboard_config:
             label:      Time Of Response
             route:      diamante_report_widget
             route_parameters: { id: time_of_response_widget }
-            description: Test Widget
+            description: Time Of Response
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
         tickets_by_channels_widget:
             label:      Tickets by Channels
             route:      diamante_report_widget
             route_parameters: { id: tickets_by_channels_widget }
-            description: Test Widget
+            description: Tickets by Channels
+            icon:       bundles/orodashboard/img/quick_launchpad.png
+
+        tickets_by_branch_widget:
+            label:      Tickets by Branch
+            route:      diamante_report_widget
+            route_parameters: { id: tickets_by_branch_widget }
+            description: Tickets by Branch
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
     dashboards:
