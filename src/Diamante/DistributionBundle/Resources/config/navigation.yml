@@ -18,13 +18,13 @@ oro_menu_config:
             extras:
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
                 position: 90
-
         diamante_report_list:
             label: 'Reports'
             uri: '#'
             extras:
                 position: 95
 
+        #reports
         diamante_report_tickets_by_priority:
             label: 'Tickets By priority'
             route: diamante_report_view
@@ -38,6 +38,14 @@ oro_menu_config:
             route: diamante_report_view
             routeParameters:
                 id: 'time_of_response'
+            extras:
+                routes: ['diamante_report_*']
+
+        diamante_report_tickets_by_channels:
+            label: 'Tickets by Channels'
+            route: diamante_report_view
+            routeParameters:
+                id: 'tickets_by_channels'
             extras:
                 routes: ['diamante_report_*']
 
@@ -67,6 +75,7 @@ oro_menu_config:
                     children:
                         diamante_report_tickets_by_priority: ~
                         diamante_report_time_of_response: ~
+                        diamante_report_tickets_by_channels: ~
                 diamante_config_tab:
                   children:
                     system_configuration: ~
