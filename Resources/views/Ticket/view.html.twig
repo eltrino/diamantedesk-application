@@ -135,6 +135,29 @@
         {% endif %}
     {% endif %}
 
+    {{ UI.clientButton({
+        'dataUrl': path('diamante_add_watcher', { 'ticketId': entity.id }),
+        'aCss': 'no-hash',
+        'iCss': 'icon-plus',
+        'dataId': entity.id,
+        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'label' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'widget' : {
+            'type' : 'dialog',
+            'multiple' : true,
+            'reload-grid-name' : '',
+            'options' : {
+                'alias': 'status-dialog',
+                'stateEnabled' : false,
+                'dialogOptions' : {
+                    'resizable' : false,
+                    'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+                    'width': 520
+                }
+            }
+        }
+    }) }}
+
     {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
         {% set changeStatusTitle = 'diamante.desk.ticket.actions.change_status'|trans %}
         {{ UI.clientButton({
@@ -199,29 +222,6 @@
                     }
                 }
             }
-        }) }}
-
-        {{ UI.clientButton({
-        'dataUrl': path('diamante_add_watcher', { 'ticketId': entity.id }),
-        'aCss': 'no-hash',
-        'iCss': 'icon-plus',
-        'dataId': entity.id,
-        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
-        'label' : 'diamante.desk.ticket.actions.add_watcher'|trans,
-        'widget' : {
-        'type' : 'dialog',
-        'multiple' : true,
-        'reload-grid-name' : '',
-        'options' : {
-        'alias': 'status-dialog',
-        'stateEnabled' : false,
-        'dialogOptions' : {
-        'resizable' : false,
-        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
-        'width': 520
-        }
-        }
-        }
         }) }}
 
         {% set assignTitle = 'diamante.desk.ticket.actions.assign'|trans %}
