@@ -340,11 +340,22 @@ class CommentServiceImpl implements CommentService
      * Verify permissions through Oro Platform security bundle
      *
      * @param $operation
-     * @param $entity
+     * @param Comment $entity
      * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
      */
     private function isGranted($operation, $entity)
     {
+        // User should have ability to view all comments (except private)
+        // if he is a owner of a ticket
+        if ($operation === 'VIEW') {
+            $loggedUser = $this->userService->getUserFromApiUser($this->authorizationService->getLoggedUser());
+            /** @var User $reporter */
+            $reporter = $entity->getTicket()->getReporter();
+            if ($loggedUser && $reporter && $loggedUser->getId() == $reporter->getId()) {
+                return;
+            }
+        }
+
         if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
