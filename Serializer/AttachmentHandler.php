@@ -57,15 +57,15 @@ class AttachmentHandler implements SubscribingHandlerInterface
         return array(
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
-                'format' => 'json',
-                'type' => 'Diamante\\DeskBundle\\Entity\\Attachment',
-                'method' => 'serializeToJson',
+                'format'    => 'json',
+                'type'      => 'Diamante\\DeskBundle\\Entity\\Attachment',
+                'method'    => 'serializeToJson',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
-                'format' => 'xml',
-                'type' => 'Diamante\\DeskBundle\\Entity\\Attachment',
-                'method' => 'serializeToXml',
+                'format'    => 'xml',
+                'type'      => 'Diamante\\DeskBundle\\Entity\\Attachment',
+                'method'    => 'serializeToXml',
             ),
         );
     }
@@ -121,30 +121,53 @@ class AttachmentHandler implements SubscribingHandlerInterface
         try {
             $thumbnail = $this->attachmentService->getThumbnail($attachment->getHash());
         } catch (FileNotFoundException $e) {
-            $thumbnail = null;
+            // try to generate thumbnail on the fly
+            $thumbnail = $this->createThumbnail($attachment);
         }
 
         /** @var \Symfony\Component\HttpFoundation\Request $request */
         $request = $this->serviceContainer->get('request');
 
         $data = [
-            'id' => $attachment->getId(),
+            'id'         => $attachment->getId(),
             'created_at' => $attachment->getCreatedAt(),
             'updated_at' => $attachment->getUpdatedAt(),
-            'file' => [
-                'url' => $request->getUriForPath(static::URL_PATH_TO_FILE . $attachment->getHash()),
-                'filename' => $attachment->getFilename()
-            ]
+            'file'       => [
+                'url'      => $request->getUriForPath(static::URL_PATH_TO_FILE . $attachment->getHash()),
+                'filename' => $attachment->getFilename(),
+            ],
         ];
 
         if ($thumbnail) {
             $data['thumbnails'] = [
-                'url' => $request->getUriForPath(static::URL_PATH_TO_THUMBNAIL . $attachment->getHash()),
-                'filename' => $thumbnail->getFilename()
+                'url'      => $request->getUriForPath(static::URL_PATH_TO_THUMBNAIL . $attachment->getHash()),
+                'filename' => $thumbnail->getFilename(),
             ];
         }
 
         return $data;
+    }
+
+    /**
+     * @param Attachment $attachment
+     * @return null|\Symfony\Component\HttpFoundation\File\File
+     */
+    private function createThumbnail(Attachment $attachment)
+    {
+        $fileName = $attachment->getFile()->getPathname();
+        $fileParts = explode('/', $fileName);
+        array_pop($fileParts);
+        $prefix = array_pop($fileParts);
+
+        $this->managerImpl->createThumbnail($attachment->getFile(), $attachment->getHash(), $prefix);
+
+        try {
+            $thumbnail = $this->attachmentService->getThumbnail($attachment->getHash());
+        } catch (FileNotFoundException $e) {
+            $thumbnail = null;
+        }
+
+        return $thumbnail;
     }
 
 }
