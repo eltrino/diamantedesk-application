@@ -162,7 +162,7 @@ class ManagerImpl implements Manager
      * @param                                            $fileNamePrefix
      * @return \Imagine\Image\ManipulatorInterface
      */
-    protected function createThumbnail(File $file, $hash, $fileNamePrefix)
+    public function createThumbnail(File $file, $hash, $fileNamePrefix)
     {
         $image = $this->loader->getImagine()->open($file->getPathname());
         $thumbnail = $image->thumbnail(new Box(100,100));
