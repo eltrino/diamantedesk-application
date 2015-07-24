@@ -348,11 +348,13 @@ class CommentServiceImpl implements CommentService
         // User should have ability to view all comments (except private)
         // if he is a owner of a ticket
         if ($operation === 'VIEW') {
-            $loggedUser = $this->userService->getUserFromApiUser($this->authorizationService->getLoggedUser());
-            /** @var User $reporter */
-            $reporter = $entity->getTicket()->getReporter();
-            if ($loggedUser && $reporter && $loggedUser->getId() == $reporter->getId()) {
-                return;
+            if ($this->authorizationService->getLoggedUser()) {
+                $loggedUser = $this->userService->getUserFromApiUser($this->authorizationService->getLoggedUser());
+                /** @var User $reporter */
+                $reporter = $entity->getTicket()->getReporter();
+                if ($loggedUser && $reporter && $loggedUser->getId() == $reporter->getId()) {
+                    return;
+                }
             }
         }
 
