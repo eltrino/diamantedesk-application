@@ -33,7 +33,8 @@ class RegexpVoter extends Voter
         return [
             '^diamante_[a-z_]+',
             '^oro_user_[a-z_]+',
-            '^sylius_flow_[a-z_]+'
+            '^sylius_flow_[a-z_]+',
+            '^imagine[a-z_]+',
         ];
     }
 }
