@@ -47,9 +47,18 @@ class EngineImpl implements Engine
      */
     protected $executionContext;
 
+    /**
+     * @var array
+     */
+    protected $rulesets;
+
+    /**
+     * @param RuleProvider   $ruleProvider
+     * @param ActionProvider $actionProvider
+     */
     public function __construct(
-        RuleProvider              $ruleProvider,
-        ActionProvider            $actionProvider
+        RuleProvider $ruleProvider,
+        ActionProvider $actionProvider
     )
     {
         $this->ruleProvider             = $ruleProvider;
@@ -57,25 +66,21 @@ class EngineImpl implements Engine
         $this->agenda                   = new Agenda();
     }
 
+    /**
+     * @param Fact   $fact
+     * @param string $mode
+     *
+     * @return bool
+     */
     public function check(Fact $fact, $mode = self::MODE_WORKFLOW)
     {
         $result = false;
 
-        switch ($mode) {
-            case self::MODE_WORKFLOW:
-                $ruleset = $this->ruleProvider->getWorkflowRules($fact);
-                break;
-            case self::MODE_BUSINESS:
-                $ruleset = $this->ruleProvider->getBusinessRules($fact);
-                break;
-            default:
-                throw new \RuntimeException(sprintf("RuleEngine configured to use unknown mode: %s", (string)$mode));
-                break;
+        if (empty($this->rulesets[$mode][$fact->getTargetType()])) {
+            $this->loadRulesets($mode, $fact);
         }
 
-        if (empty($ruleset)) {
-            return false;
-        }
+        $ruleset = $this->rulesets[$mode][$fact->getTargetType()];
 
         $this->prepareExecutionContext($fact);
 
@@ -102,6 +107,12 @@ class EngineImpl implements Engine
         $this->agenda->clear();
     }
 
+    /**
+     * @param Fact $fact
+     * @param Rule $rule
+     *
+     * @return bool
+     */
     protected function doCheck(Fact $fact, Rule $rule)
     {
         if ($rule->hasChildren()) {
@@ -123,6 +134,12 @@ class EngineImpl implements Engine
         return $result;
     }
 
+    /**
+     * @param Fact $fact
+     * @param      $ruleset
+     *
+     * @return bool
+     */
     protected function processExclusive(Fact $fact, $ruleset)
     {
         /** @var Rule $rule */
@@ -141,6 +158,12 @@ class EngineImpl implements Engine
         return false;
     }
 
+    /**
+     * @param Fact $fact
+     * @param      $ruleset
+     *
+     * @return bool
+     */
     protected function processInclusive(Fact $fact, $ruleset)
     {
         /** @var Rule $rule */
@@ -165,7 +188,13 @@ class EngineImpl implements Engine
         $this->executionContext = null;
     }
 
-    public function createFact(Entity $entity, $entityChangeset)
+    /**
+     * @param Entity $entity
+     * @param array  $entityChangeset
+     *
+     * @return Fact
+     */
+    public function createFact(Entity $entity, $entityChangeset = [])
     {
         return new Fact($entity, $entityChangeset);
     }
@@ -175,9 +204,37 @@ class EngineImpl implements Engine
 
     }
 
+    /**
+     * @param Fact $fact
+     */
     protected function prepareExecutionContext(Fact $fact)
     {
         $this->executionContext = new ExecutionContext($fact->getTarget(), $fact->getTargetChangeset());
         $this->executionContext->addAttribute('target_type', $fact->getTargetType());
+    }
+
+    /**
+     * @param string $mode
+     * @param Fact   $fact
+     */
+    protected function loadRulesets($mode, $fact)
+    {
+        switch ($mode) {
+            case self::MODE_WORKFLOW:
+                $ruleset = $this->ruleProvider->getWorkflowRules($fact);
+                break;
+            case self::MODE_BUSINESS:
+                $ruleset = $this->ruleProvider->getBusinessRules($fact);
+                break;
+            default:
+                throw new \RuntimeException(sprintf("RuleEngine configured to use unknown mode: %s", (string)$mode));
+                break;
+        }
+
+        if (empty($ruleset)) {
+            return false;
+        }
+
+        $this->rulesets[$mode][$fact->getTargetType()] = $ruleset;
     }
 }

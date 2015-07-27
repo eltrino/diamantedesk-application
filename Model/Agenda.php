@@ -59,6 +59,6 @@ class Agenda implements \Diamante\AutomationBundle\Rule\Action\Agenda
 
     public function isClean()
     {
-        return (bool)count($this->actions);
+        return (bool)count($this->actions) === false;
     }
 }
