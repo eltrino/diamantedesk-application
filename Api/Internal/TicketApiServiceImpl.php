@@ -91,6 +91,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      *      {
      *          "name"="key",
      *          "dataType"="string",
+     *          "requirement"="^.*-[0-9]+$",
      *          "description"="Ticket Key"
      *      }
      *  },
@@ -320,6 +321,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      *      {
      *          "name"="key",
      *          "dataType"="string",
+     *          "requirement"="^.*-[0-9]+$",
      *          "description"="Ticket Key"
      *      }
      *  },
@@ -387,6 +389,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      *      {
      *          "name"="key",
      *          "dataType"="string",
+     *          "requirement"="^.*-[0-9]+$",
      *          "description"="Ticket Key"
      *      }
      *  },
