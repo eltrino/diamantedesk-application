@@ -4,6 +4,7 @@ namespace Diamante\AutomationBundle;
 
 use Diamante\AutomationBundle\DependencyInjection\Compiler\RegisterRulesPass;
 use Diamante\AutomationBundle\DependencyInjection\Compiler\RegisterStrategiesPass;
+use Diamante\AutomationBundle\DependencyInjection\Compiler\RegisterRepositoriesPass;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -15,6 +16,7 @@ class DiamanteAutomationBundle extends Bundle
         parent::build($container);
         $container->addCompilerPass(new RegisterRulesPass());
         $container->addCompilerPass(new RegisterStrategiesPass());
+        $container->addCompilerPass(new RegisterRepositoriesPass());
     }
 
     public function boot()

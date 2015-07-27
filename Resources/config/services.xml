@@ -8,8 +8,10 @@
         <parameter key="diamante_automation.workflow_rule.entity.class">Diamante\AutomationBundle\Entity\WorkflowRule</parameter>
         <parameter key="diamante_automation.business_rule.entity.class">Diamante\AutomationBundle\Entity\BusinessRule</parameter>
         <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Rule\Action\ActionProviderImpl</parameter>
+        <parameter key="diamante_automation.repository.provider.class">Diamante\AutomationBundle\Rule\Repository\RepositoryProviderImpl</parameter>
         <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Rule\Engine\EngineImpl</parameter>
         <parameter key="diamante_automation.rule.provider.class">Diamante\AutomationBundle\Rule\Provider\RuleProviderImpl</parameter>
+        <parameter key="diamante.business_rules.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRulesRepository</parameter>
     </parameters>
 
     <services>
@@ -19,7 +21,7 @@
                 >
             <argument type="string">%diamante_automation.workflow_rule.entity.class%</argument>
         </service>
-        <service id="diamante_automation.business_rule.repository" class="%diamante.generic.repository.class%"
+        <service id="diamante_automation.business_rule.repository" class="%diamante.business_rules.repository.class%"
                 factory-service="doctrine.orm.entity_manager"
                 factory-method="getRepository"
                 >
@@ -27,6 +29,10 @@
         </service>
 
         <service id="diamante_automation.action.provider" class="%diamante_automation.action.provider.class%"/>
+
+        <service id="diamante_automation.repository.provider" class="%diamante_automation.repository.provider.class%">
+            <argument type="service" id="diamante_automation.business_rule.repository"/>
+        </service>
 
         <service id="diamante_automation.rule.provider" class="%diamante_automation.rule.provider.class%">
             <argument type="service" id="diamante_automation.workflow_rule.repository"/>
