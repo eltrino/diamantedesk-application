@@ -34,7 +34,7 @@ class RegexpVoter extends Voter
             '^diamante_[a-z_]+',
             '^oro_user_[a-z_]+',
             '^sylius_flow_[a-z_]+',
-            '^imagine[a-z_]+',
+            '^_imagine[a-z_]+',
         ];
     }
 }
