@@ -36,30 +36,18 @@ define(['app'], function(App){
         newTicketView.on('form:submit', function(attr){
           App.request('user:model:current').done(function(user){
             attr.reporter =  'diamante_' + user.get('id');
+            if(attachmentCollection.length){
+              attr.attachmentsInput = attachmentCollection.toJSON();
+            }
             newTicketModel.save(attr, {
               success : function(resultModel){
-                if(attachmentCollection.length){
-                  attachmentCollection.save({
-                    ticket : resultModel,
-                    success : function(){
-                      isSuccess = true;
-                      App.trigger('ticket:view', resultModel.get('key'));
-                      App.trigger('message:show', {
-                        status:'success',
-                        text: 'Ticket ' + resultModel.get('key') + ' created'
-                      });
-                      modalCreateView.$el.modal('hide');
-                    }
-                  });
-                } else {
-                  isSuccess = true;
-                  App.trigger('ticket:view', resultModel.get('key'));
-                  App.trigger('message:show', {
-                    status:'success',
-                    text: 'Ticket ' + resultModel.get('key') + ' created'
-                  });
-                  modalCreateView.$el.modal('hide');
-                }
+                isSuccess = true;
+                App.trigger('ticket:view', resultModel.get('key'));
+                App.trigger('message:show', {
+                  status:'success',
+                  text: 'Ticket ' + resultModel.get('key') + ' created'
+                });
+                modalCreateView.$el.modal('hide');
               },
               error : function(){
                 App.alert({

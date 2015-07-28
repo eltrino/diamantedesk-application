@@ -17,12 +17,6 @@ define([
         'click @ui.deleteButton' : 'deleteAttachment'
       },
 
-      templateHelpers: function(){
-        return {
-          link : Config.baseUrl.replace('diamantefront','desk') + 'attachments/download/file/' + this.model.get('hash')
-        };
-      },
-
       deleteAttachment: function(e){
         e.preventDefault();
         this.trigger('attachment:delete', this.model);

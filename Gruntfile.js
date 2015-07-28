@@ -130,6 +130,10 @@ module.exports = function(grunt) {
       less : {
         files: '<%= lessDir %>/**',
         tasks: ['css']
+      },
+      js : {
+        files: '<%=assetsDir%>/js/**/*.js',
+        tasks: ['jshint']
       }
     }
 
