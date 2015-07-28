@@ -2,7 +2,6 @@
   "browser": true,
   "jquery": true,
   "newcap": true,
-  "-W100": true,
   "globals": {
     "reqiure": false,
     "define": false

@@ -53,7 +53,8 @@ define([
           };
           reader.onloadend = function () {
             ++ready;
-            data[i].content = reader.result.replace(/^data:.+?;base64,/, '');
+            data[i].base64 = reader.result;
+            data[i].content = data[i].base64.replace(/^data:.+?;base64,/, '');
             this.trigger('progress' , 'reading', ready/files.length * 100);
             if(files.length == ready){
               setTimeout(function(){
