@@ -110,6 +110,8 @@ diamante:
             watch:
               error:           Error occured while trying to add watcher.
               success:         Watcher successfully added.
+            watcher_remove:
+              success:         Watcher successfully removed.
             get:
               error:           Ticket loading failed, ticket not found.
               attachment:

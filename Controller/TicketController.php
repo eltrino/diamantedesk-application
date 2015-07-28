@@ -266,6 +266,48 @@ class TicketController extends Controller
 
     /**
      * @Route(
+     *      "/watcher/ticket/{ticketId}/{user}",
+     *      name="diamante_remove_watcher",
+     *      requirements={"ticketId"="\d+"}
+     * )
+     *
+     * @param int $ticketId
+     * @param string $user
+     * @return array
+     */
+    public function deleteWatcherAction($ticketId, $user)
+    {
+        try {
+            $user = User::fromString($user);
+            $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
+            $ticketKey = $ticket->getKey();
+            $this->get('diamante.watcher.service.api')->removeWatcher($ticket, $user);
+            $this->addSuccessMessage('diamante.desk.ticket.messages.watcher_remove.success');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
+        } catch (TicketNotFoundException $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Watcher removal failed: %s',
+                $e->getMessage()));
+            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_list'
+            ));
+        } catch (\Exception $e) {
+            $this->container->get('monolog.logger.diamante')->error(sprintf('Watcher removal failed: %s',
+                $e->getMessage()));
+            $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
+            $response = $this->redirect($this->generateUrl(
+                'diamante_ticket_view',
+                array('key' => $ticketKey)
+            ));
+        }
+        return $response;
+    }
+
+    /**
+     * @Route(
      *      "/create/{id}",
      *      name="diamante_ticket_create",
      *      requirements={"id" = "\d+"},
@@ -743,6 +785,7 @@ class TicketController extends Controller
         }
 
         return [
+            'ticketId' => $ticketId,
             'watchers' => $users,
         ];
     }

@@ -159,11 +159,10 @@ class AttachmentHandler implements SubscribingHandlerInterface
         array_pop($fileParts);
         $prefix = array_pop($fileParts);
 
-        $this->managerImpl->createThumbnail($attachment->getFile(), $attachment->getHash(), $prefix);
-
         try {
+            $this->managerImpl->createThumbnail($attachment->getFile(), $attachment->getHash(), $prefix);
             $thumbnail = $this->attachmentService->getThumbnail($attachment->getHash());
-        } catch (FileNotFoundException $e) {
+        } catch (\Exception $e) {
             $thumbnail = null;
         }
 
