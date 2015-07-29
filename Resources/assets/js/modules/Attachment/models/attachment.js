@@ -28,6 +28,7 @@ define([
       },
 
       save : function(options){
+        this.forEach(function(model) { model.unset('base64'); });
         var attr = { attachmentsInput : this.toJSON()},
           settings = _.extend({
             ticket : this.ticket,
