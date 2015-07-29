@@ -40,7 +40,11 @@ class ReportController extends Controller
     {
         try {
             $data = $this->get('diamante.report.service')->build($id);
-            return ['data' => $data];
+
+            return [
+                'chart-type' => $this->getChartType($id),
+                'data'       => $data,
+            ];
         } catch (\Exception $e) {
             return $this->throwException($e);
         }
@@ -62,7 +66,8 @@ class ReportController extends Controller
 
             $params = array_merge(
                 [
-                    'data' => $this->get('diamante.report.service')->build($id)
+                    'chart-type' => $this->getChartType($id),
+                    'data'       => $this->get('diamante.report.service')->build($id),
                 ],
                 $manager->getWidgetAttributesForTwig($id)
             );
@@ -75,6 +80,16 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return $this->throwException($e);
         }
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
+    private function getChartType($id)
+    {
+        $config = $this->get('diamante.report.service')->getConfig($id);
+        return $config['chart']['type'];
     }
 
     /**
