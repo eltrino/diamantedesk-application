@@ -45,7 +45,7 @@ abstract class AbstractCondition implements Condition
 
     public function getClass()
     {
-        $bits = explode("\\", __CLASS__);
+        $bits = explode("\\", get_called_class());
         $class = lcfirst(array_pop($bits));
 
         return $class;

@@ -37,7 +37,7 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
 
     /**
      * @var Condition
-     * @ORM\Column(type="condition_type")
+     * @ORM\Column(name="rule_condition", type="condition_type")
      */
     protected $condition;
 

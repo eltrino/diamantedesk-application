@@ -13,14 +13,11 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Model;
+namespace Diamante\AutomationBundle\Api;
 
-use Diamante\AutomationBundle\Rule\Engine\EngineImpl;
+use Diamante\AutomationBundle\Api\Command\RuleCommand;
 
-class WorkflowRule extends Rule
+interface RuleService
 {
-    public function getMode()
-    {
-        return EngineImpl::MODE_WORKFLOW;
-    }
+    public function actionRule(RuleCommand $command, $action);
 }
