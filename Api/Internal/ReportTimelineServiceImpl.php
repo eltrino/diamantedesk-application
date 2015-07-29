@@ -103,6 +103,10 @@ class ReportTimelineServiceImpl implements ReportTimelineService
                     $from = $changes['status'][0]->getValue();
                     $to = $changes['status'][1]->getValue();
 
+                    if ($from === $to) {
+                        return;
+                    }
+
                     if ($to === 'resolved') {
                         $this->increaseSolvedCounter();
                     }
