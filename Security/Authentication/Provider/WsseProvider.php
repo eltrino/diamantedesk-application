@@ -166,7 +166,7 @@ class WsseProvider implements AuthenticationProviderInterface
      */
     private function isTokenFromFuture($created)
     {
-        return strtotime($created) > time();
+        return (strtotime($created) - $this->lifetime) > time();
     }
 
     /**
