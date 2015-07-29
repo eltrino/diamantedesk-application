@@ -37,6 +37,7 @@ define(['app'], function(App){
           App.request('user:model:current').done(function(user){
             attr.reporter =  'diamante_' + user.get('id');
             if(attachmentCollection.length){
+              attachmentCollection.forEach(function(model){ model.unset('base64'); });
               attr.attachmentsInput = attachmentCollection.toJSON();
             }
             newTicketModel.save(attr, {
