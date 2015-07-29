@@ -63,7 +63,7 @@ define([
         $(document).ajaxError(function(event, jqxhr, settings){
           if(jqxhr.status === 401 && App.getCurrentRoute() !== 'login') {
             this.logout();
-            App.alert({ title: "Authorization Required", messages: ["This action require authorization"] });
+            App.alert({ title: "Authorization Required", messages: ["This action requires authorization"] });
             App.trigger('session:login', { return_path: App.getCurrentRoute() });
           }
         }.bind(this));
