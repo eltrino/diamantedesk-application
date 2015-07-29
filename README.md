@@ -78,3 +78,7 @@ Application uses **Bower** to manage all asset dependencies, which will be insta
 Composer installs all NPM dependencies during package installation. This is done through `eloquent/composer-npm-bridge`.
 
 All dependencies specified in `@DiamanteFrontBundle/packages.json` and installed in `@DiamanteFrontBundle/node_modules` folder. To update them manually or reinstall, you should use `npm update` or `npm install` in the `@DiamanteFrontBundle` folder.
+
+## Contributing
+
+We appreciate any effort to make DiamanteDesk functionality better; therefore, we welcome all kinds of contributions in the form of bug reporting, patches submition, feature requests or documentation enhancement. Please refer to the DiamanteDesk [guidelines for contributing](http://docs.diamantedesk.com/en/latest/developer-guide/contributing.html) if you wish to be a part of the project.
