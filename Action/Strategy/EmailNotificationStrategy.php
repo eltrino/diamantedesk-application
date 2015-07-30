@@ -18,22 +18,61 @@ namespace Diamante\AutomationBundle\Action\Strategy;
 use Diamante\AutomationBundle\Action\NotificationStrategy;
 use Diamante\AutomationBundle\Rule\Action\ActionStrategy;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
+use Diamante\EmailProcessingBundle\Model\Message\MessageRecipient;
+use Diamante\UserBundle\Api\Internal\UserServiceImpl;
 
 class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
 {
-    const CHANNEL = 'email';
-    const TYPE    = 'notify';
+    const CHANNEL            = 'email';
+    const TYPE               = 'notify';
+    const RECIPIENTS         = 'recipients';
 
-    public function execute(ExecutionContext $context)
-    {
-        // TODO: Implement execute() method.
+    const TEMPLATE_TYPE_HTML = 1;
+    const TEMPLATE_TYPE_TXT  = 2;
+
+    /**
+     * recipients in format email => name
+     * @var array
+     */
+    protected $recipientsList = [];
+
+    /** @var array */
+    protected $templates = [];
+
+    /**
+     * @var UserServiceImpl
+     */
+    protected $userService;
+
+    /**
+     * @param UserServiceImpl $userService
+     */
+    public function __construct(
+        UserServiceImpl $userService
+    ) {
+        $this->userService = $userService;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return self::TYPE;
     }
 
+    /**
+     * @return string
+     */
+    public function getNotificationChannel()
+    {
+        return self::CHANNEL;
+    }
+
+    /**
+     * @param ExecutionContext $context
+     * @return bool
+     */
     public function isApplicable(ExecutionContext $context)
     {
         $isOfType = self::TYPE === $context->getActionType();
@@ -43,14 +82,42 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
         return $isOfType && $isChannelSupported;
     }
 
+    /**
+     * @param ExecutionContext $context
+     */
+    public function execute(ExecutionContext $context)
+    {
+        $this->prepareRecipientsList($context);
+        $this->resolveNotificationTemplates();
+    }
+
+    /**
+     * @param ExecutionContext $context
+     */
     public function prepareRecipientsList(ExecutionContext $context)
     {
-        // TODO: Implement prepareRecipientsList() method.
+        $arguments = $context->getActionArguments();
+        if (!property_exists($arguments, static::RECIPIENTS)) {
+            return;
+        }
+
+        $recipients = $arguments->{static::RECIPIENTS};
+
+        foreach ($recipients as $email) {
+            $this->recipientsList[$email] = $this->getUserName($email);
+        }
     }
 
     public function resolveNotificationTemplates()
     {
-        // TODO: Implement resolveNotificationTemplates() method.
+        if (empty($this->templates)) {
+            $this->templates = [
+                static::TEMPLATE_TYPE_TXT  => 'DiamanteDeskBundle:Ticket/notification:notification.txt.twig',
+                static::TEMPLATE_TYPE_HTML => 'DiamanteDeskBundle:Ticket/notification:notification.html.twig',
+            ];
+        }
+
+        return $this->templates;
     }
 
     public function notify()
@@ -58,8 +125,26 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
         // TODO: Implement notify() method.
     }
 
-    public function getNotificationChannel()
+    /**
+     * @param $email
+     * @return string
+     */
+    private function getUserName($email)
     {
-        return self::CHANNEL;
+        $user = $this->userService->getUserByEmail($email);
+        if ($user) {
+            $userDetails = $this->userService->fetchUserDetails($user);
+            return sprintf(
+                "%s %s",
+                $userDetails->getFirstName(),
+                $userDetails->getLastName()
+            );
+        }
+        $recipient = new MessageRecipient($email, null);
+        return sprintf(
+            "%s %s",
+            $recipient->getFirstName(),
+            $recipient->getLastName()
+        );
     }
 }
