@@ -12,6 +12,7 @@
         <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Rule\Engine\EngineImpl</parameter>
         <parameter key="diamante_automation.rule.provider.class">Diamante\AutomationBundle\Rule\Provider\RuleProviderImpl</parameter>
         <parameter key="diamante.business_rules.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRulesRepository</parameter>
+        <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -42,6 +43,11 @@
         <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
             <argument type="service" id="diamante_automation.rule.provider"/>
             <argument type="service" id="diamante_automation.action.provider"/>
+        </service>
+
+        <service id="diamante.rule.service" class="%diamante.rule.service.class%">
+            <argument type="service" id="diamante_automation.workflow_rule.repository"/>
+            <argument type="service" id="diamante_automation.business_rule.repository"/>
         </service>
     </services>
 </container>

@@ -20,8 +20,9 @@ use Diamante\AutomationBundle\Rule\Condition\Condition;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Fact\Fact;
 use Doctrine\Common\Collections\ArrayCollection;
+use Diamante\DeskBundle\Model\Shared\Entity;
 
-class Rule implements AutomationRule
+class Rule implements AutomationRule, Entity
 {
 
     const EXPRESSION_INCLUSIVE = 'AND';
@@ -82,8 +83,15 @@ class Rule implements AutomationRule
      * @param \Diamante\AutomationBundle\Model\Shared\AutomationRule $parent
      * @throws \Exception
      */
-    public function __construct($expression = self::EXPRESSION_INCLUSIVE, $condition, $action, $weight = 0, $active = true, Target $target = null, AutomationRule $parent = null)
-    {
+    public function __construct(
+        $expression = self::EXPRESSION_INCLUSIVE,
+        $condition,
+        $action,
+        $weight = 0,
+        $active = true,
+        Target $target = null,
+        AutomationRule $parent = null
+    ) {
         $this->expression   = $expression;
         $this->condition    = ConditionFactory::getConditionFor($condition);
         $this->action       = $action;
@@ -186,8 +194,15 @@ class Rule implements AutomationRule
      * @param \Diamante\AutomationBundle\Model\Target                $target
      * @param \Diamante\AutomationBundle\Model\Shared\AutomationRule $parent
      */
-    public function update($expression, $condition, $action, $weight, $active, Target $target, AutomationRule $parent)
-    {
+    public function update(
+        $expression,
+        $condition,
+        $action,
+        $weight,
+        $active,
+        Target $target,
+        AutomationRule $parent = null
+    ) {
         $this->expression   = $expression;
         $this->condition    = ConditionFactory::getConditionFor($condition);
         $this->action       = $action;

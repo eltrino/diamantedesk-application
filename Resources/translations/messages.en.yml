@@ -1,0 +1,7 @@
+diamante:
+    automation:
+        rule:
+          messages:
+            create:
+              error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
+              success:         Rule successfully created.
