@@ -23,12 +23,12 @@ use Diamante\UserBundle\Api\Internal\UserServiceImpl;
 
 class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
 {
-    const CHANNEL            = 'email';
-    const TYPE               = 'notify';
-    const RECIPIENTS         = 'recipients';
+    const CHANNEL = 'email';
+    const TYPE = 'notify';
+    const RECIPIENTS = 'recipients';
 
     const TEMPLATE_TYPE_HTML = 1;
-    const TEMPLATE_TYPE_TXT  = 2;
+    const TEMPLATE_TYPE_TXT = 2;
 
     /**
      * recipients in format email => name
@@ -89,6 +89,7 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
     {
         $this->prepareRecipientsList($context);
         $this->resolveNotificationTemplates();
+        $t = 1;
     }
 
     /**
@@ -108,6 +109,9 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
         }
     }
 
+    /**
+     * @return array
+     */
     public function resolveNotificationTemplates()
     {
         if (empty($this->templates)) {

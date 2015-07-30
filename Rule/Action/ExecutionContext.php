@@ -75,4 +75,14 @@ class ExecutionContext
         return $this->actionArguments;
     }
 
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    public function getTargetChangeset()
+    {
+        return $this->targetChangeset;
+    }
+
 }

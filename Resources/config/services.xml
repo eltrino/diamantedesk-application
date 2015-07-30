@@ -13,6 +13,7 @@
         <parameter key="diamante_automation.rule.provider.class">Diamante\AutomationBundle\Rule\Provider\RuleProviderImpl</parameter>
         <parameter key="diamante.business_rules.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRulesRepository</parameter>
         <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
+        <parameter key="diamante_automation.event_listener.on_flush.class">Diamante\AutomationBundle\EventListener\OnFlushListener</parameter>
     </parameters>
 
     <services>
@@ -49,5 +50,11 @@
             <argument type="service" id="diamante_automation.workflow_rule.repository"/>
             <argument type="service" id="diamante_automation.business_rule.repository"/>
         </service>
+
+        <service id="diamante_automation.event_listener.on_flush" class="%diamante_automation.event_listener.on_flush.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_subscriber" connection="default"/>
+        </service>
+
     </services>
 </container>
