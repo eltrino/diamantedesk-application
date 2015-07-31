@@ -9,5 +9,4 @@ interface NotificationStrategy
     public function prepareRecipientsList(ExecutionContext $context);
     public function resolveNotificationTemplates();
     public function notify();
-    public function getNotificationChannel();
 }

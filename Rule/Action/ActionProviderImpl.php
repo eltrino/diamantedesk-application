@@ -27,7 +27,7 @@ class ActionProviderImpl implements ActionProvider
      */
     public function addStrategy(ActionStrategy $strategy)
     {
-        $this->strategies[$strategy->getType()][] = $strategy;
+        $this->strategies[$strategy->getType()] = $strategy;
     }
 
     /**
@@ -41,13 +41,11 @@ class ActionProviderImpl implements ActionProvider
             throw new \Exception(sprintf("Unknown action type configured: %s", $context->getActionType()));
         }
 
-        $strategies = $this->strategies[$context->getActionType()];
+        $strategy = $this->strategies[$context->getActionType()];
 
         /** @var ActionStrategy $strategy */
-        foreach ($strategies as $strategy) {
-            if ($strategy->isApplicable($context)) {
-                return new Action($strategy);
-            }
+        if ($strategy->isApplicable($context)) {
+            return new Action($strategy);
         }
 
         return null;

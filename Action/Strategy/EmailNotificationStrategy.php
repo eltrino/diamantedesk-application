@@ -23,9 +23,8 @@ use Diamante\UserBundle\Api\Internal\UserServiceImpl;
 
 class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
 {
-    const CHANNEL = 'email';
-    const TYPE = 'notify';
     const RECIPIENTS = 'recipients';
+    const TYPE    = 'notifyByEmail';
 
     const TEMPLATE_TYPE_HTML = 1;
     const TEMPLATE_TYPE_TXT = 2;
@@ -62,24 +61,12 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
     }
 
     /**
-     * @return string
-     */
-    public function getNotificationChannel()
-    {
-        return self::CHANNEL;
-    }
-
-    /**
      * @param ExecutionContext $context
      * @return bool
      */
     public function isApplicable(ExecutionContext $context)
     {
-        $isOfType = self::TYPE === $context->getActionType();
-        $args = $context->getActionArguments();
-        $isChannelSupported = $this->getNotificationChannel() === $args->channel;
-
-        return $isOfType && $isChannelSupported;
+        return self::TYPE === $context->getActionType();
     }
 
     /**

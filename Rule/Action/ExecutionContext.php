@@ -58,7 +58,7 @@ class ExecutionContext
     public function setAction($actionString)
     {
         $matches = [];
-        $result = preg_match('/^([a-z]+)\[(.*)\]/', $actionString, $matches);
+        $result = preg_match('/^(\w+)\[(.*)\]/', $actionString, $matches);
 
         if (!$result) {
             throw new \RuntimeException('Action of unknown type is configured');
