@@ -140,7 +140,6 @@
             <tag name="kernel.event_listener" event="oro_search.prepare_result_item" method="process"/>
             <argument type="service" id="service_container"/>
             <argument type="service" id="oro_search.mapper"/>
-            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
 
 <!-- filters -->

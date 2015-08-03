@@ -3,7 +3,6 @@
 namespace Diamante\DeskBundle\EventListener\Search;
 
 use Diamante\DeskBundle\Entity\Ticket;
-use Doctrine\ORM\EntityManager;
 use Oro\Bundle\SearchBundle\Engine\ObjectMapper;
 use Oro\Bundle\SearchBundle\Event\PrepareResultItemEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,23 +22,15 @@ class PrepareResultItemListener
     private $mapper;
 
     /**
-     * @var EntityManager
-     */
-    private $em;
-
-    /**
      * @param ContainerInterface $container
      * @param ObjectMapper $mapper
-     * @param EntityManager $em
      */
     public function __construct(
         ContainerInterface $container,
-        ObjectMapper $mapper,
-        EntityManager $em
+        ObjectMapper $mapper
     ) {
         $this->container = $container;
         $this->mapper = $mapper;
-        $this->em = $em;
     }
 
     public function process(PrepareResultItemEvent $event)
