@@ -239,7 +239,7 @@
         </service>
 
         <service id="diamante.ticket.watcher_list.service" class="%diamante.watcher_list.service.class%">
-            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument type="service" id="doctrine" />
             <argument type="service" id="diamante.watcher_list.repository"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="oro_user.manager"/>
