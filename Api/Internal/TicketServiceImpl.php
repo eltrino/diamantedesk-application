@@ -38,6 +38,7 @@ use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
@@ -47,15 +48,14 @@ use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Oro\Bundle\TagBundle\Entity\TagManager;
-use Doctrine\ORM\EntityManager;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 
 class TicketServiceImpl implements TicketService
 {
     /**
-     * @var EntityManager
+     * @var Registry
      */
-    protected $em;
+    protected $doctrineRegistry;
 
     /**
      * @var TicketRepository
@@ -118,7 +118,7 @@ class TicketServiceImpl implements TicketService
     protected $securityFacade;
 
     /**
-     * @param EntityManager               $em
+     * @param Registry                    $doctrineRegistry
      * @param TicketRepository            $ticketRepository
      * @param Repository                  $branchRepository
      * @param TicketBuilder               $ticketBuilder
@@ -131,7 +131,7 @@ class TicketServiceImpl implements TicketService
      * @param DoctrineGenericRepository   $ticketHistoryRepository
      * @param TagManager                  $tagManager
      */
-    public function __construct(EntityManager $em,
+    public function __construct(Registry $doctrineRegistry,
                                 TicketRepository $ticketRepository,
                                 Repository $branchRepository,
                                 TicketBuilder $ticketBuilder,
@@ -145,7 +145,7 @@ class TicketServiceImpl implements TicketService
                                 TagManager $tagManager,
                                 SecurityFacade $securityFacade
     ) {
-        $this->em = $em;
+        $this->doctrineRegistry = $doctrineRegistry;
         $this->ticketRepository = $ticketRepository;
         $this->branchRepository = $branchRepository;
         $this->ticketBuilder = $ticketBuilder;
@@ -357,7 +357,7 @@ class TicketServiceImpl implements TicketService
             $this->tagManager->saveTagging($ticket);
         }
 
-        $this->em->detach($ticket);
+        $this->doctrineRegistry->getManager()->detach($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
