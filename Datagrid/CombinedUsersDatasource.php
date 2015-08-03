@@ -15,7 +15,7 @@
 namespace Diamante\DeskBundle\Datagrid;
 
 use Diamante\UserBundle\Model\User;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query;
 use Oro\Bundle\DataGridBundle\Datagrid\DatagridInterface;
 use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
@@ -33,9 +33,9 @@ class CombinedUsersDatasource implements DatasourceInterface
     const PATH_PAGER_ORIGINAL_TOTALS = '[source][original_totals]';
 
     /**
-     * @var EntityManager
+     * @var Registry
      */
-    protected $em;
+    protected $doctrineRegistry;
 
     /**
      * @var EventDispatcherInterface
@@ -61,10 +61,10 @@ class CombinedUsersDatasource implements DatasourceInterface
     protected $originalTotals = 0;
 
     public function __construct(
-        EntityManager $em,
+        Registry $doctrineRegistry,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->em = $em;
+        $this->doctrineRegistry = $doctrineRegistry;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -114,7 +114,7 @@ class CombinedUsersDatasource implements DatasourceInterface
      */
     protected function getOroUsers()
     {
-        return $this->em->getRepository('OroUserBundle:User')
+        return $this->doctrineRegistry->getManager()->getRepository('OroUserBundle:User')
             ->createQueryBuilder('e')
             ->select('e')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);
@@ -125,7 +125,7 @@ class CombinedUsersDatasource implements DatasourceInterface
      */
     protected function getDiamanteUsers()
     {
-        return $this->em->getRepository('DiamanteUserBundle:DiamanteUser')
+        return $this->doctrineRegistry->getManager()->getRepository('DiamanteUserBundle:DiamanteUser')
             ->createQueryBuilder('e')
             ->select('e')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);

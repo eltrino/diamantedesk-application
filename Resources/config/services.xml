@@ -46,7 +46,7 @@
         </service>
 
         <service id="diamante_deskbundle.datagrid.combined_users_datasource" class="%diamante.datagrid.combined_users_datasource.class%">
-            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument id="doctrine" type="service"/>
             <argument id="oro_datagrid.event.dispatcher" type="service"/>
             <tag name="oro_datagrid.datasource" type="diamante_combined_users_datasource"/>
         </service>
