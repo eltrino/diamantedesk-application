@@ -74,7 +74,7 @@
         </service>
 
         <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%">
-            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument type="service" id="doctrine" />
             <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.ticket.builder"/>

@@ -27,9 +27,9 @@ use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Doctrine\ORM\EntityManager;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -37,9 +37,9 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     const EMPTY_SUBJECT_PLACEHOLDER = '[No Subject]';
 
     /**
-     * @var EntityManager
+     * @var Registry
      */
-    protected $em;
+    protected $doctrineRegistry;
 
     /**
      * @var MessageReferenceRepository
@@ -92,7 +92,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $logger;
 
     /**
-     * @param EntityManager               $em
+     * @param Registry                    $doctrineRegistry
      * @param MessageReferenceRepository  $messageReferenceRepository
      * @param Repository                  $ticketRepository
      * @param TicketBuilder               $ticketBuilder
@@ -105,7 +105,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param Logger                      $logger
      */
     public function __construct(
-        EntityManager $em,
+        Registry $doctrineRegistry,
         MessageReferenceRepository $messageReferenceRepository,
         Repository $ticketRepository,
         TicketBuilder $ticketBuilder,
@@ -118,7 +118,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         Logger  $logger
     )
     {
-        $this->em                          = $em;
+        $this->doctrineRegistry            = $doctrineRegistry;
         $this->messageReferenceRepository  = $messageReferenceRepository;
         $this->ticketRepository            = $ticketRepository;
         $this->ticketBuilder               = $ticketBuilder;
@@ -166,7 +166,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         }
         $this->ticketRepository->store($ticket);
         $this->createMessageReference($messageId, $ticket);
-        $this->em->detach($ticket);
+        $this->doctrineRegistry->getManager()->detach($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
