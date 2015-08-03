@@ -63,6 +63,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $doctrineRegistry;
 
     /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketRepository
      */
@@ -232,6 +238,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
+        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
 
         $this->authorizationService
             ->expects($this->once())
@@ -290,6 +297,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
+        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
 
         $this->authorizationService
             ->expects($this->once())
@@ -359,6 +367,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
+        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
 
         $this->authorizationService
             ->expects($this->once())
