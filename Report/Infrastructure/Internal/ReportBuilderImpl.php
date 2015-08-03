@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Report\Infrastructure\Internal;
 
 use Diamante\DeskBundle\Report\ChartTypeProvider;
 use Diamante\DeskBundle\Report\Infrastructure\ReportBuilder;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\QueryException;
 use Rhumsaa\Uuid\Console\Exception;
@@ -38,9 +38,9 @@ class ReportBuilderImpl implements ReportBuilder
     const CALLABLE_PREFIX = 'buildFrom';
 
     /**
-     * @var EntityManager
+     * @var Registry
      */
-    protected $entityManager;
+    protected $doctrineRegistry;
 
     /**
      * @var ChartTypeProvider
@@ -48,10 +48,10 @@ class ReportBuilderImpl implements ReportBuilder
     protected $chartTypeProvider;
 
     public function __construct(
-        EntityManager $entityManager,
+        Registry $doctrineRegistry,
         ChartTypeProvider $chartTypeProvider
     ) {
-        $this->entityManager = $entityManager;
+        $this->doctrineRegistry = $doctrineRegistry;
         $this->chartTypeProvider = $chartTypeProvider;
     }
 
@@ -126,7 +126,7 @@ class ReportBuilderImpl implements ReportBuilder
     protected function buildFromDql($config)
     {
 
-        $query = $this->entityManager->createQuery($config['dql']);
+        $query = $this->doctrineRegistry->getManager()->createQuery($config['dql']);
         try {
             $result = $query->execute();
         } catch (QueryException $e) {
@@ -151,7 +151,7 @@ class ReportBuilderImpl implements ReportBuilder
             throw new \RuntimeException('Repository or action not found');
         }
 
-        $repository = new $class($this->entityManager);
+        $repository = new $class($this->doctrineRegistry->getManager());
 
         return $repository->$action();
     }
