@@ -40,7 +40,7 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
-     * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock Doctrine\Bundle\DoctrineBundle\Registry
      */
     private $doctrineRegistry;
 

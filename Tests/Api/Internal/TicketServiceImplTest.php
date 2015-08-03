@@ -57,10 +57,10 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketService;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
-     * @Mock \Doctrine\ORM\EntityManager
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock Doctrine\Bundle\DoctrineBundle\Registry
      */
-    private $em;
+    private $doctrineRegistry;
 
     /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketRepository
@@ -146,7 +146,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->notificationDeliveryManager = new NotificationDeliveryManager();
 
         $this->ticketService = new TicketServiceImpl(
-            $this->em,
+            $this->doctrineRegistry,
             $this->ticketRepository,
             $this->branchRepository,
             $this->ticketBuilder,
