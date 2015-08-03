@@ -53,6 +53,12 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $em;
 
     /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    private $doctrineRegistry;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
      * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
      */
@@ -135,7 +141,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         MockAnnotations::init($this);
 
         $this->messageReferenceService = new MessageReferenceServiceImpl(
-            $this->em,
+            $this->doctrineRegistry,
             $this->messageReferenceRepository,
             $this->ticketRepository,
             $this->ticketBuilder,
@@ -167,6 +173,7 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($this->ticket));
 
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
 
         $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket);
 
@@ -216,6 +223,8 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())
             ->method('store')
             ->with($this->equalTo($this->ticket));
+
+        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
 
         $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket);
 
