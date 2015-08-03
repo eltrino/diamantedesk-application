@@ -39,10 +39,10 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     const DESCRIPTION  = 'Description';
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
      * @Mock \Doctrine\ORM\EntityManager
      */
-    private $em;
+    private $doctrineRegistry;
 
     /**
      * @var \Diamante\UserBundle\Api\UserService
@@ -133,7 +133,7 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->notificationDeliveryManager = new NotificationDeliveryManager();
 
         $this->ticketService = new TicketApiServiceImpl(
-            $this->em,
+            $this->doctrineRegistry,
             $this->ticketRepository,
             $this->branchRepository,
             $this->ticketBuilder,
