@@ -53,6 +53,7 @@ class StringVoter extends Voter
             'oro_tag_search',
             'oro_security_access_levels',
             'oro_translation_available_translations',
+            'oro_translation_download',
 
             //OroUserBundle
             'oro_activity_list_api_get_list',
