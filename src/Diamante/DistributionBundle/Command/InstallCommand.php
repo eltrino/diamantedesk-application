@@ -57,8 +57,6 @@ class InstallCommand extends OroInstallCommand
                 'Timeout for child command execution',
                 CommandExecutor::DEFAULT_TIMEOUT
             );
-
-        $this->logger = $this->getContainer()->get('monolog.logger.diamante');
     }
 
     /**
@@ -70,7 +68,9 @@ class InstallCommand extends OroInstallCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('monolog.logger.diamante')
+        $this->logger = $this->getContainer()->get('monolog.logger.diamante');
+
+        $this->logger
             ->info(sprintf('DiamanteDesk installation started at %s', date('Y-m-d H:i:s')));
         try {
             $this->checkStep($output);
