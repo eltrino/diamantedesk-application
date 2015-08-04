@@ -47,8 +47,9 @@ class StringVoter extends Voter
             'oro_shortcut_actionslist',
             'oro_platform_system_info',
             'oro_datagrid_mass_action',
-            'oro_datagrid_index',
             'oro_datagrid_widget',
+            'oro_datagrid_index',
+            'oro_datagrid_api_rest_gridview_post',
             'oro_tag_search',
             'oro_security_access_levels',
             'oro_translation_available_translations',
@@ -58,6 +59,7 @@ class StringVoter extends Voter
             'oro_activity_list_api_get_list',
             'oro_comment_form',
             'orocrm_task_user_tasks',
+            'oro_api_delete_user',
 
             //Embedded Forms
             'diamante_embedded_form_submit',
