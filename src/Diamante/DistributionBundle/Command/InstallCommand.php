@@ -14,7 +14,7 @@
  */
 namespace Diamante\DistributionBundle\Command;
 
-use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Oro\Bundle\InstallerBundle\Command\InstallCommand as OroInstallCommand;
@@ -31,6 +31,12 @@ class InstallCommand extends OroInstallCommand
     protected $commandExecutor;
 
     /**
+     * @var Logger
+     *
+     */
+    protected $logger;
+
+    /**
      * Configures the current command.
      */
     protected function configure()
@@ -43,7 +49,16 @@ class InstallCommand extends OroInstallCommand
             ->addOption('user-email', null, InputOption::VALUE_OPTIONAL, 'User email')
             ->addOption('user-firstname', null, InputOption::VALUE_OPTIONAL, 'User first name')
             ->addOption('user-lastname', null, InputOption::VALUE_OPTIONAL, 'User last name')
-            ->addOption('user-password', null, InputOption::VALUE_OPTIONAL, 'User password');
+            ->addOption('user-password', null, InputOption::VALUE_OPTIONAL, 'User password')
+            ->addOption(
+                'timeout',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Timeout for child command execution',
+                CommandExecutor::DEFAULT_TIMEOUT
+            );
+
+        $this->logger = $this->getContainer()->get('monolog.logger.diamante');
     }
 
     /**
@@ -59,7 +74,7 @@ class InstallCommand extends OroInstallCommand
             ->info(sprintf('DiamanteDesk installation started at %s', date('Y-m-d H:i:s')));
         try {
             $this->checkStep($output);
-            $this->oroInit($output, $input);
+            $this->oroInit($input, $output);
             $this->oroInstall($input, $output);
             $this->runExistingCommand('cache:clear', $output);
             $this->runExistingCommand('diamante:desk:install', $output);
@@ -70,17 +85,17 @@ class InstallCommand extends OroInstallCommand
             $this->runExistingCommand('assetic:dump', $output, array('--process-isolation' => true));
             $this->oroAdministrationSetup($output);
         } catch (\Exception $e) {
-            $this->getContainer()->get('monolog.logger.diamante')
+            $this->logger
                 ->error(sprintf('Installation failed with error: %s', $e->getMessage()));
             $output->writeln($e->getMessage());
             return 255;
         }
-        $this->getContainer()->get('monolog.logger.diamante')
+        $this->logger
             ->info(sprintf('DiamanteDesk installation finished at %s', date('Y-m-d H:i:s')));
         return 0;
     }
 
-    protected function oroInit($output, $input)
+    protected function oroInit(InputInterface $input, OutputInterface $output)
     {
         $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
 
@@ -90,7 +105,7 @@ class InstallCommand extends OroInstallCommand
             $this->getApplication(),
             $this->getContainer()->get('oro_cache.oro_data_cache_manager')
         );
-        $this->commandExecutor->setDefaultTimeout(0);
+        $this->commandExecutor->setDefaultTimeout($input->hasOption('timeout') ? $input->getOption('timeout') : 0);
     }
 
     protected function oroInstall(InputInterface $input, OutputInterface $output)
@@ -354,16 +369,15 @@ class InstallCommand extends OroInstallCommand
      */
     protected function runExistingCommand($commandName, OutputInterface $output, array $parameters = array())
     {
-        $command = $this->getApplication()->find($commandName);
-
-        $arguments = array(
-            'command' => $commandName
-        );
-
-        $arguments = array_merge($arguments, $parameters);
-
-        $input = new ArrayInput($arguments);
-        $command->run($input, $output);
+        try {
+            $this->commandExecutor
+                ->runCommand(
+                    $commandName,
+                    $parameters
+                );
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('Error occured during execution of %s: %s', $commandName, $e->getMessage()));
+        }
     }
 
     /**
