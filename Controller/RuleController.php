@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Diamante\AutomationBundle\Api\Command\RuleCommand;
+use JMS\Serializer\SerializerBuilder;
 
 /**
  * Class RuleController
@@ -100,18 +101,14 @@ class RuleController extends Controller
      */
     public function createAction()
     {
-        $command = new RuleCommand();
-        $command->mode = EngineImpl::MODE_WORKFLOW;
-        $command->weight = 0;
-        $command->active = 1;
-        $command->expression = 'AND';
-        $command->condition = 'eq[status, new]';
-        $command->action = 'notify[channel:email, recipients:{akolomiec1989@gmail.com}]';
+        $content = $this->getRequest()->getContent();
+        $serializer = SerializerBuilder::create()->build();
+        $command = $serializer->deserialize($content, 'Diamante\AutomationBundle\Api\Command\RuleCommand', 'json');
 
         try {
-            $rule = $this->get('diamante.rule.service')->actionRule($command, self::CREATE);
+            $this->get('diamante.rule.service')->actionRule($command, self::CREATE);
 
-            return $rule->getId();
+            return new Response();
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(
                 sprintf('Rule creation failed: %s', $e->getMessage())
@@ -128,26 +125,24 @@ class RuleController extends Controller
 
     /**
      * @Route(
-     *      "/update/{id}",
-     *      name="diamante_automation_update",
-     *      requirements={"id"="\d+"}
+     *      "/update",
+     *      name="diamante_automation_update"
      * )
      *
-     * @param int $id
      * @return array
      */
-    public function updateAction($id)
+    public function updateAction()
     {
-        $command = new RuleCommand();
-        $command->id = $id;
-        $command->mode = EngineImpl::MODE_WORKFLOW;
+        $content = $this->getRequest()->getContent();
+        $serializer = SerializerBuilder::create()->build();
+        $updateCommand = $serializer->deserialize($content, 'Diamante\AutomationBundle\Api\Command\UpdateRuleCommand', 'json');
 
         try {
-            $rule = $this->get('diamante.rule.service')->actionRule($command, self::LOAD);
-            $command = RuleCommand::fromRule($rule);
-            $rule = $this->get('diamante.rule.service')->actionRule($command, self::UPDATE);
+            foreach($updateCommand->rules as $command) {
+                $this->get('diamante.rule.service')->actionRule($command, self::UPDATE);
+            }
 
-            return $rule->getId();
+            return new Response();
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(
                 sprintf('Rule creation failed: %s', $e->getMessage())
@@ -156,7 +151,7 @@ class RuleController extends Controller
 
             return $this->redirect(
                 $this->generateUrl(
-                    'diamante_automation_create'
+                    'diamante_automation_update'
                 )
             );
         }
