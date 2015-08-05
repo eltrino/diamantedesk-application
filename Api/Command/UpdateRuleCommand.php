@@ -21,79 +21,16 @@ use Diamante\AutomationBundle\Model\Rule;
 use JMS\Serializer\Annotation\Type;
 
 /**
- * Class RuleCommand
+ * Class UpdateRuleCommand
  *
  * @package Diamante\AutomationBundle\Api\Command
  */
-class RuleCommand
+class UpdateRuleCommand
 {
-    /**
-     * @var int|null
-     *
-     * @Type("integer")
-     */
-    public $id;
-
-    /**
-     * @var Condition
-     *
-     * @Type("string")
-     */
-    public $condition;
-
-    /**
-     * @var string
-     *
-     * @Type("string")
-     */
-    public $action;
-
-    /**
-     * @var int
-     *
-     * @Type("integer")
-     */
-    public $weight;
-
     /**
      * @var array
      *
      * @Type("array<Diamante\AutomationBundle\Api\Command\RuleCommand>")
      */
-    public $children;
-
-    /**
-     * @var Target
-     *
-     * @Type("string")
-     */
-    public $target;
-
-    /**
-     * @var AutomationRule
-     *
-     * @Type("integer")
-     */
-    public $parent;
-
-    /**
-     * @var bool
-     *
-     * @Type("boolean")
-     */
-    public $active;
-
-    /**
-     * @var string
-     *
-     * @Type("string")
-     */
-    public $expression;
-
-    /**
-     * @var string
-     *
-     * @Type("string")
-     */
-    public $mode;
+    public $rules;
 }

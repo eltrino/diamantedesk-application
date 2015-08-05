@@ -43,7 +43,7 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $action;
 
@@ -79,7 +79,7 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $expression;
 }

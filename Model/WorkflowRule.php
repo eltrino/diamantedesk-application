@@ -15,12 +15,6 @@
 
 namespace Diamante\AutomationBundle\Model;
 
-use Diamante\AutomationBundle\Rule\Engine\EngineImpl;
-
 class WorkflowRule extends Rule
 {
-    public function getMode()
-    {
-        return EngineImpl::MODE_WORKFLOW;
-    }
 }

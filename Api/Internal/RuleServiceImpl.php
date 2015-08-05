@@ -20,6 +20,7 @@ use Diamante\AutomationBundle\Rule\Engine\EngineImpl;
 use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Entity\BusinessRule;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\AutomationBundle\Model\Target;
 
 class RuleServiceImpl implements RuleService
 {
@@ -86,13 +87,20 @@ class RuleServiceImpl implements RuleService
             $command->action,
             $command->weight,
             $command->active,
-            $command->target,
+            new Target($command->target),
             $command->parent
         );
 
         $this->businessRuleRepository->store($rule);
 
-        return $rule;
+        if ($command->children) {
+            foreach ($command->children as $child) {
+                $child->parent = $rule;
+                $this->createBusinessRule($child);
+            }
+        }
+
+        return;
     }
 
     public function createWorkflowRule(RuleCommand $command)
@@ -103,13 +111,20 @@ class RuleServiceImpl implements RuleService
             $command->action,
             $command->weight,
             $command->active,
-            $command->target,
+            new Target($command->target),
             $command->parent
         );
 
         $this->workflowRuleRepository->store($rule);
 
-        return $rule;
+        if ($command->children) {
+            foreach ($command->children as $child) {
+                $child->parent = $rule;
+                $this->createWorkflowRule($child);
+            }
+        }
+
+        return;
     }
 
     public function updateWorkflowRule(RuleCommand $command)
@@ -121,7 +136,7 @@ class RuleServiceImpl implements RuleService
             $command->action,
             $command->weight,
             $command->active,
-            $command->target,
+            new Target($command->target),
             $command->parent
         );
 
@@ -137,7 +152,7 @@ class RuleServiceImpl implements RuleService
             $command->action,
             $command->weight,
             $command->active,
-            $command->target,
+            new Target($command->target),
             $command->parent
         );
 
@@ -208,5 +223,4 @@ class RuleServiceImpl implements RuleService
 
         return $result;
     }
-
 }
