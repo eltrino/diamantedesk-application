@@ -28,8 +28,8 @@
     "require": {
         "php": ">=5.4.4",
         "oro/platform": "1.7.*",
-        "nelmio/api-doc-bundle": "*",
-        "jms/serializer-bundle": "*",
+        "nelmio/api-doc-bundle": "2.7.*",
+        "jms/serializer-bundle": "0.*",
         "diamante/desk-bundle": "self.version",
         "diamante/user-bundle": "self.version"
     },
