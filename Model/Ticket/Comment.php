@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Updatable;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToComment;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
@@ -25,7 +26,7 @@ use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 
-class Comment extends DomainEventProvider implements Entity, AttachmentHolder
+class Comment extends DomainEventProvider implements Entity, AttachmentHolder, Updatable
 {
     /**
      * @var integer
@@ -224,5 +225,22 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder
     public function setPrivate($private)
     {
         $this->private = $private;
+    }
+
+    /**
+     * Update properties of the comment
+     *
+     * @param array $properties
+     * @return void
+     */
+    public function updateProperties(array $properties)
+    {
+        foreach ($properties as $name => $value) {
+            if (property_exists($this, $name)) {
+                $this->$name = $value;
+            } else {
+                throw new \DomainException(sprintf('Comment does not have "%s" property.', $name));
+            }
+        }
     }
 }

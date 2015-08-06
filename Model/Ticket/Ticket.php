@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Updatable;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToTicket;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasDeletedFromTicket;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasAddedToTicket;
@@ -34,7 +35,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
-class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Taggable
+class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Taggable, Updatable
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
@@ -667,7 +668,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     }
 
     /**
-     * Update single property of the ticket
+     * Update properties of the ticket
      *
      * @param array $properties
      * @return void
