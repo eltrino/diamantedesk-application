@@ -43,6 +43,7 @@
         </service>
 
         <service id="diamante.attachment.manager" class="%diamante.attachment.manager.class%">
+            <argument type="service" id="doctrine" />
             <argument type="service" id="diamante.attachment.file_storage.service"/>
             <argument type="service" id="diamante.attachment.entity.factory"/>
             <argument type="service" id="diamante.attachment.repository"/>
