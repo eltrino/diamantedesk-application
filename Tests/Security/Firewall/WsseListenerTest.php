@@ -16,7 +16,6 @@ namespace Diamante\ApiBundle\Tests\Security\Firewall;
 
 use Diamante\ApiBundle\Security\Authentication\Token\WsseToken;
 use Diamante\ApiBundle\Security\Firewall\WsseListener;
-use Diamante\UserBundle\Model\DiamanteUser;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class WsseListenerTest extends \PHPUnit_Framework_TestCase

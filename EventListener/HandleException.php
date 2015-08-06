@@ -19,7 +19,6 @@ use Diamante\DeskBundle\Model\Entity\Exception;
 use FOS\RestBundle\Util\Codes;
 use JMS\Serializer\Serializer;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;

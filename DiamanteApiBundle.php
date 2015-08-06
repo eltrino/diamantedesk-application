@@ -15,6 +15,7 @@
 namespace Diamante\ApiBundle;
 
 use Diamante\ApiBundle\DependencyInjection\Security\Factory\Factory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Diamante\ApiBundle\DependencyInjection\Compiler\TestClientCompilerPass;
@@ -27,6 +28,7 @@ class DiamanteApiBundle extends Bundle
 
         $container->addCompilerPass(new TestClientCompilerPass());
         $extension = $container->getExtension('security');
+        /** @var $extension SecurityExtension */
         $extension->addSecurityListenerFactory(new Factory());
     }
 }
