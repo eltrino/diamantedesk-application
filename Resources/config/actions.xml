@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="diamante_automation.notification_strategy.email.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy</parameter>
+        <parameter key="diamante_automation.update_strategy.property.class">Diamante\AutomationBundle\Action\Strategy\UpdatePropertyStrategy</parameter>
     </parameters>
 
     <services>
@@ -14,6 +15,12 @@
                 class="%diamante_automation.notification_strategy.email.class%"
                 >
             <argument type="service" id="diamante.user.service"/>
+            <tag name="diamante.action.strategy"/>
+        </service>
+
+        <service
+                id="diamante_automation.update_strategy.property"
+                class="%diamante_automation.update_strategy.property.class%">
             <tag name="diamante.action.strategy"/>
         </service>
     </services>
