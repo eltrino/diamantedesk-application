@@ -18,10 +18,6 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/eltrino/DiamanteFrontBundle.git"
-        },
-        {
-            "type": "git",
             "url": "https://github.com/orocrm/composer.git"
         }
     ],
