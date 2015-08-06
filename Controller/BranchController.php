@@ -154,7 +154,7 @@ class BranchController extends Controller
                 $branchId = $this->get('diamante.branch.service')->updateBranch($command);
                 $this->updateBranchEmailConfiguration($command, $branchId);
                 return $branchId;
-            }, $branch);
+            });
         } catch (MethodNotAllowedException $e) {
             return $this->redirect(
                 $this->generateUrl(

@@ -18,11 +18,7 @@ namespace Diamante\DeskBundle\Report\Infrastructure\Internal;
 use Diamante\DeskBundle\Report\ChartTypeProvider;
 use Diamante\DeskBundle\Report\Infrastructure\ReportBuilder;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\QueryException;
-use Rhumsaa\Uuid\Console\Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Process\Exception\RuntimeException;
 
 
 /**

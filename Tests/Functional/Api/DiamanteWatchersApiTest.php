@@ -16,9 +16,6 @@ namespace Diamante\DeskBundle\Tests\Functional\Api;
 
 use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
 use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
-use FOS\RestBundle\Util\Codes;
-use Diamante\DeskBundle\Model\Ticket\Status;
-use Diamante\UserBundle\Model\User;
 
 class DiamanteWatchersApiTest extends ApiTestCase
 {

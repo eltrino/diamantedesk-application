@@ -19,6 +19,9 @@ use Imagine\Image\ImagineInterface;
 
 class FileSystemAttachmentLoader extends FileSystemLoader
 {
+    /**
+     * @param ImagineInterface $imagine
+     */
     public function __construct(ImagineInterface $imagine)
     {
         $this->imagine = $imagine;

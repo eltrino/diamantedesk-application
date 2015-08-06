@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
 use Diamante\UserBundle\Model\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class TicketFactory extends AbstractEntityFactory

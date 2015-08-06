@@ -14,13 +14,11 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
-use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
-use OroCRM\Bundle\ContactBundle\Entity\Contact;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 {

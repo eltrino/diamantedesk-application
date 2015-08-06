@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Tests\Api\Internal;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Diamante\DeskBundle\Api\Internal\BranchEmailConfigurationServiceImpl;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
-use Doctrine\ORM\EntityManager;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCase

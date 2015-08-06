@@ -26,6 +26,9 @@ use Symfony\Component\Validator\Constraints\File;
 class AnyValidatorTest extends AbstractConstraintValidatorTest
 {
 
+    /**
+     * @return AnyValidator
+     */
     protected function createValidator() {
         return new AnyValidator();
     }
@@ -56,6 +59,9 @@ class AnyValidatorTest extends AbstractConstraintValidatorTest
         $this->assertGreaterThan($countConstraints, $countViolations);
     }
 
+    /**
+     * @return array
+     */
     public static function getValidValues()
     {
         return [
@@ -65,6 +71,9 @@ class AnyValidatorTest extends AbstractConstraintValidatorTest
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function getInvalidValues()
     {
         return [
