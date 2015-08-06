@@ -67,10 +67,11 @@ interface TicketService
     /**
      * Remove Attachment from Ticket
      * @param RemoveTicketAttachmentCommand $command
+     * @param boolean $flush
      * @return TicketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
-    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command);
+    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command, $flush = false);
 
     /**
      * Create Ticket

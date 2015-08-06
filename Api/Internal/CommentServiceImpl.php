@@ -30,6 +30,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -80,7 +81,13 @@ class CommentServiceImpl implements CommentService
      */
     private $notifier;
 
+    /**
+     * @var Registry
+     */
+    private $registry;
+
     public function __construct(
+        Registry $doctrineRegistry,
         Repository $ticketRepository,
         Repository $commentRepository,
         CommentFactory $commentFactory,
@@ -100,6 +107,7 @@ class CommentServiceImpl implements CommentService
         $this->dispatcher = $dispatcher;
         $this->notificationDeliveryManager = $notificationDeliveryManager;
         $this->notifier = $notifier;
+        $this->registry = $doctrineRegistry;
     }
 
     /**
@@ -210,9 +218,10 @@ class CommentServiceImpl implements CommentService
     /**
      * Add Attachments to Comment
      * @param Command\AddCommentAttachmentCommand $command
+     * @param boolean $flush
      * @return array
      */
-    public function addCommentAttachment(Command\AddCommentAttachmentCommand $command)
+    public function addCommentAttachment(Command\AddCommentAttachmentCommand $command, $flush = false)
     {
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
@@ -229,9 +238,13 @@ class CommentServiceImpl implements CommentService
             }
         }
 
-        $this->commentRepository->store($comment);
+        $this->registry->getManager()->persist($comment);
 
         $this->dispatchEvents($comment);
+
+        if (true === $flush) {
+            $this->registry->getManager()->flush();
+        }
 
         return $attachments;
     }
@@ -239,9 +252,10 @@ class CommentServiceImpl implements CommentService
     /**
      * Update Ticket Comment content
      * @param Command\CommentCommand $command
+     * @param boolean $flush
      * @return void
      */
-    public function updateTicketComment(Command\CommentCommand $command)
+    public function updateTicketComment(Command\CommentCommand $command, $flush = false)
     {
         $comment = $this->loadCommentBy($command->id);
 
@@ -259,40 +273,49 @@ class CommentServiceImpl implements CommentService
             }
         }
 
-        $this->commentRepository->store($comment);
+        $this->registry->getManager()->persist($comment);
 
         $ticket = $comment->getTicket();
         $newStatus = new Status($command->ticketStatus);
         if (false === $ticket->getStatus()->equals($newStatus)) {
             $ticket->updateStatus($newStatus);
-            $this->ticketRepository->store($ticket);
+            $this->registry->getManager()->persist($ticket);
         }
 
         $this->dispatchEvents($comment, $ticket);
+
+        if (true === $flush) {
+            $this->registry->getManager()->flush();
+        }
     }
 
     /**
      * Update certain properties of the Comment
      * @param Command\UpdateCommentCommand $command
+     * @param boolean $flush
      * @return Comment
      */
-    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command)
+    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command, $flush = false)
     {
         $comment = $this->loadCommentBy($command->id);
 
         $this->isGranted('EDIT', $comment);
 
         $comment->updateContent($command->content);
-        $this->commentRepository->store($comment);
+        $this->registry->getManager()->persist($comment);
 
         $ticket = $comment->getTicket();
         $newStatus = new Status($command->ticketStatus);
         if (false === $ticket->getStatus()->equals($newStatus)) {
             $ticket->updateStatus($newStatus);
-            $this->ticketRepository->store($ticket);
+            $this->registry->getManager()->persist($ticket);
         }
 
         $this->dispatchEvents($comment, $ticket);
+
+        if (true === $flush) {
+            $this->registry->getManager()->flush();
+        }
 
         return $comment;
     }
@@ -308,20 +331,23 @@ class CommentServiceImpl implements CommentService
 
         $comment->delete();
 
-        $this->commentRepository->remove($comment);
+        $this->registry->getManager()->remove($comment);
         foreach ($comment->getAttachments() as $attachment) {
             $this->attachmentManager->deleteAttachment($attachment);
         }
         $this->dispatchEvents($comment);
+
+        $this->registry->getManager()->flush();
     }
 
     /**
      * Remove Attachment from Comment
      * @param RemoveCommentAttachmentCommand $command
+     * @param boolean $flush
      * @return void
      * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
      */
-    public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command)
+    public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command, $flush = false)
     {
         $comment = $this->loadCommentBy($command->commentId);
 
@@ -332,8 +358,12 @@ class CommentServiceImpl implements CommentService
             throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
         }
         $comment->removeAttachment($attachment);
-        $this->commentRepository->store($comment);
+        $this->registry->getManager()->persist($comment);
         $this->attachmentManager->deleteAttachment($attachment);
+
+        if (true === $flush) {
+            $this->registry->getManager()->flush();
+        }
     }
 
     /**

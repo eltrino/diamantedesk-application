@@ -237,8 +237,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setStatus')->with(null)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
-        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
-        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
+        $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($ticket));
+
+        $this->em
+            ->expects($this->once())
+            ->method('flush');
 
         $this->authorizationService
             ->expects($this->once())
@@ -296,8 +304,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setStatus')->with($status)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
-        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
-        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
+        $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($ticket));
+
+        $this->em
+            ->expects($this->once())
+            ->method('flush');
 
         $this->authorizationService
             ->expects($this->once())
@@ -366,8 +382,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($ticket)
             );
 
-        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($ticket));
-        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
+        $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($ticket));
+
+        $this->em
+            ->expects($this->once())
+            ->method('flush');
 
         $this->authorizationService
             ->expects($this->once())
@@ -420,6 +444,17 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($ticket));
+
+        $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($ticket));
+
+        $this->em
+            ->expects($this->once())
+            ->method('flush');
 
         $this->authorizationService
             ->expects($this->once())
@@ -489,6 +524,17 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($ticket))
             ->will($this->returnValue(true));
+
+        $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($ticket));
+
+        $this->em
+            ->expects($this->once())
+            ->method('flush');
 
         $command = new UpdateTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
@@ -730,7 +776,16 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->attachmentManager->expects($this->once())->method('deleteAttachment')->with($this->equalTo($attachment));
 
-        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
+        $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($this->ticket));
+
+        $this->em
+            ->expects($this->never())
+            ->method('flush');
 
         $this->authorizationService
             ->expects($this->once())

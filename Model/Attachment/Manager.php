@@ -21,14 +21,16 @@ interface Manager
      * @param string $filename
      * @param string $content
      * @param AttachmentHolder $holder
+     * @param boolean $flush
      * @return \Diamante\DeskBundle\Model\Attachment\Attachment
      */
-    public function createNewAttachment($filename, $content, AttachmentHolder $holder);
+    public function createNewAttachment($filename, $content, AttachmentHolder $holder, $flush = false);
 
     /**
      * Delete attachment
      * @param Attachment $attachment
+     * @param boolean $flush
      * @return void
      */
-    public function deleteAttachment(Attachment $attachment);
+    public function deleteAttachment(Attachment $attachment, $flush = false);
 }

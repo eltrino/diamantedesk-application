@@ -88,11 +88,24 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $userService;
 
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    private $registry;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock \Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->branchServiceImpl = new BranchServiceImpl(
+            $this->registry,
             $this->branchFactory,
             $this->branchRepository,
             $this->branchLogoHandler,
@@ -147,7 +160,19 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchFactory->expects($this->once())->method('create')
             ->with($this->equalTo($name), $this->equalTo($description))->will($this->returnValue($branchStub));
 
-        $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($branchStub));
+        $this->registry
+            ->expects($this->exactly(2))
+            ->method('getManager')
+            ->will($this->returnValue($this->entityManager));
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('persist')
+            ->with($branchStub);
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('flush');
 
         $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
@@ -195,7 +220,19 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->tagManager->expects($this->once())->method('saveTagging')->with($this->equalTo($branch));
 
-        $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($branch));
+        $this->registry
+            ->expects($this->exactly(2))
+            ->method('getManager')
+            ->will($this->returnValue($this->entityManager));
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('persist')
+            ->with($branch);
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('flush');
 
         $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('CREATE'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
@@ -228,7 +265,19 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branch->expects($this->once())->method('update')
             ->with($this->equalTo($name), $this->equalTo($description));
 
-        $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($this->branch));
+        $this->registry
+            ->expects($this->exactly(2))
+            ->method('getManager')
+            ->will($this->returnValue($this->entityManager));
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->branch);
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('flush');
 
         $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
@@ -273,7 +322,19 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branch->expects($this->once())->method('setTags')->with($this->equalTo($tags));
 
-        $this->branchRepository->expects($this->once())->method('store')->with($this->equalTo($this->branch));
+        $this->registry
+            ->expects($this->exactly(2))
+            ->method('getManager')
+            ->will($this->returnValue($this->entityManager));
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->branch);
+
+        $this->entityManager
+            ->expects($this->once())
+            ->method('flush');
 
         $this->tagManager->expects($this->once())->method('saveTagging')->with($this->equalTo($this->branch));
 

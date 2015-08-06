@@ -62,10 +62,23 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    private $registry;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
         $this->manager = new ManagerImpl(
+            $this->registry,
             $this->fileStorageService,
             $this->factory,
             $this->repository,
@@ -129,7 +142,16 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
             )->will($this->returnValue($attachment));
 
         $this->holder->expects($this->once())->method('addAttachment')->with($this->equalTo($attachment));
-        $this->repository->expects($this->once())->method('store')->with($this->equalTo($attachment));
+
+        $this->registry
+            ->expects($this->once())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->equalTo($attachment));
 
         $createdAttachment = $this->manager->createNewAttachment($filename, $content, $this->holder);
 
@@ -147,7 +169,16 @@ class ManagerImplTest extends \PHPUnit_Framework_TestCase
         $attachment = new Attachment(new File($pathname));
 
         $this->fileStorageService->expects($this->once())->method('remove')->with($this->equalTo($filename));
-        $this->repository->expects($this->once())->method('remove')->with($this->equalTo($attachment));
+
+        $this->registry
+            ->expects($this->once())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->once())
+            ->method('remove')
+            ->with($this->equalTo($attachment));
 
         $this->manager->deleteAttachment($attachment);
     }

@@ -116,12 +116,13 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * )
      *
      * @param Command\AddCommentAttachmentCommand $command
+     * @param $flush
      * @return array
      */
-    public function addCommentAttachment(Command\AddCommentAttachmentCommand $command)
+    public function addCommentAttachment(Command\AddCommentAttachmentCommand $command, $flush = false)
     {
         $this->prepareAttachmentInput($command);
-        return parent::addCommentAttachment($command);
+        return parent::addCommentAttachment($command, $flush);
     }
 
     /**
@@ -218,11 +219,12 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * )
      *
      * @param Command\UpdateCommentCommand $command
+     * @param boolean $flush
      * @return Comment
      */
-    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command)
+    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command, $flush = false)
     {
-        return parent::updateCommentContentAndTicketStatus($command);
+        return parent::updateCommentContentAndTicketStatus($command, $flush);
     }
 
     /**

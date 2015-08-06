@@ -52,23 +52,26 @@ interface CommentService
     /**
      * Add Attachments to Comment
      * @param AddCommentAttachmentCommand $command
+     * @param boolean $flush
      * @return array
      */
-    public function addCommentAttachment(AddCommentAttachmentCommand $command);
+    public function addCommentAttachment(AddCommentAttachmentCommand $command, $flush = false);
 
     /**
      * Update Ticket Comment content
      * @param CommentCommand $command
+     * @param boolean $flush
      * @return void
      */
-    public function updateTicketComment(CommentCommand $command);
+    public function updateTicketComment(CommentCommand $command, $flush = false);
 
     /**
      * Update certain properties of the Comment
      * @param Command\UpdateCommentCommand $command
+     * @param boolean $flush
      * @return void
      */
-    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command);
+    public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command, $flush = false);
 
     /**
      * Delete Ticket Comment

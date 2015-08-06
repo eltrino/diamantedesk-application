@@ -52,6 +52,7 @@
         </service>
 
         <service id="diamante.branch.service" class="%diamante.branch.service.class%">
+            <argument type="service" id="doctrine" />
             <argument type="service" id="diamante.branch.entity.factory"/>
             <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.branch.logo_handler"/>
@@ -71,6 +72,7 @@
         <service id="diamante.branch.api.service_oro" alias="diamante.branch.api.service" />
 
         <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%">
+            <argument type="service" id="doctrine" />
             <argument type="service" id="diamante.branch_email_configuration.entity.factory"/>
             <argument type="service" id="diamante.branch_email_configuration.repository"/>
             <argument type="service" id="diamante.branch.repository"/>

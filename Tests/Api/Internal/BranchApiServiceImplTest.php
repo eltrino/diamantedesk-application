@@ -72,11 +72,18 @@ class BranchApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $apiPagingService;
 
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    private $registry;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->branchServiceImpl = new BranchApiServiceImpl(
+            $this->registry,
             $this->branchFactory,
             $this->branchRepository,
             $this->branchLogoHandler,

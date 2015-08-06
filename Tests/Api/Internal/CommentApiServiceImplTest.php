@@ -107,11 +107,19 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $apiPagingService;
 
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    private $registry;
+
     public function setUp()
     {
         MockAnnotations::init($this);
         $this->notificationDeliveryManager = new NotificationDeliveryManager();
-        $this->service = new CommentApiServiceImpl($this->ticketRepository,
+        $this->service = new CommentApiServiceImpl(
+            $this->registry,
+            $this->ticketRepository,
             $this->commentRepository,
             $this->commentFactory,
             $this->userService,

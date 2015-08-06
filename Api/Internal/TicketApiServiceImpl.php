@@ -270,12 +270,13 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * )
      *
      * @param RemoveTicketAttachmentCommand $command
+     * @param boolean $flush
      * @return string $ticketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
-    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command)
+    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command, $flush = false)
     {
-        return parent::removeAttachmentFromTicket($command);
+        return parent::removeAttachmentFromTicket($command, $flush);
     }
 
     /**

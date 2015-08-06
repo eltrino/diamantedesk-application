@@ -115,11 +115,25 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $notifier;
 
+    /**
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    private $registry;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
     public function setUp()
     {
         MockAnnotations::init($this);
         $this->notificationDeliveryManager = new NotificationDeliveryManager();
-        $this->service = new CommentServiceImpl($this->ticketRepository,
+        $this->service = new CommentServiceImpl(
+            $this->registry,
+            $this->ticketRepository,
             $this->commentRepository,
             $this->commentFactory,
             $this->userService,
@@ -314,7 +328,14 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
+        $this->registry
+            ->expects($this->any())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('persist');
 
         $this->authorizationService
             ->expects($this->once())
@@ -345,7 +366,14 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
+        $this->registry
+            ->expects($this->any())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('persist');
 
         $filesListDto = $this->attachmentInputs();
 
@@ -387,7 +415,14 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($comment));
+        $this->registry
+            ->expects($this->any())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('persist');
 
         $this->authorizationService
             ->expects($this->once())
@@ -431,7 +466,14 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->commentRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_COMMENT_ID))
             ->will($this->returnValue($comment));
 
-        $this->commentRepository->expects($this->once())->method('remove')
+        $this->registry
+            ->expects($this->any())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('remove')
             ->with($this->equalTo($comment));
 
         $this->attachmentManager->expects($this->exactly(count($comment->getAttachments())))
@@ -466,7 +508,15 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($comment)
             );
 
-        $this->commentRepository->expects($this->once())->method('store')->with($comment);
+        $this->registry
+            ->expects($this->any())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('persist')
+            ->with($this->equalTo($comment));
 
         $this->authorizationService
             ->expects($this->once())
@@ -549,7 +599,14 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->attachmentManager->expects($this->once())->method('deleteAttachment')
             ->with($this->equalTo($attachment));
 
-        $this->commentRepository->expects($this->once())->method('store')->with($this->equalTo($this->comment));
+        $this->registry
+            ->expects($this->any())
+            ->method('getManager')
+            ->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('persist');
 
         $this->authorizationService
             ->expects($this->once())

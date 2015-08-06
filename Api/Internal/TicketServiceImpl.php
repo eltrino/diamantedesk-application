@@ -118,18 +118,19 @@ class TicketServiceImpl implements TicketService
     protected $securityFacade;
 
     /**
-     * @param Registry                    $doctrineRegistry
-     * @param TicketRepository            $ticketRepository
-     * @param Repository                  $branchRepository
-     * @param TicketBuilder               $ticketBuilder
-     * @param AttachmentManager           $attachmentManager
-     * @param UserService                 $userService
-     * @param AuthorizationService        $authorizationService
-     * @param EventDispatcher             $dispatcher
+     * @param Registry $doctrineRegistry
+     * @param TicketRepository $ticketRepository
+     * @param Repository $branchRepository
+     * @param TicketBuilder $ticketBuilder
+     * @param AttachmentManager $attachmentManager
+     * @param UserService $userService
+     * @param AuthorizationService $authorizationService
+     * @param EventDispatcher $dispatcher
      * @param NotificationDeliveryManager $notificationDeliveryManager
-     * @param Notifier                    $notifier
-     * @param DoctrineGenericRepository   $ticketHistoryRepository
-     * @param TagManager                  $tagManager
+     * @param Notifier $notifier
+     * @param DoctrineGenericRepository $ticketHistoryRepository
+     * @param TagManager $tagManager
+     * @param SecurityFacade $securityFacade
      */
     public function __construct(Registry $doctrineRegistry,
                                 TicketRepository $ticketRepository,
@@ -296,10 +297,11 @@ class TicketServiceImpl implements TicketService
     /**
      * Remove Attachment from Ticket
      * @param RemoveTicketAttachmentCommand $command
+     * @param boolean $flush
      * @return string $ticketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
-    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command)
+    public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command, $flush = false)
     {
         $ticket = $this->loadTicketById($command->ticketId);
 
@@ -311,11 +313,16 @@ class TicketServiceImpl implements TicketService
         }
 
         $ticket->removeAttachment($attachment);
-        $this->ticketRepository->store($ticket);
+        $this->doctrineRegistry->getManager()->persist($ticket);
 
         $this->attachmentManager->deleteAttachment($attachment);
 
         $this->dispatchEvents($ticket);
+
+        if (true === $flush) {
+            $this->doctrineRegistry->getManager()->flush();
+        }
+
         return $ticket->getKey();
     }
 
@@ -351,7 +358,7 @@ class TicketServiceImpl implements TicketService
             }
         }
 
-        $this->ticketRepository->store($ticket);
+        $this->doctrineRegistry->getManager()->persist($ticket);
 
         if ($this->securityFacade->getOrganization()) {
             $this->tagManager->saveTagging($ticket);
@@ -359,6 +366,8 @@ class TicketServiceImpl implements TicketService
 
         $this->doctrineRegistry->getManager()->detach($ticket);
         $this->dispatchEvents($ticket);
+
+        $this->doctrineRegistry->getManager()->flush();
 
         return $ticket;
     }
@@ -411,13 +420,15 @@ class TicketServiceImpl implements TicketService
             }
         }
 
-        $this->ticketRepository->store($ticket);
+        $this->doctrineRegistry->getManager()->persist($ticket);
         $this->tagManager->deleteTaggingByParams($ticket->getTags(), get_class($ticket), $ticket->getId());
         $tags = $command->tags;
         $tags['owner'] = $tags['all'];
         $ticket->setTags($tags);
         $this->tagManager->saveTagging($ticket);
         $this->dispatchEvents($ticket);
+
+        $this->doctrineRegistry->getManager()->flush();
 
         return $ticket;
     }
@@ -451,12 +462,14 @@ class TicketServiceImpl implements TicketService
         $ticket = $this->loadTicketById($command->id);
         $this->ticketHistoryRepository->store(new TicketHistory($ticket->getId(), $ticket->getKey()));
         $ticket->move($command->branch);
-        $this->ticketRepository->store($ticket);
+        $this->doctrineRegistry->getManager()->persist($ticket);
 
         //Remove old key from history to prevent loop redirects
         if ($oldHistory = $this->ticketHistoryRepository->findOneByTicketKey($ticket->getKey())) {
-            $this->ticketHistoryRepository->remove($oldHistory);
+            $this->doctrineRegistry->getManager()->remove($oldHistory);
         }
+
+        $this->doctrineRegistry->getManager()->flush();
 
         $this->dispatchEvents($ticket);
     }

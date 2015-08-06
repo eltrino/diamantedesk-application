@@ -23,6 +23,7 @@ use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
@@ -61,7 +62,13 @@ class BranchServiceImpl implements BranchService
      */
     private $userService;
 
+    /**
+     * @var Registry
+     */
+    private $registry;
+
     public function __construct(
+        Registry $doctrineRegistry,
         BranchFactory $branchFactory,
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
@@ -75,6 +82,7 @@ class BranchServiceImpl implements BranchService
         $this->tagManager        = $tagManager;
         $this->authorizationService = $authorizationService;
         $this->userService       = $userService;
+        $this->registry          = $doctrineRegistry;
     }
 
     /**
@@ -140,8 +148,10 @@ class BranchServiceImpl implements BranchService
                 $branchCommand->tags
             );
 
-        $this->branchRepository->store($branch);
+        $this->registry->getManager()->persist($branch);
         $this->tagManager->saveTagging($branch);
+
+        $this->registry->getManager()->flush();
 
         return $branch;
     }
@@ -182,7 +192,7 @@ class BranchServiceImpl implements BranchService
         }
 
         $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
-        $this->branchRepository->store($branch);
+        $this->registry->getManager()->persist($branch);
 
         //TODO: Refactor tag manipulations.
         $this->tagManager->deleteTaggingByParams($branch->getTags(), get_class($branch), $branch->getId());
@@ -190,6 +200,8 @@ class BranchServiceImpl implements BranchService
         $tags['owner'] = $tags['all'];
         $branch->setTags($tags);
         $this->tagManager->saveTagging($branch);
+
+        $this->registry->getManager()->flush();
 
         return $branch->getId();
     }

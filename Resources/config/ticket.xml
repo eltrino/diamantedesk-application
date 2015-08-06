@@ -195,6 +195,7 @@
         </service>
 
         <service id="diamante.comment.service" class="%diamante.comment.service.class%">
+            <argument type="service" id="doctrine" />
             <argument type="service" id="diamante.ticket.repository"/>
             <argument type="service" id="diamante.comment.repository"/>
             <argument type="service" id="diamante.comment.entity.factory"/>

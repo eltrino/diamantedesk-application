@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Model\Attachment;
 
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Imagine\Image\Box;
 use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
 use Symfony\Bridge\Monolog\Logger;
@@ -48,13 +49,20 @@ class ManagerImpl implements Manager
     private $logger;
 
     /**
+     * @var Registry
+     */
+    private $registry;
+
+    /**
+     * @param Registry $doctrineRegistry
      * @param \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService $fileStorageService
-     * @param \Diamante\DeskBundle\Model\Attachment\AttachmentFactory           $factory
-     * @param \Diamante\DeskBundle\Model\Shared\Repository                      $repository
-     * @param \Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader          $loader
-     * @param \Symfony\Bridge\Monolog\Logger                                    $logger
+     * @param \Diamante\DeskBundle\Model\Attachment\AttachmentFactory $factory
+     * @param \Diamante\DeskBundle\Model\Shared\Repository $repository
+     * @param \Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader $loader
+     * @param \Symfony\Bridge\Monolog\Logger $logger
      */
     public function __construct(
+        Registry $doctrineRegistry,
         Services\FileStorageService $fileStorageService,
         AttachmentFactory $factory,
         Repository $repository,
@@ -66,6 +74,8 @@ class ManagerImpl implements Manager
         $this->repository = $repository;
         $this->loader = $loader;
         $this->logger = $logger;
+
+        $this->registry = $doctrineRegistry;
     }
 
     /**
@@ -75,7 +85,7 @@ class ManagerImpl implements Manager
      * @param AttachmentHolder $holder
      * @return \Diamante\DeskBundle\Model\Attachment\Attachment
      */
-    public function createNewAttachment($filename, $content, AttachmentHolder $holder)
+    public function createNewAttachment($filename, $content, AttachmentHolder $holder, $flush = false)
     {
         $this->validateFilename($filename);
         $this->validateContent($content);
@@ -95,7 +105,11 @@ class ManagerImpl implements Manager
         $attachment = $this->factory->create($file, $hash);
 
         $holder->addAttachment($attachment);
-        $this->repository->store($attachment);
+        $this->registry->getManager()->persist($attachment);
+
+        if (true === $flush) {
+            $this->registry->getManager()->flush();
+        }
 
         return $attachment;
     }
@@ -103,12 +117,17 @@ class ManagerImpl implements Manager
     /**
      * Delete attachment
      * @param Attachment $attachment
+     * @param boolean $flush
      * @return void
      */
-    public function deleteAttachment(Attachment $attachment)
+    public function deleteAttachment(Attachment $attachment, $flush = false)
     {
         $this->fileStorageService->remove($attachment->getFilename());
-        $this->repository->remove($attachment);
+        $this->registry->getManager()->remove($attachment);
+
+        if (true === $flush) {
+            $this->registry->getManager()->flush();
+        }
     }
 
     private function validateFilename($filename)

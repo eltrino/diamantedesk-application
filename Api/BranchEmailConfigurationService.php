@@ -44,17 +44,19 @@ interface BranchEmailConfigurationService
     /**
      * Create BranchEmailConfiguration
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param boolean $flush
      * @return int
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
+    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand, $flush = false);
 
     /**
      * Update BranchEmailConfiguration
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param boolean $flush
      * @return int
      */
-    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand);
+    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand, $flush = false);
 
     /**
      * @param $branchId

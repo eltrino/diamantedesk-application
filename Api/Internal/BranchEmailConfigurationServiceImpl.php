@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFac
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRepository;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 use Diamante\DeskBundle\Api\Command;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bridge\Monolog\Logger;
 
 class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationService
@@ -44,7 +45,13 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
      */
     private $logger;
 
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager|object
+     */
+    private $doctrineRegistry;
+
     public function __construct(
+        Registry $doctrineRegistry,
         BranchEmailConfigurationFactory $branchEmailConfigurationFactory,
         BranchEmailConfigurationRepository $branchEmailConfigurationRepository,
         Repository $branchRepository,
@@ -54,6 +61,7 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
         $this->branchEmailConfigurationRepository = $branchEmailConfigurationRepository;
         $this->branchRepository                   = $branchRepository;
         $this->logger                             = $logger;
+        $this->doctrineRegistry                   = $doctrineRegistry;
     }
 
     /**
@@ -87,10 +95,11 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
     /**
      * Create BranchEmailConfiguration
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param boolean $flush
      * @return int
      * @throws \RuntimeException if unable to load required branch
      */
-    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
+    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand, $flush = false)
     {
         $branch = $this->branchRepository->get($branchEmailConfigurationCommand->branch);
 
@@ -106,7 +115,11 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
                 $branchEmailConfigurationCommand->supportAddress
             );
 
-        $this->branchEmailConfigurationRepository->store($branchEmailConfiguration);
+        $this->doctrineRegistry->getManager()->persist($branchEmailConfiguration);
+
+        if (true === $flush) {
+            $this->doctrineRegistry->getManager()->flush();
+        }
 
         return $branchEmailConfiguration->getId();
     }
@@ -115,9 +128,10 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
      * Update BranchEmailConfiguration
      *
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
+     * @param boolean $flush
      * @return int
      */
-    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
+    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand, $flush = false)
     {
         if ($this->getConfigurationByBranchId($branchEmailConfigurationCommand->branch))
         {
@@ -135,7 +149,12 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
                     $branchEmailConfigurationCommand->supportAddress
                 );
         }
-        $this->branchEmailConfigurationRepository->store($branchEmailConfiguration);
+
+        $this->doctrineRegistry->getManager()->persist($branchEmailConfiguration);
+
+        if (true === $flush) {
+            $this->doctrineRegistry->getManager()->flush();
+        }
         return $branchEmailConfiguration->getId();
     }
 
