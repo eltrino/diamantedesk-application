@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
 use Diamante\EmailProcessingBundle\Model\Service\EmailFilterService;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
-class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
+class EmailFilterServiceTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_COMMENT_CONTENT = 'dummy_comment_content';
     const DUMMY_CLEANED_COMMENT_CONTENT = "<p>dummy<em>comment</em>content</p>\n";
