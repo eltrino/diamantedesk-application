@@ -62,7 +62,7 @@ class ReportBuilderImpl implements ReportBuilder
         $method = $this->resolveSourceResultMethod($config['source'], $reportId);
 
         if (method_exists($this, $method)) {
-            call_user_func_array([$this, $method], [$config['source']]);
+            $result = call_user_func_array([$this, $method], [$config['source']]);
         } else {
             throw new \RuntimeException();
         }
