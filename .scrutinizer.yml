@@ -1,0 +1,3 @@
+fitler:
+  excluded_paths:
+    - "*/Tests/*"
