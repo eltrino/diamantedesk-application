@@ -241,6 +241,7 @@ class BranchServiceImpl implements BranchService
     {
         $this->isGranted('DELETE', 'Entity:DiamanteDeskBundle:Branch');
 
+        /** @var Branch $branch */
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
             throw new \RuntimeException('Branch loading failed, branch not found. ');
