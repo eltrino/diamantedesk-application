@@ -169,7 +169,7 @@ class CommentServiceImpl implements CommentService
 
         $comment = $this->commentFactory->create($command->content, $ticket, $author, $command->private);
 
-        if ($command->attachmentsInput) {
+        if (!empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
                 $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
             }
@@ -188,7 +188,8 @@ class CommentServiceImpl implements CommentService
     /**
      * Retrieves comment attachments
      * @param $commentId
-     * @return array
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function listCommentAttachment($commentId)
     {
@@ -267,7 +268,7 @@ class CommentServiceImpl implements CommentService
         $comment->updateContent($command->content);
         $comment->setPrivate($command->private);
 
-        if ($command->attachmentsInput) {
+        if (!empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
                 $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
             }
@@ -369,8 +370,8 @@ class CommentServiceImpl implements CommentService
     /**
      * Verify permissions through Oro Platform security bundle
      *
-     * @param $operation
-     * @param Comment $entity
+     * @param string|string[] $operation
+     * @param Comment|string $entity
      * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
      */
     private function isGranted($operation, $entity)

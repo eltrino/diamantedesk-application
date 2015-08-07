@@ -110,7 +110,7 @@ class WatchersApiServiceImpl extends WatchersServiceImpl implements RestServiceI
             $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
         }
 
-        parent::addWatcher($ticket, $user);
+        $this->addWatcher($ticket, $user);
         return $this->userService->fetchUserDetails($user);
     }
 

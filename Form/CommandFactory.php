@@ -21,9 +21,7 @@ use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
-
 use Diamante\DeskBundle\Api\Command\MoveTicketCommand;
-
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\UserBundle\Model\User;

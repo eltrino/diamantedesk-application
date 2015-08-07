@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 
@@ -35,11 +36,11 @@ class DoctrineReportRepository
     private $driver;
 
     /**
-     * @param EntityManager $entityManager
+     * @param Registry $registry
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(Registry $registry)
     {
-        $this->em = $entityManager;
+        $this->em = $registry->getManager();
         $this->driver = $this->em->getConnection()->getDriver()->getName();
     }
 

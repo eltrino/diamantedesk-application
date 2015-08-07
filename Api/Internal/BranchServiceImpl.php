@@ -264,7 +264,7 @@ class BranchServiceImpl implements BranchService
     /**
      * Verify permissions through Oro Platform security bundle
      *
-     * @param $operation
+     * @param string $operation
      * @param $entity
      * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
      */

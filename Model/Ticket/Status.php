@@ -35,7 +35,10 @@ class Status
      */
     private $status;
 
-    private static $valueToLabelMap = array();
+    /**
+     * @var array
+     */
+    protected static $valueToLabelMap = array();
 
     /**
      * @param $status
@@ -69,7 +72,7 @@ class Status
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getValue()
     {
@@ -85,6 +88,9 @@ class Status
         return static::$valueToLabelMap[$this->status];
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getLabel();

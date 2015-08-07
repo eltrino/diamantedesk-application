@@ -62,6 +62,10 @@ class AttachmentInput
         return $this->content;
     }
 
+    /**
+     * @param UploadedFile $uploadedFile
+     * @return AttachmentInput
+     */
     public static function createFromUploadedFile(UploadedFile $uploadedFile)
     {
         $dto = new self();
@@ -76,9 +80,13 @@ class AttachmentInput
         return $dto;
     }
 
-    public static function createFromArray($input)
+    /**
+     * @param array $input
+     * @return AttachmentInput
+     */
+    public static function createFromArray(array $input)
     {
-        if (false == isset($input['filename']) || false == isset($input['content'])) {
+        if (false === isset($input['filename']) || false === isset($input['content'])) {
             throw new \InvalidArgumentException('Not all required fields exists in array.');
         }
         $dto = new self();

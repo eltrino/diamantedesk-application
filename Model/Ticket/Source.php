@@ -29,7 +29,10 @@ class Source
      */
     private $source;
 
-    private static $valueToLabelMap = array();
+    /**
+     * @var array
+     */
+    protected static $valueToLabelMap = array();
 
     /**
      * @param $source
@@ -60,7 +63,7 @@ class Source
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getValue()
     {
@@ -76,6 +79,9 @@ class Source
         return static::$valueToLabelMap[$this->source];
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getLabel();

@@ -33,6 +33,8 @@ class CreateTicketCommand implements Taggable
      *              message="This is a required field"
      * )
      * @Any({@Assert\Type(type="integer"), @Assert\Type(type="object")})
+     *
+     * @var int|\Diamante\DeskBundle\Entity\Branch
      */
     public $branch;
 

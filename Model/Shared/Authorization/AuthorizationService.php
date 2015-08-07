@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Model\Shared\Authorization;
 interface AuthorizationService
 {
     /**
-     * @param $attributes
+     * @param string $attributes
      * @param $object
      * @return bool
      */

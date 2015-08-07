@@ -178,7 +178,7 @@ class TicketStrategy implements Strategy
             $branchId = $this->branchEmailConfigurationService
                 ->getConfigurationBySupportAddressAndCustomerDomain($to, $customerDomain);
         }
-        if (!$branchId) {
+        if (null === $branchId) {
             $branchId = $this->emailProcessingSettings->getDefaultBranchId();
         }
 

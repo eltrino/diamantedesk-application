@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
@@ -23,6 +24,12 @@ use Diamante\UserBundle\Model\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
 
+/**
+ * Class DoctrineTicketRepository
+ * @package Diamante\DeskBundle\Infrastructure\Persistence
+ *
+ * @method \Diamante\DeskBundle\Entity\Ticket findOneByTicketKey(TicketKey $key)
+ */
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
 
@@ -31,7 +38,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      *
      * @param TicketKey $key
      *
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @return \Diamante\DeskBundle\Entity\Ticket
      */
     public function getByTicketKey(TicketKey $key)
     {

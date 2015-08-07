@@ -47,6 +47,10 @@ class PagingInfo
      */
     protected $pagingConfig;
 
+    /**
+     * @param int $totalRecords
+     * @param PagingProperties $pagingConfig
+     */
     public function __construct($totalRecords, PagingProperties $pagingConfig)
     {
         $this->totalRecords = $totalRecords;
@@ -55,9 +59,12 @@ class PagingInfo
         $this->calculatePaging();
     }
 
+    /**
+     * @return null
+     */
     protected function calculatePaging()
     {
-        $this->lastPage = ceil($this->totalRecords/$this->pagingConfig->getLimit());
+        $this->lastPage = (int)ceil($this->totalRecords/$this->pagingConfig->getLimit());
         $currentPage = $this->pagingConfig->getPage();
 
         if ($this->lastPage <= 1) {

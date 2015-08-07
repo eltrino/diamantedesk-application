@@ -44,7 +44,7 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
      *      403="Returned when the user is not authorized to list branches"
      *  }
      * )
-     * @param Command\Filter\FilterBranchesCommand $command|null
+     * @param Command\Filter\FilterBranchesCommand $command
      * @return \Diamante\DeskBundle\Model\Branch\Branch[]
      */
     public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null)
@@ -56,11 +56,8 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
         $repository = $this->getBranchRepository();
         $branches = $repository->filter($criteria, $pagingProperties);
 
-        try {
-            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
-        } catch(\Exception $e) {
-        }
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
 
         return $branches;
     }

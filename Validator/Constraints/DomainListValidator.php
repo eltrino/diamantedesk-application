@@ -24,7 +24,7 @@ class DomainListValidator extends ConstraintValidator
      * @param mixed $value
      * @param Constraint $constraint
      *
-     * @return bool
+     * @return bool|null
      */
     public function validate($value, Constraint $constraint)
     {

@@ -18,10 +18,10 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 trait AuthorizationImplTrait
 {
     /**
-     * @param $attributes
+     * @param string $attributes
      * @param $object
      *
-     * @return bool|mixed
+     * @return bool
      */
     public function isGranted($attributes, $object)
     {

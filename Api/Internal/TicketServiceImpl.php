@@ -39,6 +39,7 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
@@ -237,7 +238,8 @@ class TicketServiceImpl implements TicketService
     /**
      * List Ticket attachments
      * @param int $id
-     * @return array|Attachment[]
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function listTicketAttachments($id)
     {
@@ -298,7 +300,8 @@ class TicketServiceImpl implements TicketService
      * Remove Attachment from Ticket
      * @param RemoveTicketAttachmentCommand $command
      * @param boolean $flush
-     * @return string $ticketKey
+     *
+     * @return TicketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
     public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command, $flush = false)
@@ -543,8 +546,8 @@ class TicketServiceImpl implements TicketService
     /**
      * Verify permissions through Oro Platform security bundle
      *
-     * @param $operation
-     * @param $entity
+     * @param string $operation
+     * @param string|Ticket $entity
      * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
      */
     private function isGranted($operation, $entity)
@@ -657,6 +660,7 @@ class TicketServiceImpl implements TicketService
         $commentsList = $comments->toArray();
         $comments->clear();
         foreach($commentsList as $comment) {
+            /** @var \Diamante\DeskBundle\Entity\Comment $comment */
             if(!$comment->isPrivate()) {
                 $comments->add($comment);
             }

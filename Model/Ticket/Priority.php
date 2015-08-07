@@ -26,7 +26,7 @@ class Priority
 
     private $priority;
 
-    private static $valueToLabelMap = array();
+    protected static $valueToLabelMap = array();
 
     public function __construct($priority = null)
     {

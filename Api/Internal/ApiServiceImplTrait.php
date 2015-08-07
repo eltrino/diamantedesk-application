@@ -37,12 +37,12 @@ trait ApiServiceImplTrait
     }
 
     /**
-     * @param string $input
+     * @param array $input
      * @return array
      */
     private function decodeAttachmentInput($input)
     {
-        if (false == isset($input['filename']) || false == isset($input['content'])) {
+        if (false === isset($input['filename']) || false === isset($input['content'])) {
             throw new \InvalidArgumentException('Attachment input string is invalid.');
         }
         $input['content'] = base64_decode($input['content']);

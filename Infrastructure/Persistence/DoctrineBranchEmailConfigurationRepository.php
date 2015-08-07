@@ -18,14 +18,13 @@ use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationRep
 use Doctrine\ORM\Query\ResultSetMapping;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 
-class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericRepository
-    implements BranchEmailConfigurationRepository
+class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericRepository implements BranchEmailConfigurationRepository
 {
     /**
      * Retrieves BranchEmailConfiguration by Branch Id
      *
      * @param $branchId
-     * @return BranchEmailConfiguration
+     * @return BranchEmailConfiguration|null
      */
     public function getByBranchId($branchId)
     {

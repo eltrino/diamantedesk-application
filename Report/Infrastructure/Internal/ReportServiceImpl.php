@@ -67,7 +67,7 @@ class ReportServiceImpl implements ReportService
     }
 
     /**
-     * @return $this
+     * @return $this|array
      */
     public function readConfig()
     {

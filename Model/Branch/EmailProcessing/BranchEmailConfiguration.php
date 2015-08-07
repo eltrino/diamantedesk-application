@@ -49,6 +49,11 @@ class BranchEmailConfiguration implements Entity
      */
     protected $updatedAt;
 
+    /**
+     * @param Branch $branch
+     * @param $customerDomains
+     * @param $supportAddress
+     */
     public function __construct(Branch $branch, $customerDomains, $supportAddress)
     {
         $this->branch               = $branch;
@@ -61,8 +66,8 @@ class BranchEmailConfiguration implements Entity
     /**
      * Update BranchEmailConfiguration
      *
-     * @param $customerDomains
-     * @param $supportAddress
+     * @param array $customerDomains
+     * @param string $supportAddress
      */
     public function update($customerDomains, $supportAddress)
     {
@@ -88,7 +93,7 @@ class BranchEmailConfiguration implements Entity
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getCustomerDomains()
     {
@@ -100,7 +105,7 @@ class BranchEmailConfiguration implements Entity
      */
     public function getCustomerDomainsAsArray()
     {
-        if (!$this->customerDomains) {
+        if (empty($this->customerDomains)) {
             return array();
         }
         $delimiter = ',';

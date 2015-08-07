@@ -14,22 +14,20 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
-use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Doctrine\ORM\EntityManager;
-use Diamante\DeskBundle\Model\Ticket\Source;
-use Diamante\DeskBundle\Model\Ticket\Status;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-
+use Doctrine\ORM\EntityManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\UserBundle\Model\User;
+use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
+use Diamante\DeskBundle\Model\Ticket\UniqueId;
 
 class LoadTicketData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -52,8 +50,16 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
         ];
     }
 
+    /**
+     * @param ContainerInterface|null $container
+     * @throws \Exception
+     */
     public function setContainer(ContainerInterface $container = null)
     {
+        if (is_null($container)) {
+            throw new \Exception('Container is not set');
+        }
+
         $this->container = $container;
         /** @var  EntityManager $entityManager */
         $entityManager = $container->get('doctrine.orm.entity_manager');
@@ -61,6 +67,9 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
         $this->branchRepository = $entityManager->getRepository('DiamanteDeskBundle:Branch');
     }
 
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $assignee = $this->userRepository->findOneBy(array('id' => 1));

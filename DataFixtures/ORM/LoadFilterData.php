@@ -16,7 +16,6 @@ namespace Diamante\DeskBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Diamante\DeskBundle\Entity\Filter;
 
 class LoadFilterData extends AbstractFixture

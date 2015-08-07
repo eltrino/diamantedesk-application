@@ -40,10 +40,9 @@ class SortHelper
      * Apply sorting for "key" grid column
      *
      * @param OrmDatasource $dataSource
-     * @param $sortKey
      * @param $direction
      */
-    public static function applySorting(OrmDatasource $dataSource, $sortKey, $direction)
+    public static function applySorting(OrmDatasource $dataSource, $direction)
     {
         $qb = $dataSource->getQueryBuilder();
         $qb->addOrderBy(self::SORT_BRANCH_KEY, $direction);
