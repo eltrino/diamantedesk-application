@@ -14,21 +14,15 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Diamante\DeskBundle\DataFixtures\AbstractContainerAwareFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Model\Attachment\File;
 
-class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadAttachmentData extends AbstractContainerAwareFixture implements  DependentFixtureInterface
 {
-    /** @var ContainerInterface */
-    private $container;
-
     /**
      * {@inheritdoc}
      */
@@ -37,11 +31,6 @@ class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterf
         return [
             'Diamante\DeskBundle\DataFixtures\Test\LoadTicketData'
         ];
-    }
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     public function load(ObjectManager $manager)
@@ -61,4 +50,9 @@ class LoadAttachmentData extends AbstractFixture implements ContainerAwareInterf
         $manager->flush();
     }
 
+    /**
+     * @return null
+     */
+    protected function init()
+    {}
 }

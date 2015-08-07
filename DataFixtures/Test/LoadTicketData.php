@@ -14,10 +14,8 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Diamante\DeskBundle\DataFixtures\AbstractContainerAwareFixture;
 use Doctrine\ORM\EntityManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -29,11 +27,8 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 
-class LoadTicketData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadTicketData extends AbstractContainerAwareFixture implements DependentFixtureInterface
 {
-    /** @var ContainerInterface */
-    private $container;
-
     /** @var EntityRepository */
     private $userRepository;
 
@@ -48,23 +43,6 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
         return [
             'Diamante\DeskBundle\DataFixtures\Test\LoadBranchData'
         ];
-    }
-
-    /**
-     * @param ContainerInterface|null $container
-     * @throws \Exception
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        if (is_null($container)) {
-            throw new \Exception('Container is not set');
-        }
-
-        $this->container = $container;
-        /** @var  EntityManager $entityManager */
-        $entityManager = $container->get('doctrine.orm.entity_manager');
-        $this->userRepository = $entityManager->getRepository('OroUserBundle:User');
-        $this->branchRepository = $entityManager->getRepository('DiamanteDeskBundle:Branch');
     }
 
     /**
@@ -95,5 +73,17 @@ class LoadTicketData extends AbstractFixture implements ContainerAwareInterface,
 
         $manager->flush();
     }
+
+    /**
+     * @return null
+     */
+    protected function init()
+    {
+        /** @var  EntityManager $entityManager */
+        $entityManager = $this->container->get('doctrine')->getManager();
+        $this->userRepository = $entityManager->getRepository('OroUserBundle:User');
+        $this->branchRepository = $entityManager->getRepository('DiamanteDeskBundle:Branch');
+    }
+
 
 }
