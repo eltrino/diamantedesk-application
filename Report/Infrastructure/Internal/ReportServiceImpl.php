@@ -78,8 +78,8 @@ class ReportServiceImpl implements ReportService
         $builder = new ContainerBuilder();
 
         $configLoader = new CumulativeConfigLoader(
-            static::CONFIG_ID,
-            new YamlCumulativeFileLoader(static::FILE_PATH)
+            self::CONFIG_ID,
+            new YamlCumulativeFileLoader(self::FILE_PATH)
         );
 
         $resources = $configLoader->load($builder);

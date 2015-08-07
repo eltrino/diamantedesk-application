@@ -18,6 +18,7 @@ use Diamante\DeskBundle\Api\ReportTimelineService;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketTimeline;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,11 +37,6 @@ class ReportTimelineServiceImpl implements ReportTimelineService
      * @var TicketTimeline
      */
     protected $currentDayRecord;
-
-    /**
-     * @var array
-     */
-    protected static $processedNowTickets = [];
 
     /**
      * @return TicketTimeline|null|object
@@ -62,11 +58,6 @@ class ReportTimelineServiceImpl implements ReportTimelineService
         return $this->currentDayRecord;
     }
 
-    protected function storeCurrentDayRecord()
-    {
-        $this->timelineRepository->store($this->currentDayRecord);
-    }
-
     /**
      * @param OnFlushEventArgs $event
      * @param ContainerInterface $container
@@ -81,22 +72,15 @@ class ReportTimelineServiceImpl implements ReportTimelineService
 
         foreach ($uof->getScheduledEntityInsertions() as $entity) {
             if ($entity instanceof Ticket) {
-                if (in_array($entity->getId(), static::$processedNowTickets)) {
-                    return;
-                }
                 if ((string)$entity->getStatus()->getValue() === 'new') {
                     $this->increaseNewCounter();
-                    static::$processedNowTickets[] = $entity->getId();
-                    $this->storeCurrentDayRecord();
+                    $this->persistCurrentDayRecord($em);
                 }
             }
         }
 
         foreach ($uof->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof Ticket) {
-                if (in_array($entity->getId(), static::$processedNowTickets)) {
-                    return;
-                }
                 $changes = $uof->getEntityChangeSet($entity);
                 if (isset($changes['status'])) {
 
@@ -121,11 +105,22 @@ class ReportTimelineServiceImpl implements ReportTimelineService
                         $this->increaseReopenCounter();
                     }
 
-                    static::$processedNowTickets[] = $entity->getId();
-                    $this->storeCurrentDayRecord();
+                    $this->persistCurrentDayRecord($em);
                 }
             }
         }
+    }
+
+    /**
+     * @param EntityManager $em
+     */
+    protected function persistCurrentDayRecord(EntityManager $em)
+    {
+        $em->persist($this->currentDayRecord);
+        $em->getUnitOfWork()->computeChangeSet(
+            $em->getClassMetadata(get_class($this->currentDayRecord)),
+            $this->currentDayRecord
+        );
     }
 
     private function increaseNewCounter()

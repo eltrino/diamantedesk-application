@@ -17,11 +17,11 @@ class GroupedBarChart extends LineChart
     {
         $this->validateParameters($config);
 
-        $xPropertyName = $config['chart'][static::X_AXIS_ALIAS];
-        $yPropertyName = $config['chart'][static::Y_AXIS_ALIAS];
+        $xPropertyName = $config['chart'][self::X_AXIS_ALIAS];
+        $yPropertyName = $config['chart'][self::Y_AXIS_ALIAS];
 
-        $this->xItemCountValue = isset($config['chart'][static::X_ITEM_COUNT_ALIAS]) ?
-            $config['chart'][static::X_ITEM_COUNT_ALIAS] : $this->xItemCountValue;
+        $this->xItemCountValue = isset($config['chart'][self::X_ITEM_COUNT_ALIAS]) ?
+            $config['chart'][self::X_ITEM_COUNT_ALIAS] : $this->xItemCountValue;
 
         $extractedData = [];
         $groupIndex = 0;

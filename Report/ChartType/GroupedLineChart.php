@@ -18,13 +18,13 @@ class GroupedLineChart extends AbstractChart
     {
         $this->validateParameters($config);
 
-        $xPropertyName = $config['chart'][static::X_AXIS_ALIAS];
-        $yPropertyName = $config['chart'][static::Y_AXIS_ALIAS];
+        $xPropertyName = $config['chart'][self::X_AXIS_ALIAS];
+        $yPropertyName = $config['chart'][self::Y_AXIS_ALIAS];
 
         $extractedData = [];
         $groupName = '';
-        if (isset($config['chart'][static::Y_ITEMS_GROUP_NAME])) {
-            $groupName = $config['chart'][static::Y_ITEMS_GROUP_NAME];
+        if (isset($config['chart'][self::Y_ITEMS_GROUP_NAME])) {
+            $groupName = $config['chart'][self::Y_ITEMS_GROUP_NAME];
         }
 
         foreach ($records as $record) {
@@ -36,9 +36,9 @@ class GroupedLineChart extends AbstractChart
                 $groupData = is_object($record[$groupName]) ? (string)$record[$groupName] : $record[$groupName];
             }
 
-            if (is_array($config['chart'][static::Y_AXIS_ALIAS])) {
-                if (isset($config['chart'][static::Y_AXIS_ALIAS][static::Y_ITEMS_ALIAS])) {
-                    foreach ($config['chart'][static::Y_AXIS_ALIAS][static::Y_ITEMS_ALIAS] as $yItem) {
+            if (is_array($config['chart'][self::Y_AXIS_ALIAS])) {
+                if (isset($config['chart'][self::Y_AXIS_ALIAS][self::Y_ITEMS_ALIAS])) {
+                    foreach ($config['chart'][self::Y_AXIS_ALIAS][self::Y_ITEMS_ALIAS] as $yItem) {
                         $extractedData[$xData][$yItem] = $record[$yItem];
                     }
                 }
@@ -53,7 +53,7 @@ class GroupedLineChart extends AbstractChart
 
     protected function validateParameters(array $config)
     {
-        if (!isset($config['chart'][static::X_AXIS_ALIAS]) || !isset($config['chart'][static::Y_AXIS_ALIAS])) {
+        if (!isset($config['chart'][self::X_AXIS_ALIAS]) || !isset($config['chart'][self::Y_AXIS_ALIAS])) {
             throw new \RuntimeException("Report has missed required parameters");
         }
         return true;

@@ -31,7 +31,7 @@ class ChartTypeProvider
             throw new \RuntimeException('Chart type not defined');
         }
 
-        $className = static::CHART_TYPE_CLASS_PREFIX . '\\' . $this->charts[$alias];
+        $className = self::CHART_TYPE_CLASS_PREFIX . '\\' . $this->charts[$alias];
 
         if (!class_exists($className)) {
             throw new \RuntimeException('Chart type class not found');

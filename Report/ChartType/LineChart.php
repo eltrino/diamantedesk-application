@@ -16,8 +16,8 @@ class LineChart extends AbstractChart
     {
         $this->validateParameters($config);
 
-        $xPropertyName = $config['chart'][static::X_AXIS_ALIAS];
-        $yPropertyName = $config['chart'][static::Y_AXIS_ALIAS];
+        $xPropertyName = $config['chart'][self::X_AXIS_ALIAS];
+        $yPropertyName = $config['chart'][self::Y_AXIS_ALIAS];
 
         $extractedData = [];
         foreach ($records as $record) {
@@ -36,7 +36,7 @@ class LineChart extends AbstractChart
      */
     protected function validateParameters(array $config)
     {
-        if (!isset($config['chart'][static::X_AXIS_ALIAS]) || !isset($config['chart'][static::Y_AXIS_ALIAS])) {
+        if (!isset($config['chart'][self::X_AXIS_ALIAS]) || !isset($config['chart'][self::Y_AXIS_ALIAS])) {
             throw new \RuntimeException("Report has missed required parameters");
         }
         return true;

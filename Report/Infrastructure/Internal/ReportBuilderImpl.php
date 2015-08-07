@@ -31,7 +31,7 @@ class ReportBuilderImpl implements ReportBuilder
 
     const TYPE_REPOSITORY = 'repository';
 
-    const CALLABLE_PREFIX = 'buildFrom';
+    const METHOD_PREFIX = 'buildFrom';
 
     /**
      * @var Registry
@@ -59,10 +59,10 @@ class ReportBuilderImpl implements ReportBuilder
     public function build($config, $reportId)
     {
 
-        $callable = $this->resolveSourceResultMethod($config['source'], $reportId);
+        $method = $this->resolveSourceResultMethod($config['source'], $reportId);
 
-        if (is_callable(array($this, $callable))) {
-            $result = $this->$callable($config['source']);
+        if (method_exists($this, $method)) {
+            call_user_func_array([$this, $method], [$config['source']]);
         } else {
             throw new \RuntimeException();
         }
@@ -77,7 +77,7 @@ class ReportBuilderImpl implements ReportBuilder
     }
 
     /**
-     * Retrieve callable interface for getting results
+     * Retrieve method name for getting results
      *
      * @param $config
      * @param $reportId
@@ -87,32 +87,31 @@ class ReportBuilderImpl implements ReportBuilder
     {
 
         if (!isset($config['type'])) {
-            $config['type'] = static::TYPE_DQL;
+            $config['type'] = self::TYPE_DQL;
         }
 
-
-        if ($config['type'] == static::TYPE_DQL) {
+        if ($config['type'] == self::TYPE_DQL) {
             if (!isset($config['dql'])) {
                 $message = sprintf("Parameter 'dql' is not defined in source for report %s", $reportId);
                 throw new \RuntimeException($message);
             }
-            $callable = static::CALLABLE_PREFIX . ucfirst(static::TYPE_DQL);
+            $method = self::METHOD_PREFIX . ucfirst(self::TYPE_DQL);
         }
 
-        if ($config['type'] == static::TYPE_REPOSITORY) {
+        if ($config['type'] == self::TYPE_REPOSITORY) {
             if (!isset($config['repository'])) {
                 $message = sprintf("Parameter 'repository' is not defined in source for report %s", $reportId);
                 throw new \RuntimeException($message);
             }
-            $callable = static::CALLABLE_PREFIX . ucfirst(static::TYPE_REPOSITORY);
+            $method = self::METHOD_PREFIX . ucfirst(self::TYPE_REPOSITORY);
         }
 
-        if (!isset($callable)) {
+        if (!isset($method)) {
             $message = sprintf("Unknown source type %s for report %s", $config['type'], $reportId);
             throw new \RuntimeException($message);
         }
 
-        return $callable;
+        return $method;
     }
 
     /**
