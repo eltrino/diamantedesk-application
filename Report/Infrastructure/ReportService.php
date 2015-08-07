@@ -23,6 +23,7 @@ interface ReportService
 {
     /**
      * Read reports configuration defined in reports.xml
+     * @return $this\array
      */
     public function readConfig();
 

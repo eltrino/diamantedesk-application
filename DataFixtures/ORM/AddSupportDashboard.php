@@ -3,7 +3,6 @@
 namespace OroCRM\Bundle\ChannelBundle\Migrations\Data\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oro\Bundle\DashboardBundle\Migrations\Data\ORM\AbstractDashboardFixture;
 
 class AddSupportDashboard extends AbstractDashboardFixture

@@ -15,18 +15,13 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
-
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Diamante\DeskBundle\Form\Type\CreateBranchType;
 use Diamante\DeskBundle\Form\Type\UpdateBranchType;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -90,7 +85,6 @@ class BranchController extends Controller
                 $this->createBranchEmailConfiguration($command, $branch->getId());
                 return $branch->getId();
             });
-        } catch (MethodNotAllowedException $e) {
         } catch(\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(sprintf('Branch creation failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.create.error');
@@ -183,7 +177,7 @@ class BranchController extends Controller
     /**
      * @param BranchCommand $command
      * @param $callback
-     * @param UpdateBranchType $form
+     * @param Form $form
      * @return array
      */
     private function edit(BranchCommand $command, $form, $callback)
@@ -236,13 +230,12 @@ class BranchController extends Controller
         try {
             $this->get('diamante.branch.service')
                 ->deleteBranch($id);
-            if (false == $this->isDeletionRequestFromGrid()) {
+            if (false === $this->isDeletionRequestFromGrid()) {
                 $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
             }
             return new Response(null, 204, array(
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
-        } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(sprintf('Branch deletion failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.delete.error');
@@ -310,7 +303,8 @@ class BranchController extends Controller
             return false;
         }
 
-        $origin = array_pop(explode('/', $referer));
+        $parts = explode('/', $referer);
+        $origin = array_pop($parts);
 
         return 'branches' === $origin;
     }

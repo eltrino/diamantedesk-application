@@ -133,7 +133,8 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * )
      *
      * @param int $id
-     * @return array|\Diamante\DeskBundle\Model\Attachment\Attachment[]
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function listTicketAttachments($id)
     {
@@ -271,7 +272,8 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      *
      * @param RemoveTicketAttachmentCommand $command
      * @param boolean $flush
-     * @return string $ticketKey
+     *
+     * @return \Diamante\DeskBundle\Model\Ticket\TicketKey
      * @throws \RuntimeException if Ticket does not exists or Ticket has no particular attachment
      */
     public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command, $flush = false)
@@ -445,11 +447,8 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
 
         $tickets = $repository->filter($criteria, $pagingProperties, $user);
 
-        try {
-            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
-        } catch (\Exception $e) {
-        }
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
 
         return $tickets;
     }
@@ -488,11 +487,8 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $repository = $this->getTicketRepository();
         $tickets = $repository->search($query, $criteria, $pagingProperties);
 
-        try {
-            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
-        } catch (\Exception $e) {
-        }
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
 
         return $tickets;
     }
@@ -548,7 +544,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      */
     public function getReporterForTicket($id)
     {
-        $ticket = parent::loadTicket($id);
+        $ticket = $this->loadTicket($id);
         $details = $this->userService->fetchUserDetails($ticket->getReporter());
 
         return $details;
@@ -581,7 +577,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      */
     public function getAssigneeForTicket($id)
     {
-        $ticket = parent::loadTicket($id);
+        $ticket = $this->loadTicket($id);
         $assignee = $ticket->getAssignee();
         $details = [];
 

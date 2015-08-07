@@ -56,10 +56,10 @@ class TicketNotification implements Notification
     private $event;
 
     /**
-     * @param                   $ticketUniqueId
-     * @param                   $author
-     * @param                   $headerText
-     * @param                   $subject
+     * @param string            $ticketUniqueId
+     * @param string            $author
+     * @param string            $headerText
+     * @param string            $subject
      * @param \ArrayAccess      $changeList
      * @param array             $attachments
      * @param NotificationEvent $event
@@ -91,7 +91,7 @@ class TicketNotification implements Notification
     }
 
     /**
-     * @return int
+     * @return \Diamante\UserBundle\Model\User
      */
     public function getAuthor()
     {

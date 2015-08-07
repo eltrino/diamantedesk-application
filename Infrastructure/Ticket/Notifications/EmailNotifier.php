@@ -189,11 +189,11 @@ class EmailNotifier implements Notifier
     }
 
     /**
-     * @param Notification $notification
-     * @param Ticket       $ticket
-     * @param bool         $isOroUser
-     * @param string       $recipientEmail
-     * @param              $changeList
+     * @param Notification  $notification
+     * @param Ticket        $ticket
+     * @param bool          $isOroUser
+     * @param string        $recipientEmail
+     * @param \ArrayAccess  $changeList
      *
      * @return \Swift_Message
      */
@@ -305,7 +305,7 @@ class EmailNotifier implements Notifier
     }
 
     /**
-     * @param $user
+     * @param OroUser|ApiUser $user
      * @return \Diamante\UserBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
      */
     private function getUserDependingOnType($user)

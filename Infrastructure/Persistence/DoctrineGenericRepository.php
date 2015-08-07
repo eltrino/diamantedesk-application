@@ -23,6 +23,12 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 
+/**
+ * Class DoctrineGenericRepository
+ * @package Diamante\DeskBundle\Infrastructure\Persistence
+ *
+ * @method \Diamante\DeskBundle\Entity\Ticket findOneByTicketKey(\Diamante\DeskBundle\Model\Ticket\TicketKey $key)
+ */
 class DoctrineGenericRepository extends EntityRepository implements Repository, FilterableRepository
 {
     const SELECT_ALIAS = 'e';
@@ -30,7 +36,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
     const HAS_TABLE_ALIAS = 4;
     /**
      * @param $id
-     * @return Entity
+     * @return Entity|null
      */
     public function get($id)
     {

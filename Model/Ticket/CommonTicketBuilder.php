@@ -89,7 +89,7 @@ class CommonTicketBuilder implements TicketBuilder
     private $status;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|array
      */
     private $tags;
 

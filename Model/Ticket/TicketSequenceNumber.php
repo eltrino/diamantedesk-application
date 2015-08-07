@@ -27,7 +27,7 @@ class TicketSequenceNumber
      */
     public function __construct($number = null)
     {
-        if (false == is_null($number) && (false == is_int($number) || $number < 1)) {
+        if (false === is_null($number) && (false === is_int($number) || $number < 1)) {
             throw new \InvalidArgumentException('Number can be an integer and greater than 0 or null.');
         }
         $this->number = $number;
@@ -41,6 +41,9 @@ class TicketSequenceNumber
         return $this->number;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return (string) $this->number;

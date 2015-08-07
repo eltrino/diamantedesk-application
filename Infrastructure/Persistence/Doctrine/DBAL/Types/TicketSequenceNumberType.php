@@ -32,11 +32,21 @@ class TicketSequenceNumberType extends IntegerType
         return self::TICKET_SEQUENCE_NUMBER_TYPE;
     }
 
+    /**
+     * @param mixed $value
+     * @param AbstractPlatform $platform
+     * @return TicketSequenceNumber
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         return new TicketSequenceNumber((int) $value);
     }
 
+    /**
+     * @param mixed $value
+     * @param AbstractPlatform $platform
+     * @return mixed|string
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (!$value) {

@@ -12,6 +12,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WatchersSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;

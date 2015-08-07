@@ -27,7 +27,7 @@ interface BranchEmailConfigurationRepository extends Repository
      * Retrieves BranchEmailConfiguration by Branch Id
      *
      * @param $branchId
-     * @return BranchEmailConfiguration
+     * @return BranchEmailConfiguration|null
      */
     public function getByBranchId($branchId);
 

@@ -14,18 +14,16 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\Comment;
+use Diamante\UserBundle\Model\User;
 
 class LoadCommentData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -48,8 +46,16 @@ class LoadCommentData extends AbstractFixture implements ContainerAwareInterface
         ];
     }
 
+    /**
+     * @param ContainerInterface|null $container
+     * @throws \Exception
+     */
     public function setContainer(ContainerInterface $container = null)
     {
+        if (is_null($container)) {
+            throw new \Exception('Container is not set');
+        }
+
         $this->container = $container;
         /** @var  EntityManager $entityManager */
         $entityManager = $container->get('doctrine.orm.entity_manager');
@@ -57,6 +63,9 @@ class LoadCommentData extends AbstractFixture implements ContainerAwareInterface
         $this->ticketRepository = $entityManager->getRepository('DiamanteDeskBundle:Ticket');
     }
 
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $author = $this->userRepository->findOneBy(array('id' => 1));

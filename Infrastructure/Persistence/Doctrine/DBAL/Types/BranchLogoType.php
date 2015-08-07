@@ -75,7 +75,7 @@ class BranchLogoType extends StringType
         $name = $value->getName();
         $originalName = $value->getOriginalName();
 
-        if ($name && $originalName) {
+        if (!empty($name) && !empty($originalName)) {
             $logo = $name . self::DELIMITER . $originalName;
         }
 

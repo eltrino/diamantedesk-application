@@ -28,17 +28,13 @@ use Diamante\DeskBundle\Form\Type\UpdateTicketType;
 use Diamante\UserBundle\Model\User;
 use Rhumsaa\Uuid\Console\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
-
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentDto;
@@ -69,7 +65,7 @@ class TicketController extends Controller
         $filtersGenerator = $this->container->get('diamante.ticket.internal.grid_filters_service');
 
         $filtersList = $filtersGenerator->getFilters();
-        $linksList = array();
+        $linksList = $link = array();
         foreach($filtersList as $filter) {
             $link['name'] =  $filter->getName();
             $link['url'] = $filtersGenerator->generateGridFilterUrl($filter->getId());
@@ -266,20 +262,19 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *      "/watcher/ticket/{ticketId}/{user}",
+     *      "/watcher/ticket/{ticket}/{user}",
      *      name="diamante_remove_watcher",
-     *      requirements={"ticketId"="\d+"}
+     *      requirements={"ticket"="\d+"}
      * )
      *
-     * @param int $ticketId
+     * @param Ticket $ticket
      * @param string $user
-     * @return array
+     * @return array|Response
      */
-    public function deleteWatcherAction($ticketId, $user)
+    public function deleteWatcherAction(Ticket $ticket, $user)
     {
         try {
             $user = User::fromString($user);
-            $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
             $ticketKey = $ticket->getKey();
             $this->get('diamante.watcher.service.api')->removeWatcher($ticket, $user);
             $this->addSuccessMessage('diamante.desk.ticket.messages.watcher_remove.success');
@@ -321,7 +316,7 @@ class TicketController extends Controller
     public function createAction($id = null)
     {
         $branch = null;
-        if ($id) {
+        if (!is_null($id)) {
             $branch = $this->get('diamante.branch.service')->getBranch($id);
         }
         $command = $this->get('diamante.command_factory')
@@ -375,7 +370,6 @@ class TicketController extends Controller
     public function updateAction($key)
     {
         try {
-            $r = $this->getRequest();
             $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
 
             $command = $this->get('diamante.command_factory')
@@ -549,13 +543,16 @@ class TicketController extends Controller
             if ($this->getRequest()->request->get('diam-dropzone')) {
                 $response = new Response();
                 try {
+                    $uploadedAttachments = array();
                     $afterUploadAttachments = $ticket->getAttachments()->toArray();
                     $uploadedAttachments = $this->getAttachmentsDiff($afterUploadAttachments, $beforeUploadAttachments);
 
                     foreach ($uploadedAttachments as $att) {
                         $uploadedAttachmentsIds[] = $att->getId();
                     }
-                    $session->set('recent_attachments_ids', $uploadedAttachmentsIds);
+                    if (count($uploadedAttachmentsIds) > 0) {
+                        $session->set('recent_attachments_ids', $uploadedAttachmentsIds);
+                    }
                     $response->setStatusCode(200);
                 } catch (\Exception $e) {
                     $this->container->get('monolog.logger.diamante')->error(sprintf('Adding attachment failed: %s', $e->getMessage()));
@@ -665,6 +662,7 @@ class TicketController extends Controller
     public function getRecentlyUploadedAttachmentsAction($ticketId)
     {
         $session = $this->get('session');
+        $recentAttachments = array();
 
         if ($session->has('recent_attachments_ids')) {
             $uploadedAttachmentsIds = $session->get('recent_attachments_ids');
@@ -809,7 +807,7 @@ class TicketController extends Controller
     }
 
     /**
-     * @param $message
+     * @param string $message
      */
     private function addSuccessMessage($message)
     {
@@ -819,6 +817,9 @@ class TicketController extends Controller
         );
     }
 
+    /**
+     * @param string $message
+     */
     private function addErrorMessage($message)
     {
         $this->get('session')->getFlashBag()->add(
@@ -829,7 +830,7 @@ class TicketController extends Controller
 
     /**
      * @param Ticket $ticket
-     * @return array
+     * @return array|RedirectResponse
      */
     private function getSuccessSaveResponse(Ticket $ticket)
     {
@@ -913,6 +914,10 @@ class TicketController extends Controller
         return $diff;
     }
 
+    /**
+     * @param AttachmentDto $attachmentDto
+     * @return BinaryFileResponse
+     */
     private function getFileDownloadResponse(AttachmentDto $attachmentDto)
     {
         $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($attachmentDto->getFilePath());

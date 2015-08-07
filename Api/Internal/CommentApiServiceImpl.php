@@ -148,7 +148,8 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * )
      *
      * @param $id
-     * @return array
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function listCommentAttachment($id)
     {
@@ -324,11 +325,8 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
         $repository = $this->getCommentsRepository();
         $comments = $repository->filter($criteria, $pagingProperties);
 
-        try {
-            $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-            $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
-        } catch (\Exception $e) {
-        }
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
 
         return $comments;
     }
@@ -377,7 +375,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      */
     public function getAuthorData($id)
     {
-        $comment = parent::loadComment($id);
+        $comment = $this->loadComment($id);
 
         $details = $this->userService->fetchUserDetails($comment->getAuthor());
 

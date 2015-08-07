@@ -130,6 +130,9 @@ class ManagerImpl implements Manager
         }
     }
 
+    /**
+     * @param string $filename
+     */
     private function validateFilename($filename)
     {
         if (false === is_string($filename)) {
@@ -137,6 +140,9 @@ class ManagerImpl implements Manager
         }
     }
 
+    /**
+     * @param string $content
+     */
     private function validateContent($content)
     {
         if (false === is_string($content)) {
