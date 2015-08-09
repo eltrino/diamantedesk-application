@@ -107,6 +107,7 @@ oro_menu_config:
                       children:
                         embedded_forms: ~
                     oro_platform_system_info: ~
+                    audit_list: ~
 
 
 
