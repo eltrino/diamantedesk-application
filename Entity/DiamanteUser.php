@@ -15,10 +15,17 @@
 namespace Diamante\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository")
  * @ORM\Table(name="diamante_user")
+ * @Config(
+ *      defaultValues={
+ *         "dataaudit"={"auditable"=true}
+ *      }
+ * )
  */
 class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
 {
@@ -37,6 +44,12 @@ class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
      * @var string
      *
      * @ORM\Column(type="string", length=255, unique=true)
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $email;
 
@@ -46,6 +59,12 @@ class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
      * @var string
      *
      * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $firstName;
 
@@ -55,6 +74,12 @@ class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
      * @var string
      *
      * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $lastName;
 
