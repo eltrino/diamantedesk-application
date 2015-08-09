@@ -15,10 +15,17 @@
 namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineAttachmentRepository")
  * @ORM\Table(name="diamante_attachment")
+ * @Config(
+ *      defaultValues={
+ *         "dataaudit"={"auditable"=true}
+ *      }
+ * )
  */
 class Attachment extends \Diamante\DeskBundle\Model\Attachment\Attachment
 {
@@ -35,6 +42,12 @@ class Attachment extends \Diamante\DeskBundle\Model\Attachment\Attachment
      * @var \Symfony\Component\HttpFoundation\File\File
      *
      * @ORM\Column(name="file", type="file")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $file;
 
