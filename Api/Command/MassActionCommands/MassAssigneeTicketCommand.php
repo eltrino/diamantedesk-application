@@ -19,9 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MassAssigneeTicketCommand
 {
     /**
-     * @var array
+     * @var string
      * @Assert\NotNull()
-     * @Assert\Type(type="array")
+     * @Assert\Type(type="string")
      */
     public $ids;
 

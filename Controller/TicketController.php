@@ -43,7 +43,6 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Diamante\DeskBundle\Form\Type\AddWatcherType;
 use Diamante\UserBundle\Entity\DiamanteUser;
-
 use Diamante\DeskBundle\Form\Type\MassChangeTicketStatusType;
 use Diamante\DeskBundle\Form\Type\MassAssigneeTicketType;
 use Diamante\DeskBundle\Form\Type\MassMoveTicketType;
@@ -949,53 +948,55 @@ class TicketController extends Controller
      */
     public function assignMassAction()
     {
-        $response = array();
         $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
         $command = $this->get('diamante.command_factory')
             ->createMassAssigneeTicketCommand($this->getRequest()->get('values'));
+
         $form = $this->createForm(new MassAssigneeTicketType(), $command);
 
+        if (true === $redirect) {
+            $response = array('form' => $form->createView());
+            return $response;
+        }
+
         try {
-            if (false === $redirect) {
-                $form->handleRequest($this->getRequest());
-                $requestAssign = $this->getRequest()->get('assignee');
-                if(!isset($requestAssign)) {
-                    $assignee = $command->assignee;
-                } else {
-                    $assignee = $requestAssign;
-                }
-
-                $ids = explode(",", $this->getRequest()->get('ids'));
-
-                foreach($ids as $id) {
-                    $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-                    $command = $this->get('diamante.command_factory')
-                        ->createAssigneeTicketCommand($ticket);
-
-                    $command->assignee = $assignee;
-                    $this->get('diamante.ticket.service')->assignTicket($command);
-                }
-
-                $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
-                $response = array('saved' => true);
-
+            $form->handleRequest($this->getRequest());
+            $requestAssign = $this->getRequest()->get('assignee');
+            if(!isset($requestAssign)) {
+                $assignee = $command->assignee;
             } else {
-                $response = array('form' => $form->createView());
+                $assignee = $requestAssign;
             }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->createAssigneeTicketCommand($ticket);
+
+                $command->assignee = $assignee;
+                $this->get('diamante.ticket.service')->assignTicket($command);
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
+            $response = array('saved' => true);
+
         } catch (TicketNotFoundException $e) {
-            $this->container->get('monolog.logger.diamante')->error(
-                sprintf('Ticket assignment failed: %s', $e->getMessage())
+            $response = $this->handleException(
+                $e,
+                'Ticket assignment failed: %s',
+                'diamante.desk.ticket.messages.reassign.error',
+                true,
+                'diamante_ticket_list'
             );
-            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
-            $url = $this->generateUrl('diamante_ticket_list');
-            $response = array('reload_page' => true, 'redirect' => $url);
-        } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(
-                sprintf('Ticket assignment failed: %s', $e->getMessage())
+            $response = $this->handleException(
+                $e,
+                'Ticket assignment failed: %s',
+                'diamante.desk.ticket.messages.reassign.error',
+                true
             );
-            $this->addErrorMessage('diamante.desk.ticket.messages.reassign.error');
-            $response['reload_page'] = true;
         }
 
         return $response;
@@ -1013,52 +1014,55 @@ class TicketController extends Controller
      */
     public function changeStatusMassAction()
     {
-        $response = array();
         $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
         $command = $this->get('diamante.command_factory')
             ->createChangeStatusMassCommand($this->getRequest()->get('values'));
+
         $form = $this->createForm(new MassChangeTicketStatusType(), $command);
 
+        if (true === $redirect) {
+            $response = array('form' => $form->createView());
+            return $response;
+        }
+
         try {
-            if (false === $redirect) {
-                $form->handleRequest($this->getRequest());
-                $requestStatus = $this->getRequest()->get('status');
-                if(!isset($requestStatus)) {
-                    $status = $command->status;
-                } else {
-                    $status = $requestStatus;
-                }
-
-                $ids = explode(",", $this->getRequest()->get('ids'));
-
-                foreach($ids as $id) {
-                    $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-                    $command = $this->get('diamante.command_factory')
-                        ->createUpdateStatusCommandForView($ticket);
-
-                    $command->status = $status;
-                    $this->get('diamante.ticket.service')->updateStatus($command);
-                }
-
-                $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
-                $response = array('saved' => true);
+            $form->handleRequest($this->getRequest());
+            $requestStatus = $this->getRequest()->get('status');
+            if(!isset($requestStatus)) {
+                $status = $command->status;
             } else {
-                $response = array('form' => $form->createView());
+                $status = $requestStatus;
             }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->createUpdateStatusCommandForView($ticket);
+
+                $command->status = $status;
+                $this->get('diamante.ticket.service')->updateStatus($command);
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
+            $response = array('saved' => true);
+
         } catch (TicketNotFoundException $e) {
-            $this->container->get('monolog.logger.diamante')->error(
-                sprintf('Change ticket status failed: %s', $e->getMessage())
+            $response = $this->handleException(
+                $e,
+                'Change ticket status failed: %s',
+                'diamante.desk.ticket.messages.change_status.error',
+                true,
+                'diamante_ticket_list'
             );
-            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
-            $url = $this->generateUrl('diamante_ticket_list');
-            $response = array('reload_page' => true, 'redirect' => $url);
-        } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(
-                sprintf('Change ticket status failed: %s', $e->getMessage())
+            $response = $this->handleException(
+                $e,
+                'Change ticket status failed: %s',
+                'diamante.desk.ticket.messages.change_status.error',
+                true
             );
-            $this->addErrorMessage('diamante.desk.ticket.messages.change_status.error');
-            $response['reload_page'] = true;
         }
 
         return $response;
@@ -1076,56 +1080,65 @@ class TicketController extends Controller
      */
     public function moveMassAction()
     {
-        $response = array();
         $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
-
         $command = $this->get('diamante.command_factory')
             ->createMassMoveTicketCommand($this->getRequest()->get('values'));
+
         $form = $this->createForm(new MassMoveTicketType(), $command);
 
+        if (true === $redirect) {
+            $response = array('form' => $form->createView());
+            return $response;
+        }
+
         try {
-            if (false === $redirect) {
-                $form->handleRequest($this->getRequest());
-                $requestBranch = $this->getRequest()->get('branch');
-                if(!isset($requestAssign)) {
-                    $branch = $command->branch;
-                } else {
-                    $branch = $requestBranch;
-                }
-
-                $ids = explode(",", $this->getRequest()->get('ids'));
-
-                foreach($ids as $id) {
-                    $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-                    $command = $this->get('diamante.command_factory')
-                        ->createMoveTicketCommand($ticket);
-
-                    $command->branch = $this->get('diamante.branch.service')->getBranch($branch);
-
-                    if ($command->branch->getId() != $ticket->getBranch()->getId()){
-                        $this->get('diamante.ticket.service')->moveTicket($command);
-                    }
-                }
-
-                $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
-                $response = array('reload_page' => true, 'saved' => true);
+            $form->handleRequest($this->getRequest());
+            $requestBranch = $this->getRequest()->get('branch');
+            if(!isset($requestBranch)) {
+                $branch = $command->branch;
             } else {
-                $response = array('form' => $form->createView());
+                $branch = $requestBranch;
             }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->createMoveTicketCommand($ticket);
+
+                $command->branch = $this->get('diamante.branch.service')->getBranch($branch);
+
+                if ($command->branch->getId() != $ticket->getBranch()->getId()){
+                    $this->get('diamante.ticket.service')->moveTicket($command);
+                }
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
+            $response = array('reload_page' => true, 'saved' => true);
+
         } catch (TicketNotFoundException $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Move ticket failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
-            $url = $this->generateUrl('diamante_ticket_list');
-            $response = array('reload_page' => true, 'redirect' => $url);
+            $response = $this->handleException(
+                $e,
+                'Move ticket failed: %s',
+                'diamante.desk.ticket.messages.get.error',
+                true,
+                'diamante_ticket_list'
+            );
         } catch (BranchNotFoundException $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch loading failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.get.error');
-            $response = array('reload_page' => true);
-        } catch (MethodNotAllowedException $e) {
+            $response = $this->handleException(
+                $e,
+                'Branch loading failed: %s',
+                'diamante.desk.branch.messages.get.error',
+                true
+            );
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Move ticket failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.ticket.messages.move.error');
-            $response['reload_page'] = true;
+            $response = $this->handleException(
+                $e,
+                'Move ticket failed: %s',
+                'diamante.desk.ticket.messages.move.error',
+                true
+            );
         }
 
         return $response;
@@ -1143,55 +1156,56 @@ class TicketController extends Controller
      */
     public function addWatcherMassAction()
     {
-        $response = array();
         $redirect = ($this->getRequest()->get('no_redirect')) ? false : true;
         $command = $this->get('diamante.command_factory')
             ->createMassAddWatcherCommand($this->getRequest()->get('values'));
 
         $form = $this->createForm(new MassAddWatcherTicketType(), $command);
 
+        if (true === $redirect) {
+            $response = array('form' => $form->createView());
+            return $response;
+        }
+
         try {
-            if (false === $redirect) {
-                $form->handleRequest($this->getRequest());
-                $requestWatcher = $this->getRequest()->get('branch');
-
-                if(!isset($requestAssign)) {
-                    $watcher = $command->watcher;
-                } else {
-                    $watcher = $requestWatcher;
-                }
-
-                $ids = explode(",", $this->getRequest()->get('ids'));
-
-                foreach($ids as $id) {
-                    $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-                    $command = $this->get('diamante.command_factory')
-                        ->addWatcherCommand($ticket);
-
-                    $command->watcher = $watcher;
-                    $this->get('diamante.ticket.watcher_list.service')
-                        ->addWatcher($ticket, $command->watcher);
-                }
-
-                $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
-                $response = array('reload_page' => true);
+            $form->handleRequest($this->getRequest());
+            $requestWatcher = $this->getRequest()->get('branch');
+            if(!isset($requestWatcher)) {
+                $watcher = $command->watcher;
             } else {
-                $response = array('form' => $form->createView());
+                $watcher = $requestWatcher;
             }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->addWatcherCommand($ticket);
+
+                $command->watcher = $watcher;
+                $this->get('diamante.ticket.watcher_list.service')
+                    ->addWatcher($ticket, $command->watcher);
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
+            $response = array('reload_page' => true);
+
         } catch (TicketNotFoundException $e) {
-            $this->container->get('monolog.logger.diamante')->error(
-                sprintf('Add watcher to ticket failed: %s', $e->getMessage())
+            $response = $this->handleException(
+                $e,
+                'Add watcher to ticket failed: %s',
+                'diamante.desk.ticket.messages.get.error',
+                true,
+                'diamante_ticket_list'
             );
-            $this->addErrorMessage('diamante.desk.ticket.messages.get.error');
-            $url = $this->generateUrl('diamante_ticket_list');
-            $response = array('reload_page' => true, 'redirect' => $url);
-        } catch (MethodNotAllowedException $e) {
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(
-                sprintf('Add watcher to ticket failed: %s', $e->getMessage())
+            $response = $this->handleException(
+                $e,
+                'Add watcher to ticket failed: %s',
+                'diamante.desk.ticket.messages.watch.error',
+                true
             );
-            $this->addErrorMessage('diamante.desk.ticket.messages.watch.error');
-            $response['reload_page'] = true;
         }
 
         return $response;

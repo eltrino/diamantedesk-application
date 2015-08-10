@@ -26,7 +26,6 @@ use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\UserBundle\Model\User;
 use Diamante\DeskBundle\Api\Command\AddWatcherCommand;
-
 use Diamante\DeskBundle\Api\Command\MassActionCommands\MassChangeStatusCommand;
 use Diamante\DeskBundle\Api\Command\MassActionCommands\MassAssigneeTicketCommand;
 use Diamante\DeskBundle\Api\Command\MassActionCommands\MassMoveTicketCommand;

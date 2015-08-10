@@ -21,9 +21,9 @@ use Diamante\DeskBundle\Validator\Constraints\User;
 class MassAddWatcherCommand
 {
     /**
-     * @var array
+     * @var string
      * @Assert\NotNull()
-     * @Assert\Type(type="array")
+     * @Assert\Type(type="string")
      */
     public $ids;
 
