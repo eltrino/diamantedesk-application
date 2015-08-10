@@ -22,7 +22,8 @@ diamante:
             view:              View Branch
             add:               Add Branch
             edit:              Edit Branch
-            remove:            Delete Branch
+            remove_several:    Delete Branch
+            remove_mass:       Delete Branches
 
           messages:
             create:

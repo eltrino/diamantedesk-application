@@ -37,6 +37,11 @@
         <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportServiceImpl</parameter>
         <parameter key="diamante.report.builder.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportBuilderImpl</parameter>
         <parameter key="diamante.report.chart_type_provider.class">Diamante\DeskBundle\Report\ChartTypeProvider</parameter>
+
+        <parameter key="diamante.mass_action.change.class">Diamante\DeskBundle\MassAction\ChangeAction</parameter>
+        <parameter key="diamante.mass_action.assign.class">Diamante\DeskBundle\MassAction\AssignAction</parameter>
+        <parameter key="diamante.mass_action.move.class">Diamante\DeskBundle\MassAction\MoveAction</parameter>
+        <parameter key="diamante.mass_action.watch.class">Diamante\DeskBundle\MassAction\WatchAction</parameter>
     </parameters>
 
     <services>
@@ -120,5 +125,22 @@
         </service>
 
         <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>
+
+        <service id="diamante.mass_action.change" class="%diamante.mass_action.change.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="change"/>
+        </service>
+
+        <service id="diamante.mass_action.assign" class="%diamante.mass_action.assign.class%" scope="prototype">
+            <tag name="oro_datagrid.extension.mass_action.type" type="assign" />
+        </service>
+
+        <service id="diamante.mass_action.move" class="%diamante.mass_action.move.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="move"/>
+        </service>
+
+        <service id="diamante.mass_action.watch" class="%diamante.mass_action.watch.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="watch"/>
+        </service>
+
     </services>
 </container>

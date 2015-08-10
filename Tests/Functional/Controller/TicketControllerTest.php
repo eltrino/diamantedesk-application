@@ -385,4 +385,111 @@ class TicketControllerTest extends AbstractController
 
         return current($result['data']);
     }
+
+    /**
+     * @group mass
+     */
+    public function testMassAssign()
+    {
+        $ticketMassAssignUrl = $this->getUrl('diamante_ticket_mass_assign');
+        $crawler = $this->client->request('GET', $ticketMassAssignUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
+
+    /**
+     * @group mass
+     */
+    public function testMassChangeStatus()
+    {
+        $ticketMassChangeUrl = $this->getUrl('diamante_ticket_mass_status_change');
+        $crawler = $this->client->request('GET', $ticketMassChangeUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
+    /**
+     * @group mass
+     */
+    public function testMassMove()
+    {
+        $ticketMassMoveUrl = $this->getUrl('diamante_ticket_mass_move');
+        $crawler = $this->client->request('GET', $ticketMassMoveUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
+    }
+
+    /**
+     * @group mass
+     */
+    public function testMassWatch()
+    {
+        $ticketMassWatchUrl = $this->getUrl('diamante_ticket_mass_add_watcher');
+        $crawler = $this->client->request('GET', $ticketMassWatchUrl);
+
+        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
+        $this->assertEquals("Add", $crawler->selectButton('Add')->html());
+    }
+
+
+    /**
+     * @group mass
+     */
+    public function testMassAssignSubmit()
+    {
+
+        $ticketMassAssignSubmitUrl = $this->getUrl('diamante_ticket_mass_assign',
+                                                  ['no_redirect' => 'false', 'ids' =>'1, 2',
+                                                   'assignee' => '1']);
+
+        $this->client->request('GET', $ticketMassAssignSubmitUrl);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @group mass
+     */
+    public function testMassChangeStatusSubmit()
+    {
+        $ticketMassChangeSubmitUrl = $this->getUrl('diamante_ticket_mass_status_change',
+                                                  ['no_redirect' => 'false', 'ids' =>'1, 2', 'status' => 'new']);
+
+        $this->client->request('GET', $ticketMassChangeSubmitUrl);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @group mass
+     */
+    public function testMassMoveSubmit()
+    {
+        $ticketMassMoveSubmitUrl = $this->getUrl('diamante_ticket_mass_move', ['no_redirect' => 'false',
+                                                 'ids' =>'1, 2', 'branch' => '1']);
+
+        $this->client->request('GET', $ticketMassMoveSubmitUrl);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @group mass
+     */
+    public function testMassWatchSubmit()
+    {
+        $ticketMassWatchSubmitUrl = $this->getUrl('diamante_ticket_mass_add_watcher',
+                                                  ['no_redirect' => 'false', 'ids' =>'1, 2',
+                                                   'watcher' => '1']);
+
+        $this->client->request('GET', $ticketMassWatchSubmitUrl);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+
 }

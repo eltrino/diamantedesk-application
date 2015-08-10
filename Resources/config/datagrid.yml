@@ -64,10 +64,18 @@ datagrid:
                 acl_resource:  EDIT;Entity:DiamanteDeskBundle:Branch
             delete:
                 type:          delete
-                label:         diamante.desk.branch.actions.remove
+                label:         diamante.desk.branch.actions.remove_several
                 icon:          trash
                 link:          delete_link
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
+        mass_actions:
+            delete:
+                type:               delete
+                label :             diamante.desk.branch.actions.remove_mass
+                acl_resource:       DELETE;Entity:DiamanteDeskBundle:Branch
+                entity_name:        DiamanteDeskBundle:Branch
+                data_identifier:    b.id
+                icon:               trash
         options:
             entityHint: branches
 
@@ -232,6 +240,19 @@ datagrid:
                 link:          delete_link
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
         mass_actions:
+            change:
+                type: change
+                label : diamante.desk.ticket.actions.change_status
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
+                icon: flag
+            assign:
+                type: assign
+                label : diamante.desk.ticket.actions.assign
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                icon: user
             delete:
                 type: delete
                 label : diamante.desk.ticket.actions.delete
@@ -239,6 +260,20 @@ datagrid:
                 entity_name: DiamanteDeskBundle:Ticket
                 data_identifier: i.id
                 icon: trash
+            move:
+                type: move
+                label : diamante.desk.ticket.actions.move
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
+                icon: random
+            watch:
+                type: watch
+                label : diamante.desk.ticket.actions.watch
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
+                icon: plus
         options:
             entityHint: tickets
 
