@@ -37,6 +37,8 @@ use Symfony\Component\Validator\Exception\ValidatorException;
  */
 class CommentController extends Controller
 {
+    use Shared\FormHandlerTrait;
+
     /**
      * @Route(
      *      "/create/{id}",
@@ -232,24 +234,6 @@ class CommentController extends Controller
         ));
 
         return $response;
-    }
-
-    /**
-     * @param Form $form
-     * @throws \LogicException
-     * @throws \RuntimeException
-     */
-    private function handle(Form $form)
-    {
-        if (false === $this->getRequest()->isMethod('POST')) {
-            throw new MethodNotAllowedException(array('POST'),'Form can be posted only by "POST" method.');
-        }
-
-        $form->handleRequest($this->getRequest());
-
-        if (false === $form->isValid()) {
-            throw new ValidatorException('Form object validation failed, form is invalid.');
-        }
     }
 
     /**

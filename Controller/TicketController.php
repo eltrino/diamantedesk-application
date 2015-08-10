@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\TicketService;
+use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
@@ -49,6 +50,8 @@ use Diamante\UserBundle\Entity\DiamanteUser;
  */
 class TicketController extends Controller
 {
+    use Shared\FormHandlerTrait;
+
     /**
      * @Route(
      *      "/{_format}",
@@ -522,7 +525,6 @@ class TicketController extends Controller
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $response = null;
-        $session = $this->get('session');
         $commandFactory = new CommandFactory();
         $form = $this->createForm(new AttachmentType(), $commandFactory->createAddTicketAttachmentCommand($ticket));
         $formView = $form->createView();
@@ -530,34 +532,19 @@ class TicketController extends Controller
             $formView->children['attachmentsInput']->vars,
             array('full_name' => 'diamante_attachment_form[attachmentsInput][]')
         );
-        $beforeUploadAttachments = $ticket->getAttachments()->toArray();
 
         try {
             $this->handle($form);
             $command = $form->getData();
             /** @var TicketService $ticketService */
             $ticketService = $this->get('diamante.ticket.service');
-            $ticketService->addAttachmentsForTicket($command);
+            $uploadedAttachments = $ticketService->addAttachmentsForTicket($command);
 
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');
             if ($this->getRequest()->request->get('diam-dropzone')) {
-                $response = new Response();
-                try {
-                    $uploadedAttachments = array();
-                    $afterUploadAttachments = $ticket->getAttachments()->toArray();
-                    $uploadedAttachments = $this->getAttachmentsDiff($afterUploadAttachments, $beforeUploadAttachments);
-
-                    foreach ($uploadedAttachments as $att) {
-                        $uploadedAttachmentsIds[] = $att->getId();
-                    }
-                    if (count($uploadedAttachmentsIds) > 0) {
-                        $session->set('recent_attachments_ids', $uploadedAttachmentsIds);
-                    }
-                    $response->setStatusCode(200);
-                } catch (\Exception $e) {
-                    $this->container->get('monolog.logger.diamante')->error(sprintf('Adding attachment failed: %s', $e->getMessage()));
-                    $response->setStatusCode(500);
-                }
+                $response = new JsonResponse();
+                $response->setData($this->getRecentAttachmentsList($id, $uploadedAttachments));
+                $response->setStatusCode(200);
             } else {
                 $response = $this->get('oro_ui.router')->redirectAfterSave(
                     ['route' => 'diamante_attachment_attach', 'parameters' => []],
@@ -651,42 +638,6 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *      "/attachment/latest/ticket/{ticketId}",
-     *      name="diamante_ticket_attachment_latest",
-     *      requirements={"ticketId"="\d+"}
-     * )
-     *
-     * @param int $ticketId
-     * @return JsonResponse
-     */
-    public function getRecentlyUploadedAttachmentsAction($ticketId)
-    {
-        $session = $this->get('session');
-        $recentAttachments = array();
-
-        if ($session->has('recent_attachments_ids')) {
-            $uploadedAttachmentsIds = $session->get('recent_attachments_ids');
-            $ticketService = $this->get('diamante.ticket.service');
-
-            foreach ($uploadedAttachmentsIds as $attachmentId) {
-                $retrieveTicketAttachmentCommand = new RetrieveTicketAttachmentCommand();
-                $retrieveTicketAttachmentCommand->attachmentId = $attachmentId;
-                $retrieveTicketAttachmentCommand->ticketId = $ticketId;
-                $recentAttachments[] = $ticketService->getTicketAttachment($retrieveTicketAttachmentCommand);
-            }
-
-            $list = $this->getRecentAttachmentsList($ticketId, $recentAttachments);
-            $response = new JsonResponse($list);
-        } else {
-            $response = new Response();
-            $response->setStatusCode(500);
-        }
-        $session->remove('recent_attachments_ids');
-        return $response;
-    }
-
-    /**
-     * @Route(
      *       "/attachment/list/{id}",
      *      name="diamante_ticket_widget_attachment_list",
      *      requirements={"id"="\d+"}
@@ -707,17 +658,16 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *       "/watch/ticket/{ticketId}",
+     *       "/watch/ticket/{ticket}",
      *      name="diamante_ticket_watch",
-     *      requirements={"ticketId"="\d+"}
+     *      requirements={"ticket"="\d+"}
      * )
      *
-     * @param int $ticketId
+     * @param Ticket $ticket
      * @return RedirectResponse
      */
-    public function watchAction($ticketId)
+    public function watchAction(Ticket $ticket)
     {
-        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
         $watcherService = $this->get('diamante.ticket.watcher_list.service');
 
         $user = new User($this->getUser()->getId(), User::TYPE_ORO);
@@ -735,17 +685,16 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *       "/unwatch/ticket/{ticketId}",
+     *       "/unwatch/ticket/{ticket}",
      *      name="diamante_ticket_unwatch",
-     *      requirements={"ticketId"="\d+"}
+     *      requirements={"ticket"="\d+"}
      * )
      *
-     * @param int $ticketId
+     * @param Ticket $ticket
      * @return RedirectResponse
      */
-    public function unwatchAction($ticketId)
+    public function unwatchAction(Ticket $ticket)
     {
-        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
         $watcherService = $this->get('diamante.ticket.watcher_list.service');
 
         $user = new User($this->getUser()->getId(), User::TYPE_ORO);
@@ -763,19 +712,18 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *       "/watchers/ticket/{ticketId}",
+     *       "/watchers/ticket/{ticket}",
      *      name="diamante_ticket_watchers",
-     *      requirements={"ticketId"="\d+"}
+     *      requirements={"ticket"="\d+"}
      * )
      * @Template("DiamanteDeskBundle:Ticket:widget/watchers.html.twig")
      *
-     * @param int $ticketId
+     * @param Ticket $ticket
      * @return array
      */
-    public function watchers($ticketId)
+    public function watchersAction($ticket)
     {
-        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
-
+        $ticket = $this->container->get('diamante.ticket.repository')->get($ticket);
         $users = [];
 
         foreach ($ticket->getWatcherList() as $watcher) {
@@ -783,28 +731,12 @@ class TicketController extends Controller
         }
 
         return [
-            'ticketId' => $ticketId,
+            'ticket'   => $ticket,
             'watchers' => $users,
         ];
     }
 
-    /**
-     * @param Form $form
-     * @throws MethodNotAllowedException
-     * @throws ValidatorException
-     */
-    private function handle(Form $form)
-    {
-        if (false === $this->getRequest()->isMethod('POST')) {
-            throw new MethodNotAllowedException(array('POST'),'Form can be posted only by "POST" method.');
-        }
 
-        $form->handleRequest($this->getRequest());
-
-        if (false === $form->isValid()) {
-            throw new ValidatorException('Form object validation failed, form is invalid.');
-        }
-    }
 
     /**
      * @param string $message
@@ -841,10 +773,10 @@ class TicketController extends Controller
     }
 
     /**
-     * Get attachments list as JSON
+     * Get attachments list as array ready for conversion to JSON
      *
      * @param int $ticketId
-     * @param array $attachments
+     * @param Attachment[] $attachments
      * @return array
      */
     private function getRecentAttachmentsList($ticketId, $attachments)
@@ -880,38 +812,12 @@ class TicketController extends Controller
                 'url'      => $downloadLink,
                 'delete'   => $deleteLink,
                 'id'       => $attachment->getId(),
+                'hash'     => $attachment->getHash(),
             );
         }
         $data["staticFlashMessages"] = $this->get('session')->getFlashBag()->all();
 
         return $data;
-    }
-
-    /**
-     * Get diff between ticket's attachments before and after upload
-     *
-     * @param array $afterUpload
-     * @param array $beforeUpload
-     * @return array
-     */
-    private function getAttachmentsDiff(array $afterUpload, array $beforeUpload = array())
-    {
-        $diff = $beforeUploadItems = array();
-
-        if (!empty($beforeUpload)) {
-            foreach ($beforeUpload as $item) {
-                $beforeUploadItems[] = $item->getId();
-            }
-            foreach ($afterUpload as $index=>$item) {
-                if (!in_array($item->getId(), $beforeUploadItems)) {
-                    $diff[] = $afterUpload[$index];
-                }
-            }
-        } else {
-            $diff = $afterUpload;
-        }
-
-        return $diff;
     }
 
     /**

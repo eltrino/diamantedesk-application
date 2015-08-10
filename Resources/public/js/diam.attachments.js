@@ -36,8 +36,16 @@ define(['jquery', 'underscore', 'oroui/js/modal', 'oroui/js/mediator'],
               data: data,
               processData: false,
               contentType: false,
-              type: 'post'
-            }).done(onPost).fail(function(){
+              type: 'post',
+              success: function(response) {
+                  if(response.result){
+                      var newElements = template({attachments : response.attachments});
+                      $attachment.find('.diam-attachment-new').removeClass('diam-attachment-new');
+                      $dropzone.before(newElements);
+                  }
+                  resetDropZone();
+              }
+            }).fail(function(){
               var dialog = new Modal({
                 content: 'Something went wrong, try upload file once more',
                 cancelText: 'Close',
@@ -47,20 +55,6 @@ define(['jquery', 'underscore', 'oroui/js/modal', 'oroui/js/mediator'],
               resetDropZone();
               dialog.open()
             });
-          },
-          onPost = function(){
-            $.ajax({
-              url : $(form).data('update'),
-              type : 'get',
-              dataType: 'json'
-            }).done(function(json){
-              if(json.result){
-                var newElements = template({attachments : json.attachments});
-                $attachment.find('.diam-attachment-new').removeClass('diam-attachment-new');
-                $dropzone.before(newElements);
-              }
-              resetDropZone();
-            })
           },
           resetDropZone = function(){
             $label.show();

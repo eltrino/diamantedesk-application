@@ -35,7 +35,6 @@
             <div class="diam-dropzone-placeholder">
                 <form id="diam-dropzone-form"
                       action="{{ path('diamante_ticket_create_attach_post', {'id': ticket.id}) }}"
-                      data-update="{{ path('diamante_ticket_attachment_latest', {'ticketId': ticket.id}) }}"
                       method="post" enctype="multipart/form-data">
                     <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> {{ 'diamante.desk.attachment.placeholders.dropzone'|trans }}</label>
                     <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>

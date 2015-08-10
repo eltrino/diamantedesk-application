@@ -21,7 +21,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Model\Attachment\File;
 
-class LoadAttachmentData extends AbstractContainerAwareFixture implements  DependentFixtureInterface
+class LoadAttachmentData extends AbstractContainerAwareFixture implements DependentFixtureInterface
 {
     /**
      * {@inheritdoc}

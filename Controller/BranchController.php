@@ -32,6 +32,8 @@ use Symfony\Component\Validator\Exception\ValidatorException;
  */
 class BranchController extends Controller
 {
+    use Shared\FormHandlerTrait;
+
     /**
      * @Route(
      *      "/{_format}",
@@ -240,24 +242,6 @@ class BranchController extends Controller
             $this->container->get('monolog.logger.diamante')->error(sprintf('Branch deletion failed: %s', $e->getMessage()));
             $this->addErrorMessage('diamante.desk.branch.messages.delete.error');
             return new Response($e->getMessage(), 500);
-        }
-    }
-
-    /**
-     * @param Form $form
-     * @throws MethodNotAllowedException
-     * @throws ValidatorException
-     */
-    private function handle(Form $form)
-    {
-        if (false === $this->getRequest()->isMethod('POST')) {
-            throw new MethodNotAllowedException(array('POST'), 'Form can be posted only by "POST" method.');
-        }
-
-        $form->handleRequest($this->getRequest());
-
-        if (false === $form->isValid()) {
-            throw new ValidatorException('Form object validation failed, form is invalid.');
         }
     }
 
