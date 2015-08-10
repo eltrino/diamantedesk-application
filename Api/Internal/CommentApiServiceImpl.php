@@ -122,7 +122,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     public function addCommentAttachment(Command\AddCommentAttachmentCommand $command, $flush = false)
     {
         $this->prepareAttachmentInput($command);
-        return parent::addCommentAttachment($command, $flush);
+        return parent::addCommentAttachment($command, true);
     }
 
     /**
@@ -225,7 +225,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      */
     public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command, $flush = false)
     {
-        return parent::updateCommentContentAndTicketStatus($command, $flush);
+        return parent::updateCommentContentAndTicketStatus($command, true);
     }
 
     /**

@@ -278,7 +278,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      */
     public function removeAttachmentFromTicket(RemoveTicketAttachmentCommand $command, $flush = false)
     {
-        return parent::removeAttachmentFromTicket($command, $flush);
+        return parent::removeAttachmentFromTicket($command, true);
     }
 
     /**
