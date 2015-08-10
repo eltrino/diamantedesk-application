@@ -24,23 +24,6 @@ class AnonymousAuthorizationImpl implements Authorization
     use AuthorizationImplTrait;
 
     /**
-     * @var SecurityContextInterface
-     */
-    private $securityContext;
-
-    /**
-     * @var DoctrineDiamanteUserRepository
-     */
-    private $diamanteUserRepository;
-
-    /**
-     * @var array
-     */
-    private $permissionsMap = array(
-        'Entity:DiamanteDeskBundle:Ticket'   => array('CREATE'),
-    );
-
-    /**
      * @param DoctrineDiamanteUserRepository $diamanteUserRepository
      * @param SecurityContextInterface       $securityContext
      */
@@ -50,5 +33,9 @@ class AnonymousAuthorizationImpl implements Authorization
     ) {
         $this->securityContext = $securityContext;
         $this->diamanteUserRepository = $diamanteUserRepository;
+
+        $this->permissionsMap = array(
+            'Entity:DiamanteDeskBundle:Ticket'   => array('CREATE'),
+        );
     }
 } 

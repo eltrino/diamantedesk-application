@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Entity;
 
+use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,7 +35,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
  *      }
  * )
  */
-class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
+class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket implements Owned
 {
     /**
      * @var integer

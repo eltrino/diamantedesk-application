@@ -56,9 +56,9 @@ class RenderTagExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'render_ticket_tag' => new \Twig_Function_Method(
-                $this,
-                'renderTag',
+             new \Twig_SimpleFunction(
+                'render_ticket_tag',
+                [$this, 'renderTag'],
                 array(
                     'is_safe'           => array('html'),
                     'needs_environment' => true
@@ -69,6 +69,7 @@ class RenderTagExtension extends \Twig_Extension
 
     public function renderTag(\Twig_Environment $twig, $ticketId)
     {
+        /** @var \Diamante\DeskBundle\Entity\Ticket $ticket */
         $ticket = $this->ticketRepository->get($ticketId);
         $this->tagManager->loadTagging($ticket);
 

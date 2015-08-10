@@ -367,8 +367,6 @@ class TicketServiceImpl implements TicketService
             $this->tagManager->saveTagging($ticket);
         }
 
-        //$this->doctrineRegistry->getManager()->detach($ticket);
-
         try {
             $this->doctrineRegistry->getManager()->flush();
         } catch (\Exception $e) {

@@ -26,4 +26,6 @@ trait FormHandlerTrait
             throw new ValidatorException('Form object validation failed, form is invalid.');
         }
     }
+
+    abstract public function getRequest();
 }
