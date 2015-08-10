@@ -64,7 +64,7 @@ class CommandFactory
         $command->description = $ticket->getDescription();
         $command->reporter = $ticket->getReporter();
         $command->assignee = $ticket->getAssignee();
-        $command->status = $ticket->getStatus();
+        $command->status = $ticket->getStatus()->getValue();
         $command->priority = $ticket->getPriority();
         $command->branch = $ticket->getBranch();
         $command->source = $ticket->getSource();

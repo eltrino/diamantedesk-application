@@ -38,6 +38,8 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 class CommentController extends Controller
 {
     use Shared\FormHandlerTrait;
+    use Shared\ExceptionHandlerTrait;
+    use Shared\SessionFlashMessengerTrait;
 
     /**
      * @Route(
@@ -125,11 +127,8 @@ class CommentController extends Controller
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
             $response = $this->getSuccessSaveResponse((string) $ticket->getKey());
-        } catch (MethodNotAllowedException $e) {
-            $response = array('form' => $formView, 'ticket' => $ticket);
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Comment saving failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.comment.messages.create.error');
+            $this->handleException($e, 'Comment saving failed: %s', 'diamante.desk.comment.messages.create.error');
             $response = array('form' => $formView, 'ticket' => $ticket);
         }
         return $response;
@@ -153,8 +152,7 @@ class CommentController extends Controller
 
             $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Comment deletion failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.comment.messages.delete.error');
+            $this->handleException($e, 'Comment deletion failed: %s', 'diamante.desk.comment.messages.delete.error');
         }
 
         return $this->redirect(
@@ -224,8 +222,7 @@ class CommentController extends Controller
             $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment deletion failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
+            $this->handleException($e, 'Attachment deletion failed: %s', 'diamante.desk.attachment.messages.delete.error');
         }
 
         $response = $this->redirect($this->generateUrl(
@@ -234,28 +231,6 @@ class CommentController extends Controller
         ));
 
         return $response;
-    }
-
-    /**
-     * @param $message
-     */
-    private function addSuccessMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans($message)
-        );
-    }
-
-    /**
-     * @param $message
-     */
-    private function addErrorMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            $this->get('translator')->trans($message)
-        );
     }
 
     /**

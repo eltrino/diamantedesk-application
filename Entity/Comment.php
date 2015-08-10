@@ -16,8 +16,8 @@ namespace Diamante\DeskBundle\Entity;
 
 use Diamante\DeskBundle\Model\Shared\Owned;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Diamante\UserBundle\Model\User as UserModel;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineCommentRepository")
@@ -60,7 +60,7 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment implements Owned
     protected $ticket;
 
     /**
-     * @var User
+     * @var UserModel
      *
      * @ORM\Column(name="author_id", type="user_type")
      */
@@ -103,6 +103,9 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment implements Owned
         return __CLASS__;
     }
 
+    /**
+     * @return UserModel
+     */
     public function getOwner()
     {
         return $this->author;

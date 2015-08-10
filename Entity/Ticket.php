@@ -20,6 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Diamante\UserBundle\Model\User as UserModel;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository")
@@ -97,7 +98,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket implements Owned
     protected $branch;
 
     /**
-     * @var User
+     * @var UserModel
      * @ORM\Column(type="user_type", name="reporter_id")
      */
     protected $reporter;
@@ -168,7 +169,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket implements Owned
     }
 
     /**
-     * @return User
+     * @return UserModel
      */
     public function getOwner()
     {

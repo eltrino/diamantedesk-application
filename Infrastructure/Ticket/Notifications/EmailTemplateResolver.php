@@ -47,7 +47,7 @@ class EmailTemplateResolver implements TemplateResolver
      */
     private function isTxtType($type)
     {
-        return $type === self::TYPE_TXT;
+        return $type == self::TYPE_TXT;
     }
 
     /**
@@ -56,6 +56,6 @@ class EmailTemplateResolver implements TemplateResolver
      */
     private function isHtmlType($type)
     {
-        return $type === self::TYPE_HTML;
+        return $type == self::TYPE_HTML;
     }
 }

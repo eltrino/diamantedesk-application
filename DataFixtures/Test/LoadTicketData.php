@@ -54,6 +54,7 @@ class LoadTicketData extends AbstractContainerAwareFixture implements DependentF
         $reporter = new User($assignee->getId(), User::TYPE_ORO);
 
         for ($i = 1; $i <= 10; $i ++) {
+            /** @var \Diamante\DeskBundle\Entity\Branch $branch */
             $branch = $this->branchRepository->findOneBy(array('name' => 'branchName' . $i));
             $ticket = new Ticket(
                 UniqueId::generate(),

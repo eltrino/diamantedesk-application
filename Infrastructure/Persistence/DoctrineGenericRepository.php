@@ -29,7 +29,7 @@ use Diamante\UserBundle\Model\ApiUser\ApiUser;
  *
  * @method \Diamante\DeskBundle\Entity\Ticket findOneByTicketKey(\Diamante\DeskBundle\Model\Ticket\TicketKey $key)
  */
-class DoctrineGenericRepository extends EntityRepository implements Repository, FilterableRepository
+class DoctrineGenericRepository extends EntityRepository implements FilterableRepository, Repository
 {
     const SELECT_ALIAS = 'e';
 

@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Branch implements Entity, Taggable
+class Branch implements Taggable, Entity
 {
     /**
      * @var integer

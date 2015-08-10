@@ -280,7 +280,7 @@ class EmailNotifier implements Notifier
     }
 
     /**
-     * @param OroUser|ApiUser $user
+     * @param OroUser|ApiUser|int $user
      * @return \Diamante\UserBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
      */
     private function getUserDependingOnType($user)

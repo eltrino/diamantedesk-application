@@ -33,6 +33,8 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 class BranchController extends Controller
 {
     use Shared\FormHandlerTrait;
+    use Shared\ExceptionHandlerTrait;
+    use Shared\SessionFlashMessengerTrait;
 
     /**
      * @Route(
@@ -88,8 +90,7 @@ class BranchController extends Controller
                 return $branch->getId();
             });
         } catch(\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch creation failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.create.error');
+            $this->handleException($e, 'Branch creation failed: %s', 'diamante.desk.branch.messages.create.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
@@ -161,8 +162,7 @@ class BranchController extends Controller
                 )
             );
         } catch(\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch update failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
+            $this->handleException($e, 'Branch update failed: %s', 'diamante.desk.branch.messages.save.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_view',
@@ -207,11 +207,8 @@ class BranchController extends Controller
                 );
             }
             $response = array('form' => $formView);
-        } catch (MethodNotAllowedException $e) {
-            $response = array('form' => $form->createView());
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch saving failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
+            $this->handleException($e, 'Branch saving failed: %s', 'diamante.desk.branch.messages.save.error');
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -239,32 +236,9 @@ class BranchController extends Controller
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch deletion failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.delete.error');
+            $this->handleException($e, 'Branch deletion failed: %s', 'diamante.desk.branch.messages.delete.error');
             return new Response($e->getMessage(), 500);
         }
-    }
-
-    /**
-     * @param $message
-     */
-    private function addSuccessMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans($message)
-        );
-    }
-
-    /**
-     * @param $message
-     */
-    private function addErrorMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            $this->get('translator')->trans($message)
-        );
     }
 
     /**

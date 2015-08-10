@@ -332,8 +332,8 @@ class TicketServiceImpl implements TicketService
     /**
      * Create Ticket
      * @param CreateTicketCommand $command
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
-     * @throws \RuntimeException if unable to load required branch, reporter, assignee
+     * @return Ticket
+     * @throws \Exception
      */
     public function createTicket(CreateTicketCommand $command)
     {
@@ -347,7 +347,7 @@ class TicketServiceImpl implements TicketService
             ->setDescription($command->description)
             ->setBranchId($command->branch)
             ->setReporter($command->reporter)
-            ->setAssigneeId($command->assignee)
+            ->setAssignee($command->assignee)
             ->setPriority($command->priority)
             ->setSource($command->source)
             ->setStatus($command->status)

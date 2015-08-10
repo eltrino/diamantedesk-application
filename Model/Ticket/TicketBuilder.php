@@ -14,6 +14,8 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
+use Oro\Bundle\UserBundle\Entity\User;
+
 interface TicketBuilder
 {
     /**
@@ -47,10 +49,10 @@ interface TicketBuilder
     public function setReporter($id);
 
     /**
-     * @param int $id
+     * @param int|User $identity
      * @return $this
      */
-    public function setAssigneeId($id);
+    public function setAssignee($identity);
 
     /**
      * @param string $priority
@@ -71,7 +73,7 @@ interface TicketBuilder
     public function setStatus($status);
 
     /**
-     * @param array|\Doctrine\Common\Collections\ArrayCollection|null $tags
+     * @param \ArrayAccess|null $tags
      * @return $this
      */
     public function setTags($tags);
