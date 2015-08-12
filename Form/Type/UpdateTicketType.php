@@ -38,4 +38,14 @@ class UpdateTicketType extends CreateTicketType
             )
         );
     }
+
+    /**
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
+     */
+    public function getName()
+    {
+        return 'diamante_ticket_update_form';
+    }
 }

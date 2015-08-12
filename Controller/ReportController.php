@@ -25,6 +25,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ReportController extends Controller
 {
+    use Shared\ExceptionHandlerTrait;
+    use Shared\SessionFlashMessengerTrait;
+
     /**
      * @Route(
      *      "/{id}",
@@ -46,7 +49,8 @@ class ReportController extends Controller
                 'data'       => $data,
             ];
         } catch (\Exception $e) {
-            return $this->throwException($e);
+            $this->handleException($e, 'Report build failed', 'diamante.desk.report.messages.build.error');
+            return new Response($e->getMessage(), 404);
         }
     }
 
@@ -78,7 +82,8 @@ class ReportController extends Controller
             );
 
         } catch (\Exception $e) {
-            return $this->throwException($e);
+            $this->handleException($e, 'Report build failed', 'diamante.desk.report.messages.build.error');
+            return new Response($e->getMessage(), 404);
         }
     }
 
@@ -90,20 +95,5 @@ class ReportController extends Controller
     {
         $config = $this->get('diamante.report.service')->getConfig($id);
         return $config['chart']['type'];
-    }
-
-    /**
-     * @param $e
-     * @return Response
-     */
-    private function throwException(\Exception $e)
-    {
-        $this->container->get('monolog.logger.diamante')->error(sprintf('Report build failed: %s',
-            $e->getMessage()));
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            $this->get('translator')->trans($e->getMessage())
-        );
-        return new Response($e->getMessage(), 404);
     }
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante_ticket_status_form.type.class">Diamante\DeskBundle\Form\Type\UpdateTicketStatusType</parameter>
+        <parameter key="diamante_add_watcher_form.type.class">Diamante\DeskBundle\Form\Type\AddWatcherType</parameter>
+        <parameter key="diamante_assignee_select_form.type.class">Diamante\DeskBundle\Form\Type\AssigneeSelectType</parameter>
+        <parameter key="diamante_ticket_form_assignee.type.class">Diamante\DeskBundle\Form\Type\AssigneeTicketType</parameter>
+        <parameter key="diamante_attachment_form.type.class">Diamante\DeskBundle\Form\Type\AttachmentType</parameter>
+        <parameter key="diamante_branch_email_configuration_form.type.class">Diamante\DeskBundle\Form\Type\BranchEmailConfigurationType</parameter>
+        <parameter key="diamante_comment_form.type.class">Diamante\DeskBundle\Form\Type\CommentType</parameter>
+        <parameter key="diamante_branch_form.type.class">Diamante\DeskBundle\Form\Type\CreateBranchType</parameter>
+        <parameter key="diamante_ticket_form.type.class">Diamante\DeskBundle\Form\Type\CreateTicketType</parameter>
+        <parameter key="diamante_email_processing_default_branch.type.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
+        <parameter key="diamante_user_select.type.class">Diamante\DeskBundle\Form\Type\DiamanteUserSelectType</parameter>
+        <parameter key="diamante_ticket_form_move.type.class">Diamante\DeskBundle\Form\Type\MoveTicketType</parameter>
+        <parameter key="diamante_reporter_select.type.class">Diamante\DeskBundle\Form\Type\ReporterSelectType</parameter>
+        <parameter key="diamante_update_branch_form.type.class">Diamante\DeskBundle\Form\Type\UpdateBranchType</parameter>
+        <parameter key="diamante_ticket_update_form.type.class">Diamante\DeskBundle\Form\Type\UpdateTicketType</parameter>
+        <parameter key="diamante_watcher_select.type.class">Diamante\DeskBundle\Form\Type\WatcherSelectType</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante_ticket_status_form" class="%diamante_ticket_status_form.type.class%">
+            <tag name="form.type" alias="diamante_ticket_status_form"/>
+        </service>
+        <service id="diamante_add_watcher_form" class="%diamante_add_watcher_form.type.class%">
+            <tag name="form.type" alias="diamante_add_watcher_form"/>
+        </service>
+        <service id="diamante_assignee_select_form" class="%diamante_assignee_select_form.type.class%">
+            <tag name="form.type" alias="diamante_assignee_select_form"/>
+        </service>
+        <service id="diamante_ticket_form_assignee" class="%diamante_ticket_form_assignee.type.class%">
+            <tag name="form.type" alias="diamante_ticket_form_assignee"/>
+        </service>
+        <service id="diamante_attachment_form" class="%diamante_attachment_form.type.class%">
+            <tag name="form.type" alias="diamante_attachment_form"/>
+        </service>
+        <service id="diamante_branch_email_configuration_form" class="%diamante_branch_email_configuration_form.type.class%">
+            <tag name="form.type" alias="diamante_branch_email_configuration_form"/>
+        </service>
+        <service id="diamante_comment_form" class="%diamante_comment_form.type.class%">
+            <tag name="form.type" alias="diamante_comment_form"/>
+        </service>
+        <service id="diamante_branch_form" class="%diamante_branch_form.type.class%">
+            <tag name="form.type" alias="diamante_branch_form"/>
+        </service>
+        <service id="diamante_ticket_form" class="%diamante_ticket_form.type.class%">
+            <tag name="form.type" alias="diamante_ticket_form"/>
+        </service>
+        <service id="diamante_email_processing_default_branch" class="%diamante_email_processing_default_branch.type.class%">
+            <tag name="form.type" alias="diamante_email_processing_default_branch"/>
+        </service>
+        <service id="diamante_user_select" class="%diamante_user_select.type.class%">
+            <tag name="form.type" alias="diamante_user_select"/>
+        </service>
+        <service id="diamante_ticket_form_move" class="%diamante_ticket_form_move.type.class%">
+            <tag name="form.type" alias="diamante_ticket_form_move"/>
+        </service>
+        <service id="diamante_reporter_select" class="%diamante_reporter_select.type.class%">
+            <tag name="form.type" alias="diamante_reporter_select"/>
+        </service>
+        <service id="diamante_update_branch_form" class="%diamante_update_branch_form.type.class%">
+            <tag name="form.type" alias="diamante_update_branch_form"/>
+        </service>
+        <service id="diamante_ticket_update_form" class="%diamante_ticket_update_form.type.class%">
+            <tag name="form.type" alias="diamante_ticket_update_form"/>
+        </service>
+        <service id="diamante_watcher_select" class="%diamante_watcher_select.type.class%">
+            <tag name="form.type" alias="diamante_watcher_select"/>
+        </service>
+    </services>
+</container>

@@ -25,12 +25,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("comment")
@@ -126,9 +123,9 @@ class CommentController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse((string) $ticket->getKey());
+            $response = $this->getSuccessSaveResponse((string)$ticket->getKey());
         } catch (\Exception $e) {
-            $this->handleException($e, 'Comment saving failed: %s', 'diamante.desk.comment.messages.create.error');
+            $this->handleException($e);
             $response = array('form' => $formView, 'ticket' => $ticket);
         }
         return $response;
@@ -152,7 +149,7 @@ class CommentController extends Controller
 
             $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
         } catch (\Exception $e) {
-            $this->handleException($e, 'Comment deletion failed: %s', 'diamante.desk.comment.messages.delete.error');
+            $this->handleException($e, 'Comment deletion failed', 'diamante.desk.comment.messages.delete.error');
         }
 
         return $this->redirect(
@@ -222,7 +219,7 @@ class CommentController extends Controller
             $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
         } catch (\Exception $e) {
-            $this->handleException($e, 'Attachment deletion failed: %s', 'diamante.desk.attachment.messages.delete.error');
+            $this->handleException($e, 'Attachment deletion failed', 'diamante.desk.attachment.messages.delete.error');
         }
 
         $response = $this->redirect($this->generateUrl(

@@ -15,6 +15,7 @@
 
 namespace Diamante\DeskBundle\Controller\Shared;
 
+use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 use Symfony\Bridge\Monolog\Logger;
 
 trait ExceptionHandlerTrait
@@ -24,39 +25,42 @@ trait ExceptionHandlerTrait
      */
     protected $logger;
 
+    /** @var
+     * array
+     */
+    protected $ignoredExceptions = [
+        'Symfony\Component\Routing\Exception\MethodNotAllowedException'
+    ];
+
+    /**
+     * @param \Exception $e
+     * @param bool $showFlashMessage
+     * @param bool $skipIgnored
+     * @return array
+     */
     protected function handleException(
         \Exception $e,
-        $message = null,
-        $flashMessage = null,
-        $reloadPage = false,
-        $redirectRoute = null,
-        $redirectParams = []
+        $showFlashMessage = true,
+        $skipIgnored = true
     )
     {
-        $response = [];
-
-        /** @var \Symfony\Bundle\FrameworkBundle\Controller\Controller $this */
-        if (empty($this->logger)) {
-            $this->logger = $this->get('monolog.logger.diamante');
+        if (in_array(get_class($e), $this->ignoredExceptions) && $skipIgnored) {
+            return null;
         }
 
-        if (!is_null($message)) {
-            $this->logger->error(sprintf($message, $e->getMessage()));
+        if ($e instanceof Flashable) {
+            $message = $e->getFlashMessage();
+        } else {
+            $message = 'Exception occurred';
         }
 
-        if (!is_null($flashMessage)) {
-            $this->addErrorMessage($flashMessage);
-        }
+        $this->get('monolog.logger.diamante')
+            ->error(
+                sprintf("%s: %s", $message, $e->getMessage())
+            );
 
-        if (!is_null($redirectRoute)) {
-            $response['redirect'] = $this->get('router')->generate($redirectRoute, $redirectParams);
+        if ($showFlashMessage) {
+            $this->addErrorMessage($message);
         }
-
-        if ($reloadPage) {
-            $response['reload_page'] = true;
-        }
-
-        return $response;
     }
-
 }

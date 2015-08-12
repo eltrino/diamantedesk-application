@@ -14,7 +14,13 @@
  */
 namespace Diamante\DeskBundle\Model\Branch\Exception;
 
+use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 
-class BranchNotFoundException extends EntityNotFoundException
-{}
+class BranchNotFoundException extends EntityNotFoundException implements Flashable
+{
+    public function getFlashMessage()
+    {
+        return 'diamante.desk.branch.messages.get.error';
+    }
+}

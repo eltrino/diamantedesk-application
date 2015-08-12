@@ -69,7 +69,7 @@ class BranchController extends Controller
                 'branchEmailConfiguration' => $branchEmailConfiguration
             ];
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch loading failed: %s', $e->getMessage()));
+            $this->handleException($e, 'Branch loading failed', 'diamante.desk.branch.messages.get.error');
             return new Response($e->getMessage(), 404);
         }
     }
@@ -90,7 +90,7 @@ class BranchController extends Controller
                 return $branch->getId();
             });
         } catch(\Exception $e) {
-            $this->handleException($e, 'Branch creation failed: %s', 'diamante.desk.branch.messages.create.error');
+            $this->handleException($e, 'Branch creation failed', 'diamante.desk.branch.messages.create.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
@@ -138,7 +138,7 @@ class BranchController extends Controller
         $branch = $this->get('diamante.branch.service')->getBranch($id);
         $command = BranchCommand::fromBranch($branch);
 
-        if ($this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id)) {
+        if ($this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id) !== null) {
             $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id);
             $branchEmailConfigurationCommand = BranchEmailConfigurationCommand::fromBranchEmailConfiguration($branchEmailConfiguration);
             $command->setBranchEmailConfiguration($branchEmailConfigurationCommand);
@@ -162,7 +162,7 @@ class BranchController extends Controller
                 )
             );
         } catch(\Exception $e) {
-            $this->handleException($e, 'Branch update failed: %s', 'diamante.desk.branch.messages.save.error');
+            $this->handleException($e, 'Branch update failed', 'diamante.desk.branch.messages.save.error');
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_view',
@@ -208,7 +208,7 @@ class BranchController extends Controller
             }
             $response = array('form' => $formView);
         } catch (\Exception $e) {
-            $this->handleException($e, 'Branch saving failed: %s', 'diamante.desk.branch.messages.save.error');
+            $this->handleException($e, 'Branch saving failed', 'diamante.desk.branch.messages.save.error');
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -236,7 +236,7 @@ class BranchController extends Controller
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
         } catch (\Exception $e) {
-            $this->handleException($e, 'Branch deletion failed: %s', 'diamante.desk.branch.messages.delete.error');
+            $this->handleException($e, 'Branch deletion failed', 'diamante.desk.branch.messages.delete.error');
             return new Response($e->getMessage(), 500);
         }
     }

@@ -63,6 +63,10 @@ class AttachmentController extends Controller
         }
     }
 
+    /**
+     * @param AttachmentDto $attachmentDto
+     * @return BinaryFileResponse
+     */
     private function getFileDownloadResponse(AttachmentDto $attachmentDto)
     {
         $response = new BinaryFileResponse($attachmentDto->getFilePath());

@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Exception;
 
-class TicketMovedException extends \RuntimeException
+use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
+
+class TicketMovedException extends \RuntimeException implements Flashable
 {
     private $ticketKey;
 
@@ -27,5 +29,10 @@ class TicketMovedException extends \RuntimeException
     public function getTicketKey()
     {
         return $this->ticketKey;
+    }
+
+    public function getFlashMessage()
+    {
+        return 'diamante.desk.ticket.messages.move.error';
     }
 }

@@ -32,7 +32,7 @@ class BranchListener
         $query = $em->createQuery("SELECT b FROM DiamanteDeskBundle:Branch b WHERE b.key = :key")
             ->setParameter('key', $branch->getKey());
         $result = $query->getResult();
-        if (count($result)) {
+        if (count($result) > 0) {
             throw new DuplicateBranchKeyException('Branch key already exists. Please, provide another one.');
         }
     }

@@ -29,6 +29,7 @@ use Doctrine\ORM\Query;
  * @package Diamante\DeskBundle\Infrastructure\Persistence
  *
  * @method \Diamante\DeskBundle\Entity\Ticket findOneByTicketKey(TicketKey $key)
+ * @method \Diamante\DeskBundle\Entity\Ticket[] findByBranch($id)
  */
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
