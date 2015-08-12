@@ -105,7 +105,7 @@ class WatchersServiceImpl implements WatchersService
     {
         $watcher = $this->watcherListRepository->findOne($ticket, $user);
 
-        if ($watcher) {
+        if ($watcher !== null) {
             $this->watcherListRepository->remove($watcher);
         }
     }

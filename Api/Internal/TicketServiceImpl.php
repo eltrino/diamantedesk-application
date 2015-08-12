@@ -17,8 +17,16 @@ namespace Diamante\DeskBundle\Api\Internal;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentCreateException;
+use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentDeleteException;
+use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentNotFoundException;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketAssigneeNotFoundException;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketChangeStatusException;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketCreateException;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketDeleteException;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketUpdateException;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Priority;
@@ -53,6 +61,8 @@ use Oro\Bundle\SecurityBundle\SecurityFacade;
 
 class TicketServiceImpl implements TicketService
 {
+    use Shared\AttachmentTrait;
+
     /**
      * @var Registry
      */
@@ -209,7 +219,7 @@ class TicketServiceImpl implements TicketService
         $ticket = $this->ticketRepository
             ->getByTicketKey($ticketKey);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+            throw new TicketNotFoundException();
         }
 
         $this->removePrivateComments($ticket);
@@ -227,7 +237,7 @@ class TicketServiceImpl implements TicketService
         /** @var \Diamante\DeskBundle\Model\Ticket\Ticket $ticket */
         $ticket = $this->ticketRepository->get($id);
         if (is_null($ticket)) {
-            throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
+            throw new TicketNotFoundException();
         }
 
         $this->removePrivateComments($ticket);
@@ -262,7 +272,7 @@ class TicketServiceImpl implements TicketService
 
         $attachment = $ticket->getAttachment($command->attachmentId);
         if (!$attachment) {
-            throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
+            throw new AttachmentNotFoundException();
         }
         return $attachment;
     }
@@ -281,18 +291,15 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
-        $attachments = [];
+        try {
+            $attachments = $this->createAttachments($command, $ticket);
 
-        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
-            foreach ($command->attachmentsInput as $each) {
-                $attachments[] = $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
-            }
+            $this->ticketRepository->store($ticket);
+        } catch (\Exception $e) {
+            throw new AttachmentCreateException($e->getMessage());
         }
 
-        $this->ticketRepository->store($ticket);
-
         $this->dispatchEvents($ticket);
-
         return $attachments;
     }
 
@@ -310,22 +317,26 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
-        $attachment = $ticket->getAttachment($command->attachmentId);
-        if (!$attachment) {
-            throw new \RuntimeException('Attachment loading failed. Ticket has no such attachment.');
+        try {
+            $attachment = $ticket->getAttachment($command->attachmentId);
+            if (!$attachment) {
+                throw new AttachmentNotFoundException();
+            }
+
+            $ticket->removeAttachment($attachment);
+            $this->doctrineRegistry->getManager()->persist($ticket);
+
+            $this->attachmentManager->deleteAttachment($attachment);
+
+            if (true === $flush) {
+                $this->doctrineRegistry->getManager()->flush();
+            }
+
+        } catch (\Exception $e) {
+            throw new AttachmentDeleteException($e->getMessage());
         }
-
-        $ticket->removeAttachment($attachment);
-        $this->doctrineRegistry->getManager()->persist($ticket);
-
-        $this->attachmentManager->deleteAttachment($attachment);
 
         $this->dispatchEvents($ticket);
-
-        if (true === $flush) {
-            $this->doctrineRegistry->getManager()->flush();
-        }
-
         return $ticket->getKey();
     }
 
@@ -355,11 +366,7 @@ class TicketServiceImpl implements TicketService
 
         $ticket = $this->ticketBuilder->build();
 
-        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
-            foreach ($command->attachmentsInput as $each) {
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
-            }
-        }
+        $this->createAttachments($command, $ticket);
 
         $this->doctrineRegistry->getManager()->persist($ticket);
 
@@ -370,7 +377,7 @@ class TicketServiceImpl implements TicketService
         try {
             $this->doctrineRegistry->getManager()->flush();
         } catch (\Exception $e) {
-            throw $e;
+            throw new TicketCreateException($e->getMessage());
         }
 
         $this->dispatchEvents($ticket);
@@ -420,21 +427,21 @@ class TicketServiceImpl implements TicketService
             $command->tags
         );
 
-        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
-            foreach ($command->attachmentsInput as $each) {
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $ticket);
-            }
+        $this->createAttachments($command, $ticket);
+
+        try {
+            $this->doctrineRegistry->getManager()->persist($ticket);
+            $this->tagManager->deleteTaggingByParams($ticket->getTags(), get_class($ticket), $ticket->getId());
+            $tags = $command->tags;
+            $tags['owner'] = $tags['all'];
+            $ticket->setTags($tags);
+            $this->tagManager->saveTagging($ticket);
+            $this->dispatchEvents($ticket);
+
+            $this->doctrineRegistry->getManager()->flush();
+        } catch (\Exception $e) {
+            throw new TicketUpdateException($e->getMessage());
         }
-
-        $this->doctrineRegistry->getManager()->persist($ticket);
-        $this->tagManager->deleteTaggingByParams($ticket->getTags(), get_class($ticket), $ticket->getId());
-        $tags = $command->tags;
-        $tags['owner'] = $tags['all'];
-        $ticket->setTags($tags);
-        $this->tagManager->saveTagging($ticket);
-        $this->dispatchEvents($ticket);
-
-        $this->doctrineRegistry->getManager()->flush();
 
         return $ticket;
     }
@@ -450,11 +457,14 @@ class TicketServiceImpl implements TicketService
 
         $this->isAssigneeGranted($ticket);
 
-        $ticket->updateStatus(new Status($command->status));
-        $this->ticketRepository->store($ticket);
+        try {
+            $ticket->updateStatus(new Status($command->status));
+            $this->ticketRepository->store($ticket);
+        } catch (\Exception $e) {
+            throw new TicketChangeStatusException($e->getMessage());
+        }
 
         $this->dispatchEvents($ticket);
-
         return $ticket;
     }
 
@@ -466,16 +476,21 @@ class TicketServiceImpl implements TicketService
     public function moveTicket(MoveTicketCommand $command)
     {
         $ticket = $this->loadTicketById($command->id);
-        $this->ticketHistoryRepository->store(new TicketHistory($ticket->getId(), $ticket->getKey()));
-        $ticket->move($command->branch);
-        $this->doctrineRegistry->getManager()->persist($ticket);
 
-        //Remove old key from history to prevent loop redirects
-        if ($oldHistory = $this->ticketHistoryRepository->findOneByTicketKey($ticket->getKey())) {
-            $this->doctrineRegistry->getManager()->remove($oldHistory);
+        try {
+            $this->ticketHistoryRepository->store(new TicketHistory($ticket->getId(), $ticket->getKey()));
+            $ticket->move($command->branch);
+            $this->doctrineRegistry->getManager()->persist($ticket);
+
+            //Remove old key from history to prevent loop redirects
+            if ($oldHistory = $this->ticketHistoryRepository->findOneByTicketKey($ticket->getKey())) {
+                $this->doctrineRegistry->getManager()->remove($oldHistory);
+            }
+
+            $this->doctrineRegistry->getManager()->flush();
+        } catch (\Exception $e) {
+            throw new TicketMovedException($e->getMessage());
         }
-
-        $this->doctrineRegistry->getManager()->flush();
 
         $this->dispatchEvents($ticket);
     }
@@ -491,17 +506,21 @@ class TicketServiceImpl implements TicketService
 
         $this->isAssigneeGranted($ticket);
 
-        if ($command->assignee) {
-            $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
-            if (is_null($assignee)) {
-                throw new \RuntimeException('Assignee loading failed, assignee not found.');
+        try {
+            if ($command->assignee) {
+                $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
+                if (is_null($assignee)) {
+                    throw new TicketAssigneeNotFoundException();
+                }
+                $ticket->assign($assignee);
+            } else {
+                $ticket->unAssign();
             }
-            $ticket->assign($assignee);
-        } else {
-            $ticket->unAssign();
-        }
 
-        $this->ticketRepository->store($ticket);
+            $this->ticketRepository->store($ticket);
+        } catch (\Exception $e) {
+            throw new TicketUpdateException($e->getMessage());
+        }
 
         $this->dispatchEvents($ticket);
     }
@@ -539,11 +558,16 @@ class TicketServiceImpl implements TicketService
     {
         $attachments = $ticket->getAttachments();
         $ticket->delete();
-        foreach ($attachments as $attachment) {
-            $this->attachmentManager->deleteAttachment($attachment);
+
+        try {
+            foreach ($attachments as $attachment) {
+                $this->attachmentManager->deleteAttachment($attachment);
+            }
+            $this->dispatchEvents($ticket);
+            $this->ticketRepository->remove($ticket);
+        } catch (\Exception $e) {
+            throw new TicketDeleteException($e->getMessage());
         }
-        $this->dispatchEvents($ticket);
-        $this->ticketRepository->remove($ticket);
     }
 
     /**
@@ -608,8 +632,12 @@ class TicketServiceImpl implements TicketService
 
         $this->isGranted('EDIT', $ticket);
 
-        $ticket->updateProperties($command->properties);
-        $this->ticketRepository->store($ticket);
+        try {
+            $ticket->updateProperties($command->properties);
+            $this->ticketRepository->store($ticket);
+        } catch (\Exception $e) {
+            throw new TicketUpdateException($e->getMessage());
+        }
         $this->dispatchEvents($ticket);
 
         return $ticket;

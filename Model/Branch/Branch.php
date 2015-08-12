@@ -185,7 +185,7 @@ class Branch implements Taggable, Entity
         $this->name = $name;
         $this->description = $description;
         $this->defaultAssignee = $defaultAssignee;
-        if ($logo) {
+        if ($logo !== null) {
             $this->logo = $logo;
         }
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));

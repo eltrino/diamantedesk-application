@@ -15,13 +15,14 @@
 
 namespace Diamante\DeskBundle\Model\Ticket\Exception;
 
+
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\EntityProcessingException;
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 
-class TicketDeleteException extends EntityProcessingException implements Flashable
+class TicketUpdateException extends EntityProcessingException implements Flashable
 {
     public function getFlashMessage()
     {
-        return 'diamante.desk.ticket.messages.delete.error';
+        return 'diamante.desk.ticket.messages.save.error';
     }
 }

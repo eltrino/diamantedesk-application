@@ -16,9 +16,10 @@
 namespace Diamante\DeskBundle\Model\Branch\Exception;
 
 
+use Diamante\DeskBundle\Infrastructure\Shared\Exception\EntityProcessingException;
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 
-class BranchSaveException extends \RuntimeException implements Flashable
+class BranchSaveException extends EntityProcessingException implements Flashable
 {
     public function getFlashMessage()
     {

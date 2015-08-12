@@ -18,13 +18,18 @@ use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
-use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchCreateException;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchDeleteException;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchSaveException;
+use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\TagBundle\Entity\TagManager;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
@@ -106,9 +111,11 @@ class BranchServiceImpl implements BranchService
     {
         $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
         $branch = $this->branchRepository->get($id);
+
         if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed. Branch not found.');
+            throw new BranchNotFoundException();
         }
+
         $this->tagManager->loadTagging($branch);
         return $branch;
     }
@@ -116,44 +123,38 @@ class BranchServiceImpl implements BranchService
     /**
      * Create Branch
      * @param Command\BranchCommand $branchCommand
-     * @return \Diamante\DeskBundle\Model\Branch\Branch
+     * @return \Diamante\DeskBundle\Entity\Branch
      * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand)
     {
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Branch');
 
-        $logo = null;
-        $originalName = null;
+        $logo = $this->uploadBranchLogoIfExists($branchCommand);
+        $originalLogoFileName = $logo->getOriginalName();
+        $assignee = $this->extractDefaultBranchAssignee($branchCommand);
 
-        if ($branchCommand->logoFile) {
-            $logo = $this->handleLogoUpload($branchCommand->logoFile);
-            $originalName = $branchCommand->logoFile->getClientOriginalName();
+        try {
+            $branch = $this->branchFactory
+                ->create(
+                    $branchCommand->name,
+                    $branchCommand->description,
+                    $branchCommand->key,
+                    $assignee,
+                    $logo,
+                    $originalLogoFileName,
+                    $branchCommand->tags
+                );
+
+            $this->registry->getManager()->persist($branch);
+            $this->tagManager->saveTagging($branch);
+
+            $this->registry->getManager()->flush();
+
+            return $branch;
+        } catch (\Exception $e) {
+            throw new BranchCreateException($e->getMessage());
         }
-
-        if ($branchCommand->defaultAssignee) {
-            $assignee = $this->userService->getByUser(new User($branchCommand->defaultAssignee, User::TYPE_ORO));
-        } else {
-            $assignee = null;
-        }
-
-        $branch = $this->branchFactory
-            ->create(
-                $branchCommand->name,
-                $branchCommand->description,
-                $branchCommand->key,
-                $assignee,
-                $logo,
-                $originalName,
-                $branchCommand->tags
-            );
-
-        $this->registry->getManager()->persist($branch);
-        $this->tagManager->saveTagging($branch);
-
-        $this->registry->getManager()->flush();
-
-        return $branch;
     }
 
     /**
@@ -167,43 +168,29 @@ class BranchServiceImpl implements BranchService
         $this->isGranted('EDIT', 'Entity:DiamanteDeskBundle:Branch');
 
         /**
-         * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
+         * @var $branch \Diamante\DeskBundle\Entity\Branch
          */
         $branch = $this->branchRepository->get($branchCommand->id);
 
-        if ($branchCommand->defaultAssignee) {
-            $assignee = $this->userService->getByUser(new User($branchCommand->defaultAssignee, User::TYPE_ORO));
-        } else {
-            $assignee = null;
+        $assignee = $this->extractDefaultBranchAssignee($branchCommand);
+        if($branchCommand->isRemoveLogo() || $branchCommand->logoFile) {
+            $this->removeBranchLogo($branch);
+        } 
+
+        $file = $this->uploadBranchLogoIfExists($branchCommand);
+
+        try {
+            $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
+            $this->registry->getManager()->persist($branch);
+            $this->handleTagging($branchCommand, $branch);
+
+            $this->registry->getManager()->flush();
+            $this->tagManager->saveTagging($branch);
+
+            return $branch->getId();
+        } catch (\Exception $e) {
+            throw new BranchSaveException($e->getMessage());
         }
-
-        /** @var \Symfony\Component\HttpFoundation\File\File $file */
-        $file = null;
-
-        if($branchCommand->isRemoveLogo()) {
-            $this->branchLogoHandler->remove($branch->getLogo());
-            $file = new Logo();
-        } elseif ($branchCommand->logoFile) {
-            if ($branch->getLogo()) {
-                $this->branchLogoHandler->remove($branch->getLogo());
-            }
-            $logo = $this->handleLogoUpload($branchCommand->logoFile);
-            $file = new Logo($logo->getFilename(), $branchCommand->logoFile->getClientOriginalName());
-        }
-
-        $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
-        $this->registry->getManager()->persist($branch);
-
-        //TODO: Refactor tag manipulations.
-        $this->tagManager->deleteTaggingByParams($branch->getTags(), get_class($branch), $branch->getId());
-        $tags = $branchCommand->tags;
-        $tags['owner'] = $tags['all'];
-        $branch->setTags($tags);
-        $this->tagManager->saveTagging($branch);
-
-        $this->registry->getManager()->flush();
-
-        return $branch->getId();
     }
 
     /**
@@ -216,20 +203,24 @@ class BranchServiceImpl implements BranchService
         $this->isGranted('EDIT', 'Entity:DiamanteDeskBundle:Branch');
 
         /**
-         * @var $branch \Diamante\DeskBundle\Model\Branch\Branch
+         * @var $branch \Diamante\DeskBundle\Entity\Branch
          */
         $branch = $this->branchRepository->get($command->id);
         if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed, branch not found. ');
+            throw new BranchNotFoundException();
         }
 
-        foreach ($command->properties as $name => $value) {
-            $branch->updateProperty($name, $value);
+        try {
+            foreach ($command->properties as $name => $value) {
+                $branch->updateProperty($name, $value);
+            }
+
+            $this->branchRepository->store($branch);
+
+            return $branch;
+        } catch (\Exception $e) {
+            throw new BranchSaveException($e->getMessage());
         }
-
-        $this->branchRepository->store($branch);
-
-        return $branch;
     }
 
     /**
@@ -244,21 +235,33 @@ class BranchServiceImpl implements BranchService
         /** @var Branch $branch */
         $branch = $this->branchRepository->get($branchId);
         if (is_null($branch)) {
-            throw new \RuntimeException('Branch loading failed, branch not found. ');
+            throw new BranchNotFoundException();
         }
-        if ($branch->getLogo()) {
-            $this->branchLogoHandler->remove($branch->getLogo());
+
+        try {
+            if ($branch->getLogo()) {
+                $this->branchLogoHandler->remove($branch->getLogo());
+            }
+            $this->branchRepository->remove($branch);
+        } catch (\Exception $e) {
+            throw new BranchDeleteException($e->getMessage());
         }
-        $this->branchRepository->remove($branch);
     }
 
     /**
-     * @param UploadedFile $file
-     * @return \Symfony\Component\HttpFoundation\File\File
+     * @param Command\BranchCommand $command
+     * @return Logo|null
+     * @throws \Diamante\DeskBundle\Model\Branch\Exception\LogoHandlerLogicException
      */
-    private function handleLogoUpload(UploadedFile $file)
+    private function uploadBranchLogoIfExists(Command\BranchCommand $command)
     {
-        return $this->branchLogoHandler->upload($file);
+        /** @var File $command->logoFile */
+        if (!empty($command->logoFile)) {
+            $logo = $this->branchLogoHandler->upload($command->logoFile);
+            return new Logo($logo, $command->logoFile->getOriginalClientName());
+        }
+
+        return null;
     }
 
     /**
@@ -281,5 +284,44 @@ class BranchServiceImpl implements BranchService
     protected function getBranchRepository()
     {
         return $this->branchRepository;
+    }
+
+    /**
+     * @param Command\BranchCommand $command
+     * @return \Diamante\UserBundle\Entity\DiamanteUser|null|\Oro\Bundle\UserBundle\Entity\User
+     */
+    protected function extractDefaultBranchAssignee(Command\BranchCommand $command)
+    {
+        $assignee = null;
+
+        if ($command->defaultAssignee !== null) {
+            $assignee = $this->userService->getByUser(new User($command->defaultAssignee, User::TYPE_ORO));
+        }
+
+        return $assignee;
+    }
+
+    /**
+     * @param Branch $branch
+     * @return Logo
+     */
+    protected function removeBranchLogo(Branch $branch)
+    {
+        if (null !== $branch->getLogo()) {
+            $this->branchLogoHandler->remove($branch->getLogo());
+        }
+
+        return new Logo();
+    }
+
+    /**
+     * @param Command\BranchCommand $command
+     * @param Branch $branch
+     */
+    protected function handleTagging(Command\BranchCommand $command, Branch $branch)
+    {
+        $tags = $command->getTags();
+        $tags['owner'] = $tags['all'];
+        $branch->setTags($tags);
     }
 }

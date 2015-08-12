@@ -13,15 +13,10 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\Model\Ticket\Exception;
+namespace Diamante\DeskBundle\Infrastructure\Shared\Exception;
 
-use Diamante\DeskBundle\Infrastructure\Shared\Exception\EntityProcessingException;
-use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 
-class TicketDeleteException extends EntityProcessingException implements Flashable
+class EntityProcessingException extends \RuntimeException
 {
-    public function getFlashMessage()
-    {
-        return 'diamante.desk.ticket.messages.delete.error';
-    }
+
 }

@@ -13,15 +13,16 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\Model\Ticket\Exception;
+namespace Diamante\DeskBundle\Model\Attachment\Exception;
 
-use Diamante\DeskBundle\Infrastructure\Shared\Exception\EntityProcessingException;
+
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
+use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 
-class TicketDeleteException extends EntityProcessingException implements Flashable
+class AttachmentNotFoundException extends EntityNotFoundException implements Flashable
 {
     public function getFlashMessage()
     {
-        return 'diamante.desk.ticket.messages.delete.error';
+        return 'diamante.desk.attachment.messages.get.error';
     }
 }

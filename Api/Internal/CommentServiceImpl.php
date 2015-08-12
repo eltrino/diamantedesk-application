@@ -16,10 +16,21 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\CommentService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
+use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentCreateException;
+use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentDeleteException;
+use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentNotFoundException;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
+use Diamante\DeskBundle\Model\Ticket\Exception\CommentAttachmentNotFoundException;
+use Diamante\DeskBundle\Model\Ticket\Exception\CommentCreateException;
+use Diamante\DeskBundle\Model\Ticket\Exception\CommentDeleteException;
+use Diamante\DeskBundle\Model\Ticket\Exception\CommentNotFoundException;
+use Diamante\DeskBundle\Model\Ticket\Exception\CommentSaveException;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -36,6 +47,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CommentServiceImpl implements CommentService
 {
+    use Shared\AttachmentTrait;
+
     /**
      * @var Repository
      */
@@ -119,6 +132,11 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->loadCommentBy($id);
         $this->isGranted('VIEW', $comment);
+
+        if (is_null($comment)) {
+            throw new CommentNotFoundException();
+        }
+
         return $comment;
     }
 
@@ -130,7 +148,7 @@ class CommentServiceImpl implements CommentService
     {
         $comment = $this->commentRepository->get($commentId);
         if (is_null($comment)) {
-            throw new \RuntimeException('Comment loading failed, comment not found.');
+            throw new CommentNotFoundException();
         }
         return $comment;
     }
@@ -143,7 +161,7 @@ class CommentServiceImpl implements CommentService
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
-            throw new \RuntimeException('Ticket loading failed, ticket not found.');
+            throw new TicketNotFoundException();
         }
         return $ticket;
     }
@@ -159,30 +177,25 @@ class CommentServiceImpl implements CommentService
 
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+        try {
+            /**
+             * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
+             */
+            $ticket = $this->loadTicketBy($command->ticket);
+            $author = User::fromString($command->author);
+            $comment = $this->commentFactory->create($command->content, $ticket, $author, $command->private);
 
-        /**
-         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
-         */
-        $ticket = $this->loadTicketBy($command->ticket);
+            $this->createAttachments($command, $comment);
+            $ticket->updateStatus(new Status($command->ticketStatus));
+            $ticket->postNewComment($comment);
+            $this->ticketRepository->store($ticket);
+            $this->dispatchEvents($comment, $ticket);
 
-        $author = User::fromString($command->author);
+            return $comment;
 
-        $comment = $this->commentFactory->create($command->content, $ticket, $author, $command->private);
-
-        if (!empty($command->attachmentsInput)) {
-            foreach ($command->attachmentsInput as $each) {
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
-            }
+        } catch (\Exception $e) {
+            throw new CommentCreateException($e->getMessage());
         }
-
-        $ticket->updateStatus(new Status($command->ticketStatus));
-        $ticket->postNewComment($comment);
-
-        $this->ticketRepository->store($ticket);
-
-        $this->dispatchEvents($comment, $ticket);
-
-        return $comment;
     }
 
     /**
@@ -210,8 +223,8 @@ class CommentServiceImpl implements CommentService
         $this->isGranted('VIEW', $comment);
 
         $attachment = $comment->getAttachment($command->attachmentId);
-        if (!$attachment) {
-            throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
+        if (is_null($attachment)) {
+            throw new CommentAttachmentNotFoundException();
         }
         return $attachment;
     }
@@ -227,27 +240,23 @@ class CommentServiceImpl implements CommentService
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
-        $comment = $this->loadCommentBy($command->commentId);
+        try {
+            $comment = $this->loadCommentBy($command->commentId);
 
-        $this->isGranted('EDIT', $comment);
+            $this->isGranted('EDIT', $comment);
 
-        $attachments = [];
+            $attachments = $this->createAttachments($command, $comment);
+            $this->registry->getManager()->persist($comment);
+            $this->dispatchEvents($comment);
 
-        if (is_array($command->attachmentsInput) && false === empty($command->attachmentsInput)) {
-            foreach ($command->attachmentsInput as $each) {
-                $attachments[] = $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
+            if (true === $flush) {
+                $this->registry->getManager()->flush();
             }
+
+            return $attachments;
+        } catch (\Exception $e) {
+            throw new AttachmentCreateException($e->getMessage());
         }
-
-        $this->registry->getManager()->persist($comment);
-
-        $this->dispatchEvents($comment);
-
-        if (true === $flush) {
-            $this->registry->getManager()->flush();
-        }
-
-        return $attachments;
     }
 
     /**
@@ -268,25 +277,20 @@ class CommentServiceImpl implements CommentService
         $comment->updateContent($command->content);
         $comment->setPrivate($command->private);
 
-        if (!empty($command->attachmentsInput)) {
-            foreach ($command->attachmentsInput as $each) {
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $comment);
+        $this->createAttachments($command, $comment);
+
+        try {
+            $this->registry->getManager()->persist($comment);
+            $ticket = $comment->getTicket();
+            $this->updateTicketStatus($ticket, $command);
+
+            $this->dispatchEvents($comment, $ticket);
+
+            if (true === $flush) {
+                $this->registry->getManager()->flush();
             }
-        }
-
-        $this->registry->getManager()->persist($comment);
-
-        $ticket = $comment->getTicket();
-        $newStatus = new Status($command->ticketStatus);
-        if (false === $ticket->getStatus()->equals($newStatus)) {
-            $ticket->updateStatus($newStatus);
-            $this->registry->getManager()->persist($ticket);
-        }
-
-        $this->dispatchEvents($comment, $ticket);
-
-        if (true === $flush) {
-            $this->registry->getManager()->flush();
+        } catch (\Exception $e) {
+            throw new CommentSaveException($e->getMessage());
         }
     }
 
@@ -302,23 +306,21 @@ class CommentServiceImpl implements CommentService
 
         $this->isGranted('EDIT', $comment);
 
-        $comment->updateContent($command->content);
-        $this->registry->getManager()->persist($comment);
+        try {
+            $comment->updateContent($command->content);
 
-        $ticket = $comment->getTicket();
-        $newStatus = new Status($command->ticketStatus);
-        if (false === $ticket->getStatus()->equals($newStatus)) {
-            $ticket->updateStatus($newStatus);
-            $this->registry->getManager()->persist($ticket);
+            $ticket = $comment->getTicket();
+            $this->updateTicketStatus($ticket, $command);
+            $this->dispatchEvents($comment, $ticket);
+
+            if (true === $flush) {
+                $this->registry->getManager()->flush();
+            }
+
+            return $comment;
+        } catch (\Exception $e) {
+            throw new CommentSaveException($e->getMessage());
         }
-
-        $this->dispatchEvents($comment, $ticket);
-
-        if (true === $flush) {
-            $this->registry->getManager()->flush();
-        }
-
-        return $comment;
     }
 
     /**
@@ -331,14 +333,17 @@ class CommentServiceImpl implements CommentService
         $this->isGranted('DELETE', $comment);
 
         $comment->delete();
+        try {
+            $this->registry->getManager()->remove($comment);
+            foreach ($comment->getAttachments() as $attachment) {
+                $this->attachmentManager->deleteAttachment($attachment);
+            }
+            $this->dispatchEvents($comment);
 
-        $this->registry->getManager()->remove($comment);
-        foreach ($comment->getAttachments() as $attachment) {
-            $this->attachmentManager->deleteAttachment($attachment);
+            $this->registry->getManager()->flush();
+        } catch (\Exception $e) {
+            throw new CommentDeleteException($e->getMessage());
         }
-        $this->dispatchEvents($comment);
-
-        $this->registry->getManager()->flush();
     }
 
     /**
@@ -354,16 +359,20 @@ class CommentServiceImpl implements CommentService
 
         $this->isGranted('EDIT', $comment);
 
-        $attachment = $comment->getAttachment($command->attachmentId);
-        if (!$attachment) {
-            throw new \RuntimeException('Attachment loading failed. Comment has no such attachment.');
-        }
-        $comment->removeAttachment($attachment);
-        $this->registry->getManager()->persist($comment);
-        $this->attachmentManager->deleteAttachment($attachment);
+        try {
+            $attachment = $comment->getAttachment($command->attachmentId);
+            if (null === $attachment) {
+                throw new AttachmentNotFoundException();
+            }
+            $comment->removeAttachment($attachment);
+            $this->registry->getManager()->persist($comment);
+            $this->attachmentManager->deleteAttachment($attachment);
 
-        if (true === $flush) {
-            $this->registry->getManager()->flush();
+            if (true === $flush) {
+                $this->registry->getManager()->flush();
+            }
+        } catch (\Exception $e) {
+            throw new AttachmentDeleteException($e->getMessage());
         }
     }
 
@@ -377,7 +386,7 @@ class CommentServiceImpl implements CommentService
     private function isGranted($operation, $entity)
     {
         // User should have ability to view all comments (except private)
-        // if he is a owner of a ticket
+        // if he is an owner of a ticket
         if ($operation === 'VIEW') {
             if ($this->authorizationService->getLoggedUser()) {
                 $loggedUser = $this->userService->getUserFromApiUser($this->authorizationService->getLoggedUser());
@@ -419,5 +428,18 @@ class CommentServiceImpl implements CommentService
     protected function getCommentsRepository()
     {
         return $this->commentRepository;
+    }
+
+    /**
+     * @param Ticket $ticket
+     * @param $command
+     */
+    protected function updateTicketStatus(Ticket $ticket, $command)
+    {
+        $status = new Status($command->ticketStatus);
+        if (false === $ticket->getStatus()->equals($status)) {
+            $ticket->updateStatus($status);
+            $this->registry->getManager()->persist($ticket);
+        }
     }
 }

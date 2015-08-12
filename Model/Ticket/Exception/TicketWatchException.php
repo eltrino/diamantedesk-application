@@ -15,10 +15,10 @@
 
 namespace Diamante\DeskBundle\Model\Ticket\Exception;
 
-
+use Diamante\DeskBundle\Infrastructure\Shared\Exception\EntityProcessingException;
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 
-class TicketWatchException extends \RuntimeException implements Flashable
+class TicketWatchException extends EntityProcessingException implements Flashable
 {
     public function getFlashMessage()
     {

@@ -14,9 +14,10 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Exception;
 
+use Diamante\DeskBundle\Infrastructure\Shared\Exception\EntityProcessingException;
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 
-class TicketMovedException extends \RuntimeException implements Flashable
+class TicketMovedException extends EntityProcessingException implements Flashable
 {
     private $ticketKey;
 

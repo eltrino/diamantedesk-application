@@ -61,6 +61,7 @@ class BranchController extends Controller
             $branch = $this->get('diamante.branch.service')->getBranch($id);
             $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')
                 ->getConfigurationByBranchId($branch->getId());
+            $this->container->get('oro_tag.tag.manager')->loadTagging($branch);
             return [
                 'entity' => $branch,
                 'branchEmailConfiguration' => $branchEmailConfiguration
