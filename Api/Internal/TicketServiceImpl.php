@@ -52,7 +52,6 @@ use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Oro\Bundle\TagBundle\Entity\TagManager;
@@ -138,7 +137,7 @@ class TicketServiceImpl implements TicketService
      * @param EventDispatcher $dispatcher
      * @param NotificationDeliveryManager $notificationDeliveryManager
      * @param Notifier $notifier
-     * @param DoctrineGenericRepository $ticketHistoryRepository
+     * @param DoctrineTicketHistoryRepository $ticketHistoryRepository
      * @param TagManager $tagManager
      * @param SecurityFacade $securityFacade
      */
@@ -152,7 +151,7 @@ class TicketServiceImpl implements TicketService
                                 EventDispatcher $dispatcher,
                                 NotificationDeliveryManager $notificationDeliveryManager,
                                 Notifier $notifier,
-                                DoctrineGenericRepository $ticketHistoryRepository,
+                                DoctrineTicketHistoryRepository $ticketHistoryRepository,
                                 TagManager $tagManager,
                                 SecurityFacade $securityFacade
     ) {
