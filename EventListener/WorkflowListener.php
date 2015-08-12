@@ -15,15 +15,14 @@
 
 namespace Diamante\AutomationBundle\EventListener;
 
+use Diamante\AutomationBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Diamante\DeskBundle\Model\Shared\Entity;
 
-class OnFlushListener implements EventSubscriber
+class WorkflowListener
 {
     /**
      * @var ContainerInterface
@@ -44,19 +43,9 @@ class OnFlushListener implements EventSubscriber
     }
 
     /**
-     * @return array
+     * @param WorkflowEvent $event
      */
-    public function getSubscribedEvents()
-    {
-        return [
-            'onFlush',
-        ];
-    }
-
-    /**
-     * @param OnFlushEventArgs $event
-     */
-    public function onFlush(OnFlushEventArgs $event)
+    public function processWorkflowRule(WorkflowEvent $event)
     {
         $this->unitOfWork = $event->getEntityManager()->getUnitOfWork();
 
