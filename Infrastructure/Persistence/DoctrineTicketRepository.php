@@ -28,8 +28,9 @@ use Doctrine\ORM\Query;
  * Class DoctrineTicketRepository
  * @package Diamante\DeskBundle\Infrastructure\Persistence
  *
- * @method \Diamante\DeskBundle\Entity\Ticket findOneByTicketKey(TicketKey $key)
- * @method \Diamante\DeskBundle\Entity\Ticket[] findByBranch($id)
+ * @method Ticket findOneByTicketKey(TicketKey $key)
+ * @method Ticket[] findByBranch($id)
+ * @method Ticket|null get($id)
  */
 class DoctrineTicketRepository extends DoctrineGenericRepository implements TicketRepository
 {
@@ -137,23 +138,6 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         }
 
         return $result;
-    }
-
-    /**
-     * @param $id
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
-     */
-    public function get($id)
-    {
-        $ticket = $this->_em
-            ->createQueryBuilder()->select('t')
-            ->from('DiamanteDeskBundle:Ticket', 't')
-            ->where('t.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        return $ticket;
     }
 
     /**

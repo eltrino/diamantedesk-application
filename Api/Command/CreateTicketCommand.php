@@ -34,7 +34,7 @@ class CreateTicketCommand implements Taggable
      * )
      * @Any({@Assert\Type(type="integer"), @Assert\Type(type="object")})
      *
-     * @var int|\Diamante\DeskBundle\Entity\Branch
+     * @var int
      */
     public $branch;
 
@@ -127,7 +127,7 @@ class CreateTicketCommand implements Taggable
     /**
      * Returns the collection of tags for this Taggable entity
      *
-     * @return ArrayCollection
+     * @return ArrayCollection|array
      */
     public function getTags()
     {

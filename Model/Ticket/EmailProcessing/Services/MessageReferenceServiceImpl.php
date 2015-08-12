@@ -156,7 +156,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             ->setDescription($description)
             ->setBranchId($branchId)
             ->setReporter($reporter)
-            ->setAssigneeId($assigneeId)
+            ->setAssignee($assigneeId)
             ->setSource(Source::EMAIL);
 
         $ticket = $this->ticketBuilder->build();

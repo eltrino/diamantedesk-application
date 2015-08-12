@@ -131,7 +131,6 @@ class BranchServiceImpl implements BranchService
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Branch');
 
         $logo = $this->uploadBranchLogoIfExists($branchCommand);
-        $originalLogoFileName = $logo->getOriginalName();
         $assignee = $this->extractDefaultBranchAssignee($branchCommand);
 
         try {
@@ -142,7 +141,6 @@ class BranchServiceImpl implements BranchService
                     $branchCommand->key,
                     $assignee,
                     $logo,
-                    $originalLogoFileName,
                     $branchCommand->tags
                 );
 

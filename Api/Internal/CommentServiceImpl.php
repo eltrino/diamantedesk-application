@@ -379,7 +379,7 @@ class CommentServiceImpl implements CommentService
     /**
      * Verify permissions through Oro Platform security bundle
      *
-     * @param string|string[] $operation
+     * @param string $operation
      * @param Comment|string $entity
      * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
      */
@@ -387,7 +387,7 @@ class CommentServiceImpl implements CommentService
     {
         // User should have ability to view all comments (except private)
         // if he is an owner of a ticket
-        if ($operation === 'VIEW') {
+        if ($operation === 'VIEW' && is_object($entity)) {
             if ($this->authorizationService->getLoggedUser()) {
                 $loggedUser = $this->userService->getUserFromApiUser($this->authorizationService->getLoggedUser());
                 /** @var User $reporter */

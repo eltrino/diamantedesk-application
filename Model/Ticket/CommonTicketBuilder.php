@@ -214,7 +214,7 @@ class CommonTicketBuilder implements TicketBuilder
     }
 
     /**
-     * @param \ArrayAccess|null $tags
+     * @param \ArrayAccess|null|array $tags
      * @return $this
      */
     public function setTags($tags)

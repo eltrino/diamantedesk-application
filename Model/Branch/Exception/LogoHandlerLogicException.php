@@ -15,4 +15,6 @@
 namespace Diamante\DeskBundle\Model\Branch\Exception;
 
 class LogoHandlerLogicException extends \Exception
-{}
+{
+
+}

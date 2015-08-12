@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
-use Diamante\DeskBundle\Model\Attachment\Attachment;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository;
 use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentCreateException;
 use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentDeleteException;
 use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentNotFoundException;
@@ -47,7 +47,6 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
@@ -114,7 +113,7 @@ class TicketServiceImpl implements TicketService
     private $notifier;
 
     /**
-     * @var DoctrineGenericRepository
+     * @var DoctrineTicketHistoryRepository
      */
     private $ticketHistoryRepository;
 
@@ -157,19 +156,19 @@ class TicketServiceImpl implements TicketService
                                 TagManager $tagManager,
                                 SecurityFacade $securityFacade
     ) {
-        $this->doctrineRegistry = $doctrineRegistry;
-        $this->ticketRepository = $ticketRepository;
-        $this->branchRepository = $branchRepository;
-        $this->ticketBuilder = $ticketBuilder;
-        $this->userService = $userService;
-        $this->attachmentManager = $attachmentManager;
-        $this->authorizationService = $authorizationService;
-        $this->dispatcher = $dispatcher;
-        $this->notificationDeliveryManager = $notificationDeliveryManager;
-        $this->notifier = $notifier;
-        $this->ticketHistoryRepository = $ticketHistoryRepository;
-        $this->tagManager = $tagManager;
-        $this->securityFacade = $securityFacade;
+        $this->doctrineRegistry             = $doctrineRegistry;
+        $this->ticketRepository             = $ticketRepository;
+        $this->branchRepository             = $branchRepository;
+        $this->ticketBuilder                = $ticketBuilder;
+        $this->userService                  = $userService;
+        $this->attachmentManager            = $attachmentManager;
+        $this->authorizationService         = $authorizationService;
+        $this->dispatcher                   = $dispatcher;
+        $this->notificationDeliveryManager  = $notificationDeliveryManager;
+        $this->notifier                     = $notifier;
+        $this->ticketHistoryRepository      = $ticketHistoryRepository;
+        $this->tagManager                   = $tagManager;
+        $this->securityFacade               = $securityFacade;
     }
 
     /**
@@ -187,7 +186,7 @@ class TicketServiceImpl implements TicketService
     /**
      * Load Ticket by given Ticket Key
      * @param string $key
-     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     * @return \Diamante\DeskBundle\Entity\Ticket
      */
     public function loadTicketByKey($key)
     {
@@ -688,14 +687,10 @@ class TicketServiceImpl implements TicketService
         }
 
         $comments = $ticket->getComments();
-        $commentsList = $comments->toArray();
-        $comments->clear();
-        foreach($commentsList as $comment) {
-            /** @var \Diamante\DeskBundle\Entity\Comment $comment */
-            if(!$comment->isPrivate()) {
-                $comments->add($comment);
+        foreach ($comments as $comment) {
+            if (!$comment->isPrivate()) {
+                $comments->remove($comment);
             }
         }
-        $comments->takeSnapshot();
     }
 }

@@ -51,7 +51,7 @@ class UpdateTicketCommand implements Taggable
 
     /**
      * @Assert\NotNull()
-     * @var \Diamante\DeskBundle\Model\Ticket\Status
+     * @var string
      */
     public $status;
 
