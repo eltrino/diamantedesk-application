@@ -49,7 +49,7 @@ class ReportController extends Controller
                 'data'       => $data,
             ];
         } catch (\Exception $e) {
-            $this->handleException($e, 'Report build failed', 'diamante.desk.report.messages.build.error');
+            $this->handleException($e);
             return new Response($e->getMessage(), 404);
         }
     }
@@ -82,7 +82,7 @@ class ReportController extends Controller
             );
 
         } catch (\Exception $e) {
-            $this->handleException($e, 'Report build failed', 'diamante.desk.report.messages.build.error');
+            $this->handleException($e);
             return new Response($e->getMessage(), 404);
         }
     }

@@ -14,18 +14,15 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
-use Diamante\DeskBundle\Form\Type\CreateBranchType;
-use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("branches")
@@ -69,7 +66,7 @@ class BranchController extends Controller
                 'branchEmailConfiguration' => $branchEmailConfiguration
             ];
         } catch (\Exception $e) {
-            $this->handleException($e, 'Branch loading failed', 'diamante.desk.branch.messages.get.error');
+            $this->handleException($e);
             return new Response($e->getMessage(), 404);
         }
     }
@@ -82,7 +79,7 @@ class BranchController extends Controller
     {
         $command = new BranchCommand();
         try {
-            $form = $this->createForm(new CreateBranchType(), $command);
+            $form = $this->createForm('diamante_branch_form', $command);
 
             $result = $this->edit($command, $form, function ($command) {
                 $branch = $this->get('diamante.branch.service')->createBranch($command);
@@ -90,7 +87,7 @@ class BranchController extends Controller
                 return $branch->getId();
             });
         } catch(\Exception $e) {
-            $this->handleException($e, 'Branch creation failed', 'diamante.desk.branch.messages.create.error');
+            $this->handleException($e);
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
@@ -145,7 +142,7 @@ class BranchController extends Controller
         }
 
         try {
-            $form = $this->createForm(new UpdateBranchType(), $command);
+            $form = $this->createForm('diamante_update_branch_form', $command);
 
             $result = $this->edit($command, $form, function ($command) use ($branch) {
                 $branchId = $this->get('diamante.branch.service')->updateBranch($command);
@@ -162,7 +159,7 @@ class BranchController extends Controller
                 )
             );
         } catch(\Exception $e) {
-            $this->handleException($e, 'Branch update failed', 'diamante.desk.branch.messages.save.error');
+            $this->handleException($e);
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_view',
@@ -208,7 +205,7 @@ class BranchController extends Controller
             }
             $response = array('form' => $formView);
         } catch (\Exception $e) {
-            $this->handleException($e, 'Branch saving failed', 'diamante.desk.branch.messages.save.error');
+            $this->handleException($e);
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -236,7 +233,7 @@ class BranchController extends Controller
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
         } catch (\Exception $e) {
-            $this->handleException($e, 'Branch deletion failed', 'diamante.desk.branch.messages.delete.error');
+            $this->handleException($e);
             return new Response($e->getMessage(), 500);
         }
     }
