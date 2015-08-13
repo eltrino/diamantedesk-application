@@ -127,7 +127,7 @@ class CommentServiceImpl implements CommentService
     /**
      * Load Comment by given comment id
      * @param int $id
-     * @return \Diamante\DeskBundle\Model\Ticket\Comment
+     * @return \Diamante\DeskBundle\Entity\Comment
      */
     public function loadComment($id)
     {

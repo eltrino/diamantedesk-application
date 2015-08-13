@@ -435,7 +435,6 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     {
         $criteriaProcessor = new TicketFilterCriteriaProcessor();
         $repository = $this->getTicketRepository();
-
         $user = $this->getAuthorizationService()->getLoggedUser();
 
         if ($user instanceof ApiUser) {
@@ -443,8 +442,9 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         }
 
         $pagingProperties = $this->buildPagination($criteriaProcessor, $repository, $ticketFilterCommand, $this->apiPagingService);
+        $criteria = $criteriaProcessor->getCriteria();
 
-        $tickets = $repository->filter($criteriaProcessor->getCriteria(), $pagingProperties, $user);
+        $tickets = $repository->filter($criteria, $pagingProperties, $user);
 
         return $tickets;
     }

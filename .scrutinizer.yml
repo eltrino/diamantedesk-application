@@ -21,8 +21,6 @@ checks:
         simplify_boolean_return: true
         side_effects_or_types: true
         security_vulnerabilities: true
-        return_doc_comments: true
-        return_doc_comment_if_not_inferrable: true
         require_scope_for_properties: true
         require_scope_for_methods: true
         require_php_tag_first: true
@@ -75,7 +73,6 @@ checks:
         foreach_traversable: true
         fix_line_ending: true
         fix_doc_comments: true
-        encourage_single_quotes: true
         encourage_shallow_comparison: true
         encourage_postdec_operator: true
         duplication: true

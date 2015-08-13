@@ -41,6 +41,7 @@ class TicketController extends Controller
     use Shared\FormHandlerTrait;
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
+    use Shared\ResponseHandlerTrait;
 
     /**
      * @Route(
@@ -304,7 +305,7 @@ class TicketController extends Controller
             $ticket = $this->get('diamante.ticket.service')->createTicket($command);
 
             $this->addSuccessMessage('diamante.desk.ticket.messages.create.success');
-            $response = $this->getSuccessSaveResponse($ticket);
+            $response = $this->getSuccessSaveResponse('diamante_ticket_update', 'diamante_ticket_view', ['key' => (string)$ticket->getKey()]);
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = array('form' => $formView);
@@ -345,7 +346,7 @@ class TicketController extends Controller
 
             $ticket = $this->get('diamante.ticket.service')->updateTicket($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
-            $response = $this->getSuccessSaveResponse($ticket);
+            $response = $this->getSuccessSaveResponse('diamante_ticket_update', 'diamante_ticket_view', ['key' => (string)$ticket->getKey()]);
         } catch (TicketMovedException $e) {
             return $this->redirect(
                 $this->generateUrl(
@@ -671,18 +672,6 @@ class TicketController extends Controller
     }
 
     /**
-     * @param Ticket $ticket
-     * @return array|RedirectResponse
-     */
-    private function getSuccessSaveResponse(Ticket $ticket)
-    {
-        return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_ticket_update', 'parameters' => ['key' => (string) $ticket->getKey()]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['key' => (string) $ticket->getKey()]]
-        );
-    }
-
-    /**
      * Get attachments list as array ready for conversion to JSON
      *
      * @param int $ticketId
@@ -730,23 +719,6 @@ class TicketController extends Controller
         $response = new JsonResponse();
         $response->setData($data);
         $response->setStatusCode(201);
-
-        return $response;
-    }
-
-    /**
-     * @param AttachmentDto $attachmentDto
-     * @return BinaryFileResponse
-     */
-    private function getFileDownloadResponse(AttachmentDto $attachmentDto)
-    {
-        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($attachmentDto->getFilePath());
-        $response->trustXSendfileTypeHeader();
-        $response->setContentDisposition(
-            \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $attachmentDto->getFileName(),
-            iconv('UTF-8', 'ASCII//TRANSLIT', $attachmentDto->getFileName())
-        );
 
         return $response;
     }

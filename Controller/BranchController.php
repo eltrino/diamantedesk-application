@@ -32,6 +32,7 @@ class BranchController extends Controller
     use Shared\FormHandlerTrait;
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
+    use Shared\ResponseHandlerTrait;
 
     /**
      * @Route(
@@ -194,7 +195,7 @@ class BranchController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse($branchId);
+            $response = $this->getSuccessSaveResponse('diamante_branch_update', 'diamante_branch_view', ['id' => $branchId]);
         } catch (DuplicateBranchKeyException $e) {
             $this->addErrorMessage($e->getMessage());
             $formView = $form->createView();
@@ -240,17 +241,8 @@ class BranchController extends Controller
     }
 
     /**
-     * @param int $branchId
-     * @return mixed
+     * @return bool
      */
-    private function getSuccessSaveResponse($branchId)
-    {
-        return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_branch_update', 'parameters' => ['id' => $branchId]],
-            ['route' => 'diamante_branch_view', 'parameters' => ['id' => $branchId]]
-        );
-    }
-
     private function isDeletionRequestFromGrid()
     {
         $referer = $this->getRequest()->headers->get('referer');

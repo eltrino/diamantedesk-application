@@ -33,6 +33,7 @@ class CommentController extends Controller
     use Shared\FormHandlerTrait;
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
+    use Shared\ResponseHandlerTrait;
 
     /**
      * @Route(
@@ -119,7 +120,7 @@ class CommentController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse((string)$ticket->getKey());
+            $response = $this->getSuccessSaveResponse('diamante_comment_update', 'diamante_ticket_view', ['key' => (string)$ticket->getKey()]);
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = array('form' => $formView, 'ticket' => $ticket);
@@ -225,17 +226,4 @@ class CommentController extends Controller
 
         return $response;
     }
-
-    /**
-     * @param string $ticketKey
-     * @return array
-     */
-    private function getSuccessSaveResponse($ticketKey)
-    {
-        return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_comment_update', 'parameters' => ['key' => $ticketKey]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['key' => $ticketKey]]
-        );
-    }
-
 }

@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
+use Diamante\DeskBundle\Entity\Ticket;
 
 class Comment extends DomainEventProvider implements Entity, AttachmentHolder, Updatable
 {
