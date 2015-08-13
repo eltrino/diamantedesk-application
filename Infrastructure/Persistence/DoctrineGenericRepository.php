@@ -137,10 +137,10 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
 
         switch ($operator) {
             case 'like':
-                $literal = $qb->expr()->literal("%{$value}%");
+                $literal = $qb->expr()->literal(sprintf('%%s%', $value));
                 break;
             default:
-                $literal = $qb->expr()->literal("{$value}");
+                $literal = $qb->expr()->literal(sprintf('%s', $value));
                 break;
         }
 

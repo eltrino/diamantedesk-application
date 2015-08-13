@@ -52,13 +52,12 @@ checks:
         no_trait_type_hints: true
         no_trailing_whitespace: true
         no_short_variable_names:
-            minimum: '3'
+            minimum: '2'
         no_short_open_tag: true
         no_short_method_names:
-            minimum: '3'
+            minimum: '2'
         no_property_on_interface: true
         no_non_implemented_abstract_methods: true
-        no_new_line_at_end_of_file: true
         no_goto: true
         no_global_keyword: true
         no_exit: true
@@ -68,7 +67,6 @@ checks:
         no_duplicate_arguments: true
         no_debug_code: true
         no_commented_out_code: true
-        more_specific_types_in_doc_comments: true
         missing_arguments: true
         method_calls_on_non_object: true
         instanceof_class_exists: true
