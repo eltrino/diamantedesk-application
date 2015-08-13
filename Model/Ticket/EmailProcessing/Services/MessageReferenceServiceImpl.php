@@ -14,22 +14,18 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
-use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
-use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
-use Diamante\DeskBundle\Model\Shared\Repository;
-use Diamante\DeskBundle\Model\Ticket\CommentFactory;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
+use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Diamante\DeskBundle\Api\CommentService;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\Source;
-use Diamante\UserBundle\Api\UserService;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
 use Diamante\UserBundle\Model\User;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class MessageReferenceServiceImpl implements MessageReferenceService
 {
@@ -37,54 +33,9 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     const EMPTY_SUBJECT_PLACEHOLDER = '[No Subject]';
 
     /**
-     * @var Registry
-     */
-    protected $doctrineRegistry;
-
-    /**
      * @var MessageReferenceRepository
      */
     private $messageReferenceRepository;
-
-    /**
-     * @var Repository
-     */
-    private $ticketRepository;
-
-    /**
-     * @var TicketBuilder
-     */
-    private $ticketBuilder;
-
-    /**
-     * @var CommentFactory
-     */
-    private $commentFactory;
-
-    /**
-     * @var UserService
-     */
-    private $userService;
-
-    /**
-     * @var AttachmentManager
-     */
-    private $attachmentManager;
-
-    /**
-     * @var EventDispatcher
-     */
-    private $dispatcher;
-
-    /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var Notifier
-     */
-    private $notifier;
 
     /**
      * @var \Symfony\Bridge\Monolog\Logger
@@ -92,43 +43,27 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $logger;
 
     /**
-     * @param Registry                    $doctrineRegistry
-     * @param MessageReferenceRepository  $messageReferenceRepository
-     * @param Repository                  $ticketRepository
-     * @param TicketBuilder               $ticketBuilder
-     * @param CommentFactory              $commentFactory
-     * @param UserService                 $userService
-     * @param AttachmentManager           $attachmentManager
-     * @param EventDispatcher             $dispatcher
-     * @param NotificationDeliveryManager $notificationDeliveryManager
-     * @param Notifier                    $notifier
-     * @param Logger                      $logger
+     * @var TicketService
+     */
+    private $ticketService;
+
+    /**
+     * @param MessageReferenceRepository $messageReferenceRepository
+     * @param Logger $logger
+     * @param TicketService $ticketService
+     * @param CommentService $commentService
      */
     public function __construct(
-        Registry $doctrineRegistry,
         MessageReferenceRepository $messageReferenceRepository,
-        Repository $ticketRepository,
-        TicketBuilder $ticketBuilder,
-        CommentFactory $commentFactory,
-        UserService $userService,
-        AttachmentManager $attachmentManager,
-        EventDispatcher $dispatcher,
-        NotificationDeliveryManager $notificationDeliveryManager,
-        Notifier $notifier,
-        Logger  $logger
+        Logger  $logger,
+        TicketService $ticketService,
+        CommentService $commentService
     )
     {
-        $this->doctrineRegistry            = $doctrineRegistry;
         $this->messageReferenceRepository  = $messageReferenceRepository;
-        $this->ticketRepository            = $ticketRepository;
-        $this->ticketBuilder               = $ticketBuilder;
-        $this->commentFactory              = $commentFactory;
-        $this->userService                 = $userService;
-        $this->attachmentManager           = $attachmentManager;
-        $this->dispatcher                  = $dispatcher;
-        $this->notificationDeliveryManager = $notificationDeliveryManager;
-        $this->notifier                    = $notifier;
         $this->logger                      = $logger;
+        $this->ticketService               = $ticketService;
+        $this->commentService              = $commentService;
     }
 
     /**
@@ -151,37 +86,19 @@ class MessageReferenceServiceImpl implements MessageReferenceService
             $subject = self::EMPTY_SUBJECT_PLACEHOLDER;
         }
 
-        $this->ticketBuilder
-            ->setSubject($subject)
-            ->setDescription($description)
-            ->setBranchId($branchId)
-            ->setReporter($reporter)
-            ->setAssignee($assigneeId)
-            ->setSource(Source::EMAIL);
+        $command = new CreateTicketCommand();
+        $command->subject           = $subject;
+        $command->description       = $description;
+        $command->branch            = $branchId;
+        $command->reporter          = $reporter;
+        $command->assignee          = $assigneeId;
+        $command->source            = Source::EMAIL;
+        $command->attachmentsInput  = $this->convertAttachments($attachments);
 
-        $ticket = $this->ticketBuilder->build();
-
-        if ($attachments) {
-            $this->createAttachments($attachments, $ticket);
-        }
-        $this->ticketRepository->store($ticket);
+        $ticket = $this->ticketService->createTicket($command);
         $this->createMessageReference($messageId, $ticket);
-        $this->doctrineRegistry->getManager()->detach($ticket);
-        $this->dispatchEvents($ticket);
 
         return $ticket;
-    }
-
-    /**
-     * @param array $attachments
-     * @param AttachmentHolder $attachmentHolder
-     */
-    private function createAttachments(array $attachments, AttachmentHolder $attachmentHolder)
-    {
-        foreach ($attachments as $attachment) {
-            $this->attachmentManager
-                ->createNewAttachment($attachment->getName(), $attachment->getContent(), $attachmentHolder);
-        }
     }
 
     /**
@@ -195,6 +112,10 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)
     {
+        if (empty($content)) {
+            return null;
+        }
+
         $reference = $this->messageReferenceRepository
             ->getReferenceByMessageId($messageId);
 
@@ -205,21 +126,14 @@ class MessageReferenceServiceImpl implements MessageReferenceService
 
         $ticket = $reference->getTicket();
 
-        $author = User::fromString($authorId);
+        $command = new CommentCommand();
+        $command->ticket            = $ticket->getId();
+        $command->content           = $content;
+        $command->author            = User::fromString($authorId);
+        $command->ticketStatus      = $ticket->getStatus();
+        $command->attachmentsInput  = $this->convertAttachments($attachments);
 
-        if (empty($content)) {
-            return null;
-        }
-
-        $comment = $this->commentFactory->create($content, $ticket, $author);
-
-        if ($attachments) {
-            $this->createAttachments($attachments, $comment);
-        }
-
-        $ticket->postNewComment($comment);
-        $this->ticketRepository->store($ticket);
-        $this->dispatchEvents($ticket);
+        $this->commentService->postNewCommentForTicket($command);
 
         return $ticket;
     }
@@ -237,14 +151,22 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     }
 
     /**
-     * @param Ticket $ticket
+     * @param Attachment[] $attachments
+     * @return AttachmentInput[]|null
      */
-    private function dispatchEvents(Ticket $ticket)
+    private function convertAttachments(array $attachments)
     {
-        foreach ($ticket->getRecordedEvents() as $event) {
-            $this->dispatcher->dispatch($event->getEventName(), $event);
+        $result = null;
+
+        foreach ($attachments as $attachment) {
+            if ($attachment instanceof Attachment) {
+                $input = new AttachmentInput();
+                $input->setFilename($attachment->getName());
+                $input->setContent($attachment->getContent());
+                $result[] = $input;
+            }
         }
 
-        $this->notificationDeliveryManager->deliver($this->notifier);
+        return $result;
     }
 }
