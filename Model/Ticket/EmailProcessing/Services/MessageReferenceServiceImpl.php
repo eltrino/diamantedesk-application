@@ -48,6 +48,11 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     private $ticketService;
 
     /**
+     * @var CommentService
+     */
+    private $commentService;
+
+    /**
      * @param MessageReferenceRepository $messageReferenceRepository
      * @param Logger $logger
      * @param TicketService $ticketService
@@ -142,7 +147,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * Create Message Reference
      *
      * @param $messageId
-     * @param $ticket
+     * @param Ticket $ticket
      */
     private function createMessageReference($messageId, $ticket)
     {
@@ -151,10 +156,10 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     }
 
     /**
-     * @param Attachment[] $attachments
+     * @param Attachment[]|null $attachments
      * @return AttachmentInput[]|null
      */
-    private function convertAttachments(array $attachments)
+    private function convertAttachments(array $attachments = null)
     {
         $result = null;
 

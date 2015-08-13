@@ -143,7 +143,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
-     * @param ApiUser $user
+     * @param ApiUser|null $user
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */

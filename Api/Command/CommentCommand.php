@@ -40,6 +40,7 @@ class CommentCommand
     /**
      * @var array
      * @Assert\Type(type="array")
+     * @var array|null
      */
     public $attachmentsInput;
 

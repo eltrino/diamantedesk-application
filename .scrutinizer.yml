@@ -49,11 +49,7 @@ checks:
         no_underscore_prefix_in_methods: true
         no_trait_type_hints: true
         no_trailing_whitespace: true
-        no_short_variable_names:
-            minimum: '2'
         no_short_open_tag: true
-        no_short_method_names:
-            minimum: '2'
         no_property_on_interface: true
         no_non_implemented_abstract_methods: true
         no_goto: true
