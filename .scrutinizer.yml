@@ -59,8 +59,6 @@ checks:
         no_property_on_interface: true
         no_non_implemented_abstract_methods: true
         no_new_line_at_end_of_file: true
-        no_long_variable_names:
-            maximum: '20'
         no_goto: true
         no_global_keyword: true
         no_exit: true
@@ -74,20 +72,6 @@ checks:
         more_specific_types_in_doc_comments: true
         missing_arguments: true
         method_calls_on_non_object: true
-        naming_conventions:
-            local_variable: '^[a-z][a-zA-Z0-9]*$'
-            abstract_class_name: ^Abstract|Factory$
-            utility_class_name: 'Utils?$'
-            constant_name: '^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$'
-            property_name: '^[a-z][a-zA-Z0-9]*$'
-            method_name: '^(?:[a-z]|__)[a-zA-Z0-9]*$'
-            parameter_name: '^[a-z][a-zA-Z0-9]*$'
-            interface_name: '^[A-Z][a-zA-Z0-9]*Interface$'
-            type_name: '^[A-Z][a-zA-Z0-9]*$'
-            exception_name: '^[A-Z][a-zA-Z0-9]*Exception$'
-            isser_method_name: '^(?:is|has|should|may|supports)'
-        line_length:
-            max_length: '120'
         instanceof_class_exists: true
         function_in_camel_caps: true
         foreach_usable_as_reference: true
