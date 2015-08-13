@@ -406,7 +406,7 @@ class CommentServiceImpl implements CommentService
 
     /**
      * @param Comment $comment
-     * @param Ticket $ticket
+     * @param null|Ticket $ticket
      */
     private function dispatchEvents(Comment $comment, Ticket $ticket = null)
     {

@@ -25,7 +25,7 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
-use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Entity\Ticket as TicketEntity;
 
 class Comment extends DomainEventProvider implements Entity, AttachmentHolder, Updatable
 {
@@ -41,7 +41,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
     protected $content;
 
     /**
-     * @var Ticket
+     * @var TicketEntity
      */
     protected $ticket;
 
@@ -98,7 +98,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
     }
 
     /**
-     * @return Ticket
+     * @return TicketEntity
      */
     public function getTicket()
     {

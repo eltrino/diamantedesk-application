@@ -271,7 +271,7 @@ class TicketController extends Controller
      * )
      * @Template("DiamanteDeskBundle:Ticket:create.html.twig")
      *
-     * @param int $id
+     * @param int|null $id
      * @return array
      */
     public function createAction($id = null)

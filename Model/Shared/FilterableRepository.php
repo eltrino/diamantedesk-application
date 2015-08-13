@@ -23,7 +23,7 @@ interface FilterableRepository
     /**
      * @param array $criteria
      * @param PagingProperties $pagingProperties
-     * @param ApiUser $user
+     * @param ApiUser|null $user
      * @return Entity[]
      */
     public function filter(array &$criteria, PagingProperties $pagingProperties, $user = null);

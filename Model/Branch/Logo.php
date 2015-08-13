@@ -34,8 +34,8 @@ class Logo
     private $originalName;
 
     /**
-     * @param string $name
-     * @param string $originalName
+     * @param string|null $name
+     * @param string|null $originalName
      */
     public function __construct($name = null, $originalName = null)
     {

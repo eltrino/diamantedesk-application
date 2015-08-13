@@ -105,10 +105,8 @@ class Status
         if ($this == $status) {
             return true;
         }
-        if ($this->status == $status->getValue()) {
-            return true;
-        }
-        return false;
+
+        return $this->status == $status->getValue();
     }
 
     /**

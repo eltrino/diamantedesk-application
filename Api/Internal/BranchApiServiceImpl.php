@@ -47,7 +47,7 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
      * @param Command\Filter\FilterBranchesCommand $command
      * @return \Diamante\DeskBundle\Model\Branch\Branch[]
      */
-    public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null)
+    public function listAllBranches(Command\Filter\FilterBranchesCommand $command)
     {
         $processor = new BranchFilterCriteriaProcessor();
         $repository = $this->getBranchRepository();

@@ -76,7 +76,7 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
-     * @param ApiUser $user
+     * @param ApiUser|null $user
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */

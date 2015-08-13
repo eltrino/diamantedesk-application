@@ -23,7 +23,7 @@ abstract class AbstractContainerAwareFixture extends AbstractFixture implements 
     /**
      * Sets the Container associated with this Controller.
      *
-     * @param ContainerInterface $container A ContainerInterface instance
+     * @param null|ContainerInterface $container A ContainerInterface instance
      *
      * @throws \Exception
      * @api

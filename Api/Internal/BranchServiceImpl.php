@@ -30,10 +30,10 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\TagBundle\Entity\TagManager;
-use Symfony\Component\HttpFoundation\File\File;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class BranchServiceImpl implements BranchService
 {
@@ -253,7 +253,7 @@ class BranchServiceImpl implements BranchService
      */
     private function uploadBranchLogoIfExists(Command\BranchCommand $command)
     {
-        /** @var File $command->logoFile */
+        /** @var UploadedFile $command->logoFile */
         if (!empty($command->logoFile)) {
             $logo = $this->branchLogoHandler->upload($command->logoFile);
             return new Logo($logo, $command->logoFile->getOriginalClientName());

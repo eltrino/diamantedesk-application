@@ -81,7 +81,6 @@ checks:
         code_rating: true
         closure_use_not_conflicting: true
         closure_use_modifiable: true
-        classes_in_camel_caps: true
         catch_class_exists: true
         blank_line_after_namespace_declaration: true
         avoid_useless_overridden_methods: true

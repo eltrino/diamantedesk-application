@@ -45,7 +45,7 @@ class Attachment implements Entity
 
     /**
      * @param File $file
-     * @param string $hash
+     * @param string|null $hash
      */
     public function __construct(File $file, $hash = null)
     {

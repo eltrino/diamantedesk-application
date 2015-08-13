@@ -140,7 +140,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $description
      * @param $reporter
      * @param $assigneeId
-     * @param array $attachments
+     * @param array|null $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
@@ -190,7 +190,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @param $content
      * @param $authorId
      * @param $messageId
-     * @param array $attachments
+     * @param array|null $attachments
      * @return Ticket|null
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null)

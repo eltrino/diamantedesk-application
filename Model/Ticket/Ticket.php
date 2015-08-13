@@ -137,11 +137,11 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
      * @param $description
      * @param Branch $branch
      * @param User $reporter
-     * @param OroUser $assignee
+     * @param OroUser|null $assignee
      * @param Source $source
      * @param Priority $priority
      * @param Status $status
-     * @param ArrayCollection $tags
+     * @param ArrayCollection|null $tags
      */
     public function __construct(
         UniqueId $uniqueId,
@@ -439,7 +439,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
      * @param Status $status
      * @param Source $source
      * @param OroUser|null $assignee
-     * @param array $tags
+     * @param null|array|ArrayCollection $tags
      */
     public function update(
         $subject, $description, User $reporter, Priority $priority,
@@ -516,6 +516,10 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
         $this->status = $status;
     }
 
+    /**
+     * @param Branch $branch
+     * @param TicketSequenceNumber|null $sequenceNumber
+     */
     public function move(Branch $branch, TicketSequenceNumber $sequenceNumber = null)
     {
         if ($sequenceNumber == null) {
@@ -678,27 +682,22 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     {
         $hasChanges = false;
         foreach ($properties as $name => $value) {
-            /**
-             * @todo Not a very good approach in case number of such properties will increase, should be refactored
-             */
-            if ($name == 'status') {
-                $value = new Status($value);
-            } elseif ($name == 'priority') {
-                $value = new Priority($value);
-            } elseif ($name == 'source') {
-                $value = new Source($value);
-            }
-            if (property_exists($this, $name)) {
-                if ($this->$name != $value) {
-                    $hasChanges = true;
-                }
-                $this->$name = $value;
-            } else {
+            if (!property_exists($this, $name)) {
                 throw new \DomainException(sprintf('Ticket does not have "%s" property.', $name));
+            }
+
+            if (in_array(strtolower($name), ['status', 'priority', 'source'])) {
+                $propertyClass = strtoupper($name);
+                $value = new $propertyClass($value);
+            }
+
+            if ($this->$name !== $value) {
+                $this->$name = $value;
+                $hasChanges = true;
             }
         }
 
-        if ($hasChanges) {
+        if (true === $hasChanges) {
             $this->raise(
                 new TicketWasUpdated(
                     (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,

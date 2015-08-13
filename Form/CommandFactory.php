@@ -30,8 +30,8 @@ use Diamante\DeskBundle\Api\Command\AddWatcherCommand;
 class CommandFactory
 {
     /**
-     * @param Branch $branch
-     * @param User   $reporter
+     * @param Branch|null $branch
+     * @param User|null   $reporter
      *
      * @return CreateTicketCommand
      */
@@ -64,7 +64,7 @@ class CommandFactory
         $command->description = $ticket->getDescription();
         $command->reporter = $ticket->getReporter();
         $command->assignee = $ticket->getAssignee();
-        $command->status = $ticket->getStatus();
+        $command->status = $ticket->getStatus()->getValue();
         $command->priority = $ticket->getPriority();
         $command->branch = $ticket->getBranch();
         $command->source = $ticket->getSource();
@@ -158,7 +158,7 @@ class CommandFactory
         $command->author = (string)$comment->getAuthor();
         $command->ticket = $comment->getTicket()->getId();
         $command->attachmentList = $comment->getAttachments();
-        $command->ticketStatus = $comment->getTicket()->getStatus();
+        $command->ticketStatus = $comment->getTicket()->getStatus()->getValue();
         $command->private = $comment->isPrivate();
 
         return $command;
