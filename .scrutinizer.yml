@@ -68,7 +68,6 @@ checks:
         no_duplicate_arguments: true
         no_debug_code: true
         no_commented_out_code: true
-        newline_at_end_of_file: true
         more_specific_types_in_doc_comments: true
         missing_arguments: true
         method_calls_on_non_object: true
@@ -106,7 +105,6 @@ checks:
         avoid_aliased_php_functions: true
         assignment_of_null_return: true
         argument_type_checks: true
-        align_assignments: true
 filter:
   excluded_paths:
     - Tests/*
