@@ -15,8 +15,11 @@
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\ApiPagingService;
+use Diamante\DeskBundle\Api\Command\Shared\FilteringCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
+use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 
 trait ApiServiceImplTrait
 {
@@ -57,5 +60,29 @@ trait ApiServiceImplTrait
     {
         $links = $service->createPagingLinks($info);
         $service->populatePagingHeaders($info, $links);
+    }
+
+    /**
+     * @param FilterCriteriaProcessor $processor
+     * @param FilterableRepository $repository
+     * @param FilteringCommand $command
+     * @param ApiPagingService $service
+     *
+     * @return \Diamante\DeskBundle\Model\Shared\Filter\PagingProperties
+     */
+    protected function buildPagination(
+        FilterCriteriaProcessor $processor,
+        FilterableRepository $repository,
+        FilteringCommand $command,
+        ApiPagingService $service
+    ){
+        $processor->setCommand($command);
+        $criteria = $processor->getCriteria();
+        $pagingProperties = $processor->getPagingProperties();
+
+        $pagingInfo = $service->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($service, $pagingInfo);
+
+        return $pagingProperties;
     }
 }

@@ -50,14 +50,10 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
     public function listAllBranches(Command\Filter\FilterBranchesCommand $command = null)
     {
         $processor = new BranchFilterCriteriaProcessor();
-        $processor->setCommand($command);
-        $criteria = $processor->getCriteria();
-        $pagingProperties = $processor->getPagingProperties();
         $repository = $this->getBranchRepository();
-        $branches = $repository->filter($criteria, $pagingProperties);
+        $pagingProperties = $this->buildPagination($processor, $repository, $command, $this->apiPagingService);
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        $branches = $repository->filter($processor->getCriteria(), $pagingProperties);
 
         return $branches;
     }

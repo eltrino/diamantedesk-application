@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentCreateException;
 use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentDeleteException;
 use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentNotFoundException;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
+use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
@@ -423,7 +424,7 @@ class CommentServiceImpl implements CommentService
     }
 
     /**
-     * @return Repository
+     * @return FilterableRepository
      */
     protected function getCommentsRepository()
     {

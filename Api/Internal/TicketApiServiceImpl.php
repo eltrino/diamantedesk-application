@@ -434,9 +434,6 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function listAllTickets(Command\Filter\FilterTicketsCommand $ticketFilterCommand)
     {
         $criteriaProcessor = new TicketFilterCriteriaProcessor();
-        $criteriaProcessor->setCommand($ticketFilterCommand);
-        $criteria = $criteriaProcessor->getCriteria();
-        $pagingProperties = $criteriaProcessor->getPagingProperties();
         $repository = $this->getTicketRepository();
 
         $user = $this->getAuthorizationService()->getLoggedUser();
@@ -445,10 +442,9 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
             $user = $this->userService->getUserFromApiUser($user);
         }
 
-        $tickets = $repository->filter($criteria, $pagingProperties, $user);
+        $pagingProperties = $this->buildPagination($criteriaProcessor, $repository, $ticketFilterCommand, $this->apiPagingService);
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        $tickets = $repository->filter($criteriaProcessor->getCriteria(), $pagingProperties, $user);
 
         return $tickets;
     }

@@ -15,15 +15,15 @@
 
 namespace Diamante\DeskBundle\Model\Shared\Filter;
 
-
-use Diamante\DeskBundle\Api\Command\Filter\CommonFilterCommand;
+use Diamante\DeskBundle\Api\Command\Shared\FilteringCommand;
 
 interface FilterCriteriaProcessor
 {
     /**
-     * @param CommonFilterCommand $command
+     * @param FilteringCommand $command
+     * @return
      */
-    public function setCommand(CommonFilterCommand $command);
+    public function setCommand(FilteringCommand $command);
 
     /**
      * @return array

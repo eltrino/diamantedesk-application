@@ -104,7 +104,7 @@ class InstallCommand extends AbstractCommand
      */
     protected function createBranchLogoDirectory()
     {
-        $branchLogoDir = sprintf("%s%s", realpath($this->kernelRootDir .'/../web'), Logo::PATH_TO_LOGO_DIR);
+        $branchLogoDir = sprintf('%s%s', realpath($this->kernelRootDir .'/../web'), Logo::PATH_TO_LOGO_DIR);
         $this->createDirectory($branchLogoDir);
     }
 

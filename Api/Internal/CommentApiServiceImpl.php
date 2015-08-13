@@ -319,14 +319,10 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     public function listAllComments(Command\Filter\FilterCommentsCommand $command)
     {
         $criteriaProcessor = new CommentFilterCriteriaProcessor();
-        $criteriaProcessor->setCommand($command);
-        $criteria = $criteriaProcessor->getCriteria();
-        $pagingProperties = $criteriaProcessor->getPagingProperties();
         $repository = $this->getCommentsRepository();
-        $comments = $repository->filter($criteria, $pagingProperties);
+        $pagingProperties = $this->buildPagination($criteriaProcessor, $repository, $command, $this->apiPagingService);
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        $comments = $repository->filter($criteriaProcessor->getCriteria(), $pagingProperties);
 
         return $comments;
     }
