@@ -44,14 +44,14 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFunctions()
     {
-        $expectedFunctions = array('fetch_user_details', 'fetch_oro_user', 'get_gravatar');
+        $expectedFunctions = array('fetch_user_details', 'fetch_oro_user', 'get_gravatar', 'fetch_diamante_user', 'render_user_name');
 
         $actualFunctions = $this->userDetailsExtension->getFunctions();
 
-        foreach ($expectedFunctions as $function)
+        foreach ($actualFunctions as $function)
         {
-            $this->assertTrue(array_key_exists($function, $actualFunctions));
-            $this->assertInstanceOf('\Twig_Function_Method', $actualFunctions[$function]);
+            $this->assertTrue(in_array($function->getName(), $expectedFunctions));
+            $this->assertInstanceOf('\Twig_SimpleFunction', $function);
         }
     }
 
