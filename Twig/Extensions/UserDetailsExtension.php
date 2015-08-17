@@ -51,29 +51,11 @@ class UserDetailsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'fetch_user_details' => new \Twig_Function_Method(
-                $this,
-                'fetchUserDetails',
-                array('is_safe' => array('html'))
-            ),
-            'fetch_oro_user' => new \Twig_Function_Method(
-                $this, 'fetchOroUser', array('is_safe' => array('html'))
-            ),
-            'fetch_diamante_user' => new \Twig_Function_Method(
-                $this,
-                'fetchDiamanteUser',
-                array('is_safe' => array('html'))
-            ),
-            'get_gravatar' => new \Twig_Function_Method(
-                $this,
-                'getGravatarForUser',
-                array('is_safe' => array('html'))
-            ),
-            'render_user_name' => new \Twig_Function_Method(
-                $this,
-                'renderUserName',
-                array('is_safe' => array('html'))
-            ),
+            new \Twig_SimpleFunction('fetch_user_details',[$this, 'fetchUserDetails'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('fetch_oro_user',[$this, 'fetchOroUser'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('fetch_diamante_user',[$this, 'fetchDiamanteUser'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_gravatar',[$this, 'getGravatarForUser'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('render_user_name',[$this, 'renderUserName'], ['is_safe' => ['html']]),
         ];
     }
 
