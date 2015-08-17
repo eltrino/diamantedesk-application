@@ -54,6 +54,6 @@ class DefaultBranchKeyGenerator implements BranchKeyGenerator
     {
         $name = preg_replace('/[^a-zA-Z\p{Cyrillic}]/u', '', $name);
 
-        return !mb_strlen($name) < 2;
+        return !(mb_strlen($name) < 2);
     }
 } 

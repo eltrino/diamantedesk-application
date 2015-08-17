@@ -235,7 +235,7 @@ class BranchServiceImpl implements BranchService
         /** @var UploadedFile $command->logoFile */
         if (!empty($command->logoFile)) {
             $logo = $this->branchLogoHandler->upload($command->logoFile);
-            return new Logo($logo, $command->logoFile->getOriginalClientName());
+            return new Logo($logo->getFilename(), $command->logoFile->getClientOriginalName());
         }
 
         return null;

@@ -118,9 +118,8 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Branch loading failed. Branch not found.
      */
-    public function thatRetreivingExceptionsThrowsExceptionIfBranchDoesNotExists()
+    public function thatRetreivingBranchThrowsExceptionIfBranchDoesNotExists()
     {
         $this->authorizationService->expects($this->once())->method('isActionPermitted')
             ->with($this->equalTo('VIEW'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
@@ -199,6 +198,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $tags = array();
         $branch = new Branch($key, $name, $description, null, new Logo('dummy'));
         $this->fileMock = new UploadedFileStub(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
+        $logoMock = new Logo($this->fileMock->getFilename(), $this->fileMock->getClientOriginalName());
 
         $this->userService
             ->expects($this->once())
@@ -215,7 +215,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->branchFactory->expects($this->once())->method('create')
             ->with(
                 $this->equalTo($name), $this->equalTo($description), $key,
-                $this->equalTo($defaultAssignee), $this->equalTo($this->fileMock)
+                $this->equalTo($defaultAssignee), $this->equalTo($logoMock)
             )->will($this->returnValue($branch));
 
         $this->tagManager->expects($this->once())->method('saveTagging')->with($this->equalTo($branch));
@@ -317,7 +317,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->branch->expects($this->once())->method('update')->with(
             $this->equalTo($name), $this->equalTo($description), $this->equalTo($defaultAssignee),
-            $this->equalTo(new Logo($uploadedFile->getFilename()))
+            $this->equalTo(new Logo($uploadedFile->getFilename(), $uploadedFile->getFilename()))
         );
 
         $this->branch->expects($this->once())->method('setTags')->with($this->equalTo($tags));
@@ -361,7 +361,6 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Branch loading failed, branch not found.
      */
     public function thatBranchDeleteThrowsExceptionIfBranchDoesNotExists()
     {

@@ -210,7 +210,7 @@ class TicketServiceImpl implements TicketService
         $ticket = $this->ticketRepository
             ->getByTicketKey($ticketKey);
         if (is_null($ticket)) {
-            throw new TicketNotFoundException();
+            throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
 
         $this->removePrivateComments($ticket);
@@ -228,7 +228,7 @@ class TicketServiceImpl implements TicketService
         /** @var \Diamante\DeskBundle\Model\Ticket\Ticket $ticket */
         $ticket = $this->ticketRepository->get($id);
         if (is_null($ticket)) {
-            throw new TicketNotFoundException();
+            throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
 
         $this->removePrivateComments($ticket);
@@ -262,7 +262,7 @@ class TicketServiceImpl implements TicketService
         $this->isGranted('VIEW', $ticket);
 
         $attachment = $ticket->getAttachment($command->attachmentId);
-        if ($attachment !== null) {
+        if (empty($attachment)) {
             throw new AttachmentNotFoundException();
         }
         return $attachment;
@@ -479,10 +479,10 @@ class TicketServiceImpl implements TicketService
 
         if ($command->assignee !== null) {
             $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
-            if (!is_null($assignee)) {
-                $ticket->assign($assignee);
+            if (is_null($assignee)) {
+                throw new \RuntimeException('Assignee loading failed, assignee not found');
             }
-            throw new \RuntimeException('Assignee loading failed, assignee not found');
+            $ticket->assign($assignee);
         } else {
             $ticket->unAssign();
         }

@@ -69,7 +69,7 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
             ->setDescription(self::DESCRIPTION)
             ->setBranchId(self::BRANCH_ID)
             ->setReporter($this->createReporter())
-            ->setAssigneeId(self::ASSIGNEE_ID)
+            ->setAssignee(self::ASSIGNEE_ID)
             ->setPriority(Priority::PRIORITY_LOW)
             ->setSource(Source::EMAIL)
             ->setStatus(Status::IN_PROGRESS);
@@ -100,7 +100,7 @@ class CommonTicketBuilderTest extends \PHPUnit_Framework_TestCase
             ->setDescription(self::DESCRIPTION)
             ->setBranchId(self::BRANCH_ID)
             ->setReporter((string)$reporter)
-            ->setAssigneeId(self::ASSIGNEE_ID);
+            ->setAssignee(self::ASSIGNEE_ID);
 
         $ticket = $this->builder->build();
 

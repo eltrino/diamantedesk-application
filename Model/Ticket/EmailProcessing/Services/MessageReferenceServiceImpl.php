@@ -161,6 +161,10 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      */
     private function convertAttachments(array $attachments = null)
     {
+        if (is_null($attachments)) {
+            return null;
+        }
+
         $result = null;
 
         foreach ($attachments as $attachment) {

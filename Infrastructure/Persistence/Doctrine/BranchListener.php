@@ -15,7 +15,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence\Doctrine;
 
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 

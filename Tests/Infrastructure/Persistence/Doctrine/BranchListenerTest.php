@@ -33,7 +33,7 @@ class BranchListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException
+     * @expectedException \Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException
      * @expectedExceptionMessage Branch key already exists. Please, provide another one.
      */
     public function testPrePersistHandler()

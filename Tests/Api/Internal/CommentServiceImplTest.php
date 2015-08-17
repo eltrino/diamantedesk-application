@@ -161,7 +161,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Comment loading failed, comment not found.
      */
     public function thatCommentRetrievesThrowsExceptionWhenNotFound()
     {
@@ -191,7 +190,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatCommentPostThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -302,7 +300,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Comment loading failed, comment not found.
      */
     public function thatCommentUpdateThrowsExceptionIfCommentDoesNotExists()
     {
@@ -444,7 +441,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Comment loading failed, comment not found.
      */
     public function thatCommentDeleteThrowsExceptionIfCommentDoesNotExists()
     {
@@ -561,7 +557,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Attachment loading failed. Comment has no such attachment.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenCommentHasNoAttachment()
     {

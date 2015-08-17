@@ -83,12 +83,6 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $commentFactory;
 
     /**
-     * @var \Diamante\UserBundle\Api\UserService
-     * @Mock \Diamante\UserBundle\Api\UserService
-     */
-    private $userService;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Attachment\Manager
      * @Mock \Diamante\DeskBundle\Model\Attachment\Manager
      */
@@ -113,45 +107,32 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private $messageReference;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
-     * @Mock Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    private $dispatcher;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager
-     * @Mock Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     * @Mock Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     */
-    private $notifier;
-
-    /**
      * @var \Symfony\Bridge\Monolog\Logger
      * @Mock Symfony\Bridge\Monolog\Logger
      */
     private $logger;
+
+    /**
+     * @var \Diamante\DeskBundle\Api\TicketService
+     * @Mock \Diamante\DeskBundle\Api\TicketService
+     */
+    private $ticketService;
+
+    /**
+     * @var \Diamante\DeskBundle\Api\CommentService
+     * @Mock \Diamante\DeskBundle\Api\CommentService
+     */
+    private $commentService;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
 
         $this->messageReferenceService = new MessageReferenceServiceImpl(
-            $this->doctrineRegistry,
             $this->messageReferenceRepository,
-            $this->ticketRepository,
-            $this->ticketBuilder,
-            $this->commentFactory,
-            $this->userService,
-            $this->attachmentManager,
-            $this->dispatcher,
-            $this->notificationDeliveryManager,
-            $this->notifier,
-            $this->logger
+            $this->logger,
+            $this->ticketService,
+            $this->commentService
         );
     }
 
@@ -162,28 +143,17 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $branchId = 1;
         $assigneeId = 3;
-
         $reporter = $this->createReporter();
-        $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setSource')->with(Source::EMAIL)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($this->ticket));
 
-        $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
-        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
+        $this->ticketService
+            ->expects($this->once())
+            ->method('createTicket')
+            ->will($this->returnValue($this->ticket));
 
         $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket);
 
         $this->messageReferenceRepository->expects($this->once())->method('store')
             ->with($this->equalTo($messageReference));
-
-        $this->ticket
-            ->expects($this->atLeastOnce())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
 
         $this->messageReferenceService->createTicket(
             self::DUMMY_MESSAGE_ID,
@@ -202,40 +172,18 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         $branchId = 1;
         $assigneeId = 3;
-
         $reporter = $this->createReporter();
 
-        $this->ticketBuilder->expects($this->once())->method('setSubject')->with(self::SUBJECT)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setSource')->with(Source::EMAIL)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($this->ticket));
-
-        $this->attachmentManager->expects($this->once())->method('createNewAttachment')
-            ->with(
-                $this->equalTo(self::DUMMY_FILENAME),
-                $this->equalTo(self::DUMMY_FILE_CONTENT),
-                $this->equalTo($this->ticket)
-            );
-
-        $this->ticketRepository->expects($this->once())
-            ->method('store')
-            ->with($this->equalTo($this->ticket));
-
-        $this->doctrineRegistry->expects($this->once())->method('getManager')->will($this->returnValue($this->em));
+        $this->ticketService
+            ->expects($this->once())
+            ->method('createTicket')
+            ->will($this->returnValue($this->ticket));
 
         $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket);
 
         $this->messageReferenceRepository->expects($this->once())
             ->method('store')
             ->with($this->equalTo($messageReference));
-
-        $this->ticket
-            ->expects($this->atLeastOnce())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
 
         $this->messageReferenceService->createTicket(
             self::DUMMY_MESSAGE_ID,
@@ -256,6 +204,8 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $author  = $this->createAuthor();
 
         $ticket = $this->createDummyTicket();
+        $ticketWithComment = clone $ticket;
+        $ticketWithComment->postNewComment($this->comment);
 
         $this->messageReferenceRepository->expects($this->once())
             ->method('getReferenceByMessageId')
@@ -266,21 +216,17 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getTicket')
             ->will($this->returnValue($ticket));
 
-        $this->commentFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_COMMENT_CONTENT),
-            $this->equalTo($ticket),
-            $this->equalTo($author)
-        )->will($this->returnValue($this->comment));
-
-        $this->ticketRepository->expects($this->once())->method('store')
-            ->with($this->equalTo($ticket));
+        $this->commentService
+            ->expects($this->once())
+            ->method('postNewCommentForTicket')
+            ->will($this->returnValue($ticketWithComment));
 
         $this->messageReferenceService->createCommentForTicket(
             self::DUMMY_COMMENT_CONTENT, (string)$author, self::DUMMY_MESSAGE_ID
         );
 
-        $this->assertCount(1, $ticket->getComments());
-        $this->assertEquals($this->comment, $ticket->getComments()->get(0));
+        $this->assertCount(1, $ticketWithComment->getComments());
+        $this->assertEquals($this->comment, $ticketWithComment->getComments()->get(0));
     }
 
     /**
@@ -291,6 +237,8 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
         $author  = $this->createAuthor();
 
         $ticket = $this->createDummyTicket();
+        $ticketWithComment = clone $ticket;
+        $ticketWithComment->postNewComment($this->comment);
 
         $this->messageReferenceRepository->expects($this->once())
             ->method('getReferenceByMessageId')
@@ -301,28 +249,17 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getTicket')
             ->will($this->returnValue($ticket));
 
-        $this->commentFactory->expects($this->once())->method('create')->with(
-            $this->equalTo(self::DUMMY_COMMENT_CONTENT),
-            $this->equalTo($ticket),
-            $this->equalTo($author)
-        )->will($this->returnValue($this->comment));
-
-        $this->attachmentManager->expects($this->once())->method('createNewAttachment')
-            ->with(
-                $this->equalTo(self::DUMMY_FILENAME),
-                $this->equalTo(self::DUMMY_FILE_CONTENT),
-                $this->equalTo($this->comment)
-            );
-
-        $this->ticketRepository->expects($this->once())->method('store')
-            ->with($this->equalTo($ticket));
+        $this->commentService
+            ->expects($this->once())
+            ->method('postNewCommentForTicket')
+            ->will($this->returnValue($ticketWithComment));
 
         $this->messageReferenceService->createCommentForTicket(
             self::DUMMY_COMMENT_CONTENT, (string)$author, self::DUMMY_MESSAGE_ID, $this->attachments()
         );
 
-        $this->assertCount(1, $ticket->getComments());
-        $this->assertEquals($this->comment, $ticket->getComments()->get(0));
+        $this->assertCount(1, $ticketWithComment->getComments());
+        $this->assertEquals($this->comment, $ticketWithComment->getComments()->get(0));
     }
 
     private function createBranch()

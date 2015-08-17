@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Tests\Model\Branch;
 
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
+use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Tests\Stubs\FileInfoStub;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User;
@@ -24,7 +25,7 @@ class BranchFactoryTest extends \PHPUnit_Framework_TestCase
     const KEY = 'DB';
     const NAME = 'Diamante Branch';
     const DESCRIPTION = 'Description';
-    const PATH_TO_LOGO_FILE = 'path\to\logo\file.ext';
+    const FILE_NAME = 'file.ext';
 
     /**
      * @var \Diamante\DeskBundle\Model\Branch\BranchKeyGenerator
@@ -48,13 +49,13 @@ class BranchFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateWhenLogoIsDefined()
     {
         $this->branchKeyGenerator->expects($this->exactly(0))->method('generate');
-        $logo = new FileInfoStub(self::PATH_TO_LOGO_FILE, false, true);
+        $logo = new Logo(self::FILE_NAME, self::FILE_NAME);
 
         $branch = $this->factory->create(self::NAME, self::DESCRIPTION, self::KEY, new User(), $logo);
 
         $this->assertEquals(self::KEY, $branch->getKey());
         $this->assertInstanceOf('\Diamante\DeskBundle\Model\Branch\Logo', $branch->getLogo());
-        $this->assertEquals(self::PATH_TO_LOGO_FILE, $branch->getLogo()->getName());
+        $this->assertEquals(self::FILE_NAME, $branch->getLogo()->getName());
     }
 
     public function testCreateWhenKeyIsNotDefined()

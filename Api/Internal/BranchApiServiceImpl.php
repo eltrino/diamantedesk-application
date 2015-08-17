@@ -52,8 +52,9 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
         $processor = new BranchFilterCriteriaProcessor();
         $repository = $this->getBranchRepository();
         $pagingProperties = $this->buildPagination($processor, $repository, $command, $this->apiPagingService);
+        $criteria = $processor->getCriteria();
 
-        $branches = $repository->filter($processor->getCriteria(), $pagingProperties);
+        $branches = $repository->filter($criteria, $pagingProperties);
 
         return $branches;
     }

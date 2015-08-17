@@ -21,10 +21,12 @@ class UploadedFileStub extends UploadedFile
 {
     private $originalName;
     private $mimeType;
+    private $fileName;
 
     public function __construct($path, $originalName, $mimeType = null)
     {
         $this->originalName = $originalName;
+        $this->fileName = $originalName;
         $this->mimeType = $mimeType ?: 'application/octet-stream';
     }
 
@@ -43,5 +45,20 @@ class UploadedFileStub extends UploadedFile
     public function getMimeType()
     {
         return $this->mimeType;
+    }
+
+    public function __toString()
+    {
+        return $this->originalName;
+    }
+
+    public function getFilename()
+    {
+        return $this->fileName;
+    }
+
+    public function getClientOriginalName()
+    {
+        return $this->originalName;
     }
 }

@@ -331,7 +331,7 @@ class CommentServiceImpl implements CommentService
         $this->isGranted('EDIT', $comment);
 
         $attachment = $comment->getAttachment($command->attachmentId);
-        if (null === $attachment) {
+        if (empty($attachment)) {
             throw new AttachmentNotFoundException();
         }
         $comment->removeAttachment($attachment);
