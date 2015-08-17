@@ -36,7 +36,7 @@ use Diamante\UserBundle\Model\User as UserModel;
  *      }
  * )
  */
-class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket implements Owned
+class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
 {
     /**
      * @var integer
@@ -166,21 +166,5 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket implements Owned
     public static function getClassName()
     {
         return __CLASS__;
-    }
-
-    /**
-     * @return UserModel
-     */
-    public function getOwner()
-    {
-        return $this->reporter;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getOwnerId()
-    {
-        return $this->getOwner() ? $this->getOwner()->getId() : null;
     }
 }

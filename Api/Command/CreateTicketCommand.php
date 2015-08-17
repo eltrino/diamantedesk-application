@@ -15,12 +15,10 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Diamante\DeskBundle\Entity\Branch;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 use Diamante\DeskBundle\Validator\Constraints\User;
 use Diamante\DeskBundle\Validator\Constraints\PrintType;
-use Oro\Bundle\TagBundle\Entity\Taggable;
 
 class CreateTicketCommand
 {

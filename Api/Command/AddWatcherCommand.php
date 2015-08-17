@@ -16,7 +16,6 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
-use Diamante\DeskBundle\Validator\Constraints\User;
 
 class AddWatcherCommand
 {

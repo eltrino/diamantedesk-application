@@ -15,7 +15,6 @@
 
 namespace Diamante\DeskBundle\Model\Attachment\Exception;
 
-
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 

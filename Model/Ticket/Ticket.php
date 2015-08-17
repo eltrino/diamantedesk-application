@@ -36,7 +36,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
-class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Taggable, Updatable
+class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Taggable, Updatable, Owned
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
@@ -705,5 +705,21 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
                 )
             );
         }
+    }
+
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->reporter;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOwnerId()
+    {
+        return $this->getOwner() ? $this->getOwner()->getId() : null;
     }
 }

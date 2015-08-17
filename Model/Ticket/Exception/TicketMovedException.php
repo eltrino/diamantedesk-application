@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,16 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Exception;
 
-use Diamante\DeskBundle\Infrastructure\Shared\Exception\EntityProcessingException;
-use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
-
-class TicketMovedException extends EntityProcessingException implements Flashable
+class TicketMovedException extends \RuntimeException
 {
     private $ticketKey;
-
     public function __construct($ticketKey)
     {
         $this->ticketKey = $ticketKey;
         parent::__construct();
     }
-
     public function getTicketKey()
     {
         return $this->ticketKey;
-    }
-
-    public function getFlashMessage()
-    {
-        return 'diamante.desk.ticket.messages.move.error';
     }
 }

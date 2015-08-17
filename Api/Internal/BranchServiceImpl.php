@@ -18,11 +18,7 @@ use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\BranchFactory;
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
-use Diamante\DeskBundle\Model\Branch\Exception\BranchCreateException;
-use Diamante\DeskBundle\Model\Branch\Exception\BranchDeleteException;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
-use Diamante\DeskBundle\Model\Branch\Exception\BranchSaveException;
-use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
@@ -124,7 +120,6 @@ class BranchServiceImpl implements BranchService
      * Create Branch
      * @param Command\BranchCommand $branchCommand
      * @return \Diamante\DeskBundle\Entity\Branch
-     * @throws DuplicateBranchKeyException
      */
     public function createBranch(Command\BranchCommand $branchCommand)
     {
@@ -133,26 +128,22 @@ class BranchServiceImpl implements BranchService
         $logo = $this->uploadBranchLogoIfExists($branchCommand);
         $assignee = $this->extractDefaultBranchAssignee($branchCommand);
 
-        try {
-            $branch = $this->branchFactory
-                ->create(
-                    $branchCommand->name,
-                    $branchCommand->description,
-                    $branchCommand->key,
-                    $assignee,
-                    $logo,
-                    $branchCommand->tags
-                );
+        $branch = $this->branchFactory
+            ->create(
+                $branchCommand->name,
+                $branchCommand->description,
+                $branchCommand->key,
+                $assignee,
+                $logo,
+                $branchCommand->tags
+            );
 
-            $this->registry->getManager()->persist($branch);
-            $this->tagManager->saveTagging($branch);
+        $this->registry->getManager()->persist($branch);
+        $this->tagManager->saveTagging($branch);
 
-            $this->registry->getManager()->flush();
+        $this->registry->getManager()->flush();
 
-            return $branch;
-        } catch (\Exception $e) {
-            throw new BranchCreateException($e->getMessage());
-        }
+        return $branch;
     }
 
     /**
@@ -177,18 +168,14 @@ class BranchServiceImpl implements BranchService
 
         $file = $this->uploadBranchLogoIfExists($branchCommand);
 
-        try {
-            $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
-            $this->registry->getManager()->persist($branch);
-            $this->handleTagging($branchCommand, $branch);
+        $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
+        $this->registry->getManager()->persist($branch);
+        $this->handleTagging($branchCommand, $branch);
 
-            $this->registry->getManager()->flush();
-            $this->tagManager->saveTagging($branch);
+        $this->registry->getManager()->flush();
+        $this->tagManager->saveTagging($branch);
 
-            return $branch->getId();
-        } catch (\Exception $e) {
-            throw new BranchSaveException($e->getMessage());
-        }
+        return $branch->getId();
     }
 
     /**
@@ -208,17 +195,13 @@ class BranchServiceImpl implements BranchService
             throw new BranchNotFoundException();
         }
 
-        try {
-            foreach ($command->properties as $name => $value) {
-                $branch->updateProperty($name, $value);
-            }
-
-            $this->branchRepository->store($branch);
-
-            return $branch;
-        } catch (\Exception $e) {
-            throw new BranchSaveException($e->getMessage());
+        foreach ($command->properties as $name => $value) {
+            $branch->updateProperty($name, $value);
         }
+
+        $this->branchRepository->store($branch);
+
+        return $branch;
     }
 
     /**
@@ -236,14 +219,10 @@ class BranchServiceImpl implements BranchService
             throw new BranchNotFoundException();
         }
 
-        try {
-            if ($branch->getLogo()) {
-                $this->branchLogoHandler->remove($branch->getLogo());
-            }
-            $this->branchRepository->remove($branch);
-        } catch (\Exception $e) {
-            throw new BranchDeleteException($e->getMessage());
+        if ($branch->getLogo()) {
+            $this->branchLogoHandler->remove($branch->getLogo());
         }
+        $this->branchRepository->remove($branch);
     }
 
     /**
