@@ -240,4 +240,12 @@ class Branch implements Entity, Taggable
             throw new \DomainException(sprintf('Branch does not have "%s" property.', $name));
         }
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }
