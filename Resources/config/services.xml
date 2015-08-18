@@ -80,11 +80,6 @@
 
         <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>
 
-        <service id="diamante.email_processing.form.type.default_branch" class="%diamante.email_processing.form.type.default_branch.class%">
-            <argument type="service" id="diamante.branch.service"/>
-            <tag name="form.type" alias="diamante_email_processing_default_branch"/>
-        </service>
-
         <service id="diamante.email_processing.branchRemoveEventListener" class="%diamante.email_processing.branchRemoveEventListener.class%">
             <argument type="service" id="service_container"/>
             <tag name="doctrine.event_listener" event="preRemove"/>

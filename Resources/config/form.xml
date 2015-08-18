@@ -52,6 +52,7 @@
             <tag name="form.type" alias="diamante_ticket_form"/>
         </service>
         <service id="diamante_email_processing_default_branch" class="%diamante_email_processing_default_branch.type.class%">
+            <argument type="service" id="diamante.branch.service"/>
             <tag name="form.type" alias="diamante_email_processing_default_branch"/>
         </service>
         <service id="diamante_user_select" class="%diamante_user_select.type.class%">
