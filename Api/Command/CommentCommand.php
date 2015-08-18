@@ -37,7 +37,6 @@ class CommentCommand
     public $attachmentList;
 
     /**
-     * @var array
      * @Assert\Type(type="array")
      * @var array|null
      */

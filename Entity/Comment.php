@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Entity;
 
-use Diamante\DeskBundle\Model\Shared\Owned;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Diamante\UserBundle\Model\User as UserModel;
@@ -33,7 +32,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *      }
  * )
  */
-class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment implements Owned
+class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
 {
     /**
      * @var integer
@@ -111,27 +110,4 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment implements Owned
      * )
      */
     protected $private;
-
-    public static function getClassName()
-    {
-        return __CLASS__;
-    }
-
-    /**
-     * @return UserModel
-     */
-    public function getOwner()
-    {
-        return $this->author;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getOwnerId()
-    {
-        return $this->getOwner() ? $this->getOwner()->getId() : null;
-    }
-
-
 }
