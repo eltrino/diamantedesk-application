@@ -83,7 +83,8 @@ class ManagerImpl implements Manager
      * @param string $filename
      * @param string $content
      * @param AttachmentHolder $holder
-     * @return \Diamante\DeskBundle\Model\Attachment\Attachment
+     * @param bool $flush
+     * @return Attachment
      */
     public function createNewAttachment($filename, $content, AttachmentHolder $holder, $flush = false)
     {

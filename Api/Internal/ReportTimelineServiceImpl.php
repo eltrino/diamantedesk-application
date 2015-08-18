@@ -116,6 +116,9 @@ class ReportTimelineServiceImpl implements ReportTimelineService
      */
     protected function persistCurrentDayRecord(EntityManager $em)
     {
+        if (!$this->currentDayRecord) {
+            return;
+        }
         $em->persist($this->currentDayRecord);
         $em->getUnitOfWork()->computeChangeSet(
             $em->getClassMetadata(get_class($this->currentDayRecord)),

@@ -18,6 +18,7 @@ use Diamante\DeskBundle\Model\Shared\Owned;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Diamante\UserBundle\Model\User as UserModel;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineCommentRepository")
@@ -27,7 +28,8 @@ use Diamante\UserBundle\Model\User as UserModel;
  *          "security"={
  *              "type"="ACL",
  *              "group_name"="DiamanteDesk"
- *          }
+ *          },
+ *         "dataaudit"={"auditable"=true}
  *      }
  * )
  */
@@ -48,6 +50,12 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment implements Owned
      * @var string $text
      *
      * @ORM\Column(type="text")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $content;
 
@@ -95,6 +103,12 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment implements Owned
      * @var bool
      *
      * @ORM\Column(name="private", type="boolean")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $private;
 

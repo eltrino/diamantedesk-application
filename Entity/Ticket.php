@@ -14,12 +14,12 @@
  */
 namespace Diamante\DeskBundle\Entity;
 
-use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Diamante\UserBundle\Model\User as UserModel;
 
 /**
@@ -32,7 +32,8 @@ use Diamante\UserBundle\Model\User as UserModel;
  *              "type"="ACL",
  *              "permissions"="VIEW;CREATE;EDIT;DELETE",
  *              "group_name"="DiamanteDesk"
- *          }
+ *          },
+ *         "dataaudit"={"auditable"=true}
  *      }
  * )
  */
@@ -65,6 +66,12 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=false)
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $subject;
 
@@ -72,6 +79,12 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @var string
      *
      * @ORM\Column(type="text")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $description;
 
@@ -79,6 +92,12 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @var string
      *
      * @ORM\Column(type="status")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $status;
 
@@ -86,6 +105,12 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @var string
      *
      * @ORM\Column(type="priority")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $priority;
 
@@ -94,12 +119,24 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      *
      * @ORM\ManyToOne(targetEntity="Branch")
      * @ORM\JoinColumn(name="branch_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $branch;
 
     /**
      * @var UserModel
      * @ORM\Column(type="user_type", name="reporter_id")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $reporter;
 
@@ -108,6 +145,12 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      *
      * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="assignee_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $assignee;
 

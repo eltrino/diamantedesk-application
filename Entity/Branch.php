@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
@@ -27,7 +28,8 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
  *          "security"={
  *              "type"="ACL",
  *              "group_name"="DiamanteDesk"
- *          }
+ *          },
+ *         "dataaudit"={"auditable"=true}
  *      }
  * )
  */
@@ -49,6 +51,11 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      *
      * @ORM\Column(type="string", length=255)
      *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $name;
 
@@ -58,6 +65,12 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      * @var string $description
      *
      * @ORM\Column(type="text", length=65535, nullable=true)
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $description;
 
@@ -65,6 +78,12 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      * @var string
      *
      * @ORM\Column(name="branch_key", type="string", length=255, nullable=false, unique=true)
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $key;
 
@@ -75,6 +94,12 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      *
      * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="default_assignee_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $defaultAssignee;
 
@@ -82,6 +107,12 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      * @var \Diamante\DeskBundle\Model\Branch\Logo
      *
      * @ORM\Column(type="branch_logo")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $logo;
 
