@@ -76,13 +76,13 @@ class InstallCommand extends OroInstallCommand
             $this->checkStep($output);
             $this->oroInit($input, $output);
             $this->oroInstall($input, $output);
-            $this->runExistingCommand('cache:clear', $output);
-            $this->runExistingCommand('diamante:desk:install', $output);
-            $this->runExistingCommand('diamante:user:install', $output);
-            $this->runExistingCommand('diamante:embeddedform:install', $output);
-            $this->runExistingCommand('diamante:front:build', $output, array('--with-assets-dependencies' => true));
-            $this->runExistingCommand('assets:install', $output);
-            $this->runExistingCommand('assetic:dump', $output, array('--process-isolation' => true));
+            $this->runExistingCommand('cache:clear');
+            $this->runExistingCommand('diamante:desk:install');
+            $this->runExistingCommand('diamante:user:install');
+            $this->runExistingCommand('diamante:embeddedform:install');
+            $this->runExistingCommand('diamante:front:build',  array('--with-assets-dependencies' => true));
+            $this->runExistingCommand('assets:install');
+            $this->runExistingCommand('assetic:dump', array('--process-isolation' => true));
             $this->oroAdministrationSetup($output);
         } catch (\Exception $e) {
             $this->logger
@@ -364,10 +364,9 @@ class InstallCommand extends OroInstallCommand
     /**
      * Run existing command in system
      * @param string $commandName
-     * @param OutputInterface $output
      * @param array $parameters
      */
-    protected function runExistingCommand($commandName, OutputInterface $output, array $parameters = array())
+    protected function runExistingCommand($commandName, array $parameters = array())
     {
         try {
             $this->commandExecutor
@@ -378,17 +377,5 @@ class InstallCommand extends OroInstallCommand
         } catch (\Exception $e) {
             $this->logger->error(sprintf('Error occured during execution of %s: %s', $commandName, $e->getMessage()));
         }
-    }
-
-    /**
-     * @return array list of registered bundles
-     */
-    private function listBundlesToExcludeInAssetsInstall()
-    {
-        $bundles = $this->getContainer()->getParameter('kernel.bundles');
-        if (isset($bundles['DiamanteFrontBundle'])) {
-            unset($bundles['DiamanteFrontBundle']);
-        }
-        return array_keys($bundles);
     }
 }

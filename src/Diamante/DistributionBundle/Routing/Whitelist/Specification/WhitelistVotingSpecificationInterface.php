@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,11 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DistributionBundle\Routing;
+namespace Diamante\DistributionBundle\Routing\Whitelist\Specification;
 
-/**
- * Class Voter
- *
- * @package Diamante\DistributionBundle\Routing
- */
-abstract class Voter implements VoterInterface
+
+interface WhitelistVotingSpecificationInterface
 {
-    const TYPE_STRING = 'string';
-    const TYPE_REGEXP = 'regexp';
-    const TYPE_SHORTCUT = 'shortcut';
+    public function getType();
+    public function isItemWhitelisted($item, $whitelist);
 }

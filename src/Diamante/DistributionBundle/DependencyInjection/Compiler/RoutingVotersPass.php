@@ -32,14 +32,14 @@ class RoutingVotersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('diamante.distribution.voter.provider')) {
+        if (!$container->hasDefinition('diamante.distribution.whitelist.provider')) {
             return false;
         }
 
-        $def = $container->getDefinition('diamante.distribution.voter.provider');
+        $def = $container->getDefinition('diamante.distribution.whitelist.provider');
 
-        foreach ($container->findTaggedServiceIds('diamante.routing.voter') as $id => $attrs) {
-            $def->addMethodCall('addVoter', [new Reference($id)]);
+        foreach ($container->findTaggedServiceIds('diamante.routing.spec') as $id => $attrs) {
+            $def->addMethodCall('addWhitelistVotingSpecification', [new Reference($id)]);
         }
     }
 }

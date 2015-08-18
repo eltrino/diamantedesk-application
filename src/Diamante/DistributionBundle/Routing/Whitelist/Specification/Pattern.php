@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,24 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DistributionBundle\Routing;
+namespace Diamante\DistributionBundle\Routing\Whitelist\Specification;
 
-class RegexpVoter extends Voter
+
+class Pattern extends WhitelistVotingSpecification
 {
-    /**
-     * @return string
-     */
     public function getType()
     {
-        return Voter::TYPE_REGEXP;
+        return self::TYPE_PATTERN;
     }
 
-    /**
-     * @return array
-     */
-    public function getListedItems()
+    public function isItemWhitelisted($item, $whitelist)
     {
-        return [
-            '^diamante_[a-z_]+',
-            '^oro_user_[a-z_]+',
-            '^sylius_flow_[a-z_]+',
-            '^_imagine[a-z_]+',
-        ];
+        foreach ($whitelist as $rule) {
+            if (preg_match(sprintf('/%s/', $rule), $item) === 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

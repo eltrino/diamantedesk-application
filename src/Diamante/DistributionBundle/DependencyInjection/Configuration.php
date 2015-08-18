@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
             $rootNode,
             [
                 'organization_name'  => ['value' => 'Diamante'],
-                'application_url'   => ['value' => 'http://localhost/diamante/']
+                'application_url'    => ['value' => 'http://localhost/diamante/']
             ]
         );
 

@@ -1,0 +1,82 @@
+whitelist:
+  simple:
+    - 'oro_config_configuration_system'
+    - 'oro_api_get_sidebars'
+    - 'oro_api_cget_sidebarwidgets'
+    - 'oro_default'
+    - 'oro_dashboard_itemized_widget'
+    - 'oro_activity_list_widget_activities'
+    - 'oro_translation_jstranslation'
+    - 'oro_form_autocomplete_search'
+    - 'oro_search_results'
+    - 'oro_pinbar_help'
+    - 'oro_email_user_emails'
+    - 'oro_calendar_view_default'
+    - 'oro_shortcut_actionslist'
+    - 'oro_platform_system_info'
+    - 'oro_datagrid_mass_action'
+    - 'oro_datagrid_widget'
+    - 'oro_datagrid_index'
+    - 'oro_datagrid_api_rest_gridview_post'
+    - 'oro_tag_search'
+    - 'oro_security_access_levels'
+    - 'oro_translation_available_translations'
+    - 'oro_translation_download'
+    - 'oro_dataaudit_index'
+
+    #OroUserBundle
+    - 'oro_activity_list_api_get_list'
+    - 'oro_comment_form'
+    - 'orocrm_task_user_tasks'
+    - 'oro_api_delete_user'
+
+    #Dashboard
+    - 'oro_dashboard_index'
+    - 'oro_dashboard_view'
+    - 'oro_dashboard_configure'
+    - 'oro_dashboard_update'
+    - 'oro_api_post_dashboard_widget_add_widget'
+    - 'oro_api_put_dashboard_widget_positions'
+    - 'oro_api_delete_dashboard_widget'
+
+    #Embedded Forms
+    - 'diamante_embedded_form_submit'
+    - 'oro_embedded_form_list'
+    - 'oro_embedded_form_create'
+    - 'oro_embedded_form_view'
+    - 'oro_embedded_form_delete'
+    - 'oro_embedded_form_default_data'
+    - 'oro_embedded_form_submit'
+    - 'oro_embedded_form_success'
+    - 'oro_embedded_form_update'
+    - 'oro_embedded_form_info'
+
+    # Api
+    - 'oro_api_get_users'
+    - 'nelmio_api_doc_index'
+
+    #@TODO:REMOVE THESE ON RELEASE
+    - 'oro_email_dashboard_recent_emails'
+    - 'oro_calendar_dashboard_my_calendar'
+    - 'oro_api_get_calendarevents'
+    - '_wdt'
+
+    - 'fos_js_routing_js'
+    - 'oro_installer_flow'
+    - '_imagine_avatar_med'
+
+    #Shortcuts
+    - 'diamante_branch_list'
+    - 'diamante_ticket_list'
+    - 'embedded_forms'
+    - 'shortcut_list_users'
+    - 'shortcut_new_user'
+    - 'system_configuration'
+    - 'user_groups'
+    - 'user_roles'
+
+  pattern:
+    - '^diamante_[a-z_]+'
+    - '^oro_user_[a-z_]+'
+    - '^sylius_flow_[a-z_]+'
+    - '^_imagine[a-z_]+'

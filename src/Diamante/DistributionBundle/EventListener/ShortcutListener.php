@@ -15,9 +15,8 @@
 
 namespace Diamante\DistributionBundle\EventListener;
 
+use Diamante\DistributionBundle\Routing\Whitelist\WhitelistProvider;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Diamante\DistributionBundle\Routing\VoterProvider;
-use Diamante\DistributionBundle\Routing\Voter;
 
 /**
  * Class ShortcutListener
@@ -27,16 +26,16 @@ use Diamante\DistributionBundle\Routing\Voter;
 class ShortcutListener
 {
     /**
-     * @var array
+     * @var WhitelistProvider
      */
-    protected $whitelist;
+    protected $whitelistProvider;
 
     /**
-     * @param VoterProvider      $provider
+     * @param WhitelistProvider $provider
      */
-    public function __construct(VoterProvider $provider)
+    public function __construct(WhitelistProvider $provider)
     {
-        $this->whitelist = $provider->getCumulativeWhitelist();
+        $this->whitelistProvider = $provider;
     }
 
     /**
@@ -48,22 +47,12 @@ class ShortcutListener
         if ('oro_shortcut_actionslist' == $_route) {
             $controllerResult = $event->getControllerResult();
             foreach ($controllerResult['actionsList'] as $route => $data) {
-                if (!$this->isTargetWhitelisted($route)) {
+                if (!$this->whitelistProvider->isItemWhitelisted($route)) {
                     unset($controllerResult['actionsList'][$route]);
                 }
             }
 
             $event->setControllerResult($controllerResult);
         }
-    }
-
-    /**
-     * @param $route
-     *
-     * @return bool
-     */
-    protected function isTargetWhitelisted($route)
-    {
-        return in_array($route, $this->whitelist[Voter::TYPE_SHORTCUT]);
     }
 }

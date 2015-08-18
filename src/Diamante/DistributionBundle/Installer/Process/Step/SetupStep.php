@@ -13,7 +13,6 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\InstallerBundle\Process\Step\AbstractStep;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 class SetupStep extends AbstractStep
 {
