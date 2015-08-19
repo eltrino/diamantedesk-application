@@ -47,7 +47,11 @@ class Status
     {
         static::initValueLabelsMap();
 
-        if (false === isset(static::$valueToLabelMap[$status])) {
+        if (!$status) {
+            $status = '';
+        }
+
+        if (false === isset(static::$valueToLabelMap[$status]) && $status !== '') {
             throw new \InvalidArgumentException('Given status is wrong');
         }
 

@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle;
 
 use Doctrine\DBAL\Types\Type;
+use Oro\Bundle\DataAuditBundle\Model\AuditFieldTypeRegistry;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -61,6 +62,10 @@ class DiamanteDeskBundle extends Bundle
                 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketUniqueIdType'
             );
         }
+
+        AuditFieldTypeRegistry::addType('status', 'status');
+        AuditFieldTypeRegistry::addType('priority', 'priority');
+        AuditFieldTypeRegistry::addType('user_type', 'user_type');
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $conn = $em->getConnection();

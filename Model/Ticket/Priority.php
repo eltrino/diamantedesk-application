@@ -36,7 +36,7 @@ class Priority
 
         static::initValueLabelsMap();
 
-        if (false === isset(static::$valueToLabelMap[$priority])) {
+        if (false === isset(static::$valueToLabelMap[$priority]) && $priority !== '') {
             throw new \InvalidArgumentException("Priority doesn't exist.");
         }
 
