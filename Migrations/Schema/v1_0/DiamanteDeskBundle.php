@@ -40,6 +40,7 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
         $this->auditFieldExtension->addType($schema, $doctrineType = 'status', $auditType = 'status');
         $this->auditFieldExtension->addType($schema, $doctrineType = 'priority', $auditType = 'priority');
         $this->auditFieldExtension->addType($schema, $doctrineType = 'user_type', $auditType = 'user_type');
+        $this->auditFieldExtension->addType($schema, $doctrineType = 'file', $auditType = 'file');
     }
 
     /**

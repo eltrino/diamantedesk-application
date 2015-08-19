@@ -66,6 +66,7 @@ class DiamanteDeskBundle extends Bundle
         AuditFieldTypeRegistry::addType('status', 'status');
         AuditFieldTypeRegistry::addType('priority', 'priority');
         AuditFieldTypeRegistry::addType('user_type', 'user_type');
+        AuditFieldTypeRegistry::addType('file', 'file');
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $conn = $em->getConnection();
