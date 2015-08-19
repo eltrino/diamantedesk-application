@@ -246,11 +246,6 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
         }
     }
 
-    public static function getClassName()
-    {
-        return __CLASS__;
-    }
-
     /**
      * @return User
      */

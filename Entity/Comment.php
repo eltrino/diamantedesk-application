@@ -110,4 +110,9 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
      * )
      */
     protected $private;
+
+    public static function getClassName()
+    {
+        return __CLASS__;
+    }
 }
