@@ -30,7 +30,7 @@ class SchemaStep extends AbstractStep
             case 'schema-update':
                 return $this->handleAjaxAction(
                     'oro:migration:load',
-                    array('--force' => true, '--exclude' => array('DiamanteEmbeddedFormBundle'))
+                    array('--force' => true, '--exclude' => array('DiamanteEmbeddedFormBundle'), '--timeout' => 0)
                 );
             case 'fixtures':
                 return $this->handleAjaxAction(
