@@ -70,7 +70,7 @@ class ReportController extends Controller
 
             $params = array_merge(
                 [
-                    'chart-type' => $this->getChartType($id),
+                    'chart_type' => $this->getChartType($id),
                     'data'       => $this->get('diamante.report.service')->build($id),
                 ],
                 $manager->getWidgetAttributesForTwig($id)
