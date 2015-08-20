@@ -21,6 +21,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DiamanteDeskBundle extends Bundle
 {
+    /**
+     * @var array
+     */
+    private $dataAuditTypes = [
+        'status',
+        'priority',
+        'user_type',
+        'file',
+    ];
+
     public function boot()
     {
         if (!Type::hasType('branch_logo')) {
@@ -63,10 +73,11 @@ class DiamanteDeskBundle extends Bundle
             );
         }
 
-        AuditFieldTypeRegistry::addType('status', 'status');
-        AuditFieldTypeRegistry::addType('priority', 'priority');
-        AuditFieldTypeRegistry::addType('user_type', 'user_type');
-        AuditFieldTypeRegistry::addType('file', 'file');
+        foreach ($this->dataAuditTypes as $type) {
+            if (!AuditFieldTypeRegistry::hasType($type)) {
+                AuditFieldTypeRegistry::addType($type, $type);
+            }
+        }
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $conn = $em->getConnection();
