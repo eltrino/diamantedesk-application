@@ -171,6 +171,8 @@ class TicketServiceImpl implements TicketService
     public function loadTicket($id)
     {
         $ticket = $this->loadTicketById($id);
+        $this->loadTagging($ticket);
+
         $this->isGranted('VIEW', $ticket);
         return $ticket;
     }
@@ -192,9 +194,7 @@ class TicketServiceImpl implements TicketService
             $ticket = $this->loadTicketByTicketKey($ticketKey);
         }
 
-        if ($this->securityFacade->getOrganization()) {
-            $this->tagManager->loadTagging($ticket);
-        }
+        $this->loadTagging($ticket);
 
         $this->isGranted('VIEW', $ticket);
 
@@ -353,12 +353,11 @@ class TicketServiceImpl implements TicketService
 
         $this->doctrineRegistry->getManager()->persist($ticket);
 
-        if ($this->securityFacade->getOrganization()) {
-            $this->tagManager->saveTagging($ticket);
-        }
-
         $this->doctrineRegistry->getManager()->flush();
-
+        $this->tagManager->saveTagging($ticket);
+        $ticket->setTags(null);
+        $this->loadTagging($ticket);
+        $this->doctrineRegistry->getManager()->detach($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
@@ -599,6 +598,7 @@ class TicketServiceImpl implements TicketService
         $ticket->updateProperties($command->properties);
         $this->ticketRepository->store($ticket);
 
+        $this->loadTagging($ticket);
         $this->dispatchEvents($ticket);
 
         return $ticket;
@@ -653,6 +653,16 @@ class TicketServiceImpl implements TicketService
             if (!$comment->isPrivate()) {
                 $comments->remove($comment);
             }
+        }
+    }
+
+    /**
+     * @param Ticket $ticket
+     */
+    private function loadTagging(Ticket $ticket)
+    {
+        if ($this->securityFacade->getOrganization()) {
+            $this->tagManager->loadTagging($ticket);
         }
     }
 }

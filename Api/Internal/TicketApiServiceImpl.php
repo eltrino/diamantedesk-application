@@ -22,12 +22,14 @@ use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
+use Oro\Bundle\TagBundle\Entity\TagManager;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -40,6 +42,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * @var UserService
      */
     private $userService;
+
+    /**
+     * @var TagManager
+     */
+    private $tagManager;
 
     /**
      * @var Repository
@@ -445,6 +452,15 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $criteria = $criteriaProcessor->getCriteria();
 
         $tickets = $repository->filter($criteria, $pagingProperties, $user);
+        if ($this->securityFacade->getOrganization()) {
+            foreach ($tickets as $ticket) {
+                /** @var Ticket $ticket */
+                $this->tagManager->loadTagging($ticket);
+            }
+        }
+
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
 
         return $tickets;
     }
@@ -511,6 +527,14 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function setBranchRepository(Repository $branchRepository)
     {
         $this->branchRepository = $branchRepository;
+    }
+
+    /**
+     * @param TagManager $tagManager
+     */
+    public function setTagManager(TagManager $tagManager)
+    {
+        $this->tagManager = $tagManager;
     }
 
     /**
