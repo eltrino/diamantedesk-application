@@ -127,7 +127,7 @@
     {% else %}
         {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
             {{ UI.button({
-                'path': path('diamante_ticket_watch', { 'ticketId': entity.id }),
+                'path': path('diamante_ticket_watch', { 'ticket': entity.id }),
                 'iCss': 'icon-eye-open',
                 'title': 'diamante.desk.ticket.actions.watch'|trans,
                 'label': 'diamante.desk.ticket.actions.watch'|trans
