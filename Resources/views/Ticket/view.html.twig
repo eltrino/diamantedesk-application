@@ -118,7 +118,7 @@
     {% if isWatching == 1 %}
         {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
             {{ UI.button({
-                'path': path('diamante_ticket_unwatch', { 'ticketId': entity.id }),
+                'path': path('diamante_ticket_unwatch', { 'ticket': entity.id }),
                 'iCss': 'icon-eye-close',
                 'title': 'diamante.desk.ticket.actions.unwatch'|trans,
                 'label': 'diamante.desk.ticket.actions.unwatch'|trans
@@ -127,7 +127,7 @@
     {% else %}
         {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
             {{ UI.button({
-                'path': path('diamante_ticket_watch', { 'ticketId': entity.id }),
+                'path': path('diamante_ticket_watch', { 'ticket': entity.id }),
                 'iCss': 'icon-eye-open',
                 'title': 'diamante.desk.ticket.actions.watch'|trans,
                 'label': 'diamante.desk.ticket.actions.watch'|trans
@@ -314,7 +314,7 @@
     {% set WatchersListWidget %}
         {{ oro_widget_render({
             'widgetType': 'block',
-            'url': path('diamante_ticket_watchers', {ticketId: entity.id})
+            'url': path('diamante_ticket_watchers', {"ticket": entity.id})
         }) }}
     {% endset %}
 

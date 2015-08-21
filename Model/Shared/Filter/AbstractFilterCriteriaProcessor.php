@@ -16,6 +16,7 @@
 namespace Diamante\DeskBundle\Model\Shared\Filter;
 
 use Diamante\DeskBundle\Api\Command\Filter\CommonFilterCommand;
+use Diamante\DeskBundle\Api\Command\Shared\FilteringCommand;
 
 abstract class AbstractFilterCriteriaProcessor implements FilterCriteriaProcessor
 {
@@ -63,9 +64,9 @@ abstract class AbstractFilterCriteriaProcessor implements FilterCriteriaProcesso
     protected $pagingConfig;
 
     /**
-     * @param CommonFilterCommand $command
+     * @param FilteringCommand $command
      */
-    public function setCommand(CommonFilterCommand $command)
+    public function setCommand(FilteringCommand $command)
     {
         $this->command = $command;
         $this->populateProperties();

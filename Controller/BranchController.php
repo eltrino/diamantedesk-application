@@ -14,24 +14,26 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
-use Diamante\DeskBundle\Form\Type\CreateBranchType;
-use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("branches")
  */
 class BranchController extends Controller
 {
+    use Shared\FormHandlerTrait;
+    use Shared\ExceptionHandlerTrait;
+    use Shared\SessionFlashMessengerTrait;
+    use Shared\ResponseHandlerTrait;
+
     /**
      * @Route(
      *      "/{_format}",
@@ -60,12 +62,13 @@ class BranchController extends Controller
             $branch = $this->get('diamante.branch.service')->getBranch($id);
             $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')
                 ->getConfigurationByBranchId($branch->getId());
+            $this->container->get('oro_tag.tag.manager')->loadTagging($branch);
             return [
                 'entity' => $branch,
                 'branchEmailConfiguration' => $branchEmailConfiguration
             ];
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch loading failed: %s', $e->getMessage()));
+            $this->handleException($e);
             return new Response($e->getMessage(), 404);
         }
     }
@@ -78,7 +81,7 @@ class BranchController extends Controller
     {
         $command = new BranchCommand();
         try {
-            $form = $this->createForm(new CreateBranchType(), $command);
+            $form = $this->createForm('diamante_branch_form', $command);
 
             $result = $this->edit($command, $form, function ($command) {
                 $branch = $this->get('diamante.branch.service')->createBranch($command);
@@ -86,8 +89,7 @@ class BranchController extends Controller
                 return $branch->getId();
             });
         } catch(\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch creation failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.create.error');
+            $this->handleException($e);
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
@@ -135,14 +137,14 @@ class BranchController extends Controller
         $branch = $this->get('diamante.branch.service')->getBranch($id);
         $command = BranchCommand::fromBranch($branch);
 
-        if ($this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id)) {
+        if ($this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id) !== null) {
             $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id);
             $branchEmailConfigurationCommand = BranchEmailConfigurationCommand::fromBranchEmailConfiguration($branchEmailConfiguration);
             $command->setBranchEmailConfiguration($branchEmailConfigurationCommand);
         }
 
         try {
-            $form = $this->createForm(new UpdateBranchType(), $command);
+            $form = $this->createForm('diamante_update_branch_form', $command);
 
             $result = $this->edit($command, $form, function ($command) use ($branch) {
                 $branchId = $this->get('diamante.branch.service')->updateBranch($command);
@@ -159,8 +161,7 @@ class BranchController extends Controller
                 )
             );
         } catch(\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch update failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
+            $this->handleException($e);
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_view',
@@ -194,7 +195,7 @@ class BranchController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse($branchId);
+            $response = $this->getSuccessSaveResponse('diamante_branch_update', 'diamante_branch_view', ['id' => $branchId]);
         } catch (DuplicateBranchKeyException $e) {
             $this->addErrorMessage($e->getMessage());
             $formView = $form->createView();
@@ -205,11 +206,8 @@ class BranchController extends Controller
                 );
             }
             $response = array('form' => $formView);
-        } catch (MethodNotAllowedException $e) {
-            $response = array('form' => $form->createView());
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch saving failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.save.error');
+            $this->handleException($e);
             $response = array('form' => $form->createView());
         }
         return $response;
@@ -237,64 +235,14 @@ class BranchController extends Controller
                 'Content-Type' => $this->getRequest()->getMimeType('json')
             ));
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Branch deletion failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.branch.messages.delete.error');
+            $this->handleException($e);
             return new Response($e->getMessage(), 500);
         }
     }
 
     /**
-     * @param Form $form
-     * @throws MethodNotAllowedException
-     * @throws ValidatorException
+     * @return bool
      */
-    private function handle(Form $form)
-    {
-        if (false === $this->getRequest()->isMethod('POST')) {
-            throw new MethodNotAllowedException(array('POST'), 'Form can be posted only by "POST" method.');
-        }
-
-        $form->handleRequest($this->getRequest());
-
-        if (false === $form->isValid()) {
-            throw new ValidatorException('Form object validation failed, form is invalid.');
-        }
-    }
-
-    /**
-     * @param $message
-     */
-    private function addSuccessMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans($message)
-        );
-    }
-
-    /**
-     * @param $message
-     */
-    private function addErrorMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            $this->get('translator')->trans($message)
-        );
-    }
-
-    /**
-     * @param int $branchId
-     * @return mixed
-     */
-    private function getSuccessSaveResponse($branchId)
-    {
-        return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_branch_update', 'parameters' => ['id' => $branchId]],
-            ['route' => 'diamante_branch_view', 'parameters' => ['id' => $branchId]]
-        );
-    }
-
     private function isDeletionRequestFromGrid()
     {
         $referer = $this->getRequest()->headers->get('referer');

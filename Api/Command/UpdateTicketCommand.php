@@ -15,9 +15,9 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Diamante\DeskBundle\Entity\Branch;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Oro\Bundle\TagBundle\Entity\Taggable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class UpdateTicketCommand implements Taggable
 {
@@ -51,7 +51,7 @@ class UpdateTicketCommand implements Taggable
 
     /**
      * @Assert\NotNull()
-     * @var \Diamante\DeskBundle\Model\Ticket\Status
+     * @var string
      */
     public $status;
 

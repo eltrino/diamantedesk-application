@@ -122,7 +122,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     public function addCommentAttachment(Command\AddCommentAttachmentCommand $command, $flush = false)
     {
         $this->prepareAttachmentInput($command);
-        return parent::addCommentAttachment($command, $flush);
+        return parent::addCommentAttachment($command, true);
     }
 
     /**
@@ -225,7 +225,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      */
     public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command, $flush = false)
     {
-        return parent::updateCommentContentAndTicketStatus($command, $flush);
+        return parent::updateCommentContentAndTicketStatus($command, true);
     }
 
     /**
@@ -319,14 +319,11 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     public function listAllComments(Command\Filter\FilterCommentsCommand $command)
     {
         $criteriaProcessor = new CommentFilterCriteriaProcessor();
-        $criteriaProcessor->setCommand($command);
-        $criteria = $criteriaProcessor->getCriteria();
-        $pagingProperties = $criteriaProcessor->getPagingProperties();
         $repository = $this->getCommentsRepository();
-        $comments = $repository->filter($criteria, $pagingProperties);
+        $pagingProperties = $this->buildPagination($criteriaProcessor, $repository, $command, $this->apiPagingService);
+        $criteria = $criteriaProcessor->getCriteria();
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
+        $comments = $repository->filter($criteria, $pagingProperties);
 
         return $comments;
     }

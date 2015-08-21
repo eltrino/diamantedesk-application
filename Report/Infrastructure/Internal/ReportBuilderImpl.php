@@ -146,7 +146,7 @@ class ReportBuilderImpl implements ReportBuilder
             throw new \RuntimeException('Repository or action not found');
         }
 
-        $repository = new $class($this->doctrineRegistry->getManager());
+        $repository = new $class($this->doctrineRegistry);
 
         return $repository->$action();
     }

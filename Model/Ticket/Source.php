@@ -51,7 +51,7 @@ class Source
     /**
      * Initialize static array of value to label priorities map
      */
-    private static function initValueLabelsMap()
+    protected static function initValueLabelsMap()
     {
         if (empty(static::$valueToLabelMap)) {
             static::$valueToLabelMap = [

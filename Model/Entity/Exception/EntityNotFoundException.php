@@ -15,4 +15,6 @@
 namespace Diamante\DeskBundle\Model\Entity\Exception;
 
 class EntityNotFoundException extends \RuntimeException
-{}
+{
+
+}

@@ -48,9 +48,9 @@ class RenderUrlExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'render_ticket_url' => new \Twig_Function_Method(
-                $this,
-                'renderUrl',
+            new \Twig_SimpleFunction(
+                'render_ticket_url',
+                [$this, 'renderUrl'],
                 array('is_safe' => array('html'))
             )
         ];

@@ -14,12 +14,13 @@
  */
 namespace Diamante\DeskBundle\Api\Command;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 use Diamante\DeskBundle\Validator\Constraints\User;
 use Diamante\DeskBundle\Validator\Constraints\PrintType;
 use Oro\Bundle\TagBundle\Entity\Taggable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class CreateTicketCommand implements Taggable
 {
@@ -34,7 +35,7 @@ class CreateTicketCommand implements Taggable
      * )
      * @Any({@Assert\Type(type="integer"), @Assert\Type(type="object")})
      *
-     * @var int|\Diamante\DeskBundle\Entity\Branch
+     * @var int|Branch
      */
     public $branch;
 
@@ -94,7 +95,6 @@ class CreateTicketCommand implements Taggable
      * @Any({@Assert\Type(type="array"), @Assert\Type(type="object")})
      */
     public $tags;
-
 
     public function __construct()
     {

@@ -109,8 +109,8 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $apiPagingService;
 
     /**
-     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
-     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
+     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
+     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
      */
     private $ticketHistoryRepository;
 

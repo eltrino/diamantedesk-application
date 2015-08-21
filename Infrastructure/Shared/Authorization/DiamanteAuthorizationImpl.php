@@ -23,27 +23,6 @@ class DiamanteAuthorizationImpl implements Authorization
     use AuthorizationImplTrait;
 
     /**
-     * @var SecurityContextInterface
-     */
-    private $securityContext;
-
-    /**
-     * @var DoctrineDiamanteUserRepository
-     */
-    private $diamanteUserRepository;
-
-    /**
-     * @var array
-     */
-    private $permissionsMap
-        = array(
-            'Diamante\DeskBundle\Entity\Ticket'  => array('VIEW', 'EDIT'),
-            'Entity:DiamanteDeskBundle:Ticket'   => array('VIEW', 'CREATE'),
-            'Entity:DiamanteDeskBundle:Comment'  => array('CREATE'),
-            'Diamante\DeskBundle\Entity\Comment' => array('VIEW', 'EDIT', 'DELETE'),
-        );
-
-    /**
      * @param DoctrineDiamanteUserRepository $diamanteUserRepository
      * @param SecurityContextInterface       $securityContext
      */
@@ -53,5 +32,12 @@ class DiamanteAuthorizationImpl implements Authorization
     ) {
         $this->securityContext = $securityContext;
         $this->diamanteUserRepository = $diamanteUserRepository;
+
+        $this->permissionsMap = array(
+            'Diamante\DeskBundle\Entity\Ticket'  => array('VIEW', 'EDIT'),
+            'Entity:DiamanteDeskBundle:Ticket'   => array('VIEW', 'CREATE'),
+            'Entity:DiamanteDeskBundle:Comment'  => array('CREATE'),
+            'Diamante\DeskBundle\Entity\Comment' => array('VIEW', 'EDIT', 'DELETE'),
+        );
     }
 } 

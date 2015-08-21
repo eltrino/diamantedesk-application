@@ -5,7 +5,6 @@ namespace Diamante\DeskBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use \Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 
 /**
@@ -13,6 +12,9 @@ use Diamante\DeskBundle\Api\Dto\AttachmentDto;
  */
 class AttachmentController extends Controller
 {
+    use Shared\ExceptionHandlerTrait;
+    use Shared\ResponseHandlerTrait;
+
     /**
      * @Route(
      *      "/download/file/{hash}",
@@ -32,7 +34,7 @@ class AttachmentController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
             return $response;
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment loading failed: %s', $e->getMessage()));
+            $this->handleException($e);
             throw $this->createNotFoundException('Attachment not found');
         }
     }
@@ -58,21 +60,8 @@ class AttachmentController extends Controller
             $response = $this->getFileDownloadResponse($attachmentDto);
             return $response;
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment loading failed: %s', $e->getMessage()));
+            $this->handleException($e);
             throw $this->createNotFoundException('Attachment not found');
         }
-    }
-
-    private function getFileDownloadResponse(AttachmentDto $attachmentDto)
-    {
-        $response = new BinaryFileResponse($attachmentDto->getFilePath());
-        $response->trustXSendfileTypeHeader();
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $attachmentDto->getFileName(),
-            iconv('UTF-8', 'ASCII//TRANSLIT', $attachmentDto->getFileName())
-        );
-
-        return $response;
     }
 }

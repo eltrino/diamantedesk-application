@@ -15,8 +15,8 @@
 namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Diamante\UserBundle\Model\User as UserModel;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
@@ -67,7 +67,7 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     protected $ticket;
 
     /**
-     * @var User
+     * @var UserModel
      *
      * @ORM\Column(name="author_id", type="user_type")
      */
@@ -114,10 +114,5 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     public static function getClassName()
     {
         return __CLASS__;
-    }
-
-    public function getOwner()
-    {
-        return $this->author;
     }
 }

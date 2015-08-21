@@ -14,12 +14,16 @@
  */
 namespace Diamante\DeskBundle\Command;
 
+use Diamante\DeskBundle\Model\Branch\Logo;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class InstallCommand extends AbstractCommand
 {
+    const DESK_BUNDLE_NAME = 'DiamanteDeskBundle';
+
     /**
      * @var string
      */
@@ -61,40 +65,45 @@ class InstallCommand extends AbstractCommand
      * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      *
-     * @return null|integer null or 0 if everything went fine, or an error code
+     * @return integer 0 if everything went fine, or an error code
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write("Creating Branch logo directory..." . "\n");
+            $output->writeln('Creating Branch logo directory...');
             $this->createBranchLogoDirectory();
-            $output->writeln("Done" . "\n");
+            $output->writeln('Done');
 
-            $output->write("Creating attachments directory..." . "\n");
+            $output->writeln('Creating attachments directory...');
             $this->createAttachmentsDirectory();
-            $output->writeln("Done" . "\n");
+            $output->writeln('Done');
 
-            $output->write("Installing DB schema..." . "\n");
+            $output->writeln('Installing DB schema...');
             $this->updateDbSchema();
-            $output->writeln("Done" . "\n");
+            $output->writeln('Done');
 
             $this->loadData($output);
 
             $this->updateEntityConfig($output);
 
-            $output->write("Updating navigation..." . "\n");
+            $output->writeln('Updating navigation...');
             $this->updateNavigation($output);
-            $output->writeln("Done" . "\n");
+            $output->writeln('Done');
 
-            $output->write("Loading migration data" . "\n");
+            $output->writeln('Loading migration data');
             $this->loadDataFixtures($output);
-            $output->writeln("Done" . "\n");
+            $output->writeln('Done');
+
+            $output->writeln('Updating DataAudit fields...');
+            $this->updateDataAuditFields($output);
+            $output->writeln('Done');
+
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return 255;
         }
 
-        $output->writeln("Installed!" . "\n");
+        $output->writeln('Installed!');
         return 0;
     }
 
@@ -103,9 +112,7 @@ class InstallCommand extends AbstractCommand
      */
     protected function createBranchLogoDirectory()
     {
-        $branchLogoDir = realpath($this->kernelRootDir .'/../web')
-            . \Diamante\DeskBundle\Model\Branch\Logo::PATH_TO_LOGO_DIR;
-
+        $branchLogoDir = sprintf('%s%s', realpath($this->kernelRootDir . '/../web'), Logo::PATH_TO_LOGO_DIR);
         $this->createDirectory($branchLogoDir);
     }
 
@@ -152,10 +159,41 @@ class InstallCommand extends AbstractCommand
 
         $this->runExistingCommand('doctrine:fixtures:load', $output,
             array(
-                '--fixtures'       => "{$bundlePath}/DataFixtures/ORM",
+                '--fixtures'       => sprintf('%s/DataFixtures/ORM', $bundlePath),
                 '--append'         => true,
                 '--no-interaction' => true,
             )
         );
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return int
+     * @throws \Exception
+     */
+    protected function updateDataAuditFields(OutputInterface $output)
+    {
+        $this->resetMigrationData();
+
+        $this->runExistingCommand('oro:migration:load', $output,
+            array(
+                '--bundles' => [static::DESK_BUNDLE_NAME],
+                '--force'   => true,
+                '--timeout' => 0,
+            )
+        );
+
+        return 0;
+    }
+
+    private  function resetMigrationData()
+    {
+        /** @var EntityManager $em */
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $record = $em->getRepository('OroMigrationBundle:DataMigration')->findOneByBundle(static::DESK_BUNDLE_NAME);
+        if ($record) {
+            $em->remove($record);
+            $em->flush();
+        }
     }
 }

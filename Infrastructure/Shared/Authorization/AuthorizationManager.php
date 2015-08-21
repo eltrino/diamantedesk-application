@@ -44,17 +44,20 @@ class AuthorizationManager implements AuthorizationService
         $this->securityContext = $securityContext;
         $user = $this->getLoggedUser();
 
-        if ($user instanceof ApiUser) {
-            $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
-            $this->userType = 'Diamante';
-        } elseif ($user instanceof User) {
-            $this->authImpl = $serviceContainer->get('diamante.oro_authorization.service');
-            $this->userType = 'Oro';
-        } else {
-            $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
-            $this->userType = 'Anonymous';
+        switch (true) {
+            case ($user instanceof ApiUser):
+                $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
+                $this->userType = 'Diamante';
+                break;
+            case ($user instanceof User):
+                $this->authImpl = $serviceContainer->get('diamante.oro_authorization.service');
+                $this->userType = 'Oro';
+                break;
+            default:
+                $this->authImpl = $serviceContainer->get('diamante.diamante_authorization.service');
+                $this->userType = 'Anonymous';
+                break;
         }
-
     }
 
     /**

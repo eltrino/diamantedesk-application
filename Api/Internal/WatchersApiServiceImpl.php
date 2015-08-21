@@ -158,6 +158,10 @@ class WatchersApiServiceImpl extends WatchersServiceImpl implements RestServiceI
         }
     }
 
+    /**
+     * @param $command
+     * @return \Diamante\DeskBundle\Model\Ticket\Ticket
+     */
     protected function getTicket($command)
     {
         if (is_object($command)) {

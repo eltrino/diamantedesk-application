@@ -14,7 +14,13 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\Exception;
 
+use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 
-class TicketNotFoundException extends EntityNotFoundException
-{}
+class TicketNotFoundException extends EntityNotFoundException implements Flashable
+{
+    public function getFlashMessage()
+    {
+        return 'diamante.desk.ticket.messages.get.error';
+    }
+}

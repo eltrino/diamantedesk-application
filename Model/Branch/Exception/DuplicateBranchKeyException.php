@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Branch;
+namespace Diamante\DeskBundle\Model\Branch\Exception;
 
 class DuplicateBranchKeyException extends \RuntimeException
 {

@@ -128,8 +128,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $notifier;
 
     /**
-     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
-     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
+     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
+     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
      */
     private $ticketHistoryRepository;
 
@@ -170,7 +170,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function testLoadTicketByKeyThrowsExceptionIfTicketDoesNotExist()
     {
@@ -183,6 +182,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketService->loadTicketByKey($key);
     }
 
+    /**
+     * @test
+     */
     public function testLoadTicketByKey()
     {
         $key = 'TK-1';
@@ -231,7 +233,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssignee')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setStatus')->with(null)->will($this->returnValue($this->ticketBuilder));
@@ -298,7 +300,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssignee')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setStatus')->with($status)->will($this->returnValue($this->ticketBuilder));
@@ -366,7 +368,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('setDescription')->with(self::DESCRIPTION)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setBranchId')->with($branchId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setReporter')->with((string)$reporter)->will($this->returnValue($this->ticketBuilder));
-        $this->ticketBuilder->expects($this->once())->method('setAssigneeId')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
+        $this->ticketBuilder->expects($this->once())->method('setAssignee')->with($assigneeId)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setSource')->with($source)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setPriority')->with($priority)->will($this->returnValue($this->ticketBuilder));
         $this->ticketBuilder->expects($this->once())->method('setStatus')->with(null)->will($this->returnValue($this->ticketBuilder));
@@ -555,7 +557,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -571,7 +572,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Attachment loading failed. Ticket has no such attachment.
      */
     public function thatAttachmentRetrievingThrowsExceptionWhenTicketHasNoAttachment()
     {
@@ -658,7 +658,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentsAddingThrowsExceptionWhenTicketNotExists()
     {
@@ -712,7 +711,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenTicketDoesNotExists()
     {
@@ -728,7 +726,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Attachment loading failed. Ticket has no such attachment.
      */
     public function thatAttachmentRemovingThrowsExceptionWhenTicketHasNoAttachment()
     {
@@ -807,7 +804,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function testUpdateStatusWhenTicketDoesNotExists()
     {
@@ -955,6 +951,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         return array($attachmentInput);
     }
 
+    /**
+     * @test
+     */
     public function testAssignTicket()
     {
         $assigneeId = $currentUserId = 3;
@@ -1038,7 +1037,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Ticket loading failed, ticket not found.
      */
     public function testAssignTicketWhenTicketDoesNotExist()
     {
@@ -1056,7 +1054,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Assignee loading failed, assignee not found.
      */
     public function testAssignTicketWhenAssigneeDoesNotExist()
     {

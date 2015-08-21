@@ -53,9 +53,7 @@ class DefaultBranchKeyGenerator implements BranchKeyGenerator
     private function validate($name)
     {
         $name = preg_replace('/[^a-zA-Z\p{Cyrillic}]/u', '', $name);
-        if (mb_strlen($name) < 2) {
-            return false;
-        }
-        return true;
+
+        return !(mb_strlen($name) < 2);
     }
 } 

@@ -166,13 +166,18 @@ class CommonTicketBuilder implements TicketBuilder
     }
 
     /**
-     * @param int $id
+     * @param int|OroUser $identity
      * @return $this
      */
-    public function setAssigneeId($id)
+    public function setAssignee($identity)
     {
-        if (!empty($id)) {
-            $assignee = $this->userService->getByUser(new User((integer) $id, User::TYPE_ORO));
+        if ($identity instanceof OroUser) {
+            $this->assignee = $identity;
+            return $this;
+        }
+
+        if (!empty($identity)) {
+            $assignee = $this->userService->getByUser(new User((integer) $identity, User::TYPE_ORO));
             $this->assignee = $assignee;
         }
         return $this;
@@ -209,7 +214,7 @@ class CommonTicketBuilder implements TicketBuilder
     }
 
     /**
-     * @param array|ArrayCollection|null $tags
+     * @param ArrayCollection|null|array $tags
      * @return $this
      */
     public function setTags($tags)

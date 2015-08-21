@@ -15,7 +15,6 @@
 namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Diamante\DeskBundle\Validator\Constraints\Any;
 
 class CommentCommand
 {
@@ -38,8 +37,8 @@ class CommentCommand
     public $attachmentList;
 
     /**
-     * @var array
      * @Assert\Type(type="array")
+     * @var array|null
      */
     public $attachmentsInput;
 

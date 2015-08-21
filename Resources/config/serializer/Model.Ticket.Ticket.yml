@@ -23,6 +23,8 @@ Diamante\DeskBundle\Model\Ticket\Ticket:
             exclude: true
         status:
             exclude: true
+        tags:
+            type: ArrayCollection<Oro\Bundle\TagBundle\Entity\Tag>
     virtual_properties:
         getAssigneeId:
             serialized_name: assignee

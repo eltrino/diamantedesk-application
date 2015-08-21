@@ -14,29 +14,27 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
-use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
-use Diamante\DeskBundle\Entity\Ticket;
-use Diamante\DeskBundle\Api\Command\CommentCommand;
-use Diamante\DeskBundle\Form\Type\CommentType;
 use Diamante\DeskBundle\Api\CommentService;
+use Diamante\DeskBundle\Api\Command\CommentCommand;
+use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
+use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Response;
-
-use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * @Route("comment")
  */
 class CommentController extends Controller
 {
+    use Shared\FormHandlerTrait;
+    use Shared\ExceptionHandlerTrait;
+    use Shared\SessionFlashMessengerTrait;
+    use Shared\ResponseHandlerTrait;
+
     /**
      * @Route(
      *      "/create/{id}",
@@ -107,7 +105,7 @@ class CommentController extends Controller
     private function edit(CommentCommand $command, $callback, Ticket $ticket)
     {
         $response = null;
-        $form = $this->createForm(new CommentType(), $command);
+        $form = $this->createForm('diamante_comment_form', $command);
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,
@@ -122,12 +120,9 @@ class CommentController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse((string) $ticket->getKey());
-        } catch (MethodNotAllowedException $e) {
-            $response = array('form' => $formView, 'ticket' => $ticket);
+            $response = $this->getSuccessSaveResponse('diamante_comment_update', 'diamante_ticket_view', ['key' => (string)$ticket->getKey()]);
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Comment saving failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.comment.messages.create.error');
+            $this->handleException($e);
             $response = array('form' => $formView, 'ticket' => $ticket);
         }
         return $response;
@@ -151,8 +146,7 @@ class CommentController extends Controller
 
             $this->addSuccessMessage('diamante.desk.comment.messages.delete.success');
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Comment deletion failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.comment.messages.delete.error');
+            $this->handleException($e);
         }
 
         return $this->redirect(
@@ -222,8 +216,7 @@ class CommentController extends Controller
             $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
         } catch (\Exception $e) {
-            $this->container->get('monolog.logger.diamante')->error(sprintf('Attachment deletion failed: %s', $e->getMessage()));
-            $this->addErrorMessage('diamante.desk.attachment.messages.delete.error');
+            $this->handleException($e);
         }
 
         $response = $this->redirect($this->generateUrl(
@@ -233,57 +226,4 @@ class CommentController extends Controller
 
         return $response;
     }
-
-    /**
-     * @param Form $form
-     * @throws \LogicException
-     * @throws \RuntimeException
-     */
-    private function handle(Form $form)
-    {
-        if (false === $this->getRequest()->isMethod('POST')) {
-            throw new MethodNotAllowedException(array('POST'),'Form can be posted only by "POST" method.');
-        }
-
-        $form->handleRequest($this->getRequest());
-
-        if (false === $form->isValid()) {
-            throw new ValidatorException('Form object validation failed, form is invalid.');
-        }
-    }
-
-    /**
-     * @param $message
-     */
-    private function addSuccessMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans($message)
-        );
-    }
-
-    /**
-     * @param $message
-     */
-    private function addErrorMessage($message)
-    {
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            $this->get('translator')->trans($message)
-        );
-    }
-
-    /**
-     * @param string $ticketKey
-     * @return array
-     */
-    private function getSuccessSaveResponse($ticketKey)
-    {
-        return $this->get('oro_ui.router')->redirectAfterSave(
-            ['route' => 'diamante_comment_update', 'parameters' => ['key' => $ticketKey]],
-            ['route' => 'diamante_ticket_view', 'parameters' => ['key' => $ticketKey]]
-        );
-    }
-
 }

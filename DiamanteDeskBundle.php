@@ -15,11 +15,22 @@
 namespace Diamante\DeskBundle;
 
 use Doctrine\DBAL\Types\Type;
+use Oro\Bundle\DataAuditBundle\Model\AuditFieldTypeRegistry;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DiamanteDeskBundle extends Bundle
 {
+    /**
+     * @var array
+     */
+    private $dataAuditTypes = [
+        'status',
+        'priority',
+        'user_type',
+        'file',
+    ];
+
     public function boot()
     {
         if (!Type::hasType('branch_logo')) {
@@ -60,6 +71,12 @@ class DiamanteDeskBundle extends Bundle
                 'ticket_unique_id',
                 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketUniqueIdType'
             );
+        }
+
+        foreach ($this->dataAuditTypes as $type) {
+            if (!AuditFieldTypeRegistry::hasType($type)) {
+                AuditFieldTypeRegistry::addType($type, $type);
+            }
         }
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');

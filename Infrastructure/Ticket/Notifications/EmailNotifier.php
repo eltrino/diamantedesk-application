@@ -240,31 +240,6 @@ class EmailNotifier implements Notifier
      * @param Ticket $ticket
      * @return array
      */
-
-    private function resolveRecipientsEmails(Ticket $ticket)
-    {
-        $emails = array();
-        $reporter = $ticket->getReporter();
-        $reporter = $this->userService->getByUser($reporter);
-        $assignee = $ticket->getAssignee();
-
-        if ($reporter instanceof DiamanteUser) {
-            $emails[$reporter->getEmail()] = $reporter->getFullName();
-        } else {
-            $emails[$reporter->getEmail()] = $reporter->getFirstName() . ' ' . $reporter->getLastName();
-        }
-
-        if ($assignee) {
-            $emails[$assignee->getEmail()] = $assignee->getFirstName() . ' ' . $assignee->getLastName();
-        }
-
-        return $emails;
-    }
-
-    /**
-     * @param Ticket $ticket
-     * @return array
-     */
     private function referencesHeader(Ticket $ticket)
     {
         $ids = array();
@@ -305,7 +280,7 @@ class EmailNotifier implements Notifier
     }
 
     /**
-     * @param OroUser|ApiUser $user
+     * @param OroUser|ApiUser|int $user
      * @return \Diamante\UserBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
      */
     private function getUserDependingOnType($user)

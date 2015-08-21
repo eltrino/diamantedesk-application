@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Branch implements Entity, Taggable
+class Branch implements Taggable, Entity
 {
     /**
      * @var integer
@@ -185,7 +185,7 @@ class Branch implements Entity, Taggable
         $this->name = $name;
         $this->description = $description;
         $this->defaultAssignee = $defaultAssignee;
-        if ($logo) {
+        if ($logo !== null) {
             $this->logo = $logo;
         }
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
@@ -239,5 +239,13 @@ class Branch implements Entity, Taggable
         } else {
             throw new \DomainException(sprintf('Branch does not have "%s" property.', $name));
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

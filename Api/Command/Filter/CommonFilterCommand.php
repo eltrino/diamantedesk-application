@@ -15,7 +15,9 @@
 
 namespace Diamante\DeskBundle\Api\Command\Filter;
 
-class CommonFilterCommand
+use Diamante\DeskBundle\Api\Command\Shared\FilteringCommand;
+
+class CommonFilterCommand implements FilteringCommand
 {
     /**
      * @var string

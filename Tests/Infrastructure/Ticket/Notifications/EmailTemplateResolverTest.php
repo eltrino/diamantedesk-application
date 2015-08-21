@@ -24,7 +24,7 @@ class EmailTemplateResolverTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Give type is invalid.
+     * @expectedExceptionMessage Given template type is invalid.
      */
     public function testResolve()
     {

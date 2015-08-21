@@ -63,6 +63,6 @@ class MassChangeTicketStatusType extends AbstractType
      */
     public function getName()
     {
-        return 'diamante_ticket_status_form_mass_change';
+        return 'diamante_ticket_form_status_mass_change';
     }
 }

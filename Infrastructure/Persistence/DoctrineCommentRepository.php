@@ -63,7 +63,7 @@ class DoctrineCommentRepository extends DoctrineGenericRepository implements Com
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
-     * @param ApiUser $user
+     * @param ApiUser|null $user
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */

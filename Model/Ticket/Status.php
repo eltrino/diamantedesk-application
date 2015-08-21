@@ -47,7 +47,11 @@ class Status
     {
         static::initValueLabelsMap();
 
-        if (false === isset(static::$valueToLabelMap[$status])) {
+        if (!$status) {
+            $status = '';
+        }
+
+        if (false === isset(static::$valueToLabelMap[$status]) && $status !== '') {
             throw new \InvalidArgumentException('Given status is wrong');
         }
 
@@ -57,7 +61,7 @@ class Status
     /**
      * Initialize static array of value to label priorities map
      */
-    private static function initValueLabelsMap()
+    protected static function initValueLabelsMap()
     {
         if (empty(static::$valueToLabelMap)) {
             static::$valueToLabelMap = [
@@ -105,10 +109,8 @@ class Status
         if ($this == $status) {
             return true;
         }
-        if ($this->status == $status->getValue()) {
-            return true;
-        }
-        return false;
+
+        return $this->status == $status->getValue();
     }
 
     /**

@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\DeskBundle\Model\Shared\Updatable;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToComment;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted;
@@ -25,8 +26,9 @@ use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
+use Diamante\DeskBundle\Entity\Ticket as TicketEntity;
 
-class Comment extends DomainEventProvider implements Entity, AttachmentHolder, Updatable
+class Comment extends DomainEventProvider implements Entity, AttachmentHolder, Updatable, Owned
 {
     /**
      * @var integer
@@ -40,7 +42,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
     protected $content;
 
     /**
-     * @var Ticket
+     * @var TicketEntity
      */
     protected $ticket;
 
@@ -97,7 +99,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
     }
 
     /**
-     * @return Ticket
+     * @return TicketEntity
      */
     public function getTicket()
     {
@@ -242,5 +244,21 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
                 throw new \DomainException(sprintf('Comment does not have "%s" property.', $name));
             }
         }
+    }
+
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOwnerId()
+    {
+        return $this->getOwner() ? $this->getOwner()->getId() : null;
     }
 }

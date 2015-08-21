@@ -255,44 +255,8 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->em
             ->expects($this->once())
-            ->method('createQueryBuilder')
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('select')
-            ->with($this->equalTo('t'))
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('from')
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('where')
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('setParameter')
-            ->will($this->returnValue($this->queryBuilder));
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('getQuery')
-            ->will($this->returnValue($this->searchQuery));
-
-        $this->em
-            ->expects($this->atLeastOnce())
-            ->method('newHydrator')
-            ->with($this->equalTo(Query::HYDRATE_OBJECT))
-            ->will($this->returnValue($this->objectHydrator));
-
-        $this->objectHydrator
-            ->expects($this->atLeastOnce())
-            ->method('hydrateAll')
+            ->method('find')
+            ->with($this->equalTo(self::CLASS_NAME),$this->equalTo($id))
             ->will($this->returnValue($ticket));
 
         $result = $this->repository->get($id);

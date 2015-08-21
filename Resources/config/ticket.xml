@@ -56,6 +56,7 @@
         <parameter key="diamante.ticket.email_processing_message_reference.entity.class">Diamante\DeskBundle\Entity\MessageReference</parameter>
         <parameter key="diamante.ticket.email_processing_message_reference.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository</parameter>
         <parameter key="diamante.ticket.email_processing_message_reference.service.class">Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
+        <parameter key="diamante.tag.serialize.handler.class">Diamante\DeskBundle\Serializer\TagHandler</parameter>
     </parameters>
 
     <services>
@@ -123,6 +124,9 @@
             </call>
             <call method="setBranchRepository">
                 <argument type="service" id="diamante.branch.repository"/>
+            </call>
+            <call method="setTagManager">
+                <argument type="service" id="oro_tag.tag.manager"/>
             </call>
         </service>
 
@@ -252,6 +256,10 @@
         <service id="diamante.report.timeline_service" class="%diamante.report.timeline_service.class%"/>
 
         <service id="diamante.watcher.service.api" class="%diamante.watcher.service.api.class%" parent="diamante.ticket.watcher_list.service"/>
+
+        <service id="diamante.tag.serialize.handler" class="%diamante.tag.serialize.handler.class%">
+            <tag name="jms_serializer.subscribing_handler" connection="default"/>
+        </service>
 
 <!-- repositories start -->
         <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"

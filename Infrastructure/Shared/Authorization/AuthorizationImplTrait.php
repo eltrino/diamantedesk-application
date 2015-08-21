@@ -15,8 +15,27 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
+use Diamante\DeskBundle\Model\Shared\Owned;
+use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+
 trait AuthorizationImplTrait
 {
+    /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
+    /**
+     * @var DoctrineDiamanteUserRepository
+     */
+    private $diamanteUserRepository;
+
+    /**
+     * @var array
+     */
+    private $permissionsMap = [];
+
     /**
      * @param string $attributes
      * @param $object
@@ -29,6 +48,9 @@ trait AuthorizationImplTrait
             return false;
         }
 
+        $objectIdentity = null;
+
+        /** @var Owned $object */
         if (is_object($object)) {
             $objectIdentity = get_class($object);
             $user = $this->securityContext->getToken()->getUser();
@@ -58,4 +80,5 @@ trait AuthorizationImplTrait
 
         return false;
     }
+
 }

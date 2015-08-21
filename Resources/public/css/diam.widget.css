@@ -1,0 +1,96 @@
+.diam-plot svg{
+  width: 100%;
+  height: 100%;
+}
+
+.diam-plot .bar {
+  fill: steelblue;
+}
+
+.diam-plot .bar:hover {
+  fill: brown;
+}
+
+
+
+.diam-plot .axis {
+  font: 10px sans-serif;
+}
+
+.diam-plot .axis path,
+.diam-plot .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.diam-plot .x.axis path {
+  display: none;
+}
+
+
+.diam-d3-tip {
+
+}
+.diam-d3-tip:after {
+
+}
+.diam-d3-tip.n:after {
+
+}
+
+.diam-d3-tip ul{
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.diam-d3-tip .color-label {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  vertical-align: middle;
+  margin-right: 1ex;
+}
+
+
+.diam-plot .lines polyline {
+  fill:none;
+  opacity: .3;
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.diam-plot .slice:hover {
+  fill: brown !important;
+}
+
+.diam-plot .line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+
+.diam-plot .brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+.diam-plot .tooltip-holder rect {
+  opacity: 0;
+}
+
+.diam-plot .tooltip-holder line {
+  stroke: steelblue;
+  stroke-width: 2px;
+  opacity: 0;
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
+
+.diam-plot .tooltip-holder:hover line {
+  opacity: 1;
+}

@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Diamante\UserBundle\Model\User as UserModel;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository")
@@ -128,7 +129,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     protected $branch;
 
     /**
-     * @var User
+     * @var UserModel
      * @ORM\Column(type="user_type", name="reporter_id")
      *
      * @ConfigField(
@@ -208,21 +209,5 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     public static function getClassName()
     {
         return __CLASS__;
-    }
-
-    /**
-     * @return User
-     */
-    public function getOwner()
-    {
-        return $this->reporter;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getOwnerId()
-    {
-        return $this->getOwner() ? $this->getOwner()->getId() : null;
     }
 }

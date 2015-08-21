@@ -14,6 +14,8 @@
  */
 namespace Diamante\DeskBundle\Model\Shared;
 
+use Diamante\UserBundle\Model\User;
+
 interface Notification
 {
     /**
@@ -22,7 +24,7 @@ interface Notification
     public function getHeaderText();
 
     /**
-     * @return int
+     * @return User
      */
     public function getAuthor();
 }

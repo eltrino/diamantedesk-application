@@ -87,7 +87,7 @@ class AttachmentInput
     public static function createFromArray(array $input)
     {
         if (false === isset($input['filename']) || false === isset($input['content'])) {
-            throw new \InvalidArgumentException('Not all required fields exists in array.');
+            throw new \InvalidArgumentException('Not all required fields exist in array.');
         }
         $dto = new self();
         $dto->setFilename($input['filename']);

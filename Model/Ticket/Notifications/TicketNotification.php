@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Model\Ticket\Notifications;
 
 use Diamante\DeskBundle\Model\Shared\Notification;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Events;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationEvent;
+use Diamante\UserBundle\Model\User;
 
 class TicketNotification implements Notification
 {
@@ -36,7 +36,7 @@ class TicketNotification implements Notification
     private $subject;
 
     /**
-     * @var \Diamante\UserBundle\Model\User
+     * @var User
      */
     private $author;
 
@@ -57,7 +57,7 @@ class TicketNotification implements Notification
 
     /**
      * @param string            $ticketUniqueId
-     * @param string            $author
+     * @param User              $author
      * @param string            $headerText
      * @param string            $subject
      * @param \ArrayAccess      $changeList

@@ -27,13 +27,15 @@ class EmailTemplateResolver implements TemplateResolver
      */
     public function resolve(Notification $notification, $type = self::TYPE_TXT)
     {
-        $template = null;
-        if ($this->isTxtType($type)) {
-            $template = 'DiamanteDeskBundle:Ticket/notification:notification.txt.twig';
-        } elseif ($this->isHtmlType($type)) {
-            $template = 'DiamanteDeskBundle:Ticket/notification:notification.html.twig';
-        } else {
-            throw new \InvalidArgumentException('Give type is invalid.');
+        switch (true) {
+            case ($this->isHtmlType($type)):
+                $template = 'DiamanteDeskBundle:Ticket/notification:notification.html.twig';
+                break;
+            case ($this->isTxtType($type)):
+                $template = 'DiamanteDeskBundle:Ticket/notification:notification.txt.twig';
+                break;
+            default:
+                throw new \InvalidArgumentException('Given template type is invalid.');
         }
 
         return $template;

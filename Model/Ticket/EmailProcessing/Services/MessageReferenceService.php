@@ -25,7 +25,7 @@ interface MessageReferenceService
      * @param $description
      * @param $reporterId
      * @param $assigneeId
-     * @param array $attachments
+     * @param array|null $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
@@ -38,7 +38,7 @@ interface MessageReferenceService
      * @param $content
      * @param $authorId
      * @param $messageId
-     * @param array $attachments
+     * @param array|null $attachments
      */
     public function createCommentForTicket($content, $authorId, $messageId, array $attachments = null);
 }

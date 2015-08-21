@@ -29,7 +29,7 @@ use Diamante\UserBundle\Model\ApiUser\ApiUser;
  *
  * @method \Diamante\DeskBundle\Entity\Ticket findOneByTicketKey(\Diamante\DeskBundle\Model\Ticket\TicketKey $key)
  */
-class DoctrineGenericRepository extends EntityRepository implements Repository, FilterableRepository
+class DoctrineGenericRepository extends EntityRepository implements FilterableRepository, Repository
 {
     const SELECT_ALIAS = 'e';
 
@@ -76,7 +76,7 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
-     * @param ApiUser $user
+     * @param ApiUser|null $user
      * @return \Doctrine\Common\Collections\Collection|static
      * @throws \Exception
      */
@@ -137,10 +137,10 @@ class DoctrineGenericRepository extends EntityRepository implements Repository, 
 
         switch ($operator) {
             case 'like':
-                $literal = $qb->expr()->literal("%{$value}%");
+                $literal = $qb->expr()->literal(sprintf('%%s%', $value));
                 break;
             default:
-                $literal = $qb->expr()->literal("{$value}");
+                $literal = $qb->expr()->literal(sprintf('%s', $value));
                 break;
         }
 

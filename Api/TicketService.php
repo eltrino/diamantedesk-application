@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Doctrine\Common\Collections\ArrayCollection;
 
 interface TicketService
 {
@@ -45,7 +46,7 @@ interface TicketService
     /**
      * List Ticket attachments
      * @param int $id
-     * @return array|Attachment[]
+     * @return ArrayCollection|Attachment[]
      */
     public function listTicketAttachments($id);
 

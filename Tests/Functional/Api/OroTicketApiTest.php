@@ -20,6 +20,7 @@ use Diamante\UserBundle\Model\User;
 use FOS\RestBundle\Util\Codes;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Oro\Bundle\TagBundle\Entity\Tag;
 
 class OroTicketApiTest extends ApiTestCase
 {
@@ -43,7 +44,12 @@ class OroTicketApiTest extends ApiTestCase
             'status'      => 'open',
             'priority'    => Priority::PRIORITY_MEDIUM,
             'source'      => Source::PHONE,
-            'reporter'    => User::TYPE_ORO . User::DELIMITER . 1
+            'reporter'    => User::TYPE_ORO . User::DELIMITER . 1,
+            'tags' => array(
+                'autocomplete' => array(''),
+                'all'          => array(new Tag('test tag')),
+                'owner'        => array(new Tag('test tag'))
+            ),
         );
         $response = $this->post('diamante_ticket_api_service_oro_create_ticket', $this->command);
 
