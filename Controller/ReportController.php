@@ -45,7 +45,7 @@ class ReportController extends Controller
             $data = $this->get('diamante.report.service')->build($id);
 
             return [
-                'chart-type' => $this->getChartType($id),
+                'chart_type' => $this->getChartType($id),
                 'data'       => $data,
             ];
         } catch (\Exception $e) {

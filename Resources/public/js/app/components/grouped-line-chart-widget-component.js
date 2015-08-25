@@ -6,6 +6,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
       resizeGroupedLine = {},
       dateFormat = d3.time.format("%Y-%m-%d"),
       parseDate = dateFormat.parse,
+      sortByDateAscending = function(a, b) { return a.date - b.date;},
       template = _.template(
           '<div class="tooltip-arrow"></div>' +
           '<div class="tooltip-inner">' +
@@ -31,7 +32,8 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
 
   return function (options) {
 
-    var data = _.map(options.data, function(value, key){ value.date = parseDate(key); return value;}),
+    var data = _.map(options.data, function(value, key){ value.date = parseDate(key); return value;})
+                .sort(sortByDateAscending),
         parent = options.parent.el,
         elem = options._sourceElement.get(0),
         plot = d3.select(elem);
@@ -69,7 +71,14 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
 
     var color = d3.scale.category10();
 
-    color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
+    var keys = _.chain(data)
+        .map(function(elem){ return d3.keys(elem)})
+        .flatten()
+        .uniq()
+        .filter(function(key) { return key !== "date"; })
+        .value();
+
+    color.domain(keys);
 
     var xAxis = d3.svg.axis().scale(x).orient("bottom"),
         xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
@@ -81,7 +90,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
       focus.selectAll('.line')
           .attr("d", function(d) { return line(d.values); });
       focus.selectAll('.tooltip-holder')
-          .attr("transform", function(d){ return "translate(" + (x(d.date) - 5) + ",0)"})
+          .attr("transform", function(d){ return "translate(" + (x(d.date) - 10) + ",0)"})
     };
 
     var brush = d3.svg.brush()
@@ -89,12 +98,12 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         .on("brush", brushed);
 
     var line = d3.svg.line()
-        .interpolate("monotone")
+        .interpolate("linear")
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.state); });
 
     var line2 = d3.svg.line()
-        .interpolate("monotone")
+        .interpolate("linear")
         .x(function(d) { return x2(d.date); })
         .y(function(d) { return y2(d.state); });
 
@@ -102,10 +111,12 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
       return {
         name: name,
         values: data.map(function(d) {
-          return {date: d.date, state: +d[name]};
+          return {date: d.date, state: d[name] ? +d[name] : 0};
         })
       };
     });
+
+    console.log(tickets);
 
     var tip = d3tip()
         .attr('class', 'diam-d3-tip tooltip top')
@@ -147,13 +158,13 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
 
     focus.append("g")
         .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Tickets State");
+        .call(yAxis);
+        //.append("text")
+        //.attr("transform", "rotate(-90)")
+        //.attr("y", 6)
+        //.attr("dy", ".71em")
+        //.style("text-anchor", "end")
+        //.text("Tickets State");
 
     var ticket = focus.selectAll(".ticket")
         .data(tickets)
@@ -238,9 +249,13 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
           .call(yAxis);
 
       focus.selectAll('.tooltip-holder')
-          .attr("transform", function(d){ return "translate(" + (x(d.date) - 5) + ",0)"})
+          .attr("transform", function(d){ return "translate(" + (x(d.date) - 10) + ",0)"})
           .select('rect')
           .attr('height', height);
+
+      focus.selectAll('.tooltip-holder')
+          .select('line')
+          .attr('y2', height);
 
       context.select('.x.axis')
           .call(xAxis2);
