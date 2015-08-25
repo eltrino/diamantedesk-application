@@ -612,7 +612,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
      */
     public function removeAttachment(Attachment $attachment)
     {
-        $this->attachments->remove($attachment->getId());
+        $this->attachments->removeElement($attachment);
         $this->raise(new AttachmentWasDeletedFromTicket($this->uniqueId, $this->subject, $attachment->getFilename()));
     }
 
