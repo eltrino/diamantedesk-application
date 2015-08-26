@@ -338,11 +338,13 @@ class TicketServiceImpl implements TicketService
         $this->createAttachments($command, $ticket);
 
         $this->doctrineRegistry->getManager()->persist($ticket);
-
         $this->doctrineRegistry->getManager()->flush();
-        $this->tagManager->saveTagging($ticket);
-        $ticket->setTags(null);
-        $this->loadTagging($ticket);
+
+        if ($this->securityFacade->getOrganization()) {
+            $this->tagManager->saveTagging($ticket);
+            $ticket->setTags(null);
+            $this->loadTagging($ticket);
+        }
 
         $this->dispatchWorkflowEvent(
             $this->doctrineRegistry,
@@ -625,7 +627,7 @@ class TicketServiceImpl implements TicketService
         $comments = $ticket->getComments();
         foreach ($comments as $comment) {
             if (!$comment->isPrivate()) {
-                $comments->remove($comment);
+                $comments->removeElement($comment);
             }
         }
     }
