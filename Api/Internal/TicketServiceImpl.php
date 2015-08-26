@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
-use Diamante\AutomationBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository;

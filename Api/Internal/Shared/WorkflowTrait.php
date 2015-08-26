@@ -1,7 +1,7 @@
 <?php
 namespace Diamante\DeskBundle\Api\Internal\Shared;
 
-use Diamante\AutomationBundle\Event\WorkflowEvent;
+use Diamante\DeskBundle\Event\WorkflowEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
