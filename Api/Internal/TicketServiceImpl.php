@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
+use Diamante\AutomationBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository;
@@ -53,6 +54,7 @@ use Oro\Bundle\SecurityBundle\SecurityFacade;
 class TicketServiceImpl implements TicketService
 {
     use Shared\AttachmentTrait;
+    use Shared\WorkflowTrait;
 
     /**
      * @var Registry
@@ -357,7 +359,12 @@ class TicketServiceImpl implements TicketService
         $this->tagManager->saveTagging($ticket);
         $ticket->setTags(null);
         $this->loadTagging($ticket);
-        $this->dispatchEvents($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
 
         return $ticket;
     }
@@ -412,9 +419,16 @@ class TicketServiceImpl implements TicketService
         $tags['owner'] = $tags['all'];
         $ticket->setTags($tags);
         $this->tagManager->saveTagging($ticket);
-        $this->dispatchEvents($ticket);
 
         $this->doctrineRegistry->getManager()->flush();
+        $ticket->setTags(null);
+        $this->loadTagging($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
 
         return $ticket;
     }
