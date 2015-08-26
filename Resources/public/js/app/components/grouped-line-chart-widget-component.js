@@ -1,4 +1,4 @@
-define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
+define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'], function (BaseComponent, d3, d3tip, _) {
 
   "use strict";
 
@@ -20,7 +20,19 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
               '<% }) %>' +
             '</ul>' +
           '</div>'
-      );
+      ),
+      populateData = function(data){
+        var index = 0,
+            current = new Date(data[0].date),
+            last = new Date(data[data.length - 1].date);
+        while(index++, current < last) {
+          current.setDate(current.getDate() + 1);
+          if(data[index] && data[index].date > current){
+            data.splice(index,0, { date : new Date(current) });
+          }
+        }
+
+      };
 
   window.addEventListener('resize', _.debounce(function(){
     for(var key in resizeGroupedLine) {
@@ -62,7 +74,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         .attr("id", "clip")
         .append("rect")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height + 1);
 
     var x = d3.time.scale().range([0, width]),
         x2 = d3.time.scale().range([0, width]),
@@ -98,14 +110,16 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         .on("brush", brushed);
 
     var line = d3.svg.line()
-        .interpolate("linear")
+        .interpolate("basis")
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.state); });
 
     var line2 = d3.svg.line()
-        .interpolate("linear")
+        .interpolate("basis")
         .x(function(d) { return x2(d.date); })
         .y(function(d) { return y2(d.state); });
+
+    populateData(data);
 
     var tickets = color.domain().map(function(name) {
       return {
@@ -116,18 +130,16 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
       };
     });
 
-    console.log(tickets);
-
     var tip = d3tip()
         .attr('class', 'diam-d3-tip tooltip top')
         .html(function(d) {
           var _data = {
             date : dateFormat(d.date),
-            states : _.map(_.omit(d, 'date'), function(value, name){
+            states : _.map(keys, function(key){
                       return {
-                        name : name,
-                        value : value,
-                        color: color(name)
+                        name : key,
+                        value : d[key]? d[key] : 0,
+                        color: color(key)
                       }
                     })
           };
@@ -225,6 +237,11 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
           width = w - margin.left - margin.right,
           height = h - margin.top - margin.bottom - (h2 + margin.top);
 
+      if(w <= 0) {
+        delete resizeGroupedLine[parent.id];
+        return;
+      }
+
       x.range([0, width]);
       x2.range([0, width]);
       y.range([height, 0]);
@@ -237,7 +254,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
 
       svg.select("#clip").select("rect")
           .attr("width", width)
-          .attr("height", height);
+          .attr("height", height + 1);
 
       context.attr("transform", "translate(" + margin.left + "," + (margin.top * 2 + height) + ")");
 

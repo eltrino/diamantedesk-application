@@ -118,6 +118,11 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
           height = h - margin.top - margin.bottom,
           radius = Math.min(width, height) / 2;
 
+      if(w <= 0) {
+        delete resizePie[parent.id];
+        return;
+      }
+
 
       arc.outerRadius(radius * 0.8).innerRadius(radius * 0.4);
       outerArc.outerRadius(radius * 0.9).innerRadius(radius * 0.9);
