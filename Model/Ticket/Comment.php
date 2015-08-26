@@ -22,10 +22,9 @@ use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\DeskBundle\Model\Shared\Updatable;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Entity\Ticket as TicketEntity;
 
-class Comment extends DomainEventProvider implements Entity, AttachmentHolder, Updatable, Owned
+class Comment implements Entity, AttachmentHolder, Updatable, Owned
 {
     /**
      * @var integer
