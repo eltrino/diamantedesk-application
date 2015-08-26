@@ -18,7 +18,9 @@ namespace Diamante\AutomationBundle\EventListener;
 use Diamante\AutomationBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Doctrine\ORM\UnitOfWork;
+use Oro\Bundle\DataAuditBundle\Entity\Audit;
+use Oro\Bundle\DataAuditBundle\Entity\AuditField;
+use Diamante\AutomationBundle\Model\Change;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Diamante\DeskBundle\Model\Shared\Entity;
 
@@ -30,9 +32,9 @@ class WorkflowListener
     private $container;
 
     /**
-     * @var UnitOfWork
+     * @var WorkflowEvent
      */
-    private $unitOfWork;
+    private $event;
 
     /**
      * @param ContainerInterface $container
@@ -47,22 +49,16 @@ class WorkflowListener
      */
     public function processWorkflowRule(WorkflowEvent $event)
     {
-        $this->unitOfWork = $event->getEntityManager()->getUnitOfWork();
+        $this->event = $event;
+        $entity = $event->getEntity();
 
-        $entities = array_merge(
-            $this->unitOfWork->getScheduledEntityInsertions(),
-            $this->unitOfWork->getScheduledEntityUpdates()
-        );
-
-        foreach ($entities as $entity) {
-            if ($entity instanceof Ticket || $entity instanceof Comment) {
-                try {
-                    $this->processEntity($entity);
-                } catch (\RuntimeException $e) {
-                    $this->container->get('monolog.logger.diamante')->error(
-                        sprintf('Rule processing failed: %s', $e->getMessage())
-                    );
-                }
+        if ($entity instanceof Ticket || $entity instanceof Comment) {
+            try {
+                $this->processEntity($entity);
+            } catch (\RuntimeException $e) {
+                $this->container->get('monolog.logger.diamante')->error(
+                    sprintf('Rule processing failed: %s', $e->getMessage())
+                );
             }
         }
     }
@@ -73,11 +69,93 @@ class WorkflowListener
     protected function processEntity(Entity $entity)
     {
         $engine = $this->container->get('diamante_automation.engine');
-        $fact = $engine->createFact($entity, $this->unitOfWork->getEntityChangeSet($entity));
+
+        $fact = $engine->createFact($entity, $this->computeChanges($entity));
 
         if ($engine->check($fact)) {
             $engine->runAgenda();
         }
         $engine->reset();
     }
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    protected function computeChanges(Entity $entity)
+    {
+        $repository = $this->event->getEntityManager()->getRepository('OroDataAuditBundle:Audit');
+        $entityLog = $repository->getLogEntries($entity);
+
+        /** @var Audit $lastEntityLog */
+        $lastEntityLog = array_shift($entityLog);
+
+        $changes = [];
+
+        if (!$lastEntityLog) {
+            return $changes;
+        }
+
+
+        switch (true) {
+            case $entity instanceof Ticket:
+                $changes = $this->computeTicketChanges($entity, $lastEntityLog);
+                break;
+            case $entity instanceof Comment:
+                $changes = $this->computeCommentChanges($entity, $lastEntityLog);
+                break;
+        }
+
+        return $changes;
+    }
+
+    /**
+     * @param Ticket $entity
+     * @param Audit $entityLog
+     * @return array
+     */
+    private function computeTicketChanges(Ticket $entity, Audit $entityLog)
+    {
+        $changes = $this->extractChanges($entityLog);
+
+        $repository = $this->event->getEntityManager()->getRepository('OroDataAuditBundle:Audit');
+
+        /** @var  $attachment */
+        foreach ($entity->getAttachments() as $attachment) {
+            $attachmentLog = $repository->getLogEntries($attachment);
+            $lastAttachmentLog = array_shift($attachmentLog);
+            $changes['attachments'] = $this->extractChanges($lastAttachmentLog);
+        }
+
+        return $changes;
+    }
+
+    /**
+     * @param Comment $entity
+     * @param Audit $entityLog
+     * @return array
+     */
+    private function computeCommentChanges(Comment $entity, Audit $entityLog)
+    {
+        return $this->extractChanges($entityLog);
+    }
+
+    /**
+     * @param Audit $entityLog
+     * @return array
+     */
+    private function extractChanges(Audit $entityLog)
+    {
+        $changes = [];
+        /** @var AuditField $field */
+        foreach ($entityLog->getFields()->toArray() as $field) {
+            $changes[] = new Change(
+                $field->getField(),
+                $field->getOldValue(),
+                $field->getNewValue()
+            );
+        }
+        return $changes;
+    }
+
 }

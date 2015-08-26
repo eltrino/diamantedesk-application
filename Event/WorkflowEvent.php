@@ -15,12 +15,16 @@ class WorkflowEvent extends Event
      */
     protected $doctrineRegistry;
 
+    protected $entity;
+
     /**
      * @param Registry $registry
+     * @param $entity
      */
-    public function __construct(Registry $registry)
+    public function __construct(Registry $registry, $entity)
     {
         $this->doctrineRegistry = $registry;
+        $this->entity = $entity;
     }
 
     /**
@@ -29,5 +33,13 @@ class WorkflowEvent extends Event
     public function getEntityManager()
     {
         return $this->doctrineRegistry->getManager();
+    }
+
+    /**
+     * @return array
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 }
