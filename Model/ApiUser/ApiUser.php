@@ -16,10 +16,9 @@ namespace Diamante\UserBundle\Model\ApiUser;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\UserBundle\Model\ApiUser\Notifications\Events\ApiUserPasswordWasChanged;
 
-class ApiUser extends DomainEventProvider implements Entity, UserInterface
+class ApiUser implements Entity, UserInterface
 {
     const EXPIRATION_TIME = 900;//Hash expiration time in seconds (15 minutes);
 
@@ -115,7 +114,7 @@ class ApiUser extends DomainEventProvider implements Entity, UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
-        $this->raise(new ApiUserPasswordWasChanged());
+        //$this->raise(new ApiUserPasswordWasChanged());
         return $this;
     }
 
