@@ -293,7 +293,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      */
     public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command)
     {
-        parent::removeAttachmentFromComment($command);
+        parent::removeAttachmentFromComment($command, true);
     }
 
     /**

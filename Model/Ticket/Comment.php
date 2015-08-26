@@ -191,7 +191,7 @@ class Comment implements Entity, AttachmentHolder, Updatable, Owned
 
     public function removeAttachment(Attachment $attachment)
     {
-        $this->attachments->remove($attachment->getId());
+        $this->attachments->removeElement($attachment);
     }
 
     public function delete()

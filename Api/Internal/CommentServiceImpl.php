@@ -36,6 +36,7 @@ use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 
 class CommentServiceImpl implements CommentService
 {
@@ -227,7 +228,7 @@ class CommentServiceImpl implements CommentService
         $this->isGranted('VIEW', $comment);
 
         $attachment = $comment->getAttachment($command->attachmentId);
-        if (is_null($attachment)) {
+        if (!$attachment) {
             throw new AttachmentNotFoundException();
         }
         return $attachment;
@@ -384,7 +385,12 @@ class CommentServiceImpl implements CommentService
         // if he is an owner of a ticket
         if ($operation === 'VIEW' && is_object($entity)) {
             if ($this->authorizationService->getLoggedUser()) {
-                $loggedUser = $this->userService->getUserFromApiUser($this->authorizationService->getLoggedUser());
+                $loggedUser = $this->authorizationService->getLoggedUser();
+
+                if($loggedUser instanceof ApiUser) {
+                    $loggedUser = $this->userService->getUserFromApiUser($loggedUser);
+                }
+
                 /** @var User $reporter */
                 $reporter = $entity->getTicket()->getReporter();
                 if ($loggedUser && $reporter && $loggedUser->getId() == $reporter->getId()) {
