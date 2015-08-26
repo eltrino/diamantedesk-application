@@ -392,8 +392,7 @@ class TicketServiceImpl implements TicketService
             new Priority($command->priority),
             new Status($command->status),
             new Source($command->source),
-            $assignee,
-            $command->tags
+            $assignee
         );
 
         $this->createAttachments($command, $ticket);

@@ -17,20 +17,9 @@ namespace Diamante\DeskBundle\Model\Ticket;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\DeskBundle\Model\Shared\Updatable;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToTicket;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasDeletedFromTicket;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasAddedToTicket;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketAssigneeWasChanged;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketStatusWasChanged;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasCreated;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasDeleted;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUnassigned;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketWasUpdated;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\TicketTagWasUpdated;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
@@ -418,26 +407,16 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
      * @param Status $status
      * @param Source $source
      * @param OroUser|null $assignee
-     * @param null|array|ArrayCollection $tags
      */
     public function update(
-        $subject, $description, User $reporter, Priority $priority,
-        Status $status, Source $source, OroUser $assignee = null, $tags = null
+        $subject,
+        $description,
+        User $reporter,
+        Priority $priority,
+        Status $status,
+        Source $source,
+        OroUser $assignee = null
     ) {
-        $hasChanges = false;
-        $tagChanges = false;
-
-        if ($this->subject !== $subject || $this->description !== $description || $this->reporter !== $reporter
-            || $this->assignee != $assignee || $this->priority->getValue() !== $priority->getValue()
-            || $this->status->notEquals($status) || $this->source->getValue() !== $source->getValue()
-        ) {
-            $hasChanges = true;
-        }
-
-        if (count($this->tags->getValues()) != count($tags['all'])) {
-            $tagChanges = true;
-        }
-
         $this->subject     = $subject;
         $this->description = $description;
         $this->reporter    = $reporter;
