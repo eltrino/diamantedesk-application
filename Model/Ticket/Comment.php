@@ -20,9 +20,6 @@ use Diamante\DeskBundle\Model\Attachment\AttachmentHolder;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\DeskBundle\Model\Shared\Updatable;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\AttachmentWasAddedToComment;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasDeleted;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Events\CommentWasUpdated;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Shared\DomainEventProvider;
@@ -160,13 +157,6 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
      */
     public function updateContent($content)
     {
-        if ($this->content !== $content) {
-            $this->raise(
-                new CommentWasUpdated(
-                    $this->ticket->getUniqueId(), $this->ticket->getSubject(), $content, $this->isPrivate()
-                )
-            );
-        }
         $this->content = $content;
     }
 
@@ -177,11 +167,6 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
-        $this->raise(
-            new AttachmentWasAddedToComment(
-                $this->ticket->getUniqueId(), $this->ticket->getSubject(), $this->content, $attachment->getFilename()
-            )
-        );
     }
 
     public function getAttachments()
@@ -212,11 +197,7 @@ class Comment extends DomainEventProvider implements Entity, AttachmentHolder, U
 
     public function delete()
     {
-        $this->raise(
-            new CommentWasDeleted(
-                $this->ticket->getUniqueId(), $this->ticket->getSubject(), $this->content, $this->private
-            )
-        );
+
     }
 
     public function isPrivate()

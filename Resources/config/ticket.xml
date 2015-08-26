@@ -95,16 +95,11 @@
 
         <service id="diamante.ticket.service" class="%diamante.ticket.service.class%">
             <argument type="service" id="doctrine" />
-            <argument type="service" id="diamante.ticket.repository"/>
-            <argument type="service" id="diamante.branch.repository"/>
             <argument type="service" id="diamante.ticket.builder"/>
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="diamante.notification.delivery.manger"/>
-            <argument type="service" id="diamante.notification.ticket.email.notifier"/>
-            <argument type="service" id="diamante.ticket_history.repository"/>
             <argument type="service" id="oro_tag.tag.manager"/>
             <argument type="service" id="oro_security.security_facade"/>
         </service>

@@ -36,7 +36,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
-class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Taggable, Updatable, Owned
+class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
@@ -171,22 +171,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
         $this->updatedAt = clone $this->createdAt;
         $this->source = $source;
         $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
-
-
-        $this->raise(
-            new TicketWasCreated(
-                (string) $this->uniqueId,
-                $this->branch->getName(),
-                $this->subject,
-                $this->description,
-                (string)$this->reporter,
-                $this->getAssigneeFullName(),
-                (string) $this->priority,
-                (string) $this->status,
-                (string) $this->source,
-                $this->tags
-            )
-        );
     }
 
     /**
@@ -422,11 +406,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
-        $this->raise(
-            new CommentWasAddedToTicket(
-                $this->uniqueId, $this->subject, $comment->getContent(), $comment->isPrivate()
-            )
-        );
     }
 
     /** LEGACY CODE START */
@@ -473,22 +452,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
         } else {
             $this->processAssign($assignee);
         }
-
-        if ($hasChanges) {
-            $this->raise(
-                new TicketWasUpdated(
-                    (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
-                    (string) $this->priority, (string) $this->status, (string) $this->source, $tags
-                )
-            );
-        } elseif ($tagChanges) {
-                $this->raise(
-                    new TicketTagWasUpdated(
-                        (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
-                        (string) $this->priority, (string) $this->status, (string) $this->source, $tags
-                    )
-                );
-        }
     }
 
     /**
@@ -500,11 +463,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     {
         if ($this->status->notEquals($status)) {
             $this->processUpdateStatus($status);
-            $this->raise(
-                new TicketStatusWasChanged(
-                    (string) $this->uniqueId, $this->subject, (string) $this->status
-                )
-            );
         }
     }
 
@@ -539,7 +497,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     {
         if (is_null($this->assignee) || $newAssignee->getId() != $this->assignee->getId()) {
             $this->processAssign($newAssignee);
-            $this->raise(new TicketAssigneeWasChanged($this->uniqueId, $this->subject, $this->getAssigneeFullName()));
         }
     }
 
@@ -559,7 +516,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     public function unAssign()
     {
         $this->processUnAssign();
-        $this->raise(new TicketWasUnassigned($this->uniqueId, $this->subject));
     }
 
     /**
@@ -594,17 +550,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     public function addAttachment(Attachment $attachment)
     {
         $this->attachments->add($attachment);
-        $event = null;
-        foreach ($this->recorderEvents as $each) {
-            if ($each instanceof TicketWasCreated || $each instanceof TicketWasUpdated) {
-                $event = $each;
-            }
-        }
-        if (is_null($event)) {
-            $this->raise(new AttachmentWasAddedToTicket($this->uniqueId, $this->subject, $attachment->getFilename()));
-        } elseif ($event) {
-            $event->pushAttachment($attachment->getFilename());
-        }
     }
 
     /**
@@ -613,7 +558,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
     public function removeAttachment(Attachment $attachment)
     {
         $this->attachments->removeElement($attachment);
-        $this->raise(new AttachmentWasDeletedFromTicket($this->uniqueId, $this->subject, $attachment->getFilename()));
     }
 
     /**
@@ -667,9 +611,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
 
     public function delete()
     {
-        $this->raise(
-            new TicketWasDeleted($this->uniqueId, $this->subject)
-        );
+
     }
 
     /**
@@ -680,7 +622,6 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
      */
     public function updateProperties(array $properties)
     {
-        $hasChanges = false;
         foreach ($properties as $name => $value) {
             if (!property_exists($this, $name)) {
                 throw new \DomainException(sprintf('Ticket does not have "%s" property.', $name));
@@ -693,17 +634,7 @@ class Ticket extends DomainEventProvider implements Entity, AttachmentHolder, Ta
 
             if ($this->$name !== $value) {
                 $this->$name = $value;
-                $hasChanges = true;
             }
-        }
-
-        if (true === $hasChanges) {
-            $this->raise(
-                new TicketWasUpdated(
-                    (string) $this->uniqueId, $this->subject, $this->description, (string)$this->reporter,
-                    (string) $this->priority, (string) $this->status, (string) $this->source, $this->tags
-                )
-            );
         }
     }
 
