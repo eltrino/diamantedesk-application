@@ -15,7 +15,7 @@
 
 namespace Diamante\AutomationBundle\EventListener;
 
-use Diamante\AutomationBundle\Event\WorkflowEvent;
+use Diamante\DeskBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Oro\Bundle\DataAuditBundle\Entity\Audit;
