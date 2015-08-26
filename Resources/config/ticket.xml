@@ -196,7 +196,6 @@
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="diamante.notification.delivery.manger"/>
             <argument type="service" id="diamante.notification.ticket.email.notifier"/>
         </service>
 
