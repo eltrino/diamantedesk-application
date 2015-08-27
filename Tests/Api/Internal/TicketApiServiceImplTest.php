@@ -67,6 +67,12 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentManager;
 
     /**
+     * @var \Diamante\DeskBundle\Model\Shared\Repository
+     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
+     */
+    private $branchRepository;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      */
@@ -84,11 +90,18 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $dispatcher;
 
+
     /**
      * @var \Diamante\DeskBundle\Api\ApiPagingService
      * @Mock Diamante\DeskBundle\Api\ApiPagingService
      */
     private $apiPagingService;
+
+    /**
+     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
+     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
+     */
+    private $ticketHistoryRepository;
 
     /**
      * @var \Oro\Bundle\TagBundle\Entity\TagManager
@@ -106,6 +119,10 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
 
+        $this->doctrineRegistry->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnCallback([$this, 'getRepository']));
+
         $this->ticketService = new TicketApiServiceImpl(
             $this->doctrineRegistry,
             $this->ticketBuilder,
@@ -118,6 +135,30 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->ticketService->setApiPagingService($this->apiPagingService);
+    }
+
+    /**
+     * @param $class
+     * @return \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
+     * @return \Diamante\DeskBundle\Model\Shared\Repository
+     * @return \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @return null
+     */
+    public function getRepository($class)
+    {
+        switch ($class) {
+            case 'DiamanteDeskBundle:Ticket':
+                return $this->ticketRepository;
+                break;
+            case 'DiamanteDeskBundle:Branch':
+                return $this->branchRepository;
+                break;
+            case 'DiamanteDeskBundle:TicketHistory':
+                return $this->ticketHistoryRepository;
+                break;
+            default:
+                return null;
+        }
     }
 
     /**
