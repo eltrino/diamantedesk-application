@@ -1,0 +1,4 @@
+entities:
+    - %diamante.ticket.entity.class%
+    - %diamante.comment.entity.class%
+    - %diamante.user.entity.class%

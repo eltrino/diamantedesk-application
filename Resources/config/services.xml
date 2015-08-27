@@ -14,6 +14,7 @@
         <parameter key="diamante.business_rules.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRulesRepository</parameter>
         <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
         <parameter key="diamante_automation.event_listener.workflow.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
+        <parameter key="diamante_automation.provider.listed_entities.class">Diamante\AutomationBundle\Model\ListedEntitiesProvider</parameter>
     </parameters>
 
     <services>
@@ -54,6 +55,10 @@
         <service id="diamante_automation.event_listener.workflow" class="%diamante_automation.event_listener.workflow.class%">
             <argument type="service" id="service_container"/>
             <tag name="kernel.event_listener" event="automation.workflow.process" method="processWorkflowRule" />
+        </service>
+
+        <service id="diamante_automation.provider.listed_entities" class="%diamante_automation.provider.listed_entities.class%">
+            <argument type="service" id="service_container"/>
         </service>
 
     </services>
