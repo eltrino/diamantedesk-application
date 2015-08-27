@@ -82,6 +82,10 @@ class EngineImpl implements Engine
 
         $ruleset = $this->rulesets[$mode][$fact->getTargetType()];
 
+        if (!$ruleset) {
+            return false;
+        }
+
         $this->prepareExecutionContext($fact);
 
         /** @var Rule $rule */
