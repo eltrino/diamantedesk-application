@@ -26,10 +26,6 @@ use Diamante\UserBundle\Model\ApiUser\ApiUserRepository;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
-
 
 class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterface
 {
