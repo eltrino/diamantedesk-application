@@ -16,7 +16,6 @@ namespace Diamante\UserBundle\Model\ApiUser;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Diamante\UserBundle\Model\ApiUser\Notifications\Events\ApiUserPasswordWasChanged;
 
 class ApiUser implements Entity, UserInterface
 {
