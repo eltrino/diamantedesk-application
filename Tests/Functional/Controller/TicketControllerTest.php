@@ -27,7 +27,7 @@ class TicketControllerTest extends AbstractController
     {
         $this->initClient(
             array(),
-            array_merge($this->generateBasicAuthHeader('admin', '123'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
         );
     }
 

@@ -64,7 +64,7 @@ datagrid:
                 acl_resource:  EDIT;Entity:DiamanteDeskBundle:Branch
             delete:
                 type:          delete
-                label:         diamante.desk.branch.actions.remove_several
+                label:         diamante.desk.branch.actions.remove
                 icon:          trash
                 link:          delete_link
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
