@@ -53,36 +53,16 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
      */
     private $logger;
 
-    /**
-     * @var EventDispatcher
-     */
-    private $dispatcher;
-    /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var Notifier
-     */
-    private $notifier;
-
     public function __construct(
         DiamanteUserRepository $diamanteUserRepository,
         ApiUserRepository $apiUserRepository,
         AuthorizationService $authorizationService,
-        Logger $logger,
-        EventDispatcher $dispatcher,
-        NotificationDeliveryManager $notificationDeliveryManager,
-        Notifier $notifier
+        Logger $logger
     ) {
         $this->diamanteUserRepository      = $diamanteUserRepository;
         $this->apiUserRepository           = $apiUserRepository;
         $this->authorizationService        = $authorizationService;
         $this->logger                      = $logger;
-        $this->dispatcher                  = $dispatcher;
-        $this->notificationDeliveryManager = $notificationDeliveryManager;
-        $this->notifier                    = $notifier;
     }
 
     /**
@@ -98,7 +78,7 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
      *      401="Returned when the user is not found"
      *  }
      * )
-     * @return \Diamante\DeskBundle\Model\User\DiamanteUser
+     * @return \Diamante\UserBundle\Model\DiamanteUser
      */
     public function getCurrentUser()
     {
@@ -157,7 +137,6 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
             $apiUser->setPassword($command->password);
         }
 
-        $this->dispatchEvents($apiUser);
         $this->diamanteUserRepository->store($diamanteUser);
         $this->apiUserRepository->store($apiUser);
 
@@ -175,25 +154,5 @@ class CurrentUserApiServiceImpl implements CurrentUserService, RestServiceInterf
             throw new \RuntimeException('User loading failed, user not found.');
         }
         return $diamanteUser;
-    }
-
-    /**
-     * Dispatches events
-     *
-     * @param ApiUser $apiUser
-     */
-    private function dispatchEvents(ApiUser $apiUser)
-    {
-        $events = $apiUser->getRecordedEvents();
-
-        if (empty($events)) {
-            return;
-        }
-
-        foreach ($events as $event) {
-            $this->dispatcher->dispatch($event->getEventName(), $event);
-        }
-
-        $this->notificationDeliveryManager->deliver($this->notifier);
     }
 }
