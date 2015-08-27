@@ -67,8 +67,6 @@
             <argument type="service" id="diamante.user.repository" />
             <argument type="service" id="diamante.user_factory" />
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
-            <argument type="service" id="diamante.notification.ticket.subscriber"/>
-            <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="diamante.ticket.watcher_list.service"/>
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="oro_config.global"/>
@@ -195,8 +193,6 @@
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="diamante.notification.ticket.email.notifier"/>
         </service>
 
         <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service">

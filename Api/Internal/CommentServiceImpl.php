@@ -73,16 +73,6 @@ class CommentServiceImpl implements CommentService
     private $authorizationService;
 
     /**
-     * @var EventDispatcher
-     */
-    private $dispatcher;
-
-    /**
-     * @var Notifier
-     */
-    private $notifier;
-
-    /**
      * @var Registry
      */
     private $registry;
@@ -95,8 +85,6 @@ class CommentServiceImpl implements CommentService
      * @param UserService $userService
      * @param AttachmentManager $attachmentManager
      * @param AuthorizationService $authorizationService
-     * @param EventDispatcher $dispatcher
-     * @param Notifier $notifier
      */
     public function __construct(
         Registry $doctrineRegistry,
@@ -105,9 +93,7 @@ class CommentServiceImpl implements CommentService
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentManager $attachmentManager,
-        AuthorizationService $authorizationService,
-        EventDispatcher $dispatcher,
-        Notifier $notifier
+        AuthorizationService $authorizationService
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
@@ -115,8 +101,6 @@ class CommentServiceImpl implements CommentService
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
         $this->authorizationService = $authorizationService;
-        $this->dispatcher = $dispatcher;
-        $this->notifier = $notifier;
         $this->registry = $doctrineRegistry;
     }
 
