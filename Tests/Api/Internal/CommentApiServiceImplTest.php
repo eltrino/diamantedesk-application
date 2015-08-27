@@ -22,7 +22,6 @@ use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -85,23 +84,6 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $authorizationService;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
-     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    private $dispatcher;
-
-    /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     */
-    private $notifier;
-
-    /**
      * @var \Diamante\DeskBundle\Api\ApiPagingService
      * @Mock Diamante\DeskBundle\Api\ApiPagingService
      */
@@ -116,7 +98,6 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         MockAnnotations::init($this);
-        $this->notificationDeliveryManager = new NotificationDeliveryManager();
         $this->service = new CommentApiServiceImpl(
             $this->registry,
             $this->ticketRepository,
@@ -124,10 +105,7 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->commentFactory,
             $this->userService,
             $this->attachmentManager,
-            $this->authorizationService,
-            $this->dispatcher,
-            $this->notificationDeliveryManager,
-            $this->notifier
+            $this->authorizationService
         );
 
         $this->service->setApiPagingService($this->apiPagingService);

@@ -18,7 +18,6 @@ use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -87,12 +86,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticket;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\Repository
-     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
-     */
-    private $branchRepository;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      */
@@ -117,23 +110,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     */
-    private $notifier;
-
-    /**
-     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
-     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
-     */
-    private $ticketHistoryRepository;
-
-    /**
      * @var \Oro\Bundle\TagBundle\Entity\TagManager
      * @Mock \Oro\Bundle\TagBundle\Entity\TagManager
      */
@@ -149,20 +125,13 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
 
-        $this->notificationDeliveryManager = new NotificationDeliveryManager();
-
         $this->ticketService = new TicketServiceImpl(
             $this->doctrineRegistry,
-            $this->ticketRepository,
-            $this->branchRepository,
             $this->ticketBuilder,
             $this->attachmentManager,
             $this->userService,
             $this->authorizationService,
             $this->dispatcher,
-            $this->notificationDeliveryManager,
-            $this->notifier,
-            $this->ticketHistoryRepository,
             $this->tagManager,
             $this->securityFacade
         );

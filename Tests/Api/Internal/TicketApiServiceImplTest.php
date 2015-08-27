@@ -22,7 +22,6 @@ use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingInfo;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -68,12 +67,6 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $attachmentManager;
 
     /**
-     * @var \Diamante\DeskBundle\Model\Shared\Repository
-     * @Mock \Diamante\DeskBundle\Model\Shared\Repository
-     */
-    private $branchRepository;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      * @Mock \Diamante\DeskBundle\Model\Ticket\TicketBuilder
      */
@@ -92,27 +85,10 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     */
-    private $notifier;
-
-    /**
      * @var \Diamante\DeskBundle\Api\ApiPagingService
      * @Mock Diamante\DeskBundle\Api\ApiPagingService
      */
     private $apiPagingService;
-
-    /**
-     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
-     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
-     */
-    private $ticketHistoryRepository;
 
     /**
      * @var \Oro\Bundle\TagBundle\Entity\TagManager
@@ -130,20 +106,13 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
 
-        $this->notificationDeliveryManager = new NotificationDeliveryManager();
-
         $this->ticketService = new TicketApiServiceImpl(
             $this->doctrineRegistry,
-            $this->ticketRepository,
-            $this->branchRepository,
             $this->ticketBuilder,
             $this->attachmentManager,
             $this->userService,
             $this->authorizationService,
             $this->dispatcher,
-            $this->notificationDeliveryManager,
-            $this->notifier,
-            $this->ticketHistoryRepository,
             $this->tagManager,
             $this->securityFacade
         );

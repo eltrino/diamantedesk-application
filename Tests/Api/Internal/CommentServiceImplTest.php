@@ -23,7 +23,6 @@ use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Model\Ticket\Comment;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Internal\CommentServiceImpl;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -99,23 +98,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $authorizationService;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
-     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    private $dispatcher;
-
-    /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     */
-    private $notifier;
-
-    /**
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
      * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
      */
@@ -130,7 +112,6 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         MockAnnotations::init($this);
-        $this->notificationDeliveryManager = new NotificationDeliveryManager();
         $this->service = new CommentServiceImpl(
             $this->registry,
             $this->ticketRepository,
@@ -138,10 +119,7 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->commentFactory,
             $this->userService,
             $this->attachmentManager,
-            $this->authorizationService,
-            $this->dispatcher,
-            $this->notificationDeliveryManager,
-            $this->notifier
+            $this->authorizationService
         );
 
         $this->_dummyTicket = new Ticket(
