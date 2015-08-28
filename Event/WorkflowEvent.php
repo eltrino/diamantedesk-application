@@ -1,6 +1,7 @@
 <?php
 namespace Diamante\DeskBundle\Event;
 
+use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -36,7 +37,7 @@ class WorkflowEvent extends Event
     }
 
     /**
-     * @return array
+     * @return Entity
      */
     public function getEntity()
     {
