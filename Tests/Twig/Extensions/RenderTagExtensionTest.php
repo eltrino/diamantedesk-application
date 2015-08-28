@@ -88,11 +88,16 @@ class RenderTagExtensionTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\Twig_SimpleFunction', $function);
         }
     }
+
+    public function testWithoutContext()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->renderTagExtensionExtension->renderTag($this->twig, 1, '');
+    }
     
 
     public function testRenderBranch()
     {
-        $entityid = 1;
         $tags = array(array('id' => 1, 'name' => 'Branch Tag'));
         $renderTagResult = '<span class="tag-inline">Branch Tag</span>';
 
@@ -127,7 +132,6 @@ class RenderTagExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderTicket()
     {
-        $entityid = 1;
         $tags = array(array('id' => 1, 'name' => 'Ticket Tag'));
         $renderTagResult = '<span class="tag-inline">Ticket Tag</span>';
 

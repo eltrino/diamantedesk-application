@@ -79,13 +79,20 @@ class RenderTagExtension extends \Twig_Extension
      */
     public function renderTag(\Twig_Environment $twig, $entityId, $context)
     {
-        if ($context === 'branch') {
-            /** @var \Diamante\DeskBundle\Entity\Branch $entity */
-            $entity =  $this->registry->getRepository('DiamanteDeskBundle:Branch')->get($entityId);
-        } elseif ($context === 'ticket') {
-            /** @var \Diamante\DeskBundle\Entity\Ticket $entity */
-            $entity = $this->registry->getRepository('DiamanteDeskBundle:Ticket')->get($entityId);
+        switch ($context) {
+            case 'branch':
+                /** @var \Diamante\DeskBundle\Entity\Branch $entity */
+                $entity =  $this->registry->getRepository('DiamanteDeskBundle:Branch')->get($entityId);
+                break;
+
+            case 'ticket':
+                /** @var \Diamante\DeskBundle\Entity\Ticket $entity */
+                $entity = $this->registry->getRepository('DiamanteDeskBundle:Ticket')->get($entityId);
+                break;
+            default:
+                throw new \InvalidArgumentException('Entity didn\'t get.');
         }
+
         $this->tagManager->loadTagging($entity);
 
         return $twig->render(
