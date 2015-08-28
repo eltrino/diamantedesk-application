@@ -91,17 +91,11 @@ class ReportTimelineServiceImpl implements ReportTimelineService
                         return;
                     }
 
-                    if ($to === 'resolved') {
-                        $this->increaseSolvedCounter();
-                    }
-
                     if ($to === 'closed') {
                         $this->increaseClosedCounter();
                     }
 
-                    if (($from === 'closed' || $from === 'resolved') &&
-                        ($to !== 'closed' && $to !== 'resolved')
-                    ) {
+                    if ($from === 'closed') {
                         $this->increaseReopenCounter();
                     }
 
@@ -130,13 +124,6 @@ class ReportTimelineServiceImpl implements ReportTimelineService
     {
         $this->getCurrentDayRecord()->setNew(
             $this->getCurrentDayRecord()->getNew() + 1
-        );
-    }
-
-    private function increaseSolvedCounter()
-    {
-        $this->getCurrentDayRecord()->setSolved(
-            $this->getCurrentDayRecord()->getSolved() + 1
         );
     }
 
