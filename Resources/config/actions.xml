@@ -14,6 +14,7 @@
                 id="diamante_automation.notification_strategy.email"
                 class="%diamante_automation.notification_strategy.email.class%"
                 >
+            <argument type="service" id="service_container"/>
             <argument type="service" id="diamante.user.service"/>
             <tag name="diamante.action.strategy"/>
         </service>

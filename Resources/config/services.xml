@@ -14,7 +14,8 @@
         <parameter key="diamante.business_rules.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRulesRepository</parameter>
         <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
         <parameter key="diamante_automation.event_listener.workflow.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
-        <parameter key="diamante_automation.provider.listed_entities.class">Diamante\AutomationBundle\Model\ListedEntitiesProvider</parameter>
+        <parameter key="diamante_automation.provider.listed_entities.class">Diamante\AutomationBundle\Model\ListedEntity\ListedEntitiesProvider</parameter>
+        <parameter key="diamante_automation.email_notification_strategy.email_notification.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification</parameter>
     </parameters>
 
     <services>
@@ -59,6 +60,10 @@
 
         <service id="diamante_automation.provider.listed_entities" class="%diamante_automation.provider.listed_entities.class%">
             <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.email_notification_strategy.email_notification" class="%diamante_automation.email_notification_strategy.email_notification.class%" >
+            <argument id="diamante.user.service" type="service"/>
         </service>
 
     </services>

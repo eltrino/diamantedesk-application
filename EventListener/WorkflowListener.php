@@ -15,12 +15,10 @@
 
 namespace Diamante\AutomationBundle\EventListener;
 
+use Diamante\AutomationBundle\Model\ListedEntity\ListedEntitiesProvider;
+use Diamante\AutomationBundle\Model\ListedEntity\ProcessorInterface;
 use Diamante\DeskBundle\Event\WorkflowEvent;
-use Diamante\DeskBundle\Model\Ticket\Comment;
-use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Oro\Bundle\DataAuditBundle\Entity\Audit;
-use Oro\Bundle\DataAuditBundle\Entity\AuditField;
-use Diamante\AutomationBundle\Model\Change;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Diamante\DeskBundle\Model\Shared\Entity;
 
@@ -37,11 +35,28 @@ class WorkflowListener
     private $event;
 
     /**
+     * @var array
+     */
+    private $listedEntities = [];
+
+    /**
+     * @var ListedEntitiesProvider
+     */
+    private $listedEntitiesProvider;
+
+    /**
+     * @var ProcessorInterface
+     */
+    private $listedEntityProcessor;
+
+    /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->listedEntitiesProvider = $container->get('diamante_automation.provider.listed_entities');
+        $this->listedEntities = $this->listedEntitiesProvider->provideListedEntities();
     }
 
     /**
@@ -49,18 +64,31 @@ class WorkflowListener
      */
     public function processWorkflowRule(WorkflowEvent $event)
     {
+
         $this->event = $event;
         $entity = $event->getEntity();
 
-        if ($entity instanceof Ticket || $entity instanceof Comment) {
-            try {
-                $this->processEntity($entity);
-            } catch (\RuntimeException $e) {
-                $this->container->get('monolog.logger.diamante')->error(
-                    sprintf('Rule processing failed: %s', $e->getMessage())
-                );
+        foreach ($this->listedEntities as $listedEntity) {
+            $listedEntityClassName = $listedEntity->getListedEntityClassName();
+            if ($entity instanceof $listedEntityClassName) {
+                $this->listedEntityProcessor = $listedEntity->getEntityProcessor();
+                break;
             }
         }
+
+        if (!$this->listedEntityProcessor) {
+            return;
+        }
+
+
+        try {
+            $this->processEntity($entity);
+        } catch (\RuntimeException $e) {
+            $this->container->get('monolog.logger.diamante')->error(
+                sprintf('Rule processing failed: %s', $e->getMessage())
+            );
+        }
+
     }
 
     /**
@@ -96,65 +124,8 @@ class WorkflowListener
             return $changes;
         }
 
+        $changes = $this->listedEntityProcessor->getEntityChanges($entity, $lastEntityLog, $this->event);
 
-        switch (true) {
-            case $entity instanceof Ticket:
-                $changes = $this->computeTicketChanges($entity, $lastEntityLog);
-                break;
-            case $entity instanceof Comment:
-                $changes = $this->computeCommentChanges($entity, $lastEntityLog);
-                break;
-        }
-
-        return $changes;
-    }
-
-    /**
-     * @param Ticket $entity
-     * @param Audit $entityLog
-     * @return array
-     */
-    private function computeTicketChanges(Ticket $entity, Audit $entityLog)
-    {
-        $changes = $this->extractChanges($entityLog);
-
-        $repository = $this->event->getEntityManager()->getRepository('OroDataAuditBundle:Audit');
-
-        /** @var  $attachment */
-        foreach ($entity->getAttachments() as $attachment) {
-            $attachmentLog = $repository->getLogEntries($attachment);
-            $lastAttachmentLog = array_shift($attachmentLog);
-            $changes['attachments'] = $this->extractChanges($lastAttachmentLog);
-        }
-
-        return $changes;
-    }
-
-    /**
-     * @param Comment $entity
-     * @param Audit $entityLog
-     * @return array
-     */
-    private function computeCommentChanges(Comment $entity, Audit $entityLog)
-    {
-        return $this->extractChanges($entityLog);
-    }
-
-    /**
-     * @param Audit $entityLog
-     * @return array
-     */
-    private function extractChanges(Audit $entityLog)
-    {
-        $changes = [];
-        /** @var AuditField $field */
-        foreach ($entityLog->getFields()->toArray() as $field) {
-            $changes[] = new Change(
-                $field->getField(),
-                $field->getOldValue(),
-                $field->getNewValue()
-            );
-        }
         return $changes;
     }
 
