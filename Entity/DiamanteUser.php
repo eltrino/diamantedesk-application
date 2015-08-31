@@ -83,6 +83,18 @@ class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
      */
     protected $lastName;
 
+    /**
+     * @var
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @var
+     * @ORM\Column(type="datetime")
+     */
+    protected $updatedAt;
+
     public static function getClassName()
     {
         return __CLASS__;

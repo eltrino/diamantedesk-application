@@ -1,0 +1,35 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% set pageTitle = 'diamante.user.all'|trans %}
+{% block navButtons %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteUserBundle:DiamanteUser') %}
+        {{ UI.addButton({
+            'path' : path('diamante_user_create'),
+            'title' : 'diamante.user.actions.create'|trans,
+            'label' : 'diamante.user.actions.create'|trans
+        }) }}
+    {% endif %}
+{% endblock %}
+
+{% block content_datagrid %}
+
+    {% set gridName = 'diamante-user-grid' %}
+
+    <div class="scrollable-container">
+        <div class="content" style="background-color: #fff;">
+            {{ dataGrid.renderGrid(gridName, {}, {cssClass:'diam-users'}) }}
+        </div>
+    </div>
+    <script>
+        require(['jquery',  'oroui/js/mediator'],
+                function($, mediator) {
+                    mediator.on('grid_render:complete', function (element) {
+                        $(element).find("tbody tr").each(function(){
+                            //Here we expect to have key column as first column with string type data
+                            $(this).find("td.string-cell").first().addClass("key-cell");
+                        });
+                    });
+                });
+    </script>
+
+{% endblock content_datagrid %}

@@ -1,0 +1,24 @@
+diamante:
+  user:
+    all:        Diamante Users
+    email:      E-mail
+    first_name: First Name
+    last_name:  Last Name
+    active:     Is Active
+
+    actions:
+      create:   Create User
+      remove:   Delete User
+
+    messages:
+      delete:
+        query:  Are you sure you want to delete this user?
+        success: User successfully deleted
+
+
+    customer_management: Customer Management
+
+    placeholder:
+      email:    'Please enter an email address'
+
+    entity_plural_label: Users

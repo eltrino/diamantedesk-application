@@ -1,0 +1,61 @@
+datagrid:
+  diamante-user-grid:
+    source:
+      type: orm
+      query:
+        select:
+          - u.id
+          - u.email
+          - u.firstName
+          - u.lastName
+        from:
+          - { table: %diamante.user.entity.class%, alias: u }
+    properties:
+      id: ~
+      view_link:
+        type: url
+        route: diamante_user_view
+        params: [ id ]
+      update_link:
+        type: url
+        route: diamante_user_update
+        params: [ id ]
+      delete_link:
+        type: url
+        route: diamante_user_delete
+        params: [ id ]
+    sorters:
+      columns:
+        email:
+          data_name: u.email
+        firstName:
+          data_name: u.firstName
+        lastName:
+          data_name: u.lastName
+    columns:
+      email:
+        label: diamante.user.email
+      firstName:
+        label: diamante.user.first_name
+      lastName:
+        label: diamante.user.last_name
+    actions:
+      view:
+        type: navigate
+        label: diamante.user.view
+        icon: eye-open
+        link: view_link
+        rowAction: true
+        acl_resource: VIEW;Entity:DiamanteUserBundle:DiamanteUser
+      update:
+        type: navigate
+        label: diamante.user.update
+        icon: edit
+        link: update_link
+        acl_resource: EDIT;Entity:DiamanteUserBundle:DiamanteUser
+      delete:
+        type: delete
+        label: diamante.user.delete
+        icon: trash
+        link: delete_link
+        acl_resource: DELETE;Entity:DiamanteUserBundle:DiamanteUser

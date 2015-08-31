@@ -38,11 +38,23 @@ class DiamanteUser implements Entity
      */
     protected $lastName;
 
+    /**
+     * @var \DateTime
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     */
+    protected $updatedAt;
+
     public function __construct($email, $firstName = null, $lastName = null)
     {
         $this->email     = $email;
         $this->firstName = $firstName;
         $this->lastName  = $lastName;
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = clone $this->createdAt;
     }
 
     /**
@@ -103,5 +115,21 @@ class DiamanteUser implements Entity
     public function getFullName()
     {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

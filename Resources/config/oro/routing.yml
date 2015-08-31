@@ -8,3 +8,9 @@ diamante_user_api:
     defaults:
         version:  latest
         _format:  json
+
+
+diamante_user_bundle:
+    resource:     "@DiamanteUserBundle/Controller"
+    type:         annotation
+    prefix:       /desk/customer
