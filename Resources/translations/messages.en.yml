@@ -1,5 +1,12 @@
 diamante:
-  user:
+    user:
+        diamanteuser:
+          entity_label:               Diamante User
+          entity_plural_label:        Diamante Users
+          email.label:                Email
+          first_name.label:           First name
+          id.label:                   Id
+          last_name.label:            Last name  user:
     all:        Diamante Users
     email:      E-mail
     first_name: First Name
