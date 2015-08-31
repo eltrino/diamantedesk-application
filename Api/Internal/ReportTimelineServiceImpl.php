@@ -81,6 +81,10 @@ class ReportTimelineServiceImpl implements ReportTimelineService
             if ($entity instanceof Ticket) {
                 $changes = $uof->getEntityChangeSet($entity);
 
+                if (!isset($changes['status'])) {
+                    continue;
+                }
+
                 $from = $changes['status'][0]->getValue();
                 $to = $changes['status'][1]->getValue();
 
