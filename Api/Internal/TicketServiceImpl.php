@@ -39,6 +39,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class TicketServiceImpl implements TicketService
 {
@@ -96,9 +97,9 @@ class TicketServiceImpl implements TicketService
     private $tagManager;
 
     /**
-     * @var SecurityFacade
+     * @var OroUser|ApiUser
      */
-    protected $securityFacade;
+    protected $loggedUser;
 
     /**
      * @param Registry $doctrineRegistry
@@ -126,11 +127,11 @@ class TicketServiceImpl implements TicketService
         $this->authorizationService    = $authorizationService;
         $this->dispatcher              = $dispatcher;
         $this->tagManager              = $tagManager;
-        $this->securityFacade          = $securityFacade;
 
         $this->ticketRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
         $this->branchRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
         $this->ticketHistoryRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:TicketHistory');
+        $this->loggedUser              = $securityFacade->getLoggedUser();
     }
 
     /**
@@ -340,7 +341,7 @@ class TicketServiceImpl implements TicketService
         $this->doctrineRegistry->getManager()->persist($ticket);
         $this->doctrineRegistry->getManager()->flush();
 
-        if ($this->securityFacade->getOrganization()) {
+        if ($this->loggedUser instanceof OroUser) {
             $this->tagManager->saveTagging($ticket);
             $ticket->setTags(null);
             $this->loadTagging($ticket);
@@ -637,7 +638,7 @@ class TicketServiceImpl implements TicketService
      */
     private function loadTagging(Ticket $ticket)
     {
-        if ($this->securityFacade->getOrganization()) {
+        if ($this->loggedUser instanceof OroUser) {
             $this->tagManager->loadTagging($ticket);
         }
     }
