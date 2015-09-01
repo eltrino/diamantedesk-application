@@ -1,0 +1,48 @@
+{
+  "name": "backbone.babysitter",
+  "version": "0.1.7",
+  "homepage": "https://github.com/marionettejs/backbone.babysitter",
+  "authors": [
+    "Derick Bailey <derickbailey@gmail.com>"
+  ],
+  "description": "Manage child views in a Backbone.View",
+  "main": "lib/backbone.babysitter.js",
+  "keywords": [
+    "backbone",
+    "plugin",
+    "computed",
+    "field",
+    "model",
+    "client",
+    "browser"
+  ],
+  "dependencies": {
+    "backbone": ">=0.9.9 <=1.2.0",
+    "underscore": ">=1.4.0 <=1.8.3"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "public",
+    "specs",
+    ".gitignore",
+    ".jshintrc",
+    ".travis.yml",
+    "Gruntfile.js",
+    "component.json",
+    "package.json"
+  ],
+  "_release": "0.1.7",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.7",
+    "commit": "59eecb77dcdec8d65f36b5dfcf919acc68f4584b"
+  },
+  "_source": "git://github.com/marionettejs/backbone.babysitter.git",
+  "_target": "^0.1.0",
+  "_originalSource": "backbone.babysitter"
+}
