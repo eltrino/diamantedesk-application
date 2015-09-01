@@ -23,7 +23,7 @@
     ],
     "require": { 
         "php": ">=5.4.4",
-        "oro/platform": "1.7.*",
+        "oro/platform": "1.8.*",
         "diamante/api-bundle": "self.version",
         "diamante/desk-bundle": "self.version"
     },
