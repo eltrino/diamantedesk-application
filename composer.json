@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": ">=5.4.4",
-        "oro/platform": "1.7.*",
+        "oro/platform": "1.8.*",
         "beberlei/assert": "2.*",
         "diamante/email-processing-bundle": "self.version",
         "diamante/api-bundle": "self.version",
