@@ -1,0 +1,15 @@
+{
+  "name": "backbone.paginator",
+  "homepage": "https://github.com/addyosmani/backbone.paginator",
+  "version": "2.0.2",
+  "_release": "2.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.0.2",
+    "commit": "3fa9bcb1fd59d463333b501b821735be6152a605"
+  },
+  "_source": "git://github.com/addyosmani/backbone.paginator.git",
+  "_target": "~2.0.2",
+  "_originalSource": "backbone.paginator",
+  "_direct": true
+}

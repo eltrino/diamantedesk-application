@@ -117,11 +117,6 @@ class BuildCommand extends ContainerAwareCommand
         }
 
         $process = new Process($command, $this->bundleDir);
-        $process->setEnv([
-          'HOME' => '',
-          'PATH' => getenv('PATH')
-        ]);
-
         $logger = $this->getContainer()->get('monolog.logger.diamante');
 
         $result = $process->run(function ($type, $buffer) use ($output, $logger) {
