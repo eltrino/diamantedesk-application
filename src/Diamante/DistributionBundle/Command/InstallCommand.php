@@ -80,7 +80,6 @@ class InstallCommand extends OroInstallCommand
             $this->runExistingCommand('diamante:desk:install');
             $this->runExistingCommand('diamante:user:install');
             $this->runExistingCommand('diamante:embeddedform:install');
-            $this->runExistingCommand('diamante:front:build',  array('--with-assets-dependencies' => true));
             $this->runExistingCommand('assets:install');
             $this->runExistingCommand('assetic:dump', array('--process-isolation' => true));
             $this->oroAdministrationSetup($output);

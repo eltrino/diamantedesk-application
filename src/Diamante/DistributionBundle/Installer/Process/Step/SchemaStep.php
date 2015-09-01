@@ -43,8 +43,6 @@ class SchemaStep extends AbstractStep
                 return $this->handleAjaxAction('oro:process:configuration:load');
             case 'diamante-install':
                 return $this->handleAjaxAction('diamante:desk:install');
-            case 'diamante-front-build':
-                return $this->handleAjaxAction('diamante:front:build', array('--with-assets-dependencies' => true));
             case 'diamante-front-assets-install':
                 return $this->handleAjaxAction(
                     'oro:assets:install',
