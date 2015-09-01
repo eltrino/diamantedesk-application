@@ -69,7 +69,13 @@ php app/console diamante:front:build
 ```
 ### NPM Dependencies ###
 
-All dependencies specified in `@DiamanteFrontBundle/packages.json` and installed in `@DiamanteFrontBundle/node_modules` folder. To update them manually or reinstall, you should use `npm update` or `npm install` in the `@DiamanteFrontBundle` folder.
+All dependencies required for the development are specified at `@DiamanteFrontBundle/packages.json` file and can be installed  using the following command:
+
+`npm install`
+
+To update the dependencies, execute the following command:
+
+`npm update` 
 
 ## Contributing
 
