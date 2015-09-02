@@ -4,7 +4,7 @@ oro_menu_config:
       label: 'diamante.user.customer_management'
       route: 'diamante_user_list'
       extras:
-        position: 30
+        position: 60
   tree:
     application_menu:
       children:
@@ -14,3 +14,4 @@ oro_menu_config:
 oro_titles:
   diamante_user_create: 'Create user'
   diamante_user_view:   '%%user.fullName%% - DiamanteDesk User'
+  diamante_user_update: '%%user.name%% - Update'

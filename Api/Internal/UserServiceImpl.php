@@ -15,7 +15,9 @@
 namespace Diamante\UserBundle\Api\Internal;
 
 
+use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
+use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Api\GravatarProvider;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Entity\DiamanteUser;
@@ -172,6 +174,28 @@ class UserServiceImpl implements UserService, GravatarProvider
     }
 
     /**
+     * @param UpdateDiamanteUserCommand $command
+     * @return int
+     */
+    public function updateDiamanteUser(UpdateDiamanteUserCommand $command)
+    {
+        /** @var DiamanteUser $user */
+        $user = $this->diamanteUserRepository->get($command->id);
+
+        if (is_null($user)) {
+            throw new EntityNotFoundException('Failed to load Diamante User, user not found');
+        }
+
+        $user->setEmail($command->email);
+        $user->setFirstName($command->firstName);
+        $user->setLastName($command->lastName);
+
+        $this->diamanteUserRepository->store($user);
+
+        return $user->getId();
+    }
+
+    /**
      * @param User $user
      * @return UserDetails
      */
@@ -238,5 +262,14 @@ class UserServiceImpl implements UserService, GravatarProvider
         return $this->diamanteUserRepository->findUserByEmail(
             $apiUser->getEmail()
         );
+    }
+
+    /**
+     * @param $id
+     */
+    public function removeDiamanteUser($id)
+    {
+        $user = $this->diamanteUserRepository->get($id);
+        $this->diamanteUserRepository->remove($user);
     }
 }

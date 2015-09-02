@@ -12,20 +12,21 @@
             'label': 'diamante.desk.ui.edit'|trans
         }) }}
     {% endif %}
-
-    {% if resource_granted('DELETE', entity) %}
-        {{ UI.deleteButton({
-            'dataUrl': path('diamante_user_delete', {'id': entity.id}),
-            'dataRedirect': path('diamante_user_list'),
-            'aCss': 'no-hash remove-button',
-            'dataId': entity.id,
-            'id': 'btn-remove-account',
-            'dataMessage': 'diamante.user.messages.delete.query'|trans,
-            'successMessage': 'diamante.user.messages.delete.success'|trans,
-            'title': 'diamante.user.actions.remove'|trans,
-            'label': 'diamante.desk.ui.delete'|trans
-        })
-        }}
+    {% if not user_has_tickets(entity) %}
+        {% if resource_granted('DELETE', entity) %}
+            {{ UI.deleteButton({
+                'dataUrl': path('diamante_user_delete', {'id': entity.id}),
+                'dataRedirect': path('diamante_user_list'),
+                'aCss': 'no-hash remove-button',
+                'dataId': entity.id,
+                'id': 'btn-remove-account',
+                'dataMessage': 'diamante.user.messages.delete.query'|trans,
+                'successMessage': 'diamante.user.messages.delete.success'|trans,
+                'title': 'diamante.user.actions.remove'|trans,
+                'label': 'diamante.desk.ui.delete'|trans
+            })
+            }}
+        {% endif %}
     {% endif %}
 {% endblock %}
 
@@ -33,7 +34,7 @@
     {% set breadcrumbs = {
     'entity': entity,
     'indexPath': path('diamante_user_list'),
-    'indexLabel': 'diamante.user.entity_plural_label'|trans,
+    'indexLabel': 'diamante.user.labels.entity.plural'|trans,
     'entityTitle': entity.fullName|default('diamante.desk.common.not_available'|trans),
     'hasAvatar': false
     }
@@ -45,12 +46,12 @@
 
     {% set id = 'navbarUserView' %}
 
-    {% set dataSubBlocks = [UI.attibuteRow('diamante.user.email'|trans, entity.email)] %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.first_name'|trans, entity.firstName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.last_name'|trans, entity.lastName)]) %}
+    {% set dataSubBlocks = [UI.attibuteRow('diamante.user.labels.email'|trans, entity.email)] %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.first_name'|trans, entity.firstName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.last_name'|trans, entity.lastName)]) %}
 
     {% set dataBlocks =
-        [{1
+        [{
             'title': 'diamante.desk.common.general'|trans,
             'class': 'active',
             'subblocks': [{

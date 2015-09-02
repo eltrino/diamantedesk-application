@@ -19,6 +19,7 @@ use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\Internal\ApiServiceImplTrait;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
+use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 
@@ -104,5 +105,40 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
     public function getUsers()
     {
         return $this->diamanteUserRepository->getAll();
+    }
+
+    /**
+     * Updates Diamante User
+     *
+     * @ApiDoc(
+     *  description="Updates Diamante User",
+     *  uri="/users/{id}.{_format}",
+     *  method={
+     *    "PUT",
+     *    "PATCH"
+     *  },
+     *  resource=true,
+     *  requirements={
+     *      {
+     *       "name"="id",
+     *       "dataType"="integer",
+     *       "requirement"="\d+",
+     *       "description"="Diamante User ID"
+     *     }
+     *  },
+     *  statusCodes={
+     *    200="Returned when successful",
+     *    403="Returned when user is not authorized to update resource",
+     *    404="Returned when user not found"
+     *  }
+     * )
+     *
+     * @param UpdateDiamanteUserCommand $command
+     * @return \Diamante\DeskBundle\Model\Shared\Entity
+     */
+    public function updateDiamanteUser(UpdateDiamanteUserCommand $command)
+    {
+        $id = parent::updateDiamanteUser($command);
+        return $this->diamanteUserRepository->get($id);
     }
 }

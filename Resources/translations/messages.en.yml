@@ -1,31 +1,33 @@
 diamante:
     user:
-        diamanteuser:
-          entity_label:               Diamante User
-          entity_plural_label:        Diamante Users
-          email.label:                Email
-          first_name.label:           First name
-          id.label:                   Id
-          last_name.label:            Last name  user:
-    all:        Diamante Users
-    email:      E-mail
-    first_name: First Name
-    last_name:  Last Name
-    active:     Is Active
+      labels:
+        entity:         Diamante User
+        entity.plural:  Diamante Users
+        email:          Email
+        first_name:     First Name
+        last_name:      Last Name
+        active:         Is Active
+        id:             Id
 
-    actions:
-      create:   Create User
-      remove:   Delete User
+      actions:
+        create:         Create User
+        remove:         Delete User
+        view:           View User
+        update:         Update User
+        delete:         Delete User
 
-    messages:
-      delete:
-        query:  Are you sure you want to delete this user?
-        success: User successfully deleted
+      messages:
+        delete:
+          query:        Are you sure you want to delete this user?
+          success:      User successfully deleted
+        create:
+          success:      Diamante User successfully created
+        update:
+          success:      Diamante User successfully updated
 
+      customer_management: Customers
 
-    customer_management: Customer Management
+      placeholder:
+        email:          'Please enter an email address'
 
-    placeholder:
-      email:    'Please enter an email address'
-
-    entity_plural_label: Users
+      details:          User Details

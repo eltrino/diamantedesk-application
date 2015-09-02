@@ -1,6 +1,6 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-{% set pageTitle = 'diamante.user.all'|trans %}
+{% set pageTitle = 'diamante.user.labels.entity.plural'|trans %}
 {% block navButtons %}
     {% if resource_granted('CREATE', 'Entity:DiamanteUserBundle:DiamanteUser') %}
         {{ UI.addButton({

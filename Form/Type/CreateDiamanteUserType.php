@@ -30,9 +30,8 @@ class CreateDiamanteUserType extends AbstractType
             'email',
             'text',
             [
-                'label'         => 'diamante.user.email',
-                'required'      => true,
-                'empty_value'   => 'diamante.user.placeholder.email'
+                'label'         => 'diamante.user.labels.email',
+                'required'      => true
             ]
         );
 
@@ -40,7 +39,7 @@ class CreateDiamanteUserType extends AbstractType
             'firstName',
             'text',
             [
-                'label'         => 'diamante.user.first_name',
+                'label'         => 'diamante.user.labels.first_name',
                 'required'      => true
             ]
         );
@@ -49,7 +48,7 @@ class CreateDiamanteUserType extends AbstractType
             'lastName',
             'text',
             [
-                'label'         => 'diamante.user.last_name',
+                'label'         => 'diamante.user.labels.last_name',
                 'required'      => true
             ]
         );

@@ -1,10 +1,54 @@
-{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
+{% set formAction = path('diamante_user_update', {id: form.vars.data.id})  %}
+{% oro_title_set({params : {"%user.name%": form.vars.data.firstName ~ ' ' ~ form.vars.data.lastName}}) %}
+{% block head_script %}
+    {{ parent() }}
 
-{% block navButtons %}
-
+    {% block stylesheets %}
+        {{ form_stylesheet(form) }}
+    {% endblock %}
 {% endblock %}
 
-{% block content_datagrid %}
+{% block navButtons %}
+    {% if form.vars.data.id is defined %}
+        {% set cancel_url = path('diamante_user_view', {'id':form.vars.data.id}) %}
+    {% else %}
+        {% set cancel_url = path('diamante_user_list') %}
+    {% endif %}
+    {{ UI.button({'path' : cancel_url, 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.saveAndStayButton() }}
+    {{ UI.saveAndCloseButton() }}
+{% endblock %}
 
+{% block pageHeader %}
+    {% set title = 'oro.ui.update_entity'|trans({'%entityName%': 'diamante.user.labels.entity'|trans}) ~ ' - ' ~ form.vars.data.firstName ~ ' ' ~ form.vars.data.lastName %}
+    {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'userDetails' %}
+
+    {% set dataBlocks = [{
+    'title': 'diamante.desk.common.general'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'diamante.user.details'|trans,
+    'data': [
+    form_row(form.email),
+    form_row(form.firstName),
+    form_row(form.lastName),
+    ]
+    }
+    ]
+    }] %}
+
+    {% set data = {
+    'formErrors': form_errors(form)? form_errors(form) : null,
+    'dataBlocks': dataBlocks,
+    } %}
+
+    {{ parent() }}
 {% endblock %}
 
