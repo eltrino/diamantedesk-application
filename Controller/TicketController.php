@@ -598,13 +598,14 @@ class TicketController extends Controller
      *      requirements={"ticket"="\d+"}
      * )
      *
-     * @param Ticket $ticket
+     * @param int $ticket
      * @return RedirectResponse
      */
-    public function watchAction(Ticket $ticket)
+    public function watchAction($ticket)
     {
         $watcherService = $this->get('diamante.ticket.watcher_list.service');
 
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticket);
         $user = new User($this->getUser()->getId(), User::TYPE_ORO);
 
         $watcherService->addWatcher($ticket, $user);
@@ -625,13 +626,14 @@ class TicketController extends Controller
      *      requirements={"ticket"="\d+"}
      * )
      *
-     * @param Ticket $ticket
+     * @param int $ticket
      * @return RedirectResponse
      */
-    public function unwatchAction(Ticket $ticket)
+    public function unwatchAction($ticket)
     {
         $watcherService = $this->get('diamante.ticket.watcher_list.service');
 
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($ticket);
         $user = new User($this->getUser()->getId(), User::TYPE_ORO);
 
         $watcherService->removeWatcher($ticket, $user);
