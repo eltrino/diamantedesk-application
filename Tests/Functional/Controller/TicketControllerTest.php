@@ -27,7 +27,7 @@ class TicketControllerTest extends AbstractController
     {
         $this->initClient(
             array(),
-            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('akolomiec', 'akolomiec'), array('HTTP_X-CSRF-Header' => 1))
         );
     }
 
@@ -69,8 +69,8 @@ class TicketControllerTest extends AbstractController
         $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $form['diamante_ticket_form[tags][autocomplete]']    = '';
-        $form['diamante_ticket_form[tags][all]']    = '[{"id":"test_tag","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
-        $form['diamante_ticket_form[tags][owner]']    = '[{"id":"test_tag","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_form[tags][all]']    = '[{"id":"tag_1","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_form[tags][owner]']    = '[{"id":"tag_1","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
@@ -88,11 +88,11 @@ class TicketControllerTest extends AbstractController
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['diamante_ticket_form[tags][autocomplete]'] = '';
-        $form['diamante_ticket_form[tags][all]']
-            = '[{"name":"test tag 1","id":9,"url":"/tag/search/9","owner":false,"moreOwners":false,"notSaved":false},{"name":"test tag 2","id":11,"url":"/tag/search/11","owner":false,"moreOwners":false,"notSaved":false},{"id":"test_tag_3","name":"test tag 3","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
-        $form['diamante_ticket_form[tags][owner]']
-            = '[{"id":"test tag 3","name":"test tag 3","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_update_form[tags][autocomplete]'] = '';
+        $form['diamante_ticket_update_form[tags][all]']
+            = '[{"name":"test tag 1","id":1,"url":"/tag/search/1","owner":false,"moreOwners":false,"notSaved":false},{"name":"test tag 2","id":2,"url":"/tag/search/2","owner":false,"moreOwners":false,"notSaved":false},{"id":"tag_1","name":"test tag 3","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_update_form[tags][owner]']
+            = '[{"id":"tag_1","name":"test tag 3","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
 
         $this->client->followRedirects(true);
 
@@ -111,9 +111,9 @@ class TicketControllerTest extends AbstractController
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['diamante_ticket_form[tags][autocomplete]'] = '';
-        $form['diamante_ticket_form[tags][all]'] = '[]';
-        $form['diamante_ticket_form[tags][owner]'] = '[]';
+        $form['diamante_ticket_update_form[tags][autocomplete]'] = '';
+        $form['diamante_ticket_update_form[tags][all]'] = '[]';
+        $form['diamante_ticket_update_form[tags][owner]'] = '[]';
 
         $this->client->followRedirects(true);
 
@@ -257,7 +257,7 @@ class TicketControllerTest extends AbstractController
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['diamante_ticket_form[subject]'] = 'Just Changed';
+        $form['diamante_ticket_update_form[subject]'] = 'Just Changed';
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
@@ -275,7 +275,7 @@ class TicketControllerTest extends AbstractController
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['diamante_ticket_form[priority]'] = Priority::PRIORITY_HIGH;
+        $form['diamante_ticket_update_form[priority]'] = Priority::PRIORITY_HIGH;
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
@@ -293,7 +293,7 @@ class TicketControllerTest extends AbstractController
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['diamante_ticket_form[source]'] = Source::EMAIL;
+        $form['diamante_ticket_update_form[source]'] = Source::EMAIL;
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
@@ -342,7 +342,7 @@ class TicketControllerTest extends AbstractController
     public function testWatch()
     {
         $ticket = $this->chooseTicketFromGrid();
-        $ticketWatchUrl = $this->getUrl('diamante_ticket_watch', ['ticketId' => $ticket['id']]);
+        $ticketWatchUrl = $this->getUrl('diamante_ticket_watch', ['ticket' => $ticket['id']]);
 
         $this->client->followRedirects(true);
         $crawler = $this->client->request('GET', $ticketWatchUrl);
@@ -353,7 +353,7 @@ class TicketControllerTest extends AbstractController
     public function testUnWatch()
     {
         $ticket = $this->chooseTicketFromGrid();
-        $ticketWatchUrl = $this->getUrl('diamante_ticket_unwatch', ['ticketId' => $ticket['id']]);
+        $ticketWatchUrl = $this->getUrl('diamante_ticket_unwatch', ['ticket' => $ticket['id']]);
 
         $this->client->followRedirects(true);
         $crawler = $this->client->request('GET', $ticketWatchUrl);
