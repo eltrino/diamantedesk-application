@@ -12,6 +12,7 @@ use Diamante\DeskBundle\Api\Dto\AttachmentDto;
  */
 class AttachmentController extends Controller
 {
+    use Shared\SessionFlashMessengerTrait;
     use Shared\ExceptionHandlerTrait;
     use Shared\ResponseHandlerTrait;
 
