@@ -56,6 +56,16 @@ class NotificationManager
     public $templateOptions = [];
 
     /**
+     * @var \Twig_Environment
+     */
+    protected $twig;
+
+    /**
+     * @var \Swift_Mailer
+     */
+    protected $mailer;
+
+    /**
      * @param \Twig_Environment $twig
      * @param \Swift_Mailer $mailer
      */
