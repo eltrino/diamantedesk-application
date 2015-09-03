@@ -24,7 +24,7 @@ class AttachmentController extends AbstractController
 
     public function testExistingImage()
     {
-        $hash = 'e2c98e704ef238de80b450afce1d969a';
+        $hash = '0412c29576c708cf0155e8de242169b1';
         $url = $this->getUrl('diamante_attachment_file_download', ['hash' => $hash]);
         $this->client->request('GET', $url);
 
@@ -46,7 +46,7 @@ class AttachmentController extends AbstractController
 
     public function testExistingThumbnail()
     {
-        $hash = 'e2c98e704ef238de80b450afce1d969a';
+        $hash = '0412c29576c708cf0155e8de242169b1';
         $url = $this->getUrl('diamante_attachment_thumbnail_download', ['hash' => $hash]);
         $this->client->request('GET', $url);
 
