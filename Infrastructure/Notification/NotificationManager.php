@@ -136,7 +136,7 @@ class NotificationManager
         ), 'text/html');
 
         if (isset($this->templates[self::TEMPLATE_TYPE_TXT])) {
-            $message->setBody($this->twig->render(
+            $message->addPart($this->twig->render(
                 $this->templates[self::TEMPLATE_TYPE_TXT],
                 $this->templateOptions
             ), 'text/plain');
