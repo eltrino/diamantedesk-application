@@ -125,7 +125,6 @@ class EmailNotifier implements Notifier
         Container $container,
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
-        TemplateResolver $templateResolver,
         TicketRepository $ticketRepository,
         MessageReferenceRepository $messageReferenceRepository,
         UserService $userService,

@@ -18,7 +18,6 @@ use Diamante\DeskBundle\Api\Command\UpdatePropertiesCommand;
 use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Model\Attachment\File;
 use Diamante\DeskBundle\Model\Attachment\Attachment;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
@@ -117,17 +116,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $dispatcher;
 
     /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     * @Mock \Diamante\DeskBundle\Model\Ticket\Notifications\Notifier
-     */
-    private $notifier;
-
-    /**
      * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
      * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
      */
@@ -149,23 +137,44 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     {
         MockAnnotations::init($this);
 
-        $this->notificationDeliveryManager = new NotificationDeliveryManager();
+        $this->doctrineRegistry->expects($this->any())
+            ->method('getRepository')
+            ->will($this->returnCallback([$this, 'getRepository']));
 
         $this->ticketService = new TicketServiceImpl(
             $this->doctrineRegistry,
-            $this->ticketRepository,
-            $this->branchRepository,
             $this->ticketBuilder,
             $this->attachmentManager,
             $this->userService,
             $this->authorizationService,
             $this->dispatcher,
-            $this->notificationDeliveryManager,
-            $this->notifier,
-            $this->ticketHistoryRepository,
             $this->tagManager,
             $this->securityFacade
         );
+    }
+
+    /**
+     * @param $class
+     * @return \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
+     * @return \Diamante\DeskBundle\Model\Shared\Repository
+     * @return \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @return null
+     */
+    public function getRepository($class)
+    {
+        switch ($class) {
+            case 'DiamanteDeskBundle:Ticket':
+                return $this->ticketRepository;
+                break;
+            case 'DiamanteDeskBundle:Branch':
+                return $this->branchRepository;
+                break;
+            case 'DiamanteDeskBundle:TicketHistory':
+                return $this->ticketHistoryRepository;
+                break;
+            default:
+                return null;
+        }
     }
 
     /**
@@ -790,11 +799,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->ticket
-            ->expects($this->once())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
-
         $removeTicketAttachmentCommand = new RemoveTicketAttachmentCommand();
         $removeTicketAttachmentCommand->ticketId = self::DUMMY_TICKET_ID;
         $removeTicketAttachmentCommand->attachmentId = self::DUMMY_ATTACHMENT_ID;
@@ -853,11 +857,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('isActionPermitted');
 
-        $this->ticket
-            ->expects($this->once())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
-
         $command = new UpdateStatusCommand();
         $command->ticketId = self::DUMMY_TICKET_ID;
         $command->status = $status;
@@ -898,11 +897,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
-
-        $this->ticket
-            ->expects($this->once())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
 
         $command = new UpdateStatusCommand();
         $command->ticketId = self::DUMMY_TICKET_ID;
@@ -982,11 +976,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('isActionPermitted');
 
-        $this->ticket
-            ->expects($this->once())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
-
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
         $command->assignee = $assigneeId;
@@ -1022,11 +1011,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
-
-        $this->ticket
-            ->expects($this->once())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
 
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
@@ -1105,11 +1089,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
 
-        $this->ticket
-            ->expects($this->once())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
-
         $this->ticketService->deleteTicket(self::DUMMY_TICKET_ID);
     }
 
@@ -1133,11 +1112,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isActionPermitted')
             ->with($this->equalTo('DELETE'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
-
-        $this->ticket
-            ->expects($this->once())
-            ->method('getRecordedEvents')
-            ->will($this->returnValue(array()));
 
         $this->ticketService->deleteTicketByKey(self::DUMMY_TICKET_KEY);
     }

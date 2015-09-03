@@ -45,11 +45,11 @@ class ReportTimelineServiceImpl implements ReportTimelineService
     {
         if ($this->currentDayRecord) {
             return $this->currentDayRecord;
-        } else {
-            $date = new \DateTime('now', new \DateTimeZone('UTC'));
-            $date->setTime(0, 0, 0);
-            $this->currentDayRecord = $this->timelineRepository->findOneBy(['date' => $date]);
         }
+
+        $date = new \DateTime('now', new \DateTimeZone('UTC'));
+        $date->setTime(0, 0, 0);
+        $this->currentDayRecord = $this->timelineRepository->findOneBy(['date' => $date]);
 
         if (!$this->currentDayRecord) {
             $this->currentDayRecord = new TicketTimeline($date);
@@ -71,41 +71,32 @@ class ReportTimelineServiceImpl implements ReportTimelineService
         $uof = $em->getUnitOfWork();
 
         foreach ($uof->getScheduledEntityInsertions() as $entity) {
-            if ($entity instanceof Ticket) {
-                if ((string)$entity->getStatus()->getValue() === 'new') {
-                    $this->increaseNewCounter();
-                    $this->persistCurrentDayRecord($em);
-                }
+            if (($entity instanceof Ticket) && ((string)$entity->getStatus()->getValue() === 'new')) {
+                $this->increaseNewCounter();
+                $this->persistCurrentDayRecord($em);
             }
         }
 
         foreach ($uof->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof Ticket) {
                 $changes = $uof->getEntityChangeSet($entity);
-                if (isset($changes['status'])) {
 
-                    $from = $changes['status'][0]->getValue();
-                    $to = $changes['status'][1]->getValue();
+                if (!isset($changes['status'])) {
+                    continue;
+                }
 
-                    if ($from === $to) {
-                        return;
-                    }
+                $from = $changes['status'][0]->getValue();
+                $to = $changes['status'][1]->getValue();
 
-                    if ($to === 'resolved') {
-                        $this->increaseSolvedCounter();
-                    }
-
+                if (isset($changes['status']) && ($from !== $to)) {
                     if ($to === 'closed') {
                         $this->increaseClosedCounter();
+                        $this->persistCurrentDayRecord($em);
                     }
-
-                    if (($from === 'closed' || $from === 'resolved') &&
-                        ($to !== 'closed' && $to !== 'resolved')
-                    ) {
+                    if ($from === 'closed') {
                         $this->increaseReopenCounter();
+                        $this->persistCurrentDayRecord($em);
                     }
-
-                    $this->persistCurrentDayRecord($em);
                 }
             }
         }
@@ -116,9 +107,6 @@ class ReportTimelineServiceImpl implements ReportTimelineService
      */
     protected function persistCurrentDayRecord(EntityManager $em)
     {
-        if (!$this->currentDayRecord) {
-            return;
-        }
         $em->persist($this->currentDayRecord);
         $em->getUnitOfWork()->computeChangeSet(
             $em->getClassMetadata(get_class($this->currentDayRecord)),
@@ -130,13 +118,6 @@ class ReportTimelineServiceImpl implements ReportTimelineService
     {
         $this->getCurrentDayRecord()->setNew(
             $this->getCurrentDayRecord()->getNew() + 1
-        );
-    }
-
-    private function increaseSolvedCounter()
-    {
-        $this->getCurrentDayRecord()->setSolved(
-            $this->getCurrentDayRecord()->getSolved() + 1
         );
     }
 

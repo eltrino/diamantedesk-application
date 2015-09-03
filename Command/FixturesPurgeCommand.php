@@ -92,13 +92,14 @@ class FixturesPurgeCommand extends ContainerAwareCommand
      */
     protected function getTablesList()
     {
-
         $entitiesMetadata = array(
             $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Branch::getClassName()),
             $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\BranchEmailConfiguration::getClassName()),
             $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Ticket::getClassName()),
             $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Comment::getClassName()),
-            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName())
+            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName()),
+            $this->entityManager->getClassMetadata('\Oro\Bundle\TagBundle\Entity\Tag'),
+            $this->entityManager->getClassMetadata('\Oro\Bundle\TagBundle\Entity\Tagging')
         );
 
         $toPurge = array();

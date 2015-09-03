@@ -24,7 +24,6 @@ use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Ticket\Exception\CommentNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
-use Diamante\DeskBundle\Model\Ticket\Notifications\NotificationDeliveryManager;
 use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
@@ -37,6 +36,7 @@ use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Diamante\UserBundle\Model\ApiUser\ApiUser;
 
 class CommentServiceImpl implements CommentService
 {
@@ -73,25 +73,19 @@ class CommentServiceImpl implements CommentService
     private $authorizationService;
 
     /**
-     * @var EventDispatcher
-     */
-    private $dispatcher;
-
-    /**
-     * @var NotificationDeliveryManager
-     */
-    private $notificationDeliveryManager;
-
-    /**
-     * @var Notifier
-     */
-    private $notifier;
-
-    /**
      * @var Registry
      */
     private $registry;
 
+    /**
+     * @param Registry $doctrineRegistry
+     * @param Repository $ticketRepository
+     * @param Repository $commentRepository
+     * @param CommentFactory $commentFactory
+     * @param UserService $userService
+     * @param AttachmentManager $attachmentManager
+     * @param AuthorizationService $authorizationService
+     */
     public function __construct(
         Registry $doctrineRegistry,
         Repository $ticketRepository,
@@ -99,10 +93,7 @@ class CommentServiceImpl implements CommentService
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentManager $attachmentManager,
-        AuthorizationService $authorizationService,
-        EventDispatcher $dispatcher,
-        NotificationDeliveryManager $notificationDeliveryManager,
-        Notifier $notifier
+        AuthorizationService $authorizationService
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
@@ -110,9 +101,6 @@ class CommentServiceImpl implements CommentService
         $this->userService = $userService;
         $this->attachmentManager = $attachmentManager;
         $this->authorizationService = $authorizationService;
-        $this->dispatcher = $dispatcher;
-        $this->notificationDeliveryManager = $notificationDeliveryManager;
-        $this->notifier = $notifier;
         $this->registry = $doctrineRegistry;
     }
 
@@ -120,6 +108,9 @@ class CommentServiceImpl implements CommentService
      * Load Comment by given comment id
      * @param int $id
      * @return \Diamante\DeskBundle\Entity\Comment
+     *
+     * @throws ForbiddenException
+     * @throws CommentNotFoundException
      */
     public function loadComment($id)
     {
@@ -131,7 +122,9 @@ class CommentServiceImpl implements CommentService
 
     /**
      * @param $commentId
-     * @return \Diamante\DeskBundle\Model\Ticket\Comment
+     * @return Comment
+     *
+     * @throws CommentNotFoundException
      */
     private function loadCommentBy($commentId)
     {
@@ -145,6 +138,8 @@ class CommentServiceImpl implements CommentService
     /**
      * @param int $ticketId
      * @return Ticket
+     *
+     * @throws TicketNotFoundException
      */
     private function loadTicketBy($ticketId)
     {
@@ -158,7 +153,10 @@ class CommentServiceImpl implements CommentService
     /**
      * Post Comment for Ticket
      * @param Command\CommentCommand $command
-     * @return \Diamante\DeskBundle\Model\Ticket\Comment
+     * @return Comment
+     *
+     * @throws ForbiddenException
+     * @throws TicketNotFoundException
      */
     public function postNewCommentForTicket(Command\CommentCommand $command)
     {
@@ -178,7 +176,6 @@ class CommentServiceImpl implements CommentService
         $ticket->updateStatus(new Status($command->ticketStatus));
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
-        $this->dispatchEvents($comment, $ticket);
 
         return $comment;
     }
@@ -188,6 +185,9 @@ class CommentServiceImpl implements CommentService
      * @param $commentId
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @throws ForbiddenException
+     * @throws CommentNotFoundException
      */
     public function listCommentAttachment($commentId)
     {
@@ -200,6 +200,10 @@ class CommentServiceImpl implements CommentService
      * Retrieves Comment Attachment
      * @param RetrieveCommentAttachmentCommand $command
      * @return Attachment
+     *
+     * @throws ForbiddenException
+     * @throws AttachmentNotFoundException
+     * @throws CommentNotFoundException
      */
     public function getCommentAttachment(RetrieveCommentAttachmentCommand $command)
     {
@@ -208,7 +212,7 @@ class CommentServiceImpl implements CommentService
         $this->isGranted('VIEW', $comment);
 
         $attachment = $comment->getAttachment($command->attachmentId);
-        if (is_null($attachment)) {
+        if (!$attachment) {
             throw new AttachmentNotFoundException();
         }
         return $attachment;
@@ -219,6 +223,9 @@ class CommentServiceImpl implements CommentService
      * @param Command\AddCommentAttachmentCommand $command
      * @param boolean $flush
      * @return array
+     *
+     * @throws ForbiddenException
+     * @throws CommentNotFoundException
      */
     public function addCommentAttachment(Command\AddCommentAttachmentCommand $command, $flush = false)
     {
@@ -231,7 +238,6 @@ class CommentServiceImpl implements CommentService
 
         $attachments = $this->createAttachments($command, $comment);
         $this->registry->getManager()->persist($comment);
-        $this->dispatchEvents($comment);
 
         if (true === $flush) {
             $this->registry->getManager()->flush();
@@ -245,6 +251,9 @@ class CommentServiceImpl implements CommentService
      * @param Command\CommentCommand $command
      * @param boolean $flush
      * @return void
+     *
+     * @throws ForbiddenException
+     * @throws CommentNotFoundException
      */
     public function updateTicketComment(Command\CommentCommand $command, $flush = false)
     {
@@ -260,12 +269,9 @@ class CommentServiceImpl implements CommentService
 
         $this->createAttachments($command, $comment);
 
-
         $this->registry->getManager()->persist($comment);
         $ticket = $comment->getTicket();
         $this->updateTicketStatus($ticket, $command);
-
-        $this->dispatchEvents($comment, $ticket);
 
         if (true === $flush) {
             $this->registry->getManager()->flush();
@@ -277,6 +283,9 @@ class CommentServiceImpl implements CommentService
      * @param Command\UpdateCommentCommand $command
      * @param boolean $flush
      * @return Comment
+     *
+     * @throws ForbiddenException
+     * @throws CommentNotFoundException
      */
     public function updateCommentContentAndTicketStatus(Command\UpdateCommentCommand $command, $flush = false)
     {
@@ -288,7 +297,6 @@ class CommentServiceImpl implements CommentService
 
         $ticket = $comment->getTicket();
         $this->updateTicketStatus($ticket, $command);
-        $this->dispatchEvents($comment, $ticket);
 
         if (true === $flush) {
             $this->registry->getManager()->flush();
@@ -300,6 +308,9 @@ class CommentServiceImpl implements CommentService
     /**
      * Delete Ticket Comment
      * @param integer $commentId
+     *
+     * @throws ForbiddenException
+     * @throws CommentNotFoundException
      */
     public function deleteTicketComment($commentId)
     {
@@ -312,7 +323,6 @@ class CommentServiceImpl implements CommentService
         foreach ($comment->getAttachments() as $attachment) {
             $this->attachmentManager->deleteAttachment($attachment);
         }
-        $this->dispatchEvents($comment);
 
         $this->registry->getManager()->flush();
     }
@@ -322,7 +332,10 @@ class CommentServiceImpl implements CommentService
      * @param RemoveCommentAttachmentCommand $command
      * @param boolean $flush
      * @return void
-     * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
+     *
+     * @throws ForbiddenException
+     * @throws CommentNotFoundException
+     * @throws AttachmentNotFoundException
      */
     public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command, $flush = false)
     {
@@ -348,7 +361,7 @@ class CommentServiceImpl implements CommentService
      *
      * @param string $operation
      * @param Comment|string $entity
-     * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
+     * @throws ForbiddenException
      */
     private function isGranted($operation, $entity)
     {
@@ -356,7 +369,12 @@ class CommentServiceImpl implements CommentService
         // if he is an owner of a ticket
         if ($operation === 'VIEW' && is_object($entity)) {
             if ($this->authorizationService->getLoggedUser()) {
-                $loggedUser = $this->userService->getUserFromApiUser($this->authorizationService->getLoggedUser());
+                $loggedUser = $this->authorizationService->getLoggedUser();
+
+                if($loggedUser instanceof ApiUser) {
+                    $loggedUser = $this->userService->getUserFromApiUser($loggedUser);
+                }
+
                 /** @var User $reporter */
                 $reporter = $entity->getTicket()->getReporter();
                 if ($loggedUser && $reporter && $loggedUser->getId() == $reporter->getId()) {
@@ -368,25 +386,6 @@ class CommentServiceImpl implements CommentService
         if (!$this->authorizationService->isActionPermitted($operation, $entity)) {
             throw new ForbiddenException("Not enough permissions.");
         }
-    }
-
-    /**
-     * @param Comment $comment
-     * @param null|Ticket $ticket
-     */
-    private function dispatchEvents(Comment $comment, Ticket $ticket = null)
-    {
-        foreach ($comment->getRecordedEvents() as $event) {
-            $this->dispatcher->dispatch($event->getEventName(), $event);
-        }
-
-        if ($ticket) {
-            foreach ($ticket->getRecordedEvents() as $event) {
-                $this->dispatcher->dispatch($event->getEventName(), $event);
-            }
-        }
-
-        $this->notificationDeliveryManager->deliver($this->notifier);
     }
 
     /**

@@ -71,9 +71,8 @@ reports:
             y-axis:
                 items:
                     - new
-                    - solved
                     - closed
                     - reopen
         source:
             type: dql
-            dql: "select date(ttl.date) as day, ttl.new, ttl.solved, ttl.closed, ttl.reopen from Diamante\\DeskBundle\\Entity\\TicketTimeline ttl GROUP BY day"
+            dql: "select date(ttl.date) as day, ttl.new, ttl.closed, ttl.reopen from Diamante\\DeskBundle\\Entity\\TicketTimeline ttl GROUP BY day"

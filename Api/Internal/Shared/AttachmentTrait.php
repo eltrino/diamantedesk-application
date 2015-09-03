@@ -33,7 +33,7 @@ trait AttachmentTrait
         if (!empty($command->attachmentsInput)) {
             foreach ($command->attachmentsInput as $each) {
                 /** @var AttachmentInput $each */
-                $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $entity);
+                $attachments[] = $this->attachmentManager->createNewAttachment($each->getFilename(), $each->getContent(), $entity);
             }
         }
 

@@ -124,13 +124,13 @@ class BranchControllerTest extends AbstractController
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-
-        $form['diamante_branch_form[name]']             = $branch['name'];
-        $form['diamante_branch_form[description]']      = 'Branch Description Changed';
-        $form['diamante_branch_form[logoFile]']         = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
-        $form['diamante_branch_form[defaultAssignee]']  = 2;
-        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
-        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
+        $logoFile = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_update_branch_form[name]'] = $branch['name'];
+        $form['diamante_update_branch_form[description]'] = 'Branch Description Changed';
+        $form['diamante_update_branch_form[logoFile]'] = $logoFile;
+        $form['diamante_update_branch_form[defaultAssignee]'] = 1;
+        $form['diamante_update_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
+        $form['diamante_update_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
 
         $this->client->followRedirects(true);
 

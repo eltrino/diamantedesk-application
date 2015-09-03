@@ -62,6 +62,8 @@ diamante:
           subject.label:              Subject
           unique_id.label:            Unique Id
           updated_at.label:           Updated At
+          attachments.label:          Attachments
+          watcher_list.label:         Watcher list
 
           columns:
             key:               Key
@@ -131,6 +133,14 @@ diamante:
           ticket_status:       Ticket status
           content:             Content
           private:             Private
+          attachments.label:   Attachments
+          author.label:        Author
+          content.label:       Content
+          created_at.label:    Created_at
+          id.label:            Id
+          private.label:       Private
+          ticket.label:        Ticket
+          updated_at.label:    Updated at
 
           actions:
             edit:              Edit Comment
@@ -162,6 +172,11 @@ diamante:
           entity_plural_label: Attachments
           file:                File
           image:               Image
+          created_at.label:    Created at
+          file.label:          File
+          hash.label:          Hash
+          id.label:            Id
+          updated_at.label:    Updated at
 
           actions:
             delete_file:       Delete File
@@ -259,3 +274,39 @@ diamante:
           messages:
             build:
               error:           Error building the report.
+
+        tickethistory:
+          entity_label:        Ticket history
+          entity_plural_label: Tickets history
+          id.label:            Id
+          ticket_id.label:     Ticket id
+          ticket_key.label:    Ticket key
+
+        tickettimeline:
+          entity_label:        Ticket timeline
+          entity_plural_label: Tickets timeline
+          closed.label:        Closed
+          date.label:          Date
+          id.label:            Id
+          new.label:           New
+          reopen.label:        Reopen
+          solved.label:        Solved
+
+        watcherlist:
+          entity_label:        Watcher list
+          entity_plural_label: Watcher lists
+          id.label:            Id
+          ticket.label:        Ticket
+          user_type.label:     User type
+            
+oro:
+    entity_extend:
+        form:
+            data_type:
+              branch_logo:     Branch Logo
+              user_type:       User type
+              source:          Source
+              status:          Status
+              priority:        Priority
+              ticket_unique_id:        Ticket unique id
+              ticket_sequence_number:  Ticket sequence number

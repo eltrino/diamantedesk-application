@@ -70,12 +70,6 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private $emailProcessingSettings;
 
     /**
-     * @var \Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber
-     * @Mock \Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber
-     */
-    private $ticketNotificationsSubscriber;
-
-    /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
      */
@@ -108,8 +102,6 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             $this->diamanteUserRepository,
             $this->diamanteUserFactory,
             $this->emailProcessingSettings,
-            $this->ticketNotificationsSubscriber,
-            $this->eventDispatcher,
             $this->watcherService,
             $this->oroUserManager,
             $this->configManager

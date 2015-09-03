@@ -30,6 +30,7 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\TagBundle\Entity\TagManager;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -452,7 +453,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $criteria = $criteriaProcessor->getCriteria();
 
         $tickets = $repository->filter($criteria, $pagingProperties, $user);
-        if ($this->securityFacade->getOrganization()) {
+        if ($this->loggedUser instanceof OroUser) {
             foreach ($tickets as $ticket) {
                 /** @var Ticket $ticket */
                 $this->tagManager->loadTagging($ticket);

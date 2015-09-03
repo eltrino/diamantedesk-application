@@ -17,7 +17,6 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 use Diamante\DeskBundle\Api\Internal\WatchersServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
-use Diamante\DeskBundle\EventListener\TicketNotificationsSubscriber;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
@@ -27,7 +26,6 @@ use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\UserBundle\Entity\UserManager as OroUserManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class TicketStrategy implements Strategy
 {
@@ -45,11 +43,6 @@ class TicketStrategy implements Strategy
     private $branchEmailConfigurationService;
 
     /**
-     * @var TicketNotificationsSubscriber
-     */
-    private $ticketNotificationsSubscriber;
-
-    /**
      * @var DiamanteUserRepository
      */
     private $diamanteUserRepository;
@@ -63,11 +56,6 @@ class TicketStrategy implements Strategy
      * @var SystemSettings
      */
     private $emailProcessingSettings;
-
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
 
     /**
      * @var WatchersServiceImpl
@@ -90,8 +78,6 @@ class TicketStrategy implements Strategy
      * @param DiamanteUserRepository $diamanteUserRepository
      * @param DiamanteUserFactory $diamanteUserFactory
      * @param SystemSettings $settings
-     * @param TicketNotificationsSubscriber $ticketNotificationsSubscriber
-     * @param EventDispatcher $eventDispatcher
      * @param WatchersServiceImpl $watchersService
      * @param OroUserManager $oroUserManager
      * @param ConfigManager $configManager
@@ -101,8 +87,6 @@ class TicketStrategy implements Strategy
                                 DiamanteUserRepository $diamanteUserRepository,
                                 DiamanteUserFactory $diamanteUserFactory,
                                 SystemSettings $settings,
-                                TicketNotificationsSubscriber $ticketNotificationsSubscriber,
-                                EventDispatcher $eventDispatcher,
                                 WatchersServiceImpl $watchersService,
                                 OroUserManager $oroUserManager,
                                 ConfigManager $configManager)
@@ -112,8 +96,6 @@ class TicketStrategy implements Strategy
         $this->diamanteUserRepository          = $diamanteUserRepository;
         $this->diamanteUserFactory             = $diamanteUserFactory;
         $this->emailProcessingSettings         = $settings;
-        $this->ticketNotificationsSubscriber   = $ticketNotificationsSubscriber;
-        $this->eventDispatcher                 = $eventDispatcher;
         $this->watchersService                 = $watchersService;
         $this->oroUserManager                  = $oroUserManager;
         $this->configManager                   = $configManager;
@@ -148,13 +130,6 @@ class TicketStrategy implements Strategy
             $ticket = $this->messageReferenceService->createTicket($message->getMessageId(), $branchId,
                 $message->getSubject(), $message->getContent(), $reporter, $assigneeId, $attachments);
         } else {
-            $this->eventDispatcher->removeListener(
-                'commentWasAddedToTicket',
-                array(
-                    $this->ticketNotificationsSubscriber,
-                    'processEvent'
-                )
-            );
             $ticket = $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
                 $message->getReference(), $attachments);
         }

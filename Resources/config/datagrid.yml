@@ -46,6 +46,9 @@ datagrid:
                 template: DiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
             name:
                 label: diamante.desk.branch.columns.branch_name
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Branch:Datagrid/Property/name.html.twig
             key:
                 label: diamante.desk.branch.columns.branch_key
         actions:

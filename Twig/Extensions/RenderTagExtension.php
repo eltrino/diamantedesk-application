@@ -15,29 +15,31 @@
 
 namespace Diamante\DeskBundle\Twig\Extensions;
 
-use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Oro\Bundle\TagBundle\Entity\TagManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class RenderTagExtension extends \Twig_Extension
 {
-    /**
-     * @var TicketRepository
-     */
-    private $ticketRepository;
-
     /**
      * @var TagManager
      */
     private $tagManager;
 
     /**
-     * @param TicketRepository $ticketRepository
-     * @param TagManager       $tagManager
+     * @var Registry
      */
-    public function __construct(TicketRepository $ticketRepository, TagManager $tagManager)
-    {
-        $this->ticketRepository = $ticketRepository;
-        $this->tagManager = $tagManager;
+    private $registry;
+
+    /**
+     * @param TagManager $tagManager
+     * @param Registry $registry
+     */
+    public function __construct(
+        TagManager       $tagManager,
+        Registry         $registry
+    ) {
+        $this->tagManager       = $tagManager;
+        $this->registry         = $registry;
     }
 
     /**
@@ -57,7 +59,7 @@ class RenderTagExtension extends \Twig_Extension
     {
         return [
              new \Twig_SimpleFunction(
-                'render_ticket_tag',
+                'render_tag',
                 [$this, 'renderTag'],
                 array(
                     'is_safe'           => array('html'),
@@ -67,15 +69,35 @@ class RenderTagExtension extends \Twig_Extension
         ];
     }
 
-    public function renderTag(\Twig_Environment $twig, $ticketId)
+    /**
+     * Rendering tags depend on context..
+     *
+     * @param \Twig_Environment $twig
+     * @param $entityId
+     * @param $context
+     * @return string
+     */
+    public function renderTag(\Twig_Environment $twig, $entityId, $context)
     {
-        /** @var \Diamante\DeskBundle\Entity\Ticket $ticket */
-        $ticket = $this->ticketRepository->get($ticketId);
-        $this->tagManager->loadTagging($ticket);
+        switch ($context) {
+            case 'branch':
+                /** @var \Diamante\DeskBundle\Entity\Branch $entity */
+                $entity =  $this->registry->getRepository('DiamanteDeskBundle:Branch')->get($entityId);
+                break;
+
+            case 'ticket':
+                /** @var \Diamante\DeskBundle\Entity\Ticket $entity */
+                $entity = $this->registry->getRepository('DiamanteDeskBundle:Ticket')->get($entityId);
+                break;
+            default:
+                throw new \InvalidArgumentException('Entity didn\'t get.');
+        }
+
+        $this->tagManager->loadTagging($entity);
 
         return $twig->render(
-            'DiamanteDeskBundle:Ticket/Datagrid/Property:tag.html.twig',
-            ['tags' => $ticket->getTags()->getValues()]
+            'DiamanteDeskBundle:Tag/Datagrid/Property:tag.html.twig',
+            ['tags' => $entity->getTags()->getValues()]
         );
     }
 }

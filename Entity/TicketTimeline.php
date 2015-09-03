@@ -58,13 +58,6 @@ class TicketTimeline extends \Diamante\DeskBundle\Model\Ticket\TicketTimeline
     /**
      * @var integer
      *
-     * @ORM\Column(name="solved", type="integer")
-     */
-    protected $solved = 0;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="closed", type="integer")
      */
     protected $closed = 0;

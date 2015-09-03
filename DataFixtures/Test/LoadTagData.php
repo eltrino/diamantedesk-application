@@ -12,25 +12,23 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Model\Ticket\Notifications\Events;
+namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Diamante\DeskBundle\Model\Ticket\Notifications\ChangesProviderEvent;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\Persistence\ObjectManager;
+use Oro\Bundle\TagBundle\Entity\Tag;
 
-class CommentWasDeleted extends AbstractCommentEvent implements ChangesProviderEvent
+class LoadTagData extends AbstractFixture
 {
-    /**
-     * @return string
-     */
-    public function getEventName()
+    public function load(ObjectManager $manager)
     {
-        return 'commentWasDeleted';
+        for ($i = 1; $i <= 10; $i++) {
+            $tag = new Tag('tag_' . $i);
+
+            $manager->persist($tag);
+        }
+
+        $manager->flush();
     }
 
-    /**
-     * @return string
-     */
-    public function getHeaderText()
-    {
-        return 'Comment was deleted';
-    }
 }

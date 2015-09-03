@@ -86,6 +86,11 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
           width = w - margin.left - margin.right,
           height = h - margin.top - margin.bottom;
 
+      if(w <= 0) {
+        delete resizeBars[parent.id];
+        return;
+      }
+
       x.rangeRoundBands([0, width], .1);
       y.range([height, 0]);
 
