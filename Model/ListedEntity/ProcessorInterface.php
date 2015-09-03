@@ -15,6 +15,7 @@
 
 namespace Diamante\AutomationBundle\Model\ListedEntity;
 
+use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification;
 use Diamante\DeskBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Oro\Bundle\DataAuditBundle\Entity\Audit;
@@ -38,4 +39,31 @@ interface ProcessorInterface
      */
     public function getEntityChanges(Entity $entity, Audit $entityLog, WorkflowEvent $event);
 
+    /**
+     * @return string
+     */
+    public function getEntityCreateText();
+
+    /**
+     * @return string
+     */
+    public function getEntityUpdateText();
+
+    /**
+     * @return string
+     */
+    public function getEntityDeleteText();
+
+    /**
+     * @param Entity $entity
+     * @return string
+     */
+    public function formatEntityEmailSubject(Entity $entity);
+
+    /**
+     * @param EmailNotification $notification
+     * @param string $recipientEmail
+     * @return array
+     */
+    public function getEmailTemplateOptions(EmailNotification $notification, $recipientEmail);
 }

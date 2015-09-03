@@ -16,28 +16,21 @@
 namespace Diamante\AutomationBundle\Action\Strategy;
 
 use Diamante\AutomationBundle\Action\NotificationStrategy;
+use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailConfigProvider;
 use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification;
 use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailTemplate;
 use Diamante\AutomationBundle\Model\ListedEntity\ListedEntitiesProvider;
 use Diamante\AutomationBundle\Model\ListedEntity\ProcessorInterface;
 use Diamante\AutomationBundle\Rule\Action\ActionStrategy;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
-use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Model\Ticket\TicketRepository;
-use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\UserBundle\Api\Internal\UserServiceImpl;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\DependencyInjection\ContainerInterface as Container;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\HttpFoundation\Request;
 
 class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
 {
     const TYPE = 'notifyByEmail';
-
-    const EMAIL_NOTIFIER_CONFIG_PATH = 'oro_notification.email_notification_sender_email';
 
     /**
      * recipients in format email => name
@@ -49,11 +42,6 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
      * @var EmailTemplate
      */
     protected $template;
-
-    /**
-     * @var Container
-     */
-    protected $container;
 
     /**
      * @var Registry
@@ -81,23 +69,35 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
     protected $userService;
 
     /**
-     * @param Container $container
+     * @var NotificationManager
+     */
+    protected $notificationManager;
+
+    /**
+     * @var EmailConfigProvider
+     */
+    protected $emailConfigProvider;
+
+    /**
+     * @param Registry $doctrineRegistry
      * @param UserServiceImpl $userService
-     *
-     * @throws ServiceNotFoundException
-     * @throws ServiceCircularReferenceException
+     * @param EmailConfigProvider $emailConfigProvider
+     * @param ListedEntitiesProvider $listedEntitiesProvider
+     * @param NotificationManager $notificationManager
      */
     public function __construct(
-        Container $container,
-        UserServiceImpl $userService
+        Registry $doctrineRegistry,
+        UserServiceImpl $userService,
+        EmailConfigProvider $emailConfigProvider,
+        ListedEntitiesProvider $listedEntitiesProvider,
+        NotificationManager $notificationManager
     ) {
         $this->userService = $userService;
-        $this->container = $container;
-
-        $this->notification = new EmailNotification($this->userService);
-
-        $this->doctrineRegistry = $container->get('doctrine');
-        $this->listedEntitiesProvider = $container->get('diamante_automation.provider.listed_entities');
+        $this->emailConfigProvider = $emailConfigProvider;
+        $this->doctrineRegistry = $doctrineRegistry;
+        $this->listedEntitiesProvider = $listedEntitiesProvider;
+        $this->notificationManager = $notificationManager;
+        $this->notification = new EmailNotification($userService);
     }
 
     /**
@@ -133,7 +133,7 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
 
         $this->prepareRecipientsList($context);
         $this->resolveNotificationTemplates();
-        $t = 1;
+        $this->notify();
     }
 
     /**
@@ -142,7 +142,6 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
     public function prepareRecipientsList(ExecutionContext $context)
     {
         $this->notification->setContext($context);
-        $this->recipientsList = $this->notification->getRecipientEmails();
     }
 
     /**
@@ -163,45 +162,30 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
 
     public function notify()
     {
-//        if (!$this->container->isScopeActive('request')) {
-//            $this->container->enterScope('request');
-//            $this->container->set('request', new Request(), 'request');
-//        }
-//
-//        $ticket = $this->loadTicket($notification);
-//        $changeList = $this->postProcessChangesList($notification);
-//
-//
-//        foreach ($this->watchersService->getWatchers($ticket) as $watcher) {
-//            $userType = $watcher->getUserType();
-//            $user = User::fromString($userType);
-//            $isOroUser = $user->isOroUser();
-//            if ($isOroUser) {
-//                $loadedUser = $this->oroUserManager->findUserBy(['id' => $user->getId()]);
-//            } else {
-//                $loadedUser = $this->diamanteUserRepository->get($user->getId());
-//            }
-//
-//            if (!$isOroUser && $notification->isTagUpdated()) {
-//                continue;
-//            }
-//
-//            $message = $this->message($notification, $ticket, $isOroUser, $loadedUser->getEmail(), $changeList);
-//            $this->mailer->send($message);
-//            $reference = new MessageReference($message->getId(), $ticket);
-//            $this->messageReferenceRepository->store($reference);
-//        }
-    }
+        foreach ($this->notification->getRecipientEmails() as $name => $email) {
 
-    /**
-     * @param UniqueId $uniqueId
-     * @return Ticket
-     */
-    private function loadTicket(UniqueId $uniqueId)
-    {
-        /** @var TicketRepository $repository */
-        $repository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
-        $ticket = $repository->getByUniqueId($uniqueId);
-        return $ticket;
+            try {
+                $this->notificationManager->clear();
+                $this->notificationManager->setSubject(
+                    $this->listedEntityProcessor->formatEntityEmailSubject($this->notification->getContext()->getTarget())
+                );
+                $this->notificationManager->setFrom(
+                    $this->emailConfigProvider->getSenderEmail(),
+                    $this->emailConfigProvider->getSenderName()
+                );
+                $this->notificationManager->setTo($email, $name);
+                $this->notificationManager->addHtmlTemplate(
+                    $this->template->getTemplateFile(EmailTemplate::TEMPLATE_TYPE_HTML)
+                );
+                $this->notificationManager->addTxtTemplate(
+                    $this->template->getTemplateFile(EmailTemplate::TEMPLATE_TYPE_TXT)
+                );
+                $this->notificationManager->setTemplateOptions(
+                    $this->listedEntityProcessor->getEmailTemplateOptions($this->notification, $email)
+                );
+                $this->notificationManager->notify();
+            } catch (\Exception $e) {
+            }
+        }
     }
 }

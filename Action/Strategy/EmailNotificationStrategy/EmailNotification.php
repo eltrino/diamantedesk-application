@@ -3,16 +3,16 @@ namespace Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy;
 
 use Diamante\EmailProcessingBundle\Model\Message\MessageRecipient;
 use Diamante\UserBundle\Api\UserService;
-use Oro\Bundle\EmailBundle\Model\EmailTemplateInterface;
-use Oro\Bundle\NotificationBundle\Processor\EmailNotificationInterface;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
 
 /**
  * Class EmailNotification
  * @package Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy
  */
-class EmailNotification implements EmailNotificationInterface
+class EmailNotification
 {
+    const CONFIG_SENDER_NAME_PATH = 'oro_notification.email_notification_sender_name';
+    const CONFIG_SENDER_EMAIL_PATH = 'oro_notification.email_notification_sender_email';
 
     /**
      * @var UserService
@@ -36,23 +36,6 @@ class EmailNotification implements EmailNotificationInterface
     protected $context;
 
     /**
-     * Gets a template can be used to prepare a notification message
-     * @return EmailTemplateInterface
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    /**
-     * @param EmailTemplate $template
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-    }
-
-    /**
      * Gets a list of email addresses can be used to send a notification message
      * @return string[]
      */
@@ -66,7 +49,7 @@ class EmailNotification implements EmailNotificationInterface
         }
 
         foreach ($arguments->recipients as $email) {
-            $recipients[$email] = $this->getUserName($email);
+            $recipients[$this->getUserName($email)] = $email;
         }
 
         return $recipients;
@@ -92,7 +75,7 @@ class EmailNotification implements EmailNotificationInterface
      * @param $email
      * @return string
      */
-    private function getUserName($email)
+    public function getUserName($email)
     {
         $user = $this->userService->getUserByEmail($email);
         if ($user) {
@@ -101,6 +84,22 @@ class EmailNotification implements EmailNotificationInterface
         }
         $recipient = new MessageRecipient($email, null);
         return sprintf("%s %s", $recipient->getFirstName(), $recipient->getLastName());
+    }
+
+    /**
+     * @return UserService
+     */
+    public function getUserService()
+    {
+        return $this->userService;
+    }
+
+    /**
+     * @param UserService $userService
+     */
+    public function setUserService($userService)
+    {
+        $this->userService = $userService;
     }
 
 }

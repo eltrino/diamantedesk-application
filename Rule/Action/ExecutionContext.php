@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Rule\Action;
 
 use Diamante\AutomationBundle\Action\ArgumentParser;
+use Diamante\AutomationBundle\Model\Change;
 
 class ExecutionContext
 {
@@ -80,6 +81,9 @@ class ExecutionContext
         return $this->target;
     }
 
+    /**
+     * @return Change[]
+     */
     public function getTargetChangeset()
     {
         return $this->targetChangeset;

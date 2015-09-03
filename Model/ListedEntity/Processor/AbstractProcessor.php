@@ -15,12 +15,16 @@
 
 namespace Diamante\AutomationBundle\Model\ListedEntity\Processor;
 
+use Diamante\AutomationBundle\Model\ListedEntity\ProcessorInterface;
+use Diamante\DeskBundle\Model\Shared\Entity;
 use Oro\Bundle\DataAuditBundle\Entity\Audit;
 use Oro\Bundle\DataAuditBundle\Entity\AuditField;
 use Diamante\AutomationBundle\Model\Change;
 
 class AbstractProcessor
 {
+    const EMAIL_TEMPLATE_DELIMITER = '[Please reply above this line]';
+
     /**
      * @param Audit $entityLog
      * @return array
@@ -37,5 +41,24 @@ class AbstractProcessor
             );
         }
         return $changes;
+    }
+
+    /**
+     * @param Entity $entity
+     * @param ProcessorInterface $processor
+     * @param Change $field
+     * @return string
+     */
+    public function getEntityHeader(Entity $entity, ProcessorInterface $processor, Change $field)
+    {
+        if (!$entity->getId()) {
+            return $processor->getEntityDeleteText();
+        }
+
+        if ($field->getOldValue() == '') {
+            return $processor->getEntityCreateText();
+        }
+
+        return $processor->getEntityUpdateText();
     }
 }

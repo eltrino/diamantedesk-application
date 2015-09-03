@@ -5,6 +5,3 @@ entities:
     comment:
         entity: %diamante.comment.entity.class%
         processor: Diamante\AutomationBundle\Model\ListedEntity\Processor\CommentProcessor
-    user:
-        entity: %diamante.user.entity.class%
-        processor: Diamante\AutomationBundle\Model\ListedEntity\Processor\UserProcessor

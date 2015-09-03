@@ -15,10 +15,13 @@
 
 namespace Diamante\AutomationBundle\Model\ListedEntity\Processor;
 
+use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification;
+use Diamante\AutomationBundle\Model\Change;
 use Diamante\AutomationBundle\Model\ListedEntity\ProcessorInterface;
 use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailTemplate;
 use Diamante\DeskBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Comment;
 use Oro\Bundle\DataAuditBundle\Entity\Audit;
 
 class CommentProcessor extends AbstractProcessor implements ProcessorInterface
@@ -31,7 +34,7 @@ class CommentProcessor extends AbstractProcessor implements ProcessorInterface
      */
     public function getEntityChanges(Entity $entity, Audit $entityLog, WorkflowEvent $event)
     {
-        return [];
+        return $this->extractChanges($entityLog);
     }
 
     /**
@@ -44,4 +47,72 @@ class CommentProcessor extends AbstractProcessor implements ProcessorInterface
             EmailTemplate::TEMPLATE_TYPE_TXT  => 'DiamanteDeskBundle:Ticket/notification:notification.txt.twig',
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function getEntityCreateText()
+    {
+        return 'Comment was added';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityUpdateText()
+    {
+        return 'Comment was updated';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityDeleteText()
+    {
+        return 'Comment was deleted';
+    }
+
+    /**
+     * @param Entity $entity
+     * @return string
+     */
+    public function formatEntityEmailSubject(Entity $entity)
+    {
+        /** @var Comment $comment */
+        $comment = $entity;
+        return sprintf('[%s] %s', $comment->getTicket()->getKey(), $comment->getTicket()->getSubject());
+    }
+
+    /**
+     * @param EmailNotification $notification
+     * @param string $recipientEmail
+     * @return array
+     */
+    public function getEmailTemplateOptions(EmailNotification $notification, $recipientEmail)
+    {
+        $context = $notification->getContext();
+        /** @var Comment $comment */
+        $comment = $notification->getContext()->getTarget();
+
+        $contentChange = new Change('content');
+        foreach ($context->getTargetChangeset() as $change){
+            if ($change->getFieldName() === 'content') {
+                $contentChange = $change;
+                break;
+            }
+        }
+
+        $author = $notification->getUserService()->fetchUserDetails($comment->getAuthor());
+
+        return [
+            'delimiter' => self::EMAIL_TEMPLATE_DELIMITER,
+            'header' => $this->getEntityHeader($comment, $this ,$contentChange),
+            'user' => $author->getFullName(),
+            'changes' => $context->getTargetChangeset(),
+            'ticketKey' => $comment->getTicket()->getKey(),
+            'isOroUser' => true,
+            'attachments' => false
+        ];
+    }
+
 }

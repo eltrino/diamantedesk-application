@@ -38,15 +38,23 @@ class Change
     private $fieldName;
 
     /**
-     * @param $fieldName
-     * @param $oldValue
-     * @param $newValue
+     * @param string $fieldName
+     * @param null|mixed $oldValue
+     * @param null|mixed $newValue
      */
-    public function __construct($fieldName, $oldValue, $newValue)
+    public function __construct($fieldName, $oldValue = null, $newValue = null)
     {
         $this->fieldName = $fieldName;
         $this->oldValue = $oldValue;
         $this->newValue = $newValue;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s: %s', $this->fieldName, $this->getNewValue());
     }
 
     /**
@@ -71,6 +79,14 @@ class Change
     public function getNewValue()
     {
         return $this->newValue;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isChanged()
+    {
+        return $this->oldValue !== $this->newValue;
     }
 
 }
