@@ -16,7 +16,6 @@
         <parameter key="diamante_automation.event_listener.workflow.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
         <parameter key="diamante_automation.provider.listed_entities.class">Diamante\AutomationBundle\Model\ListedEntity\ListedEntitiesProvider</parameter>
         <parameter key="diamante_automation.email_notification_strategy.email_notification.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification</parameter>
-        <parameter key="diamante_automation.email_notification_strategy.config_provider.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailConfigProvider</parameter>
     </parameters>
 
     <services>
@@ -65,16 +64,6 @@
 
         <service id="diamante_automation.email_notification_strategy.email_notification" class="%diamante_automation.email_notification_strategy.email_notification.class%" >
             <argument type="service" id="diamante.user.service"/>
-        </service>
-
-        <service id="diamante_automation.email_notification_strategy.config_provider" class="%diamante_automation.email_notification_strategy.config_provider.class%" >
-            <argument type="service" id="oro_config.global"/>
-            <argument type="string" key="transport">%mailer_transport%</argument>
-            <argument type="string" key="host">%mailer_host%</argument>
-            <argument type="string" key="port">%mailer_port%</argument>
-            <argument type="string" key="encryption">%mailer_encryption%</argument>
-            <argument type="string" key="user">%mailer_user%</argument>
-            <argument type="string" key="password">%mailer_password%</argument>
         </service>
 
     </services>
