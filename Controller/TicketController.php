@@ -771,7 +771,7 @@ class TicketController extends Controller
             $form = $this->createForm('diamante_ticket_form_mass_assignee', $command);
 
             if (true === $this->widgetRedirectRequested()) {
-                return $response = array('form' => $form->createView());
+                return array('form' => $form->createView());
             }
 
             $form->handleRequest($this->getRequest());
@@ -827,7 +827,7 @@ class TicketController extends Controller
             $form = $this->createForm('diamante_ticket_form_status_mass_change', $command);
 
             if (true === $this->widgetRedirectRequested()) {
-                return $response = array('form' => $form->createView());
+                return array('form' => $form->createView());
             }
 
             $form->handleRequest($this->getRequest());
@@ -883,7 +883,7 @@ class TicketController extends Controller
             $form = $this->createForm('diamante_ticket_form_mass_move', $command);
 
             if (true === $this->widgetRedirectRequested()) {
-                return $response = array('form' => $form->createView());
+                return array('form' => $form->createView());
             }
 
             $form->handleRequest($this->getRequest());
@@ -945,7 +945,7 @@ class TicketController extends Controller
             $form = $this->createForm('diamante_ticket_form_mass_add_watcher', $command);
 
             if (true === $this->widgetRedirectRequested()) {
-                return $response = array('form' => $form->createView());
+                return array('form' => $form->createView());
             }
 
             $form->handleRequest($this->getRequest());
