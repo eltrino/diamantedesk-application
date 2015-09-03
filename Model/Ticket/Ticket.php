@@ -588,11 +588,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         return $this->source->getValue();
     }
 
-    public function delete()
-    {
-
-    }
-
     /**
      * Update properties of the ticket
      *

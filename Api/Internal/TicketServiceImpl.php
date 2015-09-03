@@ -435,6 +435,12 @@ class TicketServiceImpl implements TicketService
         $ticket->updateStatus(new Status($command->status));
         $this->ticketRepository->store($ticket);
 
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
+
         return $ticket;
     }
 
@@ -458,6 +464,13 @@ class TicketServiceImpl implements TicketService
             }
 
             $this->doctrineRegistry->getManager()->flush();
+
+            $this->dispatchWorkflowEvent(
+                $this->doctrineRegistry,
+                $this->dispatcher,
+                $ticket
+            );
+
         } catch (\Exception $e) {
             throw new TicketMovedException($e->getMessage());
         }
@@ -485,6 +498,12 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
     }
 
     /**
@@ -523,12 +542,17 @@ class TicketServiceImpl implements TicketService
     private function processDeleteTicket(Ticket $ticket)
     {
         $attachments = $ticket->getAttachments();
-        $ticket->delete();
 
         foreach ($attachments as $attachment) {
             $this->attachmentManager->deleteAttachment($attachment);
         }
         $this->ticketRepository->remove($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
     }
 
     /**
@@ -577,6 +601,12 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository->store($ticket);
 
         $this->loadTagging($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
 
         return $ticket;
     }

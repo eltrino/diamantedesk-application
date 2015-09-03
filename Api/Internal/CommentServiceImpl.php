@@ -24,7 +24,6 @@ use Diamante\DeskBundle\Model\Ticket\CommentFactory;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Ticket\Exception\CommentNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
-use Diamante\DeskBundle\Model\Ticket\Notifications\Notifier;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
@@ -41,6 +40,7 @@ use Diamante\UserBundle\Model\ApiUser\ApiUser;
 class CommentServiceImpl implements CommentService
 {
     use Shared\AttachmentTrait;
+    use Shared\WorkflowTrait;
 
     /**
      * @var Repository
@@ -78,6 +78,11 @@ class CommentServiceImpl implements CommentService
     private $registry;
 
     /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
      * @param Registry $doctrineRegistry
      * @param Repository $ticketRepository
      * @param Repository $commentRepository
@@ -85,6 +90,7 @@ class CommentServiceImpl implements CommentService
      * @param UserService $userService
      * @param AttachmentManager $attachmentManager
      * @param AuthorizationService $authorizationService
+     * @param EventDispatcher $eventDispatcher
      */
     public function __construct(
         Registry $doctrineRegistry,
@@ -93,7 +99,8 @@ class CommentServiceImpl implements CommentService
         CommentFactory $commentFactory,
         UserService $userService,
         AttachmentManager $attachmentManager,
-        AuthorizationService $authorizationService
+        AuthorizationService $authorizationService,
+        EventDispatcher $eventDispatcher
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
@@ -102,6 +109,7 @@ class CommentServiceImpl implements CommentService
         $this->attachmentManager = $attachmentManager;
         $this->authorizationService = $authorizationService;
         $this->registry = $doctrineRegistry;
+        $this->dispatcher = $eventDispatcher;
     }
 
     /**
@@ -176,6 +184,12 @@ class CommentServiceImpl implements CommentService
         $ticket->updateStatus(new Status($command->ticketStatus));
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->registry,
+            $this->dispatcher,
+            $comment
+        );
 
         return $comment;
     }
@@ -273,9 +287,13 @@ class CommentServiceImpl implements CommentService
         $ticket = $comment->getTicket();
         $this->updateTicketStatus($ticket, $command);
 
-        if (true === $flush) {
-            $this->registry->getManager()->flush();
-        }
+        $this->registry->getManager()->flush();
+
+        $this->dispatchWorkflowEvent(
+            $this->registry,
+            $this->dispatcher,
+            $comment
+        );
     }
 
     /**
@@ -302,6 +320,12 @@ class CommentServiceImpl implements CommentService
             $this->registry->getManager()->flush();
         }
 
+        $this->dispatchWorkflowEvent(
+            $this->registry,
+            $this->dispatcher,
+            $comment
+        );
+
         return $comment;
     }
 
@@ -325,6 +349,12 @@ class CommentServiceImpl implements CommentService
         }
 
         $this->registry->getManager()->flush();
+
+        $this->dispatchWorkflowEvent(
+            $this->registry,
+            $this->dispatcher,
+            $comment
+        );
     }
 
     /**
