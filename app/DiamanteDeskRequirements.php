@@ -23,18 +23,17 @@ class DiamanteDeskRequirements extends OroRequirements
             'Change the permissions of the "<strong>app/attachments/</strong>" directory so that the web server can write into it.'
         );
 
-        $this->addDiamanteDeskRequirement(
+        $this->addRecommendation(
             $this->IsNpmInstalled(),
             'npm package manager is installed',
             'Install <strong>npm</strong> package manager.'
         );
 
-        $this->addDiamanteDeskRequirement(
+        $this->addRecommendation(
             $this->IsGruntAndBowerInstalled(),
             'grunt and bower packages are installed',
             'Install <strong>grunt and bower</strong> packages.'
         );
-
     }
 
     /**
