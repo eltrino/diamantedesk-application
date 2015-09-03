@@ -13,7 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\ApiBundle\Routine\Tests;
+namespace Diamante\ApiBundle\Routine\Tests\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;

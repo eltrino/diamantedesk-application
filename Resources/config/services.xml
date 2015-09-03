@@ -22,7 +22,7 @@
         <parameter key="diamante.api.routing.rest_service_loader.class">Diamante\ApiBundle\Routing\RestServiceLoader</parameter>
         <parameter key="diamante.api.event_listener.handle_request.class">Diamante\ApiBundle\EventListener\HandleRequest</parameter>
         <parameter key="diamante.api.event_listener.handle_view.class">Diamante\ApiBundle\EventListener\HandleView</parameter>
-        <parameter key="diamante.api.event_listener.data_audit.class">Diamante\ApiBundle\Routine\Tests\DataAuditListener</parameter>
+        <parameter key="diamante.api.event_listener.data_audit.class">Diamante\ApiBundle\Routine\Tests\EventListener\DataAuditListener</parameter>
         <parameter key="diamante.api.event_listener.handle_exception.class">Diamante\ApiBundle\EventListener\HandleException</parameter>
         <parameter key="diamante.api.user.security.provider.class">Diamante\ApiBundle\Security\ApiUserProvider</parameter>
 
