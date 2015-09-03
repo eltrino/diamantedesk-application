@@ -26,6 +26,10 @@ use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\UserBundle\Model\User;
 use Diamante\DeskBundle\Api\Command\AddWatcherCommand;
+use Diamante\DeskBundle\Api\Command\MassActionCommands\MassChangeStatusCommand;
+use Diamante\DeskBundle\Api\Command\MassActionCommands\MassAssigneeTicketCommand;
+use Diamante\DeskBundle\Api\Command\MassActionCommands\MassMoveTicketCommand;
+use Diamante\DeskBundle\Api\Command\MassActionCommands\MassAddWatcherCommand;
 
 class CommandFactory
 {
@@ -88,6 +92,18 @@ class CommandFactory
     }
 
     /**
+     * @param string $ticketIds
+     * @return MassAssigneeTicketCommand
+     */
+    public function createMassAssigneeTicketCommand($ticketIds)
+    {
+        $command = new MassAssigneeTicketCommand();
+        $command->ids = $ticketIds;
+
+        return $command;
+    }
+
+    /**
      * @param Ticket $ticket
      *
      * @return MoveTicketCommand
@@ -102,6 +118,18 @@ class CommandFactory
     }
 
     /**
+     * @param string $ticketIds
+     * @return MassMoveTicketCommand
+     */
+    public function createMassMoveTicketCommand($ticketIds)
+    {
+        $command = new MassMoveTicketCommand();
+        $command->ids = $ticketIds;
+
+        return $command;
+    }
+
+    /**
      * @param Ticket $ticket
      *
      * @return AddWatcherCommand
@@ -110,6 +138,18 @@ class CommandFactory
     {
         $command = new AddWatcherCommand();
         $command->id = $ticket->getId();
+
+        return $command;
+    }
+
+    /**
+     * @param string $ticketIds
+     * @return MassAddWatcherCommand
+     */
+    public function createMassAddWatcherCommand($ticketIds)
+    {
+        $command = new MassAddWatcherCommand();
+        $command->ids = $ticketIds;
 
         return $command;
     }
@@ -173,6 +213,18 @@ class CommandFactory
         $command           = new UpdateStatusCommand();
         $command->ticketId = $ticket->getId();
         $command->status   = $ticket->getStatus()->getValue();
+
+        return $command;
+    }
+
+    /**
+     * @param string $ticketIds
+     * @return MassChangeStatusCommand
+     */
+    public function createChangeStatusMassCommand($ticketIds)
+    {
+        $command = new MassChangeStatusCommand();
+        $command->ids = $ticketIds;
 
         return $command;
     }

@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 
 /**
  * @Route("tickets")
@@ -748,5 +749,237 @@ class TicketController extends Controller
     private function widgetRedirectRequested()
     {
         return !(bool)$this->container->get('request')->get('no_redirect');
+    }
+
+    /**
+     * @Route(
+     *      "/assignMass",
+     *      name="diamante_ticket_mass_assign",
+     *      options= {"expose"= true}
+     * )
+     *
+     * @Template("DiamanteDeskBundle:Ticket:widget/massAssignee.html.twig")
+     *
+     * @return array
+     */
+    public function assignMassAction()
+    {
+        try {
+            $command = $this->get('diamante.command_factory')
+                ->createMassAssigneeTicketCommand($this->getRequest()->get('values'));
+
+            $form = $this->createForm('diamante_ticket_form_mass_assignee', $command);
+
+            if (true === $this->widgetRedirectRequested()) {
+                return $response = array('form' => $form->createView());
+            }
+
+            $form->handleRequest($this->getRequest());
+            $requestAssign = $this->getRequest()->get('assignee');
+
+            if(!isset($requestAssign)) {
+                $assignee = $command->assignee;
+            } else {
+                $assignee = $requestAssign;
+            }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->createAssigneeTicketCommand($ticket);
+
+                $command->assignee = $assignee;
+                $this->get('diamante.ticket.service')->assignTicket($command);
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
+            $response = array('saved' => true);
+
+        } catch (TicketNotFoundException $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/changeStatusMass",
+     *      name="diamante_ticket_mass_status_change",
+     *      options = {"expose" = true}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/massChangeStatus.html.twig")
+     *
+     * @return array
+     */
+    public function changeStatusMassAction()
+    {
+        try {
+            $command = $this->get('diamante.command_factory')
+                ->createChangeStatusMassCommand($this->getRequest()->get('values'));
+
+            $form = $this->createForm('diamante_ticket_form_status_mass_change', $command);
+
+            if (true === $this->widgetRedirectRequested()) {
+                return $response = array('form' => $form->createView());
+            }
+
+            $form->handleRequest($this->getRequest());
+            $requestStatus = $this->getRequest()->get('status');
+
+            if(!isset($requestStatus)) {
+                $status = $command->status;
+            } else {
+                $status = $requestStatus;
+            }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->createUpdateStatusCommandForView($ticket);
+
+                $command->status = $status;
+                $this->get('diamante.ticket.service')->updateStatus($command);
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
+            $response = array('saved' => true);
+
+        } catch (TicketNotFoundException $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/moveMass",
+     *      name="diamante_ticket_mass_move",
+     *      options = {"expose" = true}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/massMove.html.twig")
+     *
+     * @return array
+     */
+    public function moveMassAction()
+    {
+        try {
+            $command = $this->get('diamante.command_factory')
+                ->createMassMoveTicketCommand($this->getRequest()->get('values'));
+
+            $form = $this->createForm('diamante_ticket_form_mass_move', $command);
+
+            if (true === $this->widgetRedirectRequested()) {
+                return $response = array('form' => $form->createView());
+            }
+
+            $form->handleRequest($this->getRequest());
+            $requestBranch = $this->getRequest()->get('branch');
+
+            if(!isset($requestBranch)) {
+                $branch = $command->branch;
+            } else {
+                $branch = $requestBranch;
+            }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->createMoveTicketCommand($ticket);
+
+                $command->branch = $this->get('diamante.branch.service')->getBranch($branch);
+
+                if ($command->branch->getId() != $ticket->getBranch()->getId()){
+                    $this->get('diamante.ticket.service')->moveTicket($command);
+                }
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
+            $response = array('reload_page' => true, 'saved' => true);
+
+        } catch (TicketNotFoundException $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        } catch (BranchNotFoundException $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/addWatcherMass",
+     *      name="diamante_ticket_mass_add_watcher",
+     *      options = {"expose" = true}
+     * )
+     * @Template("DiamanteDeskBundle:Ticket:widget/massAddWatcher.html.twig")
+     *
+     * @return array
+     */
+    public function addWatcherMassAction()
+    {
+        try {
+            $command = $this->get('diamante.command_factory')
+                ->createMassAddWatcherCommand($this->getRequest()->get('values'));
+
+            $form = $this->createForm('diamante_ticket_form_mass_add_watcher', $command);
+
+            if (true === $this->widgetRedirectRequested()) {
+                return $response = array('form' => $form->createView());
+            }
+
+            $form->handleRequest($this->getRequest());
+            $requestWatcher = $this->getRequest()->get('branch');
+
+            if(!isset($requestWatcher)) {
+                $watcher = $command->watcher;
+            } else {
+                $watcher = $requestWatcher;
+            }
+
+            $ids = explode(",", $this->getRequest()->get('ids'));
+
+            foreach($ids as $id) {
+                $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+                $command = $this->get('diamante.command_factory')
+                    ->addWatcherCommand($ticket);
+
+                $command->watcher = $watcher;
+                $this->get('diamante.ticket.watcher_list.service')
+                    ->addWatcher($ticket, $command->watcher);
+            }
+
+            $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
+            $response = array('reload_page' => true);
+
+        } catch (TicketNotFoundException $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
+        }
+
+        return $response;
     }
 }
