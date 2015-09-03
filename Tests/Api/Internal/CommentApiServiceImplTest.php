@@ -78,6 +78,12 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
     protected $_dummyTicket;
 
     /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
@@ -105,7 +111,8 @@ class CommentApiServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->commentFactory,
             $this->userService,
             $this->attachmentManager,
-            $this->authorizationService
+            $this->authorizationService,
+            $this->dispatcher
         );
 
         $this->service->setApiPagingService($this->apiPagingService);

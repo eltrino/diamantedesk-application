@@ -87,6 +87,12 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
     private $comment;
 
     /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     protected $_dummyTicket;
@@ -119,7 +125,8 @@ class CommentServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->commentFactory,
             $this->userService,
             $this->attachmentManager,
-            $this->authorizationService
+            $this->authorizationService,
+            $this->dispatcher
         );
 
         $this->_dummyTicket = new Ticket(
