@@ -21,6 +21,10 @@
         <parameter key="diamante_update_branch_form.type.class">Diamante\DeskBundle\Form\Type\UpdateBranchType</parameter>
         <parameter key="diamante_ticket_update_form.type.class">Diamante\DeskBundle\Form\Type\UpdateTicketType</parameter>
         <parameter key="diamante_watcher_select.type.class">Diamante\DeskBundle\Form\Type\WatcherSelectType</parameter>
+        <parameter key="diamante_ticket_form_mass_assignee.type.class">Diamante\DeskBundle\Form\Type\MassAssigneeTicketType</parameter>
+        <parameter key="diamante_ticket_form_status_mass_change.type.class">Diamante\DeskBundle\Form\Type\MassChangeTicketStatusType</parameter>
+        <parameter key="diamante_ticket_form_mass_move.type.class">Diamante\DeskBundle\Form\Type\MassMoveTicketType</parameter>
+        <parameter key="diamante_ticket_form_mass_add_watcher.type.class">Diamante\DeskBundle\Form\Type\MassAddWatcherTicketType</parameter>
     </parameters>
 
     <services>
@@ -72,6 +76,18 @@
         </service>
         <service id="diamante_watcher_select" class="%diamante_watcher_select.type.class%">
             <tag name="form.type" alias="diamante_watcher_select"/>
+        </service>
+        <service id="diamante_ticket_form_mass_assignee" class="%diamante_ticket_form_mass_assignee.type.class%">
+            <tag name="form.type" alias="diamante_ticket_form_mass_assignee"/>
+        </service>
+        <service id="diamante_ticket_form_status_mass_change" class="%diamante_ticket_form_status_mass_change.type.class%">
+            <tag name="form.type" alias="diamante_ticket_form_status_mass_change"/>
+        </service>
+        <service id="diamante_ticket_form_mass_move" class="%diamante_ticket_form_mass_move.type.class%">
+            <tag name="form.type" alias="diamante_ticket_form_mass_move"/>
+        </service>
+        <service id="diamante_ticket_form_mass_add_watcher" class="%diamante_ticket_form_mass_add_watcher.type.class%">
+            <tag name="form.type" alias="diamante_ticket_form_mass_add_watcher"/>
         </service>
     </services>
 </container>
