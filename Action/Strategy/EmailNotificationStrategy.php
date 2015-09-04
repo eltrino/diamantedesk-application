@@ -142,6 +142,7 @@ class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
     public function prepareRecipientsList(ExecutionContext $context)
     {
         $this->notification->setContext($context);
+        $this->notification->setListedEntityProcessor($this->listedEntityProcessor);
     }
 
     /**

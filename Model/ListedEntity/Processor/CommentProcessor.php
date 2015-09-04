@@ -72,6 +72,13 @@ class CommentProcessor extends AbstractProcessor implements ProcessorInterface
         return 'Comment was deleted';
     }
 
+    public function getTicketEntity(Entity $entity)
+    {
+        /** @var Comment $comment */
+        $comment = $entity;
+        return $comment->getTicket();
+    }
+
     /**
      * @param Entity $entity
      * @return string

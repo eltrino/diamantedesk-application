@@ -18,6 +18,7 @@ namespace Diamante\AutomationBundle\Model\ListedEntity;
 use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification;
 use Diamante\DeskBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Oro\Bundle\DataAuditBundle\Entity\Audit;
 
 /**
@@ -66,4 +67,10 @@ interface ProcessorInterface
      * @return array
      */
     public function getEmailTemplateOptions(EmailNotification $notification, $recipientEmail);
+
+    /**
+     * @param Entity $entity
+     * @return Ticket
+     */
+    public function getTicketEntity(Entity $entity);
 }

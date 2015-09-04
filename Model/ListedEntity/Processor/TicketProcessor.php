@@ -84,6 +84,10 @@ class TicketProcessor extends AbstractProcessor implements ProcessorInterface
         return 'Ticket was deleted';
     }
 
+    public function getTicketEntity(Entity $entity)
+    {
+        return $entity;
+    }
     /**
      * @param Entity $entity
      * @return string
