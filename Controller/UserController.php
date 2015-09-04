@@ -8,6 +8,9 @@ use Diamante\DeskBundle\Controller\Shared\ResponseHandlerTrait;
 use Diamante\DeskBundle\Controller\Shared\SessionFlashMessengerTrait;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Model\User;
+use JMS\AopBundle\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -79,6 +82,7 @@ class UserController extends Controller
     public function updateAction($id)
     {
         $command = new UpdateDiamanteUserCommand();
+        /** @var DiamanteUser $user */
         $user = $this->get('doctrine')
             ->getManager()
             ->getRepository('DiamanteUserBundle:DiamanteUser')
@@ -113,6 +117,15 @@ class UserController extends Controller
     public function deleteAction($id)
     {
         try {
+            $tickets = $this->get('doctrine')
+                ->getManager()
+                ->getRepository('DiamanteDeskBundle:Ticket')
+                ->count(['reporter', 'eq', sprintf("%s_%d", User::TYPE_DIAMANTE, $id)]);
+
+            if ($tickets > 0) {
+                throw new RuntimeException('User has existing tickets. User can not be deleted');
+            }
+
             $this->get('diamante.user.service')
                 ->removeDiamanteUser($id);
             return new Response(null, 204, array(
@@ -151,13 +164,5 @@ class UserController extends Controller
         }
 
         return $response;
-    }
-
-    /**
-     * @Route("/debug", name="diamante_user_debug")
-     */
-    public function debug()
-    {
-        $this->get('doctrine')->getManager()->getRepository('DiamanteUserBundle:DiamanteUser')->getUserGridView();
     }
 }

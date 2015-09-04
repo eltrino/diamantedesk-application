@@ -15,6 +15,7 @@
 namespace Diamante\UserBundle\Model\ApiUser;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ApiUser implements Entity, UserInterface
@@ -61,14 +62,20 @@ class ApiUser implements Entity, UserInterface
      */
     protected $hashExpirationTime;
 
-    public function __construct($email, $password, $salt = null)
+    /**
+     * @var DiamanteUser
+     */
+    protected $diamanteUser;
+
+    public function __construct($email, $password, $salt = null, DiamanteUser $diamanteUser)
     {
-        $this->email  = $email;
-        $this->password  = $password;
-        $this->salt      = $salt;
-        $this->isActive  = false;
-        $this->hash = md5($this->email . time());
-        $this->hashExpirationTime = 0;
+        $this->email                = $email;
+        $this->password             = $password;
+        $this->salt                 = $salt;
+        $this->isActive             = false;
+        $this->hash                 = md5($this->email . time());
+        $this->hashExpirationTime   = 0;
+        $this->diamanteUser         = $diamanteUser;
     }
 
     /**
@@ -152,6 +159,22 @@ class ApiUser implements Entity, UserInterface
     public function getHash()
     {
         return $this->hash;
+    }
+
+    /**
+     * @return DiamanteUser
+     */
+    public function getDiamanteUser()
+    {
+        return $this->diamanteUser;
+    }
+
+    /**
+     * @param DiamanteUser $diamanteUser
+     */
+    public function setDiamanteUser($diamanteUser)
+    {
+        $this->diamanteUser = $diamanteUser;
     }
 
     /**

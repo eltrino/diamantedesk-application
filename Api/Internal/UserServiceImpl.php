@@ -26,6 +26,7 @@ use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Diamante\UserBundle\Model\UserDetails;
+use Diamante\UserBundle\Entity\ApiUser as ApiUserEntity;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Oro\Bundle\AttachmentBundle\Manager\AttachmentManager;
@@ -168,6 +169,9 @@ class UserServiceImpl implements UserService, GravatarProvider
             $command->lastName
         );
 
+        $apiUser = new ApiUserEntity($command->email, $this->generateRandomPassword(), null, $user);
+        $user->setApiUser($apiUser);
+
         $this->diamanteUserRepository->store($user);
 
         return $user->getId();
@@ -189,6 +193,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $user->setEmail($command->email);
         $user->setFirstName($command->firstName);
         $user->setLastName($command->lastName);
+        $user->setApiUser($user->getApiUser());
 
         $this->diamanteUserRepository->store($user);
 
@@ -271,5 +276,16 @@ class UserServiceImpl implements UserService, GravatarProvider
     {
         $user = $this->diamanteUserRepository->get($id);
         $this->diamanteUserRepository->remove($user);
+    }
+
+    /**
+     * @param int $length
+     * @return string
+     */
+    private function generateRandomPassword($length = 8)
+    {
+        $charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
+
+        return substr( str_shuffle( $charmap ), 0, $length );
     }
 }

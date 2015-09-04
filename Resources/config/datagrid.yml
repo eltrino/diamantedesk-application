@@ -8,7 +8,10 @@ datagrid:
           - u.email
           - u.firstName
           - u.lastName
-          - (SELECT a.isActive FROM DiamanteUserBundle:ApiUser a WHERE a.email = u.email) as active
+          - COALESCE(a.isActive, 2) as active
+        join:
+          left:
+            - { join: u.apiUser, alias: a }
         from:
           - { table: %diamante.user.entity.class%, alias: u }
     properties:
@@ -69,3 +72,12 @@ datagrid:
         icon: trash
         link: delete_link
         acl_resource: DELETE;Entity:DiamanteUserBundle:DiamanteUser
+  diamante-user-ticket-grid:
+    extends: diamante-ticket-grid
+    source:
+      query:
+        where:
+          and:
+            - i.reporter = :reporter
+      bind_parameters:
+        - reporter

@@ -84,14 +84,21 @@ class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
     protected $lastName;
 
     /**
+     * @var ApiUser
+     * @ORM\OneToOne(targetEntity="Diamante\UserBundle\Entity\ApiUser", mappedBy="id", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="api_user", referencedColumnName="id")
+     */
+    protected $apiUser;
+
+    /**
      * @var
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created_at")
      */
     protected $createdAt;
 
     /**
      * @var
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="updated_at")
      */
     protected $updatedAt;
 

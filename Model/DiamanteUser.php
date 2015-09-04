@@ -15,6 +15,7 @@
 namespace Diamante\UserBundle\Model;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\UserBundle\Entity\ApiUser;
 
 class DiamanteUser implements Entity
 {
@@ -37,6 +38,11 @@ class DiamanteUser implements Entity
      * @var string
      */
     protected $lastName;
+
+    /**
+     * @var ApiUser
+     */
+    protected $apiUser;
 
     /**
      * @var \DateTime
@@ -139,6 +145,22 @@ class DiamanteUser implements Entity
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * @return ApiUser
+     */
+    public function getApiUser()
+    {
+        return $this->apiUser;
+    }
+
+    /**
+     * @param ApiUser $apiUser
+     */
+    public function setApiUser($apiUser)
+    {
+        $this->apiUser = $apiUser;
     }
 }
 

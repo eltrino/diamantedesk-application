@@ -1,5 +1,6 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as macros %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 
 {% oro_title_set({params : {"%user.fullName%": entity.fullName|default('diamante.desk.common.not_available'|trans) }}) %}
 
@@ -45,10 +46,13 @@
 {% block content_data %}
 
     {% set id = 'navbarUserView' %}
-
+    {% set userid = 'diamante_' ~ entity.id %}
     {% set dataSubBlocks = [UI.attibuteRow('diamante.user.labels.email'|trans, entity.email)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.first_name'|trans, entity.firstName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.last_name'|trans, entity.lastName)]) %}
+    {% if entity.apiUser is not empty %}
+        {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.active'|trans, entity.apiUser.isActive ? 'diamante.user.ui.yes'|trans : 'diamante.user.ui.no'|trans )]) %}
+    {% endif %}
 
     {% set dataBlocks =
         [{
@@ -60,6 +64,15 @@
             }]
         }]
     %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'diamante.user.activity'|trans,
+        'subblocks': [{
+            'title' : null,
+            'data' : [dataGrid.renderGrid('diamante-user-ticket-grid', { "reporter": userid })],
+            'useSpan': false
+        }]
+    }]) %}
     {% set data = {'dataBlocks': dataBlocks} %}
     {{ parent() }}
 {% endblock %}

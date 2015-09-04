@@ -36,7 +36,7 @@ class ApiUser extends \Diamante\UserBundle\Model\ApiUser\ApiUser
      *
      * @var string
      *
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
      */
     protected $email;
 
@@ -77,6 +77,13 @@ class ApiUser extends \Diamante\UserBundle\Model\ApiUser\ApiUser
      * @ORM\Column(name="hash_expiration_time", type="integer")
      */
     protected $hashExpirationTime;
+
+    /**
+     * @var DiamanteUser
+     * @ORM\OneToOne(targetEntity="Diamante\UserBundle\Entity\DiamanteUser", inversedBy="apiUser", orphanRemoval=true)
+     * @ORM\JoinColumn(name="diamante_user", referencedColumnName="id")
+     */
+    protected $diamanteUser;
 
 
     public static function getClassName()

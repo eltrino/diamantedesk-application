@@ -31,3 +31,8 @@ diamante:
         email:          'Please enter an email address'
 
       details:          User Details
+      activity:         User Activity
+
+      ui:
+        yes:            Yes
+        no:             No
