@@ -89,4 +89,12 @@ class Change
         return $this->oldValue !== $this->newValue;
     }
 
+    /**
+     * @param null|mixed $value
+     */
+    public function setNewValue($value)
+    {
+        $this->newValue = $value;
+    }
+
 }

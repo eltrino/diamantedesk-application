@@ -84,6 +84,14 @@ class TicketProcessor extends AbstractProcessor implements ProcessorInterface
         return 'Ticket was deleted';
     }
 
+    /**
+     * @return string
+     */
+    public function getTicketWasMovedText()
+    {
+        return 'Ticket was moved';
+    }
+
     public function getTicketEntity(Entity $entity)
     {
         return $entity;
@@ -112,14 +120,7 @@ class TicketProcessor extends AbstractProcessor implements ProcessorInterface
         $ticket = $context->getTarget();
 
         $statusChange = new Change('status');
-
-        /** @var Change $change */
-        foreach ($context->getTargetChangeset() as $change){
-            if ($change->getFieldName() === 'status') {
-                $statusChange = $change;
-                break;
-            }
-        }
+        $branchChange = false;
 
         $reporter = User::fromString($ticket->getReporter());
         $reporterDetails = $notification->getUserService()->fetchUserDetails($reporter);
@@ -127,9 +128,30 @@ class TicketProcessor extends AbstractProcessor implements ProcessorInterface
         $recipient = $notification->getUserService()->getUserByEmail($recipientEmail);
         $isOroUser = $recipient instanceof User ? $recipient->isOroUser() : false;
 
+        /** @var Change $change */
+        foreach ($context->getTargetChangeset() as $change){
+            if ($change->getFieldName() === 'status') {
+                $statusChange = $change;
+                continue;
+            }
+            if ($change->getFieldName() === 'branch') {
+                $branchChange = $change;
+                continue;
+            }
+            if ($change->getFieldName() === 'reporter') {
+                $change->setNewValue($reporterDetails->getFullName());
+                continue;
+            }
+        }
+
+        $header = $this->getEntityHeader($ticket, $this, $statusChange);
+        if ($branchChange && count($context->getTargetChangeset()) == 1) {
+            $header = $this->getTicketWasMovedText();
+        }
+
         return [
             'delimiter' => self::EMAIL_TEMPLATE_DELIMITER,
-            'header' => $this->getEntityHeader($ticket, $this, $statusChange),
+            'header' => $header,
             'user' => $reporterDetails->getFullName(),
             'changes' => $context->getTargetChangeset(),
             'ticketKey' => $ticket->getKey(),
