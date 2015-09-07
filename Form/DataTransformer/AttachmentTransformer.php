@@ -40,6 +40,11 @@ class AttachmentTransformer implements DataTransformerInterface
     public function reverseTransform($value)
     {
         $inputs = array();
+
+        if (!$value) {
+            return $inputs;
+        }
+
         foreach ($value as $each) {
             if ($each) {
                 if (false === ($each instanceof UploadedFile)) {

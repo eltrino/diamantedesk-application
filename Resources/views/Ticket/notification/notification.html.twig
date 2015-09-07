@@ -29,7 +29,7 @@
                                 <tr>
                                     <td style="color: #A09F9F; font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; white-space: nowrap; vertical-align: top;" valign="top">{{ value.getFieldName }}</td>
                                     <td style="font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; vertical-align: top;" valign="top">
-                                        {% if value.isChanged %}
+                                        {% if value.getOldValue != '' %}
                                             <del>{{ value.getOldValue|striptags }}</del><br />{{ value.getNewValue|striptags }}
                                         {% else %}
                                             {{ value.getNewValue|striptags }}
