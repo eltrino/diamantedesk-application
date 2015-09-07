@@ -5,7 +5,7 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Client;
 
-class AbstractController extends WebTestCase
+abstract class AbstractController extends WebTestCase
 {
 
     /**
