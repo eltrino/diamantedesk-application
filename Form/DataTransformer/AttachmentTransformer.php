@@ -39,6 +39,10 @@ class AttachmentTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
+        if(!$value) {
+            return null;
+        }
+
         $inputs = array();
 
         if (!$value) {

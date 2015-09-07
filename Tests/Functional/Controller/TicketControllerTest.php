@@ -140,7 +140,7 @@ class TicketControllerTest extends AbstractController
         $form['diamante_ticket_form[branch]']      = $this->chooseBranchFromGrid()['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
-        $form['diamante_ticket_form[status]']      = 'open';
+        $form['diamante_ticket_form[status]']      = Status::OPEN;
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_MEDIUM;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
         $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
@@ -375,15 +375,35 @@ class TicketControllerTest extends AbstractController
 
     private function chooseTicketFromGrid()
     {
+        $result = $this->getTicketGridData();
+
+        return current($result['data']);
+    }
+
+    private function getTicketsId($quantity = 2)
+    {
+        $identifiers = [];
+        $result = $this->getTicketGridData();
+        foreach ($result['data'] as $ticket) {
+            $identifiers[] = $ticket['id'];
+
+            if (count($identifiers) == $quantity) {
+                break;
+            }
+        }
+
+        return trim(implode(', ', $identifiers), ', ');;
+    }
+
+    private function getTicketGridData()
+    {
         $response = $this->requestGrid(
             'diamante-ticket-grid'
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $result = $this->jsonToArray($response->getContent());
-
-        return current($result['data']);
+        return $this->jsonToArray($response->getContent());
     }
 
     /**
@@ -441,10 +461,15 @@ class TicketControllerTest extends AbstractController
      */
     public function testMassAssignSubmit()
     {
-
-        $ticketMassAssignSubmitUrl = $this->getUrl('diamante_ticket_mass_assign',
-                                                  ['no_redirect' => 'false', 'ids' =>'1, 2',
-                                                   'assignee' => '1']);
+        $ticketIdentifiers = $this->getTicketsId();
+        $ticketMassAssignSubmitUrl = $this->getUrl(
+            'diamante_ticket_mass_assign',
+            [
+                'no_redirect' => 'false',
+                'ids'         => $ticketIdentifiers,
+                'assignee'    => '1'
+            ]
+        );
 
         $this->client->request('GET', $ticketMassAssignSubmitUrl);
         $response = $this->client->getResponse();
@@ -456,8 +481,11 @@ class TicketControllerTest extends AbstractController
      */
     public function testMassChangeStatusSubmit()
     {
-        $ticketMassChangeSubmitUrl = $this->getUrl('diamante_ticket_mass_status_change',
-                                                  ['no_redirect' => 'false', 'ids' =>'1, 2', 'status' => 'new']);
+        $ticketIdentifiers = $this->getTicketsId();
+        $ticketMassChangeSubmitUrl = $this->getUrl(
+            'diamante_ticket_mass_status_change',
+            ['no_redirect' => 'false', 'ids' => $ticketIdentifiers, 'status' => Status::NEW_ONE]
+        );
 
         $this->client->request('GET', $ticketMassChangeSubmitUrl);
         $response = $this->client->getResponse();
@@ -469,8 +497,15 @@ class TicketControllerTest extends AbstractController
      */
     public function testMassMoveSubmit()
     {
-        $ticketMassMoveSubmitUrl = $this->getUrl('diamante_ticket_mass_move', ['no_redirect' => 'false',
-                                                 'ids' =>'1, 2', 'branch' => '1']);
+        $ticketIdentifiers = $this->getTicketsId();
+        $ticketMassMoveSubmitUrl = $this->getUrl(
+            'diamante_ticket_mass_move',
+            [
+                'no_redirect' => 'false',
+                'ids'         => $ticketIdentifiers,
+                'branch'      => '1'
+            ]
+        );
 
         $this->client->request('GET', $ticketMassMoveSubmitUrl);
         $response = $this->client->getResponse();
@@ -482,14 +517,18 @@ class TicketControllerTest extends AbstractController
      */
     public function testMassWatchSubmit()
     {
-        $ticketMassWatchSubmitUrl = $this->getUrl('diamante_ticket_mass_add_watcher',
-                                                  ['no_redirect' => 'false', 'ids' =>'1, 2',
-                                                   'watcher' => '1']);
+        $ticketIdentifiers = $this->getTicketsId();
+        $ticketMassWatchSubmitUrl = $this->getUrl(
+            'diamante_ticket_mass_add_watcher',
+            [
+                'no_redirect' => 'false',
+                'ids'         => $ticketIdentifiers,
+                'watcher'     => '1'
+            ]
+        );
 
         $this->client->request('GET', $ticketMassWatchSubmitUrl);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
-
-
 }
