@@ -98,3 +98,7 @@ checks:
 filter:
   excluded_paths:
     - Tests/*
+tools:
+    external_code_coverage:
+        timeout: 600
+        runs: 3
