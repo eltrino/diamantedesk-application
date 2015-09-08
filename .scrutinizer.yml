@@ -100,5 +100,5 @@ filter:
     - Tests/*
 tools:
     external_code_coverage:
-        timeout: 600
+        timeout: 900
         runs: 3
