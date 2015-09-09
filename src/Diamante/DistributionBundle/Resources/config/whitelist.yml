@@ -31,10 +31,6 @@ whitelist:
     - 'oro_api_delete_user'
 
     #Dashboard
-    - 'oro_dashboard_index'
-    - 'oro_dashboard_view'
-    - 'oro_dashboard_configure'
-    - 'oro_dashboard_update'
     - 'oro_api_post_dashboard_widget_add_widget'
     - 'oro_api_put_dashboard_widget_positions'
     - 'oro_api_delete_dashboard_widget'
@@ -80,3 +76,4 @@ whitelist:
     - '^oro_user_[a-z_]+'
     - '^sylius_flow_[a-z_]+'
     - '^_imagine[a-z_]+'
+    - '^oro_dashboard_[a-z_]+'
