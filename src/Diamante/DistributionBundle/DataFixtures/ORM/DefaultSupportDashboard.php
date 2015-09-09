@@ -16,7 +16,10 @@ class DefaultSupportDashboard extends AbstractDashboardFixture
         $dashboard = $this->findAdminDashboardModel($manager, 'diamante_support');
         if ($dashboard) {
             $dashboard->setIsDefault(true);
-            $this->findAdminDashboardModel($manager, 'main')->setIsDefault(false);
+            $mainDashboard = $this->findAdminDashboardModel($manager, 'main');
+            if ($mainDashboard) {
+                $manager->remove($mainDashboard->getEntity());
+            }
         }
 
         $manager->flush();
