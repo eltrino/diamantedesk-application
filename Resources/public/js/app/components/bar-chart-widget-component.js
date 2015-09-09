@@ -47,7 +47,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
-        .ticks(1);
+        .ticks(2);
 
     var tip = d3tip()
         .attr('class', 'diam-d3-tip tooltip top')
@@ -56,7 +56,11 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         });
 
     x.domain( data.map(function(d) { return d.x; }));
-    y.domain([0, d3.max(data, function(d) { return d.y; })]);
+    y.domain([0, parseInt(d3.max(data, function(d) { return d.y; })) + 1]);
+
+    if(x.rangeBand() > width / 4) {
+      x.rangeRoundBands([0, width * .5], .1);
+    }
 
     root.call(tip);
 
@@ -93,6 +97,10 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
 
       x.rangeRoundBands([0, width], .1);
       y.range([height, 0]);
+
+      if(x.rangeBand() > width / 4) {
+        x.rangeRoundBands([0, width * .5], .1);
+      }
 
       xAxis.scale(x);
       yAxis.scale(y);

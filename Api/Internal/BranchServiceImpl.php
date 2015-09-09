@@ -139,9 +139,8 @@ class BranchServiceImpl implements BranchService
             );
 
         $this->registry->getManager()->persist($branch);
-        $this->tagManager->saveTagging($branch);
-
         $this->registry->getManager()->flush();
+        $this->tagManager->saveTagging($branch);
 
         return $branch;
     }

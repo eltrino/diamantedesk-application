@@ -303,7 +303,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * Time filtering values should be converted to UTC
      *
      * @ApiDoc(
-     *  description="Returns all tickets.",
+     *  description="Returns all comments.",
      *  uri="/comments.{_format}",
      *  method="GET",
      *  resource=true,

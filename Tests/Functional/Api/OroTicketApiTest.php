@@ -37,6 +37,7 @@ class OroTicketApiTest extends ApiTestCase
 
     public function testCreateTicket()
     {
+        $uniqueTag = sprintf('test tag %d', microtime(true) * 1000);
         $this->command->requestParameters = array(
             'branch'      => 1,
             'subject'     => 'Test Ticket',
@@ -47,8 +48,8 @@ class OroTicketApiTest extends ApiTestCase
             'reporter'    => User::TYPE_ORO . User::DELIMITER . 1,
             'tags' => array(
                 'autocomplete' => array(''),
-                'all'          => array(new Tag('test tag')),
-                'owner'        => array(new Tag('test tag'))
+                'all'          => array(new Tag($uniqueTag)),
+                'owner'        => array(new Tag($uniqueTag))
             ),
         );
         $response = $this->post('diamante_ticket_api_service_oro_create_ticket', $this->command);
