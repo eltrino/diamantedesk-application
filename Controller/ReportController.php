@@ -45,6 +45,7 @@ class ReportController extends Controller
             $data = $this->get('diamante.report.service')->build($id);
 
             return [
+                'page_title' => $this->getReportLabel($id),
                 'chart_type' => $this->getChartType($id),
                 'data'       => $data,
             ];
@@ -95,5 +96,15 @@ class ReportController extends Controller
     {
         $config = $this->get('diamante.report.service')->getConfig($id);
         return $config['chart']['type'];
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
+    private function getReportLabel($id)
+    {
+        $config = $this->get('diamante.report.service')->getConfig($id);
+        return $config['label'];
     }
 }

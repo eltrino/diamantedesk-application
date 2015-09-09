@@ -1,5 +1,7 @@
 {% extends 'DiamanteDeskBundle::layout.html.twig' %}
 
+{% oro_title_set({params : {"%report.label%": page_title|default('diamante.desk.common.not_available'|trans) }}) %}
+
 {% block content %}
 
     {% set options  = {
