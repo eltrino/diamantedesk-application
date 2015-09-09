@@ -125,3 +125,5 @@ oro_titles:
     diamante_ticket_create: 'Create Ticket'
     diamante_ticket_update: '%%ticket.subject%% - Edit'
     diamante_ticket_create_attach: 'Add Attachment'
+
+    diamante_report_view: '%%report.label%%'
