@@ -58,7 +58,8 @@ class ReportController extends Controller
     /**
      * @Route(
      *      "/widget/{id}",
-     *      name="diamante_report_widget"
+     *      name="diamante_report_widget",
+     *      options={"expose"=true}
      * )
      *
      * @param string $id
