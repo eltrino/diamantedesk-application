@@ -51,7 +51,7 @@ class ReportController extends Controller
             ];
         } catch (\Exception $e) {
             $this->handleException($e);
-            return new Response($e->getMessage(), 404);
+            throw $this->createNotFoundException($e->getMessage(), $e);
         }
     }
 
@@ -85,7 +85,7 @@ class ReportController extends Controller
 
         } catch (\Exception $e) {
             $this->handleException($e);
-            return new Response($e->getMessage(), 404);
+            throw $this->createNotFoundException($e->getMessage(), $e);
         }
     }
 
