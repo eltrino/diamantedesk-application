@@ -76,8 +76,9 @@ class RegistrationServiceImpl implements RegistrationService
             throw new \RuntimeException('An account with this email address already exists');
         }
 
+        $diamanteUser->setApiUser($apiUser);
+
         $this->diamanteUserRepository->store($diamanteUser);
-        $this->apiUserRepository->store($apiUser);
 
         $this->registrationMailer->sendConfirmationEmail($diamanteUser->getEmail(), $apiUser->getHash());
     }
