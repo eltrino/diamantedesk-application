@@ -123,6 +123,8 @@
         <service id="diamante.notification_manager" class="%diamante.notification_manager.class%">
             <argument id="twig" type="service"/>
             <argument id="swiftmailer.mailer" type="service"/>
+            <argument id="translator" type="service"/>
+            <argument id="oro_config.global" type="service"/>
         </service>
 
         <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>

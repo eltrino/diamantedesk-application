@@ -18,11 +18,13 @@ namespace Diamante\DeskBundle\Controller\Shared;
 
 use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 trait ResponseHandlerTrait
 {
+    protected $massActionResultFormat = "diamante.%s.actions.mass.%s.messages.%s";
     /**
      * @param $saveAndStay
      * @param $saveAndClose
@@ -52,5 +54,39 @@ trait ResponseHandlerTrait
         );
 
         return $response;
+    }
+
+    /**
+     * @param null $redirectUrl
+     * @param array $redirectParams
+     * @param bool|true $reload
+     * @return array
+     */
+    protected function getWidgetResponse($redirectUrl = null, $redirectParams = [], $reload = true)
+    {
+        $response = ['reload_page' => $reload];
+
+        if (!is_null($redirectUrl) && !empty($redirectParams)) {
+            $response['redirect'] = $this->generateUrl($redirectUrl, $redirectParams);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param $action
+     * @param $section
+     * @param bool|true $result
+     * @return JsonResponse
+     */
+    protected function getMassActionResponse($action, $section, $result = true)
+    {
+        $data = [
+            'successful' => $result ? 1 : 0,
+            'message'    => $this->get('translator')
+                ->trans(sprintf($this->massActionResultFormat, $section, $action, $result ? 'success' : 'fail' )),
+        ];
+
+        return new JsonResponse($data, $result ? 200 : 500);
     }
 }
