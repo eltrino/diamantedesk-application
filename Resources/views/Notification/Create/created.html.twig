@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <p>We have created account for you. You will be able to check status of your support tickets on <a href="{{ get_portal_link() }}">support portal</a>.</p>
+
+        <p>Before using account please create new password for it.</p>
+
+        <p>Click <a href="{{ get_password_reset_link(activation_hash) }}">this link</a> to proceed.</p>
+    </body>
+</html>

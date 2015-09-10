@@ -15,6 +15,7 @@
 namespace Diamante\UserBundle\Infrastructure\Persistence\Doctrine;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Doctrine\ORM\Query;
@@ -50,6 +51,7 @@ class DoctrineDiamanteUserRepository extends DoctrineGenericRepository implement
                     $qb->orWhere($qb->expr()->like("u.{$field}", $qb->expr()->literal("%{$query}%")));
                 }
             }
+            $qb->andWhere($qb->expr()->eq('u.isDeleted', 0));
 
             $query = $qb->getQuery();
 
@@ -60,10 +62,9 @@ class DoctrineDiamanteUserRepository extends DoctrineGenericRepository implement
                 $result = null;
             }
         } else {
-            $result = $this->findAll();
+            $result = $this->findBy(['isDeleted' => false]);
         }
 
         return $result;
     }
-
 }

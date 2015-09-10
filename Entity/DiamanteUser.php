@@ -86,9 +86,15 @@ class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
     /**
      * @var ApiUser
      * @ORM\OneToOne(targetEntity="Diamante\UserBundle\Entity\ApiUser", mappedBy="id", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="api_user", referencedColumnName="id")
+     * @ORM\JoinColumn(name="api_user", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $apiUser;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="is_deleted", type="boolean", nullable=false, options={"default" = false})
+     */
+    protected $isDeleted = false;
 
     /**
      * @var

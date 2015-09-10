@@ -1,13 +1,14 @@
 diamante:
     user:
       labels:
-        entity:         Diamante User
-        entity.plural:  Diamante Users
+        entity:         Customer
+        entity.plural:  Customers
         email:          Email
         first_name:     First Name
         last_name:      Last Name
         active:         Is Active
         id:             Id
+        is_deleted:     Is Deleted
 
       actions:
         create:         Create User
@@ -15,6 +16,18 @@ diamante:
         view:           View User
         update:         Update User
         delete:         Delete User
+        reset_pwd:      Reset Password
+        mass:
+          delete:
+            label:      Delete Selected Users
+            messages:
+              success:  Successfully deleted selected customers
+              fail:     Failed to delete selected customers
+          reset_pwd:
+            label:      Force Reset passwords for selected users
+            messages:
+              success:  Successfully reset passwords for selected users
+              fail:     Error occured while resetting passwords.
 
       messages:
         delete:
@@ -24,6 +37,9 @@ diamante:
           success:      Diamante User successfully created
         update:
           success:      Diamante User successfully updated
+        reset_pwd:
+          query:        Are you sure you want to reset password for this user?
+          success:      User password successfully reset.
 
       customer_management: Customers
 
@@ -36,3 +52,10 @@ diamante:
       ui:
         yes:            Yes
         no:             No
+
+      notification:
+        created:        New DiamanteDesk account created
+        force_reset:    Password reset notification
+
+      exception:
+        user_exists:    User with such email already exists

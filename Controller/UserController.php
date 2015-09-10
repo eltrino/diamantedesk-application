@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -117,15 +118,6 @@ class UserController extends Controller
     public function deleteAction($id)
     {
         try {
-            $tickets = $this->get('doctrine')
-                ->getManager()
-                ->getRepository('DiamanteDeskBundle:Ticket')
-                ->count(['reporter', 'eq', sprintf("%s_%d", User::TYPE_DIAMANTE, $id)]);
-
-            if ($tickets > 0) {
-                throw new RuntimeException('User has existing tickets. User can not be deleted');
-            }
-
             $this->get('diamante.user.service')
                 ->removeDiamanteUser($id);
             return new Response(null, 204, array(
@@ -161,6 +153,81 @@ class UserController extends Controller
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = ['form' => $form->createView()];
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route("/delete/massaction", name="diamante_user_delete_massaction", options={"expose"=true})
+     */
+    public function massRemoveAction()
+    {
+        $users = $this->get('request')->get('values');
+
+        if (!is_array($users)) {
+            $users = [$users];
+        }
+
+        try {
+            foreach ($users as $user) {
+                $this->get('diamante.user.service')->removeDiamanteUser($user);
+            }
+
+            $response = $this->getMassActionResponse('delete', 'user', true);
+
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = $this->getMassActionResponse('delete', 'user', false);
+        }
+
+        return $response;
+    }
+
+
+    /**
+     * @param $id
+     *
+     * @Route("/reset/{id}", name="diamante_user_force_reset", options={"expose"=true}, requirements={"id"="\d+"});
+     *
+     * @return Response
+     */
+    public function resetPasswordAction($id)
+    {
+        $user = new User($id, User::TYPE_DIAMANTE);
+
+        try {
+            $this->get('diamante.user.service')->resetPassword($user);
+            return new Response(null, 204, array(
+                'Content-Type' => $this->getRequest()->getMimeType('json')
+            ));
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            return new Response($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @Route("/reset/massaction", name="diamante_user_reset_pwd_massaction", options={"expose" = true})
+     * @Template("DiamanteUserBundle:User/Widget:massResetPassword.html.twig")
+     */
+    public function massResetPasswordAction()
+    {
+        $users = $this->get('request')->get('values');
+
+        if (!is_array($users)) {
+            $users = [$users];
+        }
+
+        try {
+            foreach ($users as $user) {
+                $this->get('diamante.user.service')->resetPassword(new User($user, User::TYPE_DIAMANTE));
+            }
+
+            $response = $this->getMassActionResponse('reset_pwd', 'user', true);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = $this->getMassActionResponse('reset_pwd', 'user', false);
         }
 
         return $response;

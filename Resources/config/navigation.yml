@@ -15,3 +15,4 @@ oro_titles:
   diamante_user_create: 'Create user'
   diamante_user_view:   '%%user.fullName%% - DiamanteDesk User'
   diamante_user_update: '%%user.name%% - Update'
+  diamante_user_list:   'Customers Management'

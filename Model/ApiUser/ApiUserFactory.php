@@ -15,13 +15,14 @@
 namespace Diamante\UserBundle\Model\ApiUser;
 
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
+use Diamante\UserBundle\Entity\ApiUser as ApiUserEntity;
 
 class ApiUserFactory extends AbstractEntityFactory
 {
     /**
      * @param string $email
      * @param string $password
-     * @return ApiUser
+     * @return ApiUserEntity
      */
     public function create($email, $password)
     {

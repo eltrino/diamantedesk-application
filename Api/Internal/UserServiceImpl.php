@@ -15,6 +15,7 @@
 namespace Diamante\UserBundle\Api\Internal;
 
 
+use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
@@ -24,6 +25,8 @@ use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
+use Diamante\UserBundle\Model\ApiUser\ApiUserRepository;
+use Diamante\UserBundle\Model\Exception\DiamanteUserExistsException;
 use Diamante\UserBundle\Model\User;
 use Diamante\UserBundle\Model\UserDetails;
 use Diamante\UserBundle\Entity\ApiUser as ApiUserEntity;
@@ -52,16 +55,25 @@ class UserServiceImpl implements UserService, GravatarProvider
      */
     protected $attachmentManager;
 
+    /**
+     * @var NotificationManager
+     */
+    protected $notifier;
+
     public function __construct(
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
         DiamanteUserFactory $factory,
-        AttachmentManager $attachmentManager
+        AttachmentManager $attachmentManager,
+        NotificationManager $notifier,
+        ApiUserRepository $diamanteApiUserRepository
     ) {
-        $this->oroUserManager         = $userManager;
-        $this->diamanteUserRepository = $diamanteUserRepository;
-        $this->factory                = $factory;
-        $this->attachmentManager      = $attachmentManager;
+        $this->oroUserManager               = $userManager;
+        $this->diamanteUserRepository       = $diamanteUserRepository;
+        $this->diamanteApiUserRepository    = $diamanteApiUserRepository;
+        $this->factory                      = $factory;
+        $this->attachmentManager            = $attachmentManager;
+        $this->notifier                     = $notifier;
     }
 
     /**
@@ -163,15 +175,28 @@ class UserServiceImpl implements UserService, GravatarProvider
      */
     public function createDiamanteUser(CreateDiamanteUserCommand $command)
     {
+        $user = $this->diamanteUserRepository->findUserByEmail($command->email);
+
+        if (!is_null($user)) {
+            if (true === $user->isDeleted()) {
+                $this->restoreUser($user);
+                return $user->getId();
+            } else {
+                throw new DiamanteUserExistsException('An account with this email address already exists');
+            }
+        }
+
         $user = $this->factory->create(
             $command->email,
             $command->firstName,
             $command->lastName
         );
 
-        $apiUser = new ApiUserEntity($command->email, $this->generateRandomPassword(), null, $user);
+        $apiUser = new ApiUserEntity($command->email, $this->generateRandomSequence(16), $this->generateRandomSequence(64), $user);
+        $apiUser->generateHash();
         $user->setApiUser($apiUser);
 
+        $this->notifier->notifyByScenario('created', $user, ['activation_hash' => $user->getApiUser()->getHash()]);
         $this->diamanteUserRepository->store($user);
 
         return $user->getId();
@@ -194,6 +219,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $user->setFirstName($command->firstName);
         $user->setLastName($command->lastName);
         $user->setApiUser($user->getApiUser());
+        $user->updateTimestamp();
 
         $this->diamanteUserRepository->store($user);
 
@@ -274,18 +300,50 @@ class UserServiceImpl implements UserService, GravatarProvider
      */
     public function removeDiamanteUser($id)
     {
+        /** @var DiamanteUser $user */
         $user = $this->diamanteUserRepository->get($id);
-        $this->diamanteUserRepository->remove($user);
+        $user->setDeleted(true);
+        $user->getApiUser()->deactivate();
+        $this->diamanteUserRepository->store($user);
     }
 
     /**
      * @param int $length
      * @return string
      */
-    private function generateRandomPassword($length = 8)
+    private function generateRandomSequence($length = 8)
     {
         $charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
 
         return substr( str_shuffle( $charmap ), 0, $length );
+    }
+
+    /**
+     * @param User $userModel
+     */
+    public function resetPassword(User $userModel)
+    {
+        $user = $this->getByUser($userModel);
+        $apiUser = $user->getApiUser();
+
+        $apiUser->setPassword($this->generateRandomSequence(16));
+        $apiUser->deactivate();
+
+        $apiUser->setDiamanteUser($user);
+        $this->diamanteApiUserRepository->store($apiUser);
+
+        $this->notifier->notifyByScenario('force_reset', $user, ['activation_hash' => $apiUser->getHash()]);
+    }
+
+    /**
+     * @param DiamanteUser $user
+     */
+    protected function restoreUser(DiamanteUser $user)
+    {
+        $user->setDeleted(false);
+        $user->updateTimestamp();
+        $this->diamanteUserRepository->store($user);
+
+        $this->resetPassword(new User($user->getId(), User::TYPE_DIAMANTE));
     }
 }

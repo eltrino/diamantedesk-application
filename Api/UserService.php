@@ -14,6 +14,7 @@
  */
 namespace Diamante\UserBundle\Api;
 
+use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
@@ -66,4 +67,16 @@ interface UserService
      * @return DiamanteUser|null
      */
     public function getUserFromApiUser(ApiUser $user);
+
+    /**
+     * @param CreateDiamanteUserCommand $command
+     * @return DiamanteUser
+     */
+    public function createDiamanteUser(CreateDiamanteUserCommand $command);
+
+    /**
+     * @param $email
+     * @return User
+     */
+    public function getUserByEmail($email);
 }

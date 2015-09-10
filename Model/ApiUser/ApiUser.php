@@ -67,7 +67,12 @@ class ApiUser implements Entity, UserInterface
      */
     protected $diamanteUser;
 
-    public function __construct($email, $password, $salt = null, DiamanteUser $diamanteUser)
+    /**
+     * @param $email
+     * @param $password
+     * @param null $salt
+     */
+    public function __construct($email, $password, $salt = null)
     {
         $this->email                = $email;
         $this->password             = $password;
@@ -75,7 +80,6 @@ class ApiUser implements Entity, UserInterface
         $this->isActive             = false;
         $this->hash                 = md5($this->email . time());
         $this->hashExpirationTime   = 0;
-        $this->diamanteUser         = $diamanteUser;
     }
 
     /**
@@ -196,6 +200,12 @@ class ApiUser implements Entity, UserInterface
         $this->hash = '';
     }
 
+    public function deactivate()
+    {
+        $this->isActive = false;
+        $this->generateHash();
+    }
+
     /**
      * Generate new activation hash for reset pass
      */
@@ -204,7 +214,6 @@ class ApiUser implements Entity, UserInterface
         $timestamp = time();
         $this->hash = md5($this->getEmail() . $timestamp . $this->getPassword());
         $this->hashExpirationTime = $timestamp + self::EXPIRATION_TIME;
-
     }
 
     /**

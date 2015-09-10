@@ -14,6 +14,9 @@ datagrid:
             - { join: u.apiUser, alias: a }
         from:
           - { table: %diamante.user.entity.class%, alias: u }
+        where:
+          and:
+            - u.isDeleted = false
     properties:
       id: ~
       view_link:
@@ -52,6 +55,20 @@ datagrid:
           0: No
           1: Yes
           2: N/A
+    filters:
+      columns:
+        email:
+          type: string
+          data_name: u.email
+        firstName:
+          type: string
+          data_name: u.firstName
+        lastName:
+          type: string
+          data_name: u.lastName
+        active:
+          type: boolean
+          data_name: active
     actions:
       view:
         type: navigate
@@ -72,6 +89,24 @@ datagrid:
         icon: trash
         link: delete_link
         acl_resource: DELETE;Entity:DiamanteUserBundle:DiamanteUser
+    mass_actions:
+        delete:
+          type:             delete
+          label:            diamante.user.actions.mass.delete.label
+          acl_resource:     DELETE;Entity:DiamanteUserBundle:DiamanteUser
+          entity_name:      DiamanteUserBundle:DiamanteUser
+          data_identifier:  u.id
+          icon :            trash
+          route:            diamante_user_delete_massaction
+        reset_password:
+          type:             reset_password
+          label:            diamante.user.actions.mass.reset_pwd.label
+          acl_resource:     EDIT;Entity:DiamanteUserBundle:DiamanteUser
+          entity_name:      DiamanteUserBundle:DiamanteUser
+          data_identifier:  u.id
+          icon:             refresh
+          route:            diamante_user_reset_pwd_massaction
+
   diamante-user-ticket-grid:
     extends: diamante-ticket-grid
     source:

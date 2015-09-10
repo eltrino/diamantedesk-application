@@ -13,21 +13,33 @@
             'label': 'diamante.desk.ui.edit'|trans
         }) }}
     {% endif %}
-    {% if not user_has_tickets(entity) %}
-        {% if resource_granted('DELETE', entity) %}
-            {{ UI.deleteButton({
-                'dataUrl': path('diamante_user_delete', {'id': entity.id}),
-                'dataRedirect': path('diamante_user_list'),
-                'aCss': 'no-hash remove-button',
-                'dataId': entity.id,
-                'id': 'btn-remove-account',
-                'dataMessage': 'diamante.user.messages.delete.query'|trans,
-                'successMessage': 'diamante.user.messages.delete.success'|trans,
-                'title': 'diamante.user.actions.remove'|trans,
-                'label': 'diamante.desk.ui.delete'|trans
-            })
-            }}
-        {% endif %}
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('diamante_user_force_reset', {'id': entity.id}),
+            'dataRedirect': path('diamante_user_view', {'id':entity.id}),
+            'aCss': 'no-hash remove-button',
+            'iCss': 'icon-refresh',
+            'dataId': entity.id,
+            'id': 'btn-remove-account',
+            'dataMessage': 'diamante.user.messages.reset_pwd.query'|trans,
+            'successMessage': 'diamante.user.messages.reset_pwd.success'|trans,
+            'title': 'diamante.user.actions.reset_pwd'|trans,
+            'label': 'diamante.user.actions.reset_pwd'|trans
+        }) }}
+    {% endif %}
+    {% if resource_granted('DELETE', entity) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('diamante_user_delete', {'id': entity.id}),
+            'dataRedirect': path('diamante_user_list'),
+            'aCss': 'no-hash remove-button',
+            'dataId': entity.id,
+            'id': 'btn-remove-account',
+            'dataMessage': 'diamante.user.messages.delete.query'|trans,
+            'successMessage': 'diamante.user.messages.delete.success'|trans,
+            'title': 'diamante.user.actions.remove'|trans,
+            'label': 'diamante.desk.ui.delete'|trans
+        })
+        }}
     {% endif %}
 {% endblock %}
 
@@ -50,6 +62,7 @@
     {% set dataSubBlocks = [UI.attibuteRow('diamante.user.labels.email'|trans, entity.email)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.first_name'|trans, entity.firstName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.last_name'|trans, entity.lastName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.is_deleted'|trans, entity.isDeleted ? 'diamante.user.ui.yes'|trans : 'diamante.user.ui.no'|trans )]) %}
     {% if entity.apiUser is not empty %}
         {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.active'|trans, entity.apiUser.isActive ? 'diamante.user.ui.yes'|trans : 'diamante.user.ui.no'|trans )]) %}
     {% endif %}

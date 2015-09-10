@@ -54,6 +54,11 @@ class DiamanteUser implements Entity
      */
     protected $updatedAt;
 
+    /**
+     * @var bool
+     */
+    protected $isDeleted = false;
+
     public function __construct($email, $firstName = null, $lastName = null)
     {
         $this->email     = $email;
@@ -161,6 +166,27 @@ class DiamanteUser implements Entity
     public function setApiUser($apiUser)
     {
         $this->apiUser = $apiUser;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param boolean $isDeleted
+     */
+    public function setDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
+    }
+
+    public function updateTimestamp()
+    {
+        $this->updatedAt = new \DateTime();
     }
 }
 

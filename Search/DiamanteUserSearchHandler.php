@@ -90,6 +90,7 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
      * @param int $perPage
      * @param bool $searchById
      * @return array
+     * @TODO: Refactor
      */
     public function search($query, $page, $perPage, $searchById = false)
     {

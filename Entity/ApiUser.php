@@ -80,7 +80,7 @@ class ApiUser extends \Diamante\UserBundle\Model\ApiUser\ApiUser
 
     /**
      * @var DiamanteUser
-     * @ORM\OneToOne(targetEntity="Diamante\UserBundle\Entity\DiamanteUser", inversedBy="apiUser", orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="Diamante\UserBundle\Entity\DiamanteUser", inversedBy="apiUser", orphanRemoval=true, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="diamante_user", referencedColumnName="id")
      */
     protected $diamanteUser;
