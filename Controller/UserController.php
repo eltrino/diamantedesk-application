@@ -209,7 +209,6 @@ class UserController extends Controller
 
     /**
      * @Route("/reset/massaction", name="diamante_user_reset_pwd_massaction", options={"expose" = true})
-     * @Template("DiamanteUserBundle:User/Widget:massResetPassword.html.twig")
      */
     public function massResetPasswordAction()
     {
