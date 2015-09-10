@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Api\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 
-class AddWatcherCommand
+class AddWatcherCommand implements Shared\Command
 {
     /**
      * @Assert\NotNull()

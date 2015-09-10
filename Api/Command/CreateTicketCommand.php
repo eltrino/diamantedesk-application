@@ -22,7 +22,7 @@ use Diamante\DeskBundle\Validator\Constraints\PrintType;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class CreateTicketCommand implements Taggable
+class CreateTicketCommand implements Taggable, Shared\Command
 {
     /**
      * @var int|null

@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddTicketAttachmentCommand
+class AddTicketAttachmentCommand implements Shared\Command
 {
     /**
      * @var array

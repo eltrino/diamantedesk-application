@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UpdateCommentCommand
+class UpdateCommentCommand implements Shared\Command
 {
     /**
      * @Assert\Type(type="integer")

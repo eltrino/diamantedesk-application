@@ -395,19 +395,16 @@ class TicketServiceImpl implements TicketService
             new Priority($command->priority),
             new Status($command->status),
             new Source($command->source),
-            $assignee
+            $assignee,
+            $command->tags
         );
 
         $this->createAttachments($command, $ticket);
 
         $this->doctrineRegistry->getManager()->persist($ticket);
-        $this->tagManager->deleteTaggingByParams($ticket->getTags(), get_class($ticket), $ticket->getId());
-        $tags = $command->tags;
-        $tags['owner'] = $tags['all'];
-        $ticket->setTags($tags);
+        $this->doctrineRegistry->getManager()->flush();
         $this->tagManager->saveTagging($ticket);
 
-        $this->doctrineRegistry->getManager()->flush();
         $ticket->setTags(null);
         $this->loadTagging($ticket);
 

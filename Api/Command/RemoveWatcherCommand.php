@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RemoveWatcherCommand
+class RemoveWatcherCommand implements Shared\Command
 {
     /**
      * Ticket Id

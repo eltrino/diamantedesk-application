@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddCommentAttachmentCommand
+class AddCommentAttachmentCommand implements Shared\Command
 {
     /**
      * @var array
