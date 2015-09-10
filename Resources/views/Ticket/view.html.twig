@@ -2,6 +2,7 @@
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import 'DiamanteDeskBundle:UI:macros.html.twig' as DiamUI %}
 {% oro_title_set({params : {"%ticket.key%": ticketKey, "%ticket.subject%": entity.subject}}) %}
 {% macro renderComments(entity, ticketKey) %}
     {% set comments = entity.comments %}
@@ -295,13 +296,13 @@
         {% set reporterDisplayName = reporter.getFullName != ' ' ? reporter.getFullName : reporter.getEmail %}
     {% endif %}
 
-    {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.branch'|trans, entity.branchName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
+    {% set dataSubBlocks = [DiamUI.attributeRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.branch'|trans, entity.branchName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: 'deleted-reporter'})]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
     {% set attachmentListWidget %}
