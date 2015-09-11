@@ -110,12 +110,12 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         .on("brush", brushed);
 
     var line = d3.svg.line()
-        .interpolate("basis")
+        .interpolate("linear")
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.state); });
 
     var line2 = d3.svg.line()
-        .interpolate("basis")
+        .interpolate("linear")
         .x(function(d) { return x2(d.date); })
         .y(function(d) { return y2(d.state); });
 
