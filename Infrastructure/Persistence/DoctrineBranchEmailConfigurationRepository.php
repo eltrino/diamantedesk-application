@@ -36,7 +36,7 @@ class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericReposito
      *
      * @param $supportAddress
      * @param $customerDomain
-     * @return int
+     * @return int|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getBySupportAddressAndCustomerDomainCriteria($supportAddress, $customerDomain)
