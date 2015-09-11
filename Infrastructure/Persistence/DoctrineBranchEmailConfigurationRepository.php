@@ -65,7 +65,7 @@ class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericReposito
         if ($result['criteria']) {
             return $result['branch_id'];
         } else {
-            return 0;
+            return null;
         }
     }
 }
