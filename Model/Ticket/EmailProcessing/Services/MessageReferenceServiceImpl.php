@@ -85,7 +85,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
-                                 array $attachments = null)
+                                 array $attachments = null, $priority = 'medium', $status = 'new')
     {
         if (empty($subject)) {
             $subject = self::EMPTY_SUBJECT_PLACEHOLDER;
@@ -99,6 +99,8 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $command->assignee          = $assigneeId;
         $command->source            = Source::EMAIL;
         $command->attachmentsInput  = $this->convertAttachments($attachments);
+        $command->priority          = $priority;
+        $command->status            = $status;
 
         $ticket = $this->ticketService->createTicket($command);
         $this->createMessageReference($messageId, $ticket);
