@@ -21,6 +21,8 @@ use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
@@ -85,7 +87,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
-                                 array $attachments = null, $priority = 'medium', $status = 'new')
+                                 array $attachments = null)
     {
         if (empty($subject)) {
             $subject = self::EMPTY_SUBJECT_PLACEHOLDER;
@@ -99,8 +101,8 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $command->assignee          = $assigneeId;
         $command->source            = Source::EMAIL;
         $command->attachmentsInput  = $this->convertAttachments($attachments);
-        $command->priority          = $priority;
-        $command->status            = $status;
+        $command->priority          = Priority::PRIORITY_LOW;
+        $command->status            = Status::NEW_ONE;
 
         $ticket = $this->ticketService->createTicket($command);
         $this->createMessageReference($messageId, $ticket);

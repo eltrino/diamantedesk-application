@@ -32,7 +32,7 @@ interface MessageReferenceService
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
     public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
-                                 array $attachments = null, $priority = 'medium', $status = 'new');
+                                 array $attachments = null);
 
     /**
      * Creates Comment for Ticket
