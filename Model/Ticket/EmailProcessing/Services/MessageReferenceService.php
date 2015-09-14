@@ -26,8 +26,6 @@ interface MessageReferenceService
      * @param $reporterId
      * @param $assigneeId
      * @param array|null $attachments
-     * @param string $priority
-     * @param string $status
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
