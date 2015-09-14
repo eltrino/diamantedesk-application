@@ -18,6 +18,9 @@
         <service id="diamante.distribution.api.restriction.listener" class="%diamante.distribution.api.restriction.listener.class%">
             <argument type="service" id="diamante.distribution.whitelist.provider"/>
             <argument type="service" id="monolog.logger.diamante"/>
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="kernel"/>
+            <argument type="service" id="templating"/>
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
             <tag name="monolog.logger" channel="diamante"/>
         </service>

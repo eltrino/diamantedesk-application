@@ -15,15 +15,24 @@
  
 namespace Diamante\DistributionBundle\EventListener;
 
-use Diamante\DistributionBundle\Routing\Voter;
-use Diamante\DistributionBundle\Routing\VoterProvider;
 use Diamante\DistributionBundle\Routing\Whitelist\WhitelistProvider;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernel;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use  Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine;
 
 class OroApiCallRestrictionListener
 {
+    const VIEW_FORMAT = 'html';
+
     /**
      * @var WhitelistProvider
      */
@@ -35,13 +44,34 @@ class OroApiCallRestrictionListener
     protected $logger;
 
     /**
-     * @param WhitelistProvider $provider
-     * @param Logger $logger
+     * @var ViewHandler
      */
-    public function __construct(WhitelistProvider $provider, Logger $logger)
-    {
-        $this->provider = $provider;
-        $this->logger   = $logger;
+    protected $viewHandler;
+
+    /**
+     * @var \AppKernel
+     */
+    protected $kernel;
+
+    /**
+     * @param WhitelistProvider $provider
+     * @param Logger            $logger
+     * @param ViewHandler       $viewHandler
+     * @param \AppKernel        $kernel
+     * @param DelegatingEngine  $templating
+     */
+    public function __construct(
+        WhitelistProvider $provider,
+        Logger $logger,
+        ViewHandler $viewHandler,
+        \AppKernel $kernel,
+        DelegatingEngine $templating
+    ) {
+        $this->provider      = $provider;
+        $this->logger        = $logger;
+        $this->viewHandler   = $viewHandler;
+        $this->kernel        = $kernel;
+        $this->templating    = $templating;
     }
 
     /**
@@ -57,8 +87,55 @@ class OroApiCallRestrictionListener
         }
 
         if (!$this->provider->isItemWhitelisted($route)){
-            $this->logger->addWarning(sprintf("Route %s doesn't seem to be whitelisted. Please, check the configuration.", $route));
-            $event->setResponse(new Response('Access to this resource is restricted', 403));
+            $notFoundException = new NotFoundHttpException('Sorry, the page that you requested was not found.');
+            $statusCode = $notFoundException->getStatusCode();
+            $parameters = [
+                'status_code'    => $statusCode,
+                'status_text'    => Response::$statusTexts[$statusCode],
+                'currentContent' => '',
+                'exception'      => FlattenException::create($notFoundException),
+                'logger'         => $this->logger
+            ];
+
+            $view = View::create($parameters);
+            $view->setFormat(self::VIEW_FORMAT);
+            $view->setTemplate($this->findTemplate($request, $statusCode, $this->kernel->isDebug()));
+            $response = $this->viewHandler->handle($view);
+            $event->setResponse($response);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param         $statusCode
+     * @param         $debug
+     *
+     * @return TemplateReference
+     */
+    protected function findTemplate(Request $request, $statusCode, $debug)
+    {
+        $name = $debug ? 'exception' : 'error';
+        if ($debug) {
+            $name = 'exception_full';
+        }
+
+        // when not in debug, try to find a template for the specific HTTP status code and format
+        if (!$debug) {
+            $template = new TemplateReference('TwigBundle', 'Exception', $name.$statusCode, self::VIEW_FORMAT, 'twig');
+            if ($this->templating->exists($template)) {
+                return $template;
+            }
+        }
+
+        // try to find a template for the given format
+        $template = new TemplateReference('TwigBundle', 'Exception', $name, self::VIEW_FORMAT, 'twig');
+        if ($this->templating->exists($template)) {
+            return $template;
+        }
+
+        // default to a generic HTML exception
+        $request->setRequestFormat(self::VIEW_FORMAT);
+
+        return new TemplateReference('TwigBundle', 'Exception', $name, self::VIEW_FORMAT, 'twig');
     }
 }
