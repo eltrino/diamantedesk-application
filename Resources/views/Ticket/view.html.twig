@@ -294,6 +294,7 @@
     {% if entity.reporter %}
         {% set reporter = fetch_user_details(entity.reporter) %}
         {% set reporterDisplayName = reporter.getFullName != ' ' ? reporter.getFullName : reporter.getEmail %}
+        {% set reporterModel = fetch_diamante_user(entity.reporter) %}
     {% endif %}
 
     {% set dataSubBlocks = [DiamUI.attributeRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
@@ -301,7 +302,7 @@
     {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: 'deleted-reporter'})]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: reporterModel.isDeleted ? 'deleted-reporter' : ''})]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
