@@ -65,6 +65,26 @@ oro_menu_config:
             extras:
                 routes: ['diamante_report_*']
 
+        tags_management:
+            label: 'Tags managemnt'
+            uri: '#'
+            extras:
+                position: 90
+
+        oro_tag_list:
+            label: 'oro.tag.entity_plural_label'
+            route: 'oro_tag_index'
+            extras:
+                position:    90
+                routes:      ['oro_tag_*']
+                description: 'oro.tag.menu.tag_list.description'
+
+        shortcut_new_tag:
+            label: 'oro.tag.menu.shortcut_new_tag.label'
+            route: 'oro_tag_create'
+            extras:
+                description: 'oro.tag.menu.shortcut_new_tag.description'
+
 #        dashboard_tab:
 #            display: false
         oro_calendar_view_default:
@@ -96,6 +116,10 @@ oro_menu_config:
                         diamante_report_tickets_timeline: ~
                 diamante_config_tab:
                   children:
+                    tags_management:
+                      children:
+                        oro_tag_list: ~
+                        shortcut_new_tag: ~
                     system_configuration: ~
                     users_management:
                       children:

@@ -79,3 +79,4 @@ whitelist:
     - '^sylius_flow_[a-z_]+'
     - '^_imagine[a-z_]+'
     - '^oro_dashboard_[a-z_]+'
+    - '^oro_tag_[a-z_]+'
