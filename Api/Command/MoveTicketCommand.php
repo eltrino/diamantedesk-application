@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class MoveTicketCommand
+class MoveTicketCommand implements Shared\Command
 {
     /**
      * @var int

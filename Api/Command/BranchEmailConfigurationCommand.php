@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration;
 use Diamante\DeskBundle\Validator\Constraints as CustomAssert;
 
-class BranchEmailConfigurationCommand
+class BranchEmailConfigurationCommand implements Shared\Command
 {
     /**
      * @Assert\Type(type="integer")

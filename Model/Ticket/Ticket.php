@@ -415,7 +415,8 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         Priority $priority,
         Status $status,
         Source $source,
-        OroUser $assignee = null
+        OroUser $assignee = null,
+        $tags
     ) {
         $this->subject     = $subject;
         $this->description = $description;
@@ -423,6 +424,7 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         $this->priority    = $priority;
         $this->source      = $source;
         $this->updatedAt   = new \DateTime('now', new \DateTimeZone('UTC'));
+        $this->tags        = $tags;
 
         $this->processUpdateStatus($status);
 

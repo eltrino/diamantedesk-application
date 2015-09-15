@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RetrieveTicketAttachmentCommand
+class RetrieveTicketAttachmentCommand implements Shared\Command
 {
     /**
      * @Assert\NotNull()

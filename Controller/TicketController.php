@@ -94,7 +94,7 @@ class TicketController extends Controller
             );
         } catch (\Exception $e) {
             $this->handleException($e);
-            return new Response($e->getMessage(), 404);
+            throw $this->createNotFoundException($e->getMessage(), $e);
         }
     }
 
@@ -226,17 +226,19 @@ class TicketController extends Controller
 
     /**
      * @Route(
-     *      "/watcher/ticket/{ticket}/{user}",
+     *      "/watcher/ticket/{ticketId}/{user}",
      *      name="diamante_remove_watcher",
-     *      requirements={"ticket"="\d+"}
+     *      requirements={"ticketId"="\d+"}
      * )
      *
-     * @param Ticket $ticket
+     * @param int $ticketId
      * @param string $user
      * @return array|Response
      */
-    public function deleteWatcherAction(Ticket $ticket, $user)
+    public function deleteWatcherAction($ticketId, $user)
     {
+        $repository = $this->getDoctrine()->getManager()->getRepository('DiamanteDeskBundle:Ticket');
+        $ticket = $repository->get($ticketId);
         $ticketKey = $ticket->getKey();
 
         try {

@@ -36,7 +36,7 @@ class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericReposito
      *
      * @param $supportAddress
      * @param $customerDomain
-     * @return int
+     * @return int|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getBySupportAddressAndCustomerDomainCriteria($supportAddress, $customerDomain)
@@ -65,7 +65,7 @@ class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericReposito
         if ($result['criteria']) {
             return $result['branch_id'];
         } else {
-            return 0;
+            return null;
         }
     }
 }

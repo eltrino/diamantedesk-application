@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -12,22 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\DeskBundle\Api\Command;
 
-use Symfony\Component\Validator\Constraints as Assert;
+namespace Diamante\DeskBundle\Api\Command\Shared;
 
-class AddWatcherByEmailCommand implements Shared\Command
+
+interface Command
 {
-    /**
-     * @var int
-     * @Assert\NotNull()
-     * @Assert\Type(type="integer")
-     */
-    public $id;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type(type="string")
-     */
-    public $email;
 }
