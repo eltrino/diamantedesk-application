@@ -97,9 +97,27 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
 
     color.domain(keys);
 
+    populateData(data);
+    var tickets = color.domain().map(function(name) {
+      return {
+        name: name,
+        values: data.map(function(d) {
+          return {date: d.date, state: d[name] ? +d[name] : 0};
+        })
+      };
+    });
+
+    var ticksCount = parseInt(
+          d3.max(tickets, function(c) { return d3.max(c.values, function(v) { return v.state; }); }) -
+          d3.min(tickets, function(c) { return d3.min(c.values, function(v) { return v.state; }); })
+        ,10) + 1;
+    if(ticksCount > 20) {
+      ticksCount = 20;
+    }
+
     var xAxis = d3.svg.axis().scale(x).orient("bottom"),
         xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
-        yAxis = d3.svg.axis().scale(y).orient("left").ticks(1);
+        yAxis = d3.svg.axis().scale(y).orient("left").ticks(ticksCount);
 
     var brushed = function() {
       x.domain(brush.empty() ? x2.domain() : brush.extent());
@@ -123,17 +141,6 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         .interpolate("linear")
         .x(function(d) { return x2(d.date); })
         .y(function(d) { return y2(d.state); });
-
-    populateData(data);
-
-    var tickets = color.domain().map(function(name) {
-      return {
-        name: name,
-        values: data.map(function(d) {
-          return {date: d.date, state: d[name] ? +d[name] : 0};
-        })
-      };
-    });
 
     var tip = d3tip()
         .attr('class', 'diam-d3-tip tooltip top')
