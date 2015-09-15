@@ -101,16 +101,20 @@ class PortalUrlExtension extends \Twig_Extension
      */
     private function getUrlParts($url)
     {
-        $result = preg_match('/(http[s]?)(?:\:\/\/)(.*)(?:\/)?(.*)/',$url, $matches);
+        $result = preg_match('/^(http[s]?)\:\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)/',$url, $matches);
 
         if (false === (bool)$result) {
             throw new \RuntimeException('Invalid Application URL configured. Unable to generate links');
         }
 
-        list($subject, $scheme, $host, $baseUrl) = $matches;
+        list($subject, $scheme, $host, $port, $baseUrl) = $matches;
 
         if (!empty($baseUrl) && (0 === strpos($baseUrl, '/'))) {
-            $baseUrl = substr($baseUrl, 1);
+            $baseUrl = ltrim($baseUrl, '/');
+        }
+
+        if (!empty($port)) {
+            $host .= $port;
         }
 
         return [$scheme, $host, $baseUrl];
