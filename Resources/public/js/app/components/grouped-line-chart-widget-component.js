@@ -143,7 +143,9 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         .y(function(d) { return y2(d.state); });
 
     var tip = d3tip()
-        .attr('class', 'diam-d3-tip tooltip top')
+        .attr('class', 'diam-d3-tip tooltip bottom')
+        .direction('s')
+        .offset([20, 0])
         .html(function(d) {
           var _data = {
             date : dateFormat(d.date),
