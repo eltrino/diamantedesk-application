@@ -81,12 +81,6 @@ interface UserService
     public function createDiamanteUser(CreateDiamanteUserCommand $command);
 
     /**
-     * @param $email
-     * @return User
-     */
-    public function getUserByEmail($email);
-
-    /**
      * @param int $id
      * @return void
      */
