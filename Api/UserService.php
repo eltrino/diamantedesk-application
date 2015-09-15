@@ -69,6 +69,12 @@ interface UserService
     public function getUserFromApiUser(ApiUser $user);
 
     /**
+     * @param string $email
+     * @return User|null
+     */
+    public function getUserByEmail($email);
+
+    /**
      * @param CreateDiamanteUserCommand $command
      * @return DiamanteUser
      */
