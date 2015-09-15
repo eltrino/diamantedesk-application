@@ -23,7 +23,6 @@
         <parameter key="diamante.notification.user.email.notifier.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailNotifier</parameter>
         <parameter key="diamante.user.notification.template_resolver.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailTemplateResolver</parameter>
         <parameter key="diamante.portal_url.twig.extension.class">Diamante\UserBundle\Twig\Extensions\PortalURLExtension</parameter>
-        <parameter key="diamante.mass_action.reset_password.class">Diamante\UserBundle\MassAction\ResetPasswordAction</parameter>
     </parameters>
 
     <services>
@@ -110,9 +109,5 @@
 
         <service id="diamante.user.api_service" class="%diamante.user.api_service.class%" parent="diamante.user.service"/>
         <service id="diamante.user.api.service_oro" alias="diamante.user.api_service"/>
-
-        <service id="diamante.mass_action.reset_password" class="%diamante.mass_action.reset_password.class%">
-            <tag name="oro_datagrid.extension.mass_action.type" type="reset_password"/>
-        </service>
     </services>
 </container>

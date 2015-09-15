@@ -26,5 +26,6 @@ class DiamanteUserExtension extends Extension
         $loader->load('services.xml');
         $loader->load('forms.xml');
         $loader->load('notifications.xml');
+        $loader->load('mass_actions.xml');
     }
 }

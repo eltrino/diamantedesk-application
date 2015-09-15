@@ -166,7 +166,7 @@ class UserController extends Controller
         $users = $this->get('request')->get('values');
 
         if (!is_array($users)) {
-            $users = [$users];
+            $users = explode(',', $users);
         }
 
         try {
@@ -215,7 +215,7 @@ class UserController extends Controller
         $users = $this->get('request')->get('values');
 
         if (!is_array($users)) {
-            $users = [$users];
+            $users = explode(',', $users);
         }
 
         try {

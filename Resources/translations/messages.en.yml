@@ -26,7 +26,7 @@ diamante:
           reset_pwd:
             label:      Force Reset passwords for selected users
             messages:
-              success:  Successfully reset passwords for selected users
+              success:  Successfully reset passwords for %count% selected users
               fail:     Error occured while resetting passwords.
 
       messages:

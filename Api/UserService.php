@@ -79,4 +79,16 @@ interface UserService
      * @return User
      */
     public function getUserByEmail($email);
+
+    /**
+     * @param int $id
+     * @return void
+     */
+    public function removeDiamanteUser($id);
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function resetPassword(User $user);
 }

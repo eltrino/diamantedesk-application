@@ -105,7 +105,6 @@ datagrid:
           entity_name:      DiamanteUserBundle:DiamanteUser
           data_identifier:  u.id
           icon:             refresh
-          route:            diamante_user_reset_pwd_massaction
 
   diamante-user-ticket-grid:
     extends: diamante-ticket-grid

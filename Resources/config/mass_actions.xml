@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.user.mass.action.reset_pwd.handler.class">Diamante\UserBundle\MassAction\Handler\ResetPasswordMassActionHandler</parameter>
+        <parameter key="diamante.mass_action.reset_password.class">Diamante\UserBundle\MassAction\Actions\Ajax\ResetPasswordAction</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.user.mass.action.reset_pwd.handler" class="%diamante.user.mass.action.reset_pwd.handler.class%">
+            <argument type="service" id="translator"/>
+            <argument type="service" id="diamante.user.service"/>
+        </service>
+
+        <service id="diamante.mass_action.reset_password" class="%diamante.mass_action.reset_password.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="reset_password"/>
+        </service>
+    </services>
+
+</container>

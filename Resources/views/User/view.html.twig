@@ -1,6 +1,7 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import '@DiamanteUser/User/macros/user_ui.html.twig' as UserUI %}
 
 {% oro_title_set({params : {"%user.fullName%": entity.fullName|default('diamante.desk.common.not_available'|trans) }}) %}
 
@@ -14,13 +15,12 @@
         }) }}
     {% endif %}
     {% if resource_granted('EDIT', entity) %}
-        {{ UI.deleteButton({
+        {{ UserUI.resetPasswordButton({
             'dataUrl': path('diamante_user_force_reset', {'id': entity.id}),
             'dataRedirect': path('diamante_user_view', {'id':entity.id}),
-            'aCss': 'no-hash remove-button',
-            'iCss': 'icon-refresh',
+            'aCss': 'no-hash reset-password-button',
             'dataId': entity.id,
-            'id': 'btn-remove-account',
+            'id': 'btn-reset-password',
             'dataMessage': 'diamante.user.messages.reset_pwd.query'|trans,
             'successMessage': 'diamante.user.messages.reset_pwd.success'|trans,
             'title': 'diamante.user.actions.reset_pwd'|trans,
@@ -41,6 +41,10 @@
         })
         }}
     {% endif %}
+
+    <script type="text/javascript">
+        require(['diamante/ui/layout-reset-password-plugin'], function(ResetPasswordPlugin){});
+    </script>
 {% endblock %}
 
 {% block pageHeader %}
