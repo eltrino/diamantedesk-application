@@ -89,6 +89,8 @@ oro_menu_config:
 #            display: false
         oro_calendar_view_default:
             display: false
+        oro_email_user_emails:
+            display: false
         activities_tab:
             display: false
         reports_tab:
@@ -132,7 +134,6 @@ oro_menu_config:
                         embedded_forms: ~
                     oro_platform_system_info: ~
                     audit_list: ~
-
 
 
 oro_titles:

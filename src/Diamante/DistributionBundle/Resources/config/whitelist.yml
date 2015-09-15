@@ -10,7 +10,6 @@ whitelist:
     - 'oro_form_autocomplete_search'
     - 'oro_search_results'
     - 'oro_pinbar_help'
-    - 'oro_email_user_emails'
     - 'oro_calendar_view_default'
     - 'oro_shortcut_actionslist'
     - 'oro_platform_system_info'
