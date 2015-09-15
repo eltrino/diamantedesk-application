@@ -57,6 +57,11 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom - (h2 + margin.top);
 
+    if(parent.id == 'container' && h > parent.clientHeight - 100){
+      h = parent.clientHeight - 100;
+      height = h - margin.top - margin.bottom - (h2 + margin.top);
+    }
+
     var svg = plot.append("svg")
         .attr("width", w)
         .attr("height", h)
@@ -240,6 +245,11 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
       if(w <= 0) {
         delete resizeGroupedLine[parent.id];
         return;
+      }
+
+      if(parent.id == 'container' && h > parent.clientHeight - 100){
+        h = parent.clientHeight - 100;
+        height = h - margin.top - margin.bottom - (h2 + margin.top);
       }
 
       x.range([0, width]);

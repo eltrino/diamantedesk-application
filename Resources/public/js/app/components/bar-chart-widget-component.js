@@ -26,6 +26,11 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom;
 
+    if(parent.id == 'container' && h > parent.clientHeight - 100){
+      h = parent.clientHeight - 100;
+      height = h - margin.top - margin.bottom;
+    }
+
     var svg = plot.append("svg")
         .attr("width", w)
         .attr("height", h)
@@ -95,6 +100,11 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         return;
       }
 
+      if(parent.id == 'container' && h > parent.clientHeight - 100){
+        h = parent.clientHeight - 100;
+        height = h - margin.top - margin.bottom;
+      }
+
       x.rangeRoundBands([0, width], .1);
       y.range([height, 0]);
 
@@ -105,7 +115,9 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
       xAxis.scale(x);
       yAxis.scale(y);
 
-      svg.attr("viewBox", "0 0 " + w + " " + h);
+      svg.attr("width", w)
+          .attr("height", h)
+          .attr("viewBox", "0 0 " + w + " " + h);
 
       svg.select('.x.axis')
           .attr("transform", "translate(0," + height + ")")
