@@ -147,17 +147,9 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
                 $this->equalTo(self::DUMMY_SUPPORT_ADDRESS)
             )->will($this->returnValue($branchEmailConfigurationStub));
 
-        $this->doctrineRegistry
+        $this->branchEmailConfigurationRepository
             ->expects($this->once())
-            ->method('getManager')
-            ->will($this->returnValue($this->entityManager));
-
-        $this->entityManager->expects($this->once())->method('persist')
-            ->with($this->equalTo($branchEmailConfigurationStub));
-
-        $this->entityManager
-            ->expects($this->never())
-            ->method('flush');
+            ->method('store');
 
         $command = new BranchEmailConfigurationCommand();
         $command->branch          = self::DUMMY_BRANCH_ID;
@@ -184,18 +176,9 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
             )
             ->will($this->returnValue($this->branchEmailConfiguration));
 
-        $this->doctrineRegistry
+        $this->branchEmailConfigurationRepository
             ->expects($this->once())
-            ->method('getManager')
-            ->will($this->returnValue($this->entityManager));
-
-
-        $this->entityManager->expects($this->once())->method('persist')
-            ->with($this->equalTo($this->branchEmailConfiguration));
-
-        $this->entityManager
-            ->expects($this->never())
-            ->method('flush');
+            ->method('store');
 
         $command = new BranchEmailConfigurationCommand();
         $command->branch          = self::DUMMY_BRANCH_ID;
@@ -229,18 +212,10 @@ class BranchEmailConfigurationServiceImplTest extends \PHPUnit_Framework_TestCas
                 $this->equalTo(self::DUMMY_SUPPORT_ADDRESS)
             )->will($this->returnValue($branchEmailConfigurationStub));
 
-        $this->doctrineRegistry
+        $this->branchEmailConfigurationRepository
             ->expects($this->once())
-            ->method('getManager')
-            ->will($this->returnValue($this->entityManager));
-
-
-        $this->entityManager->expects($this->once())->method('persist')
+            ->method('store')
             ->with($this->equalTo($branchEmailConfigurationStub));
-
-        $this->entityManager
-            ->expects($this->never())
-            ->method('flush');
 
         $command = new BranchEmailConfigurationCommand();
         $command->branch = self::DUMMY_BRANCH_ID;
