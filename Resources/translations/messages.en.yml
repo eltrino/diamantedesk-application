@@ -1,7 +1,31 @@
 diamante:
-    automation:
-        rule:
-          messages:
-            create:
-              error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
-              success:         Rule successfully created.
+  automation:
+    rule:
+      entity_label:               Rule
+      entity_plural_label:        Rules
+      details :                   Rule Detail
+      messages:
+        create:
+          error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
+          success:         Rule successfully created.
+
+    ui:
+      create:              Create
+      ok:                  Ok
+      cancel:              Cancel
+      save:                Save
+      delete:              Delete
+      save_and_close:      Save and close
+      edit:                Edit
+      add:                 Add
+      change:              Change
+
+    attributes:
+      condition:           Condition
+      action:              Action
+      weight:              Weight
+      target:              Target
+      parent:              Parent
+      active:              Active
+      expression:          Expression
+      mode:                Mode

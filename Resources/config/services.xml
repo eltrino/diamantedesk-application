@@ -17,6 +17,8 @@
         <parameter key="diamante_automation.provider.listed_entities.class">Diamante\AutomationBundle\Model\ListedEntity\ListedEntitiesProvider</parameter>
         <parameter key="diamante_automation.email_notification_strategy.email_notification.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification</parameter>
         <parameter key="diamante_automation.email_notification_strategy.config_provider.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailConfigProvider</parameter>
+
+        <parameter key="diamante_rule_form.type.class">Diamante\AutomationBundle\Form\Type\CreateRuleType</parameter>
     </parameters>
 
     <services>
@@ -75,6 +77,10 @@
             <argument type="string" key="encryption">%mailer_encryption%</argument>
             <argument type="string" key="user">%mailer_user%</argument>
             <argument type="string" key="password">%mailer_password%</argument>
+        </service>
+
+        <service id="diamante_rule_form" class="%diamante_rule_form.type.class%">
+            <tag name="form.type" alias="diamante_rule_form" />
         </service>
 
     </services>

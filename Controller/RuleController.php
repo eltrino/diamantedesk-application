@@ -6,6 +6,7 @@ use Diamante\AutomationBundle\Rule\Engine\EngineImpl;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Diamante\AutomationBundle\Api\Command\RuleCommand;
@@ -59,7 +60,7 @@ class RuleController extends Controller
      */
     public function listAction()
     {
-
+        return [];
     }
 
     /**
@@ -98,28 +99,30 @@ class RuleController extends Controller
      *      "/create",
      *      name="diamante_automation_create"
      * )
+     * @Template
      */
     public function createAction()
     {
         $content = $this->getRequest()->getContent();
         $serializer = SerializerBuilder::create()->build();
         $command = $serializer->deserialize($content, 'Diamante\AutomationBundle\Api\Command\RuleCommand', 'json');
-
         try {
-            $this->get('diamante.rule.service')->actionRule($command, self::CREATE);
-
-            return new Response();
+            if($content){
+              $this->get('diamante.rule.service')->actionRule($command, self::CREATE);
+            }
+            $form = $this->createForm($this->get('diamante_rule_form'), $command);
+            return  array('form' => $form->createView());
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(
                 sprintf('Rule creation failed: %s', $e->getMessage())
             );
             $this->addErrorMessage('diamante.automation.rule.messages.create.error');
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'diamante_automation_create'
-                )
-            );
+            var_dump($e->getMessage());
+//            return $this->redirect(
+//                $this->generateUrl(
+//                    'diamante_automation_create'
+//                )
+//            );
         }
     }
 
