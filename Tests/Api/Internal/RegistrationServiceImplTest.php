@@ -81,7 +81,6 @@ class RegistrationServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($apiUser->getEmail(), $apiUser->getPassword())->will($this->returnValue($apiUser));
 
         $this->diamanteUserRepository->expects($this->once())->method('store')->with($diamanteUser);
-        $this->apiUserRepository->expects($this->once())->method('store')->with($apiUser);
 
         $this->registrationMailer->expects($this->once())->method('sendConfirmationEmail')
             ->with($diamanteUser->getEmail(), $apiUser->getHash());
