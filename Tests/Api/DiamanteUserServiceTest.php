@@ -55,6 +55,18 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $attachmentManager;
 
+    /**
+     * @var \Diamante\DeskBundle\Infrastructure\Notification\NotificationManager
+     * @Mock \Diamante\DeskBundle\Infrastructure\Notification\NotificationManager
+     */
+    private $notificationManager;
+
+    /**
+     * @var \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
+     * @Mock \Diamante\UserBundle\Model\ApiUser\ApiUserRepository
+     */
+    private $apiUserRepository;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -62,7 +74,9 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
             $this->oroUserManager,
             $this->diamanteUserRepository,
             $this->diamanteUserFactory,
-            $this->attachmentManager
+            $this->attachmentManager,
+            $this->notificationManager,
+            $this->apiUserRepository
         );
     }
 

@@ -200,6 +200,9 @@ class ApiUser implements Entity, UserInterface
         $this->hash = '';
     }
 
+    /**
+     * Deactivate user
+     */
     public function deactivate()
     {
         $this->isActive = false;
