@@ -198,9 +198,9 @@ class EngineImpl implements Engine
      *
      * @return Fact
      */
-    public function createFact(Entity $entity, $entityChangeset = [])
+    public function createFact(Entity $entity, $entityChangeset = [], $actionType)
     {
-        return new Fact($entity, $entityChangeset);
+        return new Fact($entity, $entityChangeset, $actionType);
     }
 
     protected function getActionType($rule)

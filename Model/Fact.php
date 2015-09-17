@@ -34,11 +34,17 @@ class Fact implements \Diamante\AutomationBundle\Rule\Fact\Fact
      */
     protected $type;
 
-    public function __construct(Entity $target, $targetChangeset)
+    /**
+     * @var string
+     */
+    protected $actionType;
+
+    public function __construct(Entity $target, $targetChangeset, $actionType)
     {
         $this->target = $target;
         $this->targetChangeset = $targetChangeset;
         $this->type = $this->determineType($this->target);
+        $this->actionType = $actionType;
     }
 
     /**
@@ -63,6 +69,11 @@ class Fact implements \Diamante\AutomationBundle\Rule\Fact\Fact
     public function getTargetType()
     {
         return $this->type;
+    }
+
+    public function getActionType()
+    {
+        return $this->actionType;
     }
 
     /**

@@ -17,7 +17,7 @@ namespace Diamante\AutomationBundle\Rule\Condition;
 
 class ConditionFactory
 {
-    const CONDITION_PARSE_FORMAT = '/^(eq|neq|not|in|nin|lt|lte|gt|gte|contains)\[([A-Za-z]+)\,\s+(.*)\]/';
+    const CONDITION_PARSE_FORMAT = '/^(eq|neq|not|in|nin|lt|lte|gt|gte|contains|created)(\[([A-Za-z]+)\,\s+(.*)\])?/';
 
     /**
      * @param $string

@@ -20,16 +20,16 @@ use Diamante\AutomationBundle\Rule\Fact\Fact;
 
 class Created extends AbstractCondition
 {
-    public function __construct()
-    {
-        $this->property = 'id';
-    }
+    const CREATE_ACTION = 'create';
 
+    /**
+     * @param Fact $fact
+     *
+     * @return bool
+     */
     public function isSatisfiedBy(Fact $fact)
     {
-        $actualValue = $this->extractProperty($fact->getTarget());
-
-        return $actualValue === null;
+        return self::CREATE_ACTION == $fact->getActionType();
     }
 
 

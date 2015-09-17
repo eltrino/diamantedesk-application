@@ -9,4 +9,5 @@ interface Fact
     public function getTarget();
     public function getTargetType();
     public function getTargetChangeset();
+    public function getActionType();
 }

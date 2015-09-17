@@ -24,6 +24,8 @@ use Diamante\DeskBundle\Model\Shared\Entity;
 
 class WorkflowListener
 {
+    const DELETE_ACTION = 'delete';
+
     /**
      * @var ContainerInterface
      */
@@ -97,8 +99,10 @@ class WorkflowListener
     protected function processEntity(Entity $entity)
     {
         $engine = $this->container->get('diamante_automation.engine');
-
-        $fact = $engine->createFact($entity, $this->computeChanges($entity));
+        $lastEntityLog = $this->getLastEntityLog($entity);
+        $changes = $this->computeChanges($entity, $lastEntityLog);
+        $actionType = $this->getActionType($lastEntityLog);
+        $fact = $engine->createFact($entity, $changes, $actionType);
 
         if ($engine->check($fact)) {
             $engine->runAgenda();
@@ -108,25 +112,46 @@ class WorkflowListener
 
     /**
      * @param Entity $entity
-     * @return array
+     *
+     * @return Audit
      */
-    protected function computeChanges(Entity $entity)
+    protected function getLastEntityLog(Entity $entity)
     {
         $repository = $this->event->getEntityManager()->getRepository('OroDataAuditBundle:Audit');
         $entityLog = $repository->getLogEntries($entity);
 
         /** @var Audit $lastEntityLog */
-        $lastEntityLog = array_shift($entityLog);
+        return array_shift($entityLog);
+    }
 
+    /**
+     * @param Entity $entity
+     * @param Audit  $lastEntityLog
+     *
+     * @return array
+     */
+    protected function computeChanges(Entity $entity, Audit $lastEntityLog = null)
+    {
         $changes = [];
 
         if (!$lastEntityLog) {
             return $changes;
         }
 
-        $changes = $this->listedEntityProcessor->getEntityChanges($entity, $lastEntityLog, $this->event);
-
-        return $changes;
+        return $this->listedEntityProcessor->getEntityChanges($entity, $lastEntityLog, $this->event);
     }
 
+    /**
+     * @param Audit $lastEntityLog
+     *
+     * @return string
+     */
+    protected function getActionType(Audit $lastEntityLog = null)
+    {
+        if(!$lastEntityLog) {
+            return self::DELETE_ACTION;
+        }
+
+        return $lastEntityLog->getAction();
+    }
 }
