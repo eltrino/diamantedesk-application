@@ -238,4 +238,11 @@ class ApiUser implements Entity, UserInterface
         $this->hashExpirationTime = 0;
     }
 
+    /**
+     * @param $email
+     */
+    public function updateEmail($email)
+    {
+        $this->email = $email;
+    }
 }

@@ -192,8 +192,9 @@ class UserServiceImpl implements UserService, GravatarProvider
             $command->lastName
         );
 
-        $apiUser = new ApiUserEntity($command->email, $this->generateRandomSequence(16), $this->generateRandomSequence(64), $user);
+        $apiUser = new ApiUserEntity($command->email, static::generateRandomSequence(16), static::generateRandomSequence(64), $user);
         $apiUser->generateHash();
+        $user->setDeleted(false);
         $user->setApiUser($apiUser);
 
         $this->notifier->notifyByScenario('created', $user, ['activation_hash' => $user->getApiUser()->getHash()]);
@@ -218,6 +219,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $user->setEmail($command->email);
         $user->setFirstName($command->firstName);
         $user->setLastName($command->lastName);
+        $user->getApiUser()->updateEmail($command->email);
         $user->setApiUser($user->getApiUser());
         $user->updateTimestamp();
 
@@ -304,6 +306,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $user = $this->diamanteUserRepository->get($id);
         $user->setDeleted(true);
         $user->getApiUser()->deactivate();
+        $this->diamanteApiUserRepository->store($user->getApiUser());
         $this->diamanteUserRepository->store($user);
     }
 
@@ -311,7 +314,7 @@ class UserServiceImpl implements UserService, GravatarProvider
      * @param int $length
      * @return string
      */
-    private function generateRandomSequence($length = 8)
+    public static function generateRandomSequence($length = 8)
     {
         $charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
 

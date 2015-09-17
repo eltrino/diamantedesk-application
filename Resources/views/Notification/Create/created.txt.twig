@@ -1,5 +1,5 @@
-We have created account for you. You will be able to check status of your support tickets on support portal - {{ url('diamante_front') }}.
+We have created account for you. You will be able to check status of your support tickets on support portal - {{ get_portal_link() }}
 
 Before using account please create new password for it.
 
-Follow the URL to proceed: {{ url('diamante_front') }}/#newpassword/{{ activation_hash }}
+Follow the URL to proceed: {{ get_password_reset_link(activation_hash) }}

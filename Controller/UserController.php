@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class UserController extends Controller
 {
@@ -118,6 +119,10 @@ class UserController extends Controller
     public function deleteAction($id)
     {
         try {
+            if (!in_array($this->get('request')->getMethod(), ['POST', 'PUT'])) {
+                throw new MethodNotAllowedException("This won't work");
+            }
+
             $this->get('diamante.user.service')
                 ->removeDiamanteUser($id);
             return new Response(null, 204, array(
