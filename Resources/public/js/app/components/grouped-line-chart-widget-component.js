@@ -25,6 +25,10 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         var index = 0,
             current = new Date(data[0].date),
             last = new Date(data[data.length - 1].date);
+        current.setDate(current.getDate() - 1 );
+        last.setDate(last.getDate() + 1 );
+        data.splice(0, 0, { date : new Date(current) });
+        data.push({ date : new Date(last) });
         while(index++, current < last) {
           current.setDate(current.getDate() + 1);
           if(data[index] && data[index].date > current){
@@ -143,7 +147,9 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         .y(function(d) { return y2(d.state); });
 
     var tip = d3tip()
-        .attr('class', 'diam-d3-tip tooltip top')
+        .attr('class', 'diam-d3-tip tooltip bottom')
+        .direction('s')
+        .offset([20, 0])
         .html(function(d) {
           var _data = {
             date : dateFormat(d.date),

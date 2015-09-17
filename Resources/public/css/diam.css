@@ -314,6 +314,10 @@
     border: 1px solid #BAA09D;
 }
 
+.dropdown.btn-group.open {
+    position: absolute;
+}
+
 .deleted-reporter {
     text-decoration: line-through;
 }

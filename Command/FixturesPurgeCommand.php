@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 
 class FixturesPurgeCommand extends ContainerAwareCommand
 {
@@ -38,6 +39,16 @@ class FixturesPurgeCommand extends ContainerAwareCommand
     private $entityManager;
 
     /**
+     * @var \Doctrine\DBAL\Connection
+     */
+    private $connection;
+
+    /**
+     * @var \Doctrine\DBAL\Platforms\AbstractPlatform
+     */
+    private $dbPlatform;
+
+    /**
      * Configuration of current command
      */
     protected function configure()
@@ -55,6 +66,8 @@ class FixturesPurgeCommand extends ContainerAwareCommand
     {
         $this->kernelDir = $this->getContainer()->getParameter('kernel.root_dir');
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->connection = $this->entityManager->getConnection();
+        $this->dbPlatform = $this->connection->getDatabasePlatform();
         $this->output = $output;
     }
 
@@ -104,18 +117,24 @@ class FixturesPurgeCommand extends ContainerAwareCommand
         );
 
         $toPurge = array();
+        $quoteStrategy = new DefaultQuoteStrategy();
 
         /** @var $entity \Doctrine\ORM\Mapping\ClassMetadata */
         foreach ($entitiesMetadata as $entity) {
             $tableName = $entity->getTableName();
-
             $toPurge[] = $tableName;
+
+            foreach($entity->getAssociationMappings() as $assoc) {
+                if(isset($assoc['joinTable'])) {
+                    $toPurge[] = $quoteStrategy->getJoinTableName($assoc, $entity, $this->dbPlatform);
+                }
+            }
         }
 
         return $toPurge;
     }
 
-    /**
+    /**Cl
      * Perform the actual purge by truncating each of tables from the provided list
      * Throws an Exception (in case if anything goes wrong) which stops the process of truncating to prevent
      * the possible damage to DB
@@ -125,24 +144,22 @@ class FixturesPurgeCommand extends ContainerAwareCommand
      */
     protected function purgeTables(array $tablesList)
     {
-        $connection = $this->entityManager->getConnection();
-        $dbPlatform = $connection->getDatabasePlatform();
-        $connection->query('SET FOREIGN_KEY_CHECKS=0;');
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=0;');
 
         foreach ($tablesList as $table) {
-            $query = $dbPlatform->getTruncateTableSql($table);
+            $query = $this->dbPlatform->getTruncateTableSql($table);
             try {
                 $this->output->writeln('Purging data from ' . $table);
-                $connection->executeUpdate($query);
+                $this->connection->executeUpdate($query);
             } catch (\Exception $e) {
                 $this->output->writeln('Error purging data from \'' . $table . '\'. Error: ' . $e->getMessage());
-                $connection->query('SET FOREIGN_KEY_CHECKS=1;');
+                $this->connection->query('SET FOREIGN_KEY_CHECKS=1;');
 
                 throw $e;
             }
         }
 
-        $connection->query('SET FOREIGN_KEY_CHECKS=1;');
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=1;');
     }
 
 }

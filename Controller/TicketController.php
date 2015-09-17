@@ -24,7 +24,6 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Diamante\UserBundle\Model\User;
-use Diamante\UserBundle\Entity\DiamanteUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,7 +31,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 
 /**
  * @Route("tickets")
@@ -96,132 +94,6 @@ class TicketController extends Controller
             $this->handleException($e);
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
-    }
-
-    /**
-     * @Route(
-     *      "/status/ticket/{id}",
-     *      name="diamante_ticket_status_change",
-     *      requirements={"id"="\d+"}
-     * )
-     * @Template("DiamanteDeskBundle:Ticket:widget/info.html.twig")
-     *
-     * @param int $id
-     * @return array
-     */
-    public function changeStatusWidgetAction($id)
-    {
-        try {
-            $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-            $command = $this->get('diamante.command_factory')
-                ->createUpdateStatusCommandForView($ticket);
-            $form = $this->createForm('diamante_ticket_status_form', $command);
-
-            if (true === $this->widgetRedirectRequested()) {
-                $response = array('form' => $form->createView());
-                return $response;
-            }
-
-            $this->handle($form);
-            $this->get('diamante.ticket.service')->updateStatus($command);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
-            $response = array('saved' => true);
-
-        } catch (\Exception $e) {
-            $this->handleException($e);
-            $response = array('form' => $form->createView());
-        }
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *      "/move/ticket/{id}",
-     *      name="diamante_ticket_move",
-     *      requirements={"id"="\d+"}
-     * )
-     * @Template("DiamanteDeskBundle:Ticket:widget/move.html.twig")
-     *
-     * @param int $id
-     * @return array
-     */
-    public function moveWidgetAction($id)
-    {
-        try {
-            $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-            $command = $this->get('diamante.command_factory')
-                ->createMoveTicketCommand($ticket);
-            $form = $this->createForm('diamante_ticket_form_move', $command);
-
-            if (true === $this->widgetRedirectRequested()) {
-                $response = array('form' => $form->createView());
-                return $response;
-            }
-            $this->handle($form);
-            if ($command->branch->getId() !== $ticket->getBranch()->getId()){
-                $this->get('diamante.ticket.service')->moveTicket($command);
-                $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
-                return $this->getWidgetResponse('diamante_ticket_view', ['key' => $ticket->getKey()]);
-            }
-            $response = $this->getWidgetResponse();
-        } catch (TicketNotFoundException $e) {
-            $this->handleException($e);
-            $response = $this->getWidgetResponse('diamante_ticket_list');
-        } catch (\Exception $e) {
-            $this->handleException($e);
-            $response = $this->getWidgetResponse();
-        }
-
-        return $response;
-    }
-
-    /**
-     * @Route(
-     *      "/watcher/ticket/{ticketId}",
-     *      name="diamante_add_watcher",
-     *      requirements={"ticketId"="\d+"}
-     * )
-     * @Template("DiamanteDeskBundle:Ticket:widget/add_watcher.html.twig")
-     *
-     * @param int $ticketId
-     * @return array
-     */
-    public function addWatcherWidgetAction($ticketId)
-    {
-        try {
-            $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
-            $command = $this->get('diamante.command_factory')
-                ->addWatcherCommand($ticket);
-            $form = $this->createForm('diamante_add_watcher_form', $command);
-
-            if (true === $this->widgetRedirectRequested()) {
-                return array('form' => $form->createView());
-
-            }
-            $this->handle($form);
-
-            if(is_string($command->watcher)) {
-                $user = new DiamanteUser($command->watcher);
-                $this->get('diamante.user.repository')->store($user);
-                $command->watcher = new User($user->getId(), User::TYPE_DIAMANTE);
-            }
-
-            if ($command->watcher) {
-                $this->get('diamante.ticket.watcher_list.service')
-                    ->addWatcher($ticket, $command->watcher);
-                $this->addSuccessMessage('diamante.desk.ticket.messages.watch.success');
-            }
-            $response = ['reload_page' => true];
-        } catch (TicketNotFoundException $e) {
-            $this->handleException($e);
-            $response = $this->getWidgetResponse('diamante_ticket_list');
-        } catch (\Exception $e) {
-            $this->handleException($e);
-            $response = $this->getWidgetResponse();
-        }
-
-        return $response;
     }
 
     /**
@@ -389,49 +261,6 @@ class TicketController extends Controller
             $this->handleException($e);
             return new Response($this->get('translator')->trans('diamante.desk.ticket.messages.delete.error'), 500);
         }
-    }
-
-    /**
-     * @Route(
-     *      "/assign/{id}",
-     *      name="diamante_ticket_assign",
-     *      requirements={"id"="\d+"}
-     * )
-     *
-     * @Template("DiamanteDeskBundle:Ticket:widget/assignee.html.twig")
-     *
-     * @param int $id
-     * @return array
-     */
-    public function assignWidgetAction($id)
-    {
-        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
-
-        $command = $this->get('diamante.command_factory')
-            ->createAssigneeTicketCommand($ticket);
-
-        $form = $this->createForm('diamante_ticket_form_assignee', $command);
-
-        if (true === $this->widgetRedirectRequested()) {
-            $response = array('form' => $form->createView());
-
-            return $response;
-        }
-
-        try {
-            $this->handle($form);
-
-            $command->assignee = $command->assignee ? $command->assignee->getId() : null;
-            $this->get('diamante.ticket.service')->assignTicket($command);
-            $this->addSuccessMessage('diamante.desk.ticket.messages.reassign.success');
-            $response = array('saved' => true);
-
-        } catch (\Exception $e) {
-            $this->handleException($e);
-            $response = array('form' => $form->createView());
-        }
-
-        return $response;
     }
 
     /**
@@ -648,32 +477,6 @@ class TicketController extends Controller
         ));
 
         return $response;
-    }
-
-    /**
-     * @Route(
-     *       "/watchers/ticket/{ticket}",
-     *      name="diamante_ticket_watchers",
-     *      requirements={"ticket"="\d+"}
-     * )
-     * @Template("DiamanteDeskBundle:Ticket:widget/watchers.html.twig")
-     *
-     * @param Ticket $ticket
-     * @return array
-     */
-    public function watchersAction($ticket)
-    {
-        $ticket = $this->container->get('diamante.ticket.repository')->get($ticket);
-        $users = [];
-
-        foreach ($ticket->getWatcherList() as $watcher) {
-            $users[] = User::fromString($watcher->getUserType());
-        }
-
-        return [
-            'ticket'   => $ticket,
-            'watchers' => $users,
-        ];
     }
 
     /**

@@ -27,5 +27,8 @@ trait FormHandlerTrait
         }
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
     abstract public function getRequest();
 }

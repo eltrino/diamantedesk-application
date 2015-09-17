@@ -34,6 +34,7 @@ class WatcherList extends \Diamante\DeskBundle\Model\Ticket\WatcherList
     /**
      * @var Ticket
      * @ORM\ManyToOne(targetEntity="Ticket", inversedBy="watcherList", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $ticket;
 
