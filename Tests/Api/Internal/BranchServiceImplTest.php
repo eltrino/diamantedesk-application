@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Branch\Logo;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\DeskBundle\Tests\Stubs\UploadedFileStub;
 use Diamante\UserBundle\Model\User;
+use Doctrine\ORM\EntityRepository;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -83,12 +84,6 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
     private $authorizationService;
 
     /**
-     * @var \Diamante\UserBundle\Api\UserService
-     * @Mock Diamante\UserBundle\Api\UserService
-     */
-    private $userService;
-
-    /**
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
      * @Mock \Doctrine\Bundle\DoctrineBundle\Registry
      */
@@ -100,6 +95,12 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $entityManager;
 
+    /**
+     * @var \Doctrine\ORM\EntityRepository
+     * @Mock \Doctrine\ORM\EntityRepository
+     */
+    private $userRepo;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -110,8 +111,7 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->branchRepository,
             $this->branchLogoHandler,
             $this->tagManager,
-            $this->authorizationService,
-            $this->userService
+            $this->authorizationService
         );
     }
 
@@ -200,10 +200,16 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->fileMock = new UploadedFileStub(self::DUMMY_LOGO_PATH, self::DUMMY_LOGO_NAME);
         $logoMock = new Logo($this->fileMock->getFilename(), $this->fileMock->getClientOriginalName());
 
-        $this->userService
+        $this->registry
             ->expects($this->once())
-            ->method('getByUser')
-            ->with($this->equalTo($assignee))
+            ->method('getRepository')
+            ->with($this->equalTo('OroUserBundle:User'))
+            ->will($this->returnValue($this->userRepo));
+
+        $this->userRepo
+            ->expects($this->once())
+            ->method('find')
+            ->with($this->equalTo($assigneeId))
             ->will($this->returnValue($defaultAssignee));
 
         $this->branchLogoHandler
@@ -342,10 +348,16 @@ class BranchServiceImplTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('EDIT'), $this->equalTo('Entity:DiamanteDeskBundle:Branch'))
             ->will($this->returnValue(true));
 
-        $this->userService
+        $this->registry
             ->expects($this->once())
-            ->method('getbyUser')
-            ->with($this->equalTo($assignee))
+            ->method('getRepository')
+            ->with($this->equalTo('OroUserBundle:User'))
+            ->will($this->returnValue($this->userRepo));
+
+        $this->userRepo
+            ->expects($this->once())
+            ->method('find')
+            ->with($this->equalTo($assigneeId))
             ->will($this->returnValue($defaultAssignee));
 
         $command = new BranchCommand();
