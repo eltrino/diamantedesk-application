@@ -90,6 +90,7 @@ class ManagerImpl implements Manager
     {
         $this->validateFilename($filename);
         $this->validateContent($content);
+        $filename = urldecode($filename);
 
         $filenamePrefix = $this->exposeFilenamePrefixFrom($holder);
 

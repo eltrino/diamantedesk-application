@@ -46,7 +46,7 @@ class File
      */
     public function getFilename()
     {
-        return $this->filename;
+        return urldecode($this->filename);
     }
 
     /**
