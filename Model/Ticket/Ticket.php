@@ -135,7 +135,8 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     public function __construct(
         UniqueId $uniqueId,
         TicketSequenceNumber $sequenceNumber,
-        $subject, $description,
+        $subject,
+        $description,
         Branch $branch,
         User $reporter,
         OroUser $assignee = null,

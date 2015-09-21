@@ -52,6 +52,9 @@ class CreateTicketCommand implements Taggable, Shared\Command
      *              message="This is a required field"
      * )
      * @Assert\Type(type="string")
+     * @Assert\NotBlank(
+     *              message="This is a required field"
+     * )
      */
     public $description;
 
