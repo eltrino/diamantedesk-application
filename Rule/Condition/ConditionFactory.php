@@ -48,8 +48,8 @@ class ConditionFactory
 
         if ($result) {
             $attributes['type']     = $matches[1];
-            $attributes['property'] = $matches[2];
-            $attributes['value']    = $matches[3];
+            $attributes['property'] = isset($matches[2]) ? $matches[2] : null;
+            $attributes['value'] = isset($matches[3]) ? $matches[3] : null;
         }
 
         return (object)$attributes;
