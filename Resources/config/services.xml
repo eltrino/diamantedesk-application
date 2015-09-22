@@ -38,6 +38,10 @@
         <parameter key="diamante.report.builder.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportBuilderImpl</parameter>
         <parameter key="diamante.report.chart_type_provider.class">Diamante\DeskBundle\Report\ChartTypeProvider</parameter>
         <parameter key="diamante.notification_manager.class">Diamante\DeskBundle\Infrastructure\Notification\NotificationManager</parameter>
+        <parameter key="diamante.loggable.loggable_manager.class">Diamante\DeskBundle\Loggable\LoggableManager</parameter>
+        <parameter key="diamante.listener.entity_listener.class">Diamante\DeskBundle\EventListener\EntityListener</parameter>
+        <parameter key="diamante.loggable.entity.class">Diamante\DeskBundle\Entity\Audit</parameter>
+        <parameter key="diamante.loggable.entity_field.class">Diamante\DeskBundle\Entity\AuditField</parameter>
 
         <parameter key="diamante.mass_action.change.class">Diamante\DeskBundle\MassAction\ChangeAction</parameter>
         <parameter key="diamante.mass_action.assign.class">Diamante\DeskBundle\MassAction\AssignAction</parameter>
@@ -145,5 +149,18 @@
             <tag name="oro_datagrid.extension.mass_action.type" type="watch"/>
         </service>
 
+        <service id="diamante.listener.entity_listener" class="%diamante.listener.entity_listener.class%">
+            <argument type="service" id="diamante.loggable.loggable_manager"/>
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="onFlush"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
+        </service>
+
+        <service id="diamante.loggable.loggable_manager" class="%diamante.loggable.loggable_manager.class%">
+            <argument>%diamante.loggable.entity.class%</argument>
+            <argument>%diamante.loggable.entity_field.class%</argument>
+            <argument id="oro_entity_config.provider.dataaudit" type="service"/>
+            <argument id="security.context.link" type="service"/>
+        </service>
     </services>
 </container>
