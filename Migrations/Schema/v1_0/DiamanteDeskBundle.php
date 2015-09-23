@@ -50,15 +50,12 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
         $request = Request::createFromGlobals();
         $args = $request->server->get('argv');
         if (!is_array($args)) {
-            echo "web installer";
             // Executed from diamantedesk-application
             return true;
         } elseif (isset($args[1])) {
-            echo "console installer";
             // Executed from install command
             return $args[1] === 'diamante:install';
         }
-
         // Executed from oro:migration:load
         return false;
     }
