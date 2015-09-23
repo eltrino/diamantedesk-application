@@ -27,14 +27,14 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InstallCommand extends ContainerAwareCommand
+class SchemaCommand extends ContainerAwareCommand
 {
     /**
      * Configures the current command.
      */
     protected function configure()
     {
-        $this->setName('diamante:user:install')
+        $this->setName('diamante:user:schema')
             ->setDescription('Install Diamante User Bundle');
     }
 
