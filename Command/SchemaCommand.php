@@ -30,7 +30,7 @@ class SchemaCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('diamante:embeddedform:schema')
-            ->setDescription('Install DiamanteDesk Embedded Forms');
+            ->setDescription('Apply DB schema changes related to DiamanteEmbeddedFormBundle');
     }
 
     /**
