@@ -2,6 +2,7 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Tag;
 
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\TagBundle\Entity\TagManager as OroTagManager;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\TagBundle\Entity\Tag;
@@ -20,7 +21,7 @@ class TagManager extends OroTagManager
      * @param ArrayCollection|null $tags
      * @return array
      */
-    public function getPreparedArray(Taggable $entity, $tags = null)
+    public function getPreparedArray(Taggable $entity, $tags = null, Organization $organization = null)
     {
         if (is_null($tags)) {
             $this->loadTagging($entity);

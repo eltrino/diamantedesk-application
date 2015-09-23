@@ -100,7 +100,7 @@ class CommentServiceImpl implements CommentService
         UserService $userService,
         AttachmentManager $attachmentManager,
         AuthorizationService $authorizationService,
-        EventDispatcherInterface $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
