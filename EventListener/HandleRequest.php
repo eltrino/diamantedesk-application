@@ -20,7 +20,7 @@ use Diamante\ApiBundle\Paging\Provider\PagingContext;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class HandleRequest
 {
@@ -34,7 +34,7 @@ class HandleRequest
      */
     private $container;
 
-    public function __construct(Validator $validator, ContainerInterface $container)
+    public function __construct(ValidatorInterface $validator, ContainerInterface $container)
     {
         $this->validator = $validator;
         $this->container = $container;
