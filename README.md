@@ -4,7 +4,7 @@ All the emails that get to the support email address are automatically retrieved
 
 ### Requirements ###
 
-DiamanteDesk supports OroCRM version 1.7+.
+DiamanteDesk supports OroCRM version 1.8+.
 
 ### Installation ###
 
