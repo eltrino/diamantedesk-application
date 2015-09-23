@@ -4,7 +4,7 @@ API bundle provides extended authentication required for DiamanteDesk API and a 
 
 ### Requirements ###
 
-DiamanteDesk supports OroCRM version 1.7+.
+DiamanteDesk supports OroCRM version 1.8+.
 
 ### Configuration ###
 
