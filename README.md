@@ -10,19 +10,19 @@ DiamanteDesk supports OroCRM version 1.8+.
 
 ### Installation ###
 
-Step 1: Add as dependency in composer:
+**Step 1:** Add as dependency in composer:
 
 ```bash
 composer require diamante/embeddedform-bundle:dev-master
 ```
 
-Step 2: Execute the following command:
+**Step 2:** Execute the following command:
 
 ```bash
 php app/console diamante:embeddedform:schema
 ```
 
-Step 3: Install assets in a usual way through Symfony:
+**Step 3:** Install assets in a usual way through Symfony:
 
 ```bash
 php app/console assets:install
