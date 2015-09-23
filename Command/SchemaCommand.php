@@ -26,7 +26,7 @@ class SchemaCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('diamante:desk:schema')
-            ->setDescription('Update DB schema @todo');
+            ->setDescription('Apply DB schema changes related to DiamanteDeskBundle');
     }
 
 

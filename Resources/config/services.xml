@@ -40,7 +40,6 @@
         <parameter key="diamante.notification_manager.class">Diamante\DeskBundle\Infrastructure\Notification\NotificationManager</parameter>
         <parameter key="diamante.loggable.loggable_manager.class">Diamante\DeskBundle\Loggable\LoggableManager</parameter>
         <parameter key="diamante.loggable.loggable_mapper.class">Oro\Bundle\DataAuditBundle\Loggable\AuditEntityMapper</parameter>
-
         <parameter key="diamante.listener.entity_listener.class">Diamante\DeskBundle\EventListener\EntityListener</parameter>
         <parameter key="diamante.loggable.entity.class">Diamante\DeskBundle\Entity\Audit</parameter>
         <parameter key="diamante.loggable.entity_field.class">Diamante\DeskBundle\Entity\AuditField</parameter>
@@ -165,6 +164,7 @@
             <argument id="security.context.link" type="service"/>
             <argument id="diamante.loggable.loggable_mapper" type="service"/>
         </service>
+        
         <service id="diamante.loggable.loggable_mapper" class="%diamante.loggable.loggable_mapper.class%"/>
     </services>
 </container>

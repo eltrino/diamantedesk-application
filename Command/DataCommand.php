@@ -28,7 +28,7 @@ class DataCommand extends AbstractCommand
     protected function configure()
     {
         $this->setName('diamante:desk:data')
-            ->setDescription('Update DB schema @todo');
+            ->setDescription('Load data fixtures related to DiamanteDeskBundle');
     }
 
     /**
