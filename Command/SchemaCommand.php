@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InstallCommand extends AbstractCommand
+class SchemaCommand extends AbstractCommand
 {
     const EMBEDDED_FORM_BUNDLE_NAME = 'DiamanteEmbeddedFormBundle';
 
@@ -29,7 +29,7 @@ class InstallCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('diamante:embeddedform:install')
+        $this->setName('diamante:embeddedform:schema')
             ->setDescription('Install DiamanteDesk Embedded Forms');
     }
 
@@ -62,7 +62,6 @@ class InstallCommand extends AbstractCommand
             return 255;
         }
 
-        $output->writeln("Installed!" . "\n");
         return 0;
     }
 

@@ -68,7 +68,7 @@ class DiamanteEmbeddedFormBundle implements Migration, ExtendExtensionAwareInter
             return true;
         } elseif (isset($args[1])) {
             // Executed from install command
-            return $args[1] === 'diamante:embeddedform:install';
+            return $args[1] === 'diamante:embeddedform:schema';
         }
 
         // Executed from oro:migration:load
