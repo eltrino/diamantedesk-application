@@ -35,7 +35,7 @@ use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -82,7 +82,7 @@ class TicketServiceImpl implements TicketService
     private $authorizationService;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
 
@@ -107,7 +107,7 @@ class TicketServiceImpl implements TicketService
      * @param AttachmentManager $attachmentManager
      * @param UserService $userService
      * @param AuthorizationService $authorizationService
-     * @param EventDispatcher $dispatcher
+     * @param EventDispatcherInterface $dispatcher
      * @param TagManager $tagManager
      * @param SecurityFacade $securityFacade
      */
@@ -116,7 +116,7 @@ class TicketServiceImpl implements TicketService
                                 AttachmentManager $attachmentManager,
                                 UserService $userService,
                                 AuthorizationService $authorizationService,
-                                EventDispatcher $dispatcher,
+                                EventDispatcherInterface $dispatcher,
                                 TagManager $tagManager,
                                 SecurityFacade $securityFacade
     ) {

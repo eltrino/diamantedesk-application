@@ -16,20 +16,22 @@ namespace Diamante\DeskBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
-class UpdateCommand extends AbstractCommand
+class SchemaCommand extends AbstractCommand
 {
     /**
      * Configures the current command.
      */
     protected function configure()
     {
-        $this->setName('diamante:desk:update')
-            ->setDescription('Update DiamanteDesk');
+        $this->setName('diamante:desk:schema')
+            ->setDescription('Update DB schema @todo');
     }
 
+
     /**
-     * Executes update process
+     * Executes installation
      * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      *
@@ -38,24 +40,11 @@ class UpdateCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write("Clearing cache..." . "\n");
-            $this->runExistingCommand('cache:clear', $output);
-            $output->writeln("Done" . "\n");
-
-            $output->write("Updating DB schema..." . "\n");
             $this->updateDbSchema();
-            $output->writeln("Done" . "\n");
-
-            $this->updateEntityConfig($output);
-
-            $output->write("Updating navigation..." . "\n");
-            $this->updateNavigation($output);
-            $output->writeln("Done" . "\n");
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
-            return;
+            return 255;
         }
-
-        $output->writeln("Updated!" . "\n");
+        return 0;
     }
 }

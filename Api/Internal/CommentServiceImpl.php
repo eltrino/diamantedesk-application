@@ -34,8 +34,8 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CommentServiceImpl implements CommentService
 {
@@ -78,7 +78,7 @@ class CommentServiceImpl implements CommentService
     private $registry;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
 
@@ -90,7 +90,7 @@ class CommentServiceImpl implements CommentService
      * @param UserService $userService
      * @param AttachmentManager $attachmentManager
      * @param AuthorizationService $authorizationService
-     * @param EventDispatcher $eventDispatcher
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         Registry $doctrineRegistry,
@@ -100,7 +100,7 @@ class CommentServiceImpl implements CommentService
         UserService $userService,
         AttachmentManager $attachmentManager,
         AuthorizationService $authorizationService,
-        EventDispatcher $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;

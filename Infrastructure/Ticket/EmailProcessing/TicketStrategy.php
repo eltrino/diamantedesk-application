@@ -26,6 +26,7 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\UserBundle\Entity\UserManager as OroUserManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TicketStrategy implements Strategy
 {
