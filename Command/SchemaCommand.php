@@ -35,7 +35,7 @@ class SchemaCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('diamante:user:schema')
-            ->setDescription('Install Diamante User Bundle');
+            ->setDescription('Apply DB schema changes related to DiamanteUserBundle');
     }
 
     /**
