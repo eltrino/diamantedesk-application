@@ -20,8 +20,8 @@ class SetupStep extends AbstractStep
     {
         $form = $this->createForm('diamante_installer_setup');
 
-        $form->get('organization_name')->setData('Diamante');
-        $form->get('application_url')->setData('http://localhost/diamante');
+        $form->get('organization_name')->setData('DiamanteDesk');
+        $form->get('application_url')->setData('http://localhost/diamantedesk');
 
         return $this->render(
             'DiamanteDistributionBundle:Process/Step:setup.html.twig',

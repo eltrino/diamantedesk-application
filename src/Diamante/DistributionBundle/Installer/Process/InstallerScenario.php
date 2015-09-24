@@ -14,7 +14,7 @@ class InstallerScenario extends ContainerAware implements ProcessScenarioInterfa
     {
         $builder
             ->add('configure', new OroInstallerStep\ConfigureStep())
-            ->add('schema', new DiamanteInstallerStep\SchemaStep())
+            ->add('schema', new DiamanteInstallerStep\InitializationStep())
             ->add('setup', new DiamanteInstallerStep\SetupStep())
             ->add('final', new DiamanteInstallerStep\FinalStep())
             ->setRedirect('diamante_ticket_list');

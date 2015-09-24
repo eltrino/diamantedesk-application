@@ -25,13 +25,15 @@
     },
     "require":{
       "php": ">=5.4.4",
-      "oro/platform": "1.7.*",
+      "oro/platform": "1.8.*",
       "diamante/desk-bundle": "self.version",
       "diamante/user-bundle": "self.version",
       "diamante/api-bundle": "self.version",
       "diamante/front-bundle": "self.version",
       "diamante/email-processing-bundle": "self.version",
-      "diamante/embeddedform-bundle": "self.version"
+      "diamante/embeddedform-bundle": "self.version",
+      "akeneo/batch-bundle": "0.4.2",
+      "monolog/monolog": "1.8.0"
     },
     "scripts": {
         "post-install-cmd": [

@@ -23,16 +23,7 @@ if (file_exists($paramFile)) {
         && isset($data['parameters']['installed'])
         && false != $data['parameters']['installed']
     ) {
-        require_once __DIR__.'/../app/DistributionKernel.php';
-
-        $kernel = new DistributionKernel('prod', false);
-        $kernel->loadClassCache();
-        $request = Request::createFromGlobals();
-        $response = $kernel->handle($request);
-        $response->send();
-        $kernel->terminate($request, $response);
-
-        exit;
+        exit('DiamanteDesk is already installed.');
     }
 }
 
@@ -40,7 +31,7 @@ if (file_exists($paramFile)) {
  * @todo Identify correct locale (headers?)
  */
 $locale           = 'en';
-$collection = new DiamanteDeskRequirements();
+$collection       = new DiamanteDeskRequirements();
 $translator       = new Translator($locale);
 $majorProblems    = $collection->getFailedRequirements();
 $minorProblems    = $collection->getFailedRecommendations();
@@ -63,9 +54,9 @@ function iterateRequirements(array $collection)
             <?php endif; ?>
             <?php echo $requirement->getTestMessage(); ?>
             </span>
-                        <?php if ($requirement instanceof CliRequirement && !$requirement->isFulfilled()) : ?>
-                            <pre class="output"><?php echo $requirement->getOutput(); ?></pre>
-                        <?php endif; ?>
+            <?php if ($requirement instanceof CliRequirement && !$requirement->isFulfilled()) : ?>
+                <pre class="output"><?php echo $requirement->getOutput(); ?></pre>
+            <?php endif; ?>
             </td>
             <td><?php echo $requirement->isFulfilled() ? 'OK' : $requirement->getHelpHtml(); ?></td>
         </tr>

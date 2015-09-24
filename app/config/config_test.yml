@@ -9,7 +9,11 @@ framework:
         storage_id: session.storage.mock_file
     csrf_protection: true
     profiler:
-        enabled: false
+        collect: false
+
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
 
 services:
     twig.extension.debug:

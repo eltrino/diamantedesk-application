@@ -13,10 +13,6 @@ process:
             fixtures:                       Load fixtures
             workflows:                      Load workflow definitions
             processes:                      Load processes configuration
-            diamante-install:               Install DiamanteDesk
-            diamante-front-assets-install:  Install DiamanteDesk Portal Assets
-            diamante-user-install:          Install DiamanteDesk User
-            diamante-embeddedform-install:  Install DiamanteDesk Embedded Forms
             navigation:                     Init navigation
             js-routing:                     Dump JS routing
             localization:                   Dump localization

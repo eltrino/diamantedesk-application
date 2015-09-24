@@ -50,12 +50,25 @@ class InstallCommand extends OroInstallCommand
             ->addOption('user-firstname', null, InputOption::VALUE_OPTIONAL, 'User first name')
             ->addOption('user-lastname', null, InputOption::VALUE_OPTIONAL, 'User last name')
             ->addOption('user-password', null, InputOption::VALUE_OPTIONAL, 'User password')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Force installation')
+            ->addOption(
+                'drop-database',
+                null,
+                InputOption::VALUE_NONE,
+                'Database will be dropped and all data will be deleted.'
+            )
             ->addOption(
                 'timeout',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Timeout for child command execution',
                 CommandExecutor::DEFAULT_TIMEOUT
+            )
+            ->addOption(
+                'force-debug',
+                null,
+                InputOption::VALUE_NONE,
+                'Forces launching of child commands in debug mode. By default they are launched with --no-debug'
             );
     }
 
@@ -72,112 +85,56 @@ class InstallCommand extends OroInstallCommand
 
         $this->logger
             ->info(sprintf('DiamanteDesk installation started at %s', date('Y-m-d H:i:s')));
-        try {
-            $this->checkStep($output);
-            $this->oroInit($input, $output);
-            $this->oroInstall($input, $output);
-            $this->runExistingCommand('cache:clear');
-            $this->runExistingCommand('diamante:desk:install');
-            $this->runExistingCommand('diamante:user:install');
-            $this->runExistingCommand('diamante:embeddedform:install');
-            $this->runExistingCommand('assets:install');
-            $this->runExistingCommand('assetic:dump', array('--process-isolation' => true));
-            $this->oroAdministrationSetup($output);
-        } catch (\Exception $e) {
-            $this->logger
-                ->error(sprintf('Installation failed with error: %s', $e->getMessage()));
-            $output->writeln($e->getMessage());
+
+        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
+        if (false === $input->isInteractive()) {
+            $this->validate($input);
+        }
+
+        $forceInstall = $input->getOption('force');
+        $commandExecutor = $this->getCommandExecutor($input, $output);
+
+        // if there is application is not installed or no --force option
+        $isInstalled = $this->getContainer()->hasParameter('installed')
+            && $this->getContainer()->getParameter('installed');
+
+        if ($isInstalled && !$forceInstall) {
+            $output->writeln('<comment>ATTENTION</comment>: DiamanteDesk already installed.');
+            $output->writeln(
+                'To proceed with install - run command with <info>--force</info> option:'
+            );
+            $output->writeln(sprintf('    <info>%s --force</info>', $this->getName()));
+            $output->writeln(
+                'To reinstall over existing database - run command with <info>--force --drop-database</info> options:'
+            );
+            $output->writeln(sprintf('    <info>%s --force --drop-database</info>', $this->getName()));
+            $output->writeln(
+                '<comment>ATTENTION</comment>: All data will be lost. ' .
+                'Database backup is highly recommended before executing this command.'
+            );
+            $output->writeln('');
+
             return 255;
         }
-        $this->logger
-            ->info(sprintf('DiamanteDesk installation finished at %s', date('Y-m-d H:i:s')));
-        return 0;
-    }
 
-    protected function oroInit(InputInterface $input, OutputInterface $output)
-    {
-        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
-
-        $this->commandExecutor = new CommandExecutor(
-            $input->hasOption('env') ? $input->getOption('env') : null,
-            $output,
-            $this->getApplication(),
-            $this->getContainer()->get('oro_cache.oro_data_cache_manager')
-        );
-        $this->commandExecutor->setDefaultTimeout($input->hasOption('timeout') ? $input->getOption('timeout') : 0);
-    }
-
-    protected function oroInstall(InputInterface $input, OutputInterface $output)
-    {
-        $this->prepareStep($this->commandExecutor)
-            ->loadDataStep($this->commandExecutor, $output)
-            ->finalStep($this->commandExecutor, $output, $input);
-    }
-
-    /**
-     * @param CommandExecutor $commandExecutor
-     * @param OutputInterface $output
-     * @param InputInterface $input
-     * @return InstallCommand
-     */
-    protected function finalStep(CommandExecutor $commandExecutor, OutputInterface $output, InputInterface $input)
-    {
-        $output->writeln('<info>Preparing application.</info>');
-
-        $assetsOptions = array(
-            '--exclude' => array('OroInstallerBundle')
-        );
-        if ($input->hasOption('symlink') && $input->getOption('symlink')) {
-            $assetsOptions['--symlink'] = true;
+        if ($forceInstall) {
+            // if --force option we have to clear cache and set installed to false
+            $this->updateInstalledFlag(false);
+            $commandExecutor->runCommand(
+                'cache:clear',
+                [
+                    '--no-optional-warmers' => true,
+                    '--process-isolation'   => true
+                ]
+            );
         }
 
-        $commandExecutor
-            ->runCommand(
-                'oro:navigation:init',
-                array(
-                    '--process-isolation' => true,
-                )
-            )
-            ->runCommand(
-                'fos:js-routing:dump',
-                array(
-                    '--target'            => 'web/js/routes.js',
-                    '--process-isolation' => true,
-                )
-            )
-            ->runCommand('oro:localization:dump')
-            ->runCommand(
-                'oro:translation:dump',
-                array(
-                    '--process-isolation' => true,
-                )
-            )
-            ->runCommand(
-                'oro:requirejs:build',
-                array(
-                    '--ignore-errors'     => true,
-                    '--process-isolation' => true,
-                )
-            );
+        $output->writeln('<info>Installing DiamanteDesk.</info>');
 
-        // run installer scripts
-        $this->processInstallerScripts($output, $commandExecutor);
+        $this->checkRequirementsStep($output);
+        $this->prepareStep($commandExecutor, $input->getOption('drop-database'));
 
-        $this->updateInstalledFlag(date('c'));
-
-        $output->writeln('');
-
-        return $this;
-    }
-
-    /**
-     * @param CommandExecutor $commandExecutor
-     * @param OutputInterface $output
-     *
-     * @return InstallCommand
-     */
-    protected function loadDataStep(CommandExecutor $commandExecutor, OutputInterface $output)
-    {
+        // load data step
         $output->writeln('<info>Setting up database.</info>');
 
         $commandExecutor
@@ -186,23 +143,18 @@ class InstallCommand extends OroInstallCommand
                 [
                     '--force'             => true,
                     '--process-isolation' => true,
-                    '--timeout'           => $commandExecutor->getDefaultTimeout(),
-                    '--exclude'           => array('DiamanteEmbeddedFormBundle', 'DiamanteDeskBundle')
+                    '--exclude'           => array('DiamanteEmbeddedFormBundle', 'DiamanteDeskBundle'),
+                    '--timeout'           => $commandExecutor->getDefaultOption('process-timeout')
                 ]
-            )
-            ->runCommand(
-                'oro:workflow:definitions:load',
-                [
-                    '--process-isolation' => true,
-                ]
-            )
-            ->runCommand(
-                'oro:process:configuration:load',
-                [
-                    '--process-isolation' => true
-                ]
-            )
-            ->runCommand(
+            );
+
+        $commandExecutor->runCommand('oro:workflow:definitions:load', ['--process-isolation' => true])
+            ->runCommand('oro:process:configuration:load', ['--process-isolation' => true])
+            ->runCommand('diamante:desk:schema', ['--process-isolation' => true])
+            ->runCommand('diamante:embeddedform:schema', ['--process-isolation' => true])
+            ->runCommand('diamante:user:schema', ['--process-isolation' => true]);
+
+        $commandExecutor->runCommand(
                 'oro:migration:data:load',
                 [
                     '--process-isolation' => true,
@@ -210,18 +162,36 @@ class InstallCommand extends OroInstallCommand
                 ]
             );
 
+        $commandExecutor->runCommand('diamante:desk:data', ['--process-isolation' => true]);
+
         $output->writeln('');
 
-        return $this;
-    }
-
-    protected function oroAdministrationSetup(OutputInterface $output)
-    {
         $output->writeln('<info>Administration setup.</info>');
 
         $this->updateSystemSettings();
-        $this->updateOrganization($this->commandExecutor);
-        $this->updateUser($this->commandExecutor);
+        $this->updateOrganization($commandExecutor);
+        $this->updateUser($commandExecutor);
+
+        $this->finalStep($commandExecutor, $output, $input);
+
+        $output->writeln(
+            sprintf(
+                '<info>DiamanteDesk has been successfully installed in <comment>%s</comment> mode.</info>',
+                $input->getOption('env')
+            )
+        );
+
+        if ('prod' != $input->getOption('env')) {
+            $output->writeln(
+                '<info>To run application in <comment>prod</comment> mode, ' .
+                'please run <comment>cache:clear</comment> command with <comment>--env prod</comment> parameter</info>'
+            );
+        }
+
+        $this->logger
+            ->info(sprintf('DiamanteDesk installation finished at %s', date('Y-m-d H:i:s')));
+
+        return 0;
     }
 
     /**
@@ -320,15 +290,9 @@ class InstallCommand extends OroInstallCommand
      * @return InstallCommand
      * @throws \RuntimeException
      */
-    protected function checkStep(OutputInterface $output)
+    protected function checkRequirementsStep(OutputInterface $output)
     {
         $output->writeln('<info>Requirements check:</info>');
-
-        if (!class_exists('OroRequirements')) {
-            require_once $this->getContainer()->getParameter('kernel.root_dir')
-                . DIRECTORY_SEPARATOR
-                . 'OroRequirements.php';
-        }
 
         if (!class_exists('DiamanteDeskRequirements')) {
             require_once $this->getContainer()->getParameter('kernel.root_dir')
@@ -336,17 +300,12 @@ class InstallCommand extends OroInstallCommand
                 . 'DiamanteDeskRequirements.php';
         }
 
-        $collection = new \OroRequirements();
-        $diamanteDeskCollection = new \DiamanteDeskRequirements();
+        $collection = new \DiamanteDeskRequirements();
 
         $this->renderTable($collection->getMandatoryRequirements(), 'Mandatory requirements', $output);
         $this->renderTable($collection->getPhpIniRequirements(), 'PHP settings', $output);
         $this->renderTable($collection->getOroRequirements(), 'Oro specific requirements', $output);
-        $this->renderTable(
-            $diamanteDeskCollection->getDiamanteDeskRequirements(),
-            'DiamanteDesk requirements',
-            $output
-        );
+        $this->renderTable($collection->getDiamanteDeskRequirements(), 'DiamanteDesk requirements', $output);
         $this->renderTable($collection->getRecommendations(), 'Optional recommendations', $output);
 
         if (count($collection->getFailedRequirements())) {
@@ -358,23 +317,5 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return $this;
-    }
-
-    /**
-     * Run existing command in system
-     * @param string $commandName
-     * @param array $parameters
-     */
-    protected function runExistingCommand($commandName, array $parameters = array())
-    {
-        try {
-            $this->commandExecutor
-                ->runCommand(
-                    $commandName,
-                    $parameters
-                );
-        } catch (\Exception $e) {
-            $this->logger->error(sprintf('Error occured during execution of %s: %s', $commandName, $e->getMessage()));
-        }
     }
 }

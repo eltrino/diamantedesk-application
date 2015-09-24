@@ -28,8 +28,8 @@ class Configuration implements ConfigurationInterface
         SettingsBuilder::append(
             $rootNode,
             [
-                'organization_name'  => ['value' => 'Diamante'],
-                'application_url'    => ['value' => 'http://localhost/diamante/']
+                'organization_name'  => ['value' => 'DiamanteDesk'],
+                'application_url'    => ['value' => 'http://localhost/diamantedesk/']
             ]
         );
 
