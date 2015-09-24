@@ -34,18 +34,7 @@
         <parameter key="diamante.comment.entity.factory.class">Diamante\DeskBundle\Model\Ticket\CommentFactory</parameter>
         <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
         <parameter key="diamante.ticket.service.api.class">Diamante\DeskBundle\Api\Internal\TicketApiServiceImpl</parameter>
-        <parameter key="diamante.ticket.internal.grid_filters_service.class">Diamante\DeskBundle\Api\Internal\TicketGridFiltersService</parameter>
         <parameter key="diamante.ticket.search.prepare_result_item.listener.class">Diamante\DeskBundle\EventListener\Search\PrepareResultItemListener</parameter>
-<!-- filters -->
-        <parameter key="diamante.filter.entity.class">Diamante\DeskBundle\Entity\Filter</parameter>
-        <parameter key="diamante.ticket.filter_url_generator_factory.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\FilterUrlGeneratorFactory</parameter>
-        <parameter key="diamante.ticket.all_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\AllTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_new_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyNewTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_open_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyOpenTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_reported_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyReportedTicketsFilterUrlGenerator</parameter>
-        <parameter key="diamante.ticket.my_reported_new_tickets_filter_url_generator.class">Diamante\DeskBundle\Infrastructure\Ticket\Filters\MyReportedNewTicketsFilterUrlGenerator</parameter>
-<!-- filters end-->
 
         <parameter key="diamante.comment.service.class">Diamante\DeskBundle\Api\Internal\CommentServiceImpl</parameter>
         <parameter key="diamante.comment.service.api.class">Diamante\DeskBundle\Api\Internal\CommentApiServiceImpl</parameter>
@@ -121,65 +110,11 @@
 
         <service id="diamante.ticket.api.service_oro" alias="diamante.ticket.api.service" />
 
-        <service id="diamante.ticket.internal.grid_filters_service"
-                 class="%diamante.ticket.internal.grid_filters_service.class%">
-            <argument type="service" id="service_container"/>
-            <argument type="service" id="diamante.filter.repository"/>
-        </service>
-
         <service id="diamante.ticket.search.prepare_result_item.listener" class="%diamante.ticket.search.prepare_result_item.listener.class%">
             <tag name="kernel.event_listener" event="oro_search.prepare_result_item" method="process"/>
             <argument type="service" id="service_container"/>
             <argument type="service" id="oro_search.mapper"/>
         </service>
-
-<!-- filters -->
-        <service id="diamante.ticket.filter_url_generator_factory" class="%diamante.ticket.filter_url_generator_factory.class%">
-            <argument type="service" id="service_container"/>
-        </service>
-
-        <service id="diamante.ticket.all_tickets_filter_url_generator"
-                 class="%diamante.ticket.all_tickets_filter_url_generator.class%"
-                 factory-service="diamante.ticket.filter_url_generator_factory"
-                 factory-method="createAllTicketsFilterUrlGenerator"
-                >
-        </service>
-
-        <service id="diamante.ticket.my_tickets_filter_url_generator"
-                 class="%diamante.ticket.my_tickets_filter_url_generator.class%"
-                 factory-service="diamante.ticket.filter_url_generator_factory"
-                 factory-method="createMyTicketsFilterUrlGenerator"
-                >
-        </service>
-
-        <service id="diamante.ticket.my_new_tickets_filter_url_generator"
-                 class="%diamante.ticket.my_new_tickets_filter_url_generator.class%"
-                 factory-service="diamante.ticket.filter_url_generator_factory"
-                 factory-method="createMyNewTicketsFilterUrlGenerator"
-                >
-        </service>
-
-        <service id="diamante.ticket.my_open_tickets_filter_url_generator"
-                 class="%diamante.ticket.my_open_tickets_filter_url_generator.class%"
-                 factory-service="diamante.ticket.filter_url_generator_factory"
-                 factory-method="createMyOpenTicketsFilterUrlGenerator"
-                >
-        </service>
-
-        <service id="diamante.ticket.my_reported_tickets_filter_url_generator"
-                 class="%diamante.ticket.my_reported_tickets_filter_url_generator.class%"
-                 factory-service="diamante.ticket.filter_url_generator_factory"
-                 factory-method="createMyReportedTicketsFilterUrlGenerator"
-                >
-        </service>
-
-        <service id="diamante.ticket.my_reported_new_tickets_filter_url_generator"
-                 class="%diamante.ticket.my_reported_new_tickets_filter_url_generator.class%"
-                 factory-service="diamante.ticket.filter_url_generator_factory"
-                 factory-method="createMyReportedNewTicketsFilterUrlGenerator"
-                >
-        </service>
-<!-- filters end-->
 
         <service id="diamante.comment.entity.factory" class="%diamante.comment.entity.factory.class%">
             <argument type="string">%diamante.comment.entity.class%</argument>
@@ -260,11 +195,6 @@
                 <argument type="service" id="diamante.user_state.service" />
             </call>
             <tag name="diamante.repository"/>
-        </service>
-        <service id="diamante.filter.repository" class="%diamante.generic.repository.class%"
-                 factory-service = "doctrine.orm.entity_manager"
-                 factory-method  = "getRepository">
-            <argument type="string">%diamante.filter.entity.class%</argument>
         </service>
         <service id="diamante.ticket.email_processing_message_reference.repository" class="%diamante.ticket.email_processing_message_reference.repository.class%"
                 factory-service = "doctrine.orm.entity_manager"
