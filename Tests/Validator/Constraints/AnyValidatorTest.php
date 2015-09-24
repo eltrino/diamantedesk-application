@@ -18,7 +18,10 @@ namespace Diamante\DeskBundle\Tests\Validator\Constraints;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 use Diamante\DeskBundle\Validator\Constraints\AnyValidator;
 use Symfony\Component\Validator\Tests\Constraints\AbstractConstraintValidatorTest;
-use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\IsNull;		
+use Symfony\Component\Validator\Constraints\NotNull;		
+use Symfony\Component\Validator\Constraints\File;
 
 class AnyValidatorTest extends AbstractConstraintValidatorTest
 {
@@ -62,8 +65,8 @@ class AnyValidatorTest extends AbstractConstraintValidatorTest
     public static function getValidValues()
     {
         return [
-            [1, [new Constraints\Type(['type' => 'integer'])]],
-            ['test', [new Constraints\NotNull(), new Constraints\Type(['type' => 'int']), new Constraints\File()]]
+            [1, [new Type(['type' => 'integer'])]],
+            ['test', [new NotNull(), new Type(['type' => 'int']), new File()]]
 
         ];
     }
@@ -74,8 +77,8 @@ class AnyValidatorTest extends AbstractConstraintValidatorTest
     public static function getInvalidValues()
     {
         return [
-            [1, [new Constraints\Type(['type' => 'object'])]],
-            ['test', [new Constraints\Null(), new Constraints\Type(['type' => 'integer']), new Constraints\File()]]
+            [1, [new Type(['type' => 'object'])]],
+            ['test', [new IsNull(), new Type(['type' => 'integer']), new File()]]
         ];
     }
 }
