@@ -16,7 +16,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Notification;
 
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
-use Oro\Bundle\TranslationBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class NotificationManager
 {
@@ -71,7 +71,7 @@ class NotificationManager
     protected $mailer;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 
@@ -88,13 +88,13 @@ class NotificationManager
     /**
      * @param \Twig_Environment $twig
      * @param \Swift_Mailer $mailer
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      * @param ConfigManager $configManager
      */
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
-        Translator $translator,
+        TranslatorInterface $translator,
         ConfigManager $configManager
     ) {
         $this->twig         = $twig;
