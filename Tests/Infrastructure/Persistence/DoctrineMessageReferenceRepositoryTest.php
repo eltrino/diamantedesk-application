@@ -55,8 +55,8 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
     private $unitOfWork;
 
     /**
-     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
-     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
+     * @var \Doctrine\ORM\Persisters\Entity\BasicEntityPersister
+     * @Mock \Doctrine\ORM\Persisters\Entity\BasicEntityPersister
      */
     private $entityPersister;
 
@@ -72,7 +72,6 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     public function thatMessageReferenceRetrievesByMessageId()
     {
-        $this->markTestIncomplete();
         $messageId = 1;
         $messageReference = $this->getMessageReference();
 
@@ -100,7 +99,6 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testFindAllByTicket()
     {
-        $this->markTestIncomplete();
         $messageReference = $this->getMessageReference();
         $ticket = $messageReference->getTicket();
         $references = array($messageReference);

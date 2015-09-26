@@ -79,10 +79,29 @@ class DoctrineTicketRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     private $objectHydrator;
 
+    /**
+     * @var \Doctrine\ORM\Configuration
+     * @Mock \Doctrine\ORM\Configuration
+     */
+    private $emConfiguration;
+
     protected function setUp()
     {
-        $this->markTestIncomplete();
         MockAnnotations::init($this);
+
+        $this
+            ->em
+            ->expects($this->any())
+            ->method('getConfiguration')
+            ->will($this->returnValue($this->emConfiguration))
+        ;
+
+        $this
+            ->emConfiguration
+            ->expects($this->any())
+            ->method('getDefaultQueryHints')
+            ->will($this->returnValue([]))
+        ;
 
         $this->searchQuery = $this->getMockForAbstractClass('\Doctrine\ORM\AbstractQuery', array($this->em));
         $this->classMetadata->name = self::CLASS_NAME;

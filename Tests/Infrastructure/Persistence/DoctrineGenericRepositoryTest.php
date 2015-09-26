@@ -47,8 +47,8 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
     private $unitOfWork;
 
     /**
-     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
-     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
+     * @var \Doctrine\ORM\Persisters\Entity\BasicEntityPersister
+     * @Mock \Doctrine\ORM\Persisters\Entity\BasicEntityPersister
      */
     private $entityPersister;
 
@@ -75,10 +75,30 @@ class DoctrineGenericRepositoryTest extends \PHPUnit_Framework_TestCase
      */
     private $objectHydrator;
 
+    /**
+     * @var \Doctrine\ORM\Configuration
+     * @Mock \Doctrine\ORM\Configuration
+     */
+    private $emConfiguration;
+
     protected function setUp()
     {
-        $this->markTestIncomplete();
         MockAnnotations::init($this);
+
+        $this
+            ->em
+            ->expects($this->any())
+            ->method('getConfiguration')
+            ->will($this->returnValue($this->emConfiguration))
+        ;
+
+        $this
+            ->emConfiguration
+            ->expects($this->any())
+            ->method('getDefaultQueryHints')
+            ->will($this->returnValue([]))
+        ;
+
         $this->filterQuery = $this->getMockForAbstractClass('\Doctrine\ORM\AbstractQuery', array($this->em));
 
         $this->classMetadata->name = self::CLASS_NAME;
