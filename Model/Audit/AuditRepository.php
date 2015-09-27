@@ -21,9 +21,5 @@ use Diamante\UserBundle\Model\User;
 
 interface AuditRepository extends Repository
 {
-    /**
-     * @return array
-     */
-    public function getAllEntities();
 
 }

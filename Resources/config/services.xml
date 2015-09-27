@@ -172,6 +172,7 @@
             <argument id="oro_entity_config.provider.dataaudit" type="service"/>
             <argument id="security.context.link" type="service"/>
             <argument id="diamante.loggable.loggable_mapper" type="service"/>
+            <argument id="service_container" type="service"/>
         </service>
 
         <service id="diamante.audit_datagrid.configuration.provider" class="%diamante.audit_datagrid.configuration.provider.class%">

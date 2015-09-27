@@ -94,6 +94,6 @@ class CombinedAuditDatasource extends AbstractDatasource
      */
     protected function getDiamanteAudit()
     {
-        return $this->auditRepository->getAllEntities();
+        return $this->auditRepository->getAll();
     }
 }

@@ -17,7 +17,9 @@ namespace Diamante\DeskBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Doctrine\ORM\Mapping\Index;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
 
@@ -98,6 +100,20 @@ class Audit extends AbstractLogEntry
      * @var string $username
      */
     protected $username;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\Diamante\UserBundle\Entity\DiamanteUser")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $user;
+
+    /**
+     * @var Organization
+     *
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $organization;
 
     /**
      * Constructor
@@ -245,13 +261,54 @@ class Audit extends AbstractLogEntry
         });
     }
 
-    public function getAuthor()
+    /**
+     * Set user
+     *
+     * @param  DiamanteUser  $user
+     * @return Audit
+     */
+    public function setUser(DiamanteUser $user = null)
     {
-        return 'ALEX';
+        $this->user = $user;
+
+        return $this;
     }
 
+    /**
+     * Get user
+     *
+     * @return DiamanteUser
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function getAuthor()
+    {
+        return sprintf('%s - %s', $this->getUser()->getFullName(), $this->getUser()->getEmail());
+    }
+
+    /**
+     * Set organization
+     *
+     * @param Organization $organization
+     * @return Audit
+     */
+    public function setOrganization(Organization $organization = null)
+    {
+        $this->organization = $organization;
+
+        return $this;
+    }
+
+    /**
+     * Get organization
+     *
+     * @return Organization
+     */
     public function getOrganization()
     {
-        return 'diamante';
+        return $this->organization;
     }
 }

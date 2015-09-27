@@ -20,9 +20,26 @@ use Doctrine\ORM\Mapping\ClassMetadata as DoctrineClassMetadata;
 use Oro\Bundle\DataAuditBundle\Entity\Audit;
 use  Oro\Bundle\DataAuditBundle\Loggable\LoggableManager as OroLoggableManager;
 use Doctrine\ORM\EntityManager;
+use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
+use Oro\Bundle\EntityConfigBundle\DependencyInjection\Utils\ServiceLink;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoggableManager extends OroLoggableManager
 {
+
+    protected $container;
+
+    public function __construct(
+        $logEntityClass,
+        $logEntityFieldClass,
+        ConfigProvider $auditConfigProvider,
+        ServiceLink $securityContextLink,
+        ContainerInterface $container
+    ) {
+        parent::__construct($logEntityClass, $logEntityFieldClass, $auditConfigProvider, $securityContextLink);
+        $this->container = $container;
+    }
+
     /**
      * @param string $action
      * @param mixed  $entity
@@ -43,11 +60,16 @@ class LoggableManager extends OroLoggableManager
         $entityMeta = $this->em->getClassMetadata($entityClassName);
 
         $logEntryMeta = $this->em->getClassMetadata($this->getLogEntityClass());
+        $user = $this->container->get('diamante.user.service')->getByUser($entity->getOwner());
+        $organization = current($this->em->getRepository('OroOrganizationBundle:Organization')->getEnabled());
+
         /** @var Audit $logEntry */
         $logEntry = $logEntryMeta->newInstance();
         $logEntry->setAction($action);
         $logEntry->setObjectClass($meta->name);
         $logEntry->setLoggedAt();
+        $logEntry->setUser($user);
+        $logEntry->setOrganization($organization);
         $logEntry->setObjectName(method_exists($entity, '__toString') ? $entity->__toString() : $meta->name);
 
         $entityId = $this->getIdentifier($entity);

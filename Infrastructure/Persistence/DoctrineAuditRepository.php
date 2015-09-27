@@ -25,11 +25,4 @@ use Diamante\DeskBundle\Model\Audit\AuditRepository;
 class DoctrineAuditRepository extends DoctrineGenericRepository implements AuditRepository
 {
 
-    public function getAllEntities()
-    {
-        return $this->createQueryBuilder('a')
-            ->leftJoin('a.fields', 'f')
-            ->select('a')
-            ->getQuery()->getResult();
-    }
 }
