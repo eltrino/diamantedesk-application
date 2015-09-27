@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping\Index;
 use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
 
 /**
- * @ORM\Entity(repositoryClass="Oro\Bundle\DataAuditBundle\Entity\Repository\AuditRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineAuditRepository")
  * @ORM\Table(name="diamante_audit", indexes={
  *  @Index(name="idx_diamante_audit_logged_at", columns={"logged_at"})
  * })
@@ -243,5 +243,15 @@ class Audit extends AbstractLogEntry
         return $this->getFields()->filter(function (AuditField $field) {
             return $field->isVisible();
         });
+    }
+
+    public function getAuthor()
+    {
+        return 'ALEX';
+    }
+
+    public function getOrganization()
+    {
+        return 'diamante';
     }
 }

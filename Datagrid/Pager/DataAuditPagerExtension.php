@@ -16,10 +16,9 @@ namespace Diamante\DeskBundle\Datagrid\Pager;
 
 use Oro\Bundle\DataGridBundle\Datagrid\Builder;
 use Oro\Bundle\DataGridBundle\Datagrid\Common\DatagridConfiguration;
-use Diamante\DeskBundle\Datagrid\CombinedUsersDatasource;
+use Diamante\DeskBundle\Datagrid\CombinedAuditDatasource;
 
-
-class CombinedUsersPagerExtension extends AbstractPagerExtension
+class DataAuditPagerExtension extends AbstractPagerExtension
 {
     /**
      * @param DatagridConfiguration $config
@@ -27,6 +26,7 @@ class CombinedUsersPagerExtension extends AbstractPagerExtension
      */
     public function isApplicable(DatagridConfiguration $config)
     {
-        return $config->offsetGetByPath(Builder::DATASOURCE_TYPE_PATH) === CombinedUsersDatasource::TYPE;
+        return $config->offsetGetByPath(Builder::DATASOURCE_TYPE_PATH) === CombinedAuditDatasource::TYPE;
+
     }
 }

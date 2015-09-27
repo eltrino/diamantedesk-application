@@ -17,70 +17,20 @@ namespace Diamante\DeskBundle\Datagrid;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query;
-use Oro\Bundle\DataGridBundle\Datagrid\DatagridInterface;
-use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecord;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-
-class CombinedUsersDatasource implements DatasourceInterface
+class CombinedUsersDatasource extends AbstractDatasource
 {
     const TYPE = 'diamante_combined_users_datasource';
     const DIAMANTE_USERNAME_PLACEHOLDER = '-';
     const DIAMANTE_USER_TYPE_POSTFIX = '[diamante]';
     const ORO_USER_TYPE_POSTFIX = '[oro]';
-    const PATH_PAGER_ORIGINAL_TOTALS = '[source][original_totals]';
-
-    /**
-     * @var Registry
-     */
-    protected $doctrineRegistry;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $eventDispatcher;
-
-    /**
-     * @var array
-     */
-    protected $requestPagerParameters = [
-        '_page'     => 1,
-        '_per_page' => 25,
-    ];
-
-    /**
-     * @var DatagridInterface
-     */
-    protected $grid;
-
-    /**
-     * @var int
-     */
-    protected $originalTotals = 0;
 
     public function __construct(
-        Registry $doctrineRegistry,
-        EventDispatcherInterface $eventDispatcher
+        Registry $doctrineRegistry
     ) {
         $this->doctrineRegistry = $doctrineRegistry;
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * @param DatagridInterface $grid
-     * @param array $config
-     */
-    public function process(DatagridInterface $grid, array $config)
-    {
-        $this->grid = $grid;
-
-        if ($pagerParameters = $grid->getParameters()->get('_pager')) {
-            $this->requestPagerParameters = $pagerParameters;
-        }
-
-        $grid->setDatasource(clone $this);
     }
 
     /**
@@ -129,29 +79,5 @@ class CombinedUsersDatasource implements DatasourceInterface
             ->createQueryBuilder('e')
             ->select('e')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);
-    }
-
-    /**
-     * @param array $rows
-     * @return array
-     */
-    private function applyPagination(array $rows)
-    {
-        $this->originalTotals = count($rows);
-        $this->grid->getConfig()->offsetAddToArrayByPath(static::PATH_PAGER_ORIGINAL_TOTALS, [$this->originalTotals]);
-
-        if (count($rows) > $this->requestPagerParameters['_per_page']) {
-            $offset = ($this->requestPagerParameters['_page'] - 1) * $this->requestPagerParameters['_per_page'];
-            if ($offset < 0) {
-                $offset = 0;
-            }
-            $rows = array_slice(
-                $rows,
-                $offset,
-                $this->requestPagerParameters['_per_page']
-            );
-        }
-
-        return $rows;
     }
 }

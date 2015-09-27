@@ -32,6 +32,7 @@
         <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
         <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
         <parameter key="diamante.datagrid.pager.combined_users_pager_extension.class">Diamante\DeskBundle\Datagrid\Pager\CombinedUsersPagerExtension</parameter>
+        <parameter key="diamante.datagrid.pager.data_audit_extension.class">Diamante\DeskBundle\Datagrid\Pager\DataAuditPagerExtension</parameter>
         <parameter key="diamante.render.url.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderUrlExtension</parameter>
         <parameter key="diamante.render.tag.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderTagExtension</parameter>
         <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportServiceImpl</parameter>
@@ -43,11 +44,13 @@
         <parameter key="diamante.listener.entity_listener.class">Diamante\DeskBundle\EventListener\EntityListener</parameter>
         <parameter key="diamante.loggable.entity.class">Diamante\DeskBundle\Entity\Audit</parameter>
         <parameter key="diamante.loggable.entity_field.class">Diamante\DeskBundle\Entity\AuditField</parameter>
+        <parameter key="diamante.datagrid.combined_audit_datasource.class">Diamante\DeskBundle\Datagrid\CombinedAuditDatasource</parameter>
 
         <parameter key="diamante.mass_action.change.class">Diamante\DeskBundle\MassAction\ChangeAction</parameter>
         <parameter key="diamante.mass_action.assign.class">Diamante\DeskBundle\MassAction\AssignAction</parameter>
         <parameter key="diamante.mass_action.move.class">Diamante\DeskBundle\MassAction\MoveAction</parameter>
         <parameter key="diamante.mass_action.watch.class">Diamante\DeskBundle\MassAction\WatchAction</parameter>
+        <parameter key="diamante.audit_datagrid.configuration.provider.class">Diamante\DeskBundle\Datagrid\Provider\DataAuditConfigurationProvider</parameter>
     </parameters>
 
     <services>
@@ -58,11 +61,15 @@
 
         <service id="diamante_deskbundle.datagrid.combined_users_datasource" class="%diamante.datagrid.combined_users_datasource.class%">
             <argument id="doctrine" type="service"/>
-            <argument id="oro_datagrid.event.dispatcher" type="service"/>
             <tag name="oro_datagrid.datasource" type="diamante_combined_users_datasource"/>
         </service>
 
         <service id="diamante.datagrid.pager.combined_users_pager" class="%diamante.datagrid.pager.combined_users_pager_extension.class%">
+            <argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>
+            <tag name="oro_datagrid.extension"/>
+        </service>
+
+        <service id="diamante.datagrid.pager.data_audit" class="%diamante.datagrid.pager.data_audit_extension.class%">
             <argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>
             <tag name="oro_datagrid.extension"/>
         </service>
@@ -157,6 +164,8 @@
             <tag name="doctrine.event_listener" event="postPersist"/>
         </service>
 
+        <service id="diamante.loggable.loggable_mapper" class="%diamante.loggable.loggable_mapper.class%"/>
+
         <service id="diamante.loggable.loggable_manager" class="%diamante.loggable.loggable_manager.class%">
             <argument>%diamante.loggable.entity.class%</argument>
             <argument>%diamante.loggable.entity_field.class%</argument>
@@ -164,7 +173,16 @@
             <argument id="security.context.link" type="service"/>
             <argument id="diamante.loggable.loggable_mapper" type="service"/>
         </service>
-        
-        <service id="diamante.loggable.loggable_mapper" class="%diamante.loggable.loggable_mapper.class%"/>
+
+        <service id="diamante.audit_datagrid.configuration.provider" class="%diamante.audit_datagrid.configuration.provider.class%">
+            <argument id="oro_datagrid.configuration.provider" type="service"/>
+            <tag name="oro_datagrid.configuration.provider" />
+        </service>
+
+        <service id="diamante.datagrid.combined_audit_datasource" class="%diamante.datagrid.combined_audit_datasource.class%">
+            <argument id="doctrine" type="service"/>
+            <argument id="diamante.audit.repository" type="service"/>
+            <tag name="oro_datagrid.datasource" type="diamante_combined_audit_datasource"/>
+        </service>
     </services>
 </container>
