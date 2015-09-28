@@ -17,7 +17,7 @@ namespace Diamante\ApiBundle\Handler;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\Validator\Validator\RecursiveValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MethodParameters
 {
@@ -42,7 +42,7 @@ class MethodParameters
     ];
 
 
-    public function __construct(\ReflectionMethod $method, RecursiveValidator $validator)
+    public function __construct(\ReflectionMethod $method, ValidatorInterface $validator)
     {
         $this->method = $method;
         $this->validator = $validator;
