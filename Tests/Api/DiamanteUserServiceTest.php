@@ -75,7 +75,6 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
             $this->diamanteUserRepository,
             $this->diamanteUserFactory,
             $this->attachmentManager,
-            $this->notificationManager,
             $this->apiUserRepository
         );
     }
