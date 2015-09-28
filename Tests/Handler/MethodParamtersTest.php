@@ -24,8 +24,8 @@ use Symfony\Component\Validator\ConstraintViolationList;
 class MethodParametersTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Symfony\Component\Validator\Validator
-     * @Mock \Symfony\Component\Validator\Validator
+     * @var \Symfony\Component\Validator\Validator\RecursiveValidator
+     * @Mock \Symfony\Component\Validator\Validator\RecursiveValidator
      */
     private $validator;
 
