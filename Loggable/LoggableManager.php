@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityManager;
 use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\EntityConfigBundle\DependencyInjection\Utils\ServiceLink;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Oro\Bundle\DataAuditBundle\Loggable\AuditEntityMapper;
 
 class LoggableManager extends OroLoggableManager
 {
@@ -34,9 +35,16 @@ class LoggableManager extends OroLoggableManager
         $logEntityFieldClass,
         ConfigProvider $auditConfigProvider,
         ServiceLink $securityContextLink,
+        AuditEntityMapper $auditEntityMapper,
         ContainerInterface $container
     ) {
-        parent::__construct($logEntityClass, $logEntityFieldClass, $auditConfigProvider, $securityContextLink);
+        parent::__construct(
+            $logEntityClass,
+            $logEntityFieldClass,
+            $auditConfigProvider,
+            $securityContextLink,
+            $auditEntityMapper
+        );
         $this->container = $container;
     }
 
