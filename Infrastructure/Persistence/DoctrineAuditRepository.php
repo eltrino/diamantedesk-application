@@ -15,6 +15,7 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Oro\Bundle\DataAuditBundle\Entity\Repository\AuditRepository as OroAuditRepository;
 use Diamante\DeskBundle\Model\Audit\AuditRepository;
 
 /**
@@ -22,7 +23,7 @@ use Diamante\DeskBundle\Model\Audit\AuditRepository;
  *
  * @package Diamante\DeskBundle\Infrastructure\Persistence
  */
-class DoctrineAuditRepository extends DoctrineGenericRepository implements AuditRepository
+class DoctrineAuditRepository extends OroAuditRepository implements AuditRepository
 {
 
 }

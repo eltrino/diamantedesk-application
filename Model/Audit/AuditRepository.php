@@ -19,7 +19,7 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\UserBundle\Model\User;
 
-interface AuditRepository extends Repository
+interface AuditRepository
 {
 
 }
