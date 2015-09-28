@@ -311,4 +311,9 @@ class Audit extends AbstractLogEntry
     {
         return $this->organization;
     }
+
+    public static function getClassName()
+    {
+        return __CLASS__;
+    }
 }

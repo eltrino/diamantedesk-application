@@ -362,4 +362,9 @@ class AuditField extends ExtendAuditField
             $customName
         ));
     }
+
+    public static function getClassName()
+    {
+        return __CLASS__;
+    }
 }
