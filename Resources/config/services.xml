@@ -41,8 +41,10 @@
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="diamante.user_factory"/>
             <argument type="service" id="oro_attachment.manager"/>
-            <argument type="service" id="diamante.notification_manager"/>
             <argument type="service" id="diamante.api.user.repository"/>
+            <call method="setNotificationManager">
+                <argument type="service" id="diamante.notification_manager"/>
+            </call>
         </service>
 
         <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">

@@ -65,7 +65,6 @@ class UserServiceImpl implements UserService, GravatarProvider
         DiamanteUserRepository $diamanteUserRepository,
         DiamanteUserFactory $factory,
         AttachmentManager $attachmentManager,
-        NotificationManager $notifier,
         ApiUserRepository $diamanteApiUserRepository
     ) {
         $this->oroUserManager               = $userManager;
@@ -73,7 +72,6 @@ class UserServiceImpl implements UserService, GravatarProvider
         $this->diamanteApiUserRepository    = $diamanteApiUserRepository;
         $this->factory                      = $factory;
         $this->attachmentManager            = $attachmentManager;
-        $this->notifier                     = $notifier;
     }
 
     /**
@@ -348,5 +346,13 @@ class UserServiceImpl implements UserService, GravatarProvider
         $this->diamanteUserRepository->store($user);
 
         $this->resetPassword(new User($user->getId(), User::TYPE_DIAMANTE));
+    }
+
+    /**
+     * @param NotificationManager $notificationManager
+     */
+    public function setNotificationManager(NotificationManager $notificationManager)
+    {
+        $this->notifier = $notificationManager;
     }
 }

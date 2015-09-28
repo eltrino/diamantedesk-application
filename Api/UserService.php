@@ -14,6 +14,7 @@
  */
 namespace Diamante\UserBundle\Api;
 
+use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
@@ -91,4 +92,9 @@ interface UserService
      * @return void
      */
     public function resetPassword(User $user);
+
+    /**
+     * @param NotificationManager $notificationManager
+     */
+    public function setNotificationManager(NotificationManager $notificationManager);
 }
