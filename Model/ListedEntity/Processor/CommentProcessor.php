@@ -19,20 +19,21 @@ use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNot
 use Diamante\AutomationBundle\Model\Change;
 use Diamante\AutomationBundle\Model\ListedEntity\ProcessorInterface;
 use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailTemplate;
-use Diamante\DeskBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Ticket\Comment;
-use Oro\Bundle\DataAuditBundle\Entity\Audit;
+use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
+use \Oro\Bundle\DataAuditBundle\Entity\Repository\AuditRepository;
 
 class CommentProcessor extends AbstractProcessor implements ProcessorInterface
 {
     /**
-     * @param Entity $entity
-     * @param Audit $entityLog
-     * @param WorkflowEvent $event
-     * @return mixed
+     * @param Entity           $entity
+     * @param AbstractLogEntry $entityLog
+     * @param AuditRepository  $repository
+     *
+     * @return array
      */
-    public function getEntityChanges(Entity $entity, Audit $entityLog, WorkflowEvent $event)
+    public function getEntityChanges(Entity $entity, AbstractLogEntry $entityLog, AuditRepository $repository)
     {
         return $this->extractChanges($entityLog);
     }

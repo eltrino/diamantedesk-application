@@ -17,22 +17,24 @@ namespace Diamante\AutomationBundle\Model\ListedEntity\Processor;
 
 use Diamante\AutomationBundle\Model\ListedEntity\ProcessorInterface;
 use Diamante\DeskBundle\Model\Shared\Entity;
-use Oro\Bundle\DataAuditBundle\Entity\Audit;
-use Oro\Bundle\DataAuditBundle\Entity\AuditField;
+use Oro\Bundle\DataAuditBundle\Entity\AuditField as OroAuditField;
+use Diamante\DeskBundle\Entity\AuditField as DiamanteAuditField;
 use Diamante\AutomationBundle\Model\Change;
+use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
 
 class AbstractProcessor
 {
     const EMAIL_TEMPLATE_DELIMITER = '[Please reply above this line]';
 
     /**
-     * @param Audit $entityLog
+     * @param AbstractLogEntry $entityLog
+     *
      * @return array
      */
-    protected function extractChanges(Audit $entityLog)
+    protected function extractChanges(AbstractLogEntry $entityLog)
     {
         $changes = [];
-        /** @var AuditField $field */
+        /** @var OroAuditField|DiamanteAuditField $field */
         foreach ($entityLog->getFields()->toArray() as $field) {
             $changes[] = new Change(
                 $field->getField(),

@@ -16,10 +16,10 @@
 namespace Diamante\AutomationBundle\Model\ListedEntity;
 
 use Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification;
-use Diamante\DeskBundle\Event\WorkflowEvent;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Oro\Bundle\DataAuditBundle\Entity\Audit;
+use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
+use \Oro\Bundle\DataAuditBundle\Entity\Repository\AuditRepository;
 
 /**
  * Interface ProcessorInterface
@@ -33,12 +33,13 @@ interface ProcessorInterface
     public function getEntityEmailTemplates();
 
     /**
-     * @param Entity $entity
-     * @param Audit $entityLog
-     * @param WorkflowEvent $event
+     * @param Entity           $entity
+     * @param AbstractLogEntry $entityLog
+     * @param AuditRepository  $repository
+     *
      * @return mixed
      */
-    public function getEntityChanges(Entity $entity, Audit $entityLog, WorkflowEvent $event);
+    public function getEntityChanges(Entity $entity, AbstractLogEntry $entityLog, AuditRepository $repository);
 
     /**
      * @return string

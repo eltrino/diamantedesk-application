@@ -18,9 +18,13 @@ namespace Diamante\AutomationBundle\EventListener;
 use Diamante\AutomationBundle\Model\ListedEntity\ListedEntitiesProvider;
 use Diamante\AutomationBundle\Model\ListedEntity\ProcessorInterface;
 use Diamante\DeskBundle\Event\WorkflowEvent;
-use Oro\Bundle\DataAuditBundle\Entity\Audit;
+use Oro\Bundle\DataAuditBundle\Entity\Audit as OroAudit;
+use Diamante\DeskBundle\Entity\Audit as DiamanteAudit;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
+use \Oro\Bundle\DataAuditBundle\Entity\Repository\AuditRepository;
 
 class WorkflowListener
 {
@@ -113,24 +117,25 @@ class WorkflowListener
     /**
      * @param Entity $entity
      *
-     * @return Audit
+     * @return OroAudit|DiamanteAudit
      */
     protected function getLastEntityLog(Entity $entity)
     {
-        $repository = $this->event->getEntityManager()->getRepository('OroDataAuditBundle:Audit');
+        $repository = $this->getRepository();
         $entityLog = $repository->getLogEntries($entity);
 
-        /** @var Audit $lastEntityLog */
+        /** @var OroAudit|DiamanteAudit $lastEntityLog */
+
         return array_shift($entityLog);
     }
 
     /**
-     * @param Entity $entity
-     * @param Audit  $lastEntityLog
+     * @param Entity           $entity
+     * @param AbstractLogEntry $lastEntityLog
      *
      * @return array
      */
-    protected function computeChanges(Entity $entity, Audit $lastEntityLog = null)
+    protected function computeChanges(Entity $entity, AbstractLogEntry $lastEntityLog = null)
     {
         $changes = [];
 
@@ -138,20 +143,37 @@ class WorkflowListener
             return $changes;
         }
 
-        return $this->listedEntityProcessor->getEntityChanges($entity, $lastEntityLog, $this->event);
+        return $this->listedEntityProcessor->getEntityChanges(
+            $entity,
+            $lastEntityLog,
+            $this->getRepository()
+        );
     }
 
     /**
-     * @param Audit $lastEntityLog
+     * @param AbstractLogEntry $lastEntityLog
      *
      * @return string
      */
-    protected function getActionType(Audit $lastEntityLog = null)
+    protected function getActionType(AbstractLogEntry $lastEntityLog = null)
     {
-        if(!$lastEntityLog) {
+        if (!$lastEntityLog) {
             return self::DELETE_ACTION;
         }
 
         return $lastEntityLog->getAction();
+    }
+
+    /**
+     * @return AuditRepository
+     */
+    protected function getRepository()
+    {
+        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
+        if ($loggedUser instanceof OroUser) {
+            return $this->event->getEntityManager()->getRepository('OroDataAuditBundle:Audit');
+        }
+
+        return $this->event->getEntityManager()->getRepository('DiamanteDeskBundle:Audit');
     }
 }
