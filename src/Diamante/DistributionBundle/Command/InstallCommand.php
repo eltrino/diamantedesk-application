@@ -151,6 +151,15 @@ class InstallCommand extends OroInstallCommand
         $commandExecutor->runCommand('oro:workflow:definitions:load', ['--process-isolation' => true])
             ->runCommand('oro:process:configuration:load', ['--process-isolation' => true])
             ->runCommand('diamante:desk:schema', ['--process-isolation' => true])
+            ->runCommand(
+                'oro:migration:load',
+                [
+                    '--force'             => true,
+                    '--process-isolation' => true,
+                    '--bundles'           => ['DiamanteDeskBundle'],
+                    '--timeout'           => $commandExecutor->getDefaultOption('process-timeout')
+                ]
+            )
             ->runCommand('diamante:embeddedform:schema', ['--process-isolation' => true])
             ->runCommand('diamante:user:schema', ['--process-isolation' => true]);
 

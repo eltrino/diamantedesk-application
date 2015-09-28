@@ -68,9 +68,9 @@ class InitializationStep extends AbstractStep
         $actions = [
             ['oro:migration:load', ['--force' => true, '--exclude' => ['DiamanteEmbeddedFormBundle', 'DiamanteDeskBundle'], '--timeout' => 0]],
             ['diamante:desk:schema', []],
+            ['oro:migration:load', ['--force' => true, '--bundles' => ['DiamanteDeskBundle'], '--timeout' => 0]],
             ['diamante:embeddedform:schema', []],
-            ['diamante:user:schema', []],
-            ['oro:migration:load', ['--force' => true, '--bundles' => ['DiamanteEmbeddedFormBundle', 'DiamanteDeskBundle'], '--timeout' => 0]]
+            ['diamante:user:schema', []]
         ];
 
         $exitCode = 0;
