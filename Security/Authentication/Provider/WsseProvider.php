@@ -40,7 +40,8 @@ class WsseProvider implements AuthenticationProviderInterface
 
     /**
      * Token lifetime in seconds
-     * @var string
+     *
+     * @var int
      */
     private $lifetime;
 

@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class HandleRequest
 {
     /**
-     * @var Validator
+     * @var ValidatorInterface
      */
     private $validator;
 
