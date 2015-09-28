@@ -17,19 +17,33 @@ namespace Diamante\DeskBundle\Loggable;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata as DoctrineClassMetadata;
-use Oro\Bundle\DataAuditBundle\Entity\Audit;
 use  Oro\Bundle\DataAuditBundle\Loggable\LoggableManager as OroLoggableManager;
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\EntityConfigBundle\DependencyInjection\Utils\ServiceLink;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Oro\Bundle\DataAuditBundle\Loggable\AuditEntityMapper;
+use Oro\Bundle\DataAuditBundle\Entity\AbstractAudit;
 
 class LoggableManager extends OroLoggableManager
 {
-
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
+    /**
+     * @var AuditEntityMapper
+     */
+    protected $diamanteAuditEntityMapper;
+
+    /**
+     * @param string             $logEntityClass
+     * @param string             $logEntityFieldClass
+     * @param ConfigProvider     $auditConfigProvider
+     * @param ServiceLink        $securityContextLink
+     * @param AuditEntityMapper  $auditEntityMapper
+     * @param ContainerInterface $container
+     */
     public function __construct(
         $logEntityClass,
         $logEntityFieldClass,
@@ -38,14 +52,16 @@ class LoggableManager extends OroLoggableManager
         AuditEntityMapper $auditEntityMapper,
         ContainerInterface $container
     ) {
+        $this->container = $container;
+        $this->diamanteAuditEntityMapper = $auditEntityMapper;
+
         parent::__construct(
             $logEntityClass,
             $logEntityFieldClass,
             $auditConfigProvider,
             $securityContextLink,
-            $auditEntityMapper
+            $container->get('oro_dataaudit.loggable.audit_entity_mapper')
         );
-        $this->container = $container;
     }
 
     /**
@@ -64,21 +80,21 @@ class LoggableManager extends OroLoggableManager
 
         $uow = $this->em->getUnitOfWork();
 
-        $meta = $this->getConfig($entityClassName);
+        $meta       = $this->getConfig($entityClassName);
         $entityMeta = $this->em->getClassMetadata($entityClassName);
 
-        $logEntryMeta = $this->em->getClassMetadata($this->getLogEntityClass());
         $user = $this->container->get('diamante.user.service')->getByUser($entity->getOwner());
         $organization = current($this->em->getRepository('OroOrganizationBundle:Organization')->getEnabled());
+        $logEntryMeta = $this->em->getClassMetadata($this->getLogClass($user));
 
-        /** @var Audit $logEntry */
+        /** @var AbstractAudit $logEntry */
         $logEntry = $logEntryMeta->newInstance();
         $logEntry->setAction($action);
         $logEntry->setObjectClass($meta->name);
         $logEntry->setLoggedAt();
         $logEntry->setUser($user);
         $logEntry->setOrganization($organization);
-        $logEntry->setObjectName(method_exists($entity, '__toString') ? $entity->__toString() : $meta->name);
+        $logEntry->setObjectName(method_exists($entity, '__toString') ? (string)$entity : $meta->name);
 
         $entityId = $this->getIdentifier($entity);
 
@@ -88,7 +104,7 @@ class LoggableManager extends OroLoggableManager
 
         $logEntry->setObjectId($entityId);
 
-        $newValues = array();
+        $newValues = [];
 
         if ($action !== self::ACTION_REMOVE && count($meta->propertyMetadata)) {
             foreach ($uow->getEntityChangeSet($entity) as $field => $changes) {
@@ -106,7 +122,7 @@ class LoggableManager extends OroLoggableManager
                 $fieldMapping = null;
                 if ($entityMeta->hasField($field)) {
                     $fieldMapping = $entityMeta->getFieldMapping($field);
-                    if ($fieldMapping['type'] == 'date') {
+                    if ($fieldMapping['type'] === 'date') {
                         // leave only date
                         $utc = new \DateTimeZone('UTC');
                         if ($old && $old instanceof \DateTime) {
@@ -127,14 +143,14 @@ class LoggableManager extends OroLoggableManager
                 }
 
                 if ($entityMeta->isSingleValuedAssociation($field) && $new) {
-                    $oid = spl_object_hash($new);
+                    $oid   = spl_object_hash($new);
                     $value = $this->getIdentifier($new);
 
                     if (!is_array($value) && !$value) {
-                        $this->pendingRelatedEntities[$oid][] = array(
+                        $this->pendingRelatedEntities[$oid][] = [
                             'log'   => $logEntry,
                             'field' => $field
-                        );
+                        ];
                     }
 
                     $method = $meta->propertyMetadata[$field]->method;
@@ -158,11 +174,11 @@ class LoggableManager extends OroLoggableManager
                     }
                 }
 
-                $newValues[$field] = array(
-                    'old'  => $old,
-                    'new'  => $new,
+                $newValues[$field] = [
+                    'old' => $old,
+                    'new' => $new,
                     'type' => $this->getFieldType($entityMeta, $field),
-                );
+                ];
             }
 
             $entityIdentifier = $this->getEntityIdentifierString($entity);
@@ -177,6 +193,11 @@ class LoggableManager extends OroLoggableManager
                         $newValues[$field] = $changes;
                         $newValues[$field]['type'] = $this->getFieldType($entityMeta, $field);
                     }
+                }
+
+                unset($this->collectionLogData[$entityClassName][$entityIdentifier]);
+                if (!$this->collectionLogData[$entityClassName]) {
+                    unset($this->collectionLogData[$entityClassName]);
                 }
             }
 
@@ -205,7 +226,9 @@ class LoggableManager extends OroLoggableManager
         $this->em->persist($logEntry);
         $uow->computeChangeSet($logEntryMeta, $logEntry);
 
-        $logEntryFieldMeta = $this->em->getClassMetadata($this->logEntityFieldClass);
+        $logEntryFieldMeta = $this->em->getClassMetadata(
+            $this->diamanteAuditEntityMapper->getAuditEntryFieldClass($user)
+        );
         foreach ($logEntry->getFields() as $field) {
             $this->em->persist($field);
             $uow->computeChangeSet($logEntryFieldMeta, $field);
@@ -213,7 +236,7 @@ class LoggableManager extends OroLoggableManager
     }
 
     /**
-     * @param               $entity
+     * @param object $entity
      * @param EntityManager $em
      */
     public function handlePostPersist($entity, EntityManager $em)
@@ -221,20 +244,16 @@ class LoggableManager extends OroLoggableManager
         $this->em = $em;
         $uow = $em->getUnitOfWork();
         $oid = spl_object_hash($entity);
+        $logEntryMeta = null;
 
         if ($this->pendingLogEntityInserts && array_key_exists($oid, $this->pendingLogEntityInserts)) {
-            $logEntry = $this->pendingLogEntityInserts[$oid];
+            $logEntry     = $this->pendingLogEntityInserts[$oid];
             $logEntryMeta = $em->getClassMetadata(ClassUtils::getClass($logEntry));
 
             $id = $this->getIdentifier($entity);
             $logEntryMeta->getReflectionProperty('objectId')->setValue($logEntry, $id);
 
-            $uow->scheduleExtraUpdate(
-                $logEntry,
-                array(
-                    'objectId' => array(null, $id)
-                )
-            );
+            $uow->scheduleExtraUpdate($logEntry, ['objectId' => [null, $id]]);
             $uow->setOriginalEntityProperty(spl_object_hash($logEntry), 'objectId', $id);
 
             unset($this->pendingLogEntityInserts[$oid]);
@@ -244,9 +263,9 @@ class LoggableManager extends OroLoggableManager
             $identifiers = $uow->getEntityIdentifier($entity);
 
             foreach ($this->pendingRelatedEntities[$oid] as $props) {
-                /** @var Audit $logEntry */
+                /** @var AbstractAudit $logEntry */
                 $logEntry = $props['log'];
-                $data = $logEntry->getData();
+                $data     = $logEntry->getData();
                 if (empty($data[$props['field']]['new'])) {
                     $data[$props['field']]['new'] = implode(', ', $identifiers);
                     $oldField = $logEntry->getField($props['field']);
@@ -257,7 +276,9 @@ class LoggableManager extends OroLoggableManager
                         $oldField->getOldValue()
                     );
 
-                    $uow->computeChangeSet($logEntryMeta, $logEntry);
+                    if ($logEntryMeta) {
+                        $uow->computeChangeSet($logEntryMeta, $logEntry);
+                    }
                     $uow->setOriginalEntityProperty(spl_object_hash($logEntry), 'objectId', $data);
                 }
             }
@@ -308,5 +329,15 @@ class LoggableManager extends OroLoggableManager
         }
 
         return $type;
+    }
+
+    /**
+     * @param $user
+     *
+     * @return string
+     */
+    protected function getLogClass($user)
+    {
+        return $this->diamanteAuditEntityMapper->getAuditEntryClass($user);
     }
 }

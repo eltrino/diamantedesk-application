@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Doctrine\ORM\Mapping\Index;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
-
+use Diamante\DeskBundle\Model\Shared\Entity;
 use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
 
 /**
@@ -29,7 +29,7 @@ use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
  *  @Index(name="idx_diamante_audit_logged_at", columns={"logged_at"})
  * })
  */
-class Audit extends AbstractLogEntry
+class Audit extends AbstractLogEntry implements Entity
 {
     /**
      * @var integer $id

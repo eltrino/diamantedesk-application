@@ -21,13 +21,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\DataAuditBundle\Model\AuditFieldTypeRegistry;
 use Oro\Bundle\DataAuditBundle\Model\ExtendAuditField;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Diamante\DeskBundle\Model\Shared\Entity;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="diamante_audit_field")
  * @Config(mode=Oro\Bundle\EntityConfigBundle\Config\ConfigModelManager::MODE_HIDDEN)
  */
-class AuditField extends ExtendAuditField
+class AuditField extends ExtendAuditField implements Entity
 {
     /**
      * @var int
