@@ -44,8 +44,8 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     const DUMMY_TICKET_ID     = 1;
     const DUMMY_TICKET_KEY    = 'DT-1';
     const DUMMY_ATTACHMENT_ID = 1;
-    const SUBJECT      = 'Subject';
-    const DESCRIPTION  = 'Description';
+    const SUBJECT             = 'Subject';
+    const DESCRIPTION         = 'Description';
     const DUMMY_FILENAME      = 'dummy_filename.ext';
     const DUMMY_FILE_CONTENT  = 'DUMMY_CONTENT';
     const DUMMY_STATUS        = 'dummy';
@@ -98,12 +98,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
     private $ticketBuilder;
 
     /**
-     * @var \Diamante\UserBundle\Api\UserService
-     * @Mock \Diamante\UserBundle\Api\UserService
-     */
-    private $userService;
-
-    /**
      * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
      */
@@ -133,6 +127,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $securityFacade;
 
+    /**
+     * @var \Oro\Bundle\UserBundle\Entity\Repository\UserRepository
+     * @Mock \Oro\Bundle\UserBundle\Entity\Repository\UserRepository
+     */
+    private $oroUserRepository;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -145,7 +145,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->doctrineRegistry,
             $this->ticketBuilder,
             $this->attachmentManager,
-            $this->userService,
             $this->authorizationService,
             $this->dispatcher,
             $this->tagManager,
@@ -158,6 +157,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      * @return \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository
      * @return \Diamante\DeskBundle\Model\Shared\Repository
      * @return \Diamante\DeskBundle\Model\Ticket\TicketRepository
+     * @return \Oro\Bundle\UserBundle\Entity\Repository\UserRepository
      * @return null
      */
     public function getRepository($class)
@@ -171,6 +171,9 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
                 break;
             case 'DiamanteDeskBundle:TicketHistory':
                 return $this->ticketHistoryRepository;
+                break;
+            case 'OroUserBundle:User':
+                return $this->oroUserRepository;
                 break;
             default:
                 return null;
@@ -433,9 +436,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $assigneeId = 3;
         $reporter = $this->createReporter($reporterId);
         $assignee = $this->createAssignee();
-
-        $this->userService->expects($this->atLeastOnce())->method('getByUser')->with(new User($assigneeId, User::TYPE_ORO))
-            ->will($this->returnValue($assignee));
+        $assignee->setId($assigneeId);
 
         $newStatus = Status::IN_PROGRESS;
         $branch = $this->createBranch();
@@ -497,9 +498,7 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $assigneeId = 3;
         $reporter = $this->createReporter($reporterId);
         $assignee = $this->createAssignee();
-
-        $this->userService->expects($this->at(0))->method('getByUser')->with(new User($assigneeId, User::TYPE_ORO))
-            ->will($this->returnValue($assignee));
+        $assignee->setId($assigneeId);
 
         $newStatus = Status::IN_PROGRESS;
         $branch = $this->createBranch();
@@ -960,9 +959,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
-            ->will($this->returnValue($assignee));
-
         $this->ticket->expects($this->any())->method('getAssignee')->will($this->returnValue($assignee));
         $this->ticket->expects($this->once())->method('assign')->with($assignee);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
@@ -975,6 +971,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->authorizationService
             ->expects($this->never())
             ->method('isActionPermitted');
+
+        $this->oroUserRepository
+            ->expects($this->once())
+            ->method('find')
+            ->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
 
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
@@ -994,9 +996,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketRepository->expects($this->once())->method('get')->with($this->equalTo(self::DUMMY_TICKET_ID))
             ->will($this->returnValue($this->ticket));
 
-        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
-            ->will($this->returnValue($assignee));
-
         $this->ticket->expects($this->any())->method('getAssigneeId')->will($this->returnValue($assigneeId));
         $this->ticket->expects($this->once())->method('assign')->with($assignee);
         $this->ticketRepository->expects($this->once())->method('store')->with($this->equalTo($this->ticket));
@@ -1011,6 +1010,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
+
+        $this->oroUserRepository
+            ->expects($this->any())
+            ->method('find')
+            ->with($this->equalTo($assigneeId))
+            ->will($this->returnValue($assignee));
 
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;
@@ -1057,9 +1062,6 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('isActionPermitted')
             ->with($this->equalTo('EDIT'), $this->equalTo($this->ticket))
             ->will($this->returnValue(true));
-
-        $this->userService->expects($this->at(0))->method('getByUser')->with($this->equalTo(new User($assigneeId, User::TYPE_ORO)))
-            ->will($this->returnValue(null));
 
         $command = new AssigneeTicketCommand();
         $command->id = self::DUMMY_TICKET_ID;

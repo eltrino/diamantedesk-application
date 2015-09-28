@@ -34,6 +34,7 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Diamante\DeskBundle\Entity\TicketHistory;
@@ -72,9 +73,9 @@ class TicketServiceImpl implements TicketService
     private $ticketBuilder;
 
     /**
-     * @var UserService
+     * @var EntityRepository
      */
-    private $userService;
+    private $oroUserRepository;
 
     /**
      * @var AuthorizationService
@@ -114,7 +115,6 @@ class TicketServiceImpl implements TicketService
     public function __construct(Registry $doctrineRegistry,
                                 TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
-                                UserService $userService,
                                 AuthorizationService $authorizationService,
                                 EventDispatcherInterface $dispatcher,
                                 TagManager $tagManager,
@@ -122,7 +122,6 @@ class TicketServiceImpl implements TicketService
     ) {
         $this->doctrineRegistry        = $doctrineRegistry;
         $this->ticketBuilder           = $ticketBuilder;
-        $this->userService             = $userService;
         $this->attachmentManager       = $attachmentManager;
         $this->authorizationService    = $authorizationService;
         $this->dispatcher              = $dispatcher;
@@ -131,6 +130,7 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
         $this->branchRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
         $this->ticketHistoryRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:TicketHistory');
+        $this->oroUserRepository       = $this->doctrineRegistry->getRepository('OroUserBundle:User');
         $this->loggedUser              = $securityFacade->getLoggedUser();
     }
 
@@ -383,8 +383,8 @@ class TicketServiceImpl implements TicketService
             $assignee = $ticket->getAssignee();
             $currentAssigneeId = empty($assignee) ? null : $assignee->getId();
 
-            if ($command->assignee != $currentAssigneeId) {
-                $assignee = $this->userService->getByUser(new User((int)$command->assignee, User::TYPE_ORO));
+            if ($command->assignee !== $currentAssigneeId) {
+                $assignee = $this->oroUserRepository->find($command->assignee);
             }
         }
 
@@ -485,7 +485,7 @@ class TicketServiceImpl implements TicketService
         $this->isAssigneeGranted($ticket);
 
         if ($command->assignee !== null) {
-            $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
+            $assignee = $this->oroUserRepository->find($command->assignee);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found');
             }
