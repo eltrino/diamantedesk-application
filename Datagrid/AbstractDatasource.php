@@ -23,6 +23,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 abstract class AbstractDatasource implements DatasourceInterface
 {
     const PATH_PAGER_ORIGINAL_TOTALS = '[source][original_totals]';
+    const DIRECTION_DESC = 'DESC';
 
     /**
      * @var Registry
@@ -42,6 +43,12 @@ abstract class AbstractDatasource implements DatasourceInterface
      * @var DatagridInterface
      */
     protected $grid;
+
+
+    /**
+     * @var array
+     */
+    protected $sorters;
 
     /**
      * @param DatagridInterface $grid
@@ -87,5 +94,59 @@ abstract class AbstractDatasource implements DatasourceInterface
         }
 
         return $rows;
+    }
+
+    /**
+     * @param array $sorters
+     */
+    public function setSorters($sorters)
+    {
+        $this->sorters = $sorters;
+    }
+
+    /**
+     * @param $rows
+     * @return void
+     */
+    protected function applySorting(&$rows)
+    {
+        if (!$rows || empty($rows)) {
+            return;
+        }
+
+        foreach ($this->sorters as $definition) {
+            list($direction, $sorter) = $definition;
+            $sortProperty = substr($sorter['data_name'], strrpos($sorter['data_name'], '.') + 1);
+
+            usort(
+                $rows,
+                function ($a, $b) use ($sortProperty, $direction) {
+                    $a = is_array($a) ? $a[0] : $a;
+                    $b = is_array($b) ? $b[0] : $b;
+
+                    $reflectionA = new \ReflectionClass($a);
+                    $reflectionB = new \ReflectionClass($b);
+
+                    $propertyA = $reflectionA->getProperty($sortProperty);
+                    $propertyB = $reflectionB->getProperty($sortProperty);
+                    $propertyA->setAccessible(true);
+                    $propertyB->setAccessible(true);
+
+                    $valueA = $propertyA->getValue($a);
+                    $valueB = $propertyB->getValue($b);
+
+                    $sortableArray = array($valueA, $valueB);
+                    $originalSortableArray = $sortableArray;
+
+                    asort($sortableArray);
+
+                    if ($direction == self::DIRECTION_DESC) {
+                        return $sortableArray !== $originalSortableArray;
+                    } else {
+                        return $sortableArray === $originalSortableArray;
+                    }
+                }
+            );
+        }
     }
 }

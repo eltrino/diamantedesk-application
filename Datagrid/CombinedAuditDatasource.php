@@ -70,6 +70,8 @@ class CombinedAuditDatasource extends AbstractDatasource
         $rows = [];
 
         $audit = array_merge($this->getOroAudit(), $this->getDiamanteAudit());
+        $this->applySorting($audit);
+
         foreach ($audit as $item) {
             $rows[] = new ResultRecord($item);
         }
@@ -86,6 +88,7 @@ class CombinedAuditDatasource extends AbstractDatasource
         $queryConfig = array_intersect_key($this->config, array_flip(['query']));
         $converter = new YamlConverter();
         $qb = $converter->parse($queryConfig, $this->doctrineRegistry->getManager()->createQueryBuilder());
+
         return $qb->getQuery()->getResult();
     }
 

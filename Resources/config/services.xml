@@ -33,6 +33,7 @@
         <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
         <parameter key="diamante.datagrid.pager.combined_users_pager_extension.class">Diamante\DeskBundle\Datagrid\Pager\CombinedUsersPagerExtension</parameter>
         <parameter key="diamante.datagrid.pager.data_audit_extension.class">Diamante\DeskBundle\Datagrid\Pager\DataAuditPagerExtension</parameter>
+        <parameter key="diamante.datagrid.sorter.data_audit_extension.class">Diamante\DeskBundle\Datagrid\Sorter\AuditSorterExtension</parameter>
         <parameter key="diamante.render.url.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderUrlExtension</parameter>
         <parameter key="diamante.render.tag.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderTagExtension</parameter>
         <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportServiceImpl</parameter>
@@ -71,6 +72,11 @@
 
         <service id="diamante.datagrid.pager.data_audit" class="%diamante.datagrid.pager.data_audit_extension.class%">
             <argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>
+            <tag name="oro_datagrid.extension"/>
+        </service>
+
+        <service id="diamante.datagrid.sorter.data_audit" class="%diamante.datagrid.sorter.data_audit_extension.class%">
+            <!--<argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>-->
             <tag name="oro_datagrid.extension"/>
         </service>
 
