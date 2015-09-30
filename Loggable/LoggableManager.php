@@ -83,7 +83,8 @@ class LoggableManager extends OroLoggableManager
         $meta       = $this->getConfig($entityClassName);
         $entityMeta = $this->em->getClassMetadata($entityClassName);
 
-        $user = $this->container->get('diamante.user.service')->getByUser($entity->getOwner());
+        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
+        $user = $this->container->get('diamante.user.service')->getUserFromApiUser($loggedUser);
         $organization = current($this->em->getRepository('OroOrganizationBundle:Organization')->getEnabled());
         $logEntryMeta = $this->em->getClassMetadata($this->getLogClass($user));
 
