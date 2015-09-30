@@ -154,6 +154,7 @@ abstract class ApiTestCase extends WebTestCase
     ) {
         $server = $this->generateWsse();
         $this->client->setServerParameters($server);
+        $this->client->insulate();
         $this->client->request(
             $method,
             $this->getUrl($url, $urlParameters),
