@@ -41,6 +41,13 @@ class RestServiceLoader extends Loader
 
         $reflection = new \ReflectionClass($class);
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
+            // workaround for lazy loaded services
+            if (stripos($reflectionMethod->getDocComment(), '{@inheritdoc}') || null == $reflectionMethod->getDocComment()) {
+                $parent = $reflection->getParentClass();
+                if ($parent && $parent->hasMethod($reflectionMethod->getName())) {
+                    $reflectionMethod = $parent->getMethod($reflectionMethod->getName());
+                }
+            }
             $annotation = $this->reader->getMethodAnnotation(
                 $reflectionMethod,
                 'Diamante\\ApiBundle\\Annotation\\ApiDoc'
