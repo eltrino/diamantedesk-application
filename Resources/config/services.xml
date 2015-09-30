@@ -43,6 +43,8 @@
         <parameter key="diamante.mass_action.assign.class">Diamante\DeskBundle\MassAction\AssignAction</parameter>
         <parameter key="diamante.mass_action.move.class">Diamante\DeskBundle\MassAction\MoveAction</parameter>
         <parameter key="diamante.mass_action.watch.class">Diamante\DeskBundle\MassAction\WatchAction</parameter>
+
+        <parameter key="diamante.grid_views_load.class">Diamante\DeskBundle\EventListener\GridViewsLoadListener</parameter>
     </parameters>
 
     <services>
@@ -141,6 +143,13 @@
 
         <service id="diamante.mass_action.watch" class="%diamante.mass_action.watch.class%">
             <tag name="oro_datagrid.extension.mass_action.type" type="watch"/>
+        </service>
+
+        <service id="diamante.event_listener.grid_views_load" class="%diamante.grid_views_load.class%">
+            <argument id="doctrine" type="service"/>
+            <argument id="oro_security.security_facade" type="service"/>
+            <argument id="oro_security.acl_helper" type="service"/>
+            <tag name="kernel.event_listener" event="oro_datagrid.grid_views_load" method="onViewsLoad"/>
         </service>
 
     </services>
