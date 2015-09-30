@@ -14,16 +14,23 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Diamante\DeskBundle\DataFixtures\AbstractContainerAwareFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\TagBundle\Entity\Tag;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 
-class LoadTagData extends AbstractFixture
+class LoadTagData extends AbstractContainerAwareFixture
 {
+    /** @var EntityRepository */
+    private $organizationRepository;
+
     public function load(ObjectManager $manager)
     {
+        $organization = current($this->organizationRepository->getEnabled());
         for ($i = 1; $i <= 10; $i++) {
-            $tag = new Tag('tag_' . $i);
+            $tag = new Tag('tag ' . $i);
+            $tag->setOrganization($organization);
 
             $manager->persist($tag);
         }
@@ -31,4 +38,13 @@ class LoadTagData extends AbstractFixture
         $manager->flush();
     }
 
+    /**
+     * @return null
+     */
+    protected function init()
+    {
+        /** @var  EntityManager $entityManager */
+        $entityManager = $this->container->get('doctrine')->getManager();
+        $this->organizationRepository = $entityManager->getRepository('OroOrganizationBundle:Organization');
+    }
 }

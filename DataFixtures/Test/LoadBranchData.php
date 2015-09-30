@@ -24,7 +24,7 @@ class LoadBranchData extends AbstractFixture
     {
 
         $ASCIIKey = ord('A');
-        for ($i = 1; $i <= 10; $i ++) {
+        for ($i = 1; $i <= 20; $i ++) {
 
             $keySuffix = chr($ASCIIKey + $i);
             $branch = new Branch(
