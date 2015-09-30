@@ -17,12 +17,12 @@ diamante_user_bundle:
 
 
 diamante_user_api_oro:
-  resource:       diamante.user.api.service_oro
-  type:           diamante_rest_service
-  prefix:         /api/rest/{version}/desk
-  requirements:
-    version:      latest|v1
-    _format:      xml|json
-  defaults:
-    version:      latest
-    _format:      json
+    resource:       diamante.user.api.service_oro
+    type:           diamante_rest_service
+    prefix:         /api/rest/{version}/desk
+    requirements:
+        version:      latest|v1
+        _format:      xml|json
+    defaults:
+        version:      latest
+        _format:      json

@@ -36,7 +36,7 @@
             <argument type="string">%diamante.user.entity.class%</argument>
         </service>
 
-        <service id="diamante.user.service" class="%diamante.user.service.class%" lazy="true">
+        <service id="diamante.user.service" class="%diamante.user.service.class%">
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="diamante.user_factory"/>
