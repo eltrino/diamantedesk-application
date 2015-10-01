@@ -119,7 +119,7 @@ class UserController extends Controller
     public function deleteAction($id)
     {
         try {
-            if (!in_array($this->get('request')->getMethod(), ['POST', 'PUT'])) {
+            if (!in_array($this->get('request')->getMethod(), ['POST', 'PUT','DELETE'])) {
                 throw new MethodNotAllowedException("This won't work");
             }
 
