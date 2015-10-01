@@ -1,5 +1,5 @@
 .container-fluid > .diam-plot {
-  margin: 20px 20px 0;
+  margin: 0 20px;
 }
 
 .diam-plot svg{
@@ -47,6 +47,7 @@
   list-style: none;
   padding: 0;
   text-align: left;
+  margin:5px 0 0;
 }
 
 .diam-d3-tip .color-label {

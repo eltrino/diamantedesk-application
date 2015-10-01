@@ -34,8 +34,9 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
@@ -72,9 +73,9 @@ class TicketServiceImpl implements TicketService
     private $ticketBuilder;
 
     /**
-     * @var UserService
+     * @var EntityRepository
      */
-    private $userService;
+    private $oroUserRepository;
 
     /**
      * @var AuthorizationService
@@ -82,7 +83,7 @@ class TicketServiceImpl implements TicketService
     private $authorizationService;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
 
@@ -107,22 +108,20 @@ class TicketServiceImpl implements TicketService
      * @param AttachmentManager $attachmentManager
      * @param UserService $userService
      * @param AuthorizationService $authorizationService
-     * @param EventDispatcher $dispatcher
+     * @param EventDispatcherInterface $dispatcher
      * @param TagManager $tagManager
      * @param SecurityFacade $securityFacade
      */
     public function __construct(Registry $doctrineRegistry,
                                 TicketBuilder $ticketBuilder,
                                 AttachmentManager $attachmentManager,
-                                UserService $userService,
                                 AuthorizationService $authorizationService,
-                                EventDispatcher $dispatcher,
+                                EventDispatcherInterface $dispatcher,
                                 TagManager $tagManager,
                                 SecurityFacade $securityFacade
     ) {
         $this->doctrineRegistry        = $doctrineRegistry;
         $this->ticketBuilder           = $ticketBuilder;
-        $this->userService             = $userService;
         $this->attachmentManager       = $attachmentManager;
         $this->authorizationService    = $authorizationService;
         $this->dispatcher              = $dispatcher;
@@ -131,6 +130,7 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
         $this->branchRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
         $this->ticketHistoryRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:TicketHistory');
+        $this->oroUserRepository       = $this->doctrineRegistry->getRepository('OroUserBundle:User');
         $this->loggedUser              = $securityFacade->getLoggedUser();
     }
 
@@ -383,8 +383,8 @@ class TicketServiceImpl implements TicketService
             $assignee = $ticket->getAssignee();
             $currentAssigneeId = empty($assignee) ? null : $assignee->getId();
 
-            if ($command->assignee != $currentAssigneeId) {
-                $assignee = $this->userService->getByUser(new User((int)$command->assignee, User::TYPE_ORO));
+            if ($command->assignee !== $currentAssigneeId) {
+                $assignee = $this->oroUserRepository->find($command->assignee);
             }
         }
 
@@ -395,19 +395,16 @@ class TicketServiceImpl implements TicketService
             new Priority($command->priority),
             new Status($command->status),
             new Source($command->source),
-            $assignee
+            $assignee,
+            $command->tags
         );
 
         $this->createAttachments($command, $ticket);
 
         $this->doctrineRegistry->getManager()->persist($ticket);
-        $this->tagManager->deleteTaggingByParams($ticket->getTags(), get_class($ticket), $ticket->getId());
-        $tags = $command->tags;
-        $tags['owner'] = $tags['all'];
-        $ticket->setTags($tags);
+        $this->doctrineRegistry->getManager()->flush();
         $this->tagManager->saveTagging($ticket);
 
-        $this->doctrineRegistry->getManager()->flush();
         $ticket->setTags(null);
         $this->loadTagging($ticket);
 
@@ -435,6 +432,12 @@ class TicketServiceImpl implements TicketService
         $ticket->updateStatus(new Status($command->status));
         $this->ticketRepository->store($ticket);
 
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
+
         return $ticket;
     }
 
@@ -458,6 +461,13 @@ class TicketServiceImpl implements TicketService
             }
 
             $this->doctrineRegistry->getManager()->flush();
+
+            $this->dispatchWorkflowEvent(
+                $this->doctrineRegistry,
+                $this->dispatcher,
+                $ticket
+            );
+
         } catch (\Exception $e) {
             throw new TicketMovedException($e->getMessage());
         }
@@ -475,7 +485,7 @@ class TicketServiceImpl implements TicketService
         $this->isAssigneeGranted($ticket);
 
         if ($command->assignee !== null) {
-            $assignee = $this->userService->getByUser(new User($command->assignee, User::TYPE_ORO));
+            $assignee = $this->oroUserRepository->find($command->assignee);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found');
             }
@@ -485,6 +495,12 @@ class TicketServiceImpl implements TicketService
         }
 
         $this->ticketRepository->store($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
     }
 
     /**
@@ -523,12 +539,17 @@ class TicketServiceImpl implements TicketService
     private function processDeleteTicket(Ticket $ticket)
     {
         $attachments = $ticket->getAttachments();
-        $ticket->delete();
 
         foreach ($attachments as $attachment) {
             $this->attachmentManager->deleteAttachment($attachment);
         }
         $this->ticketRepository->remove($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
     }
 
     /**
@@ -577,6 +598,12 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository->store($ticket);
 
         $this->loadTagging($ticket);
+
+        $this->dispatchWorkflowEvent(
+            $this->doctrineRegistry,
+            $this->dispatcher,
+            $ticket
+        );
 
         return $ticket;
     }

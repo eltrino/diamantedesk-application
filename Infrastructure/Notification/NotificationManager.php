@@ -15,11 +15,16 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification;
 
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class NotificationManager
 {
-    const TEMPLATE_TYPE_HTML = 'html';
-    const TEMPLATE_TYPE_TXT = 'txt';
+    const TEMPLATE_TYPE_HTML            = 'html';
+    const TEMPLATE_TYPE_TXT             = 'txt';
+
+    const SENDER_EMAIL_CONFIG_PATH      = 'oro_notification.email_notification_sender_email';
+    const SENDER_NAME_CONFIG_PATH       = 'oro_notification.email_notification_sender_name';
 
     /**
      * @var array
@@ -66,15 +71,36 @@ class NotificationManager
     protected $mailer;
 
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @var NotificationOptionsProvider[]
+     */
+    protected $providers = [];
+
+    /**
+     * @var ConfigManager
+     */
+    protected $config;
+
+    /**
      * @param \Twig_Environment $twig
      * @param \Swift_Mailer $mailer
+     * @param TranslatorInterface $translator
+     * @param ConfigManager $configManager
      */
     public function __construct(
         \Twig_Environment $twig,
-        \Swift_Mailer $mailer
+        \Swift_Mailer $mailer,
+        TranslatorInterface $translator,
+        ConfigManager $configManager
     ) {
-        $this->twig = $twig;
-        $this->mailer = $mailer;
+        $this->twig         = $twig;
+        $this->mailer       = $mailer;
+        $this->translator   = $translator;
+        $this->config       = $configManager;
     }
 
     /**
@@ -109,9 +135,14 @@ class NotificationManager
 
     /**
      * @param string $subject
+     * @param bool $translatable
      */
-    public function setSubject($subject)
+    public function setSubject($subject, $translatable = false)
     {
+        if ($translatable) {
+            $subject = $this->translator->trans($subject);
+        }
+
         $this->subject = $subject;
     }
 
@@ -177,5 +208,56 @@ class NotificationManager
         $this->toName = $name;
     }
 
+    /**
+     * @param NotificationOptionsProvider $provider
+     */
+    public function addOptionsProvider(NotificationOptionsProvider $provider)
+    {
+        $this->providers[$provider->getName()] = $provider;
+    }
 
+    /**
+     * @param $name
+     * @param $recipient
+     * @param array $options
+     */
+    public function notifyByScenario($name, $recipient, array $options = [])
+    {
+        if (!$this->hasOptionsProvider($name)) {
+            throw new \RuntimeException(sprintf('Option provider with name "%s" is not found or was not properly configured', $name));
+        }
+
+        $provider = $this->providers[$name];
+        $provider->setRecipient($recipient);
+
+        foreach ($provider->getRequiredParams() as $param) {
+            if (!array_key_exists($param, $options)) {
+                throw new \RuntimeException(sprintf('Required parameter "%s" is missing', $param));
+            }
+
+            $this->addTemplateOption($param, $options[$param]);
+        }
+
+        $this->setTo($provider->getRecipientEmail(), $provider->getRecipientName());
+        $this->addHtmlTemplate($provider->getHtmlTemplate());
+        $this->addTxtTemplate($provider->getTxtTemplate());
+        $this->setSubject($provider->getSubject(), $provider->subjectIsTranslatable());
+
+        $this->setFrom(
+            $this->config->get(self::SENDER_EMAIL_CONFIG_PATH),
+            $this->config->get(self::SENDER_NAME_CONFIG_PATH)
+        );
+
+        $this->notify();
+        $this->clear();
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    protected function hasOptionsProvider($name)
+    {
+        return array_key_exists($name, $this->providers);
+    }
 }

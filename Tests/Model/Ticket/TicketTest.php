@@ -23,6 +23,7 @@ use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Oro\Bundle\TagBundle\Entity\Tag;
 
 class TicketTest extends \PHPUnit_Framework_TestCase
 {
@@ -146,7 +147,9 @@ class TicketTest extends \PHPUnit_Framework_TestCase
             $newReporter,
             new Priority(Priority::PRIORITY_LOW),
             new Status(Status::CLOSED),
-            new Source(Source::PHONE)
+            new Source(Source::PHONE),
+            null,
+            ['autocomplete' => [''], 'all' => [new Tag('ticket_tag')], 'owner' => [new Tag('ticket_tag')]]
         );
 
         $this->assertEquals('New Subject', $ticket->getSubject());

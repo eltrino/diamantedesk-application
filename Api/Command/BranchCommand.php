@@ -20,8 +20,9 @@ use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 
-class BranchCommand implements Taggable
+class BranchCommand implements Taggable, Shared\Command
 {
+    const PERSISTENT_ENTITY = 'Diamante\DeskBundle\Entity\Branch';
 
     /**
      * @Assert\Type(type="integer")

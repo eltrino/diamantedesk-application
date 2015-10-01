@@ -92,6 +92,8 @@ class DiamanteDeskBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\TagCompilerPass());
         $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterSubscribersPass());
+        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterNotificationOptionsProvidersPass());
     }
 }

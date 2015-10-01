@@ -30,7 +30,10 @@ use Diamante\DeskBundle\Model\Ticket\UniqueId;
 class LoadTicketData extends AbstractContainerAwareFixture implements DependentFixtureInterface
 {
     /** @var EntityRepository */
-    private $userRepository;
+    private $oroUserRepository;
+
+    /** @var EntityRepository */
+    private $diamanteUserRepository;
 
     /** @var EntityRepository */
     private $branchRepository;
@@ -50,29 +53,43 @@ class LoadTicketData extends AbstractContainerAwareFixture implements DependentF
      */
     public function load(ObjectManager $manager)
     {
-        $assignee = $this->userRepository->findOneBy(array('id' => 1));
-        $reporter = new User($assignee->getId(), User::TYPE_ORO);
+        $oroAssignee = $this->oroUserRepository->findOneBy(array('id' => 1));
+        $oroReporter = new User($oroAssignee->getId(), User::TYPE_ORO);
 
         for ($i = 1; $i <= 10; $i ++) {
-            /** @var \Diamante\DeskBundle\Entity\Branch $branch */
-            $branch = $this->branchRepository->findOneBy(array('name' => 'branchName' . $i));
-            $ticket = new Ticket(
-                UniqueId::generate(),
-                new TicketSequenceNumber(null),
-                'ticketSubject' . $i,
-                'ticketDescription' . $i,
-                $branch,
-                $reporter,
-                $assignee,
-                new Source(Source::PHONE),
-                new Priority(Priority::PRIORITY_MEDIUM),
-                new Status(Status::OPEN)
-            );
+            $ticket = $this->createTicket($i, $oroReporter, $oroAssignee);
+            $manager->persist($ticket);
+        }
 
+        $diamanteAssignee = $this->diamanteUserRepository->findOneBy(array('id' => 1));
+        $diamanteReporter = new User($diamanteAssignee->getId(), User::TYPE_DIAMANTE);
+
+        for ($i = 11; $i <= 20; $i ++) {
+            $ticket = $this->createTicket($i, $diamanteReporter, $oroAssignee);
             $manager->persist($ticket);
         }
 
         $manager->flush();
+    }
+
+    protected function createTicket($iterator, $reporter, $assignee)
+    {
+        /** @var \Diamante\DeskBundle\Entity\Branch $branch */
+        $branch = $this->branchRepository->findOneBy(array('name' => 'branchName' . $iterator));
+        $ticket = new Ticket(
+            UniqueId::generate(),
+            new TicketSequenceNumber(null),
+            'ticketSubject' . $iterator,
+            'ticketDescription' . $iterator,
+            $branch,
+            $reporter,
+            $assignee,
+            new Source(Source::PHONE),
+            new Priority(Priority::PRIORITY_MEDIUM),
+            new Status(Status::OPEN)
+        );
+
+        return $ticket;
     }
 
     /**
@@ -82,7 +99,8 @@ class LoadTicketData extends AbstractContainerAwareFixture implements DependentF
     {
         /** @var  EntityManager $entityManager */
         $entityManager = $this->container->get('doctrine')->getManager();
-        $this->userRepository = $entityManager->getRepository('OroUserBundle:User');
+        $this->oroUserRepository = $entityManager->getRepository('OroUserBundle:User');
+        $this->diamanteUserRepository = $entityManager->getRepository('DiamanteUserBundle:DiamanteUser');
         $this->branchRepository = $entityManager->getRepository('DiamanteDeskBundle:Branch');
     }
 

@@ -45,19 +45,21 @@ class ReportController extends Controller
             $data = $this->get('diamante.report.service')->build($id);
 
             return [
+                'page_title' => $this->getReportLabel($id),
                 'chart_type' => $this->getChartType($id),
                 'data'       => $data,
             ];
         } catch (\Exception $e) {
             $this->handleException($e);
-            return new Response($e->getMessage(), 404);
+            throw $this->createNotFoundException($e->getMessage(), $e);
         }
     }
 
     /**
      * @Route(
      *      "/widget/{id}",
-     *      name="diamante_report_widget"
+     *      name="diamante_report_widget",
+     *      options={"expose"=true}
      * )
      *
      * @param string $id
@@ -83,7 +85,7 @@ class ReportController extends Controller
 
         } catch (\Exception $e) {
             $this->handleException($e);
-            return new Response($e->getMessage(), 404);
+            throw $this->createNotFoundException($e->getMessage(), $e);
         }
     }
 
@@ -95,5 +97,15 @@ class ReportController extends Controller
     {
         $config = $this->get('diamante.report.service')->getConfig($id);
         return $config['chart']['type'];
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
+    private function getReportLabel($id)
+    {
+        $config = $this->get('diamante.report.service')->getConfig($id);
+        return $config['label'];
     }
 }

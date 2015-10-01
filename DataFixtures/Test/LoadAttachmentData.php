@@ -42,9 +42,10 @@ class LoadAttachmentData extends AbstractContainerAwareFixture implements Depend
             $manager->persist($attachment);
         }
 
+        $name = 'test.jpg';
         $image = $this->container->get('kernel')
-            ->locateResource('@DiamanteDeskBundle/Tests/Functional/fixture/test.jpg');
-        $attachment = new Attachment(new File($image), md5($image));
+            ->locateResource('@DiamanteDeskBundle/Tests/Functional/fixture/' . $name);
+        $attachment = new Attachment(new File($image), md5($name));
         $manager->persist($attachment);
 
         $manager->flush();

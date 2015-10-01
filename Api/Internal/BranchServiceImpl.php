@@ -59,11 +59,6 @@ class BranchServiceImpl implements BranchService
     private $authorizationService;
 
     /**
-     * @var UserService
-     */
-    private $userService;
-
-    /**
      * @var Registry
      */
     private $registry;
@@ -74,15 +69,13 @@ class BranchServiceImpl implements BranchService
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
-        AuthorizationService $authorizationService,
-        UserService $userService
+        AuthorizationService $authorizationService
     ) {
         $this->branchFactory     = $branchFactory;
         $this->branchRepository  = $branchRepository;
         $this->branchLogoHandler = $branchLogoHandler;
         $this->tagManager        = $tagManager;
         $this->authorizationService = $authorizationService;
-        $this->userService       = $userService;
         $this->registry          = $doctrineRegistry;
     }
 
@@ -139,9 +132,8 @@ class BranchServiceImpl implements BranchService
             );
 
         $this->registry->getManager()->persist($branch);
-        $this->tagManager->saveTagging($branch);
-
         $this->registry->getManager()->flush();
+        $this->tagManager->saveTagging($branch);
 
         return $branch;
     }
@@ -272,7 +264,7 @@ class BranchServiceImpl implements BranchService
         $assignee = null;
 
         if ($command->defaultAssignee !== null) {
-            $assignee = $this->userService->getByUser(new User($command->defaultAssignee, User::TYPE_ORO));
+            $assignee = $this->registry->getRepository('OroUserBundle:User')->find($command->defaultAssignee);
         }
 
         return $assignee;

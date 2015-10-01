@@ -22,6 +22,7 @@
         <parameter key="diamante.ticket.entity.class">Diamante\DeskBundle\Entity\Ticket</parameter>
         <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
         <parameter key="diamante.ticket_history.entity.class">Diamante\DeskBundle\Entity\TicketHistory</parameter>
+        <parameter key="diamante.audit.entity.class">Diamante\DeskBundle\Entity\Audit</parameter>
         <parameter key="diamante.watcher_list.entity.class">Diamante\DeskBundle\Entity\WatcherList</parameter>
         <parameter key="diamante.ticket_timeline.entity.class">Diamante\DeskBundle\Entity\TicketTimeline</parameter>
         <parameter key="diamante.report.timeline_service.class">Diamante\DeskBundle\Api\Internal\ReportTimelineServiceImpl</parameter>
@@ -47,18 +48,18 @@
         <parameter key="diamante.ticket.email_processing_message_reference.service.class">Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
         <parameter key="diamante.tag.serialize.handler.class">Diamante\DeskBundle\Serializer\TagHandler</parameter>
         <parameter key="diamante.ticket_history.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository</parameter>
+        <parameter key="diamante.audit.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineAuditRepository</parameter>
     </parameters>
 
     <services>
         <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
             <argument type="service" id="diamante.ticket.email_processing_message_reference.service"/>
             <argument type="service" id="diamante.branch_email_configuration.service"/>
-            <argument type="service" id="diamante.user.repository" />
-            <argument type="service" id="diamante.user_factory" />
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <argument type="service" id="diamante.ticket.watcher_list.service"/>
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="oro_config.global"/>
+            <argument type="service" id="diamante.user.service"/>
             <tag name="email_processing.strategy" />
         </service>
 
@@ -84,7 +85,6 @@
             <argument type="service" id="doctrine" />
             <argument type="service" id="diamante.ticket.builder"/>
             <argument type="service" id="diamante.attachment.manager"/>
-            <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="oro_tag.tag.manager"/>
@@ -128,6 +128,7 @@
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.attachment.manager"/>
             <argument type="service" id="diamante.authorization_manager.service"/>
+            <argument type="service" id="event_dispatcher"/>
         </service>
 
         <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service">
@@ -215,6 +216,11 @@
                  factory-service = "doctrine.orm.entity_manager"
                  factory-method  = "getRepository">
             <argument type="string">%diamante.ticket_timeline.entity.class%</argument>
+        </service>
+        <service id="diamante.audit.repository" class="%diamante.audit.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.audit.entity.class%</argument>
         </service>
 <!-- repositories end -->
     </services>

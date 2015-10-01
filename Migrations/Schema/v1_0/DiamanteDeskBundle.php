@@ -36,7 +36,6 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
         if (!$this->isExecutedFromInstallCommand()) {
             return;
         }
-
         $this->auditFieldExtension->addType($schema, $doctrineType = 'status', $auditType = 'status');
         $this->auditFieldExtension->addType($schema, $doctrineType = 'priority', $auditType = 'priority');
         $this->auditFieldExtension->addType($schema, $doctrineType = 'user_type', $auditType = 'user_type');
@@ -50,15 +49,13 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
     {
         $request = Request::createFromGlobals();
         $args = $request->server->get('argv');
-
         if (!is_array($args)) {
             // Executed from diamantedesk-application
             return true;
         } elseif (isset($args[1])) {
             // Executed from install command
-            return $args[1] === 'diamante:desk:install';
+            return $args[1] === 'diamante:install';
         }
-
         // Executed from oro:migration:load
         return false;
     }

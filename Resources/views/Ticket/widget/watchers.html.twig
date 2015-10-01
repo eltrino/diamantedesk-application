@@ -6,7 +6,7 @@
             <li class="diam-attachment">
                 {{ render_user_name(watcher) }}
                 <span class="pull-right">
-                    <a href="{{ path('diamante_remove_watcher', { 'ticket': ticket.id, 'user': watcher } ) }}">
+                    <a href="{{ path('diamante_remove_watcher', { 'ticketId': ticket.id, 'user': watcher } ) }}">
                         <i class="icon-remove hide-text" title="{{ 'diamante.desk.ui.delete'|trans }}">
                             {{ 'diamante.desk.ui.delete'|trans }}
                         </i>

@@ -135,7 +135,8 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     public function __construct(
         UniqueId $uniqueId,
         TicketSequenceNumber $sequenceNumber,
-        $subject, $description,
+        $subject,
+        $description,
         Branch $branch,
         User $reporter,
         OroUser $assignee = null,
@@ -415,7 +416,8 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         Priority $priority,
         Status $status,
         Source $source,
-        OroUser $assignee = null
+        OroUser $assignee = null,
+        $tags
     ) {
         $this->subject     = $subject;
         $this->description = $description;
@@ -423,6 +425,7 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         $this->priority    = $priority;
         $this->source      = $source;
         $this->updatedAt   = new \DateTime('now', new \DateTimeZone('UTC'));
+        $this->tags        = $tags;
 
         $this->processUpdateStatus($status);
 
@@ -586,11 +589,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     public function getSourceValue()
     {
         return $this->source->getValue();
-    }
-
-    public function delete()
-    {
-
     }
 
     /**

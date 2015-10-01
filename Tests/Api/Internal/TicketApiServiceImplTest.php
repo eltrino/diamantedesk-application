@@ -44,12 +44,6 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
     private $doctrineRegistry;
 
     /**
-     * @var \Diamante\UserBundle\Api\UserService
-     * @Mock Diamante\UserBundle\Api\UserService
-     */
-    private $userService;
-
-    /**
      * @var TicketApiServiceImpl
      */
     private $ticketService;
@@ -127,7 +121,6 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
             $this->doctrineRegistry,
             $this->ticketBuilder,
             $this->attachmentManager,
-            $this->userService,
             $this->authorizationService,
             $this->dispatcher,
             $this->tagManager,

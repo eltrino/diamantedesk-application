@@ -44,11 +44,32 @@ class OroTicketApiTest extends ApiTestCase
             'status'      => 'open',
             'priority'    => Priority::PRIORITY_MEDIUM,
             'source'      => Source::PHONE,
+            'reporter'    => User::TYPE_ORO . User::DELIMITER . 1
+        );
+        $response = $this->post('diamante_ticket_api_service_oro_create_ticket', $this->command);
+
+        return $this->getArray($response);
+    }
+
+    public function testCreateTicketWithTag()
+    {
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $tagRepository = $entityManager->getRepository('OroTagBundle:Tag');
+        $tag = $tagRepository->findOneBy(['id' => 1]);
+        $uniqueTagName = sprintf('test tag %d', microtime(true) * 1000);
+        $tag->setName($uniqueTagName);
+
+        $this->command->requestParameters = array(
+            'branch'      => 1,
+            'subject'     => 'Test Ticket with tag',
+            'description' => 'Test Description with tag',
+            'status'      => 'open',
+            'priority'    => Priority::PRIORITY_MEDIUM,
+            'source'      => Source::PHONE,
             'reporter'    => User::TYPE_ORO . User::DELIMITER . 1,
             'tags' => array(
-                'autocomplete' => array(''),
-                'all'          => array(new Tag('test tag')),
-                'owner'        => array(new Tag('test tag'))
+                'all'          => array($tag),
+                'owner'        => array($tag)
             ),
         );
         $response = $this->post('diamante_ticket_api_service_oro_create_ticket', $this->command);

@@ -22,7 +22,7 @@ use Diamante\DeskBundle\Validator\Constraints\PrintType;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class CreateTicketCommand implements Taggable
+class CreateTicketCommand implements Taggable, Shared\Command
 {
     /**
      * @var int|null
@@ -52,6 +52,9 @@ class CreateTicketCommand implements Taggable
      *              message="This is a required field"
      * )
      * @Assert\Type(type="string")
+     * @Assert\NotBlank(
+     *              message="This is a required field"
+     * )
      */
     public $description;
 

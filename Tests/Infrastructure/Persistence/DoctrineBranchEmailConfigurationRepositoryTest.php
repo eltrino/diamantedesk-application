@@ -47,8 +47,8 @@ class DoctrineBranchEmailConfigurationRepositoryTest extends \PHPUnit_Framework_
     private $unitOfWork;
 
     /**
-     * @var \Doctrine\ORM\Persisters\BasicEntityPersister
-     * @Mock \Doctrine\ORM\Persisters\BasicEntityPersister
+     * @var \Doctrine\ORM\Persisters\Entity\BasicEntityPersister
+     * @Mock \Doctrine\ORM\Persisters\Entity\BasicEntityPersister
      */
     private $entityPersister;
 
@@ -79,12 +79,11 @@ class DoctrineBranchEmailConfigurationRepositoryTest extends \PHPUnit_Framework_
 
         $this->entityPersister->expects($this->once())
             ->method('load')
-            ->with(
-                $this->equalTo(array('branchId' => $branchId)), $this->equalTo(null), $this->equalTo(null), array(), $this->equalTo(0),
-                $this->equalTo(1), $this->equalTo(null)
+            ->with($this->equalTo(['branchId' => $branchId]), $this->equalTo(null), $this->equalTo(null),
+                $this->equalTo([]), $this->equalTo(null), $this->equalTo(1), $this->equalTo(null)
             )->will($this->returnValue($branchEmailConfiguration));
 
-        $retrievedBranchEmailConfiguration = $this->repository->findOneBy(array('branchId' => $branchId));
+        $retrievedBranchEmailConfiguration = $this->repository->findOneBy(['branchId' => $branchId]);
 
         $this->assertNotNull($retrievedBranchEmailConfiguration);
         $this->assertEquals($branchEmailConfiguration, $retrievedBranchEmailConfiguration);

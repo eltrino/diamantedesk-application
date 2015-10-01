@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
 use Diamante\EmailProcessingBundle\Model\Message;
+use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -93,18 +94,23 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $configManager;
 
+    /**
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock \Diamante\UserBundle\Api\UserService
+     */
+    private $userService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
         $this->ticketStrategy = new TicketStrategy(
             $this->messageReferenceService,
             $this->branchEmailConfigurationService,
-            $this->diamanteUserRepository,
-            $this->diamanteUserFactory,
             $this->emailProcessingSettings,
             $this->watcherService,
             $this->oroUserManager,
-            $this->configManager
+            $this->configManager,
+            $this->userService
         );
     }
 
@@ -114,10 +120,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $diamanteUser = $this->getDiamanteUser();
+        $diamanteUser = $this->getReporter(1);
 
-        $this->diamanteUserRepository->expects($this->once())
-            ->method('findUserByEmail')
+        $this->userService->expects($this->once())
+            ->method('getUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
@@ -162,25 +168,16 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $assigneeId = 1;
 
-        $this->diamanteUserRepository->expects($this->once())
-            ->method('findUserByEmail')
+        $this->userService->expects($this->once())
+            ->method('getUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue(null));
 
         $diamanteUser = new DiamanteUser('test_email', $dummyFrom->getFirstName(), $dummyFrom->getLastName());
 
-        $this->diamanteUserFactory->expects($this->once())
-            ->method('create')
-            ->with(
-                $this->equalTo(self::DUMMY_MESSAGE_FROM)
-            )->will($this->returnValue($diamanteUser));
-
-        $this->diamanteUserRepository->expects($this->once())
-            ->method('store')
-            ->with(
-                $this->equalTo($diamanteUser)
-            );
+        $this->userService->expects($this->once())
+            ->method('createDiamanteUser');
 
         $reporter = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
 
@@ -219,10 +216,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $diamanteUser = $this->getDiamanteUser();
+        $diamanteUser = $this->getReporter(1);
 
-        $this->diamanteUserRepository->expects($this->once())
-            ->method('findUserByEmail')
+        $this->userService->expects($this->once())
+            ->method('getUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
@@ -265,10 +262,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $diamanteUser = $this->getDiamanteUser();
+        $diamanteUser = $this->getReporter(1);
 
-        $this->diamanteUserRepository->expects($this->once())
-            ->method('findUserByEmail')
+        $this->userService->expects($this->once())
+            ->method('getUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
@@ -306,10 +303,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO, self::DUMMY_REFERENCE);
 
-        $diamanteUser = $this->getDiamanteUser();
+        $diamanteUser = $this->getReporter(1);
 
-        $this->diamanteUserRepository->expects($this->once())
-            ->method('findUserByEmail')
+        $this->userService->expects($this->once())
+            ->method('getUserByEmail')
             ->with(
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
@@ -337,5 +334,14 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private function getDummyFrom()
     {
         return new Message\MessageSender(self::DUMMY_MESSAGE_FROM, 'Dummy User');
+    }
+
+    private function createUserCommand()
+    {
+        $command = new CreateDiamanteUserCommand();
+        $command->email         = self::DUMMY_MESSAGE_FROM;
+        $command->username      = self::DUMMY_MESSAGE_FROM;
+        $command->firstName     = 'DUMMY_FIRST';
+        $command->lastName      = 'DUMMY_LAST';
     }
 }

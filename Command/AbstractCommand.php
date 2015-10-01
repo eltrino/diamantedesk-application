@@ -48,6 +48,8 @@ abstract class AbstractCommand extends ContainerAwareCommand
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\TicketHistory::getClassName()),
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\WatcherList::getClassName()),
             $em->getClassMetadata(\Diamante\DeskBundle\Entity\TicketTimeline::getClassName()),
+            $em->getClassMetadata(\Diamante\DeskBundle\Entity\Audit::getClassName()),
+            $em->getClassMetadata(\Diamante\DeskBundle\Entity\AuditField::getClassName())
         );
 
         $event->disableListeners();
@@ -95,26 +97,6 @@ abstract class AbstractCommand extends ContainerAwareCommand
 
         return new Schema($targetTables);
     }
-
-    /**
-     * Update oro navigation
-     * @param OutputInterface $output
-     */
-    protected function updateNavigation(OutputInterface $output)
-    {
-        $this->runExistingCommand('oro:navigation:init', $output);
-    }
-
-    /**
-     * Update oro entity-config
-     *
-     * @param OutputInterface $output
-     */
-    protected function updateEntityConfig(OutputInterface $output)
-    {
-        $this->runExistingCommand('oro:entity-config:update', $output);
-    }
-
 
     /**
      * Run existing command in system

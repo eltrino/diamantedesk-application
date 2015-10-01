@@ -1,36 +1,44 @@
 # DiamanteDesk Bundle #
 
-DiamanteDesk software extends base OroCRM functionality. Its main purpose is to integrate customer support system into the Client's CRM system.
+DiamanteDesk software extends basic OroCRM functionality. Its main purpose is to integrate customer support system into the Client's CRM system.
 
 Using this comprehensive help desk, it is now possible to create support tickets within the CRM and associate them with any customer from the system. In DiamanteDesk, tickets can be assigned to specific users and grouped into Branches. This option allows grouping tickets related to a certain customer.
 
-Currently, DiamanteDesk software is in alpha version. Eltrino team is making efforts to improve and increase the amount of features available to a user.
+Currently, DiamanteDesk software is in alpha version. Eltrino team is making efforts to improve and increase the amount of features available to our clients.
 
 ### Requirements ###
 
-DiamanteDesk supports OroCRM version 1.7+.
+DiamanteDesk supports OroCRM version 1.8+.
 
 ### Installation ###
 
-Add as dependency in composer:
+**Step 1:** Add as dependency in composer:
 
 ```bash
 composer require diamante/desk-bundle:dev-master
 ```
+**Step 2:** To properly install DiamanteDesk bundle, create the following folders:
 
-In addition, you will need to run DiamanteDesk internal command to install the software:
+* app/attachments
+* web/uploads/branch/logo
+
+**Step 3:** Run DiamanteDesk internal command:
 
 ```bash
 php app/console diamante:desk:install
 ```
 
-And here is a command that updates already installed software:
+To update the software that has already been installed, execute the followong commands:
 
 ```bash
-php app/console diamante:desk:update
+php app/console diamante:desk:schema
+php app/console oro:migration:load
+php app/console diamante:desk:data
+php app/console oro:navigation:init
+php app/console oro:entity-config:update
 ```
 
-After *install* or *update* commands the last thing which should be done is assets installation. It should be done in Symfony in a standard way:
+After *install* or *update* commands are issued, assets shall be installed in a usual way through Symfony:
 
 ```bash
 php app/console assets:install
@@ -49,4 +57,4 @@ diamante_attachments_download:
 
 ## Contributing
 
-We appreciate any effort to make DiamanteDesk functionality better; therefore, we welcome all kinds of contributions in the form of bug reporting, patches submition, feature requests or documentation enhancement. Please refer to the DiamanteDesk [guidelines for contributing](http://docs.diamantedesk.com/en/latest/developer-guide/contributing.html) if you wish to be a part of the project.
+We appreciate any effort to make DiamanteDesk functionality better; therefore, we welcome all kinds of contributions in the form of bug reporting, patches submitting, feature requests or documentation enhancement. Please refer to the DiamanteDesk [guidelines for contributing](http://docs.diamantedesk.com/en/latest/developer-guide/contributing.html) if you wish to be a part of the project.

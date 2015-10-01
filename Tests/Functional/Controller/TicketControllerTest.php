@@ -22,6 +22,7 @@ use Symfony\Component\DomCrawler\Form;
 
 class TicketControllerTest extends AbstractController
 {
+    use Shared\TicketGridTrait;
 
     public function setUp()
     {
@@ -69,8 +70,8 @@ class TicketControllerTest extends AbstractController
         $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
         $form['diamante_ticket_form[assignee]']    = 1;
         $form['diamante_ticket_form[tags][autocomplete]']    = '';
-        $form['diamante_ticket_form[tags][all]']    = '[{"id":"tag_1","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
-        $form['diamante_ticket_form[tags][owner]']    = '[{"id":"tag_1","name":"test tag","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_form[tags][all]']    = '[{"id":"tag_1","name":"test tag three","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
+        $form['diamante_ticket_form[tags][owner]']    = '[{"id":"tag_1","name":"test tag three","owner":true,"notSaved":true,"moreOwners":false,"url":""}]';
         $this->client->followRedirects(true);
 
         $crawler  = $this->client->submit($form);
@@ -140,7 +141,7 @@ class TicketControllerTest extends AbstractController
         $form['diamante_ticket_form[branch]']      = $this->chooseBranchFromGrid()['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
         $form['diamante_ticket_form[description]'] = 'Test Description';
-        $form['diamante_ticket_form[status]']      = 'open';
+        $form['diamante_ticket_form[status]']      = Status::OPEN;
         $form['diamante_ticket_form[priority]']    = Priority::PRIORITY_MEDIUM;
         $form['diamante_ticket_form[source]']      = Source::PHONE;
         $form['diamante_ticket_form[reporter]']    = User::TYPE_ORO . User::DELIMITER .  1;
@@ -163,9 +164,6 @@ class TicketControllerTest extends AbstractController
 
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-
-        //$this->assertEquals($form['diamante_ticket_form[branch]'], $branch['id']);
-        //$this->assertNotEquals($form['diamante_ticket_form[reporter]'], "");
 
         $form['diamante_ticket_form[branch]']      = $branch['id'];
         $form['diamante_ticket_form[subject]']     = 'Test Ticket';
@@ -207,27 +205,6 @@ class TicketControllerTest extends AbstractController
 
         $this->assertTrue($crawler->filter('html:contains("Attachments")')->count() == 1);
         $this->assertTrue($crawler->filter('html:contains("Comments")')->count() == 1);
-    }
-
-    public function testChangeStatus()
-    {
-        $ticket              = $this->chooseTicketFromGrid();
-        $updateStatusFormUrl = $this->getUrl('diamante_ticket_status_change', array('id' => $ticket['id']));
-        $crawler             = $this->client->request('GET', $updateStatusFormUrl);
-
-        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
-        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
-    }
-
-
-    public function testMove()
-    {
-        $ticket              = $this->chooseTicketFromGrid();
-        $moveFormUrl = $this->getUrl('diamante_ticket_move', array('id' => $ticket['id']));
-        $crawler             = $this->client->request('GET', $moveFormUrl);
-
-        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
-        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
     }
 
     public function testUpdate()
@@ -282,16 +259,6 @@ class TicketControllerTest extends AbstractController
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains("Ticket successfully saved.", $crawler->html());
-    }
-
-    public function testAssign()
-    {
-        $ticket        = $this->chooseTicketFromGrid();
-        $ticketAssignUrl = $this->getUrl('diamante_ticket_assign', array('id' => $ticket['id']));
-        $crawler = $this->client->request('GET', $ticketAssignUrl);
-
-        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
-        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
     }
 
     public function testCreateWithoutAssigneeId()
@@ -353,124 +320,4 @@ class TicketControllerTest extends AbstractController
         $result = $this->jsonToArray($response->getContent());
         return current($result['data']);
     }
-
-    private function chooseTicketFromGrid()
-    {
-        $response = $this->requestGrid(
-            'diamante-ticket-grid'
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $result = $this->jsonToArray($response->getContent());
-
-        return current($result['data']);
-    }
-
-    /**
-     * @group mass
-     */
-    public function testMassAssign()
-    {
-        $ticketMassAssignUrl = $this->getUrl('diamante_ticket_mass_assign');
-        $crawler = $this->client->request('GET', $ticketMassAssignUrl);
-
-        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
-        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
-    }
-
-
-    /**
-     * @group mass
-     */
-    public function testMassChangeStatus()
-    {
-        $ticketMassChangeUrl = $this->getUrl('diamante_ticket_mass_status_change');
-        $crawler = $this->client->request('GET', $ticketMassChangeUrl);
-
-        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
-        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
-    }
-
-    /**
-     * @group mass
-     */
-    public function testMassMove()
-    {
-        $ticketMassMoveUrl = $this->getUrl('diamante_ticket_mass_move');
-        $crawler = $this->client->request('GET', $ticketMassMoveUrl);
-
-        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
-        $this->assertEquals("Change", $crawler->selectButton('Change')->html());
-    }
-
-    /**
-     * @group mass
-     */
-    public function testMassWatch()
-    {
-        $ticketMassWatchUrl = $this->getUrl('diamante_ticket_mass_add_watcher');
-        $crawler = $this->client->request('GET', $ticketMassWatchUrl);
-
-        $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());
-        $this->assertEquals("Add", $crawler->selectButton('Add')->html());
-    }
-
-
-    /**
-     * @group mass
-     */
-    public function testMassAssignSubmit()
-    {
-
-        $ticketMassAssignSubmitUrl = $this->getUrl('diamante_ticket_mass_assign',
-                                                  ['no_redirect' => 'false', 'ids' =>'1, 2',
-                                                   'assignee' => '1']);
-
-        $this->client->request('GET', $ticketMassAssignSubmitUrl);
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    /**
-     * @group mass
-     */
-    public function testMassChangeStatusSubmit()
-    {
-        $ticketMassChangeSubmitUrl = $this->getUrl('diamante_ticket_mass_status_change',
-                                                  ['no_redirect' => 'false', 'ids' =>'1, 2', 'status' => 'new']);
-
-        $this->client->request('GET', $ticketMassChangeSubmitUrl);
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    /**
-     * @group mass
-     */
-    public function testMassMoveSubmit()
-    {
-        $ticketMassMoveSubmitUrl = $this->getUrl('diamante_ticket_mass_move', ['no_redirect' => 'false',
-                                                 'ids' =>'1, 2', 'branch' => '1']);
-
-        $this->client->request('GET', $ticketMassMoveSubmitUrl);
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    /**
-     * @group mass
-     */
-    public function testMassWatchSubmit()
-    {
-        $ticketMassWatchSubmitUrl = $this->getUrl('diamante_ticket_mass_add_watcher',
-                                                  ['no_redirect' => 'false', 'ids' =>'1, 2',
-                                                   'watcher' => '1']);
-
-        $this->client->request('GET', $ticketMassWatchSubmitUrl);
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-
 }

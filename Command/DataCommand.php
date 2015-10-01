@@ -16,20 +16,23 @@ namespace Diamante\DeskBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
-class UpdateCommand extends AbstractCommand
+class DataCommand extends AbstractCommand
 {
+
+
     /**
      * Configures the current command.
      */
     protected function configure()
     {
-        $this->setName('diamante:desk:update')
-            ->setDescription('Update DiamanteDesk');
+        $this->setName('diamante:desk:data')
+            ->setDescription('Load data fixtures related to DiamanteDeskBundle');
     }
 
     /**
-     * Executes update process
+     * Executes installation
      * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      *
@@ -38,24 +41,29 @@ class UpdateCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->write("Clearing cache..." . "\n");
-            $this->runExistingCommand('cache:clear', $output);
-            $output->writeln("Done" . "\n");
-
-            $output->write("Updating DB schema..." . "\n");
-            $this->updateDbSchema();
-            $output->writeln("Done" . "\n");
-
-            $this->updateEntityConfig($output);
-
-            $output->write("Updating navigation..." . "\n");
-            $this->updateNavigation($output);
-            $output->writeln("Done" . "\n");
-        } catch (\Exception $e) {
+            $this->loadDataFixtures($output);
+         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
-            return;
+            return 255;
         }
 
-        $output->writeln("Updated!" . "\n");
+        return 0;
+    }
+
+    /**
+     * Load migrations from DataFixtures/ORM folder
+     * @param OutputInterface $output
+     */
+    protected function loadDataFixtures(OutputInterface $output)
+    {
+        $bundlePath = $this->getContainer()->get('kernel')->locateResource('@DiamanteDeskBundle');
+
+        $this->runExistingCommand('doctrine:fixtures:load', $output,
+            array(
+                '--fixtures'       => "{$bundlePath}/DataFixtures/ORM",
+                '--append'         => true,
+                '--no-interaction' => true,
+            )
+        );
     }
 }

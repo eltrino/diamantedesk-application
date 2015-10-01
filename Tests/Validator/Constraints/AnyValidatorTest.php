@@ -19,8 +19,8 @@ use Diamante\DeskBundle\Validator\Constraints\Any;
 use Diamante\DeskBundle\Validator\Constraints\AnyValidator;
 use Symfony\Component\Validator\Tests\Constraints\AbstractConstraintValidatorTest;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Constraints\Null;
-use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\IsNull;		
+use Symfony\Component\Validator\Constraints\NotNull;		
 use Symfony\Component\Validator\Constraints\File;
 
 class AnyValidatorTest extends AbstractConstraintValidatorTest
@@ -78,7 +78,7 @@ class AnyValidatorTest extends AbstractConstraintValidatorTest
     {
         return [
             [1, [new Type(['type' => 'object'])]],
-            ['test', [new Null(), new Type(['type' => 'integer']), new File()]]
+            ['test', [new IsNull(), new Type(['type' => 'integer']), new File()]]
         ];
     }
 }

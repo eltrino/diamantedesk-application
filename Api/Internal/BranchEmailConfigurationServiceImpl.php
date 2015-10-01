@@ -95,11 +95,10 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
     /**
      * Create BranchEmailConfiguration
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
-     * @param boolean $flush
      * @return int
      * @throws \RuntimeException if unable to load required branch
      */
-    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand, $flush = false)
+    public function createBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
     {
         $branch = $this->branchRepository->get($branchEmailConfigurationCommand->branch);
 
@@ -115,11 +114,7 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
                 $branchEmailConfigurationCommand->supportAddress
             );
 
-        $this->doctrineRegistry->getManager()->persist($branchEmailConfiguration);
-
-        if (true === $flush) {
-            $this->doctrineRegistry->getManager()->flush();
-        }
+        $this->branchEmailConfigurationRepository->store($branchEmailConfiguration);
 
         return $branchEmailConfiguration->getId();
     }
@@ -128,10 +123,9 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
      * Update BranchEmailConfiguration
      *
      * @param Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand
-     * @param boolean $flush
      * @return int
      */
-    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand, $flush = false)
+    public function updateBranchEmailConfiguration(Command\BranchEmailConfigurationCommand $branchEmailConfigurationCommand)
     {
         if ($this->getConfigurationByBranchId($branchEmailConfigurationCommand->branch))
         {
@@ -150,11 +144,7 @@ class BranchEmailConfigurationServiceImpl implements BranchEmailConfigurationSer
                 );
         }
 
-        $this->doctrineRegistry->getManager()->persist($branchEmailConfiguration);
-
-        if (true === $flush) {
-            $this->doctrineRegistry->getManager()->flush();
-        }
+        $this->branchEmailConfigurationRepository->store($branchEmailConfiguration);
         return $branchEmailConfiguration->getId();
     }
 

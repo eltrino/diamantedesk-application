@@ -3,20 +3,21 @@ namespace Diamante\DeskBundle\Api\Internal\Shared;
 
 use Diamante\DeskBundle\Event\WorkflowEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class WorkflowTrait
+ *
  * @package Diamante\DeskBundle\Api\Internal
  */
 trait WorkflowTrait
 {
     /**
-     * @param Registry $doctrineRegistry
-     * @param EventDispatcher $dispatcher
-     * @param $entity
+     * @param Registry                 $doctrineRegistry
+     * @param EventDispatcherInterface $dispatcher
+     * @param                          $entity
      */
-    public function dispatchWorkflowEvent(Registry $doctrineRegistry, EventDispatcher $dispatcher, $entity)
+    public function dispatchWorkflowEvent(Registry $doctrineRegistry, EventDispatcherInterface $dispatcher, $entity)
     {
         try {
             $workFlowEvent = new WorkflowEvent($doctrineRegistry, $entity);

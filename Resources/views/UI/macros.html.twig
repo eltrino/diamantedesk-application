@@ -1,0 +1,20 @@
+{% macro attributeRow(title, value, additionalData, options) %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+    {% set attributeValue %}
+        <div class="clearfix-oro">
+            {% if value.value is not defined  %}
+                <div class="control-label {{ options.valueCss is defined ? options.valueCss : '' }}">{{ value }}</div>
+            {% else %}
+                <div class="control-label {{ options.valueCss is defined ? options.valueCss : '' }}">{{ value.value }} <strong>{{ value.hint }}</strong></div>
+            {% endif %}
+        </div>
+        {% if additionalData|length %}
+            {% for data in additionalData.data %}
+                <div class="clearfix-oro">
+                    <div class="control-label">{{ attribute(data, additionalData.field) }}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endset %}
+    {{ UI.renderAttribute(title, attributeValue) }}
+{% endmacro %}

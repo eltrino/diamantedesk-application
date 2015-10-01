@@ -21,11 +21,12 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Processing\Strategy;
-use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
-use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
+use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
+use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\UserBundle\Entity\UserManager as OroUserManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TicketStrategy implements Strategy
 {
@@ -41,16 +42,6 @@ class TicketStrategy implements Strategy
      * @var BranchEmailConfigurationService
      */
     private $branchEmailConfigurationService;
-
-    /**
-     * @var DiamanteUserRepository
-     */
-    private $diamanteUserRepository;
-
-    /**
-     * @var DiamanteUserFactory
-     */
-    private $diamanteUserFactory;
 
     /**
      * @var SystemSettings
@@ -75,30 +66,28 @@ class TicketStrategy implements Strategy
     /**
      * @param MessageReferenceService $messageReferenceService
      * @param BranchEmailConfigurationService $branchEmailConfigurationService
-     * @param DiamanteUserRepository $diamanteUserRepository
-     * @param DiamanteUserFactory $diamanteUserFactory
      * @param SystemSettings $settings
      * @param WatchersServiceImpl $watchersService
      * @param OroUserManager $oroUserManager
      * @param ConfigManager $configManager
+     * @param UserService $diamanteUserService
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 BranchEmailConfigurationService $branchEmailConfigurationService,
-                                DiamanteUserRepository $diamanteUserRepository,
-                                DiamanteUserFactory $diamanteUserFactory,
                                 SystemSettings $settings,
                                 WatchersServiceImpl $watchersService,
                                 OroUserManager $oroUserManager,
-                                ConfigManager $configManager)
+                                ConfigManager $configManager,
+                                UserService $diamanteUserService
+    )
     {
         $this->messageReferenceService         = $messageReferenceService;
         $this->branchEmailConfigurationService = $branchEmailConfigurationService;
-        $this->diamanteUserRepository          = $diamanteUserRepository;
-        $this->diamanteUserFactory             = $diamanteUserFactory;
         $this->emailProcessingSettings         = $settings;
         $this->watchersService                 = $watchersService;
         $this->oroUserManager                  = $oroUserManager;
         $this->configManager                   = $configManager;
+        $this->diamanteUserService             = $diamanteUserService;
     }
 
     /**
@@ -106,20 +95,12 @@ class TicketStrategy implements Strategy
      */
     public function process(Message $message)
     {
-        $email = $message->getFrom()->getEmail();
-        $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
-        $type = User::TYPE_DIAMANTE;
+        $diamanteUser = $this->diamanteUserService->getUserByEmail($message->getFrom()->getEmail());
 
-        if (is_null($diamanteUser)) {
-            $sender = $message->getFrom();
-            $diamanteUser = $this->diamanteUserFactory->create($email, $sender->getFirstName(), $sender->getLastName());
-
-            $this->diamanteUserRepository->store($diamanteUser);
+        if (is_null($diamanteUser) || !$diamanteUser->isDiamanteUser()) {
+            $id = $this->diamanteUserService->createDiamanteUser($this->prepareCreateUserCommand($message));
+            $diamanteUser = new User($id, User::TYPE_DIAMANTE);
         }
-
-        $reporterId = $diamanteUser->getId();
-
-        $reporter = new User($reporterId, $type);
 
         $attachments = $message->getAttachments();
 
@@ -128,9 +109,9 @@ class TicketStrategy implements Strategy
             $assigneeId = $this->branchEmailConfigurationService->getBranchDefaultAssignee($branchId);
 
             $ticket = $this->messageReferenceService->createTicket($message->getMessageId(), $branchId,
-                $message->getSubject(), $message->getContent(), $reporter, $assigneeId, $attachments);
+                $message->getSubject(), $message->getContent(), (string)$diamanteUser, $assigneeId, $attachments);
         } else {
-            $ticket = $this->messageReferenceService->createCommentForTicket($message->getContent(), $reporter,
+            $ticket = $this->messageReferenceService->createCommentForTicket($message->getContent(), (string)$diamanteUser,
                 $message->getReference(), $attachments);
         }
 
@@ -179,21 +160,29 @@ class TicketStrategy implements Strategy
                 continue;
             }
 
-            $diamanteUser = $this->diamanteUserRepository->findUserByEmail($email);
-            $oroUser = $this->oroUserManager->findUserByEmail($email);
+            $user = $this->diamanteUserService->getUserByEmail($email);
 
-            if ($oroUser) {
-                $user = new User($oroUser->getId(), User::TYPE_ORO);
-            } elseif ($diamanteUser) {
-                $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
-            } else {
-                $diamanteUser = $this->diamanteUserFactory->create($email, $recipient->getFirstName(),
-                    $recipient->getLastName());
-                $this->diamanteUserRepository->store($diamanteUser);
-                $user = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
+            if (is_null($user)) {
+                $user = $this->diamanteUserService->createDiamanteUser($this->prepareCreateUserCommand($message));
             }
 
             $this->watchersService->addWatcher($ticket, $user);
         }
+    }
+
+
+    /**
+     * @param Message $message
+     * @return CreateDiamanteUserCommand
+     */
+    protected function prepareCreateUserCommand(Message $message)
+    {
+        $command = new CreateDiamanteUserCommand();
+        $command->email     = $message->getFrom()->getEmail();
+        $command->username  = $message->getFrom()->getEmail();
+        $command->firstName = $message->getFrom()->getFirstName();
+        $command->lastName  = $message->getFrom()->getLastName();
+
+        return $command;
     }
 }

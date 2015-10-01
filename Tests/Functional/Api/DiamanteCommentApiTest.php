@@ -46,7 +46,7 @@ class DiamanteCommentApiTest extends ApiTestCase
         $this->command->urlParameters = array('id' => 1);
         $this->command->requestParameters = array(
             'content'      => 'Test Comment',
-            'ticket'       => 1,
+            'ticket'       => 11,
             'author'       => User::TYPE_DIAMANTE . User::DELIMITER . $diamanteUserId,
             'ticketStatus' => Status::NEW_ONE
         );

@@ -32,7 +32,6 @@ class BranchEmailConfigurationType extends AbstractType
             array(
                 'label'    => 'Support Address',
                 'required' => false,
-                'tooltip'  => 'gmail.com, int.go.com'
             )
         );
 
@@ -42,6 +41,7 @@ class BranchEmailConfigurationType extends AbstractType
             array(
                 'label'    => 'Customer Domains',
                 'required' => false,
+                'tooltip'  => 'gmail.com, int.go.com'
             )
         );
     }

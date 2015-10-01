@@ -25,6 +25,10 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         var index = 0,
             current = new Date(data[0].date),
             last = new Date(data[data.length - 1].date);
+        current.setDate(current.getDate() - 1 );
+        last.setDate(last.getDate() + 1 );
+        data.splice(0, 0, { date : new Date(current) });
+        data.push({ date : new Date(last) });
         while(index++, current < last) {
           current.setDate(current.getDate() + 1);
           if(data[index] && data[index].date > current){
@@ -56,6 +60,11 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         margin = {top: 20, right: 40, bottom: 30, left: 40},
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom - (h2 + margin.top);
+
+    if(parent.id == 'container' && h > parent.clientHeight - 100){
+      h = parent.clientHeight - 100;
+      height = h - margin.top - margin.bottom - (h2 + margin.top);
+    }
 
     var svg = plot.append("svg")
         .attr("width", w)
@@ -92,9 +101,27 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
 
     color.domain(keys);
 
+    populateData(data);
+    var tickets = color.domain().map(function(name) {
+      return {
+        name: name,
+        values: data.map(function(d) {
+          return {date: d.date, state: d[name] ? +d[name] : 0};
+        })
+      };
+    });
+
+    var ticksCount = parseInt(
+          d3.max(tickets, function(c) { return d3.max(c.values, function(v) { return v.state; }); }) -
+          d3.min(tickets, function(c) { return d3.min(c.values, function(v) { return v.state; }); })
+        ,10) + 1;
+    if(ticksCount > 20) {
+      ticksCount = 20;
+    }
+
     var xAxis = d3.svg.axis().scale(x).orient("bottom"),
         xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
-        yAxis = d3.svg.axis().scale(y).orient("left").ticks(1);
+        yAxis = d3.svg.axis().scale(y).orient("left").ticks(ticksCount);
 
     var brushed = function() {
       x.domain(brush.empty() ? x2.domain() : brush.extent());
@@ -110,28 +137,19 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         .on("brush", brushed);
 
     var line = d3.svg.line()
-        .interpolate("basis")
+        .interpolate("linear")
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.state); });
 
     var line2 = d3.svg.line()
-        .interpolate("basis")
+        .interpolate("linear")
         .x(function(d) { return x2(d.date); })
         .y(function(d) { return y2(d.state); });
 
-    populateData(data);
-
-    var tickets = color.domain().map(function(name) {
-      return {
-        name: name,
-        values: data.map(function(d) {
-          return {date: d.date, state: d[name] ? +d[name] : 0};
-        })
-      };
-    });
-
     var tip = d3tip()
-        .attr('class', 'diam-d3-tip tooltip top')
+        .attr('class', 'diam-d3-tip tooltip bottom')
+        .direction('s')
+        .offset([20, 0])
         .html(function(d) {
           var _data = {
             date : dateFormat(d.date),
@@ -240,6 +258,11 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
       if(w <= 0) {
         delete resizeGroupedLine[parent.id];
         return;
+      }
+
+      if(parent.id == 'container' && h > parent.clientHeight - 100){
+        h = parent.clientHeight - 100;
+        height = h - margin.top - margin.bottom - (h2 + margin.top);
       }
 
       x.range([0, width]);

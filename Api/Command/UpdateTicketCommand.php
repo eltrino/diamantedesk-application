@@ -19,8 +19,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class UpdateTicketCommand implements Taggable
+class UpdateTicketCommand implements Taggable, Shared\Command
 {
+    const PERSISTENT_ENTITY = 'Diamante\DeskBundle\Entity\Ticket';
+
     /**
      * @Assert\NotNull()
      * @Assert\Type(type="integer")
@@ -46,6 +48,9 @@ class UpdateTicketCommand implements Taggable
      *              message="This is a required field"
      * )
      * @Assert\Type(type="string")
+     * @Assert\NotBlank(
+     *              message="This is a required field"
+     * )
      */
     public $description;
 
