@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.api.routing.rest_service_loader.class">Diamante\ApiBundle\Routing\RestServiceLoader</parameter>
+        <parameter key="diamante.api.event_listener.handle_request.class">Diamante\ApiBundle\EventListener\HandleRequest</parameter>
+        <parameter key="diamante.api.event_listener.handle_view.class">Diamante\ApiBundle\EventListener\HandleView</parameter>
+        <parameter key="diamante.api.event_listener.data_audit.class">Diamante\ApiBundle\Routine\Tests\EventListener\DataAuditListener</parameter>
+        <parameter key="diamante.api.event_listener.handle_exception.class">Diamante\ApiBundle\EventListener\HandleException</parameter>
+        <parameter key="diamante.api.user.security.provider.class">Diamante\ApiBundle\Security\ApiUserProvider</parameter>
+
+        <parameter key="diamante.api.headers.container.class">Symfony\Component\HttpFoundation\ResponseHeaderBag</parameter>
+        <parameter key="diamante.api.paging.provider.class">Diamante\ApiBundle\Paging\Provider\PagingContextProvider</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.api.routing.rest_service_loader" class="%diamante.api.routing.rest_service_loader.class%">
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="annotation_reader"/>
+            <tag name="routing.loader" />
+        </service>
+
+        <service id="diamante.api.user.security.provider" class="%diamante.api.user.security.provider.class%">
+            <argument type="service" id="diamante.api.user.repository" />
+        </service>
+
+        <service id="wsse.security.cache.provider" class="Doctrine\Common\Cache\PhpFileCache">
+            <argument>%kernel.cache_dir%/security/nonces</argument>
+        </service>
+
+        <service id="wsse.security.authentication.provider"
+                 class="Diamante\ApiBundle\Security\Authentication\Provider\WsseProvider" public="false">
+            <argument /> <!-- User Provider -->
+            <argument type="service" id="wsse.security.cache.provider" />
+            <argument type="service" id="security.encoder_factory" />
+            <argument type="service" id="monolog.logger.diamante"/>
+        </service>
+
+        <service id="wsse.security.authentication.listener"
+                 class="Diamante\ApiBundle\Security\Firewall\WsseListener" public="false">
+            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.authentication.manager" />
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
+        </service>
+
+
+
+        <service id="diamante.api.event_listener.handle_request" class="%diamante.api.event_listener.handle_request.class%">
+            <argument type="service" id="validator"/>
+            <argument type="service" id="service_container"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
+        </service>
+
+        <service id="diamante.api.event_listener.handle_view" class="%diamante.api.event_listener.handle_view.class%">
+            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="logger"/>
+            <tag name="kernel.event_listener" event="kernel.view" method="onKernelView" />
+            <tag name="monolog.logger" channel="diamante"/>
+        </service>
+
+        <service id="diamante.api.event_listener.handle_exception" class="%diamante.api.event_listener.handle_exception.class%">
+            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="service_container"/>
+            <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
+        </service>
+
+        <service id="diamante.api.headers.container" class="%diamante.api.headers.container.class%" scope="request"/>
+
+        <service id="diamante.api.paging.provider" class="%diamante.api.paging.provider.class%"/>
+
+        <service id="diamante.api.event_listener.data_audit" class="%diamante.api.event_listener.data_audit.class%">
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="oro_security.security_facade"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
+        </service>
+    </services>
+</container>

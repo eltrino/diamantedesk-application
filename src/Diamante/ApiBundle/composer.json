@@ -1,0 +1,42 @@
+{
+    "name": "diamante/api-bundle",
+    "description": "DiamanteDesk Api Bundle",
+    "homepage": "https://github.com/eltrino/DiamanteApiBundle",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrino LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Diamante\\ApiBundle": "."
+        }
+    },
+    "target-dir": "Diamante/ApiBundle",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/orocrm/composer.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.4",
+        "oro/platform": "1.8.*",
+        "nelmio/api-doc-bundle": "2.9.*",
+        "jms/serializer-bundle": "0.*",
+        "diamante/desk-bundle": "self.version",
+        "diamante/user-bundle": "self.version"
+    },
+    "require-dev": {
+        "eltrino/phpunit-mockannotations": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.1.x-dev"
+        }
+    }
+}
