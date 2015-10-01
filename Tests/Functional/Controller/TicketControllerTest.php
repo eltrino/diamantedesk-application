@@ -190,25 +190,6 @@ class TicketControllerTest extends AbstractController
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'text/html; charset=UTF-8'));
         $this->assertTrue($crawler->filter('html:contains("Tickets")')->count() >= 1);
-
-        $filtersList = array(
-            'All tickets',
-            'My tickets',
-            'My new tickets',
-            'My open tickets',
-            'Reported tickets',
-            'New reported tickets',
-        );
-
-        // test filters
-        foreach($filtersList as $filter) {
-            $this->assertTrue($crawler->filter('html:contains(' . $filter . ')')->count() >= 1);
-            $links = $crawler->selectLink($filter)->links();
-            $link = $links[0];
-            $this->client->click($link);
-            $response = $this->client->getResponse();
-            $this->assertEquals(200, $response->getStatusCode());
-        }
     }
 
     public function testView()

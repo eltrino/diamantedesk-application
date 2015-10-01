@@ -55,17 +55,7 @@ class TicketController extends Controller
      */
     public function listAction()
     {
-        $filtersGenerator = $this->container->get('diamante.ticket.internal.grid_filters_service');
-
-        $filtersList = $filtersGenerator->getFilters();
-        $linksList = $link = array();
-        foreach($filtersList as $filter) {
-            $link['name'] =  $filter->getName();
-            $link['url'] = $filtersGenerator->generateGridFilterUrl($filter->getId());
-            $linksList[] = $link;
-        }
-
-        return ['linksList' => $linksList];
+        return [];
     }
 
     /**

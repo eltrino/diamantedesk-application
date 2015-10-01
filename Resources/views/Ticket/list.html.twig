@@ -15,32 +15,14 @@
 
     {% set gridName = 'diamante-ticket-grid' %}
 
-    <div class="left-panel-container diam-filter-container">
-        <div class="placeholder">
-            <div class="scrollable-container">
-                <div class="left-panel">
-                    <table class="grid table-hover table table-bordered table-condensed">
-                        <thead>
-                        <tr>
-                            <th>{{ 'diamante.desk.common.filters'|trans }}:</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for link in linksList %}
-                            <tr>
-                                <td><a href="{{ path('diamante_ticket_list') }}{{ link['url'] }}"
-                                        class="no-hash">{{ link['name'] }}</a></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="content" style="background-color: #fff;">
-                    {{ dataGrid.renderGrid(gridName, {}, {cssClass:'diam-tickets'}) }}
-                </div>
+    <div class="placeholder">
+        <div class="scrollable-container">
+            <div class="content" style="background-color: #fff;">
+                {{ dataGrid.renderGrid(gridName, {}, {cssClass:'diam-tickets'}) }}
             </div>
         </div>
     </div>
+
     <script>
         require(['jquery',  'oroui/js/mediator'],
             function($, mediator) {

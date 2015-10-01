@@ -110,36 +110,6 @@
     margin: 0;
 }
 
-.diam-filter-container {
-
-}
-.diam-filter-container > .placeholder {
-    margin-left: 180px !important;
-    border-left: none !important;
-    background: none !important;
-}
-.diam-filter-container > .placeholder > * {
-    margin-left: -180px !important;
-}
-.diam-filter-container > .placeholder > * > .left-panel {
-    width: 180px !important;
-    border-top: none !important;
-}
-.diam-filter-container > .placeholder > * > .content {
-    margin-left: 180px !important;
-    overflow: visible;
-}
-
-.diam-filter-container .scrollable-container{
-    overflow-x: inherit;
-    overflow-y: auto;
-    height: 575px;
-}
-.diam-filter-container .left-panel .grid{
-    width:auto;
-    margin: 15px 0 0 15px;
-}
-
 /**
  * Drag&Drop zone
  */
