@@ -1,0 +1,47 @@
+.ticket-list {
+  th {
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .createdAt {
+    width:1%;
+    white-space: nowrap;
+  }
+  .key {
+    width:1%;
+    white-space: nowrap;
+  }
+  .priority, .status {
+    width:1%;
+    text-transform: capitalize;
+    white-space: nowrap;
+  }
+  td {
+    a {
+      padding: @table-cell-padding;
+      margin: -@table-cell-padding;
+      display: block;
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+  .subject,
+  .message {
+    a {
+      color: @link-color;
+      &:hover {
+        text-decoration: underline;
+        color: @link-hover-color;
+      }
+    }
+  }
+  .message {
+    text-align: center;
+    td {
+      padding: @table-cell-padding * 2;
+    }
+    a {
+      display: inline;
+    }
+  }
+}

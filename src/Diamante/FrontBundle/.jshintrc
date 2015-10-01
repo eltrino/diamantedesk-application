@@ -1,0 +1,9 @@
+{
+  "browser": true,
+  "jquery": true,
+  "newcap": true,
+  "globals": {
+    "reqiure": false,
+    "define": false
+  }
+}

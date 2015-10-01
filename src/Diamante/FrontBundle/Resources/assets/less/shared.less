@@ -1,0 +1,102 @@
+.table {
+  thead {
+    th, td{
+      background: @gray-lighter;
+    }
+  }
+}
+.js-back {
+  .fa {
+    padding-right: 0.3em;
+  }
+}
+
+.blured {
+  .wrap {
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -ms-filter: blur(2px);
+    -o-filter: blur(2px);
+    filter: blur(2px);
+  }
+}
+
+.required {
+  .control-label:after {
+    content: " *";
+    display: inline;
+    color: @state-danger-text;
+  }
+}
+
+.starter-loader {
+  .loader {
+    background: none;
+    position: absolute;
+  }
+}
+
+.form-group {
+  .progress {
+    margin-top: @line-height-computed;
+  }
+  .password-verdict {
+    display: block;
+    height: @line-height-computed;
+    text-align: center;
+    margin-top: -@line-height-computed * 2;
+  }
+}
+
+.modal-body {
+  .alert {
+    font-size: 95%;
+  }
+}
+
+.loader {
+  font-size: 1.3em;
+  position: fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  text-align: center;
+  vertical-align: middle;
+  z-index: 100;
+  > div {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 1em;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 2px rgba(8,8,8,.3);
+  }
+  &:only-child {
+    > div {
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+  &:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+    width: 1px;
+  }
+  & ~ * {
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -ms-filter: blur(2px);
+    -o-filter: blur(2px);
+    filter: blur(2px);
+    .blured & {
+      -webkit-filter: none;
+      -moz-filter: none;
+      -ms-filter: none;
+      -o-filter: none;
+      filter: none;
+    }
+  }
+}

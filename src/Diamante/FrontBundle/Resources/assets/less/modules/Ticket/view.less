@@ -1,0 +1,36 @@
+.ticket-view {
+  h2 {
+    text-transform: uppercase;
+    font-size: @font-size-h4;
+  }
+}
+.ticket-meta {
+  overflow: hidden;
+  padding-top: @padding-base-vertical;
+  padding-bottom: @padding-base-vertical;
+  border: 1px solid #ccc;
+  border-radius: @border-radius-base;
+  text-transform: capitalize;
+  .row {
+    text-align: center;
+    font-size: @font-size-base;
+    line-height: @line-height-base;
+  }
+  [class^="col"] {
+    padding: 0 @padding-base-vertical;
+  }
+}
+.ticket-actions {
+  padding-left: 1ex;
+}
+
+.ticket-aside {
+  .group {
+    background: #efefef;
+    margin-bottom: @grid-gutter-width/2;
+  }
+  .block {
+    padding: @grid-gutter-width/2;
+    border-bottom: 1px solid #ccc;
+  }
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diamante</title>
+    {% if app.environment == 'dev' %}
+    <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.css') }}" type="text/css"/>
+    {% else %}
+    <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.min.css') }}" type="text/css"/>
+    {% endif %}
+</head>
+<body>
+<div class="wrap">
+    <header id="header"></header>
+    <section id="main" class="container">
+        <div id="messages"></div>
+        <div id="content">
+            <div class="loader"><div><i class="fa fa-cog fa-spin"></i> <strong>Loading...</strong></div></div>
+        </div>
+    </section>
+    <footer id="footer"></footer>
+</div>
+<div id="dialog"></div>
+
+{% if app.environment == 'dev' %}
+    <script data-main="{{ asset('bundles/diamantefront/js/main.js') }}"
+            src="{{ asset('bundles/diamantefront/js/vendor/requirejs/require.js') }}"></script>
+{% else %}
+    <script src="{{ asset('bundles/diamantefront/js/vendor/requirejs/require.js') }}"></script>
+    <script src="{{ asset('bundles/diamantefront/js/main.built.js') }}"></script>
+{% endif %}
+<script>
+    require.config({
+        baseUrl: '{{ asset('bundles/diamantefront/js/') }}',
+        config : {
+            'config' : {
+                env : '{{ app.environment }}',
+                basePath : '{{ basePath }}',
+                baseUrl : '{{ baseUrl }}',
+                apiUrl : '{{ apiUrl }}',
+                branchId : {{ branchId }},
+                logo : '{{ basePath }}/bundles/diamantefront/img/logo.png',
+                title : 'Diamante'
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+checks:
+    php: true
+filter:
+  excluded_paths:
+    - Tests/*
+tools:
+    external_code_coverage:
+        timeout: 900
+        runs: 3

@@ -1,0 +1,41 @@
+.comments-list {
+  margin-bottom: 25px;
+}
+.comments-item {
+  &:extend(.list-unstyled);
+  padding-left: 42px;
+  margin-bottom: 15px;
+}
+
+.comment-author-image {
+  float: left;
+  margin:5px 0 0 -42px;
+  width:32px;
+}
+
+.comment-date {
+  font-size: inherit;
+  color: @text-muted;
+}
+.comment-content {
+  margin: 0 0 .5em;
+}
+
+.comment-tools {
+  &:extend(.list-unstyled);
+  margin: -4px 0;
+  li {
+    display: inline;
+    cursor: pointer;
+  }
+  .btn {
+    line-height: 1;
+    color: @text-color;
+    padding: @padding-base-vertical;
+    &:hover {
+      color: @link-color;
+    }
+  }
+}
+@import "form";
+@import "attachments";

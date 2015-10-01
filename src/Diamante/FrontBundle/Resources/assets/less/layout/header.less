@@ -1,0 +1,50 @@
+#header {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top:0;
+  z-index: @zindex-navbar-fixed;
+  .translate3d(0, 0, 0);
+
+  @media (min-width: @grid-float-breakpoint) {
+    border-radius: 0;
+  }
+
+  .container {
+    background: #f5f5f5;
+    padding: 0 @main-gutter;
+    min-height: @header-height;
+  }
+
+  .logo {
+    margin: 28px 0;
+  }
+
+  .quick-access {
+    clear: right;
+    margin: 10px 0 0;
+    .form-group {
+      display: inline-block;
+      margin: 0;
+      vertical-align: top;
+    }
+  }
+}
+
+.logo {
+  display: block;
+  height: 62px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  #header {
+    position: static;
+    .logo {
+      text-align: center;
+    }
+  }
+}

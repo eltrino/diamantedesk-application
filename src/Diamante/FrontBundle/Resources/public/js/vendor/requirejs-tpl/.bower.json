@@ -1,0 +1,13 @@
+{
+  "name": "requirejs-tpl",
+  "homepage": "https://github.com/ZeeAgency/requirejs-tpl",
+  "_release": "7438735aa8",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "7438735aa84b76af0fb266d8373b5fbaab2a1a03"
+  },
+  "_source": "git://github.com/ZeeAgency/requirejs-tpl.git",
+  "_target": "*",
+  "_originalSource": "requirejs-tpl"
+}

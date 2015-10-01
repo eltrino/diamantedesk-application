@@ -1,0 +1,27 @@
+oro_system_configuration:
+    groups:
+        diamantedesk_channels_front_group:
+            title: 'Web'
+
+    fields:
+        diamante_front.registration_required:
+            type: choice
+            data_type: boolean
+            options:
+                label: 'Registration Requied'
+                choices:
+                    - No
+                    - Yes
+
+    tree:
+        system_configuration:
+            platform:
+                children:
+                    diamante_desk_setup:
+                        children:
+                            diamante_desk_channels:
+                                children:
+                                    diamantedesk_channels_front_group:
+                                        priority: 160
+                                        children:
+                                            - diamante_front.registration_required

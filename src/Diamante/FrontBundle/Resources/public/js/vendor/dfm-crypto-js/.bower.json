@@ -1,0 +1,42 @@
+{
+  "name": "dfm-crypto-js",
+  "version": "3.1.2",
+  "authors": [
+    "arcseldon <arcseldon@gmail.com>"
+  ],
+  "description": "Following googlecode project crypto-js, standard and secure cryptographic algorithms for NodeJS and browser envs.",
+  "keywords": [
+    "Hash",
+    "MD5",
+    "SHA1",
+    "SHA-1",
+    "SHA256",
+    "SHA-256",
+    "RC4",
+    "Rabbit",
+    "AES",
+    "DES",
+    "PBKDF2",
+    "HMAC",
+    "OFB",
+    "CFB",
+    "CTR",
+    "CBC",
+    "Base64"
+  ],
+  "ignore": [
+    "node_modules",
+    "bower_components"
+  ],
+  "license": "MIT",
+  "homepage": "https://code.google.com/p/crypto-js",
+  "_release": "3.1.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "3.1.2",
+    "commit": "c8d97fa01994924da532967f4a959695910731fa"
+  },
+  "_source": "git://github.com/becomejapan/dfm-crypto-js.git",
+  "_target": "~3.1.2",
+  "_originalSource": "dfm-crypto-js"
+}

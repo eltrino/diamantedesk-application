@@ -1,0 +1,46 @@
+.profile{
+  .loading {
+    display: inline-block;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 1px 0;
+    .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base);
+  }
+  .btn-link {
+    padding-left: 0;
+    padding-right: 0;
+    .caret {
+      margin-left: 1ex;
+    }
+  }
+}
+
+.profile-view,
+.profile-edit {
+  width: 320px;
+  padding: @grid-gutter-width/2;
+}
+
+.user-meta {
+  &:extend(.clearfix all);
+  padding-left: 64 + @grid-gutter-width/2;
+  margin-bottom: @grid-gutter-width/2;
+}
+.user-image {
+  float: left;
+  margin-left: -64 - @grid-gutter-width/2;
+  vertical-align: top;
+}
+
+.dropdown-menu {
+  .loader {
+    position: absolute;
+    font-size: 1em;
+    &:only-child {
+      position: relative;
+      > div {
+        box-shadow: none;
+      }
+    }
+  }
+}

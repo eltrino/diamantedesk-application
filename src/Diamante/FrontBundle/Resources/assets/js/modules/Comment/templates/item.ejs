@@ -1,0 +1,31 @@
+<% if(is_author) {%>
+<ul class="comment-tools pull-right">
+    <li><button class="btn btn-link js-edit-comment" title="Edit Comment"><i class="fa fa-pencil"></i></button></li>
+    <li><button class="btn btn-link js-delete-comment" title="Delete Comment"><i class="fa fa-times"></i></button></li>
+</ul>
+<% } %>
+<img src="<%= avatar_url %>"
+     class="comment-author-image"
+     alt="<%= author_name %>" />
+<strong class="commment-author-name">
+    <%= author_name  %>
+</strong> answered <%= created_relative %> <small class="comment-date">(<%= created_at %>)</small>
+<div class="comment-content"><%= content %></div>
+<% if(attachments && attachments.length) { %>
+<div class="comment-attachments-block">
+  <strong>File attachments:</strong>
+  <ul class="comment-attachments">
+    <% _.each(attachments, function(attachment){ %>
+      <li>
+        <a href="<%= attachment.file.url %>" title="Download: <%= attachment.file.filename %>">
+          <% if(attachment.thumbnails) { %>
+            <img src="<%= attachment.thumbnails.url %>" title="Preview of <%= attachment.file.filename %>">
+            <br>
+          <% } %>
+          <%= attachment.file.filename %>
+        </a>
+      </li>
+    <% }); %>
+  </ul>
+</div>
+<% } %>

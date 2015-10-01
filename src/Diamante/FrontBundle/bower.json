@@ -1,0 +1,30 @@
+{
+  "name": "diamante_app",
+  "version": "0.0.1",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "Resources/assets/js/vendor"
+  ],
+  "dependencies": {
+    "requirejs": "~2.1.14",
+    "marionette": "~2.1.0",
+    "bootstrap": "~3.2.0",
+    "requirejs-tpl": "*",
+    "fontawesome": "~4.2.0",
+    "dfm-crypto-js": "~3.1.2",
+    "backbone.paginator": "~2.0.2",
+    "moment": "~2.9.0",
+    "pwstrength-bootstrap": "~1.2.5",
+    "tinymce": "~4.1.10"
+  },
+  "resolutions": {
+    "underscore": "1.6.0"
+  }
+}

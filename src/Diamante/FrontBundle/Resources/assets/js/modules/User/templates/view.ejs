@@ -1,0 +1,12 @@
+<% if(message){ %>
+<div class="alert alert-success %>" role="alert">
+  <i class="fa fa-check-circle"></i>&nbsp;
+  <%= message %>
+</div>
+<% } %>
+<div class="user-meta">
+  <img src="<%=avatar_url %>?s=64&d=identicon" class="user-image" alt="<%=first_name %> <%=last_name %>" />
+  <strong class="user-name"><%=first_name %> <%=last_name %></strong>
+</div>
+<button class="btn btn-default btn-block js-edit-user">Edit</button>
+<button class="btn btn-default btn-block js-logout">Sign Out</button>

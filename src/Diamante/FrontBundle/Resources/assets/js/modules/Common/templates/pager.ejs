@@ -1,0 +1,19 @@
+<% if(totalPages > 1) { %>
+<ul class="pagination">
+  <% if(currentPage > 1) { %>
+  <li><a href="#first">&laquo;</a></li>
+  <li><a href="#prev">&lsaquo;</a></li>
+  <% } else { %>
+  <li class="disabled"><span>&laquo;</span></li>
+  <li class="disabled"><span>&lsaquo;</span></li>
+  <% } %>
+  <li class="active"><span><%= currentPage %></span></li>
+  <% if(currentPage !== lastPage) { %>
+  <li><a href="#next">&rsaquo;</a></li>
+  <li><a href="#last">&raquo;</a></li>
+  <% } else { %>
+  <li class="disabled"><span>&rsaquo;</span></li>
+  <li class="disabled"><span>&raquo;</span></li>
+  <% } %>
+</ul>
+<% } %>

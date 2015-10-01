@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.front.system_settings.class">Diamante\FrontBundle\Model\SystemSettings</parameter>
+        <parameter key="diamante.front.reset_password.service.class">Diamante\FrontBundle\Api\Internal\ResetPasswordServiceImpl</parameter>
+        <parameter key="diamante.front.reset_password.mailer.class">Diamante\FrontBundle\Infrastructure\ResetPasswordMailer</parameter>
+        <parameter key="diamante.front.registration.service.class">Diamante\FrontBundle\Api\Internal\RegistrationServiceImpl</parameter>
+        <parameter key="diamante.front.registration.mailer.class">Diamante\FrontBundle\Infrastructure\RegistrationMailer</parameter>
+        <parameter key="diamante.front.current_user.api.service.class">Diamante\FrontBundle\Api\Internal\CurrentUserApiServiceImpl</parameter>
+        <parameter key="diamante.front.send_confirm.service.class">Diamante\FrontBundle\Api\Internal\SendConfirmationServiceImpl</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.front.system_settings" class="%diamante.front.system_settings.class%">
+            <argument type="service" id="oro_config.global"/>
+        </service>
+
+        <service id="diamante.front.registration.mailer" class="%diamante.front.registration.mailer.class%">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="mailer"/>
+            <argument>%mailer_user%</argument>
+            <argument type="string">DiamanteFrontBundle:Registration/email:confirmation.html.twig</argument>
+            <argument type="string">DiamanteFrontBundle:Registration/email:confirmation.txt.twig</argument>
+        </service>
+
+        <service id="diamante.front.registration.service" class="%diamante.front.registration.service.class%">
+            <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="diamante.user_factory"/>
+            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.api.user.entity.factory"/>
+            <argument type="service" id="diamante.front.registration.mailer"/>
+        </service>
+
+        <service id="diamante.front.current_user.api.service" class="%diamante.front.current_user.api.service.class%">
+            <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
+        </service>
+
+        <service id="diamante.front.current_user.api.service_diamante" alias="diamante.front.current_user.api.service" />
+
+        <service id="diamante.front.reset_password.service" class="%diamante.front.reset_password.service.class%">
+            <argument type="service" id="diamante.user.repository" />
+            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.api.user.entity.factory"/>
+            <argument type="service" id="diamante.front.reset_password.mailer"/>
+        </service>
+        <service id="diamante.front.reset_password.mailer" class="%diamante.front.reset_password.mailer.class%">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="mailer"/>
+            <argument>%mailer_user%</argument>
+            <argument type="string">DiamanteFrontBundle:ResetPassword/email:reset.html.twig</argument>
+            <argument type="string">DiamanteFrontBundle:ResetPassword/email:reset.txt.twig</argument>
+        </service>
+        <service id="diamante.front.send_confirm.service" class="%diamante.front.send_confirm.service.class%">
+            <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.front.registration.mailer"/>
+        </service>
+    </services>
+</container>
