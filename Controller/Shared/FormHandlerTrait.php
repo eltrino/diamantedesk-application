@@ -3,9 +3,9 @@
 namespace Diamante\DeskBundle\Controller\Shared;
 
 
+use Diamante\DeskBundle\Exception\ValidatorException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 trait FormHandlerTrait
 {

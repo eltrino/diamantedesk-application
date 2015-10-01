@@ -53,7 +53,7 @@ class PagingInfo
      */
     public function __construct($totalRecords, PagingProperties $pagingConfig)
     {
-        $this->totalRecords = $totalRecords;
+        $this->totalRecords = is_null($totalRecords) ? 0 : $totalRecords;
         $this->pagingConfig = $pagingConfig;
 
         $this->calculatePaging();

@@ -244,6 +244,9 @@ diamante:
           delete_confirmation: Confirm Deletion
           filters:             Filters
           watchers:            Watchers
+          messages:
+            validation:
+              failed:          Form is invalid. Please correctly fill in all required fields.
 
         forms:
           name:                Name
