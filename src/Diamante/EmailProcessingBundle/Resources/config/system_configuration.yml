@@ -1,0 +1,82 @@
+oro_system_configuration:
+    groups:
+        diamante_desk_setup:
+            title: 'DiamanteDesk'
+            priority: 30
+
+        diamante_desk_channels:
+            title: 'Channels'
+            icon: icon-desktop
+
+        diamante_desk_channels_email_group:
+            title: 'Email'
+
+        diamante_desk_channels_general_group:
+            title: 'General'
+
+    fields:
+        diamante_email_processing.default_branch:
+            data_type: integer
+            type: diamante_email_processing_default_branch
+            options:
+                label: 'Default Branch'
+
+        diamante_email_processing.mailbox_server_address:
+            data_type: string
+            type: text
+            priority: 95
+            options:
+                label: 'Server Address'
+
+        diamante_email_processing.mailbox_port:
+            data_type: string
+            type: text
+            priority: 90
+            options:
+                label: 'Port'
+                tooltip: "It's typically on port 143. But IMAP over SSL is usually on port 993."
+
+        diamante_email_processing.mailbox_ssl:
+            data_type: boolean
+            type: choice
+            priority: 85
+            options:
+                label: 'SSL'
+                choices:
+                    - No
+                    - Yes
+
+        diamante_email_processing.mailbox_username:
+            data_type: string
+            type: text
+            priority: 80
+            options:
+                label: 'Username'
+
+        diamante_email_processing.mailbox_password:
+            data_type: string
+            type: password
+            priority: 75
+            options:
+                label: 'Password'
+
+    tree:
+        system_configuration:
+            platform:
+                children:
+                    diamante_desk_setup:
+                        children:
+                            diamante_desk_channels:
+                                children:
+                                    diamante_desk_channels_general_group:
+                                        priority: 300
+                                        children:
+                                            - diamante_email_processing.default_branch
+                                    diamante_desk_channels_email_group:
+                                        priority: 260
+                                        children:
+                                            - diamante_email_processing.mailbox_server_address
+                                            - diamante_email_processing.mailbox_port
+                                            - diamante_email_processing.mailbox_ssl
+                                            - diamante_email_processing.mailbox_username
+                                            - diamante_email_processing.mailbox_password
