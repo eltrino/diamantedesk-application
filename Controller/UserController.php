@@ -69,7 +69,7 @@ class UserController extends Controller
             return $result;
         } catch (\RuntimeException $e) {
             $this->handleException($e);
-            return $this->redirect('diamante_user_list');
+            return $this->redirect($this->get('router')->generate('diamante_user_list'));
         }
     }
 

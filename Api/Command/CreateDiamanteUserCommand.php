@@ -15,6 +15,8 @@
 
 namespace Diamante\UserBundle\Api\Command;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class CreateDiamanteUserCommand
 {
     /**
@@ -23,14 +25,23 @@ class CreateDiamanteUserCommand
     public $username;
     /**
      * @var string
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      */
     public $email;
     /**
      * @var string
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      */
     public $firstName;
     /**
      * @var string
+     * @Assert\NotNull(
+     *              message="This is a required field"
+     * )
      */
     public $lastName;
 }

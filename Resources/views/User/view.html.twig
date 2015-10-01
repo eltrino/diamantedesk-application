@@ -66,7 +66,6 @@
     {% set dataSubBlocks = [UI.attibuteRow('diamante.user.labels.email'|trans, entity.email)] %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.first_name'|trans, entity.firstName)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.last_name'|trans, entity.lastName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.is_deleted'|trans, entity.isDeleted ? 'diamante.user.ui.yes'|trans : 'diamante.user.ui.no'|trans )]) %}
     {% if entity.apiUser is not empty %}
         {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.user.labels.active'|trans, entity.apiUser.isActive ? 'diamante.user.ui.yes'|trans : 'diamante.user.ui.no'|trans )]) %}
     {% endif %}
