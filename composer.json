@@ -24,16 +24,22 @@
         "component-dir": "web/bundles/components"
     },
     "require":{
-      "php": ">=5.4.4",
-      "oro/platform": "1.8.*",
-      "diamante/desk-bundle": "self.version",
-      "diamante/user-bundle": "self.version",
-      "diamante/api-bundle": "self.version",
-      "diamante/front-bundle": "self.version",
-      "diamante/email-processing-bundle": "self.version",
-      "diamante/embeddedform-bundle": "self.version",
-      "akeneo/batch-bundle": "0.4.2",
-      "monolog/monolog": "1.8.0"
+        "php": ">=5.4.4",
+        "oro/platform": "1.8.*",
+        "akeneo/batch-bundle": "0.4.2",
+        "monolog/monolog": "1.8.0",
+        "nelmio/api-doc-bundle": "2.9.*",
+        "jms/serializer-bundle": "0.*",
+        "beberlei/assert": "2.*",
+        "zendframework/zend-mail": "~2.1.5",
+        "ezyang/htmlpurifier": "4.6.*",
+        "bordeux/email-cleaner": "0.6.*",
+        "michelf/php-markdown": "~1.4"
+
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.*",
+        "eltrino/phpunit-mockannotations": "*"
     },
     "scripts": {
         "post-install-cmd": [
@@ -61,10 +67,5 @@
         "branch-alias": {
             "dev-master": "1.1.x-dev"
         }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "4.8.*",
-        "akeneo/batch-bundle": "0.4.2",
-        "eltrino/phpunit-mockannotations": "*"
     }
 }
