@@ -25,6 +25,7 @@ class WatchAction extends WindowMassAction
     {
         if (empty($options['route'])) {
             $options['route'] = 'diamante_ticket_mass_add_watcher';
+            $options['frontend_options'] = ['dialogOptions' => ['resizable' => false]];
         }
 
         return parent::setOptions($options);

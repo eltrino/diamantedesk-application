@@ -25,6 +25,7 @@ class MoveAction extends WindowMassAction
     {
         if (empty($options['route'])) {
             $options['route'] = 'diamante_ticket_mass_move';
+            $options['frontend_options'] = ['dialogOptions' => ['resizable' => false]];
         }
 
         return parent::setOptions($options);
