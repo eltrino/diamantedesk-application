@@ -70,29 +70,7 @@ class LoadGridViewData extends AbstractFixture
             ->setGridName('diamante-ticket-grid');
 
         $manager->persist($myOpenTicketsFilter);
-        /*
-        $reportedTicketsFilter = new GridView();
-        $reportedTicketsFilter->setOwner($user)
-            ->setOrganization($organization)
-            ->setName('Reported tickets')
-            ->setType(GridView::TYPE_PUBLIC)
-            ->setFiltersData(array('reporterFullName' => 'fixtureUser', 'type' => '1'))
-            ->setSortersData(array('reporterFullName' => '-1'))
-            ->setGridName('diamante-ticket-grid');
 
-        $manager->persist($reportedTicketsFilter);
-
-        $reportedNewTicketsFilter = new GridView();
-        $reportedNewTicketsFilter->setOwner($user)
-            ->setOrganization($organization)
-            ->setName('New reported tickets')
-            ->setType(GridView::TYPE_PUBLIC)
-            ->setFiltersData(array('reporterFullName' => 'fixtureUser', 'type' => '1', 'status' => array('value' => array('new'))))
-            ->setSortersData(array('reporterFullName' => '-1'))
-            ->setGridName('diamante-ticket-grid');
-
-        $manager->persist($reportedNewTicketsFilter);
-        */
         $manager->flush();
     }
 }

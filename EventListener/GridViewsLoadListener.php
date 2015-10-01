@@ -60,12 +60,12 @@ class GridViewsLoadListener implements EventSubscriber
 
         $gridName = $event->getGridName();
         $currentUser = $this->getCurrentUser();
-        if (!$currentUser) {
+        if (empty($currentUser)) {
             return;
         }
 
         $gridViews = $this->getGridViewRepository()->findGridViews($this->aclHelper, $currentUser, $gridName);
-        if (!$gridViews) {
+        if (empty($gridViews)) {
             return;
         }
 
