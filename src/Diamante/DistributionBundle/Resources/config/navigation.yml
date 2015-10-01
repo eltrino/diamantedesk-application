@@ -24,6 +24,12 @@ oro_menu_config:
             extras:
                 position: 95
 
+        diamante_customer_management:
+          label: 'diamante.user.customer_management'
+          route: 'diamante_user_list'
+          extras:
+            position: 96
+
         #reports
         diamante_report_tickets_by_priority:
             label: 'Tickets By priority'
@@ -116,6 +122,7 @@ oro_menu_config:
                         diamante_report_tickets_by_channels: ~
                         diamante_report_tickets_by_branch: ~
                         diamante_report_tickets_timeline: ~
+                diamante_customer_management: ~
                 diamante_config_tab:
                   children:
                     tags_management:
@@ -152,3 +159,8 @@ oro_titles:
     diamante_ticket_create_attach: 'Add Attachment'
 
     diamante_report_view: '%%report.label%%'
+
+    diamante_user_create: 'Create user'
+    diamante_user_view:   '%%user.fullName%% - DiamanteDesk User'
+    diamante_user_update: '%%user.name%% - Update'
+    diamante_user_list:   'Customers Management'
