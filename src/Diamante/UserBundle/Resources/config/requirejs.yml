@@ -1,0 +1,5 @@
+config:
+  paths:
+    'oro/datagrid/action/reset-pwd-mass-action': 'bundles/diamanteuser/js/datagrid/reset-pwd-mass-action.js'
+    'oroui/js/reset-password-confirmation': 'bundles/diamanteuser/js/ui/reset-password-confirmation.js'
+    'diamante/ui/layout-reset-password-plugin': 'bundles/diamanteuser/js/ui/layout-reset-password-plugin.js'

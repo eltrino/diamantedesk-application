@@ -1,0 +1,38 @@
+{
+    "name": "diamante/user-bundle",
+    "description": "DiamanteDesk User bundle",
+    "require": {
+        "beberlei/assert": "2.*",
+        "diamante/desk-bundle": "self.version"
+    },
+    "require-dev": {
+      "eltrino/phpunit-mockannotations": "*"
+    },
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrno LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+      "branch-alias": {
+        "dev-master": "1.1.x-dev"
+      }
+    },
+    "autoload": {
+      "psr-0": {
+        "Diamante\\UserBundle": "."
+      }
+    },
+    "target-dir": "Diamante/UserBundle",
+    "repositories": [
+      {
+        "type": "git",
+        "url": "https://github.com/orocrm/composer.git"
+      }
+    ],
+    "homepage": "https://github.com/eltrino/DiamanteUserBundle"
+}

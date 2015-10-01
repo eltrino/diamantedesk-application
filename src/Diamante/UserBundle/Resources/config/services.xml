@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <parameters>
+        <parameter key="diamante.user.entity.class">Diamante\UserBundle\Entity\DiamanteUser</parameter>
+        <parameter key="diamante.user_factory.class">Diamante\UserBundle\Infrastructure\DiamanteUserFactory</parameter>
+        <parameter key="diamante.user.service.class">Diamante\UserBundle\Api\Internal\UserServiceImpl</parameter>
+        <parameter key="diamante.user.api_service.class">Diamante\UserBundle\Api\Internal\UserApiServiceImpl</parameter>
+        <parameter key="diamante.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository</parameter>
+        <parameter key="diamante.user.details.twig.extension.class">Diamante\UserBundle\Twig\Extensions\UserDetailsExtension</parameter>
+        <parameter key="diamante.user.twig.extension.class">Diamante\UserBundle\Twig\Extensions\UserExtension</parameter>
+        <parameter key="diamante.autocomplete.user.search_handler.class">Diamante\UserBundle\Search\DiamanteUserSearchHandler</parameter>
+
+        <parameter key="diamante.api.user.entity.class">Diamante\UserBundle\Entity\ApiUser</parameter>
+        <parameter key="diamante.api.user.entity.factory.class">Diamante\UserBundle\Model\ApiUser\ApiUserFactory</parameter>
+        <parameter key="diamante.api.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineApiUserRepository</parameter>
+        <parameter key="diamante.user.event.listener.class">Diamante\UserBundle\EventListener\DiamanteUserListener</parameter>
+        <parameter key="diamante.user_state.service.class">Diamante\UserBundle\Api\Internal\UserStateServiceImpl</parameter>
+        <parameter key="diamante.notification.user.email.notifier.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailNotifier</parameter>
+        <parameter key="diamante.user.notification.template_resolver.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailTemplateResolver</parameter>
+        <parameter key="diamante.portal_url.twig.extension.class">Diamante\UserBundle\Twig\Extensions\PortalURLExtension</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.user.repository" class="%diamante.user.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.user.entity.class%</argument>
+        </service>
+
+        <service id="diamante.user_factory" class="%diamante.user_factory.class%">
+            <argument type="string">%diamante.user.entity.class%</argument>
+        </service>
+
+        <service id="diamante.user.service" class="%diamante.user.service.class%">
+            <argument type="service" id="oro_user.manager"/>
+            <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="diamante.user_factory"/>
+            <argument type="service" id="oro_attachment.manager"/>
+            <argument type="service" id="diamante.api.user.repository"/>
+            <call method="setNotificationManager">
+                <argument type="service" id="diamante.notification_manager"/>
+            </call>
+        </service>
+
+        <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
+            <argument type="string">Diamante\UserBundle\Model\User\UserDetails</argument>
+            <argument type="service" id="diamante.user.service"/>
+            <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="oro_user.autocomplete.user.search_handler"/>
+            <argument type="collection">
+                <argument type="string">email</argument>
+                <argument type="string">firstName</argument>
+                <argument type="string">lastName</argument>
+                <argument type="string">fullName</argument>
+                <argument type="string">username</argument>
+                <argument type="string">type</argument>
+            </argument>
+            <tag name="oro_form.autocomplete.search_handler" alias="diamante_user" acl_resource="oro_user_user_view"/>
+        </service>
+
+        <service id="diamante.user.details.twig.extension" class="%diamante.user.details.twig.extension.class%">
+            <argument type="service" id="diamante.user.service"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.portal_url.twig.extension" class="%diamante.portal_url.twig.extension.class%">
+            <argument type="service" id="router"/>
+            <argument type="service" id="oro_config.global"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.api.user.entity.class%</argument>
+        </service>
+
+        <service id="diamante.api.user.entity.factory" class="%diamante.api.user.entity.factory.class%">
+            <argument type="string">%diamante.api.user.entity.class%</argument>
+        </service>
+
+        <service id="diamante.user_state.service" class="%diamante.user_state.service.class%">
+            <argument type="service" id="security.context"/>
+        </service>
+
+        <service
+                id="diamante.user.event.listener"
+                class="%diamante.user.event.listener.class%"
+                >
+            <argument type="service" id="service_container"/>
+            <tag name="monolog.logger" channel="diamante"/>
+            <tag name="doctrine.event_listener" event="onFlush"/>
+        </service>
+
+        <service id="diamante.user.notification.template_resolver" class="%diamante.user.notification.template_resolver.class%"/>
+
+        <service id="diamante.notification.user.email.notifier" class="%diamante.notification.user.email.notifier.class%">
+            <argument type="service" id="twig"/>
+            <argument type="service" id="mailer"/>
+            <argument type="service" id="diamante.user.notification.template_resolver"/>
+            <argument type="service" id="diamante.user.service"/>
+            <argument type="service" id="oro_locale.formatter.name"/>
+            <argument type="service" id="oro_config.global"/>
+            <argument>%mailer_user%</argument>
+        </service>
+
+        <service id="diamante.user.api_service" class="%diamante.user.api_service.class%" parent="diamante.user.service"/>
+        <service id="diamante.user.api.service_oro" alias="diamante.user.api_service"/>
+    </services>
+</container>

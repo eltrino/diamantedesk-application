@@ -1,0 +1,65 @@
+{% macro resetPasswordButton(parameters) %}
+    {% set aCss = 'btn icons-holder-text' %}
+
+    {% if parameters.disabled is defined and parameters.disabled %}
+        {% set aCss = aCss ~ ' disabled' %}
+    {% endif %}
+
+    {% if parameters.aCss is defined %}
+        {% set aCss = aCss ~ ' ' ~ parameters.aCss %}
+    {% endif %}
+
+    {% set parameters = parameters|merge({'aCss': aCss}) %}
+
+    <div class="pull-left btn-group icons-holder">
+        {{ _self.resetPasswordLink(parameters) }}
+    </div>
+{% endmacro %}
+
+{% macro resetPasswordLink(parameters) %}
+    {% import 'OroUIBundle::macros.html.twig' as baseUI %}
+
+    {% set entityLabel = parameters.entity_label is defined ? parameters.entity_label : 'oro.ui.item'|trans %}
+    {% set label = parameters.label is defined ? parameters.label : 'oro.ui.delete'|trans %}
+    {% if parameters.title is defined %}
+        {% set title = parameters.title %}
+    {% else %}
+        {% set title = parameters.entity_label is defined
+        ? 'oro.ui.delete_entity'|trans({'%entityName%': parameters.entity_label})
+        : 'oro.ui.delete'|trans
+        %}
+    {% endif %}
+
+    {% set message = parameters.dataMessage is defined ? parameters.dataMessage : 'oro.ui.delete_confirm'|trans({ '%entity_label%' : entityLabel }) %}
+    {% set successMessage = parameters.successMessage is defined ? parameters.successMessage : 'oro.ui.delete_message'|trans({ '%entity_label%' : entityLabel }) %}
+    {% set url = parameters.dataUrl is defined ? parameters.dataUrl : '' %}
+    {% set linkParams = {
+    'data': {
+    'message': message,
+    'success-message': successMessage,
+    'url': url
+    },
+    'iCss': 'icon-refresh',
+    'aCss': parameters.aCss,
+    'title': title,
+    'label': label,
+    'path': 'javascript:void(0);'
+    } %}
+
+
+    {% if (parameters.dataId is defined) %}
+        {% set data = linkParams.data|merge({'id': parameters.dataId}) %}
+        {% set linkParams = linkParams|merge({ 'data': data }) %}
+    {% endif %}
+    {% if parameters.dataRedirect is defined %}
+        {% set data = linkParams.data|merge({'redirect': parameters.dataRedirect}) %}
+        {% set linkParams = linkParams|merge({ 'data': data }) %}
+    {% endif %}
+    {% if parameters.data is defined %}
+        {% for dataItemName,dataItemValue in parameters.data %}
+            {% set data = linkParams.data|merge({(dataItemName): dataItemValue}) %}
+            {% set linkParams = linkParams|merge({ 'data': data }) %}
+        {% endfor %}
+    {% endif %}
+    {{ baseUI.link(linkParams) }}
+{% endmacro %}

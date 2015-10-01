@@ -1,0 +1,28 @@
+diamante_user_api:
+    resource:     diamante.user.api_service
+    type:         diamante_rest_service
+    prefix:       /api/diamante/rest/{version}/desk/
+    requirements:
+        version:  latest|v1
+        _format:  xml|json
+    defaults:
+        version:  latest
+        _format:  json
+
+
+diamante_user_bundle:
+    resource:     "@DiamanteUserBundle/Controller"
+    type:         annotation
+    prefix:       /desk/customer
+
+
+diamante_user_api_oro:
+    resource:       diamante.user.api.service_oro
+    type:           diamante_rest_service
+    prefix:         /api/rest/{version}/desk
+    requirements:
+        version:      latest|v1
+        _format:      xml|json
+    defaults:
+        version:      latest
+        _format:      json

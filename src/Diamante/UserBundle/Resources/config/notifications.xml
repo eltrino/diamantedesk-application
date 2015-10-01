@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.user.created.option_provider.class">Diamante\UserBundle\Infrastructure\Notification\OptionProvider\Created</parameter>
+        <parameter key="diamante.user.force_reset.option_provider.class">Diamante\UserBundle\Infrastructure\Notification\OptionProvider\ForceReset</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.user.created.option_provider" class="%diamante.user.created.option_provider.class%">
+            <tag name="diamante.notification.options.provider"/>
+        </service>
+
+        <service id="diamante.user.force_reset.option_provider" class="%diamante.user.force_reset.option_provider.class%">
+            <tag name="diamante.notification.options.provider"/>
+        </service>
+    </services>
+</container>

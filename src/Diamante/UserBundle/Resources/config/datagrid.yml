@@ -1,0 +1,117 @@
+datagrid:
+  diamante-user-grid:
+    source:
+      type: orm
+      query:
+        select:
+          - u.id
+          - u.email
+          - u.firstName
+          - u.lastName
+          - COALESCE(a.isActive, 2) as active
+        join:
+          left:
+            - { join: u.apiUser, alias: a }
+        from:
+          - { table: %diamante.user.entity.class%, alias: u }
+        where:
+          and:
+            - u.isDeleted = false
+    properties:
+      id: ~
+      view_link:
+        type: url
+        route: diamante_user_view
+        params: [ id ]
+      update_link:
+        type: url
+        route: diamante_user_update
+        params: [ id ]
+      delete_link:
+        type: url
+        route: diamante_user_delete
+        params: [ id ]
+    sorters:
+      columns:
+        email:
+          data_name: u.email
+        firstName:
+          data_name: u.firstName
+        lastName:
+          data_name: u.lastName
+        active:
+          data_name: active
+    columns:
+      email:
+        label: diamante.user.labels.email
+      firstName:
+        label: diamante.user.labels.first_name
+      lastName:
+        label: diamante.user.labels.last_name
+      active:
+        label: diamante.user.labels.active
+        frontend_type: select
+        choices:
+          0: No
+          1: Yes
+          2: N/A
+    filters:
+      columns:
+        email:
+          type: string
+          data_name: u.email
+        firstName:
+          type: string
+          data_name: u.firstName
+        lastName:
+          type: string
+          data_name: u.lastName
+        active:
+          type: boolean
+          data_name: active
+    actions:
+      view:
+        type: navigate
+        label: diamante.user.actions.view
+        icon: eye-open
+        link: view_link
+        rowAction: true
+        acl_resource: VIEW;Entity:DiamanteUserBundle:DiamanteUser
+      update:
+        type: navigate
+        label: diamante.user.actions.update
+        icon: edit
+        link: update_link
+        acl_resource: EDIT;Entity:DiamanteUserBundle:DiamanteUser
+      delete:
+        type: delete
+        label: diamante.user.actions.delete
+        icon: trash
+        link: delete_link
+        acl_resource: DELETE;Entity:DiamanteUserBundle:DiamanteUser
+    mass_actions:
+        delete:
+          type:             delete
+          label:            diamante.user.actions.mass.delete.label
+          acl_resource:     DELETE;Entity:DiamanteUserBundle:DiamanteUser
+          entity_name:      DiamanteUserBundle:DiamanteUser
+          data_identifier:  u.id
+          icon :            trash
+          route:            diamante_user_delete_massaction
+        reset_password:
+          type:             reset_password
+          label:            diamante.user.actions.mass.reset_pwd.label
+          acl_resource:     EDIT;Entity:DiamanteUserBundle:DiamanteUser
+          entity_name:      DiamanteUserBundle:DiamanteUser
+          data_identifier:  u.id
+          icon:             refresh
+
+  diamante-user-ticket-grid:
+    extends: diamante-ticket-grid
+    source:
+      query:
+        where:
+          and:
+            - i.reporter = :reporter
+      bind_parameters:
+        - reporter
