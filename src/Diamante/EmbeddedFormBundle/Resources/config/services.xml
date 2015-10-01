@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante_embedded_form.class">Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType</parameter>
+        <parameter key="diamante_embedded_form.event_listener.embedded_form.class">Diamante\EmbeddedFormBundle\EventListener\EmbeddedFormListener</parameter>
+        <parameter key="diamante_embedded_form.form.embedded_type_extension.class">Diamante\EmbeddedFormBundle\Form\Extension\EmbeddedFormTypeExtension</parameter>
+        <parameter key="diamante_embedded_form.twig.extension.dynamic_fields.class">Diamante\EmbeddedFormBundle\Twig\DynamicFieldsExtension</parameter>
+        <parameter key="diamante_embedded_form.back_link.twig.extension.class">Diamante\EmbeddedFormBundle\Twig\BackLinkExtension</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante_embedded_form.form_type.available_embedded_form" class="%diamante_embedded_form.class%">
+            <tag name="oro_embedded_form" label="Diamante Ticket"/>
+            <tag name="form.type" alias="diamante_desk_ticket_form_type"/>
+        </service>
+        <service id="diamante_embedded_form.event_listener.embedded_form" class="%diamante_embedded_form.event_listener.embedded_form.class%">
+            <call method="setRequest"><argument id="request" type="service" on-invalid="ignore" strict="false"/></call>
+            <tag name="kernel.event_listener" event="entity_form.render.before" method="addBranchField"/>
+        </service>
+        <service id="diamante_embedded_form.form.embedded_type_extension" class="%diamante_embedded_form.form.embedded_type_extension.class%">
+            <tag name="form.type_extension" alias="embedded_form"/>
+        </service>
+        <service id="diamante_embedded_form.twig.extension.dynamic_fields" class="%diamante_embedded_form.twig.extension.dynamic_fields.class%">
+            <argument type="service" id="oro_entity_config.config_manager"/>
+            <argument type="service" id="oro_entity_extend.extend.field_type_helper"/>
+            <argument type="service" id="event_dispatcher"/>
+            <tag name="twig.extension"/>
+        </service>
+        <service id="diamante_embedded_form.back_link.twig.extension" class="%diamante_embedded_form.back_link.twig.extension.class%">
+            <argument type="service" id="router"/>
+            <argument type="service" id="translator"/>
+            <tag name="twig.extension"/>
+        </service>
+    </services>
+</container>

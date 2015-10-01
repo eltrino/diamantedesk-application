@@ -1,0 +1,48 @@
+{% form_theme form with ['DiamanteEmbeddedFormBundle::fields.html.twig'] %}
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var fileToRead = document.getElementById("diamante_embedded_form_attachmentsInput");
+        fileToRead.addEventListener("change", function(event) {
+            var files = fileToRead.files;
+            var len = files.length;
+            // we should read just one file
+            if (len) {
+                document.getElementById("file-title-first").innerHTML = files[0].name;
+            }
+        }, false);
+    });
+</script>
+
+{{ form_start(form, {'action': url('diamante_embedded_form_submit', {'id': formEntity.id}), 'attr': {'id': form.vars.name }}) }}
+<div class="wrapper">
+    <div class="row-group">
+        <div class="box">
+            {{ form_row(form.firstName) }}
+        </div>
+        <div class="box">
+            {{ form_row(form.lastName) }}
+        </div>
+    </div>
+    <div class="row-group">
+        <div class="box">
+            {{ form_row(form.emailAddress) }}
+        </div>
+    </div>
+    <div class="row-group">
+        {{ form_row(form.subject) }}
+    </div>
+    <div class="row-group">
+        {{ form_row(form.description) }}
+    </div>
+    <div class="row-group">
+        <div id="file-box">
+            {{ form_row(form.attachmentsInput) }}
+            <span id="file-title-first">Please select a file...</span>
+            <span id="file-title-second">Choose File</span>
+        </div>
+    </div>
+    <div class="row-group">
+        {{ form_widget(form.submit) }}
+    </div>
+</div>
+{{ form_end(form) }}

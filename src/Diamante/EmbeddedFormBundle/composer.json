@@ -1,0 +1,39 @@
+{
+    "name": "diamante/embeddedform-bundle",
+    "description": "DiamanteDesk Embedded Form Bundle",
+    "homepage": "https://github.com/eltrino/DiamanteEmbeddedFormBundle",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrino LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Diamante\\EmbeddedFormBundle": "."
+        }
+    },
+    "target-dir": "Diamante/EmbeddedFormBundle",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/orocrm/composer.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.4",
+        "oro/platform": "1.8.*",
+        "diamante/desk-bundle": "self.version"
+    },
+    "require-dev": {
+        "eltrino/phpunit-mockannotations": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.1.x-dev"
+        }
+    }
+}
