@@ -1,0 +1,82 @@
+{% import 'OroUIBundle::macros.html.twig' as ui %}
+
+<div class="widget-content">
+    <ul id="diam-attachments" class="diam-attachments unstyled clearfix">
+    {% for key, attachment in attachments %}
+        <li class="diam-attachment">
+            <figure>
+                <div class="diam-attachment-preview">
+                {% set attachmentExtension = attachment.file.extension %}
+                {% set attachmentPreviewSrc = attachment.file.Pathname %}
+                {% if attachmentExtension == '' %}
+                    <img src="{{ asset('bundles/diamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
+                {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
+                attachmentExtension == 'png' or attachmentExtension == 'gif')
+                %}
+                    <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt="{{ attachment.filename|escape }}"/>
+                {% else %}
+                    <img src="{{ asset('bundles/diamantedesk/img/file.png') }}" alt="{{
+                    attachment.filename|escape }}"/>
+                    <span class="diam-attachment-label">{{ attachmentExtension }}</span>
+                {% endif %}
+                </div>
+                <figcaption>
+                    <span class="pull-right">
+                        <a class="no-hash" href="{{ path('diamante_ticket_attachment_download', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-download-alt hide-text" title="{{ 'diamante.desk.attachment.actions.download'|trans }}">{{ 'diamante.desk.attachment.actions.download'|trans }}</i></a>
+                        <a href="{{ path('diamante_ticket_attachment_remove', {'ticketId': ticket.id, 'attachId': attachment.id}) }}"><i class="icon-trash hide-text" title="{{ 'diamante.desk.attachment.actions.remove'|trans }}">{{ 'diamante.desk.attachment.actions.remove'|trans }}</i></a>
+                    </span>
+                    <strong>{{ attachment.filename|escape }}</strong>
+                </figcaption>
+            </figure>
+        </li>
+    {% endfor %}
+    {% if resource_granted('EDIT', ticket) %}
+        <li class="diam-dropzone" id="diam-dropzone">
+            <div class="diam-dropzone-placeholder">
+                <form id="diam-dropzone-form"
+                      action="{{ path('diamante_ticket_create_attach_post', {'id': ticket.id}) }}"
+                      method="post" enctype="multipart/form-data">
+                    <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> {{ 'diamante.desk.attachment.placeholders.dropzone'|trans }}</label>
+                    <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>
+                    <input type="hidden" name="diamante_attachment_form[_token]" value="{{ csrf_token('attachment') }}" />
+                    <input id="diam-dropzone-file" type="file" name="diamante_attachment_form[attachmentsInput][]" multiple />
+                </form>
+            </div>
+        </li>
+        <li class="diam-attachment diam-attachment-placeholder">
+            <div class="diam-dropzone-placeholder">
+
+            </div>
+        </li>
+    {% endif %}
+    </ul>
+</div>
+<script type="text/javascript">
+    require(['diamantedesk/js/diam.attachments', 'diamantedesk/js/diam.ajax.messages'], function(attachments){
+        attachments($('#diam-dropzone-file'));
+    });
+</script>
+
+<script type="text/html" id="template-attachments">
+    <% _.each(attachments, function(attachment){ %>
+    <li class="diam-attachment diam-attachment-new">
+        <figure>
+            <div class="diam-attachment-preview">
+                <% if( attachment.src) { %>
+                <img src="<%= attachment.src %>" alt="<%= _.escape(attachment.filename) %>"/>
+                <% } else { %>
+                <img src="{{ asset('bundles/diamantedesk/img/file.png') }}" alt="<%= _.escape(attachment.filename) %>"/>
+                <span class="diam-attachment-label"><%= attachment.ext %></span>
+                <% } %>
+            </div>
+            <figcaption>
+                <span class="pull-right">
+                    <a class="no-hash" href="<%= attachment.url %>"><i class="icon-download-alt hide-text" title="{{ 'diamante.desk.attachment.actions.download'|trans }}">{{ 'diamante.desk.attachment.actions.download'|trans }}</i></a>
+                    <a href="<%= attachment.delete %>"><i class="icon-trash hide-text" title="{{ 'diamante.desk.attachment.actions.remove'|trans }}">{{ 'diamante.desk.attachment.actions.remove'|trans }}</i></a>
+                </span>
+                <strong><%= _.escape(attachment.filename) %></strong>
+            </figcaption>
+        </figure>
+    </li>
+    <% }) %>
+</script>

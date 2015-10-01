@@ -1,0 +1,8 @@
+Diamante\DeskBundle\Model\Attachment\Attachment:
+    accessor_order: alphabetical
+    properties:
+        file:
+            exclude: true
+    virtual_properties:
+      getFileName:
+        serialized_name: filename

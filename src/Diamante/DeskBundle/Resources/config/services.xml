@@ -1,0 +1,212 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.command_factory.class">Diamante\DeskBundle\Form\CommandFactory</parameter>
+        <!-- repositories start -->
+        <parameter key="diamante.generic.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository</parameter>
+        <!-- repositories end -->
+        <parameter key="diamante.email_processing.form.type.default_branch.class">Diamante\DeskBundle\Form\Type\DefaultBranchType</parameter>
+        <parameter key="diamante.email_processing.branchRemoveEventListener.class">Diamante\DeskBundle\Infrastructure\Branch\BranchRemoveEventListener</parameter>
+        <parameter key="diamante.oro_user.OroUserSubscriber.class">Diamante\DeskBundle\EventListener\OroUserSubscriber</parameter>
+        <parameter key="diamante.doctrine_on_flush_subscriber.class">Diamante\DeskBundle\EventListener\DoctrineOnFlushSubscriber</parameter>
+        <parameter key="diamante.email_processing.placeholder.filter.default_branch.class">Diamante\DeskBundle\Placeholder\DefaultBranchFilter</parameter>
+        <parameter key="diamante.user_cleanup.service.class">Diamante\DeskBundle\Api\Internal\ReporterService</parameter>
+        <parameter key="diamante.api.paging.service.class">Diamante\DeskBundle\Api\Internal\ApiPagingServiceImpl</parameter>
+        <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
+        <parameter key="diamante.datagrid.pager.combined_users_pager_extension.class">Diamante\DeskBundle\Datagrid\Pager\CombinedUsersPagerExtension</parameter>
+        <parameter key="diamante.datagrid.pager.data_audit_extension.class">Diamante\DeskBundle\Datagrid\Pager\DataAuditPagerExtension</parameter>
+        <parameter key="diamante.datagrid.sorter.data_audit_extension.class">Diamante\DeskBundle\Datagrid\Sorter\AuditSorterExtension</parameter>
+        <parameter key="diamante.render.url.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderUrlExtension</parameter>
+        <parameter key="diamante.render.tag.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderTagExtension</parameter>
+        <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportServiceImpl</parameter>
+        <parameter key="diamante.report.builder.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportBuilderImpl</parameter>
+        <parameter key="diamante.report.chart_type_provider.class">Diamante\DeskBundle\Report\ChartTypeProvider</parameter>
+        <parameter key="diamante.notification_manager.class">Diamante\DeskBundle\Infrastructure\Notification\NotificationManager</parameter>
+        <parameter key="diamante.loggable.loggable_manager.class">Diamante\DeskBundle\Loggable\LoggableManager</parameter>
+        <parameter key="diamante.loggable.loggable_mapper.class">Diamante\DeskBundle\Loggable\AuditEntityMapper</parameter>
+        <parameter key="diamante.listener.entity_listener.class">Diamante\DeskBundle\EventListener\EntityListener</parameter>
+        <parameter key="diamante.loggable.entity.class">Diamante\DeskBundle\Entity\Audit</parameter>
+        <parameter key="diamante.loggable.entity_field.class">Diamante\DeskBundle\Entity\AuditField</parameter>
+        <parameter key="diamante.datagrid.combined_audit_datasource.class">Diamante\DeskBundle\Datagrid\CombinedAuditDatasource</parameter>
+        <parameter key="diamante.mass_action.change.class">Diamante\DeskBundle\MassAction\ChangeAction</parameter>
+        <parameter key="diamante.mass_action.assign.class">Diamante\DeskBundle\MassAction\AssignAction</parameter>
+        <parameter key="diamante.mass_action.move.class">Diamante\DeskBundle\MassAction\MoveAction</parameter>
+        <parameter key="diamante.mass_action.watch.class">Diamante\DeskBundle\MassAction\WatchAction</parameter>
+        <parameter key="diamante.audit_datagrid.configuration.provider.class">Diamante\DeskBundle\Datagrid\Provider\DataAuditConfigurationProvider</parameter>
+        <parameter key="diamante.grid_views_load.class">Diamante\DeskBundle\EventListener\GridViewsLoadListener</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.datagrid.extension.formatter.assignee_property" class="Diamante\DeskBundle\Datagrid\AssigneePropertyFormatter">
+            <argument type="service" id="translator"/>
+            <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
+        </service>
+
+        <service id="diamante_deskbundle.datagrid.combined_users_datasource" class="%diamante.datagrid.combined_users_datasource.class%">
+            <argument id="doctrine" type="service"/>
+            <tag name="oro_datagrid.datasource" type="diamante_combined_users_datasource"/>
+        </service>
+
+        <service id="diamante.datagrid.pager.combined_users_pager" class="%diamante.datagrid.pager.combined_users_pager_extension.class%">
+            <argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>
+            <tag name="oro_datagrid.extension"/>
+        </service>
+
+        <service id="diamante.datagrid.pager.data_audit" class="%diamante.datagrid.pager.data_audit_extension.class%">
+            <argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>
+            <tag name="oro_datagrid.extension"/>
+        </service>
+
+        <service id="diamante.datagrid.sorter.data_audit" class="%diamante.datagrid.sorter.data_audit_extension.class%">
+            <!--<argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>-->
+            <tag name="oro_datagrid.extension"/>
+        </service>
+
+        <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
+            <argument type="string">ticket</argument>
+            <argument type="constant">false</argument>
+            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-ticket-attachments-grid" method="onBuildAfter"/>
+        </service>
+
+        <service id="diamante.event_listener.oro_user_listener" class="%diamante.oro_user.OroUserSubscriber.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_subscriber" connection="default"/>
+        </service>
+
+        <service id="diamante.event_listener.doctrine_on_flush" class="%diamante.doctrine_on_flush_subscriber.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_subscriber" connection="default"/>
+        </service>
+
+        <service id="diamante.user_cleanup.service" class="%diamante.user_cleanup.service.class%">
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.comment.repository"/>
+            <argument type="service" id="diamante.watcher_list.repository"/>
+        </service>
+
+        <service id="diamante.command_factory" class="%diamante.command_factory.class%"/>
+
+        <service id="diamante.email_processing.branchRemoveEventListener" class="%diamante.email_processing.branchRemoveEventListener.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="preRemove"/>
+        </service>
+
+        <service id="diamante.email_processing.placeholder.filter.default_branch" class="%diamante.email_processing.placeholder.filter.default_branch.class%">
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
+            <tag name="oro_ui_placeholder.filter"/>
+        </service>
+
+        <service id="diamante.api.paging.service" class="%diamante.api.paging.service.class%">
+            <argument type="service" id="diamante.api.paging.provider"/>
+        </service>
+
+        <service id="diamante.render.url.twig.extension" class="%diamante.render.url.twig.extension.class%">
+            <argument type="service" id="router"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.render.tag.twig.extension" class="%diamante.render.tag.twig.extension.class%">
+            <argument type="service" id="oro_tag.tag.manager"/>
+            <argument type="service" id="doctrine"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.report.service" class="%diamante.report.service.class%">
+            <argument type="service" id="diamante.report.builder"/>
+        </service>
+
+        <service id="diamante.report.builder" class="%diamante.report.builder.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante.report.chart_type_provider"/>
+        </service>
+
+        <service id="diamante.notification_manager" class="%diamante.notification_manager.class%">
+            <argument id="twig" type="service"/>
+            <argument id="swiftmailer.mailer" type="service"/>
+            <argument id="translator" type="service"/>
+            <argument id="oro_config.global" type="service"/>
+        </service>
+
+        <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>
+
+        <service id="diamante.mass_action.change" class="%diamante.mass_action.change.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="change"/>
+        </service>
+
+        <service id="diamante.mass_action.assign" class="%diamante.mass_action.assign.class%" scope="prototype">
+            <tag name="oro_datagrid.extension.mass_action.type" type="assign" />
+        </service>
+
+        <service id="diamante.mass_action.move" class="%diamante.mass_action.move.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="move"/>
+        </service>
+
+        <service id="diamante.mass_action.watch" class="%diamante.mass_action.watch.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="watch"/>
+        </service>
+
+        <service id="diamante.event_listener.grid_views_load" class="%diamante.grid_views_load.class%">
+            <argument id="doctrine" type="service"/>
+            <argument id="oro_security.security_facade" type="service"/>
+            <argument id="oro_security.acl_helper" type="service"/>
+            <tag name="kernel.event_listener" event="oro_datagrid.grid_views_load" method="onViewsLoad"/>
+        </service>
+
+        <service id="diamante.listener.entity_listener" class="%diamante.listener.entity_listener.class%">
+            <argument type="service" id="diamante.loggable.loggable_manager"/>
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="onFlush"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
+        </service>
+
+
+        <service id="diamante.loggable.loggable_manager" class="%diamante.loggable.loggable_manager.class%">
+            <argument>%diamante.loggable.entity.class%</argument>
+            <argument>%diamante.loggable.entity_field.class%</argument>
+            <argument id="oro_entity_config.provider.dataaudit" type="service"/>
+            <argument id="security.context.link" type="service"/>
+            <argument id="diamante.loggable.loggable_mapper" type="service"/>
+            <argument id="service_container" type="service"/>
+        </service>
+
+        <service id="diamante.loggable.loggable_mapper" class="%diamante.loggable.loggable_mapper.class%">
+            <call method="addAuditEntryClass">
+                <argument>%diamante.user.entity.class%</argument>
+                <argument>%diamante.loggable.entity.class%</argument>
+            </call>
+            <call method="addAuditEntryFieldClass">
+                <argument>%diamante.user.entity.class%</argument>
+                <argument>%diamante.loggable.entity_field.class%</argument>
+            </call>
+        </service>
+
+        <service id="diamante.audit_datagrid.configuration.provider" class="%diamante.audit_datagrid.configuration.provider.class%">
+            <argument id="oro_datagrid.configuration.provider" type="service"/>
+            <tag name="oro_datagrid.configuration.provider" />
+        </service>
+
+        <service id="diamante.datagrid.combined_audit_datasource" class="%diamante.datagrid.combined_audit_datasource.class%">
+            <argument id="doctrine" type="service"/>
+            <argument id="diamante.audit.repository" type="service"/>
+            <tag name="oro_datagrid.datasource" type="diamante_combined_audit_datasource"/>
+        </service>
+    </services>
+</container>

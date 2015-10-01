@@ -1,0 +1,46 @@
+{
+    "name": "diamante/desk-bundle",
+    "description": "DiamanteDesk Bundle",
+    "homepage": "https://github.com/eltrino/DiamanteDeskBundle",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Eltrino LLC",
+            "homepage": "http://eltrino.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Diamante\\DeskBundle": "."
+        }
+    },
+    "target-dir": "Diamante/DeskBundle",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/orocrm/composer.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.4",
+        "oro/platform": "1.8.*",
+        "beberlei/assert": "2.*",
+        "zendframework/zend-mail": "~2.1.5",
+        "diamante/email-processing-bundle": "self.version",
+        "diamante/api-bundle": "self.version",
+        "diamante/user-bundle": "self.version"
+    },
+    "require-dev": {
+        "eltrino/phpunit-mockannotations": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.1.x-dev"
+        }
+    },
+    "replace": {
+        "eltrino/diamante-desk-bundle":"1.*"
+    }
+}

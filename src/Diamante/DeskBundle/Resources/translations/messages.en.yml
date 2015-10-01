@@ -1,0 +1,315 @@
+diamante:
+    desk:
+        branch:
+          entity_label:               Branch
+          entity_plural_label:        Branches
+          details:                    Branch Details
+          created_at.label:           Created At
+          description.label:          Description
+          id.label:                   Branch Id
+          key.label:                  Branch Key
+          logo.label:                 Branch Logo
+          name.label:                 Branch Name
+          updated_at.label:           Updated At
+          default_assignee.label:     Default Assignee
+
+          columns:
+            logo:              Logo
+            branch_name:       Branch Name
+            branch_key:        Branch Key
+
+          actions:
+            view:              View Branch
+            add:               Add Branch
+            edit:              Edit Branch
+            remove:            Delete Branch
+            remove_mass:       Delete Branches
+
+          messages:
+            create:
+              error:           Error occurred when creating the branch. Branch is not created. Enter all required data and try again.
+              success:         Branch successfully created.
+            save:
+              error:           Error occurred when saving the branch. Branch is not saved. Enter all required data and try again
+              success:         Branch successfully saved.
+            delete:
+              query:           Are you sure you want to delete this branch with all its tickets? Please note that it cannot be undone!
+              success:         Branch deleted
+              error:           Current branch is configured as a default for Email Processing and can't be deleted.
+            get:
+              error:           Branch loading failed. Branch not found.
+
+          placeholders:
+            form:              Choose branch...
+            default:           Current branch is configured as a default for Email Processing and can't be deleted.
+
+        ticket:
+          entity_label:               Ticket
+          entity_plural_label:        Tickets
+          details:                    Ticket Details
+          all:                        All Tickets
+          created_at.label:           Created At
+          description.label:          Description
+          id.label:                   Ticket Id
+          priority.label:             Priority
+          reporter.label:             Reporter
+          assignee.label:             Asigner
+          branch.label:               Branch
+          comments.label:             Comments
+          sequence_number.label:      Sequence Number
+          source.label:               Source
+          status.label:               Status
+          subject.label:              Subject
+          unique_id.label:            Unique Id
+          updated_at.label:           Updated At
+          attachments.label:          Attachments
+          watcher_list.label:         Watcher list
+
+          columns:
+            key:               Key
+            subject:           Subject
+            branch:            Branch
+            assignee:          Assignee
+            reporter:          Reporter
+            priority:          Priority
+            status:            Status
+            created:           Created
+            updated:           Updated
+
+          actions:
+            add:               Add Ticket
+            edit:              Edit Ticket
+            view:              View Ticket
+            remove:            Delete Ticket
+            delete:            Delete Tickets
+            assign:            Assign
+            create:            Create Ticket
+            change_status:     Change status
+            move:              Move
+            watch:             Watch
+            unwatch:           Un-watch
+            add_watcher:       Add Watcher
+
+          messages:
+            create:
+              error:           Error occurred while creating ticket
+              success:         Ticket successfully created.
+            save:
+              error:           Error saving ticket
+              success:         Ticket successfully saved.
+            delete:
+              query:           Are you sure you want to delete this ticket?
+              error:           Error occurred while deleting ticket
+              success:         Ticket successfully deleted.
+            reassign:
+              error:           Error occurred while re-assiging ticket
+              success:         Ticket successfully re-assigned.
+            change_status:
+              error:           Error occurred while trying to change ticket status.
+              success:         Status successfully changed
+            move:
+              error:           Error occurred while trying to move ticket.
+              success:         Ticket successfully moved.
+            watch:
+              error:           Error occurred while trying to add watcher.
+              success:         Watcher successfully added.
+            watcher_remove:
+              success:         Watcher successfully removed.
+            get:
+              error:           Ticket loading failed, ticket not found.
+              attachment:
+                error:         Attachment loading failed. Ticket has no such attachment.
+              branch:
+                error:         Branch loading failed, branch not found.
+              reporter:
+                error:         Reporter loading failed, reporter not found.
+              assignee:
+                error:         Assignee validation failed, assignee not found.
+
+
+        comment:
+          entity_label:        Comment
+          entity_plural_label: Comments
+          ticket_status:       Ticket status
+          content:             Content
+          private:             Private
+          attachments.label:   Attachments
+          author.label:        Author
+          content.label:       Content
+          created_at.label:    Created_at
+          id.label:            Id
+          private.label:       Private
+          ticket.label:        Ticket
+          updated_at.label:    Updated at
+
+          actions:
+            edit:              Edit Comment
+            add:               Add Comment
+
+          messages:
+            create:
+              error:           Error creating comment.
+              success:         Comment successfully created.
+            save:
+              error:           Error saving comment.
+              success:         Comment successfully saved.
+            delete:
+              error:
+              success:         Comment successfully deleted.
+              query:           Are you sure you want to delete this comment?
+            get:
+              error:           Comment loading failed, comment not found.
+            get_attach:
+              error:           Attachment loading failed. Comment has no such attachment.
+            empty:             There are no comments yet.
+
+          placeholders:
+            added:             added a comment
+            deleted_user:      Deleted user
+
+        attachment:
+          entity_label:        Attachment
+          entity_plural_label: Attachments
+          file:                File
+          image:               Image
+          created_at.label:    Created at
+          file.label:          File
+          hash.label:          Hash
+          id.label:            Id
+          updated_at.label:    Updated at
+
+          actions:
+            delete_file:       Delete File
+            add:               Add Attachment
+            download:          Download
+            remove:            Delete
+            attach:            Attach File
+
+          messages:
+            create:
+              error:           Error uploading attachment
+              success:         Attachment(s) successfully uploaded.
+            delete:
+              error:           Unable to remove attachment.
+              success:         Attachment successfully deleted.
+              query:           Are you sure you want to delete this attachment?
+            get:
+              error:           Attachment not found
+            load:
+              error:           Attachment loading failed, attachment not found.
+            upload:
+              error:           Upload directory is not writable, doesn\'t exist or no space left on the disk.
+
+          placeholders:
+            dropzone:          Drop File Here
+
+        file:
+          messages:
+            dump:
+              error:           File name can not be empty string.
+            type:
+              error:           Value should be a File type.
+
+        permissions:
+          messages:
+            granted:
+              error:           Not enough permissions.
+
+        watcher:
+          messages:
+            watch:
+              success:         Now you watching the ticket.
+            unwatch:
+              success:         You successfully unsubscribe from watching of ticket
+
+        ui:
+          create:              Create
+          ok:                  Ok
+          cancel:              Cancel
+          save:                Save
+          delete:              Delete
+          save_and_close:      Save and close
+          edit:                Edit
+          add:                 Add
+          change:              Change
+
+        common:
+          general:             General
+          description:         Description
+          created:             Created
+          updated:             Updated
+          not_available:       N/A
+          not_defined:         Not defined
+          no_description:      No description
+          delete_confirmation: Confirm Deletion
+          filters:             Filters
+          watchers:            Watchers
+          messages:
+            validation:
+              failed:          Form is invalid. Please correctly fill in all required fields.
+
+        forms:
+          name:                Name
+          default_assignee:    Default Assignee
+          logoFile:            Logo
+          tags:                Tags
+          key:                 Key
+
+        attributes:
+          name:                Name
+          subject:             Subject
+          branch:              Branch
+          status:              Status
+          priority:            Priority
+          source:              Source
+          reporter:            Reporter
+          default_assignee:    Default Assignee
+          assignee:            Assignee
+          watcher:             Watcher
+          key:                 Key
+
+        email:
+          configuration:       Email Configuration
+        dashboard:
+          support.label:       Support Dashboard
+
+        report:
+          messages:
+            build:
+              error:           Error building the report.
+
+        tickethistory:
+          entity_label:        Ticket history
+          entity_plural_label: Tickets history
+          id.label:            Id
+          ticket_id.label:     Ticket id
+          ticket_key.label:    Ticket key
+
+        tickettimeline:
+          entity_label:        Ticket timeline
+          entity_plural_label: Tickets timeline
+          closed.label:        Closed
+          date.label:          Date
+          id.label:            Id
+          new.label:           New
+          reopen.label:        Reopen
+          solved.label:        Solved
+
+        watcherlist:
+          entity_label:        Watcher list
+          entity_plural_label: Watcher lists
+          id.label:            Id
+          ticket.label:        Ticket
+          user_type.label:     User type
+            
+oro:
+    entity_extend:
+        form:
+            data_type:
+              branch_logo:     Branch Logo
+              user_type:       User type
+              source:          Source
+              status:          Status
+              priority:        Priority
+              ticket_unique_id:        Ticket unique id
+              ticket_sequence_number:  Ticket sequence number

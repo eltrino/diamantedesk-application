@@ -1,0 +1,6 @@
+config:
+    paths:
+        'd3': 'bundles/diamantedesk/lib/d3/d3.min.js'
+        'd3-tip' : 'bundles/diamantedesk/lib/d3-tip/index.js'
+        'diamante/attachments/draganddrop': 'bundles/diamantedesk/js/diam.attachments.js'
+        'diamante/ajax.messages': 'bundles/diamantedesk/js/diam.ajax.messages.js'

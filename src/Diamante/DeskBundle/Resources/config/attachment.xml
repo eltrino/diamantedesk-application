@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.attachment.entity.class">Diamante\DeskBundle\Entity\Attachment</parameter>
+        <parameter key="diamante.attachment.entity.factory.class">Diamante\DeskBundle\Model\Attachment\AttachmentFactory</parameter>
+        <parameter key="diamante.attachment.directory.name">attachments</parameter>
+        <parameter key="diamante.attachment.upload_dir.path">%kernel.root_dir%/%diamante.attachment.directory.name%</parameter>
+        <parameter key="diamante.attachment.manager.class">Diamante\DeskBundle\Model\Attachment\ManagerImpl</parameter>
+        <parameter key="diamante.attachment.file_storage.service.class">Diamante\DeskBundle\Infrastructure\Attachment\FileStorage\LocalFileStorageService</parameter>
+        <parameter key="diamante.attachment.imagine_data_loader.class">Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>
+        <parameter key="diamante.attachment.service.class">Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl</parameter>
+        <parameter key="diamante.attachment.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineAttachmentRepository</parameter>
+        <parameter key="diamante.attachment.serialize.handler.class">Diamante\DeskBundle\Serializer\AttachmentHandler</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.attachment.entity.factory" class="%diamante.attachment.entity.factory.class%">
+            <argument type="string">%diamante.attachment.entity.class%</argument>
+        </service>
+
+        <service id="diamante.attachment.file_storage.service" class="%diamante.attachment.file_storage.service.class%"
+                 factory-class="%diamante.attachment.file_storage.service.class%" factory-method="create">
+            <argument>%diamante.attachment.upload_dir.path%</argument>
+            <argument type="service" id="filesystem"/>
+        </service>
+
+        <service id="diamante.attachment.manager" class="%diamante.attachment.manager.class%">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="diamante.attachment.file_storage.service"/>
+            <argument type="service" id="diamante.attachment.entity.factory"/>
+            <argument type="service" id="diamante.attachment.repository"/>
+            <argument type="service" id="diamante.attachment.imagine_data_loader"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
+        </service>
+
+        <service id="diamante.attachment.imagine_data_loader" class="%diamante.attachment.imagine_data_loader.class%">
+            <tag name="liip_imagine.data.loader" loader="diamante_attachment" />
+            <argument type="service" id="liip_imagine" />
+        </service>
+<!-- repositories start -->
+        <service id="diamante.attachment.repository" class="%diamante.attachment.repository.class%"
+                factory-service = "doctrine.orm.entity_manager"
+                factory-method  = "getRepository">
+            <argument type="string">%diamante.attachment.entity.class%</argument>
+        </service>
+<!-- repositories end -->
+
+        <service id="diamante.attachment.service" class="%diamante.attachment.service.class%">
+            <argument type="service" id="diamante.attachment.manager"/>
+            <argument type="service" id="diamante.attachment.repository"/>
+        </service>
+
+        <service id="diamante.attachment.serialize.handler" class="%diamante.attachment.serialize.handler.class%">
+            <argument type="service" id="diamante.attachment.service"/>
+            <argument type="service" id="diamante.attachment.manager"/>
+            <argument type="service" id="service_container"/>
+            <tag name="jms_serializer.subscribing_handler" connection="default"/>
+        </service>
+    </services>
+</container>

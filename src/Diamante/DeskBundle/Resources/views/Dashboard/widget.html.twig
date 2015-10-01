@@ -1,0 +1,15 @@
+{% extends 'OroDashboardBundle:Dashboard:widget.html.twig' %}
+
+{% block content %}
+
+    {% set options  = {
+        data: data
+    } %}
+
+    <div class="diam-plot diam-{{ chart_type }}-widget"
+         data-page-component-module="diamantedesk/js/app/components/{{ chart_type }}-widget-component"
+         data-page-component-options="{{ options|json_encode }}"></div>
+
+    {#{{ dump(data) }}#}
+{% endblock %}
+

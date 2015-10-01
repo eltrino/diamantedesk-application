@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.branch.entity.class">Diamante\DeskBundle\Entity\Branch</parameter>
+        <parameter key="diamante.branch_email_configuration.entity.class">Diamante\DeskBundle\Entity\BranchEmailConfiguration</parameter>
+        <parameter key="diamante.branch.default_key_generator.class">Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator</parameter>
+        <parameter key="diamante.branch.entity.factory.class">Diamante\DeskBundle\Model\Branch\BranchFactory</parameter>
+        <parameter key="diamante.branch.logo.handler.class">Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler</parameter>
+        <parameter key="diamante.branch.service.class">Diamante\DeskBundle\Api\Internal\BranchServiceImpl</parameter>
+        <parameter key="diamante.branch.service.api.class">Diamante\DeskBundle\Api\Internal\BranchApiServiceImpl</parameter>
+        <parameter key="diamante.branch_email_configuration.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository</parameter>
+        <parameter key="diamante.branch_email_configuration.entity.factory.class">Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory</parameter>
+        <parameter key="diamante.branch_email_configuration.service.class">Diamante\DeskBundle\Api\Internal\BranchEmailConfigurationServiceImpl</parameter>
+        <parameter key="diamante.branch.placeholder.class">Diamante\DeskBundle\Placeholder\DefaultBranchPlaceholder</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="diamante.branch.default_key_generator" class="%diamante.branch.default_key_generator.class%"/>
+
+        <service id="diamante.branch.entity.factory" class="%diamante.branch.entity.factory.class%">
+            <argument type="string">%diamante.branch.entity.class%</argument>
+            <argument type="service" id="diamante.branch.default_key_generator"/>
+        </service>
+
+        <service id="diamante.branch_email_configuration.entity.factory" class="%diamante.branch_email_configuration.entity.factory.class%">
+            <argument type="string">%diamante.branch_email_configuration.entity.class%</argument>
+        </service>
+
+        <service id="diamante.branch.logo_handler" class="%diamante.branch.logo.handler.class%"
+                 factory-class="%diamante.branch.logo.handler.class%" factory-method="create">
+            <argument>%kernel.root_dir%</argument>
+            <argument type="service" id="filesystem"/>
+        </service>
+
+        <service id="diamante.branch.service" class="%diamante.branch.service.class%">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="diamante.branch.entity.factory"/>
+            <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.branch.logo_handler"/>
+            <argument type="service" id="oro_tag.tag.manager"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
+        </service>
+
+        <service id="diamante.branch.api.service" class="%diamante.branch.service.api.class%" parent="diamante.branch.service">
+            <call method="setApiPagingService">
+                <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+        </service>
+
+        <service id="diamante.branch.api.service_diamante" alias="diamante.branch.api.service" />
+
+        <service id="diamante.branch.api.service_oro" alias="diamante.branch.api.service" />
+
+        <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="diamante.branch_email_configuration.entity.factory"/>
+            <argument type="service" id="diamante.branch_email_configuration.repository"/>
+            <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <tag name="monolog.logger" channel="diamante"/>
+        </service>
+
+        <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
+            <argument type="string">branch</argument>
+            <argument type="constant">false</argument>
+            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-branch-tickets-grid" method="onBuildAfter"/>
+        </service>
+
+        <service id="diamante.branch.placeholder" class="%diamante.branch.placeholder.class%">
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
+        </service>
+<!-- repositories start -->
+        <service id="diamante.branch.repository" class="%diamante.generic.repository.class%"
+                factory-service = "doctrine.orm.entity_manager"
+                factory-method  = "getRepository">
+            <argument type="string">%diamante.branch.entity.class%</argument>
+        </service>
+
+        <service id="diamante.branch_email_configuration.repository" class="%diamante.branch_email_configuration.repository.class%"
+                factory-service="doctrine.orm.entity_manager" factory-method="getRepository">
+            <argument type="string">%diamante.branch_email_configuration.entity.class%</argument>
+        </service>
+<!-- repositories end -->
+    </services>
+</container>

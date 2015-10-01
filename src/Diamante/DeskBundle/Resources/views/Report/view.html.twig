@@ -1,0 +1,24 @@
+{% extends 'DiamanteDeskBundle::layout.html.twig' %}
+
+{% set pageTitle = page_title|default('diamante.desk.common.not_available'|trans) %}
+
+{% block content %}
+    {% set options  = {
+        data: data
+    } %}
+    <div class="container-fluid">
+        <div class="navigation clearfix navbar-extra navbar-extra-right">
+            <div class="row">
+                <div class="pull-left pull-left-extra">
+                    <div class="pull-left">
+                        <h1 class="oro-subtitle">{{ pageTitle }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="diam-plot diam-{{ chart_type }}-report"
+             data-page-component-module="diamantedesk/js/app/components/{{ chart_type }}-widget-component"
+             data-page-component-options="{{ options|json_encode }}"></div>
+    </div>
+
+{% endblock content %}

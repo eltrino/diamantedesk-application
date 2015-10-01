@@ -1,0 +1,76 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
+{% oro_title_set({params : {"%ticket.subject%": form.vars.value.subject }}) %}
+{% set formAction = path('diamante_ticket_update', { 'key': form.vars.value.key }) %}
+{% block head_script %}
+    {{ parent() }}
+    {% block stylesheets %}
+        {{ form_stylesheet(form) }}
+    {% endblock %}
+{% endblock %}
+
+{% block navButtons %}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': form.vars.value.key }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {% set html = UI.saveAndCloseButton() %}
+    {% if form.vars.value.id %}
+        {% set html = html ~ UI.saveAndStayButton() %}
+    {% endif %}
+    {{ UI.dropdownSaveButton({'html': html}) }}
+{% endblock %}
+
+{% block pageHeader %}
+    {% if form.vars.value.id %}
+        {% set breadcrumbs = {
+                'entity':      form.vars.value,
+                'indexPath':   path('diamante_branch_view', {'id': branchId}),
+                'indexLabel': branchName|trim,
+                'entityTitle': form.vars.value.key ~ ' ' ~ form.vars.value.subject|default('diamante.desk.common.not_available'|trans),
+                'hasAvatar': true,
+                'imagePath': branchLogoPathname ? branchLogoPathname : null
+            }
+        %}
+        {{ parent() }}
+    {% endif %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'account-profile' %}
+
+    {% set dataBlocks = [{
+        'title': 'diamante.desk.common.general'|trans,
+        'class': 'active',
+        'subblocks': [
+            {
+                'title': 'diamante.desk.ticket.details'|trans,
+                'data': [
+                    form_row(form.subject),
+                    form_row(form.status),
+                    form_row(form.priority),
+                    form_row(form.source),
+                    form_row(form.reporter),
+                    form_row(form.assignee),
+                    form_row(form.attachmentsInput),
+                    form_row(form.tags)
+                ]
+            }
+        ]
+    }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title' : 'diamante.desk.common.description'|trans,
+        'subblocks': [
+            {
+                'title' : null,
+                'data' : [
+                    form_row(form.description)
+                ]
+            }]
+        }]
+    ) %}
+
+    {% set data = {
+        'formErrors': form_errors(form)? form_errors(form) : null,
+        'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

@@ -1,0 +1,34 @@
+{% if form is defined %}
+{% form_theme form 'DiamanteDeskBundle:Ticket/widget:genemu_jqueryselect2_javascript.html.twig' %}
+{% endif %}
+
+<div class="widget-content form-horizontal box-content row-fluid">
+    {% if reload_page is defined and reload_page %}
+        <script type="text/javascript">
+            require(['oroui/js/widget-manager', 'oroui/js/mediator'],
+                    function (widgetManager, Mediator) {
+                        widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function (widget) {
+                            widget.remove();
+                        });
+                        Mediator.execute('refreshPage');
+                    });
+        </script>
+    {% else %}
+        <div class="form-container">
+            <form id="{{ form.vars.name }}"
+                  action="{{ path('diamante_add_watcher', { 'ticketId': form.vars.value.id, 'no_redirect': true} ) }}"
+                  method="post">
+                <fieldset class="form form-horizontal">
+                    <div class="span6">
+                        {{ form_row(form.watcher) }}
+                    </div>
+                    <div class="widget-actions form-actions">
+                        <button class="btn" type="reset">{{ 'diamante.desk.ui.cancel'|trans }}</button>
+                        <button class="btn btn-primary" type="submit">{{ 'diamante.desk.ui.add'|trans }}</button>
+                    </div>
+                </fieldset>
+                {{ form_rest(form) }}
+            </form>
+        </div>
+    {% endif %}
+</div>

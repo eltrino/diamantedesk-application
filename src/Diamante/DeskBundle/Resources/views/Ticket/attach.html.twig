@@ -1,0 +1,51 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
+{% set formAction = path('diamante_ticket_create_attach_post', { 'id': form.vars.value.ticketId }) %}
+{% block head_script %}
+    {{ parent() }}
+
+    {% block stylesheets %}
+        {{ form_stylesheet(form) }}
+    {% endblock %}
+{% endblock %}
+
+{% block navButtons %}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key':ticket.key|trim }), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.saveAndCloseButton() }}
+{% endblock %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+        'indexPath': path('diamante_branch_view', {'id': ticket.branch.id}),
+        'indexLabel': ticket.branchName,
+        'additional': [{
+            'indexPath':   path('diamante_ticket_view', {'key': ticket.key|trim}),
+            'indexLabel':  ticket.key ~ ' ' ~ ticket.subject|default('diamante.desk.common.not_available'|trans)
+        }],
+        'entityTitle': 'diamante.desk.attachment.actions.add'|trans
+    } %}
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'ticketAttachment' %}
+
+    {% set dataBlocks = [{
+        'title': 'diamante.desk.common.general'|trans,
+        'class': 'active',
+        'subblocks': [
+            {
+                'title': 'diamante.desk.attachment.entity_label'|trans,
+                'data': [
+                    form_row(form.attachmentsInput),
+                ]
+            }
+        ]
+    }] %}
+
+    {% set data = {
+        'formErrors': form_errors(form)? form_errors(form) : null,
+        'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

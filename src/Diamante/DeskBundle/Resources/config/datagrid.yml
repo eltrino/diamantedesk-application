@@ -1,0 +1,329 @@
+datagrid:
+    diamante-branch-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - b.id
+                    - b.name
+                    - b.logo
+                    - b.key
+                from:
+                    - { table: %diamante.branch.entity.class%, alias: b }
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_branch_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      diamante_branch_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      diamante_branch_api_service_diamante_delete_branch
+                params:     [ id ]
+        sorters:
+            columns:
+                name:
+                  data_name: b.name
+                key:
+                  data_name: b.key
+        filters:
+            columns:
+                name:
+                    type: string
+                    data_name: b.name
+                key:
+                    type: string
+                    data_name: b.key
+        columns:
+            logo:
+                label: diamante.desk.branch.columns.logo
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
+            name:
+                label: diamante.desk.branch.columns.branch_name
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Branch:Datagrid/Property/name.html.twig
+            key:
+                label: diamante.desk.branch.columns.branch_key
+        actions:
+            view:
+                type:          navigate
+                label:         diamante.desk.branch.actions.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+                acl_resource:  VIEW;Entity:DiamanteDeskBundle:Branch
+            update:
+                type:          navigate
+                label:         diamante.desk.branch.actions.edit
+                icon:          edit
+                link:          update_link
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Branch
+            delete:
+                type:          delete
+                label:         diamante.desk.branch.actions.remove
+                icon:          trash
+                link:          delete_link
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
+        mass_actions:
+            delete:
+                type:               delete
+                label :             diamante.desk.branch.actions.remove_mass
+                acl_resource:       DELETE;Entity:DiamanteDeskBundle:Branch
+                entity_name:        DiamanteDeskBundle:Branch
+                data_identifier:    b.id
+                icon:               trash
+        options:
+            entityHint: branches
+
+    diamante-branch-tickets-grid:
+        extends: diamante-ticket-grid
+        source:
+            query:
+                where:
+                    and:
+                        - i.branch = :branch
+        filters:
+            default:
+                status: { value: ['@diamante.ticket.datagrid_status_helper->getNewStatus', '@diamante.ticket.datagrid_status_helper->getOpenStatus'] }
+
+    diamante-ticket-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - i.id
+                    - CONCAT(branch.key, CONCAT('-', i.sequenceNumber)) as key
+                    - i.subject
+                    - i.priority
+                    - i.status
+                    - assignee.id as assigneeId
+#                    - reporter.id as reporterId
+                    - branch.name as branchName
+#                    - CONCAT(reporter.firstName, CONCAT(' ', reporter.lastName)) as reporterFullName
+                    - CONCAT(assignee.firstName, CONCAT(' ', assignee.lastName)) as assigneeFullName
+                    - i.createdAt
+                    - i.updatedAt
+                from:
+                    - { table: DiamanteDeskBundle:Ticket, alias: i }
+                join:
+                    left:
+                        - { join: i.branch, alias: branch }
+                        - { join: i.assignee, alias: assignee }
+#                        - { join: i.reporter, alias: reporter }
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_ticket_view
+                params:     [ key ]
+            update_link:
+                type:       url
+                route:      diamante_ticket_update
+                params:     [ key ]
+            delete_link:
+                type:       url
+                route:      diamante_ticket_delete
+                params:     [ key ]
+
+        columns:
+            key:
+                label:   diamante.desk.ticket.columns.key
+            subject:
+                label: diamante.desk.ticket.columns.subject
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
+            branchName:
+                label:   diamante.desk.ticket.columns.branch
+            assigneeFullName:
+                label:   diamante.desk.ticket.columns.assignee
+                type:    assignee
+#            reporterFullName:
+#                label:   diamante.desk.ticket.columns.reporter
+            priority:
+                label:   diamante.desk.ticket.columns.priority
+            status:
+                label:   diamante.desk.ticket.columns.status
+            createdAt:
+                label:   diamante.desk.ticket.columns.created
+                frontend_type: datetime
+            updatedAt:
+                label:   diamante.desk.ticket.columns.updated
+                frontend_type: datetime
+
+        sorters:
+            columns:
+                key:
+                  data_name: key
+                  apply_callback: Diamante\DeskBundle\Datagrid\SortHelper::getKeySortingFunction
+                subject:
+                  data_name: i.subject
+                branchName:
+                  data_name: branchName
+                assigneeFullName:
+                  data_name: assigneeFullName
+#                reporterFullName:
+#                  data_name: reporterFullName
+                priority:
+                  data_name: i.priority
+                status:
+                  data_name: i.status
+                createdAt:
+                  data_name: i.createdAt
+                updatedAt:
+                  data_name: i.updatedAt
+            default:
+                updatedAt: DESC
+        filters:
+            columns:
+                key:
+                    type:      string
+                    data_name: key
+                subject:
+                    type:      string
+                    data_name: i.subject
+                branchName:
+                    type:      entity
+                    data_name: i.branch
+                    options:
+                        field_options:
+                            class: DiamanteDeskBundle:Branch
+                            property: name
+                assigneeFullName:
+                    type:      string
+                    data_name: assigneeFullName
+#                reporterFullName:
+#                    type:      string
+#                    data_name: reporterFullName
+                priority:
+                    type:      choice
+                    data_name: i.priority
+                    options:
+                      field_options:
+                        multiple: true
+                        choices: @diamante.ticket.datagrid_priority_helper->getTicketPriorities
+                status:
+                    type: choice
+                    data_name: i.status
+                    options:
+                        field_options:
+                            multiple: true
+                            choices:  @diamante.ticket.datagrid_status_helper->getTicketStatuses
+                createdAt:
+                    type:      datetime
+                    data_name: i.createdAt
+                updatedAt:
+                    type:      datetime
+                    data_name: i.updatedAt
+        actions:
+            view:
+                type:          navigate
+                label:         diamante.desk.ticket.actions.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+                acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket
+            update:
+                type:          navigate
+                label:         diamante.desk.ticket.actions.edit
+                icon:          edit
+                link:          update_link
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
+            delete:
+                type:          delete
+                label:         diamante.desk.ticket.actions.remove
+                icon:          trash
+                link:          delete_link
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
+        mass_actions:
+            change:
+                type: change
+                label : diamante.desk.ticket.actions.change_status
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
+                icon: flag
+            assign:
+                type: assign
+                label : diamante.desk.ticket.actions.assign
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                icon: user
+            delete:
+                type: delete
+                label : diamante.desk.ticket.actions.delete
+                acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                icon: trash
+            move:
+                type: move
+                label : diamante.desk.ticket.actions.move
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
+                icon: random
+            watch:
+                type: watch
+                label : diamante.desk.ticket.actions.watch
+                entity_name: DiamanteDeskBundle:Ticket
+                data_identifier: i.id
+                acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
+                icon: plus
+        options:
+            entityHint: tickets
+
+    diamante-ticket-attachments-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - a.id
+                    - a.file
+                from:
+                    - { table: %diamante.attachment.entity.class%, alias: a }
+                where:
+                    and:
+                        - a.ticket = :ticket
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_attachment_view
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      diamante_attachment_delete
+                params:     [ id ]
+        columns:
+            file:
+                label: File
+        actions:
+            view:
+                type:          navigate
+                label:         View
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+            delete:
+                type:          delete
+                label:         Delete
+                icon:          trash
+                link:          delete_link
+
+    diamante-reporter-select-grid:
+        extends: users-select-grid
+        source:
+            type: diamante_combined_users_datasource
+
+    diamante-watcher-select-grid:
+        extends: users-select-grid
+        source:
+            type: diamante_combined_users_datasource

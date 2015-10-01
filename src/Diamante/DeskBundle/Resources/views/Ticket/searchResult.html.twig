@@ -1,0 +1,20 @@
+{#
+    Available variables:
+    * entity - branch entity Diamante\DeskBundle\Model\Branch or null
+    * indexer_item - indexer item Oro\Bundle\SearchBundle\Query\Result\Item
+#}
+{% extends 'DiamanteDeskBundle::searchResult.html.twig' %}
+
+{% set showImage = true %}
+
+{% set imagePath = null %}
+
+{% set recordUrl = indexer_item.recordUrl %}
+{% set title = indexer_item.recordTitle %}
+
+{% set entityType = 'diamante.desk.ticket.entity_label'|trans %}
+
+{% set entityInfo = [
+    {'title': 'diamante.desk.common.created'|trans, 'value': entity.createdAt ? entity.createdAt|oro_format_datetime : 'diamante.desk.common.not_available'},
+    {'title': 'diamante.desk.common.updated'|trans, 'value': entity.updatedAt ? entity.updatedAt|oro_format_datetime : 'diamante.desk.common.not_available'},
+] %}

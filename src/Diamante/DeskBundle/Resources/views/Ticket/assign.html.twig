@@ -1,0 +1,55 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
+{% set formAction = path('diamante_ticket_assign', { 'id': form.vars.value.id }) %}
+{% block head_script %}
+    {{ parent() }}
+
+    {% block stylesheets %}
+        {{ form_stylesheet(form) }}
+    {% endblock %}
+{% endblock %}
+
+{% block navButtons %}
+    {{ UI.button({'path' : path('diamante_ticket_view', { 'key': ticketKey}), 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.buttonType({'type': 'submit', 'class': 'btn-success', 'label': 'diamante.desk.ui.save'|trans}) }}
+{% endblock %}
+
+{% block pageHeader %}
+    {% if form.vars.value.id %}
+        {% set breadcrumbs = {
+            'entity':      form.vars.value,
+            'indexPath':   path('diamante_branch_view', {'id': branchId}),
+            'indexLabel': branchName|trim,
+            'entityTitle': ticketKey ~ ' ' ~ ticketSubject,
+            'hasAvatar': true,
+            'imagePath': branchLogoPathname ? branchLogoPathname : null
+        }
+        %}
+        {{ parent() }}
+    {% else %}
+        {% include 'OroUIBundle::page_title_block.html.twig' %}
+    {% endif %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'account-profile' %}
+
+    {% set dataBlocks = [{
+        'title': 'diamante.desk.common.general'|trans,
+        'class': 'active',
+        'subblocks': [
+            {
+                'title': 'diamante.desk.ticket.actions.assign'|trans,
+                'data': [
+                    form_row(form.assignee)
+                ]
+            }
+        ]
+    }] %}
+
+    {% set data = {
+    'formErrors': form_errors(form)? form_errors(form) : null,
+    'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

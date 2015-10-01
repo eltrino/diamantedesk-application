@@ -1,0 +1,40 @@
+Diamante\DeskBundle\Entity\Branch:
+    alias: diamante_branch
+    label: Branch
+
+    title_fields: [name]
+    route:
+        name: diamante_branch_view
+        parameters:
+            id: id
+    search_template: DiamanteDeskBundle:Branch:searchResult.html.twig
+    fields:
+        -
+            name: name
+            target_type: text
+            target_fields: [name]
+        -
+            name: key
+            target_type: text
+            target_fields: [branch_key]
+
+Diamante\DeskBundle\Entity\Ticket:
+    alias: diamante_ticket
+    label: Ticket
+
+    title_fields: [subject]
+    route:
+        name: diamante_ticket_view
+        parameters:
+            key: - # will be passed in "diamante.ticket.search.prepare_result_item.listener"
+
+    search_template: DiamanteDeskBundle:Ticket:searchResult.html.twig
+    fields:
+        -
+            name: key
+            target_type: text
+            target_fields: [key, sequence_number]
+        -
+            name: subject
+            target_type: text
+            target_fields: [subject]

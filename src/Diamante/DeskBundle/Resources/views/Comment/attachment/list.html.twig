@@ -1,0 +1,51 @@
+{% import 'OroUIBundle::macros.html.twig' as ui %}
+
+<div class="control-group">
+    <label class="control-label required" for="diamante_comment_form_content">
+        {{ 'diamante.desk.attachment.entity_plural_label'|trans }}</label>
+
+    <div class="controls diam-comment-form-attachments">
+        {% for attachment in attachments %}
+            <ul class="diam-comment-attachments unstyled">
+                <li>
+                    <a class="pull-right delete-item-confirmation action" href="#"
+                       data-url = "{{ path('diamante_ticket_comment_attachment_remove', {'commentId': comment_id, 'attachId': attachment.id}) }}"><i
+                                class="icon-trash hide-text"
+                                title="{{ 'diamante.desk.attachment.actions.delete_file'|trans }}">{{ 'diamante.desk.attachment.actions.delete_file'|trans }}</i></a>
+                    <i class="icon-paper-clip"></i>
+                    <a href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment_id, 'attachId': attachment.id}) }}"
+                       class="no-hash">
+                        {{ attachment.filename|escape }}</a>
+                </li>
+            </ul>
+        {% endfor %}
+    </div>
+
+    <script type="text/javascript">
+        require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
+                function($, Modal, Mediator, __) {
+                    $('.delete-item-confirmation').click(function (e) {
+                        e.preventDefault();
+                        var url = $(this).data('url');
+
+                        if (dialog) {
+                            dialog.close();
+                            dialog.remove();
+                        }
+
+                        var dialog = new Modal({
+                            content: '{{ 'diamante.desk.attachment.messages.delete.query'|trans }}',
+                            okText: __('{{ 'diamante.desk.ui.ok'|trans }}'),
+                            cancelText: __('{{ 'diamante.desk.ui.cancel'|trans}}'),
+                            title: __('{{ 'diamante.desk.common.delete_confirmation'|trans }}'),
+                            className: 'modal oro-modal-danger'
+                        });
+
+                        dialog.open(function () {
+                            Mediator.execute('showLoading');
+                            Mediator.execute('redirectTo', {url: url})
+                        });
+                    })
+                });
+    </script>
+</div>

@@ -1,0 +1,118 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as macros %}
+{% import 'OroTagBundle::macros.html.twig' as _tag %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import 'OroEmailBundle::macros.html.twig' as EA %}
+
+{% oro_title_set({params : {"%branch.name%": entity.name|default('diamante.desk.common.not_available'|trans) }}) %}
+
+{% block navButtons %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
+        {{ UI.button({
+            'path': path('diamante_ticket_create', {'id': entity.id}),
+            'iCss': 'icon-plus',
+            'title': 'diamante.desk.ticket.actions.add'|trans,
+            'label': 'diamante.desk.ticket.actions.add'|trans
+        }) }}
+    {% endif %}
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.button({
+            'path': path('diamante_branch_update', {'id': entity.id}),
+            'iCss': 'icon-edit',
+            'title': 'diamante.desk.branch.actions.edit'|trans,
+            'label': 'diamante.desk.ui.edit'|trans
+        }) }}
+    {% endif %}
+
+    {% if resource_granted('DELETE', entity) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('diamante_branch_delete', {'id': entity.id}),
+            'dataRedirect': path('diamante_branch_list'),
+            'aCss': 'no-hash remove-button',
+            'dataId': entity.id,
+            'id': 'btn-remove-account',
+            'dataMessage': 'diamante.desk.branch.messages.delete.query'|trans,
+            'successMessage': 'diamante.desk.branch.messages.delete.success'|trans,
+            'title': 'diamante.desk.branch.actions.remove'|trans,
+            'label': 'diamante.desk.ui.delete'|trans
+            })
+        }}
+    {% endif %}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+            'entity': entity,
+            'indexPath': path('diamante_branch_list'),
+            'indexLabel': 'diamante.desk.branch.entity_plural_label'|trans,
+            'entityTitle': entity.name|default('diamante.desk.common.not_available'|trans),
+            'hasAvatar': true,
+            'imagePath': entity.logo ? entity.logo.pathname : null
+        }
+    %}
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'branchUpdate' %}
+
+    {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.forms.name'|trans, entity.name)] %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.key'|trans, entity.key)]) %}
+
+    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssignee|oro_format_name : 'diamante.desk.common.not_defined'|trans %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.default_assignee'|trans, defaultAssigneeFullName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
+
+    {% set dataBlocks =
+        [{
+            'title': 'diamante.desk.common.general'|trans,
+            'class': 'active',
+            'subblocks': [{
+                'title': 'diamante.desk.branch.details'|trans,
+                'data' : dataSubBlocks
+            }]
+        }]
+    %}
+
+    {% set description = entity.description %}
+    {% set noDescription %}
+    <span>{{ 'diamante.desk.common.no_description'|trans }}</span>
+    {% endset %}
+    {% set dataBlocks = dataBlocks|merge([{
+        'title': 'diamante.desk.common.description'|trans,
+        'subblocks':[{
+            'title': null,
+            'data': [description ? description : noDescription]}]
+        }]
+    ) %}
+
+    {% if branchEmailConfiguration %}
+        {% set notDefined %}
+        <span>{{ 'diamante.desk.common.not_defined'|trans }}</span>
+        {% endset %}
+        {% set supportAdress = EA.email_address_simple(branchEmailConfiguration.supportAddress) %}
+        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', supportAdress ? supportAdress : notDefined)] %}
+        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains ? branchEmailConfiguration.customerDomains : notDefined)]) %}
+
+        {% set dataBlocks = dataBlocks|merge([{
+            'title': 'Email Configuration',
+            'subblocks':[{
+                'data': EmailConfDataSubBlocks
+            }]
+        }]) %}
+    {% endif %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title' : 'diamante.desk.ticket.entity_plural_label'|trans,
+        'subblocks': [
+            {
+                'title' : null,
+                'data' : [dataGrid.renderGrid('diamante-branch-tickets-grid', { branch: entity.id }, { cssClass: 'inner-grid diam-tickets' })],
+                'useSpan': false
+            }
+        ]
+    }]) %}
+
+    {% set data = {'dataBlocks': dataBlocks} %}
+    {{ parent() }}
+{% endblock content_data %}

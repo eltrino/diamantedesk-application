@@ -1,0 +1,227 @@
+<?xml version="1.0" ?>
+<!--
+
+    Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+
+    Licensed under the Open Software License (OSL 3.0).
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://opensource.org/licenses/osl-3.0.php
+
+    If you did not receive a copy of the license and are unable to
+    obtain it through the world-wide-web, please send an email
+    to license@eltrino.com so we can send you a copy immediately.
+
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.ticket.entity.class">Diamante\DeskBundle\Entity\Ticket</parameter>
+        <parameter key="diamante.comment.entity.class">Diamante\DeskBundle\Entity\Comment</parameter>
+        <parameter key="diamante.ticket_history.entity.class">Diamante\DeskBundle\Entity\TicketHistory</parameter>
+        <parameter key="diamante.audit.entity.class">Diamante\DeskBundle\Entity\Audit</parameter>
+        <parameter key="diamante.watcher_list.entity.class">Diamante\DeskBundle\Entity\WatcherList</parameter>
+        <parameter key="diamante.ticket_timeline.entity.class">Diamante\DeskBundle\Entity\TicketTimeline</parameter>
+        <parameter key="diamante.report.timeline_service.class">Diamante\DeskBundle\Api\Internal\ReportTimelineServiceImpl</parameter>
+        <parameter key="diamante.watcher_list.service.class">Diamante\DeskBundle\Api\Internal\WatchersServiceImpl</parameter>
+        <parameter key="diamante.watcher.service.api.class">Diamante\DeskBundle\Api\Internal\WatchersApiServiceImpl</parameter>
+        <parameter key="diamante.ticket.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository</parameter>
+        <parameter key="diamante.comment.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineCommentRepository</parameter>
+        <parameter key="diamante.ticket.entity.factory.class">Diamante\DeskBundle\Model\Ticket\TicketFactory</parameter>
+        <parameter key="diamante.ticket.builder.class">Diamante\DeskBundle\Model\Ticket\CommonTicketBuilder</parameter>
+        <parameter key="diamante.comment.entity.factory.class">Diamante\DeskBundle\Model\Ticket\CommentFactory</parameter>
+        <parameter key="diamante.ticket.service.class">Diamante\DeskBundle\Api\Internal\TicketServiceImpl</parameter>
+        <parameter key="diamante.ticket.service.api.class">Diamante\DeskBundle\Api\Internal\TicketApiServiceImpl</parameter>
+        <parameter key="diamante.ticket.search.prepare_result_item.listener.class">Diamante\DeskBundle\EventListener\Search\PrepareResultItemListener</parameter>
+
+        <parameter key="diamante.comment.service.class">Diamante\DeskBundle\Api\Internal\CommentServiceImpl</parameter>
+        <parameter key="diamante.comment.service.api.class">Diamante\DeskBundle\Api\Internal\CommentApiServiceImpl</parameter>
+        <parameter key="diamante.ticket.datagrid_status_helper.class">Diamante\DeskBundle\Datagrid\StatusHelper</parameter>
+        <parameter key="diamante.ticket.datagrid_priority_helper.class">Diamante\DeskBundle\Datagrid\PriorityHelper</parameter>
+
+        <parameter key="diamante.ticket.email_processing.strategy.service.class">Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy</parameter>
+        <parameter key="diamante.ticket.email_processing_message_reference.entity.class">Diamante\DeskBundle\Entity\MessageReference</parameter>
+        <parameter key="diamante.ticket.email_processing_message_reference.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository</parameter>
+        <parameter key="diamante.ticket.email_processing_message_reference.service.class">Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl</parameter>
+        <parameter key="diamante.tag.serialize.handler.class">Diamante\DeskBundle\Serializer\TagHandler</parameter>
+        <parameter key="diamante.ticket_history.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository</parameter>
+        <parameter key="diamante.audit.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineAuditRepository</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.ticket.email_processing.strategy.service" class="%diamante.ticket.email_processing.strategy.service.class%">
+            <argument type="service" id="diamante.ticket.email_processing_message_reference.service"/>
+            <argument type="service" id="diamante.branch_email_configuration.service"/>
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
+            <argument type="service" id="diamante.ticket.watcher_list.service"/>
+            <argument type="service" id="oro_user.manager"/>
+            <argument type="service" id="oro_config.global"/>
+            <argument type="service" id="diamante.user.service"/>
+            <tag name="email_processing.strategy" />
+        </service>
+
+        <service id="diamante.ticket.email_processing_message_reference.service" class="%diamante.ticket.email_processing_message_reference.service.class%">
+            <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <argument type="service" id="diamante.ticket.service"/>
+            <argument type="service" id="diamante.comment.service"/>
+            <tag name="monolog.logger" channel="diamante"/>
+        </service>
+
+        <service id="diamante.ticket.entity.factory" class="%diamante.ticket.entity.factory.class%">
+            <argument type="string">%diamante.ticket.entity.class%</argument>
+        </service>
+
+        <service id="diamante.ticket.builder" class="%diamante.ticket.builder.class%">
+            <argument type="service" id="diamante.ticket.entity.factory"/>
+            <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.user.service"/>
+        </service>
+
+        <service id="diamante.ticket.service" class="%diamante.ticket.service.class%">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="diamante.ticket.builder"/>
+            <argument type="service" id="diamante.attachment.manager"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="oro_tag.tag.manager"/>
+            <argument type="service" id="oro_security.security_facade"/>
+        </service>
+
+        <service id="diamante.ticket.api.service" class="%diamante.ticket.service.api.class%" parent="diamante.ticket.service">
+            <call method="setApiPagingService">
+                <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+            <call method="setUserService">
+                <argument type="service" id="diamante.user.service"/>
+            </call>
+            <call method="setBranchRepository">
+                <argument type="service" id="diamante.branch.repository"/>
+            </call>
+            <call method="setTagManager">
+                <argument type="service" id="oro_tag.tag.manager"/>
+            </call>
+        </service>
+
+        <service id="diamante.ticket.api.service_diamante" alias="diamante.ticket.api.service" />
+
+        <service id="diamante.ticket.api.service_oro" alias="diamante.ticket.api.service" />
+
+        <service id="diamante.ticket.search.prepare_result_item.listener" class="%diamante.ticket.search.prepare_result_item.listener.class%">
+            <tag name="kernel.event_listener" event="oro_search.prepare_result_item" method="process"/>
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="oro_search.mapper"/>
+        </service>
+
+        <service id="diamante.comment.entity.factory" class="%diamante.comment.entity.factory.class%">
+            <argument type="string">%diamante.comment.entity.class%</argument>
+        </service>
+
+        <service id="diamante.comment.service" class="%diamante.comment.service.class%">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.comment.repository"/>
+            <argument type="service" id="diamante.comment.entity.factory"/>
+            <argument type="service" id="diamante.user.service"/>
+            <argument type="service" id="diamante.attachment.manager"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="diamante.comment.api.service" class="%diamante.comment.service.api.class%" parent="diamante.comment.service">
+            <call method="setApiPagingService">
+                <argument type="service" id="diamante.api.paging.service"/>
+            </call>
+            <call method="setUserService">
+                <argument type="service" id="diamante.user.service"/>
+            </call>
+        </service>
+
+        <service id="diamante.comment.api.service_diamante" alias="diamante.comment.api.service" />
+
+        <service id="diamante.comment.api.service_oro" alias="diamante.comment.api.service" />
+
+        <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>
+        <service id="diamante.ticket.datagrid_priority_helper" class="%diamante.ticket.datagrid_priority_helper.class%"/>
+
+        <service id="diamante.form.type.assignee_select" class="Diamante\DeskBundle\Form\Type\AssigneeSelectType">
+            <tag name="form.type" alias="diamante_assignee_select"/>
+        </service>
+
+        <service id="diamante.form.type.reporter_select" class="Diamante\DeskBundle\Form\Type\ReporterSelectType">
+            <tag name="form.type" alias="diamante_reporter_select"/>
+        </service>
+
+        <service id="diamante.form.type.watcher_select" class="Diamante\DeskBundle\Form\Type\WatcherSelectType">
+            <tag name="form.type" alias="diamante_watcher_select"/>
+        </service>
+
+        <service id="diamante.form.type.user_select" class="Diamante\DeskBundle\Form\Type\DiamanteUserSelectType">
+            <tag name="form.type" alias="diamante_user_select"/>
+        </service>
+
+        <service id="diamante.ticket.watcher_list.service" class="%diamante.watcher_list.service.class%">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="diamante.watcher_list.repository"/>
+            <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="oro_user.manager"/>
+            <argument type="service" id="diamante.ticket.repository"/>
+            <argument type="service" id="diamante.user_factory" />
+            <argument type="service" id="diamante.user.service" />
+        </service>
+
+        <service id="diamante.report.timeline_service" class="%diamante.report.timeline_service.class%"/>
+
+        <service id="diamante.watcher.service.api" class="%diamante.watcher.service.api.class%" parent="diamante.ticket.watcher_list.service"/>
+
+        <service id="diamante.tag.serialize.handler" class="%diamante.tag.serialize.handler.class%">
+            <tag name="jms_serializer.subscribing_handler" connection="default"/>
+        </service>
+
+<!-- repositories start -->
+        <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket.entity.class%</argument>
+            <tag name="diamante.repository"/>
+        </service>
+        <service id="diamante.comment.repository" class="%diamante.comment.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.comment.entity.class%</argument>
+            <call method="setUserState">
+                <argument type="service" id="diamante.user_state.service" />
+            </call>
+            <tag name="diamante.repository"/>
+        </service>
+        <service id="diamante.ticket.email_processing_message_reference.repository" class="%diamante.ticket.email_processing_message_reference.repository.class%"
+                factory-service = "doctrine.orm.entity_manager"
+                factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket.email_processing_message_reference.entity.class%</argument>
+        </service>
+        <service id="diamante.ticket_history.repository" class="%diamante.ticket_history.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket_history.entity.class%</argument>
+        </service>
+        <service id="diamante.watcher_list.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.watcher_list.entity.class%</argument>
+        </service>
+        <service id="diamante.ticket_timeline.repository" class="%diamante.generic.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.ticket_timeline.entity.class%</argument>
+        </service>
+        <service id="diamante.audit.repository" class="%diamante.audit.repository.class%"
+                 factory-service = "doctrine.orm.entity_manager"
+                 factory-method  = "getRepository">
+            <argument type="string">%diamante.audit.entity.class%</argument>
+        </service>
+<!-- repositories end -->
+    </services>
+</container>

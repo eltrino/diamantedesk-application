@@ -1,0 +1,44 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroAddressBundle:Include:fields.html.twig', 'OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
+
+{% oro_title_set({params : {"%branch.name%": form.vars.value.name|default('N/A') }}) %}
+
+{% set formAction = form.vars.value.id ? path('diamante_branch_update', { 'id': form.vars.value.id }) : path('diamante_branch_create') %}
+{% block head_script %}
+    {{ parent() }}
+    {% block stylesheets %}
+        {{ form_stylesheet(form) }}
+    {% endblock %}
+{% endblock %}
+
+{% block navButtons %}
+    {% if form.vars.value.id %}
+        {% set cancel_url = path('diamante_branch_view', { 'id' : form.vars.value.id }) %}
+    {% else %}
+        {% set cancel_url = path('diamante_branch_list') %}
+    {% endif %}
+    {{ UI.button({'path' : cancel_url, 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {% set html = UI.saveAndCloseButton() %}
+    {% if form.vars.value.id or resource_granted('orocrm_contact_update') %}
+        {% set html = html ~ UI.saveAndStayButton() %}
+    {% endif %}
+    {{ UI.dropdownSaveButton({'html': html}) }}
+{% endblock %}
+
+{% block pageHeader %}
+    {% if form.vars.value.id %}
+        {% set breadcrumbs = {
+            'entity':      form.vars.value,
+            'indexPath':   path('diamante_branch_list'),
+            'indexLabel':  'diamante.desk.branch.entity_plural_label'|trans,
+            'entityTitle': form.vars.value.name|default('N/A'),
+            'hasAvatar':   true,
+            'imagePath':   form.vars.value.logo ? form.vars.value.logo.pathname : null
+        }
+        %}
+        {{ parent() }}
+    {% else %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.desk.branch.entity_plural_label'|trans}) %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+    {% endif %}
+{% endblock pageHeader %}

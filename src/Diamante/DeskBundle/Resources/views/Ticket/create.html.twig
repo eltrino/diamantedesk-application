@@ -1,0 +1,69 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
+{% set formAction = path('diamante_ticket_create')  %}
+{% block head_script %}
+    {{ parent() }}
+
+    {% block stylesheets %}
+        {{ form_stylesheet(form) }}
+    {% endblock %}
+{% endblock %}
+
+{% block navButtons %}
+    {% if form.vars.data.branch %}
+        {% set cancel_url = path('diamante_branch_view', {'id':form.vars.data.branch}) %}
+    {% else %}
+        {% set cancel_url = path('diamante_ticket_list') %}
+    {% endif %}
+    {{ UI.button({'path' : cancel_url, 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
+    {{ UI.saveAndStayButton() }}
+    {{ UI.saveAndCloseButton() }}
+{% endblock %}
+
+{% block pageHeader %}
+    {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.desk.ticket.entity_label'|trans}) %}
+    {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'ticketDetails' %}
+
+    {% set dataBlocks = [{
+        'title': 'diamante.desk.common.general'|trans,
+        'class': 'active',
+        'subblocks': [
+            {
+                'title': 'diamante.desk.ticket.details'|trans,
+                'data': [
+                    form_row(form.branch),
+                    form_row(form.subject),
+                    form_row(form.status),
+                    form_row(form.priority),
+                    form_row(form.source),
+                    form_row(form.reporter),
+                    form_row(form.assignee),
+                    form_row(form.attachmentsInput),
+                    form_row(form.tags)
+                ]
+            }
+        ]
+    }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+        'title' : 'diamante.desk.common.description'|trans,
+        'subblocks': [
+            {
+                'title' : null,
+                'data' : [
+                    form_row(form.description)
+                ]
+            }]
+        }]
+    ) %}
+
+    {% set data = {
+        'formErrors': form_errors(form)? form_errors(form) : null,
+        'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

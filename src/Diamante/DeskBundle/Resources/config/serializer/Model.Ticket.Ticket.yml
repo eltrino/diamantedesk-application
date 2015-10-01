@@ -1,0 +1,49 @@
+Diamante\DeskBundle\Model\Ticket\Ticket:
+    accessor_order: alphabetical
+    properties:
+        key:
+            exclude: true
+        sequenceNumber:
+            exclude: true
+        branch:
+            exclude: true
+        reporter:
+            exclude: true
+        assignee:
+            exclude: true
+        description:
+            groups: ["entity"]
+        comments:
+            groups: ["entity"]
+        attachments:
+            groups: ["entity"]
+        source:
+            exclude: true
+        priority:
+            exclude: true
+        status:
+            exclude: true
+        tags:
+            type: ArrayCollection<Oro\Bundle\TagBundle\Entity\Tag>
+    virtual_properties:
+        getAssigneeId:
+            serialized_name: assignee
+            type: integer
+        getReporter:
+            serialized_name: reporter
+            type: string
+        getBranchId:
+            serialized_name: branch
+            type: integer
+        getStatusValue:
+            serialized_name: status
+            type: string
+        getPriorityValue:
+            serialized_name: priority
+            type: string
+        getSourceValue:
+            serialized_name: source
+            type: string
+        getKey:
+            serialized_name: key
+            type: string

@@ -1,0 +1,372 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as macros %}
+{% import 'OroTagBundle::macros.html.twig' as _tag %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+{% import 'DiamanteDeskBundle:UI:macros.html.twig' as DiamUI %}
+{% oro_title_set({params : {"%ticket.key%": ticketKey, "%ticket.subject%": entity.subject}}) %}
+{% macro renderComments(entity, ticketKey) %}
+    {% set comments = entity.comments %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Comment') %}
+    <ol class="diam-comments unstyled">
+        {% for comment in comments if comment.id  %}
+            {% set imagePath = '' %}
+            {% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
+            {% if comment.author %}
+                {% set oroUser = fetch_oro_user(comment.author) %}
+                {% set diamanteUser = fetch_diamante_user(comment.author) %}
+                {% if oroUser %}
+                    {% set author = oroUser|oro_format_name %}
+                    {% set avatar = oro_configured_image_url(oroUser, 'avatar') %}
+                {% elseif diamanteUser %}
+                    {% set author = diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName %}
+                    {% set avatar = get_gravatar(diamanteUser.email) %}
+                {% endif %}
+            {% endif %}
+            <li class="diam-comment">
+                <div class="pull-right">
+                {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
+                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
+                {% endif %}
+                {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': ticketKey|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
+                {% endif %}
+                </div>
+                <div class="diam-comment-user-image">
+                    {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
+                    <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
+                </div>
+                <div class="diam-comment-meta">{{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }} {% if comment.private %}<span>private</span>{% endif %}</div>
+                <div class="diam-comment-content">{{ comment.content|raw }}</div>
+                {% if comment.attachments is not empty %}
+                    <div class="diam-comment-attachments-box">
+                        <strong class="diam-comment-attachments-title">{{ 'diamante.desk.attachment.entity_plural_label'|trans }}:</strong>
+                        <ul class="diam-comment-attachments unstyled">
+                            {% for attachment in comment.attachments %}
+                                <li><i class="icon-paper-clip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </li>
+        {% else %}
+            <li><em>{{ 'diamante.desk.comment.messages.empty'|trans }}</em></li>
+        {% endfor %}
+    </ol>
+{% endif %}
+
+{% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
+    <p style="text-align: right;">{{ UI.button({
+        'path': path('diamante_comment_create', {'id': entity.id}),
+        'iCss': 'icon-edit',
+        'title': 'diamante.desk.comment.entity_label'|trans,
+        'label': 'diamante.desk.comment.entity_label'|trans
+        })
+        }}
+    </p>
+{% endif %}
+<script type="text/javascript">
+    require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
+            function($, Modal, Mediator, __) {
+                $('.delete-item-confirmation').click(function (e) {
+                    e.preventDefault();
+                    var url = $(this).data('url');
+
+                    if (dialog) {
+                        dialog.close();
+                        dialog.remove();
+                    }
+
+                    var dialog = new Modal({
+                        content: '{{ 'diamante.desk.comment.messages.delete.query'|trans }}',
+                        okText: __('{{ 'diamante.desk.ui.ok'|trans }}'),
+                        cancelText: __('{{ 'diamante.desk.ui.cancel'|trans }}'),
+                        title: __('{{ 'diamante.desk.common.delete_confirmation'|trans }}'),
+                        className: 'modal oro-modal-danger'
+                    });
+
+                    dialog.open(function () {
+                        Mediator.execute('showLoading');
+                        Mediator.execute('redirectTo', {url: url})
+                    });
+                });
+            });
+</script>
+{% endmacro %}
+
+{% block navButtons %}
+    <script>
+        require(['oroui/js/mediator', 'oroui/js/widget-manager'],function(mediator, widgetManager) {
+            mediator.on('page:beforeChange', function () {
+                for (var i in widgetManager.widgets) {
+                    if(!widgetManager.widgets[i].loadingElement.hasClass('box-type1')) {
+                        widgetManager.widgets[i].remove();
+                    }
+                }
+            });
+        })
+    </script>
+
+    {% set isWatching = 0 %}
+    {% for list in entity.watcherList %}
+        {% set watcherId = list.userType|replace({'oro_': ''}) %}
+        {% if watcherId == app.user.id %}
+            {% set isWatching = 1 %}
+        {% endif %}
+    {% endfor %}
+
+    {% if isWatching == 1 %}
+        {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
+            {{ UI.button({
+                'path': path('diamante_ticket_unwatch', { 'ticket': entity.id }),
+                'iCss': 'icon-eye-close',
+                'title': 'diamante.desk.ticket.actions.unwatch'|trans,
+                'label': 'diamante.desk.ticket.actions.unwatch'|trans
+            }) }}
+        {% endif %}
+    {% else %}
+        {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Ticket') %}
+            {{ UI.button({
+                'path': path('diamante_ticket_watch', { 'ticket': entity.id }),
+                'iCss': 'icon-eye-open',
+                'title': 'diamante.desk.ticket.actions.watch'|trans,
+                'label': 'diamante.desk.ticket.actions.watch'|trans
+            }) }}
+        {% endif %}
+    {% endif %}
+
+    {{ UI.clientButton({
+        'dataUrl': path('diamante_add_watcher', { 'ticketId': entity.id }),
+        'aCss': 'no-hash',
+        'iCss': 'icon-plus',
+        'dataId': entity.id,
+        'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'label' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+        'widget' : {
+            'type' : 'dialog',
+            'multiple' : true,
+            'reload-grid-name' : '',
+            'options' : {
+                'alias': 'status-dialog',
+                'stateEnabled' : false,
+                'dialogOptions' : {
+                    'resizable' : false,
+                    'title' : 'diamante.desk.ticket.actions.add_watcher'|trans,
+                    'width': 520
+                }
+            }
+        }
+    }) }}
+
+    {% if ((entity.assignee and entity.assignee.id == app.user.id) or resource_granted('EDIT', entity)) %}
+        {% set changeStatusTitle = 'diamante.desk.ticket.actions.change_status'|trans %}
+        {{ UI.clientButton({
+            'dataUrl': path('diamante_ticket_status_change', { 'id': entity.id }),
+            'aCss': 'no-hash',
+            'iCss': 'icon-flag',
+            'dataId': entity.id,
+            'title' : changeStatusTitle,
+            'label' : changeStatusTitle,
+            'widget' : {
+                'type' : 'dialog',
+                'multiple' : true,
+                'reload-grid-name' : '',
+                'options' : {
+                    'alias': 'status-dialog',
+                    'stateEnabled' : false,
+                    'dialogOptions' : {
+                        'resizable' : false,
+                        'title' : changeStatusTitle,
+                        'width': 420
+                    }
+                }
+            }
+        }) }}
+    {% endif %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
+        {{ UI.button({
+        'path': path('diamante_ticket_create'),
+        'iCss': 'icon-plus',
+        'title': 'diamante.desk.ticket.actions.create'|trans,
+        'label': 'diamante.desk.ticket.actions.create'|trans
+        }) }}
+    {% endif %}
+
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.button({
+            'path': path('diamante_ticket_update', {'key': ticketKey|trim}),
+            'iCss': 'icon-edit',
+            'title': 'diamante.desk.ticket.actions.edit'|trans,
+            'label': 'diamante.desk.ui.edit'|trans
+        }) }}
+
+        {% set moveTitle = 'diamante.desk.ticket.actions.move'|trans %}
+        {{ UI.clientButton({
+            'dataUrl': path('diamante_ticket_move', { 'id': entity.id }),
+            'aCss': 'no-hash',
+            'iCss': 'icon-random',
+            'dataId': entity.id,
+            'title' : moveTitle,
+            'label' : moveTitle,
+            'widget' : {
+                'type' : 'dialog',
+                'multiple' : true,
+                'reload-grid-name' : '',
+                'options' : {
+                    'alias': 'status-dialog',
+                    'stateEnabled' : false,
+                    'dialogOptions' : {
+                        'resizable' : false,
+                        'title' : moveTitle,
+                        'width': 520
+                    }
+                }
+            }
+        }) }}
+
+        {% set assignTitle = 'diamante.desk.ticket.actions.assign'|trans %}
+        {{ UI.clientButton({
+            'dataUrl': path('diamante_ticket_assign', { 'id': entity.id }),
+            'aCss': 'no-hash',
+            'iCss': 'icon-user',
+            'dataId': entity.id,
+            'title' : assignTitle,
+            'label' : assignTitle,
+            'widget' : {
+                'type' : 'dialog',
+                'multiple' : true,
+                'reload-grid-name' : '',
+                'options' : {
+                    'alias': 'assignee-dialog',
+                    'stateEnabled' : false,
+                    'dialogOptions' : {
+                        'resizable' : false,
+                        'title' : assignTitle,
+                        'maximizedHeightDecreaseBy': 'minimize-bar',
+                        'width': 500
+                    }
+                }
+            }
+        }) }}
+    {% endif %}
+
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.button({
+        'path': path('diamante_ticket_create_attach', {'id': entity.id}),
+        'iCss': 'icon-file',
+        'title': 'diamante.desk.attachment.actions.attach'|trans,
+        'label': 'diamante.desk.attachment.actions.attach'|trans
+        }) }}
+    {% endif %}
+
+    {% if resource_granted('DELETE', entity) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('diamante_ticket_delete', {'key': ticketKey|trim}),
+            'dataRedirect': path('diamante_ticket_list'),
+            'aCss': 'no-hash remove-button',
+            'dataId': entity.id,
+            'id': 'btn-remove-account',
+            'dataMessage': 'diamante.desk.ticket.messages.delete.query'|trans,
+            'successMessage': 'diamante.desk.ticket.messages.delete.success'|trans,
+            'title': 'diamante.desk.ticket.actions.remove'|trans,
+            'label': 'diamante.desk.ui.delete'|trans
+        }) }}
+    {% endif %}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+        'entity': entity,
+        'indexPath': path('diamante_branch_view', {'id': entity.branch.id}),
+        'indexLabel': entity.branchName,
+        'entityTitle': ticketKey ~ ' ' ~ entity.subject|default('diamante.desk.common.not_available'|trans),
+        'hasAvatar': true,
+        'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
+    }
+    %}
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'navbarTicketView' %}
+    {% set reporterDisplayName = entity.unassignedLabel|trans %}
+    {% if entity.reporter %}
+        {% set reporter = fetch_user_details(entity.reporter) %}
+        {% set reporterDisplayName = reporter.getFullName != ' ' ? reporter.getFullName : reporter.getEmail %}
+        {% set reporterModel = fetch_diamante_user(entity.reporter) %}
+    {% endif %}
+
+    {% set dataSubBlocks = [DiamUI.attributeRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.branch'|trans, entity.branchName)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.status'|trans, entity.status.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: reporterModel.isDeleted ? 'deleted-reporter' : ''})]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
+    {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
+
+    {% set attachmentListWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('diamante_ticket_widget_attachment_list', {id: entity.id})
+        }) }}
+    {% endset %}
+
+    {% set WatchersListWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('diamante_ticket_watchers', {"ticket": entity.id})
+        }) }}
+    {% endset %}
+
+    {% set dataBlocks =
+    [
+    {
+    'title': 'diamante.desk.common.general'|trans,
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': 'diamante.desk.ticket.details'|trans,
+    'data' : dataSubBlocks
+    },
+    {
+    'title': 'diamante.desk.common.watchers'|trans,
+    'data' : [WatchersListWidget]}
+    ]
+    }
+    ]
+    %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'diamante.desk.common.description'|trans,
+    'subblocks': [{
+    'title': null,
+    'data': [entity.description]
+    }]
+    }]
+    ) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title' : 'diamante.desk.attachment.entity_plural_label'|trans,
+    'subblocks': [{
+    'title' : null,
+    'data' : [attachmentListWidget],
+    'useSpan': false
+    }]
+    }]
+    ) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title' : 'diamante.desk.comment.entity_plural_label'|trans,
+    'subblocks': [{
+    'title' : null,
+    'data' : [_self.renderComments(entity, ticketKey)],
+    'useSpan': false
+    }]
+    }]
+    ) %}
+
+    {% set data = {'dataBlocks': dataBlocks} %}
+    {{ parent() }}
+{% endblock content_data %}
