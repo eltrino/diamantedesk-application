@@ -1,0 +1,9 @@
+deploy:
+  provider: releases
+  api_key:
+    secure: lARD0PoAascv6mJW6BwkWp7iR9c44/GLg8P2T9cD1QSxS0V/vED4mbOQHnsyv09NfaMoKklZXelP+migfIgZsjl2qa93apaGrZV+EjH/otEhniJJZuXZj8CI90ZOgyt/JWDi126z5TkvwbKF8dx6vmPvCLo5+nlDY0aFbOXCdz2AL+uLKiCUVKYvgbSRukRYvO1K01DT78kT79c/dBCC3Z5FF91VPndUyXqVu7/HTm38oIR33g75014qEmsfiAF0rvTkDDetwppfkL0YSZf/zlLQ3QWuo4p8SIjoF5AgSTyNKPIf0vNKZi31GO3F4PNygJdhhfonyCvyLpqplHXVrnMgiLvMEHEWLwdY9cBFmw8Uta/2WTRn3g3/eBzagh0DaGwIne6Oc7yblfWyR/4JJFKDhFywjqsevJFJTjIVMbLuD91f3O3arfChlj8OA+m+lUSk7Q3kYF6y5BMZggvsuAE4VMeO3xadXrtnY8CLNZJZnnQfI0e47WKJuvxRtgt56UI7Aue8OrvAJI//gJTy7QJhJlpyYl6oaF0V+yArmWgsYWdJZBRQqCQjFu3rX4RSgr7mghTu6jG1B6Qxzrn0wQa0I3GJOqIf5ZqMN1ri2agWWXSSEdwTWv+evaq55ztbMfhdr5ixsxFc+oNoLXkulmga9bnEVcgPjQHcb+ky960=
+  file: diamante-application.zip
+  skip_cleanup: true
+  on:
+    tags: true
+  before_deploy: "zip "
