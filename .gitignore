@@ -17,3 +17,5 @@
 /app/config/parameters.yml
 /app/config/parameters_test.yml
 *~
+/app/logs/*
+/app/attachments/*
