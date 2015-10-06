@@ -29,6 +29,10 @@ after_script:
   - if [ -e build/coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar -O build/ocular.phar; fi
   - if [ -e build/coverage.clover ]; then php build/ocular.phar code-coverage:upload --format=php-clover build/coverage.clover; fi
 
+before_deploy:
+  - zip -q -x \*.git* \*build* app/cache/**\* app/logs/**\* travis.php.ini .travis.yml -r build/diamantedesk-application-full-$TRAVIS_TAG.zip .
+  - tar --exclude \*.git* --exclude \*build* --exclude app/cache/**\* --exclude app/logs/**\* --exclude travis.php.ini --exclude .travis.yml -zcf build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz .
+
 deploy:
   provider: releases
   api_key:
@@ -39,6 +43,4 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-  before_deploy:
-    - zip -q -x \*.git* \*build* app/cache/**\* app/logs/**\* travis.php.ini .travis.yml -r build/diamantedesk-application-full-$TRAVIS_TAG.zip .
-    - tar --exclude \*.git* --exclude \*build* --exclude app/cache/**\* --exclude app/logs/**\* --exclude travis.php.ini --exclude .travis.yml -zcf build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz .
+    php: '5.6'
