@@ -19,3 +19,4 @@
 *~
 /app/logs/*
 /app/attachments/*
+phpunit.xml

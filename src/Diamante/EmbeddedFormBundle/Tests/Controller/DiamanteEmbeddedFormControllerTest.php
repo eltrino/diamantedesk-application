@@ -27,6 +27,7 @@ class DiamanteEmbeddedFormControllerTest extends WebTestCase
 
     public function setUp()
     {
+        $this->markTestSkipped("Bundle should be rewritten and tests changed according to those changes");
         $this->initClient(
             array(),
             array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))

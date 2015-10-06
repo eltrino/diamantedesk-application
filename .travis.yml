@@ -1,9 +1,47 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+sudo: false
+
+branches:
+  only:
+    - master
+
+matrix:
+  allow_failures:
+    - php: 7.0
+    - php: hhvm
+
+before_install:
+  - if [[ "$TRAVIS_PHP_VERSION"  = "hhvm" ]]; then cat travis.php.ini >> /etc/hhvm/php.ini ; fi
+  - if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then phpenv config-add travis.php.ini ; fi
+  - composer self-update
+
+install:
+  - composer install --prefer-source --profile --no-interaction
+
+script: if [ "$TRAVIS_PHP_VERSION" != "7.0" ] && [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then phpunit --testsuite Unit --coverage-clover=build/coverage.clover; else phpunit --testsuite Unit; fi
+
+after_script:
+  - if [ -e build/coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar -O build/ocular.phar; fi
+  - if [ -e build/coverage.clover ]; then php build/ocular.phar code-coverage:upload --format=php-clover build/coverage.clover; fi
+
 deploy:
   provider: releases
   api_key:
     secure: lARD0PoAascv6mJW6BwkWp7iR9c44/GLg8P2T9cD1QSxS0V/vED4mbOQHnsyv09NfaMoKklZXelP+migfIgZsjl2qa93apaGrZV+EjH/otEhniJJZuXZj8CI90ZOgyt/JWDi126z5TkvwbKF8dx6vmPvCLo5+nlDY0aFbOXCdz2AL+uLKiCUVKYvgbSRukRYvO1K01DT78kT79c/dBCC3Z5FF91VPndUyXqVu7/HTm38oIR33g75014qEmsfiAF0rvTkDDetwppfkL0YSZf/zlLQ3QWuo4p8SIjoF5AgSTyNKPIf0vNKZi31GO3F4PNygJdhhfonyCvyLpqplHXVrnMgiLvMEHEWLwdY9cBFmw8Uta/2WTRn3g3/eBzagh0DaGwIne6Oc7yblfWyR/4JJFKDhFywjqsevJFJTjIVMbLuD91f3O3arfChlj8OA+m+lUSk7Q3kYF6y5BMZggvsuAE4VMeO3xadXrtnY8CLNZJZnnQfI0e47WKJuvxRtgt56UI7Aue8OrvAJI//gJTy7QJhJlpyYl6oaF0V+yArmWgsYWdJZBRQqCQjFu3rX4RSgr7mghTu6jG1B6Qxzrn0wQa0I3GJOqIf5ZqMN1ri2agWWXSSEdwTWv+evaq55ztbMfhdr5ixsxFc+oNoLXkulmga9bnEVcgPjQHcb+ky960=
-  file: diamante-application.zip
+  file:
+    - build/diamantedesk-application-full-$TRAVIS_TAG.zip
+    - build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz
   skip_cleanup: true
   on:
     tags: true
-  before_deploy: "zip "
+  before_deploy:
+    - zip -q -x \*.git* \*build* app/cache/**\* app/logs/**\* travis.php.ini .travis.yml -r build/diamantedesk-application-full-$TRAVIS_TAG.zip .
+    - tar --exclude \*.git* --exclude \*build* --exclude app/cache/**\* --exclude app/logs/**\* --exclude travis.php.ini --exclude .travis.yml -zcf build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz .

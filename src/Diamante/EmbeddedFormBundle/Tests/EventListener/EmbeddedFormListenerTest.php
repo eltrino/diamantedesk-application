@@ -25,6 +25,7 @@ class EmbeddedFormListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $this->markTestSkipped("Bundle should be rewritten and tests changed according to those changes");
         $this->request = new Request([], [], ['_route' => 'oro_embedded_form_']);
     }
 
