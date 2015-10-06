@@ -9,11 +9,6 @@ php:
 
 sudo: false
 
-branches:
-  only:
-    - master
-    - /^\d.\d.\d/
-
 matrix:
   allow_failures:
     - php: 7.0
