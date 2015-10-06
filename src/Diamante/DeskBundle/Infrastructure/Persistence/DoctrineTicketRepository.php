@@ -157,10 +157,13 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         if ($user instanceof DiamanteUser) {
             $user = new User($user->getId(), User::TYPE_DIAMANTE);
-            $qb->addSelect('w')
-                ->join(self::SELECT_ALIAS . '.watcherList', 'w')
-                ->andWhere('w.userType = :watcher')
-                ->setParameter('watcher', $user);
+            $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter');
+
+            $watchedTickets = $this->getWatchedTicketsIds($user);
+            if (!empty($watchedTickets)) {
+                $qb->orWhere($qb->expr()->in('e.id', array_reverse($watchedTickets)));
+            }
+            $qb->setParameter('reporter', $user);
             $conditions[] = ['w', 'userType', 'eq', $user];
         }
 
@@ -283,6 +286,26 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
                 return 0;
             }
         );
+
+        return $result;
+    }
+
+    protected function getWatchedTicketsIds(User $user)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('IDENTITY(w.ticket)')
+            ->from('DiamanteDeskBundle:WatcherList', 'w')
+            ->andWhere('w.userType = :user')
+            ->setParameter('user', (string)$user);
+
+        $query = $qb->getQuery();
+
+        try {
+            $result = $query->getResult(Query::HYDRATE_SCALAR);
+            $result = array_map(function($item){return (int)current($item);}, $result);
+        } catch (\Exception $e) {
+            $result = null;
+        }
 
         return $result;
     }
