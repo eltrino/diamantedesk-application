@@ -19,6 +19,7 @@ matrix:
     - php: hhvm
 
 before_install:
+  - mysql -e 'create database diamantedesk;'
   - if [[ "$TRAVIS_PHP_VERSION"  = "hhvm" ]]; then cat travis.php.ini >> /etc/hhvm/php.ini ; fi
   - if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then phpenv config-add travis.php.ini ; fi
   - composer self-update
