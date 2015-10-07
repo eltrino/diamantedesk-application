@@ -266,7 +266,7 @@ class InstallCommand extends OroInstallCommand
         $options       = [
             'application-url' => [
                 'label'                  => 'Application URL',
-                'config_key'             => 'diamante_distribution.application_url',
+                'config_key'             => ['diamante_distribution.application_url'],
                 'askMethod'              => 'ask',
                 'additionalAskArguments' => [],
             ]
@@ -274,19 +274,26 @@ class InstallCommand extends OroInstallCommand
 
         foreach ($options as $optionName => $optionData) {
             $configKey    = $optionData['config_key'];
-            $defaultValue = $configManager->get($configKey);
 
-            $value = $this->inputOptionProvider->get(
-                $optionName,
-                $optionData['label'],
-                $defaultValue,
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
-            );
+            if (!is_array($configKey)) {
+                $configKey = [$configKey];
+            }
 
-            // update setting if it's not empty and not equal to default value
-            if (!empty($value) && $value !== $defaultValue) {
-                $configManager->set($configKey, $value);
+            foreach ($configKey as $key) {
+                $defaultValue = $configManager->get($key);
+
+                $value = $this->inputOptionProvider->get(
+                    $optionName,
+                    $optionData['label'],
+                    $defaultValue,
+                    $optionData['askMethod'],
+                    $optionData['additionalAskArguments']
+                );
+
+                // update setting if it's not empty and not equal to default value
+                if (!empty($value) && $value !== $defaultValue) {
+                    $configManager->set($key, $value);
+                }
             }
         }
 
