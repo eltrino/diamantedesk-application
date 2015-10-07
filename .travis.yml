@@ -33,7 +33,7 @@ before_deploy:
   - rm -rf app/cache/*
   - rm -rf app/logs/*
   - zip -q -x \*.git* -x build/ -x travis.php.ini -x .travis.yml -r build/diamantedesk-application-full-$TRAVIS_TAG.zip .
-  - tar --exclude=\*.git* --exclude=build --exclude=travis.php.ini --exclude=.travis.yml-zcf build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz .
+  - tar --exclude=\*.git* --exclude=build --exclude=travis.php.ini --exclude=.travis.yml -zcf build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz .
 
 deploy:
   provider: releases
