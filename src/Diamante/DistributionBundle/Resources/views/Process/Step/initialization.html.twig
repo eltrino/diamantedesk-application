@@ -1,7 +1,7 @@
 {% extends 'OroInstallerBundle::layout.html.twig' %}
 {% use 'OroInstallerBundle::progress.html.twig' %}
 
-{% set step, steps = 'initialization', ['cache', 'schema-drop', 'clear-config', 'clear-extend', 'schema-update', 'workflows', 'processes', 'fixtures', 'navigation', 'js-routing', 'localization', 'translation', 'requirejs'] %}
+{% set step, steps = 'initialization', ['cache', 'schema-drop', 'clear-config', 'clear-extend', 'schema-update', 'workflows', 'processes', 'fixtures', 'navigation', 'js-routing', 'localization','assets', 'assetic', 'translation', 'requirejs'] %}
 
 {% block title %}{{ 'process.step.diamanteinstall.header'|trans }} - {{ parent() }}{% endblock %}
 

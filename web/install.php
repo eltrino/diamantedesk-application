@@ -228,18 +228,5 @@ function iterateRequirements(array $collection)
         </div>
     </div>
 </div>
-<div class="start-box" style="display: none;">
-    <div class="fade-box"></div>
-    <div class="start-content">
-        <div class="start-content-holder">
-            <div class="center"><img alt="Install" src="bundles/oroinstaller/img/cloud.png" /></div>
-            <h2><?php echo $translator->trans('welcome.header'); ?></h2>
-            <h3><?php echo $translator->trans('welcome.content'); ?></h3>
-            <div class="start-footer">
-                <button type="button" id="begin-install" class="primary button next" href="javascript: void(0);"><span><?php echo $translator->trans('welcome.button'); ?></span></button>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>

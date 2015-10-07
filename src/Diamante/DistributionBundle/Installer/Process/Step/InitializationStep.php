@@ -42,6 +42,13 @@ class InitializationStep extends AbstractStep
                 return $this->handleAjaxAction('fos:js-routing:dump', ['--target' => 'js/routes.js']);
             case 'localization':
                 return $this->handleAjaxAction('oro:localization:dump');
+            case 'assets':
+                return $this->handleAjaxAction(
+                    'oro:assets:install',
+                    array('target' => './', '--symlink', '--exclude' => ['OroInstallerBundle'])
+                );
+            case 'assetic':
+                return $this->handleAjaxAction('assetic:dump');
             case 'translation':
                 return $this->handleAjaxAction('oro:translation:dump');
             case 'requirejs':
