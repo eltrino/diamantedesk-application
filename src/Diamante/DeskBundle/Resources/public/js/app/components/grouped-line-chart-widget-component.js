@@ -50,9 +50,13 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
 
     var data = _.map(options.data, function(value, key){ value.date = parseDate(key); return value;})
                 .sort(sortByDateAscending),
-        parent = options.parent.el,
         elem = options._sourceElement.get(0),
+        parent = options._sourceElement.parent(),
         plot = d3.select(elem);
+
+      if (!parent.is('[data-wid]')) {
+          parent = parent.parent();
+      }
 
     var w = elem.clientWidth,
         h = w / RATIO,

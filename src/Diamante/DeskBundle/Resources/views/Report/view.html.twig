@@ -2,12 +2,11 @@
 
 {% set pageTitle = page_title|default('diamante.desk.common.not_available'|trans) %}
 
+{% oro_title_set({params : {"%report.label%": page_title|default('diamante.desk.common.not_available'|trans) }}) %}
+
 {% block content %}
     {% set options  = {
-        data: data,
-        parent: {
-            el: '.diam-plot'
-        }
+        data: data
     } %}
     <div class="container-fluid">
         <div class="navigation clearfix navbar-extra navbar-extra-right">

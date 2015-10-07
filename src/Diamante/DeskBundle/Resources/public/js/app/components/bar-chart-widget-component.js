@@ -16,9 +16,13 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
   return function (options) {
 
     var data = options.data,
-        parent = options.parent.el,
         elem = options._sourceElement.get(0),
+        parent = options._sourceElement.parent(),
         plot = d3.select(elem);
+
+    if (!parent.is('[data-wid]')) {
+        parent = parent.parent();
+    }
 
     var w = elem.clientWidth,
         h = w / RATIO,
