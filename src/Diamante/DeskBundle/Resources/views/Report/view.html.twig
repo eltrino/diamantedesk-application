@@ -4,7 +4,10 @@
 
 {% block content %}
     {% set options  = {
-        data: data
+        data: data,
+        parent: {
+            el: '.diam-plot'
+        }
     } %}
     <div class="container-fluid">
         <div class="navigation clearfix navbar-extra navbar-extra-right">
