@@ -30,8 +30,10 @@ after_script:
   - if [ -e build/coverage.clover ]; then php build/ocular.phar code-coverage:upload --format=php-clover build/coverage.clover; fi
 
 before_deploy:
-  - zip -q -x \*.git* \*build* app/cache/**\* app/logs/**\* travis.php.ini .travis.yml -r build/diamantedesk-application-full-$TRAVIS_TAG.zip .
-  - tar --exclude \*.git* --exclude \*build* --exclude app/cache/**\* --exclude app/logs/**\* --exclude travis.php.ini --exclude .travis.yml -zcf build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz .
+  - rm -rf app/cache/*
+  - rm -rf app/logs/*
+  - zip -q -x \*.git* -x build/ -x travis.php.ini -x .travis.yml -r build/diamantedesk-application-full-$TRAVIS_TAG.zip .
+  - tar --exclude=\*.git* --exclude=build --exclude=travis.php.ini --exclude=.travis.yml-zcf build/diamantedesk-application-full-$TRAVIS_TAG.tar.gz .
 
 deploy:
   provider: releases
