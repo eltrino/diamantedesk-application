@@ -210,4 +210,12 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     {
         return __CLASS__;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('[%s] %s', $this->getKey(), $this->getSubject());
+    }
 }
