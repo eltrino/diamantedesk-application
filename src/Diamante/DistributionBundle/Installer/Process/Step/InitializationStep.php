@@ -77,6 +77,7 @@ class InitializationStep extends AbstractStep
             ['diamante:user:schema', []],
             ['diamante:desk:schema', []],
             ['oro:migration:load', ['--force' => true, '--bundles' => ['DiamanteDeskBundle'], '--timeout' => 0]],
+            ['doctrine:schema:update', ['--force' => true]],
             ['diamante:embeddedform:schema', []]
         ];
 

@@ -33,13 +33,15 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
 
     public function up(Schema $schema, QueryBag $queries)
     {
-        if (!$this->isExecutedFromInstallCommand()) {
-            return;
+        $types = [
+            'status', 'priority', 'user_type', 'file'
+        ];
+
+        foreach ($types as $type) {
+            if (!$this->auditFieldTypeExists($schema, $type)) {
+                $this->auditFieldExtension->addType($schema, $type, $type);
+            }
         }
-        $this->auditFieldExtension->addType($schema, $doctrineType = 'status', $auditType = 'status');
-        $this->auditFieldExtension->addType($schema, $doctrineType = 'priority', $auditType = 'priority');
-        $this->auditFieldExtension->addType($schema, $doctrineType = 'user_type', $auditType = 'user_type');
-        $this->auditFieldExtension->addType($schema, $doctrineType = 'file', $auditType = 'file');
     }
 
     /**
@@ -58,5 +60,12 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
         }
         // Executed from oro:migration:load
         return false;
+    }
+
+    private function auditFieldTypeExists(Schema $schema, $type)
+    {
+        $table = $schema->getTable('oro_audit_field');
+
+        return ($table->hasColumn(sprintf("old_%s", $type)) && $table->hasColumn(sprintf("new_%", $type)));
     }
 }

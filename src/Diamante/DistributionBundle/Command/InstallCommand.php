@@ -161,6 +161,8 @@ class InstallCommand extends OroInstallCommand
                     '--timeout'           => $commandExecutor->getDefaultOption('process-timeout')
                 ]
             )
+            //This will populate diamante_audit_field table. @TODO: Should be refactored.
+            ->runCommand('doctrine:schema:update', ['--force' => true])
             ->runCommand('diamante:embeddedform:schema', ['--process-isolation' => true]);
 
         $commandExecutor->runCommand(
@@ -266,7 +268,7 @@ class InstallCommand extends OroInstallCommand
         $options       = [
             'application-url' => [
                 'label'                  => 'Application URL',
-                'config_key'             => ['diamante_distribution.application_url'],
+                'config_key'             => ['diamante_distribution.application_url', 'oro_ui.application_url'],
                 'askMethod'              => 'ask',
                 'additionalAskArguments' => [],
             ]
