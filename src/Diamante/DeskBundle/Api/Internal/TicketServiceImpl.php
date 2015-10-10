@@ -654,7 +654,7 @@ class TicketServiceImpl implements TicketService
 
         $comments = $ticket->getComments();
         foreach ($comments as $comment) {
-            if (!$comment->isPrivate()) {
+            if ($comment->isPrivate()) {
                 $comments->removeElement($comment);
             }
         }
