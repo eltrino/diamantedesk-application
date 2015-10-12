@@ -54,6 +54,11 @@ class InitializationStep extends AbstractStep
             case 'requirejs':
                 return $this->handleAjaxAction('oro:requirejs:build', ['--ignore-errors' => true]);
             case 'finish':
+                try {
+                    $this->runCommand('doctrine:schema:update', ['--force' => true, '--quiet' => true]);
+                } catch (\Exception $e) {
+                    //@TODO: This should be refactored once we move to Oro Migrations for schema handling routines.
+                }
                 $this->get('event_dispatcher')->dispatch(InstallerEvents::FINISH);
                 // everything was fine - update installed flag in parameters.yml
                 $dumper = $this->get('oro_installer.yaml_persister');

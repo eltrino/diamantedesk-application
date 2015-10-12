@@ -183,6 +183,12 @@ class InstallCommand extends OroInstallCommand
 
         $this->finalStep($commandExecutor, $output, $input);
 
+        try {
+            $commandExecutor->runCommand('doctrine:schema:update', ['--force' => true, '--quiet' => true]);
+        } catch (\Exception $e) {
+            $this->getContainer()->get('monolog.logger.diamante')->error(sprintf("Schema update failed upon installation: %e", $e->getMessage()));
+        }
+
         $output->writeln(
             sprintf(
                 '<info>DiamanteDesk has been successfully installed in <comment>%s</comment> mode.</info>',
