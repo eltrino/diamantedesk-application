@@ -15,10 +15,8 @@ define(['app'], function(App){
             model: userModel
           });
 
-          userButton.on('user:view', function(){
-            App.trigger('user:view', {
-              parentRegion: userButton.dropdownRegion
-            });
+          userButton.on('user:edit', function(){
+            App.trigger('user:edit', options);
           });
 
           options.parentRegion.show(userButton);

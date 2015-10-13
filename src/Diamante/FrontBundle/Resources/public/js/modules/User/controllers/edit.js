@@ -8,7 +8,15 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
         'User/models/user',
         'User/views/edit'], function(){
 
-        var request = App.request('user:model:current');
+        var request = App.request('user:model:current'),
+            modalEditView = new Edit.ModalView({
+              title: 'Edit User',
+              submit: 'Submit'
+            });
+
+        modalEditView.on('show', function(){
+          this.$el.modal();
+        });
 
         request.done(function(userModel){
           var userEditView = new Edit.ItemView({
@@ -34,6 +42,8 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
                   }
                   options.message = 'User is updated';
                   App.trigger('user:view', options);
+
+                  modalEditView.$el.modal('hide');
                 },
                 error : function(model, xhr){
                   App.alert({
@@ -45,7 +55,9 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
             }
           });
 
-          options.parentRegion.show(userEditView);
+          App.dialogRegion.show(modalEditView);
+          modalEditView.modalBody.show(userEditView);
+
         });
 
       });

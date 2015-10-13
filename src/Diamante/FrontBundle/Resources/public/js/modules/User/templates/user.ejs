@@ -1,4 +1,12 @@
-<button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-  <span class="user-name"><%= fullName %></span><span class="caret"></span>
-</button>
-<div class="dropdown-menu dropdown-menu-right" id="dropdown-profile"></div>
+<div class="user-wrapper">
+  <ul class="user-actions">
+    <li class="user-action">
+      <a href="#edit-user" class="user-edit js-edit-user">
+        <img src="<%=avatar_url %>?s=40&d=identicon" class="user-image" alt="<%=first_name %> <%=last_name %>" />
+      </a>
+    </li>
+    <li class="user-action">
+      <a href="#" class="user-logout js-logout" title="Log Out"></a>
+    </li>
+  </ul>
+</div>

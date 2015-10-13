@@ -17,19 +17,12 @@
 
 .profile-view,
 .profile-edit {
-  width: 320px;
-  padding: @grid-gutter-width/2;
 }
 
 .user-meta {
   &:extend(.clearfix all);
   padding-left: 64 + @grid-gutter-width/2;
   margin-bottom: @grid-gutter-width/2;
-}
-.user-image {
-  float: left;
-  margin-left: -64 - @grid-gutter-width/2;
-  vertical-align: top;
 }
 
 .dropdown-menu {
@@ -42,5 +35,60 @@
         box-shadow: none;
       }
     }
+  }
+}
+
+.modal-header {
+  display: none;
+}
+
+.modal-content {
+  .form-group {
+    margin-bottom: 35px;
+    label {
+      font-size: 14px;
+      font-weight: normal;
+      color: @modal-label-color;
+      line-height: 14px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      color: #000;
+      font-size: 17px;
+      border-radius: 0;
+      border: solid rgba(0, 0, 0, .5);
+      border-width: 0 0 1px;
+      box-shadow: none;
+      padding: 10px 0;
+    }
+    .progress {
+      height: 4px;
+      border-radius: 0;
+      box-shadow: none;
+      margin: 5px 0;
+      .progress-bar {
+        height: 4px;
+        box-shadow: none;
+      }
+    }
+    .password-verdict {
+      color: @modal-label-color;
+      height: auto;
+      margin: 0;
+      text-align: left;
+    }
+  }
+}
+
+.modal-footer {
+  text-align: center;
+}
+
+.profile-edit {
+  .user-avatar {
+    border-radius: 50px;
+    margin: 35px auto;
+    overflow: hidden;
+    width: 100px;
   }
 }

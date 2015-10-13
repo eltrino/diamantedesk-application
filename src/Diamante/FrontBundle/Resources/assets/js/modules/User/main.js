@@ -9,12 +9,6 @@ define([
       User.Controller(options);
     });
 
-    App.on('user:view', function(options){
-      require(['User/controllers/view'], function(View){
-        View.Controller(options);
-      });
-    });
-
     App.on('user:edit', function(options){
       require(['User/controllers/edit'], function(Edit){
         Edit.Controller(options);

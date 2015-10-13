@@ -1,23 +1,47 @@
 define([
   'app',
-  'tpl!../templates/user.ejs'], function(App, userTemplate){
+  'tpl!../templates/user.ejs',
+  'cryptojs.md5'], function(App, userTemplate, MD5){
 
   return App.module('User', function(User, App, Backbone, Marionette, $, _){
 
     User.LayoutView = Marionette.LayoutView.extend({
       template : userTemplate,
-      className : 'dropdown',
+      className : 'profile-wrapper',
 
-      regions : {
-        dropdownRegion : '#dropdown-profile'
+      ui : {
+        logoutButton : '.js-logout',
+        editButton : '.js-edit-user',
+        message: '.alert'
       },
 
       events : {
-        'click': 'viewClicked'
+        'click @ui.logoutButton' : 'logout',
+        'click @ui.editButton' : 'editUser',
+        'click' : 'click'
       },
 
       modelEvents : {
         'change' : 'updateFullName'
+      },
+
+      initialize : function(options){
+        this.message = options.message;
+      },
+
+      logout : function(){
+        App.trigger('session:logout');
+      },
+
+      editUser : function(e){
+        // Remove in order to implement routing via #edit-user hash tag;
+        e.preventDefault();
+        e.stopPropagation();
+        this.trigger('user:edit');
+      },
+
+      click : function(e){
+        e.stopPropagation();
       },
 
       templateHelpers : function(){
@@ -30,7 +54,9 @@ define([
           fullname.push(this.model.get('last_name'));
         }
         return {
-          fullName : fullname.length ? fullname.join(' ') : email
+          fullName : fullname.length ? fullname.join(' ') : email,
+          avatar_url : 'http://www.gravatar.com/avatar/' + MD5(this.model.get('email')),
+          message : this.message
         };
       },
 
