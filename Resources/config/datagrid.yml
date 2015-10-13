@@ -1,0 +1,58 @@
+datagrid:
+    diamante-workflow-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - w.id
+                    - w.action
+                from:
+                    - { table: %diamante_automation.workflow_rule.entity.class%, alias: w }
+                where:
+                    and:
+                        - w.expression is not null
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_automation_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      diamante_automation_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      diamante_automation_delete
+                params:     [ id ]
+        columns:
+            action:
+                label: diamante.desk.branch.columns.branch_key
+        actions:
+            view:
+                type:          navigate
+                label:         diamante.desk.branch.actions.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+                acl_resource:  VIEW;Entity:DiamanteAutomationBundle:WorkflowRule
+            update:
+                type:          navigate
+                label:         diamante.desk.branch.actions.edit
+                icon:          edit
+                link:          update_link
+                acl_resource:  EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
+            delete:
+                type:          delete
+                label:         diamante.desk.branch.actions.remove
+                icon:          trash
+                link:          delete_link
+                acl_resource:  DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
+        mass_actions:
+            delete:
+                type:               delete
+                label :             diamante.desk.branch.actions.remove_mass
+                acl_resource:       DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
+                entity_name:        DiamanteAutomationBundle:Branch
+                data_identifier:    w.id
+                icon:               trash

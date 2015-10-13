@@ -82,4 +82,9 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
      * @ORM\Column(type="string", nullable=true)
      */
     protected $expression;
+
+    public static function getClassName()
+    {
+        return __CLASS__;
+    }
 }

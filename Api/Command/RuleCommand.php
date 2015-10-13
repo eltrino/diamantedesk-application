@@ -28,7 +28,7 @@ use JMS\Serializer\Annotation\Type;
 class RuleCommand
 {
     /**
-     * @var int|null
+     * @var int
      *
      * @Type("integer")
      */
@@ -70,7 +70,7 @@ class RuleCommand
     public $target;
 
     /**
-     * @var AutomationRule
+     * @var int
      *
      * @Type("integer")
      */
@@ -96,4 +96,33 @@ class RuleCommand
      * @Type("string")
      */
     public $mode;
+
+    public static function createFromRule($rule)
+    {
+        return self::create($rule);
+    }
+
+    private static function create(Rule $rule, RuleCommand $parentCommand = null) {
+        $command = new self;
+        $command->id = $rule->getId();
+        $command->condition = $rule->getCondition();
+        $command->action = $rule->getAction();
+        $command->weight = $rule->getWeight();
+        $command->target = $rule->getTarget();
+        $command->active = $rule->isActive();
+        $command->children = [];
+
+        if($parentCommand) {
+            $command->parent = $parentCommand->id;
+            $parentCommand->children[] = $command;
+        }
+
+        if ($rule->getChildren()) {
+            foreach ($rule->getChildren() as $child) {
+                self::create($child, $command);
+            }
+        }
+
+        return $command;
+    }
 }

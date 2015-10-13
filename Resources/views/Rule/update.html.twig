@@ -1,0 +1,169 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% import 'DiamanteAutomationBundle:Rule/macros:general.html.twig' as _general %}
+{% import 'DiamanteAutomationBundle:Rule/macros:conditions.html.twig' as _conditions %}
+{% import 'DiamanteAutomationBundle:Rule/macros:actions.html.twig' as _actions %}
+
+{% set formAction =  path('diamante_automation_create') %}
+
+{% block navButtons %}
+    {% set cancel_url = path('diamante_automation_list') %}
+    {{ UI.button({'path' : cancel_url, 'title' : 'diamante.automation.ui.cancel'|trans, 'label' : 'diamante.automation.ui.cancel'|trans}) }}
+    {% set html = UI.saveAndCloseButton() %}
+    {{ UI.dropdownSaveButton({'html': html}) }}
+{% endblock %}
+
+
+{% block pageHeader %}
+    {% if form.vars.value.id %}
+        {% set breadcrumbs = {
+        'entity':      form.vars.value,
+        'indexPath':   path('diamante_automation_list'),
+        'indexLabel':  'diamante.automation.rule.entity_plural_label'|trans,
+        'entityTitle': form.vars.value.name|default('N/A'),
+        'hasAvatar':   true,
+        'imagePath':   null
+        }
+        %}
+        {{ parent() }}
+    {% else %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.automation.rule.entity_plural_label'|trans}) %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+    {% endif %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+
+    <script type="text/template" id="target-types-view">
+        <select class="diamante-select-target-types" name="diamante-select-target-types">
+            <% _.each(types, function(type, i) { %>
+            <option value="<%= type %>"><%= type %></option>
+            <%}) %>
+        </select>
+    </script>
+
+    <script type="text/template" id="target-properties-view">
+        <select class="diamante-select-target-properties" name="diamante-select-target-properties">
+            <% _.each(targets, function(item, i) { %>
+            <option value="<%= item.option %>"><%= item.name %></option>
+            <%}) %>
+        </select>
+    </script>
+
+    <script type="text/template" id="rule-dialog-view">
+        <div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-dialog-normal ui-dialog-buttons"
+             tabindex="-1" role="dialog" aria-describedby="ui-id-1"
+             style="width: 520px; height: auto; min-width: 375px; top: 434px; left: 700px; display: block; min-height: 199px;"
+             aria-labelledby="ui-id-2">
+            <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix ui-draggable-handle"><span
+                        id="ui-id-2" class="ui-dialog-title">Add Watcher</span>
+
+                <div class="ui-dialog-titlebar-buttonpane">
+                    <button type="button"
+                            class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close"
+                            role="button" title="close" style="position: static; top: auto; right: auto; margin: 0px;"><span
+                                class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+                        <span class="ui-button-text">Close</span>
+                    </button>
+                    <a class="ui-dialog-titlebar-maximize ui-corner-all" href="#" title="maximize" role="button"
+                       style="display: none;"><span class="ui-icon ui-icon-extlink">maximize</span></a><a
+                            class="ui-dialog-titlebar-restore ui-corner-all" href="#" title="restore" role="button"
+                            style="display: none; right: -9999em;"><span class="ui-icon ui-icon-newwin">restore</span></a><a
+                            class="ui-dialog-titlebar-minimize ui-corner-all" href="#" title="minimize" role="button"
+                            style="display: none;"><span class="ui-icon ui-icon-minus">minimize</span></a></div>
+            </div>
+            <div id="ui-id-1" class="ui-dialog-content ui-widget-content" style="display: block;" data-layout="separate">
+                <div class="widget-content form-horizontal box-content row-fluid">
+                    <div class="form-container">
+                        <form id="diamante_add_watcher_form">
+                            <input type="submit"
+                                                   style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px;">
+                            <fieldset class="form form-horizontal">
+                                <div class="span6">
+                                    <div class="control-group">
+                                        <div class="control-label wrap">
+                                            <label for="diamante-conditions" class="required">Condition<em>*</em></label>
+                                        </div>
+                                        <div class="controls">
+                                            <select class="diamante-select-conditions" name="diamante-select-conditions">
+                                            <% _.each(conditions, function(item, i) { %>
+                                                <option value="<%= i %>"><%= item.name %></option>
+                                            <%}) %>
+                                            </select>
+                                            <div class="target-types"></div>
+                                            <div class="target-properties"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <div class="form-actions widget-actions">
+                    <div class="pull-right">
+                        <div data-section="adopted" class="widget-actions-section"><span class="action-wrapper"><button
+                                        class="automation-dialog-cancel btn" type="reset">Cancel
+                                </button></span>
+                            <span class="action-wrapper">
+                                <button class="automation-dialog-add btn btn-primary" type="submit">Add</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    {% set id = 'ruleEdit' %}
+
+    <script type="text/javascript">
+        require(['jquery', 'diamanteautomation/js/condition-view'],
+                function($, RuleView) {
+                    $(function() {
+                        new RuleView({fieldId: '#{{ form.json.vars.id }}'});
+                    });
+                });
+    </script>
+
+    {% set dataBlocks = [{
+    'title': 'General',
+    'class': 'active',
+    'subblocks': [
+    {
+    'title': null,
+    'data': [
+        form_row(form.json),
+        _general.render()
+    ]
+    }
+    ]
+    }] %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Conditions',
+    'subblocks': [
+    {
+    'title': null,
+    'data': [_conditions.render()]
+    }]
+    }]
+    ) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Actions'|trans,
+    'subblocks': [
+    {
+    'title': null,
+    'data': [_actions.render()]
+    }]
+    }]
+    ) %}
+
+    {% set data = {
+    'formErrors': form_errors(form)? form_errors(form) : null,
+    'dataBlocks': dataBlocks,
+    } %}
+
+    {{ parent() }}
+{% endblock content_data %}

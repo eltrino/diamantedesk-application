@@ -27,72 +27,9 @@ class CreateRuleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'condition',
-            'text',
+            'json',
+            'hidden',
             array(
-                'label'    => 'diamante.automation.attributes.condition',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
-            'action',
-            'text',
-            array(
-                'label'    => 'diamante.automation.attributes.action',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
-            'weight',
-            'integer',
-            array(
-                'label'    => 'diamante.automation.attributes.weight',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
-            'target',
-            'text',
-            array(
-                'label'    => 'diamante.automation.attributes.target',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
-            'parent',
-            'integer',
-            array(
-                'label'    => 'diamante.automation.attributes.parent'
-            )
-        );
-
-        $builder->add(
-            'active',
-            'integer',
-            array(
-                'label'    => 'diamante.automation.attributes.active',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
-            'expression',
-            'text',
-            array(
-                'label'    => 'diamante.automation.attributes.expression',
-                'required' => true,
-            )
-        );
-
-        $builder->add(
-            'mode',
-            'text',
-            array(
-                'label'    => 'diamante.automation.attributes.mode',
                 'required' => true,
             )
         );
@@ -105,7 +42,7 @@ class CreateRuleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\AutomationBundle\Api\Command\RuleCommand',
+                'data_class' => 'Diamante\AutomationBundle\Api\Command\ViewRuleCommand',
                 'intention' => 'rule',
                 'cascade_validation' => true
             )

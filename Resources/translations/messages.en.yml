@@ -3,7 +3,7 @@ diamante:
     rule:
       entity_label:               Rule
       entity_plural_label:        Rules
-      details :                   Rule Detail
+      details :                   Rule Details
       messages:
         create:
           error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.

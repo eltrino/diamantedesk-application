@@ -1,0 +1,5 @@
+config:
+    paths:
+        'diamanteautomation/js/condition-collection': 'bundles/diamanteautomation/js/condition-collection'
+        'diamanteautomation/js/condition-model': 'bundles/diamanteautomation/js/condition-model'
+        'diamanteautomation/js/condition-view': 'bundles/diamanteautomation/js/condition-view'
