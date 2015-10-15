@@ -34,7 +34,7 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
     public function up(Schema $schema, QueryBag $queries)
     {
         $types = [
-            'status', 'priority', 'user_type', 'file'
+            'status', 'priority', 'user_type', 'attachment_file'
         ];
 
         foreach ($types as $type) {

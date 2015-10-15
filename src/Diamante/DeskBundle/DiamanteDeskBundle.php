@@ -28,7 +28,7 @@ class DiamanteDeskBundle extends Bundle
         'status',
         'priority',
         'user_type',
-        'file',
+        'attachment_file',
     ];
 
     public function boot()
@@ -42,9 +42,9 @@ class DiamanteDeskBundle extends Bundle
                 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\TicketPriorityType'
             );
         }
-        if (!Type::hasType('file')) {
+        if (!Type::hasType('attachment_file')) {
             Type::addType(
-                'file',
+                'attachment_file',
                 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\AttachmentFileType'
             );
         }

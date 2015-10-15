@@ -41,7 +41,7 @@ class Attachment extends \Diamante\DeskBundle\Model\Attachment\Attachment
     /**
      * @var \Symfony\Component\HttpFoundation\File\File
      *
-     * @ORM\Column(name="file", type="file")
+     * @ORM\Column(name="file", type="attachment_file")
      *
      * @ConfigField(
      *      defaultValues={
@@ -74,5 +74,13 @@ class Attachment extends \Diamante\DeskBundle\Model\Attachment\Attachment
     public static function getClassName()
     {
         return __CLASS__;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getFile()->getFilename();
     }
 }

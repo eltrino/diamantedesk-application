@@ -20,7 +20,7 @@ use Diamante\DeskBundle\Model\Attachment\File;
 
 class AttachmentFileType extends StringType
 {
-    const FILE_TYPE = 'file';
+    const FILE_TYPE = 'attachment_file';
 
     /**
      * Gets the name of this type.
