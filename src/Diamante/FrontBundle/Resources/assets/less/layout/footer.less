@@ -1,9 +1,21 @@
 #footer {
+  background: @footer-bg;
   .container {
+    color: @footer-color;
+    background: @footer-bg;
     position: relative;
     min-height: @footer-height;
     margin-top: -@footer-height;
-    background: #f5f5f5;
-    padding: @main-gutter/2 @main-gutter;
+    padding: 35px @main-gutter 0;
+  }
+  a {
+    color: @footer-color;
+    &:visited {
+      color: @footer-color;
+    }
+  }
+  .text-muted {
+    color: @footer-color;
+    opacity: .5;
   }
 }

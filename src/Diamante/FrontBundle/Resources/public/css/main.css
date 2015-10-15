@@ -7234,7 +7234,7 @@ body {
 }
 body {
   height: 100%;
-  background: #f9f9fb;
+  background: #fff;
 }
 #header {
   background: #50828e;
@@ -7600,7 +7600,7 @@ body {
 }
 #main {
   position: relative;
-  padding: 151px 40px 100px;
+  padding: 151px 40px 120px;
   background: #fff;
   min-height: 100%;
 }
@@ -7667,12 +7667,26 @@ body {
   border-top: 0;
   text-align: center;
 }
+#footer {
+  background: #525252;
+}
 #footer .container {
+  color: #ffffff;
+  background: #525252;
   position: relative;
-  min-height: 60px;
-  margin-top: -60px;
-  background: #f5f5f5;
-  padding: 20px 40px;
+  min-height: 80px;
+  margin-top: -80px;
+  padding: 35px 40px 0;
+}
+#footer a {
+  color: #ffffff;
+}
+#footer a:visited {
+  color: #ffffff;
+}
+#footer .text-muted {
+  color: #ffffff;
+  opacity: .5;
 }
 .profile .loading {
   display: inline-block;
