@@ -15,10 +15,17 @@
 namespace Diamante\DeskBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository")
  * @ORM\Table(name="diamante_branch_email_configuration")
+ * @Config(
+ *      defaultValues={
+ *         "dataaudit"={"auditable"=true}
+ *      }
+ * )
  */
 class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfiguration
 {
@@ -42,6 +49,11 @@ class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailPr
     /**
      * @var []
      * @ORM\Column(name="customer_domains", type="text", nullable=true)
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $customerDomains;
 
@@ -49,6 +61,12 @@ class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailPr
      * @var string
      *
      * @ORM\Column(name="support_address", type="text", nullable=true)
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $supportAddress;
 
@@ -69,5 +87,13 @@ class BranchEmailConfiguration extends \Diamante\DeskBundle\Model\Branch\EmailPr
     public static function getClassName()
     {
         return __CLASS__;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getBranch()->getName();
     }
 }
