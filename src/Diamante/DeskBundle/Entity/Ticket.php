@@ -198,6 +198,12 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * @var string
      *
      * @ORM\Column(type="source")
+     *
+     * @ConfigField(
+     *      defaultValues={
+     *          "dataaudit"={"auditable"=true}
+     *      }
+     * )
      */
     protected $source;
 

@@ -39,6 +39,10 @@ class Source
      */
     public function __construct($source)
     {
+        if (empty($source)) {
+            $source = self::WEB;
+        }
+
         static::initValueLabelsMap();
 
         if (false === isset(static::$valueToLabelMap[$source])) {

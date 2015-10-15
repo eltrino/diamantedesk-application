@@ -29,6 +29,7 @@ class DiamanteDeskBundle extends Bundle
         'priority',
         'user_type',
         'attachment_file',
+        'source'
     ];
 
     public function boot()
