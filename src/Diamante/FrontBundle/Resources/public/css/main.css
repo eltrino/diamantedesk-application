@@ -4769,7 +4769,7 @@ button.close {
 }
 .modal-content {
   position: relative;
-  background-color: #ffffff;
+  background-color: none;
   border: 1px solid #999999;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 6px;
@@ -4785,7 +4785,7 @@ button.close {
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: #000000;
+  background-color: #ffffff;
 }
 .modal-backdrop.fade {
   opacity: 0;
@@ -7604,6 +7604,69 @@ body {
   background: #fff;
   min-height: 100%;
 }
+.modal-header {
+  border-bottom: none;
+  text-transform: uppercase;
+}
+.modal-header .close {
+  display: none;
+}
+.modal-content {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.modal-content .form-group {
+  margin-bottom: 35px;
+}
+.modal-content .form-group label {
+  font-size: 14px;
+  font-weight: normal;
+  color: #949696;
+  line-height: 14px;
+}
+.modal-content .form-group input[type="text"],
+.modal-content .form-group input[type="password"] {
+  box-shadow: none;
+  color: #000;
+  line-height: 17px;
+  font-size: 17px;
+  background: none;
+  border-radius: 0;
+  border: solid rgba(0, 0, 0, 0.5);
+  border-width: 0 0 1px;
+  height: 34px;
+  padding: 5px 0;
+}
+.modal-content .form-group .progress {
+  height: 4px;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 5px 0;
+}
+.modal-content .form-group .progress .progress-bar {
+  height: 4px;
+  box-shadow: none;
+}
+.modal-content .form-group .password-verdict {
+  color: #949696;
+  height: auto;
+  margin: 0;
+  text-align: left;
+}
+.modal-content .dropzone {
+  background: none;
+  border-radius: 0;
+  border-color: #d0d0d0;
+}
+.modal-content .dropzone label {
+  color: #949696;
+  padding: 20px;
+}
+.modal-footer {
+  border-top: 0;
+  text-align: center;
+}
 #footer .container {
   position: relative;
   min-height: 60px;
@@ -7641,47 +7704,6 @@ body {
 }
 .dropdown-menu .loader:only-child > div {
   box-shadow: none;
-}
-.modal-header {
-  display: none;
-}
-.modal-content .form-group {
-  margin-bottom: 35px;
-}
-.modal-content .form-group label {
-  font-size: 14px;
-  font-weight: normal;
-  color: #949696;
-  line-height: 14px;
-}
-.modal-content .form-group input[type="text"],
-.modal-content .form-group input[type="password"] {
-  color: #000;
-  font-size: 17px;
-  border-radius: 0;
-  border: solid rgba(0, 0, 0, 0.5);
-  border-width: 0 0 1px;
-  box-shadow: none;
-  padding: 10px 0;
-}
-.modal-content .form-group .progress {
-  height: 4px;
-  border-radius: 0;
-  box-shadow: none;
-  margin: 5px 0;
-}
-.modal-content .form-group .progress .progress-bar {
-  height: 4px;
-  box-shadow: none;
-}
-.modal-content .form-group .password-verdict {
-  color: #949696;
-  height: auto;
-  margin: 0;
-  text-align: left;
-}
-.modal-footer {
-  text-align: center;
 }
 .profile-edit .user-avatar {
   border-radius: 50px;

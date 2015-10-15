@@ -7,3 +7,70 @@
   background: #fff;
   min-height: 100%;
 }
+
+.modal-header {
+  border-bottom: none;
+  text-transform: uppercase;
+  .close {
+    display: none;
+  }
+}
+
+.modal-content {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  .form-group {
+    margin-bottom: 35px;
+    label {
+      font-size: 14px;
+      font-weight: normal;
+      color: @modal-label-color;
+      line-height: 14px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      box-shadow: none;
+      color: #000;
+      line-height: 17px;
+      font-size: 17px;
+      background: none;
+      border-radius: 0;
+      border: solid rgba(0, 0, 0, .5);
+      border-width: 0 0 1px;
+      height: 34px;
+      padding: 5px 0;
+    }
+    .progress {
+      height: 4px;
+      border-radius: 0;
+      box-shadow: none;
+      margin: 5px 0;
+      .progress-bar {
+        height: 4px;
+        box-shadow: none;
+      }
+    }
+    .password-verdict {
+      color: @modal-label-color;
+      height: auto;
+      margin: 0;
+      text-align: left;
+    }
+  }
+  .dropzone {
+    background: none;
+    border-radius: 0;
+    border-color: #d0d0d0;
+    label {
+      color: @modal-label-color;
+      padding: 20px;
+    }
+  }
+}
+
+.modal-footer {
+  border-top: 0;
+  text-align: center;
+}
+
