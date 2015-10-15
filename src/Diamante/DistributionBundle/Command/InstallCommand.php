@@ -272,7 +272,7 @@ class InstallCommand extends OroInstallCommand
         $options       = [
             'application-url' => [
                 'label'                  => 'Application URL',
-                'config_key'             => 'diamante_distribution.application_url',
+                'config_key'             => 'oro_ui.application_url',
                 'askMethod'              => 'ask',
                 'additionalAskArguments' => [],
             ]
