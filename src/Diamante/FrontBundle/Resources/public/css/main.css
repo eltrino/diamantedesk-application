@@ -7725,9 +7725,11 @@ body {
   overflow: hidden;
   width: 100px;
 }
-.ticket-list th {
+.ticket-list > thead > tr > th {
+  background: none;
   white-space: nowrap;
   cursor: pointer;
+  border-bottom: 1px solid #E6E6E6;
 }
 .ticket-list .createdAt {
   width: 1%;
@@ -7760,13 +7762,56 @@ body {
   color: #2a6496;
 }
 .ticket-list .message {
+  font-size: 36px;
   text-align: center;
 }
+.ticket-list .message:hover > td {
+  background: #fff;
+}
 .ticket-list .message td {
-  padding: 16px;
+  padding: 96px;
 }
 .ticket-list .message a {
-  display: inline;
+  color: #41ffd4;
+  display: inline-block;
+  background: #41ffd4;
+  border: 2px solid #41ffd4;
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+  text-transform: uppercase;
+  margin: 0 5px;
+  padding: 5px;
+  height: 40px;
+  line-height: 26px;
+  text-indent: 30px;
+  vertical-align: middle;
+  width: 40px;
+}
+.ticket-list .message a:hover:before,
+.ticket-list .message a:focus:before,
+.ticket-list .message a:hover:after,
+.ticket-list .message a:focus:after {
+  border-color: #fff;
+}
+.ticket-list .message a:before {
+  content: '';
+  border-right: 2px solid #50828e;
+  position: absolute;
+  top: 11px;
+  left: 17px;
+  line-height: 10px;
+  height: 14px;
+  width: 0;
+}
+.ticket-list .message a:after {
+  content: '';
+  border-top: 2px solid #50828e;
+  position: absolute;
+  top: 17px;
+  left: 11px;
+  height: 0;
+  width: 14px;
 }
 .ticket-view h2 {
   text-transform: uppercase;

@@ -1,7 +1,10 @@
 .ticket-list {
-  th {
+  > thead > tr > th {
+    background: none;
+    background: none;
     white-space: nowrap;
     cursor: pointer;
+    border-bottom: 1px solid #E6E6E6;
   }
   .createdAt {
     width:1%;
@@ -36,12 +39,58 @@
     }
   }
   .message {
+    font-size: 36px;
     text-align: center;
+    &:hover {
+      > td {
+        background: #fff;
+      }
+    }
     td {
-      padding: @table-cell-padding * 2;
+      padding: @table-cell-padding * 12;
     }
     a {
-      display: inline;
+      color: #41ffd4;
+      display: inline-block;
+      background: #41ffd4;
+      border: 2px solid #41ffd4;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      text-transform: uppercase;
+      margin: 0 5px;
+      padding: 5px;
+      height: 40px;
+      line-height: 26px;
+      text-indent: 30px;
+      vertical-align: middle;
+      width: 40px;
+      &:hover,
+      &:focus {
+        &:before,
+        &:after {
+          border-color: #fff;
+        }
+      }
+      &:before {
+        content: '';
+        border-right: 2px solid #50828e;
+        position: absolute;
+        top: 11px;
+        left: 17px;
+        line-height: 10px;
+        height: 14px;
+        width: 0;
+      }
+      &:after {
+        content: '';
+        border-top: 2px solid #50828e;
+        position: absolute;
+        top: 17px;
+        left: 11px;
+        height: 0;
+        width: 14px;
+      }
     }
   }
 }

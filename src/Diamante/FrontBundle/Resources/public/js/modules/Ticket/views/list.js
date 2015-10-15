@@ -44,7 +44,7 @@ define([
     List.CompositeView = Marionette.CompositeView.extend({
       tagName: 'table',
       template: listTemplate,
-      className: 'ticket-list table table-hover table-bordered',
+      className: 'ticket-list table table-hover',
       childViewContainer: 'tbody',
       childView: List.ItemView,
 
