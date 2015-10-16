@@ -82,7 +82,7 @@
     %}
 
     {% set dataBlocks = dataBlocks|merge([{
-        'title': 'diamante.user.activity'|trans,
+        'title': 'diamante.user.labels.related_tickets'|trans,
         'subblocks': [{
             'title' : null,
             'data' : [dataGrid.renderGrid('diamante-user-ticket-grid', { "reporter": userid })],
