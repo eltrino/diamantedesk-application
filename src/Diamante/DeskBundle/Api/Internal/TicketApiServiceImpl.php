@@ -29,6 +29,7 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Diamante\UserBundle\Model\User;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\TagBundle\Entity\TagManager;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -53,6 +54,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * @var Repository
      */
     private $branchRepository;
+
+    /**
+     * @var ConfigManager
+     */
+    private $configManager;
 
     use ApiServiceImplTrait;
 
@@ -206,6 +212,10 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      */
     public function createTicket(CreateTicketCommand $command)
     {
+        if (0 === $command->branch) {
+            $command->branch = (int)$this->configManager->get('diamante_email_processing.default_branch');
+        }
+
         if (empty($command->assignee)) {
             $branch = $this->branchRepository->get((integer)$command->branch);
 
@@ -213,6 +223,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
                 $command->assignee = $branch->getDefaultAssigneeId();
             }
         }
+
         $this->prepareAttachmentInput($command);
 
         return parent::createTicket($command);
@@ -536,6 +547,11 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     public function setTagManager(TagManager $tagManager)
     {
         $this->tagManager = $tagManager;
+    }
+
+    public function setConfigManager(ConfigManager $configManager)
+    {
+        $this->configManager = $configManager;
     }
 
     /**

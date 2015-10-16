@@ -104,6 +104,9 @@
             <call method="setTagManager">
                 <argument type="service" id="oro_tag.tag.manager"/>
             </call>
+            <call method="setConfigManager">
+                <argument type="service" id="oro_config.manager"/>
+            </call>
         </service>
 
         <service id="diamante.ticket.api.service_diamante" alias="diamante.ticket.api.service" />
