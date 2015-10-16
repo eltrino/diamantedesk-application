@@ -41,7 +41,7 @@ class WatcherList extends \Diamante\DeskBundle\Model\Ticket\WatcherList
     /**
      * @var string
      *
-     * @ORM\Column(name="user_type", type="string", length=255, nullable=false)
+     * @ORM\Column(name="user_type", type="user_type", length=255, nullable=false)
      */
     protected $userType;
 
