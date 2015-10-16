@@ -172,6 +172,13 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
             $converted['fullName'] = $converted['email'];
         }
 
+        if ($item->isDiamanteUser()) {
+            $realUserObj = $this->userService->getByUser($item);
+            $converted['isDeleted'] = $realUserObj->isDeleted();
+        } else {
+            $converted['isDeleted'] = false;
+        }
+
         return $converted;
     }
 
