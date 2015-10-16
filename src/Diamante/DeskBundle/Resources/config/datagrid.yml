@@ -133,6 +133,10 @@ datagrid:
                 params:     [ key ]
 
         columns:
+            status:
+                label:   diamante.desk.ticket.columns.status
+            priority:
+                label:   diamante.desk.ticket.columns.priority
             key:
                 label:   diamante.desk.ticket.columns.key
             subject:
@@ -147,10 +151,6 @@ datagrid:
                 type:    assignee
 #            reporterFullName:
 #                label:   diamante.desk.ticket.columns.reporter
-            priority:
-                label:   diamante.desk.ticket.columns.priority
-            status:
-                label:   diamante.desk.ticket.columns.status
             createdAt:
                 label:   diamante.desk.ticket.columns.created
                 frontend_type: datetime
