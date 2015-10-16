@@ -13,7 +13,7 @@ oro_menu_config:
                 routes: ['diamante_branch_*']
                 position: 80
         diamante_ticket_list:
-            label: 'All Tickets'
+            label: 'Tickets'
             route: diamante_ticket_list
             extras:
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
@@ -72,24 +72,12 @@ oro_menu_config:
                 routes: ['diamante_report_*']
 
         tags_management:
-            label: 'Tags managemnt'
-            uri: '#'
-            extras:
-                position: 90
-
-        oro_tag_list:
-            label: 'oro.tag.entity_plural_label'
+            label: 'Tags'
             route: 'oro_tag_index'
             extras:
-                position:    90
+                position: 90
                 routes:      ['oro_tag_*']
                 description: 'oro.tag.menu.tag_list.description'
-
-        shortcut_new_tag:
-            label: 'oro.tag.menu.shortcut_new_tag.label'
-            route: 'oro_tag_create'
-            extras:
-                description: 'oro.tag.menu.shortcut_new_tag.description'
 
 #        dashboard_tab:
 #            display: false
@@ -125,10 +113,7 @@ oro_menu_config:
                 diamante_customer_management: ~
                 diamante_config_tab:
                   children:
-                    tags_management:
-                      children:
-                        oro_tag_list: ~
-                        shortcut_new_tag: ~
+                    tags_management: ~
                     system_configuration: ~
                     users_management:
                       children:
