@@ -49,7 +49,7 @@ class ApiUserProvider implements UserProviderInterface
     {
         $user = $this->apiUserRepository->findUserByEmail($email);
 
-        if (!$user) {
+        if (!$user || (true === $user->getDiamanteUser()->isDeleted())) {
             throw new UsernameNotFoundException(sprintf('User "%s" does not exist.', $email));
         }
 

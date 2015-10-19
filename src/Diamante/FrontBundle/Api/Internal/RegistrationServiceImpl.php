@@ -17,6 +17,7 @@ namespace Diamante\FrontBundle\Api\Internal;
 use Diamante\FrontBundle\Api\Command;
 use Diamante\FrontBundle\Api\RegistrationService;
 use Diamante\FrontBundle\Model\RegistrationMailer;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\ApiUser\ApiUserFactory;
@@ -68,13 +69,21 @@ class RegistrationServiceImpl implements RegistrationService
      */
     public function register(Command\RegisterCommand $command)
     {
+        $existingUser = $this->diamanteUserRepository->findUserByEmail($command->email);
+
+        if($existingUser && !$existingUser->isDeleted()){
+            throw new \RuntimeException('An account with this email address already exists');
+        }
+
+        if ($existingUser && $existingUser->isDeleted()) {
+            $this->restoreUser($command, $existingUser);
+            $this->registrationMailer->sendConfirmationEmail($existingUser->getEmail(), $existingUser->getApiUser()->getHash());
+            return;
+        }
+
         $diamanteUser = $this->diamanteUserFactory
             ->create($command->email, $command->firstName, $command->lastName);
         $apiUser = $this->apiUserFactory->create($command->email, $command->password);
-
-        if($this->diamanteUserRepository->findUserByEmail($command->email)){
-            throw new \RuntimeException('An account with this email address already exists');
-        }
 
         $diamanteUser->setApiUser($apiUser);
 
@@ -102,5 +111,20 @@ class RegistrationServiceImpl implements RegistrationService
         } catch (\Exception $e) {
             throw new \RuntimeException('Can not confirm registration.');
         }
+    }
+
+    /**
+     * @param Command\RegisterCommand $command
+     * @param DiamanteUser $user
+     */
+    protected function restoreUser(Command\RegisterCommand $command, DiamanteUser $user)
+    {
+        $user->setEmail($command->email);
+        $user->setFirstName($command->firstName);
+        $user->setLastName($command->lastName);
+        $user->setDeleted(false);
+        $user->getApiUser()->setPassword($command->password);
+
+        $this->diamanteUserRepository->store($user);
     }
 }
