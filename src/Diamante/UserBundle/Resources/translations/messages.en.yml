@@ -20,12 +20,12 @@ diamante:
         reset_pwd:      Reset Password
         mass:
           delete:
-            label:      Delete Selected Users
+            label:      Delete сustomers
             messages:
               success:  Successfully deleted selected customers
               fail:     Failed to delete selected customers
           reset_pwd:
-            label:      Force Reset passwords for selected users
+            label:      Reset passwords for customers
             messages:
               success:  Successfully reset passwords for %count% selected users
               fail:     Error occured while resetting passwords.
