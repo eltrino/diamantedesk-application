@@ -1,0 +1,42 @@
+{% import 'OroDataAuditBundle::macros.html.twig' as dataAudit %}
+
+<ul>
+    {% for fieldKey, fieldValue in value %}
+        {% if fieldKey == 'auditData' %}
+            {% for collKey, collValue in fieldValue.new %}
+                {{ collKey }}
+                <li>
+                    <b>{{ collKey }}:</b>
+
+                    {% if collKey == 'reporter' %}
+                        {% set old_reporter = fetch_user_details(fieldValue.old[collKey]) %}
+                        {% set new_reporter = fetch_user_details(collValue) %}
+                        {% if fieldValue.old|length %}
+                            <s>{{ old_reporter.fullName }}</s>
+                        {% endif %}
+                        {{ new_reporter.lastName }}
+                    {% else %}
+                        {% if fieldValue.old|length %}
+                            <s>{{ fieldValue.old[collKey] }}</s>
+                        {% endif %}
+                        {{ collValue }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>
+                <b>{{ fieldKey }}:</b>
+
+                {% if fieldKey == 'reporter' %}
+                    {% set old_reporter = fetch_user_details(fieldValue.old) %}
+                    {% set new_reporter = fetch_user_details(fieldValue.new) %}
+                    {% if old_reporter != '' %}<s>{{ dataAudit.renderFieldValue(old_reporter.fullName) }}</s> {% endif %}
+                    {{ dataAudit.renderFieldValue(new_reporter.fullName) }}
+                {% else %}
+                    <s>{{ dataAudit.renderFieldValue(fieldValue.old) }}</s>
+                    {{ dataAudit.renderFieldValue(fieldValue.new) }}
+                {% endif %}
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

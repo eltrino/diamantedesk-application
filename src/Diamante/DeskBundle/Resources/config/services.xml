@@ -52,6 +52,7 @@
         <parameter key="diamante.mass_action.watch.class">Diamante\DeskBundle\MassAction\WatchAction</parameter>
         <parameter key="diamante.audit_datagrid.configuration.provider.class">Diamante\DeskBundle\Datagrid\Provider\DataAuditConfigurationProvider</parameter>
         <parameter key="diamante.grid_views_load.class">Diamante\DeskBundle\EventListener\GridViewsLoadListener</parameter>
+        <parameter key="diamante.data_audit.listener.class">Diamante\DeskBundle\EventListener\DataAuditGridListener</parameter>
     </parameters>
 
     <services>
@@ -207,6 +208,10 @@
             <argument id="doctrine" type="service"/>
             <argument id="diamante.audit.repository" type="service"/>
             <tag name="oro_datagrid.datasource" type="diamante_combined_audit_datasource"/>
+        </service>
+
+        <service id="diamante.data_audit.listener" class="%diamante.data_audit.listener.class%">
+            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.before.audit-grid" method="onBuildBefore"/>
         </service>
     </services>
 </container>

@@ -66,8 +66,16 @@ class UserDetailsExtension extends \Twig_Extension
      *
      * @throws \Twig_Error_Runtime
      */
-    public function fetchUserDetails(User $user)
+    public function fetchUserDetails($user)
     {
+        if (empty($user)) {
+            return '';
+        }
+
+        if (is_string($user)) {
+            $user = User::fromString($user);
+        }
+
         /**
          * @var UserDetails $details
          */
