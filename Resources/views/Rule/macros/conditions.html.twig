@@ -1,9 +1,11 @@
 {% macro render() %}
     <div class="control-group">
-        <div id="rule-conditions"></div>
-        <ul style="list-style-type: none">
-            <li><a id="add-rule-condition">Add new condition</a></li>
-            <li><a id="add-rule-group">Add new group</a></li>
-        </ul>
+        <div id="condition-block">
+            <div id="list-condition"></div>
+            <ul style="list-style-type: none">
+                <li><a id="add-rule-condition" class="editable">Add new condition</a></li>
+                <li><a id="add-rule-group" class="editable">Add new group</a></li>
+            </ul>
+        </div>
     </div>
 {% endmacro %}

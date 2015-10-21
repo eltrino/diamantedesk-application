@@ -22,8 +22,7 @@
         'entityTitle': form.vars.value.name|default('N/A'),
         'hasAvatar':   true,
         'imagePath':   null
-        }
-        %}
+        } %}
         {{ parent() }}
     {% else %}
         {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.automation.rule.entity_plural_label'|trans}) %}
@@ -32,13 +31,70 @@
 {% endblock pageHeader %}
 
 {% block content_data %}
+    <script type="text/template" id="group-condition-view">
+        Match
+        <span class="match editable x-view">ALL</span>
+        <div class="selector" style="display: none">
+            <span>ALL</span>
+            <select class="condition x-hide x-edit <%= this.cid %>">
+                <option value="ALL">ALL</option>
+                <option value="ANY">ANY</option>
+            </select>
+        </div>
 
-    <script type="text/template" id="target-types-view">
-        <select class="diamante-select-target-types" name="diamante-select-target-types">
-            <% _.each(types, function(type, i) { %>
-            <option value="<%= type %>"><%= type %></option>
-            <%}) %>
-        </select>
+        this conditions
+        <span class="delete editable <%= this.cid %>">delete</span>
+        <span class="edit editable x-view <%= this.cid %>">edit</span>
+        <span class="save editable x-hide x-edit <%= this.cid %>">save</span>
+    </script>
+
+    <script type="text/template" id="item-action">
+        <div class="view-condition">123</div>
+
+        <div class="edit-condition x-hide">123</div>
+
+        <span class="delete editable">delete</span>
+        <span class="save editable x-hide">save</span>
+        <span class="edit editable">edit</span>
+    </script>
+
+    <script type="text/template" id="item-condition">
+        <div class="view-condition"></div>
+
+        <div class="edit-condition x-hide"></div>
+
+        <span class="delete editable">delete</span>
+        <span class="save editable x-hide">save</span>
+        <span class="edit editable">edit</span>
+    </script>
+
+    <script type="text/template" id="item-condition-view">
+        <span class="target editable"><%= target %></span> propery
+        <span class="target editable"><%= condition.property %></span> is
+        <span class="condition editable"><%= condition.name %></span> to
+        <span class="value editable"><%= condition.value %></span>
+    </script>
+
+    <script type="text/template" id="item-condition-edit">
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;">Ticket</span>
+            <select class="target">
+                <% _.each(targets, function(item, key) { %>
+                <option value="<%= key %>"><%= item.name %></option>
+                <%}) %>
+            </select>
+        </div>
+        is
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;">Equal</span>
+            <select class="condition">
+                <% _.each(conditions, function(item, key) { %>
+                <option value="<%= key %>"><%= item.name %></option>
+                <%}) %>
+            </select>
+        </div>
+        to
+        <input class="value" type="text">
     </script>
 
     <script type="text/template" id="target-properties-view">
@@ -49,79 +105,19 @@
         </select>
     </script>
 
-    <script type="text/template" id="rule-dialog-view">
-        <div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable ui-dialog-normal ui-dialog-buttons"
-             tabindex="-1" role="dialog" aria-describedby="ui-id-1"
-             style="width: 520px; height: auto; min-width: 375px; top: 434px; left: 700px; display: block; min-height: 199px;"
-             aria-labelledby="ui-id-2">
-            <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix ui-draggable-handle"><span
-                        id="ui-id-2" class="ui-dialog-title">Add Watcher</span>
-
-                <div class="ui-dialog-titlebar-buttonpane">
-                    <button type="button"
-                            class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close"
-                            role="button" title="close" style="position: static; top: auto; right: auto; margin: 0px;"><span
-                                class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
-                        <span class="ui-button-text">Close</span>
-                    </button>
-                    <a class="ui-dialog-titlebar-maximize ui-corner-all" href="#" title="maximize" role="button"
-                       style="display: none;"><span class="ui-icon ui-icon-extlink">maximize</span></a><a
-                            class="ui-dialog-titlebar-restore ui-corner-all" href="#" title="restore" role="button"
-                            style="display: none; right: -9999em;"><span class="ui-icon ui-icon-newwin">restore</span></a><a
-                            class="ui-dialog-titlebar-minimize ui-corner-all" href="#" title="minimize" role="button"
-                            style="display: none;"><span class="ui-icon ui-icon-minus">minimize</span></a></div>
-            </div>
-            <div id="ui-id-1" class="ui-dialog-content ui-widget-content" style="display: block;" data-layout="separate">
-                <div class="widget-content form-horizontal box-content row-fluid">
-                    <div class="form-container">
-                        <form id="diamante_add_watcher_form">
-                            <input type="submit"
-                                                   style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px;">
-                            <fieldset class="form form-horizontal">
-                                <div class="span6">
-                                    <div class="control-group">
-                                        <div class="control-label wrap">
-                                            <label for="diamante-conditions" class="required">Condition<em>*</em></label>
-                                        </div>
-                                        <div class="controls">
-                                            <select class="diamante-select-conditions" name="diamante-select-conditions">
-                                            <% _.each(conditions, function(item, i) { %>
-                                                <option value="<%= i %>"><%= item.name %></option>
-                                            <%}) %>
-                                            </select>
-                                            <div class="target-types"></div>
-                                            <div class="target-properties"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <div class="form-actions widget-actions">
-                    <div class="pull-right">
-                        <div data-section="adopted" class="widget-actions-section"><span class="action-wrapper"><button
-                                        class="automation-dialog-cancel btn" type="reset">Cancel
-                                </button></span>
-                            <span class="action-wrapper">
-                                <button class="automation-dialog-add btn btn-primary" type="submit">Add</button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </script>
-
     {% set id = 'ruleEdit' %}
 
     <script type="text/javascript">
-        require(['jquery', 'diamanteautomation/js/condition-view'],
-                function($, RuleView) {
-                    $(function() {
-                        new RuleView({fieldId: '#{{ form.json.vars.id }}'});
+        require(['jquery', 'diamanteautomation/js/condition.view'],
+                function ($, ConditionView) {
+                    $(function () {
+                        new ConditionView({fieldId: '#{{ form.json.vars.id }}'});
+                    });
+                });
+        require(['jquery', 'diamanteautomation/js/action.view'],
+                function ($, ActionView) {
+                    $(function () {
+                        new ActionView({fieldId: '#{{ form.json.vars.id }}'});
                     });
                 });
     </script>
@@ -133,8 +129,8 @@
     {
     'title': null,
     'data': [
-        form_row(form.json),
-        _general.render()
+    form_row(form.json),
+    _general.render()
     ]
     }
     ]
