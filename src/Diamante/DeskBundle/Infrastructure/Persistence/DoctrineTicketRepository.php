@@ -182,7 +182,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      * @param array $criteria
      * @return int
      */
-    public function count(array $criteria)
+    public function count(array $criteria = [])
     {
         $qb = $this->_em->createQueryBuilder();
 

@@ -112,4 +112,9 @@ class DiamanteUser extends \Diamante\UserBundle\Model\DiamanteUser
     {
         return __CLASS__;
     }
+
+    public function __toString()
+    {
+        return sprintf("%s %s [DiamanteDesk User]", $this->firstName, $this->lastName);
+    }
 }

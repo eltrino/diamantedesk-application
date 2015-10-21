@@ -115,4 +115,9 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     {
         return __CLASS__;
     }
+
+    public function __toString()
+    {
+        return 'Comment';
+    }
 }
