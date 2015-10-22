@@ -48,7 +48,7 @@ class DoctrineWatcherListRepository extends DoctrineGenericRepository implements
     public function findOne(Ticket $ticket, User $user)
     {
         return $this->findOneBy([
-            'userType' => (string)$user,
+            'userType' => $user,
             'ticket' => $ticket->getId()
         ]);
     }

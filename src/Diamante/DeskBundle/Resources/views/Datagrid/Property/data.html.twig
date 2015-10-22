@@ -8,7 +8,7 @@
                 <li>
                     <b>{{ collKey }}:</b>
 
-                    {% if collKey == 'reporter' %}
+                    {% if collKey == 'reporter' or collKey == 'userType' %}
                         {% set old_reporter = fetch_user_details(fieldValue.old[collKey]) %}
                         {% set new_reporter = fetch_user_details(collValue) %}
                         {% if fieldValue.old|length %}
@@ -27,7 +27,7 @@
             <li>
                 <b>{{ fieldKey }}:</b>
 
-                {% if fieldKey == 'reporter' %}
+                {% if fieldKey == 'reporter' or fieldKey == 'userType' %}
                     {% set old_reporter = fetch_user_details(fieldValue.old) %}
                     {% set new_reporter = fetch_user_details(fieldValue.new) %}
                     {% if old_reporter != '' %}<s>{{ dataAudit.renderFieldValue(old_reporter.fullName) }}</s> {% endif %}
