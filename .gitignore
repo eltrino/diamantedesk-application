@@ -20,3 +20,4 @@
 /app/logs/*
 /app/attachments/*
 phpunit.xml
+.DS_Store
