@@ -1,9 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\ChannelBundle\Migrations\Data\ORM;
+namespace Diamante\DistributionBundle\Migrations\Data\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oro\Bundle\DashboardBundle\Migrations\Data\ORM\AbstractDashboardFixture;
 
 class DefaultSupportDashboard extends AbstractDashboardFixture
