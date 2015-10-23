@@ -8,7 +8,7 @@ DiamanteDesk supports OroCRM version 1.8+.
 
 ### Configuration ###
 
-Add additional configuration to `app/etc/security.yml`:
+Add additional configuration to `app/config/security.yml`:
 
 - to section providers:
 ```yaml

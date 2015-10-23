@@ -17,7 +17,7 @@ php app/console assets:install
 
 ### Configuration ###
 
-Frontend is accessible at [this URL](http://app/portal). This URL should not be covered by standard Oro Platfrom authentication. You should add additional configuration to firewalls section in `app/etc/security.yml`:
+Frontend is accessible at [this URL](http://app/portal). This URL should not be covered by standard Oro Platfrom authentication. You should add additional configuration to firewalls section in `app/config/security.yml`:
 
 ```yml
 front_diamante:

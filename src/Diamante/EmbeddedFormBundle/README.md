@@ -30,7 +30,7 @@ php app/console assets:install
 
 ### Configuration ###
 
-Diamante Embedded Form URL should not be covered by the standard Oro Platfrom authentication. You should add additional configuration to filewalls section in `app/etc/security.yml`:
+Diamante Embedded Form URL should not be covered by the standard Oro Platfrom authentication. You should add additional configuration to filewalls section in `app/config/security.yml`:
 
 ```yml
 diamante_embedded_form:

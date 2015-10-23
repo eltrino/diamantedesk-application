@@ -46,7 +46,7 @@ php app/console assets:install
 
 ### Configuration ###
 
-To download the attachment, add additional configuration to firewalls section in `app/etc/security.yml`
+To download the attachment, add additional configuration to firewalls section in `app/config/security.yml`
 
 ```yml
 diamante_attachments_download:
