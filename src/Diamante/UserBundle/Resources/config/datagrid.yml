@@ -49,7 +49,7 @@ datagrid:
       lastName:
         label: diamante.user.labels.last_name
       active:
-        label: diamante.user.labels.active
+        label: diamante.user.labels.activated
         frontend_type: select
         choices:
           0: No

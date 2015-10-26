@@ -10,6 +10,7 @@ diamante:
         id:             Id
         is_deleted:     Is Deleted
         related_tickets: Tickets
+        activated:      Email Activated
 
       actions:
         create:         Create User
