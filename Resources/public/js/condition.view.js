@@ -20,8 +20,8 @@ define(['underscore',
         el: '#condition-block',
 
         events: {
-            'click #add-rule-condition': '_addCondition',
-            'click #add-rule-group': '_addGroup'
+            'click #add-rule-condition': 'addCondition',
+            'click #add-rule-group': 'addGroup'
         },
 
         /**
@@ -36,12 +36,18 @@ define(['underscore',
             }
         },
 
-        _addCondition: function () {
-            var item = new ConditionItemView({model: new ConditionModel()});
-            this.$('#list-condition').append(item.render().el);
+        addCondition: function () {
+            var data = {
+                "target": "ticket",
+                "condition": "neq",
+                "property": "subject"
+            };
+
+            var item = new ConditionItemView({"model": new ConditionModel(data)});
+            this.$('#list-condition').append(item.renderItemEdit().el);
         },
 
-        _addGroup: function () {
+        addGroup: function () {
             var group = new ConditionGroupView({model: new ConditionModel()});
             this.$('#list-condition').append(group.render().el);
         },
@@ -55,16 +61,15 @@ define(['underscore',
         build: function (mock, parent) {
             var group,
                 isGroup = !_.has(mock, 'condition'),
-                model = new ConditionModel();
+                model = new ConditionModel(mock);
 
-            model.set(mock);
             if (isGroup) {
                 group = new ConditionGroupView({model: model});
                 parent.append(group.render().el);
                 parent = group.$el;
             } else {
                 var item = new ConditionItemView({model: model});
-                parent.append(item.render().el);
+                parent.append(item.renderItemView().el);
             }
 
             if (!_.isEmpty(mock.children)) {
@@ -73,19 +78,6 @@ define(['underscore',
                     that.build(item, parent);
                 });
             }
-        },
-
-        /**
-         * Fill data to collections from hidden inputs
-         *
-         * @returns {*}
-         * @private
-         */
-        _prepareCollections: function () {
-            var rule = $.parseJSON($(this.options.fieldId).val());
-
-            this.getCollection().reset(rule);
-            return this;
         }
     });
 });

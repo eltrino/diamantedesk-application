@@ -1,11 +1,13 @@
-define(['underscore', 'backbone'
+define(["underscore", "backbone"
 ], function (_, Backbone) {
-    'use strict';
+    "use strict";
 
     return {
         data: {
             "id": 1,
-            "condition": {condition: 'eq', property: 'status', value: 'new'},
+            "condition": "eq",
+            "property": "status",
+            "value": "new",
             "action": "notifyByEmail[recipients:{admin@mail.com}]",
             "weight": 0,
             "expression": "AND",
@@ -15,45 +17,98 @@ define(['underscore', 'backbone'
                 "expression": "OR",
                 "children": [{
                     "id": 4,
-                    "condition": {name: 'eq', property: 'status', value: 'new'},
+                    "condition": "eq",
+                    "property": "status",
+                    "value": "new",
                     "weight": 0,
                     "children": [],
-                    "target": "Ticket",
+                    "target": "ticket",
                     "parent": 2,
                     "active": true
                 }, {
                     "id": 5,
-                    "condition": {name: 'contains', property: 'subject', value: 'Default'},
+                    "condition": "contains",
+                    "property": "subject",
+                    "value": "Default",
                     "weight": 0,
                     "children": [],
-                    "target": "Ticket",
+                    "target": "ticket",
                     "parent": 2,
                     "active": true
                 }],
-                "target": "Ticket",
+                "target": "ticket",
                 "parent": 1,
                 "active": true
             }, {
                 "id": 3,
-                "condition": {name: 'neq', property: 'status', value: 'open'},
+                "condition": "neq",
+                "property": "status",
+                "value": "open",
                 "weight": 0,
                 "children": [],
-                "target": "Ticket",
+                "target": "ticket",
+                "parent": 1,
+                "active": true
+            }, {
+                "id": 6,
+                "condition": "hasComments",
+                "weight": 0,
+                "children": [],
+                "target": "ticket",
+                "actionObject": "entity",
                 "parent": 1,
                 "active": true
             }],
-            "target": "Ticket",
+            "target": "ticket",
             "active": true
         },
+
         conditions: {
-            'eq': {name: 'Equal'},
-            'neq': {name: 'Not equal'},
-            'contains': {name: 'Contains'}
+            "eq": {name: "Equal", keywords: ["ticket", "comment", "property"], fields: ['property']},
+            "created": {name: "Created", keywords: ["ticket", "comment", "entity"], fields: []},
+            "hasComments": {name: "Has comment", keywords: ["ticket", "entity"], fields: []},
+            "neq": {name: "Not equal", keywords: ["ticket", "comment", "property"], fields: ['property']},
+            "contains": {name: "Contains", keywords: ["ticket", "comment", "property"], fields: ['property']}
         },
+
         targets: {
-            'ticket': {name: 'Ticket'},
-            'comment': {name: 'Comment'}
+            "ticket": {
+                name: "Ticket",
+                "properties": {
+                    "subject": "Subject",
+                    "status": "Status"
+                }
+            },
+            "comment": {
+                name: "Comment",
+                "properties": {
+                    "text": "comment text"
+                }
+            }
         },
+
+        actionObject: ["entity", "property"],
+
+        conditionTemplates: [
+            {
+                "id": "condition-general",
+                "depends": {
+                    "target": ["ticket", "comment"],
+                    "actionObject": ["property"]
+                    ,
+                    "condition": ["eq", "neq", "contains"]
+                }
+            },
+            {
+                "id": "condition-entity",
+                "depends": {
+                    "target": ["ticket", "comment"],
+                    "actionObject": ["entity"]
+                    ,
+                    "condition": ["created", "hasComments"]
+                }
+            }
+        ]
     }
 
 });

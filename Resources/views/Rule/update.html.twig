@@ -48,10 +48,39 @@
         <span class="save editable x-hide x-edit <%= this.cid %>">save</span>
     </script>
 
-    <script type="text/template" id="item-action">
-        <div class="view-condition">123</div>
+    <script type="text/template" id="item-action-view">
+        <span class="editable">Send</span> notification by
+        <span class="editable">email</span> to
+        <span class="editable">reporter</span>
+    </script>
 
-        <div class="edit-condition x-hide">123</div>
+    <script type="text/template" id="item-action-edit">
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;">Send</span>
+            <select class="">
+                <option value="send">Send</option>
+            </select>
+        </div>
+        notification by
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;">email</span>
+            <select class="">
+                <option value="email">email</option>
+            </select>
+        </div>
+        to
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;">reporter</span>
+            <select class="">
+                <option value="reporter">reporter</option>
+            </select>
+        </div>
+    </script>
+
+    <script type="text/template" id="item-action">
+        <div class="view-action"></div>
+
+        <div class="edit-action x-hide"></div>
 
         <span class="delete editable">delete</span>
         <span class="save editable x-hide">save</span>
@@ -68,33 +97,83 @@
         <span class="edit editable">edit</span>
     </script>
 
-    <script type="text/template" id="item-condition-view">
-        <span class="target editable"><%= target %></span> propery
-        <span class="target editable"><%= condition.property %></span> is
-        <span class="condition editable"><%= condition.name %></span> to
-        <span class="value editable"><%= condition.value %></span>
+    <script type="text/template" id="condition-general-view">
+        <span class="target editable"><%= target %></span>
+        <span class="target editable"><%= actionObject %></span> is
+        <span class="target editable"><%= property %></span>
+        <span class="condition editable"><%= condition %></span> to
+        <span class="value editable"><%= value %></span>
     </script>
 
-    <script type="text/template" id="item-condition-edit">
+    <script type="text/template" id="condition-general-edit">
         <div class="selector" style="width: 72px;">
-            <span style="width: 70px;">Ticket</span>
-            <select class="target">
+            <span style="width: 70px;"><%= targets[attrs.target].name %></span>
+            <select data-property="target" class="target">
                 <% _.each(targets, function(item, key) { %>
-                <option value="<%= key %>"><%= item.name %></option>
+                <option <% if (attrs.target == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>
+                <%}) %>
+            </select>
+        </div>
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;"><%= attrs.actionObject %></span>
+            <select data-property="actionObject" class="action-object">
+                <% _.each(actionObject, function(item, key) { %>
+                <option <% if (attrs.actionObject == item) { %> selected <% } %> value="<%= item %>"><%= item %></option>
+                <%}) %>
+            </select>
+        </div>
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;"><%= targets[attrs.target].properties[attrs.property] %></span>
+            <select data-property="property" class="property">
+                <% _.each(properties, function(item, key) { %>
+                <option <% if (attrs.property == key) { %> selected <% } %> value="<%= key %>"><%= item %></option>
                 <%}) %>
             </select>
         </div>
         is
         <div class="selector" style="width: 72px;">
-            <span style="width: 70px;">Equal</span>
-            <select class="condition">
+            <span style="width: 70px;"><%= conditions[attrs.condition].name %></span>
+            <select data-property="condition" class="condition">
                 <% _.each(conditions, function(item, key) { %>
-                <option value="<%= key %>"><%= item.name %></option>
+                <option <% if (attrs.condition == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>
                 <%}) %>
             </select>
         </div>
         to
-        <input class="value" type="text">
+        <input data-property="value" class="value" type="text" value="<%= attrs.value %>">
+    </script>
+
+    <script type="text/template" id="condition-entity-view">
+        <span class="target editable"><%= target %></span>
+        <span class="target editable"><%= actionObject %></span>
+        <span class="condition editable"><%= condition %></span>
+    </script>
+
+    <script type="text/template" id="condition-entity-edit">
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;"><%= targets[attrs.target].name %></span>
+            <select data-property="target" class="target">
+                <% _.each(targets, function(item, key) { %>
+                <option <% if (attrs.target == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>
+                <%}) %>
+            </select>
+        </div>
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;"><%= attrs.actionObject %></span>
+            <select data-property="actionObject" class="action-object">
+                <% _.each(actionObject, function(item, key) { %>
+                <option <% if (attrs.actionObject == item) { %> selected <% } %> value="<%= item %>"><%= item %></option>
+                <%}) %>
+            </select>
+        </div>
+        <div class="selector" style="width: 72px;">
+            <span style="width: 70px;"><%= conditions[attrs.condition].name %></span>
+            <select data-property="condition" class="condition">
+                <% _.each(conditions, function(item, key) { %>
+                <option <% if (attrs.condition == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>
+                <%}) %>
+            </select>
+        </div>
     </script>
 
     <script type="text/template" id="target-properties-view">
@@ -108,15 +187,10 @@
     {% set id = 'ruleEdit' %}
 
     <script type="text/javascript">
-        require(['jquery', 'diamanteautomation/js/condition.view'],
-                function ($, ConditionView) {
+        require(['jquery', 'diamanteautomation/js/condition.view', 'diamanteautomation/js/action.view'],
+                function ($, ConditionView, ActionView) {
                     $(function () {
                         new ConditionView({fieldId: '#{{ form.json.vars.id }}'});
-                    });
-                });
-        require(['jquery', 'diamanteautomation/js/action.view'],
-                function ($, ActionView) {
-                    $(function () {
                         new ActionView({fieldId: '#{{ form.json.vars.id }}'});
                     });
                 });

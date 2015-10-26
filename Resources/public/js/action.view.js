@@ -24,7 +24,7 @@ define(['underscore',
 
         addAction: function () {
             var item = new ActionItemView();
-            this.$('#list-action').append(item.render().el);
+            this.$('#list-action').append(item.renderEdit().el);
         }
     });
 });
