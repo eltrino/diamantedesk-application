@@ -42,7 +42,7 @@ class SortHelper
      * @param OrmDatasource $dataSource
      * @param $direction
      */
-    public static function applySorting(OrmDatasource $dataSource, $direction)
+    public static function applySorting(OrmDatasource $dataSource, $sortingKey = null, $direction)
     {
         $qb = $dataSource->getQueryBuilder();
         $qb->addOrderBy(self::SORT_BRANCH_KEY, $direction);
