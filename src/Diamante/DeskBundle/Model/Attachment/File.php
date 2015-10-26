@@ -63,8 +63,19 @@ class File
         return strtolower($fileInfo['extension']);
     }
 
+    //TODO: Refactor this part, as it is a fix for a dataaudit.
     public function __toString()
     {
-        return $this->getPathname();
+        return $this->getLocation();
+    }
+
+    public function getLocation()
+    {
+        if (!empty($this->pathname)) {
+            return '';
+        }
+
+        $location = array_slice(explode("/", $this->getPathname()), -2);
+        return sprintf("/%s/%s", $location[0], $location[1]);
     }
 }

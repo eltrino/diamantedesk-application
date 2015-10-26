@@ -294,7 +294,11 @@
     {% if entity.reporter %}
         {% set reporter = fetch_user_details(entity.reporter) %}
         {% set reporterDisplayName = reporter.getFullName != ' ' ? reporter.getFullName : reporter.getEmail %}
-        {% set reporterModel = fetch_diamante_user(entity.reporter) %}
+        {% if entity.reporter.isDiamanteUser %}
+            {% set reporterModel = fetch_diamante_user(entity.reporter) %}
+        {% else %}
+            {% set reporterModel = {'isDeleted': false} %}
+        {% endif %}
     {% endif %}
 
     {% set dataSubBlocks = [DiamUI.attributeRow('diamante.desk.attributes.subject'|trans, entity.subject)] %}
