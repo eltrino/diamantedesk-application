@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\EventListener;
 
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
@@ -84,6 +85,29 @@ class EntityListener implements OptionalListenerInterface
         $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
         if ($loggedUser instanceof ApiUser) {
             $this->loggableManager->handlePostPersist($event->getEntity(), $event->getEntityManager());
+        }
+    }
+
+    /**
+     * @param LifecycleEventArgs $eventArgs
+     */
+    public function postRemove(LifecycleEventArgs $eventArgs)
+    {
+        $manager = $eventArgs->getEntityManager();
+        $entity = $eventArgs->getEntity();
+
+        if (!$entity instanceof Ticket) {
+            return;
+        }
+
+        $remainingTickets = $manager->getRepository('DiamanteDeskBundle:Ticket')->count();
+
+        if (0 === (int)$remainingTickets) {
+            $records = $manager->getRepository('DiamanteDeskBundle:TicketTimeline')->getAll();
+
+            foreach ($records as $record) {
+                $manager->remove($record);
+            }
         }
     }
 }
