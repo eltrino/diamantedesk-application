@@ -7,13 +7,15 @@ define(["underscore", "backbone"
             "id": 1,
             "condition": "eq",
             "property": "status",
-            "value": "new",
-            "action": "notifyByEmail[recipients:{admin@mail.com}]",
+            "value": "current",
             "weight": 0,
             "expression": "AND",
             "children": [{
                 "id": 2,
                 "weight": 0,
+                "condition": "eq",
+                "property": "status",
+                "value": "new",
                 "expression": "OR",
                 "children": [{
                     "id": 4,
@@ -88,6 +90,15 @@ define(["underscore", "backbone"
         },
 
         actionObject: ["entity", "property"],
+
+        expressions: {
+            "OR": {
+                name: "ANY"
+            },
+            "AND": {
+                name: "ALL"
+            }
+        },
 
         conditionTemplates: [
             {

@@ -1,9 +1,15 @@
 define(['underscore',
     'backbone',
-    './action.item.view'
+    './action.item.view',
+    './action.collection',
+    './action.model',
+    './actions.mock'
 ], function (_,
              Backbone,
-             ActionItemView) {
+             ActionItemView,
+             ActionCollection,
+             ActionModel,
+             Mock) {
     'use strict';
 
     var $ = Backbone.$;
@@ -19,12 +25,28 @@ define(['underscore',
          * Constructor
          */
         initialize: function () {
+            this.mock = Mock.data;
+            this.collection = new ActionCollection();
 
+            if (_.isObject(this.mock)) {
+                this.render();
+            }
         },
 
         addAction: function () {
-            var item = new ActionItemView();
-            this.$('#list-action').append(item.renderEdit().el);
+            var view = new ActionItemView();
+            this.$('#list-action').append(view.renderEdit().el);
+        },
+
+        render: function() {
+            var that = this;
+
+            _.each(this.mock, function(item) {
+                var model = new ActionModel(item);
+                that.collection.add(model);
+                var view = new ActionItemView({"model": model, "collection": that.collection});
+                that.$('#list-action').append(view.renderItemView().el);
+            });
         }
     });
 });

@@ -22,18 +22,49 @@ define(['underscore', 'backbone', './mock'
             this.mock = Mock;
         },
 
-        render: function(template) {
+        editItem: function () {
+            $('.edit-action', this.$el).html(this.renderEdit());
+            $('.edit-action, .save', this.$el).removeClass('x-hide');
+            $('.view-action, .edit', this.$el).addClass('x-hide');
+        },
+
+        saveItem: function () {
+            $('.view-action', this.$el).html(this.renderView());
+            $('.edit-action, .save', this.$el).addClass('x-hide');
+            $('.view-action, .edit', this.$el).removeClass('x-hide');
+
+            this.collection.trigger("toJson");
+        },
+
+        render: function (template, container) {
             this.$el.html(this.template());
-            $('.view-action', this.$el).html(template);
+            $(container, this.$el).html(template);
             return this;
         },
 
-        renderView: function () {
-            return this.render(this.viewTemplate());
+        renderItemView: function () {
+            return this.render(this.renderView(), '.view-action');
         },
 
-        renderEdit: function() {
-            return this.render(this.editTemplate());
+        renderItemEdit: function () {
+            var template = this.render(this.renderEdit(), '.edit-action');
+            $('.save', this.$el).addClass('x-hide');
+            $('.edit-action, .edit', this.$el).removeClass('x-hide');
+
+            return template;
+        },
+
+        renderEdit: function () {
+            var data = {
+                'actions': this.mock.data,
+                'attrs': this.model.attributes
+            };
+
+            return this.editTemplate(data);
+        },
+
+        renderView: function () {
+            return this.viewTemplate(this.model.attributes);
         }
     });
 });

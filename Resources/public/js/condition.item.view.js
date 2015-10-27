@@ -1,5 +1,5 @@
-define(['underscore', 'backbone', './mock'
-], function (_, Backbone, Mock) {
+define(['underscore', 'backbone', './mock', './condition.collection'
+], function (_, Backbone, Mock, ConditionCollection) {
     'use strict';
 
     var $ = Backbone.$;
@@ -54,6 +54,8 @@ define(['underscore', 'backbone', './mock'
             $('.view-condition', this.$el).html(this.renderView());
             $('.edit-condition, .save', this.$el).addClass('x-hide');
             $('.view-condition, .edit', this.$el).removeClass('x-hide');
+
+            this.collection.trigger("toJson");
         },
 
         fillModel: function () {
@@ -68,9 +70,9 @@ define(['underscore', 'backbone', './mock'
         },
 
         changeElement: function (e) {
-            var el = $(e.target);
-            var property = el.data('property');
-            var value = el.val();
+            var el = $(e.target),
+                property = el.data('property'),
+                value = el.val();
 
             this.model.set(property, value);
         },
