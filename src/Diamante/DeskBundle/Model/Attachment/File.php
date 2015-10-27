@@ -71,7 +71,7 @@ class File
 
     public function getLocation()
     {
-        if (!empty($this->pathname)) {
+        if (empty($this->pathname)) {
             return '';
         }
 
