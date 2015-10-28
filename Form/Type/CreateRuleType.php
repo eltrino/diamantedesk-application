@@ -27,11 +27,21 @@ class CreateRuleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'json',
-            'hidden',
+            'name',
+            'text',
             array(
                 'required' => true,
             )
+        );
+
+        $builder->add(
+            'conditions',
+            'hidden'
+        );
+
+        $builder->add(
+            'actions',
+            'hidden'
         );
     }
 

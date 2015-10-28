@@ -10,6 +10,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Diamante\AutomationBundle\Api\Command\RuleCommand;
+use Diamante\AutomationBundle\Api\Command\ConditionCommand;
 use JMS\Serializer\SerializerBuilder;
 use Diamante\AutomationBundle\Form\Type\CreateRuleType;
 use Diamante\AutomationBundle\Api\Command\ViewRuleCommand;
@@ -152,13 +153,15 @@ class RuleController extends Controller
         $serializer = SerializerBuilder::create()->build();
         $repository = $this->get('diamante_automation.workflow_rule.repository');
         $rule = $repository->get($id);
-        $command = RuleCommand::createFromRule($rule);
-        $json = $serializer->serialize($command, 'json');
+        $conditionCommand = ConditionCommand::createFromRule($rule);
+
         $viewCommand = new ViewRuleCommand();
         $viewCommand->id = $id;
-        $viewCommand->json = $json;
+        $viewCommand->name = 'name';
+        $viewCommand->conditions = $serializer->serialize($conditionCommand, 'json');
+        $viewCommand->actions = '{"actions": []}';
 
-        //        $updateCommand = $serializer->deserialize($content, 'Diamante\AutomationBundle\Api\Command\UpdateRuleCommand', 'json');
+        // $updateCommand = $serializer->deserialize($content, 'Diamante\AutomationBundle\Api\Command\UpdateRuleCommand', 'json');
 
         try {
             $form = $this->createForm('diamante_rule_form', $viewCommand);
@@ -191,6 +194,18 @@ class RuleController extends Controller
 
         return $result;
 
+    }
+
+    private function edit($command, $form)
+    {
+        $response = null;
+        try {
+            $this->handle($form);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = array('form' => $form->createView());
+        }
+        return $response;
     }
 
     /**
@@ -317,28 +332,4 @@ class RuleController extends Controller
             $this->get('translator')->trans($message)
         );
     }
-
-    /**
-     * @param ViewRuleCommand $command
-     * @param Form $form
-     * @return array
-     */
-    private function edit(ViewRuleCommand $command, $form)
-    {
-        $response = null;
-        try {
-            $this->handle($form);
-            if ($command->id) {
-                $this->addSuccessMessage('diamante.desk.branch.messages.save.success');
-            } else {
-                $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
-            }
-            $response = $this->getSuccessSaveResponse('diamante_automation_update', 'diamante_automation_view', ['id' => $command->id]);
-        } catch (\Exception $e) {
-            $this->handleException($e);
-            $response = array('form' => $form->createView());
-        }
-        return $response;
-    }
-
 }

@@ -35,5 +35,15 @@ class ViewRuleCommand
     /**
      * @var string
      */
-    public $json;
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $conditions;
+
+    /**
+     * @var string
+     */
+    public $actions;
 }

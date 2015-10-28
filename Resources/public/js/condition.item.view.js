@@ -1,5 +1,5 @@
-define(['underscore', 'backbone', './mock', './condition.collection'
-], function (_, Backbone, Mock, ConditionCollection) {
+define(['underscore', 'backbone', './mock'
+], function (_, Backbone, Mock) {
     'use strict';
 
     var $ = Backbone.$;
@@ -10,7 +10,7 @@ define(['underscore', 'backbone', './mock', './condition.collection'
         template: _.template($('#item-condition').html()),
 
         events: {
-            'click .delete': 'remove',
+            'click .delete': 'removeView',
             'click .save': 'saveItem',
             'click .edit': 'editItem',
             'change select': 'changeElement',
@@ -24,6 +24,12 @@ define(['underscore', 'backbone', './mock', './condition.collection'
             this.listenTo(this.model, 'change', this.redrawEdit);
             this.listenTo(this.model, 'change:actionObject', this.changeModelField);
             this.listenTo(this.model, 'change:target', this.changeModelField);
+        },
+
+        removeView: function () {
+            this.collection.remove(this.model);
+            this.remove();
+            this.collection.trigger("toJson");
         },
 
         changeModelField: function () {
@@ -89,8 +95,8 @@ define(['underscore', 'backbone', './mock', './condition.collection'
 
         renderItemEdit: function () {
             var template = this.render(this.renderEdit(), '.edit-condition');
-            $('.save', this.$el).addClass('x-hide');
-            $('.edit-condition, .edit', this.$el).removeClass('x-hide');
+            $('.edit', this.$el).addClass('x-hide');
+            $('.edit-condition, .save', this.$el).removeClass('x-hide');
 
             return template;
         },

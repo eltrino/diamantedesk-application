@@ -50,4 +50,14 @@ abstract class AbstractCondition implements Condition
 
         return $class;
     }
+
+    public function getProperty()
+    {
+        return $this->property;
+    }
+
+    public function getValue()
+    {
+        return $this->expectedValue;
+    }
 }

@@ -1,10 +1,11 @@
-{% macro render() %}
+{% macro render(form) %}
     <div class="control-group">
         <div id="action-block">
             <div id="list-action"></div>
             <ul style="list-style-type: none">
                 <li><a id="add-rule-action" class="editable">Add new action</a></li>
             </ul>
+            {{ form_row(form.actions) }}
         </div>
     </div>
 

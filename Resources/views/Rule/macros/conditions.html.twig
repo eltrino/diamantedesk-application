@@ -6,7 +6,7 @@
                 <li><a id="add-rule-condition" class="editable">Add new condition</a></li>
                 <li><a id="add-rule-group" class="editable">Add new group</a></li>
             </ul>
-            {{ form_row(form.json) }}
+            {{ form_row(form.conditions) }}
         </div>
     </div>
 
@@ -64,7 +64,7 @@
         <span class="target editable"><%= actionObject %></span> is
         <span class="target editable"><%= property %></span>
         <span class="condition editable"><%= condition %></span> to
-        <span class="value editable"><%= value %></span>
+        <span class="value editable"><% if (this.model.has('value')) { %> <%= value %> <% } %></span>
     </script>
 
     <script type="text/template" id="condition-general-edit">

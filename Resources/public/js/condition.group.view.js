@@ -14,7 +14,7 @@ define(['underscore', 'backbone', './mock'
         initialize: function () {
             var that = this,
                 events = {
-                    'click .delete': 'remove',
+                    'click .delete': 'removeGroup',
                     'click .save': 'saveGroup',
                     'click .edit': 'editGroup',
                     'change select': 'changeElement'
@@ -29,6 +29,12 @@ define(['underscore', 'backbone', './mock'
             });
 
             this.listenTo(this.model, 'expressionChanged', this.redrawEdit);
+        },
+
+        removeGroup: function () {
+            this.collection.remove(this.model);
+            this.remove();
+            this.collection.trigger("toJson");
         },
 
         redrawEdit: function() {

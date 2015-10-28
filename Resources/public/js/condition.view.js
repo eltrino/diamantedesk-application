@@ -27,8 +27,10 @@ define(['underscore',
         /**
          * Constructor
          */
-        initialize: function () {
-            this.mock = Mock.data;
+        initialize: function (options) {
+            this.options = options;
+            this.mock = JSON.parse(this.$(this.options.fieldId).val());
+
             this.collection = new ConditionCollection();
 
             this.listenTo(this.collection, 'toJson', this.toJson);
@@ -39,17 +41,20 @@ define(['underscore',
         },
 
         toJson: function() {
-            this.$el.children('input').val(JSON.stringify(this.collection.toJSON()));
+            console.log(JSON.stringify(this.collection.toJSON()));
+            this.$(this.options.fieldId).val(JSON.stringify(this.collection.toJSON()));
         },
 
-        addCondition: function () {
+        addCondition: function (e) {
+            e.preventDefault();
+
             var defaultCondition = {
                 "target": "ticket",
                 "condition": "neq",
                 "property": "subject"
             };
-
-            var item = new ConditionItemView({"model": new ConditionModel(defaultCondition)});
+            var model = this.collection.add(defaultCondition);
+            var item = new ConditionItemView({"model": model, "collection": this.collection});
             this.$('#list-condition').append(item.renderItemEdit().el);
         },
 
@@ -61,7 +66,7 @@ define(['underscore',
         render: function () {
             var parent = this.$('#list-condition');
             this.build(this.mock, parent);
-            this.collection.trigger("toJson");
+            //this.collection.trigger("toJson");
         },
 
         build: function (mock, parent) {

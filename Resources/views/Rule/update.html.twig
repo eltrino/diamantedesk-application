@@ -37,8 +37,8 @@
         require(['jquery', 'diamanteautomation/js/condition.view', 'diamanteautomation/js/action.view'],
                 function ($, ConditionView, ActionView) {
                     $(function () {
-                        new ConditionView({fieldId: '#{{ form.json.vars.id }}'});
-                        new ActionView({fieldId: '#{{ form.json.vars.id }}'});
+                        new ConditionView({fieldId: '#{{ form.conditions.vars.id }}'});
+                        new ActionView({fieldId: '#{{ form.actions.vars.id }}'});
                     });
                 });
     </script>
@@ -50,7 +50,7 @@
     {
     'title': null,
     'data': [
-    _general.render()
+    _general.render(form)
     ]
     }
     ]
@@ -71,7 +71,7 @@
     'subblocks': [
     {
     'title': null,
-    'data': [_actions.render()]
+    'data': [_actions.render(form)]
     }]
     }]
     ) %}
