@@ -44,24 +44,6 @@ class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function isExecutedFromInstallCommand()
-    {
-        $request = Request::createFromGlobals();
-        $args = $request->server->get('argv');
-        if (!is_array($args)) {
-            // Executed from diamantedesk-application
-            return true;
-        } elseif (isset($args[1])) {
-            // Executed from install command
-            return $args[1] === 'diamante:install';
-        }
-        // Executed from oro:migration:load
-        return false;
-    }
-
     private function auditFieldTypeExists(Schema $schema, $type)
     {
         $table = $schema->getTable('oro_audit_field');
