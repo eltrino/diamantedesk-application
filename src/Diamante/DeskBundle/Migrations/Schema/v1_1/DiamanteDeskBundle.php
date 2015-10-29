@@ -20,16 +20,8 @@ use Oro\Bundle\DataAuditBundle\Migration\Extension\AuditFieldExtensionAwareInter
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
-class DiamanteDeskBundle implements Migration, AuditFieldExtensionAwareInterface
+class DiamanteDeskBundle implements Migration
 {
-    /** @var AuditFieldExtension */
-    private $auditFieldExtension;
-
-    public function setAuditFieldExtension(AuditFieldExtension $extension)
-    {
-        $this->auditFieldExtension = $extension;
-    }
-
     public function up(Schema $schema, QueryBag $queries)
     {
         $queries->addQuery(
