@@ -21,6 +21,7 @@ use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Entity\BusinessRule;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\AutomationBundle\Model\Target;
+use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 
 class RuleServiceImpl implements RuleService
 {
@@ -41,8 +42,7 @@ class RuleServiceImpl implements RuleService
     public function __construct(
         DoctrineGenericRepository $workflowRuleRepository,
         DoctrineGenericRepository $businessRuleRepository
-    )
-    {
+    ) {
         $this->workflowRuleRepository = $workflowRuleRepository;
         $this->businessRuleRepository = $businessRuleRepository;
     }
@@ -68,7 +68,7 @@ class RuleServiceImpl implements RuleService
      *
      * @return \Diamante\AutomationBundle\Model\Rule
      */
-    public function loadWorkflowRule(RuleCommand $command)
+    public function loadWorkflowRule($command)
     {
         $rule = $this->workflowRuleRepository->get($command->id);
 
@@ -127,12 +127,14 @@ class RuleServiceImpl implements RuleService
         return;
     }
 
-    public function updateWorkflowRule(RuleCommand $command)
+    public function updateWorkflowRule($command)
     {
         $rule = $this->loadWorkflowRule($command);
+
+        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
         $rule->update(
             $command->expression,
-            $command->condition,
+            $condition,
             $command->action,
             $command->weight,
             $command->active,
@@ -141,6 +143,15 @@ class RuleServiceImpl implements RuleService
         );
 
         $this->workflowRuleRepository->store($rule);
+
+        if ($command->children) {
+            foreach ($command->children as $child) {
+                $child->parent = $rule;
+                $this->updateWorkflowRule($child);
+            }
+        }
+
+        return $this;
     }
 
     public function updateBusinessRule(RuleCommand $command)
@@ -159,17 +170,20 @@ class RuleServiceImpl implements RuleService
         $this->businessRuleRepository->store($rule);
     }
 
-    public function deleteBusinessRule(RuleCommand $command) {
+    public function deleteBusinessRule(RuleCommand $command)
+    {
         $rule = $this->loadBusinessRule($command);
         $this->businessRuleRepository->remove($rule);
     }
 
-    public function deleteWorkflowRule(RuleCommand $command) {
+    public function deleteWorkflowRule($command)
+    {
         $rule = $this->loadWorkflowRule($command);
         $this->workflowRuleRepository->remove($rule);
     }
 
-    public function activateWorkflowRule(RuleCommand $command) {
+    public function activateWorkflowRule(RuleCommand $command)
+    {
         $rule = $this->loadWorkflowRule($command);
         $rule->activate();
         $this->workflowRuleRepository->store($rule);
@@ -177,7 +191,8 @@ class RuleServiceImpl implements RuleService
         return $rule;
     }
 
-    public function activateBusinessRule(RuleCommand $command) {
+    public function activateBusinessRule(RuleCommand $command)
+    {
         $rule = $this->loadBusinessRule($command);
         $rule->activate();
         $this->businessRuleRepository->store($rule);
@@ -185,7 +200,8 @@ class RuleServiceImpl implements RuleService
         return $rule;
     }
 
-    public function deactivateWorkflowRule(RuleCommand $command) {
+    public function deactivateWorkflowRule(RuleCommand $command)
+    {
         $rule = $this->loadWorkflowRule($command);
         $rule->deactivate();
         $this->workflowRuleRepository->store($rule);
@@ -193,7 +209,8 @@ class RuleServiceImpl implements RuleService
         return $rule;
     }
 
-    public function deactivateBusinessRule(RuleCommand $command) {
+    public function deactivateBusinessRule(RuleCommand $command)
+    {
         $rule = $this->loadBusinessRule($command);
         $rule->deactivate();
         $this->businessRuleRepository->store($rule);
@@ -208,12 +225,13 @@ class RuleServiceImpl implements RuleService
      * @return \Diamante\AutomationBundle\Model\Rule|void
      * @throws \Exception
      */
-    public function actionRule(RuleCommand $command, $action) {
+    public function actionRule($command, $action)
+    {
         if ($command->mode !== EngineImpl::MODE_BUSINESS && $command->mode !== EngineImpl::MODE_WORKFLOW) {
             throw new \RuntimeException('Incorrect rule mode.');
         }
 
-        $method = sprintf("%s%sRule",$action, ucfirst($command->mode));
+        $method = sprintf("%s%sRule", $action, ucfirst($command->mode));
 
         if (!method_exists($this, $method)) {
             throw new \RuntimeException('Rule action does not exists.');

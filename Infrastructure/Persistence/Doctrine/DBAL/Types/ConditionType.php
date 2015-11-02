@@ -40,6 +40,12 @@ class ConditionType extends StringType
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return ConditionFactory::getConditionFor($value);
+        try {
+            $condition = ConditionFactory::getConditionFor($value);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return $condition;
     }
 }

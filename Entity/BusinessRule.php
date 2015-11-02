@@ -83,6 +83,20 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
      */
     protected $expression;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     */
+    protected $updatedAt;
+
     public static function getClassName()
     {
         return __CLASS__;

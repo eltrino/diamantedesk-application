@@ -38,7 +38,9 @@ class ViewRuleCommand
     public $name;
 
     /**
-     * @var string
+     * @var array
+     *
+     * @Type("array<Diamante\AutomationBundle\Api\Command\ConditionCommand>")
      */
     public $conditions;
 

@@ -57,11 +57,6 @@
     {% set id = 'branchUpdate' %}
 
     {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.forms.name'|trans, entity.name)] %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.key'|trans, entity.key)]) %}
-
-    {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssignee|oro_format_name : 'diamante.desk.common.not_defined'|trans %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.default_assignee'|trans, defaultAssigneeFullName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
     {% set dataBlocks =
         [{
@@ -73,45 +68,6 @@
             }]
         }]
     %}
-
-    {% set description = entity.description %}
-    {% set noDescription %}
-    <span>{{ 'diamante.desk.common.no_description'|trans }}</span>
-    {% endset %}
-    {% set dataBlocks = dataBlocks|merge([{
-        'title': 'diamante.desk.common.description'|trans,
-        'subblocks':[{
-            'title': null,
-            'data': [description ? description : noDescription]}]
-        }]
-    ) %}
-
-    {% if branchEmailConfiguration %}
-        {% set notDefined %}
-        <span>{{ 'diamante.desk.common.not_defined'|trans }}</span>
-        {% endset %}
-        {% set supportAdress = EA.email_address_simple(branchEmailConfiguration.supportAddress) %}
-        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', supportAdress ? supportAdress : notDefined)] %}
-        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains ? branchEmailConfiguration.customerDomains : notDefined)]) %}
-
-        {% set dataBlocks = dataBlocks|merge([{
-            'title': 'Email Configuration',
-            'subblocks':[{
-                'data': EmailConfDataSubBlocks
-            }]
-        }]) %}
-    {% endif %}
-
-    {% set dataBlocks = dataBlocks|merge([{
-        'title' : 'diamante.desk.ticket.entity_plural_label'|trans,
-        'subblocks': [
-            {
-                'title' : null,
-                'data' : [dataGrid.renderGrid('diamante-branch-tickets-grid', { branch: entity.id }, { cssClass: 'inner-grid diam-tickets' })],
-                'useSpan': false
-            }
-        ]
-    }]) %}
 
     {% set data = {'dataBlocks': dataBlocks} %}
     {{ parent() }}

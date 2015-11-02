@@ -2,24 +2,16 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% set gridName = 'diamante-workflow-grid' %}
 
-{% set pageTitle = 'diamante.desk.branch.entity_plural_label'|trans %}
+{% set pageTitle = 'diamante.automation.rule.entity_plural_label'|trans %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Branch') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:WorkflowRule') %}
         {{
             UI.addButton({
-                'path' : path('diamante_branch_create'),
-                'title' : 'diamante.desk.ui.create'|trans,
-                'label' : 'diamante.desk.ui.create'|trans
+                'path' : path('diamante_automation_create'),
+                'title' : 'diamante.automation.ui.create'|trans,
+                'label' : 'diamante.automation.ui.create'|trans
             })
         }}
     {% endif %}
-    <script>
-        require(['jquery',  'oroui/js/mediator'],
-            function($, mediator) {
-                mediator.on('grid_render:complete', function (element) {
-                    $(element).addClass('diam-branch-grid')
-                });
-            });
-    </script>
 {% endblock %}

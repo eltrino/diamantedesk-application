@@ -8,6 +8,13 @@ diamante:
         create:
           error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
           success:         Rule successfully created.
+      columns:
+        name: name
+      actions:
+        view: View Rule
+        edit: Edit Rule
+        remove: Remove Rule
+        remove_mass: Remove Rules
 
     ui:
       create:              Create

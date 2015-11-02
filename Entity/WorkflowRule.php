@@ -82,4 +82,18 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule impleme
      * @ORM\Column(type="string", nullable=true)
      */
     protected $expression;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     */
+    protected $updatedAt;
 }

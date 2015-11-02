@@ -40,9 +40,45 @@ define(['underscore',
             }
         },
 
-        toJson: function() {
-            console.log(JSON.stringify(this.collection.toJSON()));
-            this.$(this.options.fieldId).val(JSON.stringify(this.collection.toJSON()));
+        toJson: function () {
+            console.log(this.collection.toJSON());
+            var jsonTree = this.unFlatten(this.collection.toJSON());
+            this.$(this.options.fieldId).val(JSON.stringify(jsonTree));
+        },
+
+        unFlatten: function (array, parent, tree) {
+            var that = this,
+                children,
+                isChild;
+
+            tree = typeof tree !== 'undefined' ? tree : [];
+
+            if (typeof parent !== 'undefined') {
+                isChild = function (child) {
+                    return parent.id == child.parent;
+                };
+            } else {
+                isChild = function (child) {
+                    return !_.has(child, 'parent');
+                };
+            }
+
+            children = _.filter(array, function (item) {
+                return isChild(item);
+            });
+
+            if (!_.isEmpty(children)) {
+                if (typeof parent === 'undefined') {
+                    tree = children[0];
+                } else {
+                    parent['children'] = children
+                }
+                _.each(children, function (child) {
+                    that.unFlatten(array, child)
+                });
+
+                return tree;
+            }
         },
 
         addCondition: function (e) {
@@ -66,7 +102,7 @@ define(['underscore',
         render: function () {
             var parent = this.$('#list-condition');
             this.build(this.mock, parent);
-            //this.collection.trigger("toJson");
+            this.collection.trigger("toJson");
         },
 
         build: function (mock, parent) {
@@ -82,10 +118,10 @@ define(['underscore',
                 group = new ConditionGroupView({model: model, "collection": this.collection});
                 parent.append(group.renderItemView().el);
                 parent = group.$el;
+            } else {
+                var item = new ConditionItemView({model: model, "collection": this.collection});
+                parent.append(item.renderItemView().el);
             }
-
-            var item = new ConditionItemView({model: model, "collection": this.collection});
-            parent.append(item.renderItemView().el);
 
             if (hasChildren) {
                 var that = this;

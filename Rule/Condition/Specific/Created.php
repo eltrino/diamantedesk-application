@@ -32,5 +32,8 @@ class Created extends AbstractCondition
         return self::CREATE_ACTION == $fact->getActionType();
     }
 
-
+    public function __toString()
+    {
+        return sprintf("%s", $this->getClass());
+    }
 }

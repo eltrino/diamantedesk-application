@@ -66,13 +66,17 @@ define(['underscore', 'backbone', './mock'
 
         fillModel: function () {
             var elements = this.$('select, input'),
-                that = this;
+                that = this,
+                generalProperties;
 
+            generalProperties = _.pick(this.model.attributes, 'id');
             this.model.clear({silent: true});
             _.each(elements, function (item) {
                 var el = that.$(item);
                 that.model.set(el.data('property'), el.val(), {silent: true});
             });
+            this.model.set(generalProperties, {silent: true});
+            console.log(this.model.attributes);
         },
 
         changeElement: function (e) {

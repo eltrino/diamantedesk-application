@@ -98,7 +98,7 @@ class ConditionCommand
      *
      * @Type("string")
      */
-    public $mode;
+    public $mode = 'workflow';
 
     public static function createFromRule($rule)
     {
@@ -106,12 +106,16 @@ class ConditionCommand
     }
 
     private static function create(Rule $rule, ConditionCommand $parentCommand = null) {
-        $condition = $rule->getCondition();
         $command = new self;
+        $condition = $rule->getCondition();
+
+        if($condition) {
+            $command->condition = $condition->getClass();
+            $command->property = $condition->getProperty();
+            $command->value = $condition->getValue();
+        }
+
         $command->id = $rule->getId();
-        $command->condition = $condition->getClass();
-        $command->property = $condition->getProperty();
-        $command->value = $condition->getValue();
         $command->weight = $rule->getWeight();
         $command->expression = $rule->getExpression();
         $command->target = strtolower($rule->getTarget());

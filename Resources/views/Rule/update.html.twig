@@ -3,7 +3,7 @@
 {% import 'DiamanteAutomationBundle:Rule/macros:conditions.html.twig' as _conditions %}
 {% import 'DiamanteAutomationBundle:Rule/macros:actions.html.twig' as _actions %}
 
-{% set formAction =  path('diamante_automation_create') %}
+{% set formAction = form.vars.value.id ? path('diamante_automation_update', { 'id': form.vars.value.id }) : path('diamante_automation_create') %}
 
 {% block navButtons %}
     {% set cancel_url = path('diamante_automation_list') %}

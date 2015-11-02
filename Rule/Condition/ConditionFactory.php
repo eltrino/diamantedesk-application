@@ -19,8 +19,20 @@ class ConditionFactory
 {
     const CONDITION_PARSE_FORMAT = '/^(eq|neq|not|in|nin|lt|lte|gt|gte|contains|created)(\[([A-Za-z]+)\,\s+(.*)\])?/';
 
+    public static function create($type, $property, $value)
+    {
+        $class = sprintf("%s\\Specific\\%s", __NAMESPACE__, ucfirst($type));
+
+        if (!class_exists($class)) {
+            throw new \Exception(sprintf("Unknown condition used: %s", (string)$type));
+        }
+
+        return new $class($property, $value);
+    }
+
     /**
      * @param $string
+     *
      * @return Condition
      * @throws \Exception
      */
@@ -38,7 +50,9 @@ class ConditionFactory
 
     /**
      * @param $string
-     * @return \StdClass
+     *
+     * @return object
+     * @throws \Exception
      */
     protected static function parse($string)
     {
@@ -46,11 +60,12 @@ class ConditionFactory
 
         $result = preg_match(self::CONDITION_PARSE_FORMAT, $string, $matches);
 
-        if ($result) {
-            $attributes['type']     = $matches[1];
-            $attributes['property'] = isset($matches[3]) ? $matches[3] : null;
-            $attributes['value'] = isset($matches[4]) ? $matches[4] : null;
+        if (!$result) {
+            throw new \Exception(sprintf("Abstract group"));
         }
+        $attributes['type'] = $matches[1];
+        $attributes['property'] = isset($matches[3]) ? $matches[3] : null;
+        $attributes['value'] = isset($matches[4]) ? $matches[4] : null;
 
         return (object)$attributes;
     }

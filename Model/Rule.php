@@ -74,6 +74,16 @@ class Rule implements AutomationRule, Entity
     protected $expression;
 
     /**
+     * @var \DateTime
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     */
+    protected $updatedAt;
+
+    /**
      * @param                                                        $expression
      * @param                                                        $condition
      * @param                                                        $action
@@ -93,7 +103,7 @@ class Rule implements AutomationRule, Entity
         AutomationRule $parent = null
     ) {
         $this->expression   = $expression;
-        $this->condition    = ConditionFactory::getConditionFor($condition);
+        $this->condition    = $condition;
         $this->action       = $action;
         $this->weight       = $weight;
         $this->target       = $target;
@@ -230,5 +240,26 @@ class Rule implements AutomationRule, Entity
     public function hasChildren()
     {
         return count($this->getChildren());
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    public function getName()
+    {
+        return 'rule name';
     }
 }
