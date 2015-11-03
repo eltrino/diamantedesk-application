@@ -110,6 +110,8 @@ class Rule implements AutomationRule, Entity
         $this->children     = new ArrayCollection();
         $this->parent       = $parent;
         $this->active       = $active;
+        $this->createdAt    = new \DateTime('now', new \DateTimeZone('UTC'));
+        $this->updatedAt    = clone $this->createdAt;
     }
 
     /**
@@ -206,7 +208,7 @@ class Rule implements AutomationRule, Entity
      */
     public function update(
         $expression,
-        $condition,
+        $condition = null,
         $action,
         $weight,
         $active,

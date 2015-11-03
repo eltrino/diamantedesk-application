@@ -114,20 +114,19 @@ class RuleController extends Controller
      *      "/create",
      *      name="diamante_automation_create"
      * )
-     * @Template
+     * @Template("DiamanteAutomationBundle:Rule:create.html.twig")
      */
     public function createAction()
     {
-        $content = $this->getRequest()->getContent();
-        $serializer = SerializerBuilder::create()->build();
-        $command = $serializer->deserialize($content, 'Diamante\AutomationBundle\Api\Command\RuleCommand', 'json');
+        $viewCommand = new ViewRuleCommand();
         try {
-            if ($content) {
-                $this->get('diamante.rule.service')->actionRule($command, self::CREATE);
-            }
-            $form = $this->createForm($this->get('diamante_rule_form'), $command);
+//            if ($content) {
+//                $this->get('diamante.rule.service')->actionRule($command, self::CREATE);
+//            }
+            $form = $this->createForm('diamante_rule_form', $viewCommand);
+            $result = $this->edit($viewCommand, $form, function ($command) use ($viewCommand) {
 
-            return array('form' => $form->createView());
+            });
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(
                 sprintf('Rule creation failed: %s', $e->getMessage())
@@ -140,6 +139,8 @@ class RuleController extends Controller
             //                )
             //            );
         }
+
+        return $result;
     }
 
     /**
@@ -168,7 +169,9 @@ class RuleController extends Controller
         $viewCommand->actions = '{"actions": []}';
         try {
             $form = $this->createForm('diamante_rule_form', $viewCommand);
-            $result = $this->edit($viewCommand, $form);
+            $result = $this->edit($viewCommand, $form, function ($command) {
+                return $this->get('diamante.rule.service')->actionRule($command, self::UPDATE);
+            });
         } catch (MethodNotAllowedException $e) {
             return $this->redirect(
                 $this->generateUrl(
@@ -195,7 +198,7 @@ class RuleController extends Controller
 
     }
 
-    private function edit(ViewRuleCommand $command, $form)
+    private function edit(ViewRuleCommand $command, $form, $callback)
     {
         $response = null;
         try {
@@ -207,12 +210,12 @@ class RuleController extends Controller
                 'json'
             );
 
-            $this->get('diamante.rule.service')->actionRule($updateConditionCommand, self::UPDATE);
+            $rootRule = $callback($updateConditionCommand);
 
             $response = $this->getSuccessSaveResponse(
                 'diamante_automation_update',
                 'diamante_automation_view',
-                ['id' => 1]
+                ['id' => $rootRule->getId()]
             );
         } catch (\Exception $e) {
             $this->handleException($e);

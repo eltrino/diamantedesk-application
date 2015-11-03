@@ -129,10 +129,13 @@ class RuleServiceImpl implements RuleService
 
     public function updateWorkflowRule($command)
     {
-        $rule = $this->loadWorkflowRule($command);
+        if (is_null($command->parent)) {
+            $this->deleteWorkflowRule($command);
+        }
 
         $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
-        $rule->update(
+
+        $rule = new WorkflowRule(
             $command->expression,
             $condition,
             $command->action,
@@ -151,7 +154,7 @@ class RuleServiceImpl implements RuleService
             }
         }
 
-        return $this;
+        return $rule->getId();
     }
 
     public function updateBusinessRule(RuleCommand $command)

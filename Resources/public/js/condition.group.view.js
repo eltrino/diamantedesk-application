@@ -22,6 +22,7 @@ define(['underscore', 'backbone', './mock'
 
             this.events = {};
             this.mock = Mock;
+            this.model.view = this;
 
             _.each(events, function (handler, event) {
                 var actionSelector = event + '.' + that.cid;
@@ -51,7 +52,7 @@ define(['underscore', 'backbone', './mock'
             this.$el.children('.view-group').html(this.renderView());
             this.$el.children('.edit-group, .save').addClass('x-hide');
             this.$el.children('.view-group, .edit').removeClass('x-hide');
-
+console.log(this.collection);
             this.collection.trigger("toJson");
         },
 
@@ -74,7 +75,11 @@ define(['underscore', 'backbone', './mock'
         },
 
         renderItemEdit: function () {
-            return this.render(this.renderEdit(), '.edit-group');
+            var template = this.render(this.renderEdit(), '.edit-group');
+            $('.edit', this.$el).addClass('x-hide');
+            $('.edit-group, .save', this.$el).removeClass('x-hide');
+
+            return template;
         },
 
         renderEdit: function () {

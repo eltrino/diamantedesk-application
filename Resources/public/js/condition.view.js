@@ -29,13 +29,16 @@ define(['underscore',
          */
         initialize: function (options) {
             this.options = options;
-            this.mock = JSON.parse(this.$(this.options.fieldId).val());
+            var data = this.$(this.options.fieldId).val();
+
 
             this.collection = new ConditionCollection();
 
             this.listenTo(this.collection, 'toJson', this.toJson);
+            this.listenTo(this.collection, 'add', this.renderNewConditions);
 
-            if (_.isObject(this.mock)) {
+            if (!_.isEmpty(data)) {
+                this.mock = JSON.parse(data);
                 this.render();
             }
         },
@@ -81,6 +84,15 @@ define(['underscore',
             }
         },
 
+        renderNewConditions: function(model) {
+            this.$('#list-condition').html('');
+            var jsonTree = this.unFlatten(this.collection.toJSON());
+            //this.collection.reset();
+            var parent = this.$('#list-condition');
+            this.build(jsonTree, parent);
+            console.log(jsonTree);
+        },
+
         addCondition: function (e) {
             e.preventDefault();
 
@@ -91,12 +103,16 @@ define(['underscore',
             };
             var model = this.collection.add(defaultCondition);
             var item = new ConditionItemView({"model": model, "collection": this.collection});
-            this.$('#list-condition').append(item.renderItemEdit().el);
+            //this.$('#list-condition').append(item.renderItemEdit().el);
         },
 
         addGroup: function () {
-            var group = new ConditionGroupView({model: new ConditionModel()});
-            this.$('#list-condition').append(group.render().el);
+            var defaultGroup = {
+                "expression": "AND"
+            };
+            var model = this.collection.add(defaultGroup);
+            var group = new ConditionGroupView({model: model, "collection": this.collection});
+            //this.$('#list-condition').append(group.renderItemEdit().el);
         },
 
         render: function () {
@@ -106,15 +122,15 @@ define(['underscore',
         },
 
         build: function (mock, parent) {
-            var m = this.getAttributes(mock);
+            var data = this.getAttributes(mock);
 
             var group,
-                hasChildren = !_.isEmpty(mock.children),
-                model = new ConditionModel(m);
+                //model = this.collection.add(data, {"silent": true}),
+                model = new ConditionModel(data),
+                isGroup = _.has(mock, 'expression'),
+                hasChildren = !_.isEmpty(mock.children);
 
-            this.collection.add(model);
-
-            if (hasChildren) {
+            if (isGroup) {
                 group = new ConditionGroupView({model: model, "collection": this.collection});
                 parent.append(group.renderItemView().el);
                 parent = group.$el;

@@ -21,10 +21,14 @@ class ConditionFactory
 
     public static function create($type, $property, $value)
     {
+        if(is_null($type)) {
+            return null;
+        }
+
         $class = sprintf("%s\\Specific\\%s", __NAMESPACE__, ucfirst($type));
 
         if (!class_exists($class)) {
-            throw new \Exception(sprintf("Unknown condition used: %s", (string)$type));
+            throw new \Exception(sprintf("Unknown condition used: %s", (string)$attributes->type));
         }
 
         return new $class($property, $value);
@@ -38,6 +42,10 @@ class ConditionFactory
      */
     public static function getConditionFor($string)
     {
+        if(empty($string)) {
+            return null;
+        }
+
         $attributes = static::parse($string);
         $class = sprintf("%s\\Specific\\%s", __NAMESPACE__, ucfirst($attributes->type));
 
@@ -61,8 +69,9 @@ class ConditionFactory
         $result = preg_match(self::CONDITION_PARSE_FORMAT, $string, $matches);
 
         if (!$result) {
-            throw new \Exception(sprintf("Abstract group"));
+            return null;
         }
+
         $attributes['type'] = $matches[1];
         $attributes['property'] = isset($matches[3]) ? $matches[3] : null;
         $attributes['value'] = isset($matches[4]) ? $matches[4] : null;

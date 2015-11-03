@@ -1,1 +1,10 @@
 {% extends 'DiamanteAutomationBundle:Rule:edit.html.twig' %}
+{% import 'DiamanteAutomationBundle:Rule/macros:general.html.twig' as _general %}
+{% import 'DiamanteAutomationBundle:Rule/macros:conditions.html.twig' as _conditions %}
+{% import 'DiamanteAutomationBundle:Rule/macros:actions.html.twig' as _actions %}
+
+{% block content_data %}
+    {% set id = 'ruleCreate' %}
+
+    {{ parent() }}
+{% endblock content_data %}

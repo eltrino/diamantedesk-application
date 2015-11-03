@@ -20,6 +20,7 @@ define(['underscore', 'backbone', './mock'
         initialize: function () {
             this.mock = Mock;
             this.prepareTemplates();
+            this.model.view = this;
 
             this.listenTo(this.model, 'change', this.redrawEdit);
             this.listenTo(this.model, 'change:actionObject', this.changeModelField);

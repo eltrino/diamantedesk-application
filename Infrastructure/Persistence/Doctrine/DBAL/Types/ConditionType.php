@@ -35,17 +35,12 @@ class ConditionType extends StringType
         if (false === ($value instanceof Condition)) {
             throw new \RuntimeException("Value should be of Condition type.");
         }
+
         return parent::convertToDatabaseValue((string)$value, $platform);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        try {
-            $condition = ConditionFactory::getConditionFor($value);
-        } catch (\Exception $e) {
-            return null;
-        }
-
-        return $condition;
+        return ConditionFactory::getConditionFor($value);
     }
 }

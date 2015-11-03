@@ -37,7 +37,7 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule impleme
 
     /**
      * @var Condition
-     * @ORM\Column(name="rule_condition", type="condition_type")
+     * @ORM\Column(name="rule_condition", type="condition_type", nullable=true)
      */
     protected $condition;
 
@@ -55,7 +55,7 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule impleme
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Diamante\AutomationBundle\Entity\WorkflowRule", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Diamante\AutomationBundle\Entity\WorkflowRule", mappedBy="parent", cascade={"persist", "remove"})
      */
     protected $children;
 
