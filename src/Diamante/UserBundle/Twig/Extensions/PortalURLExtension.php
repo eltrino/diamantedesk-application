@@ -109,13 +109,9 @@ class PortalUrlExtension extends \Twig_Extension
 
         list($subject, $scheme, $host, $port, $baseUrl) = $matches;
 
-        if (!empty($baseUrl) && (0 === strpos($baseUrl, '/'))) {
-            $baseUrl = ltrim($baseUrl, '/');
+        if (!empty($baseUrl)) {
+            $baseUrl = rtrim($baseUrl, '/');
         }
-
-//        if (!empty($port)) {
-//            $host .= $port;
-//        }
 
         return [$scheme, $host, $baseUrl];
     }
