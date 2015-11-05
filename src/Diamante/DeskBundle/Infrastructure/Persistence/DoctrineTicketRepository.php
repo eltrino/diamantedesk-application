@@ -238,56 +238,21 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      * Implemented because Doctrine ORM not support select from subQuery
      *
      * @param $result
-     * @param PagingProperties $pagingProperties
      * @return array
      */
-    public function sortByKey($result, PagingProperties $pagingProperties)
+    public function sortByKey($result)
     {
         if (!$result || empty($result)) {
             return $result;
         }
 
-        usort($result,
-            function ($a, $b) use ($pagingProperties) {
+        foreach ($result as $item) {
+            $resultArray[$item->getKey()] = $item;
+        }
 
-                $reflectionA = new \ReflectionClass($a);
-                $reflectionB = new \ReflectionClass($b);
+        asort($resultArray, SORT_NATURAL);
 
-                $sortBy = $pagingProperties->getSort();
-                $orderBy = $pagingProperties->getOrder();
-
-                if (!$reflectionA->getProperty($sortBy) || !$reflectionB->getProperty($sortBy)) {
-                    return 0;
-                }
-
-                $propertyA = $reflectionA->getProperty($sortBy);
-                $propertyB = $reflectionB->getProperty($sortBy);
-
-                $propertyA->setAccessible(true);
-                $propertyB->setAccessible(true);
-
-                $valueA = (string)$a->getKey();
-                $valueB = (string)$b->getKey();
-
-                if (is_string($valueA) || is_string($valueB)) {
-
-                    $sortableArray = array($valueA, $valueB);
-                    $originalSortableArray = $sortableArray;
-
-                    asort($sortableArray);
-
-                    if ($orderBy == 'desc') {
-                        return $sortableArray !== $originalSortableArray;
-                    } else {
-                        return $sortableArray === $originalSortableArray;
-                    }
-                }
-
-                return 0;
-            }
-        );
-
-        return $result;
+        return array_values($resultArray);
     }
 
     protected function getWatchedTicketsIds(User $user)
