@@ -94,7 +94,7 @@ class TicketWidgetController extends Controller
                 return $response;
             }
             $this->handle($form);
-            if ($command->branch->getId() !== $ticket->getBranch()->getId()){
+            if ($command->branch->getId() !== $ticket->getBranch()->getId()) {
                 $this->get('diamante.ticket.service')->moveTicket($command);
                 $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
                 return $this->getWidgetResponse('diamante_ticket_view', ['key' => $ticket->getKey()]);
@@ -136,7 +136,7 @@ class TicketWidgetController extends Controller
             }
             $this->handle($form);
 
-            if(is_string($command->watcher)) {
+            if (is_string($command->watcher)) {
                 $user = new DiamanteUser($command->watcher);
                 $this->get('diamante.user.repository')->store($user);
                 $command->watcher = new User($user->getId(), User::TYPE_DIAMANTE);
@@ -254,7 +254,7 @@ class TicketWidgetController extends Controller
             $form->handleRequest($this->getRequest());
             $requestAssign = $this->getRequest()->get('assignee');
 
-            if(!isset($requestAssign)) {
+            if (!isset($requestAssign)) {
                 $assignee = $command->assignee;
             } else {
                 $assignee = $requestAssign;
@@ -262,7 +262,7 @@ class TicketWidgetController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->createAssigneeTicketCommand($ticket);
@@ -310,7 +310,7 @@ class TicketWidgetController extends Controller
             $form->handleRequest($this->getRequest());
             $requestStatus = $this->getRequest()->get('status');
 
-            if(!isset($requestStatus)) {
+            if (!isset($requestStatus)) {
                 $status = $command->status;
             } else {
                 $status = $requestStatus;
@@ -318,7 +318,7 @@ class TicketWidgetController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->createUpdateStatusCommandForView($ticket);
@@ -366,7 +366,7 @@ class TicketWidgetController extends Controller
             $form->handleRequest($this->getRequest());
             $requestBranch = $this->getRequest()->get('branch');
 
-            if(!isset($requestBranch)) {
+            if (!isset($requestBranch)) {
                 $branch = $command->branch;
             } else {
                 $branch = $requestBranch;
@@ -374,14 +374,14 @@ class TicketWidgetController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->createMoveTicketCommand($ticket);
 
                 $command->branch = $this->get('diamante.branch.service')->getBranch($branch);
 
-                if ($command->branch->getId() != $ticket->getBranch()->getId()){
+                if ($command->branch->getId() != $ticket->getBranch()->getId()) {
                     $this->get('diamante.ticket.service')->moveTicket($command);
                 }
             }
@@ -428,7 +428,7 @@ class TicketWidgetController extends Controller
             $form->handleRequest($this->getRequest());
             $requestWatcher = $this->getRequest()->get('branch');
 
-            if(!isset($requestWatcher)) {
+            if (!isset($requestWatcher)) {
                 $watcher = $command->watcher;
             } else {
                 $watcher = $requestWatcher;
@@ -436,7 +436,7 @@ class TicketWidgetController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->addWatcherCommand($ticket);
