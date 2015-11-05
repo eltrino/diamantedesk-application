@@ -1,0 +1,55 @@
+.condition-item, .action-item {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: dashed 1px;
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 550px;
+}
+
+.condition-group {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: dashed 1px;
+    margin-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    min-height: 100px;
+}
+
+.condition-item > .delete, .condition-item > .edit, .condition-item > .save,
+.action-item > .delete, .action-item > .edit, .action-item > .save,
+.condition-group > .delete, .condition-group > .edit, .condition-group > .save {
+    margin-left: 5px;
+    float: right;
+}
+
+.editable {
+    color: #0025fe;
+    cursor: pointer;
+}
+
+#condition-block select, #condition-block .selector, #condition-block input, #condition-block .selector > span,
+#action-block select, #action-block .selector, #action-block input, #action-block .selector > span {
+    width: 70px;
+}
+
+.x-hide {
+    display: none !important;
+}
+
+.condition-item .selector, .action-item .selector, .condition-group .selector {
+    display: inline-flex;
+}
+
+.edit-condition, .view-condition, .edit-action, .view-action, .edit-group, .view-group {
+    display: inline-block;
+}
