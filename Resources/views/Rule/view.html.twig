@@ -1,40 +1,38 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
-{% import 'OroUIBundle::macros.html.twig' as macros %}
-{% import 'OroTagBundle::macros.html.twig' as _tag %}
-{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
-{% import 'OroEmailBundle::macros.html.twig' as EA %}
+{% import 'DiamanteAutomationBundle:Rule/macros:conditions.html.twig' as _conditions %}
+{% import 'DiamanteAutomationBundle:Rule/macros:actions.html.twig' as _actions %}
 
-{% oro_title_set({params : {"%branch.name%": entity.name|default('diamante.desk.common.not_available'|trans) }}) %}
+{% oro_title_set({params : {"%rule.name%": entity.name|default('diamante.automation.common.not_available'|trans) }}) %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:WorkflowRule') %}
         {{ UI.button({
-            'path': path('diamante_ticket_create', {'id': entity.id}),
+            'path': path('diamante_automation_create', {'id': entity.id}),
             'iCss': 'icon-plus',
-            'title': 'diamante.desk.ticket.actions.add'|trans,
-            'label': 'diamante.desk.ticket.actions.add'|trans
+            'title': 'diamante.automation.rule.actions.add'|trans,
+            'label': 'diamante.automation.rule.actions.add'|trans
         }) }}
     {% endif %}
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
-            'path': path('diamante_branch_update', {'id': entity.id}),
+            'path': path('diamante_automation_update', {'id': entity.id}),
             'iCss': 'icon-edit',
-            'title': 'diamante.desk.branch.actions.edit'|trans,
-            'label': 'diamante.desk.ui.edit'|trans
+            'title': 'diamante.automation.rule.actions.edit'|trans,
+            'label': 'diamante.automation.ui.edit'|trans
         }) }}
     {% endif %}
 
     {% if resource_granted('DELETE', entity) %}
         {{ UI.deleteButton({
-            'dataUrl': path('diamante_branch_delete', {'id': entity.id}),
-            'dataRedirect': path('diamante_branch_list'),
+            'dataUrl': path('diamante_automation_delete', {'id': entity.id}),
+            'dataRedirect': path('diamante_automation_list'),
             'aCss': 'no-hash remove-button',
             'dataId': entity.id,
             'id': 'btn-remove-account',
-            'dataMessage': 'diamante.desk.branch.messages.delete.query'|trans,
-            'successMessage': 'diamante.desk.branch.messages.delete.success'|trans,
-            'title': 'diamante.desk.branch.actions.remove'|trans,
-            'label': 'diamante.desk.ui.delete'|trans
+            'dataMessage': 'diamante.automation.rule.messages.delete.query'|trans,
+            'successMessage': 'diamante.automation.rule.messages.delete.success'|trans,
+            'title': 'diamante.automation.rule.actions.remove'|trans,
+            'label': 'diamante.automation.ui.delete'|trans
             })
         }}
     {% endif %}
@@ -43,9 +41,9 @@
 {% block pageHeader %}
     {% set breadcrumbs = {
             'entity': entity,
-            'indexPath': path('diamante_branch_list'),
-            'indexLabel': 'diamante.desk.branch.entity_plural_label'|trans,
-            'entityTitle': entity.name|default('diamante.desk.common.not_available'|trans),
+            'indexPath': path('diamante_automation_list'),
+            'indexLabel': 'diamante.automation.rule.entity_plural_label'|trans,
+            'entityTitle': entity.name|default('diamante.automation.common.not_available'|trans),
             'hasAvatar': true,
             'imagePath': null
         }
@@ -54,20 +52,51 @@
 {% endblock pageHeader %}
 
 {% block content_data %}
-    {% set id = 'branchUpdate' %}
+    {% set id = 'viewRule' %}
 
-    {% set dataSubBlocks = [UI.attibuteRow('diamante.desk.forms.name'|trans, entity.name)] %}
+    <script type="text/javascript">
+        require(['jquery', 'diamanteautomation/js/condition.view', 'diamanteautomation/js/action.view'],
+                function ($, ConditionView, ActionView) {
+                    $(function () {
+                        var conditions = '';
+                        new ConditionView({"conditions": '{{ conditions|raw }}'});
+                        new ActionView({fieldId: '#qwerty'});
+                    });
+                });
+    </script>
+
+    {% set dataSubBlocks = [UI.attibuteRow('diamante.automation.forms.name'|trans, entity.name)] %}
 
     {% set dataBlocks =
         [{
-            'title': 'diamante.desk.common.general'|trans,
+            'title': 'diamante.automation.common.general'|trans,
             'class': 'active',
             'subblocks': [{
-                'title': 'diamante.desk.branch.details'|trans,
+                'title': 'diamante.automation.rule.details'|trans,
                 'data' : dataSubBlocks
             }]
         }]
     %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Conditions',
+    'subblocks': [
+    {
+    'title': null,
+    'data': [_conditions.renderView(), _conditions.renderTemplates('view')]
+    }]
+    }]
+    ) %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+    'title': 'Actions'|trans,
+    'subblocks': [
+    {
+    'title': null,
+    'data': [_actions.renderView(), _actions.renderTemplates('view')]
+    }]
+    }]
+    ) %}
 
     {% set data = {'dataBlocks': dataBlocks} %}
     {{ parent() }}

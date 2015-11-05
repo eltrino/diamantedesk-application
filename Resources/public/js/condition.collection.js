@@ -9,7 +9,7 @@ define(['backbone', './condition.model'
             this.on('add', this.findParent);
         },
 
-        findParent: function (model) {
+        findParent: function (model) {console.log('aaa');
             var rootModel = this.getRootModel(),
                 group = this.getGroup();
 
@@ -18,25 +18,19 @@ define(['backbone', './condition.model'
                     model.set("isParent", true);
 
                     _.each(this.getConditions(), function(item) {
-                        item.set('parent', model.cid, {"silent": true});
+                        item.set('parent', model.getId(), {"silent": true});
                     });
-
-                    //console.log('group add');
                 } else if (this.length > 1) {
-                    var m = this.add({"expression": "AND"}, {"silent": true});
+                    var m = this.add({"expression": "AND", "target": "ticket"}, {"silent": true});
                     m.set("isParent", true);
 
                     _.each(this.getConditions(), function(item) {
-                        item.set('parent', m.cid, {"silent": true});
+                        item.set('parent', m.getId(), {"silent": true});
                     });
-
-                    //console.log('more the 1');
                 }
             } else {
-                model.set('parent', rootModel.cid, {"silent": true});
+                model.set('parent', rootModel.getId(), {"silent": true});
             }
-
-            //console.log(this.models);
         },
 
         getRootModel: function () {

@@ -29,100 +29,25 @@ class RuleCommand
 {
     /**
      * @var int
-     *
-     * @Type("integer")
      */
     public $id;
 
     /**
-     * @var Condition
-     *
-     * @Type("string")
-     */
-    public $condition;
-
-    /**
      * @var string
-     *
-     * @Type("string")
      */
-    public $action;
-
-    /**
-     * @var int
-     *
-     * @Type("integer")
-     */
-    public $weight;
+    public $name;
 
     /**
      * @var array
      *
-     * @Type("array<Diamante\AutomationBundle\Api\Command\RuleCommand>")
+     * @Type("array<Diamante\AutomationBundle\Api\Command\ConditionCommand>")
      */
-    public $children;
-
-    /**
-     * @var Target
-     *
-     * @Type("string")
-     */
-    public $target;
-
-    /**
-     * @var int
-     *
-     * @Type("integer")
-     */
-    public $parent;
-
-    /**
-     * @var bool
-     *
-     * @Type("boolean")
-     */
-    public $active;
+    public $conditions;
 
     /**
      * @var string
-     *
-     * @Type("string")
      */
-    public $expression;
+    public $actions;
 
-    /**
-     * @var string
-     *
-     * @Type("string")
-     */
     public $mode;
-
-    public static function createFromRule($rule)
-    {
-        return self::create($rule);
-    }
-
-    private static function create(Rule $rule, RuleCommand $parentCommand = null) {
-        $command = new self;
-        $command->id = $rule->getId();
-        $command->condition = $rule->getCondition();
-        $command->action = $rule->getAction();
-        $command->weight = $rule->getWeight();
-        $command->target = $rule->getTarget();
-        $command->active = $rule->isActive();
-        $command->children = [];
-
-        if($parentCommand) {
-            $command->parent = $parentCommand->id;
-            $parentCommand->children[] = $command;
-        }
-
-        if ($rule->getChildren()) {
-            foreach ($rule->getChildren() as $child) {
-                self::create($child, $command);
-            }
-        }
-
-        return $command;
-    }
 }

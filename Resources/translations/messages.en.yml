@@ -11,6 +11,7 @@ diamante:
       columns:
         name: name
       actions:
+        add: Add Rule
         view: View Rule
         edit: Edit Rule
         remove: Remove Rule
@@ -36,3 +37,15 @@ diamante:
       active:              Active
       expression:          Expression
       mode:                Mode
+    common:
+      general:             General
+      created:             Created
+      updated:             Updated
+      not_available:       N/A
+      not_defined:         Not defined
+      delete_confirmation: Confirm Deletion
+      messages:
+        validation:
+          failed:          Form is invalid. Please correctly fill in all required fields.
+    forms:
+      name:                Name

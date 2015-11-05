@@ -96,7 +96,7 @@ class Rule implements AutomationRule, Entity
     public function __construct(
         $expression = self::EXPRESSION_INCLUSIVE,
         $condition,
-        $action,
+        $action = null,
         $weight = 0,
         $active = true,
         Target $target = null,

@@ -52,7 +52,7 @@ class CreateRuleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\AutomationBundle\Api\Command\ViewRuleCommand',
+                'data_class' => 'Diamante\AutomationBundle\Api\Command\RuleCommand',
                 'intention' => 'rule',
                 'cascade_validation' => true
             )

@@ -1,4 +1,4 @@
-{% macro render(form) %}
+{% macro renderEdit(form) %}
     <div class="control-group">
         <div id="action-block">
             <div id="list-action"></div>
@@ -8,8 +8,17 @@
             {{ form_row(form.actions) }}
         </div>
     </div>
+{% endmacro %}
 
+{% macro renderView() %}
+    <div class="control-group">
+        <div id="action-block">
+            <div id="list-action"></div>
+        </div>
+    </div>
+{% endmacro %}
 
+{% macro renderTemplates(mode) %}
     <script type="text/template" id="item-action-view">
         <span class="editable"><%= action %></span> notification by
         <span class="editable"><%= property %></span> to
@@ -44,8 +53,10 @@
 
         <div class="edit-action x-hide"></div>
 
-        <span class="delete editable">delete</span>
-        <span class="save editable x-hide">save</span>
-        <span class="edit editable">edit</span>
+        {% if mode != 'view' %}
+            <span class="delete editable">delete</span>
+            <span class="save editable x-hide">save</span>
+            <span class="edit editable">edit</span>
+        {% endif %}
     </script>
 {% endmacro %}

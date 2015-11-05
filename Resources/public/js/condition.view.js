@@ -3,15 +3,13 @@ define(['underscore',
     './condition.collection',
     './condition.model',
     './condition.item.view',
-    './condition.group.view',
-    './mock'
+    './condition.group.view'
 ], function (_,
              Backbone,
              ConditionCollection,
              ConditionModel,
              ConditionItemView,
-             ConditionGroupView,
-             Mock) {
+             ConditionGroupView) {
     'use strict';
 
     var $ = Backbone.$;
@@ -29,24 +27,22 @@ define(['underscore',
          */
         initialize: function (options) {
             this.options = options;
-            var data = this.$(this.options.fieldId).val();
-
-
             this.collection = new ConditionCollection();
 
             this.listenTo(this.collection, 'toJson', this.toJson);
-            this.listenTo(this.collection, 'add', this.renderNewConditions);
+            this.listenTo(this.collection, 'addNew', this.renderNew);
 
-            if (!_.isEmpty(data)) {
-                this.mock = JSON.parse(data);
-                this.render();
+            if (!_.isEmpty(options.conditions)) {
+                this.conditions = JSON.parse(options.conditions);
+                this.renderStored();
             }
         },
 
         toJson: function () {
-            console.log(this.collection.toJSON());
-            var jsonTree = this.unFlatten(this.collection.toJSON());
-            this.$(this.options.fieldId).val(JSON.stringify(jsonTree));
+            if (this.options.conditionsEl) {
+                var jsonTree = this.unFlatten(this.collection.toJSON());
+                this.$(this.options.conditionsEl).val(JSON.stringify(jsonTree));
+            }
         },
 
         unFlatten: function (array, parent, tree) {
@@ -84,15 +80,6 @@ define(['underscore',
             }
         },
 
-        renderNewConditions: function(model) {
-            this.$('#list-condition').html('');
-            var jsonTree = this.unFlatten(this.collection.toJSON());
-            //this.collection.reset();
-            var parent = this.$('#list-condition');
-            this.build(jsonTree, parent);
-            console.log(jsonTree);
-        },
-
         addCondition: function (e) {
             e.preventDefault();
 
@@ -101,34 +88,64 @@ define(['underscore',
                 "condition": "neq",
                 "property": "subject"
             };
-            var model = this.collection.add(defaultCondition);
-            var item = new ConditionItemView({"model": model, "collection": this.collection});
-            //this.$('#list-condition').append(item.renderItemEdit().el);
+            this.collection.add(defaultCondition);
+            this.collection.trigger('addNew');
         },
 
-        addGroup: function () {
+        addGroup: function (e) {
+            e.preventDefault();
+
             var defaultGroup = {
-                "expression": "AND"
+                "expression": "AND",
+                "target": "ticket"
             };
-            var model = this.collection.add(defaultGroup);
-            var group = new ConditionGroupView({model: model, "collection": this.collection});
-            //this.$('#list-condition').append(group.renderItemEdit().el);
+            this.collection.add(defaultGroup);
+            this.collection.trigger('addNew');
         },
 
-        render: function () {
+        renderStored: function () {
             var parent = this.$('#list-condition');
-            this.build(this.mock, parent);
+            var that = this;
+            this.conditions.isParent = true;
+
+            this.build(this.conditions, parent, function (data) {
+                data = that.getAttributes(data);
+                return that.collection.add(data, {"silent": true});
+            });
+
             this.collection.trigger("toJson");
         },
 
-        build: function (mock, parent) {
-            var data = this.getAttributes(mock);
+        renderNew: function () {
+            this.$('#list-condition').html('');
+            var jsonTree = this.unFlatten(this.collection.toJSON());
+            var parent = this.$('#list-condition');
+            var that = this;
 
-            var group,
-                //model = this.collection.add(data, {"silent": true}),
-                model = new ConditionModel(data),
+            this.build(jsonTree, parent, function (data) {
+                return that.collection.get(data.id);
+            });
+
+            this.collection.trigger("toJson");
+        },
+
+        build: function (mock, parent, getModel) {
+            var model = getModel(mock),
                 isGroup = _.has(mock, 'expression'),
                 hasChildren = !_.isEmpty(mock.children);
+
+            parent = this.render(isGroup, parent, model);
+
+            if (hasChildren) {
+                var that = this;
+                _.each(mock.children, function (item) {
+                    that.build(item, parent, getModel);
+                });
+            }
+        },
+
+        render: function (isGroup, parent, model) {
+            var group;
 
             if (isGroup) {
                 group = new ConditionGroupView({model: model, "collection": this.collection});
@@ -139,40 +156,24 @@ define(['underscore',
                 parent.append(item.renderItemView().el);
             }
 
-            if (hasChildren) {
-                var that = this;
-                _.each(mock.children, function (item) {
-                    that.build(item, parent);
-                });
-            }
+            return parent;
         },
 
         getAttributes: function (data) {
-            var general = {
-                "id": data.id,
-                "condition": data.condition,
-                "weight": data.weight,
-                "target": data.target,
-                "active": data.active
-            };
+            var whiteList = [
+                'id',
+                'weight',
+                'target',
+                'active',
+                'expression',
+                'property',
+                'value',
+                'parent',
+                'condition',
+                'isParent'
+            ];
 
-            if (_.has(data, "expression")) {
-                general["expression"] = data.expression;
-            }
-
-            if (_.has(data, "property")) {
-                general["property"] = data.property;
-            }
-
-            if (_.has(data, "value")) {
-                general["value"] = data.value;
-            }
-
-            if (_.has(data, "parent")) {
-                general["parent"] = data.parent;
-            }
-
-            return general;
+            return _.pick(data, whiteList);
         }
     });
 });

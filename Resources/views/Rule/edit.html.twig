@@ -31,13 +31,13 @@
 {% endblock pageHeader %}
 
 {% block content_data %}
-    {% set id = 'ruleEdit' %}
 
     <script type="text/javascript">
         require(['jquery', 'diamanteautomation/js/condition.view', 'diamanteautomation/js/action.view'],
                 function ($, ConditionView, ActionView) {
                     $(function () {
-                        new ConditionView({fieldId: '#{{ form.conditions.vars.id }}'});
+                        var conditionsEl = $('#{{ form.conditions.vars.id }}');
+                        new ConditionView({"conditions": conditionsEl.val(), "conditionsEl": conditionsEl});
                         new ActionView({fieldId: '#{{ form.actions.vars.id }}'});
                     });
                 });
@@ -61,7 +61,7 @@
     'subblocks': [
     {
     'title': null,
-    'data': [_conditions.render(form)]
+    'data': [_conditions.renderEdit(form), _conditions.renderTemplates('edit')]
     }]
     }]
     ) %}
@@ -71,7 +71,7 @@
     'subblocks': [
     {
     'title': null,
-    'data': [_actions.render(form)]
+    'data': [_actions.renderEdit(form), _actions.renderTemplates('edit')]
     }]
     }]
     ) %}

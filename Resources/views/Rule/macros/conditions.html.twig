@@ -1,4 +1,4 @@
-{% macro render(form) %}
+{% macro renderEdit(form) %}
     <div class="control-group">
         <div id="condition-block">
             <div id="list-condition"></div>
@@ -9,19 +9,27 @@
             {{ form_row(form.conditions) }}
         </div>
     </div>
+{% endmacro %}
 
+{% macro renderView() %}
+    <div class="control-group">
+        <div id="condition-block">
+            <div id="list-condition"></div>
+        </div>
+    </div>
+{% endmacro %}
 
-
-
-
+{% macro renderTemplates(mode) %}
     <script type="text/template" id="group-condition">
         <div class="view-group"></div>
 
         <div class="edit-group x-hide"></div>
 
-        <span class="delete editable <%= this.cid %>">delete</span>
-        <span class="edit editable x-view <%= this.cid %>">edit</span>
-        <span class="save editable x-hide x-edit <%= this.cid %>">save</span>
+        {% if mode != 'view' %}
+            <span class="delete editable <%= this.cid %>">delete</span>
+            <span class="edit editable x-view <%= this.cid %>">edit</span>
+            <span class="save editable x-hide x-edit <%= this.cid %>">save</span>
+        {% endif %}
     </script>
 
     <script type="text/template" id="group-condition-view">
@@ -42,21 +50,16 @@
         this conditions
     </script>
 
-
-
-
-
-
-
-
     <script type="text/template" id="item-condition">
         <div class="view-condition"></div>
 
         <div class="edit-condition x-hide"></div>
 
-        <span class="delete editable">delete</span>
-        <span class="save editable x-hide">save</span>
-        <span class="edit editable">edit</span>
+        {% if mode != 'view' %}
+            <span class="delete editable">delete</span>
+            <span class="save editable x-hide">save</span>
+            <span class="edit editable">edit</span>
+        {% endif %}
     </script>
 
     <script type="text/template" id="condition-general-view">
@@ -107,7 +110,6 @@
         </div>
         to
         <input data-property="value" class="value" type="text" value="<%= attrs.value %>">
-        <input data-property="expression" type="hidden" value="<%= attrs.expression %>">
     </script>
 
     <script type="text/template" id="condition-entity-view">

@@ -2,10 +2,16 @@ define(['underscore', 'backbone', './mock'], function (_, Backbone, Mock) {
     'use strict';
 
     return Backbone.Model.extend({
-        idAttribute: 'cid',
+        defaults: {
+            "weight": 0,
+            "active": 1
+        },
 
         initialize: function () {
-            this.set('id', this.cid, {"silent": true});
+            if (!this.get('id')) {
+                this.set('id', this.cid, {"silent": true});
+            }
+
             if (this.get('property')) {
                 this.set('actionObject', 'property');
             } else {
@@ -13,6 +19,14 @@ define(['underscore', 'backbone', './mock'], function (_, Backbone, Mock) {
             }
 
             this.on('remove', this.removeModel);
+        },
+
+        getId: function () {
+            if (this.get('id')) {
+                return this.get('id');
+            }
+
+            return this.cid;
         }
     });
 });

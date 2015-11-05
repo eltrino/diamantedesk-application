@@ -103,12 +103,14 @@ class RuleServiceImpl implements RuleService
         return;
     }
 
-    public function createWorkflowRule(RuleCommand $command)
+    public function createWorkflowRule($command)
     {
+        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
+
         $rule = new WorkflowRule(
             $command->expression,
-            $command->condition,
-            $command->action,
+            $condition,
+            null,
             $command->weight,
             $command->active,
             new Target($command->target),
@@ -124,7 +126,7 @@ class RuleServiceImpl implements RuleService
             }
         }
 
-        return;
+        return $rule->getId();
     }
 
     public function updateWorkflowRule($command)
@@ -138,7 +140,7 @@ class RuleServiceImpl implements RuleService
         $rule = new WorkflowRule(
             $command->expression,
             $condition,
-            $command->action,
+            null,
             $command->weight,
             $command->active,
             new Target($command->target),
