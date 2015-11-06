@@ -1,6 +1,7 @@
 oro_system_configuration:
     groups:
-        diamante_desk_setup: ~
+        diamante_desk_setup:
+            title: 'DiamanteDesk Setup'
 
         diamante_desk_notifications:
             title: 'Notifications'
