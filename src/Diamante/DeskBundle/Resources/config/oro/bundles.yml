@@ -1,2 +1,2 @@
 bundles:
-    - Diamante\DeskBundle\DiamanteDeskBundle
+    - { name: Diamante\DeskBundle\DiamanteDeskBundle, priority: 1001}
