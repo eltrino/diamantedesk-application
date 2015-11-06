@@ -2,19 +2,38 @@ reports:
     tickets_by_priority:
         label: "Tickets By Priority"
         chart:
-            type: bar-chart
-            y-axis: value
-            x-axis: priority
+            type: grouped-line-chart
+            x-axis: day
+            y-axis:
+              items:
+                  - low
+                  - medium
+                  - high
         source:
-            type: dql
-            dql: "SELECT t.priority, count(t.priority) as value FROM Diamante\\DeskBundle\\Entity\\Ticket t group by t.priority"
+            type: repository
+            repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTicketsByPriority"
+
+    tickets_by_priority_widget:
+            label: "Tickets By Priority"
+            chart:
+                type: bar-chart
+                y-axis: value
+                x-axis: priority
+            source:
+                type: dql
+                dql: "SELECT t.priority, count(t.priority) as value FROM Diamante\\DeskBundle\\Entity\\Ticket t group by t.priority"
 
     time_of_response:
         label: "Time of Response"
         chart:
-            type: bar-chart
-            y-axis: data_count
-            x-axis: data_range
+            type: grouped-line-chart
+            x-axis: day
+            y-axis:
+              items:
+                  - 0-1
+                  - 1-8
+                  - 8-24
+                  - more 24
         source:
             type: repository
             repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTimeOfResponseReportData"

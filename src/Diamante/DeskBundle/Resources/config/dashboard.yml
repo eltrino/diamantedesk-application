@@ -1,9 +1,9 @@
 oro_dashboard_config:
     widgets:
-        tickets_by_priority:
+        tickets_by_priority_widget:
             label:      Tickets By priority
             route:      diamante_report_widget
-            route_parameters: { id: tickets_by_priority }
+            route_parameters: { id: tickets_by_priority_widget }
             description: See the full picture of requests according to their priorities and focus on core issues.
             icon:       bundles/orodashboard/img/quick_launchpad.png
 

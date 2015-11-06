@@ -51,10 +51,68 @@ class DoctrineReportRepository
     {
         $dateDiffExpression = $this->getDateDiffExpression();
         return $this->execute("
-              SELECT '0-1'     AS data_range, count(t.id) as data_count, DATE(t.created_at) as data_date FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} BETWEEN 0 AND 3600 GROUP BY DATE(t.created_at)
-        UNION SELECT '1-8'     AS data_range, count(t.id) as data_count, DATE(t.created_at) as data_date FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} BETWEEN 3600 AND 3600 * 8 GROUP BY DATE(t.created_at)
-        UNION SELECT '8-24'    AS data_range, count(t.id) as data_count, DATE(t.created_at) as data_date FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} BETWEEN 3600 * 8 AND 3600 * 24 GROUP BY DATE(t.created_at)
-        UNION SELECT 'more 24' AS data_range, count(t.id) as data_count, DATE(t.created_at) as data_date FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} > 3600 * 24 GROUP BY DATE(t.created_at)");
+        SELECT  `day`,
+                coalesce(sum(`0-1`), 0)  AS '0-1',
+                coalesce(sum(`1-8`), 0) as '1-8',
+                coalesce(sum(`8-24`), 0) as '8-24',
+                coalesce(sum(`more 24`), 0) as 'more 24' from
+        (SELECT date(t.created_at) as 'day',
+                count(t.id) as '0-1',
+                null as '1-8',
+                null as '8-24',
+                null as 'more 24'
+        FROM diamante_ticket t
+        INNER JOIN
+        (SELECT min(c.created_at) AS c_created_at,
+                c.ticket_id AS subquery_ticket_id
+         FROM diamante_comment c
+         GROUP BY c.ticket_id) s
+        ON (t.id = s.subquery_ticket_id)
+        WHERE {$dateDiffExpression} BETWEEN 0 AND 3600
+        UNION ALL
+        SELECT date(t.created_at),
+               null as '0-1',
+               count(t.id) as '1-8',
+               null as '8-24',
+               null as 'more 24'
+        FROM diamante_ticket t
+        INNER JOIN
+        (SELECT min(c.created_at) AS c_created_at,
+                c.ticket_id AS subquery_ticket_id
+         FROM diamante_comment c
+         GROUP BY c.ticket_id) s
+        ON (t.id = s.subquery_ticket_id)
+        WHERE {$dateDiffExpression} BETWEEN 3600 AND 3600 * 8
+        UNION ALL
+        SELECT date(t.created_at),
+               null as '0-1',
+               null as '1-8',
+               count(t.id) as '8-24',
+               null as 'more 24'
+        FROM diamante_ticket t
+        INNER JOIN
+        (SELECT min(c.created_at) AS c_created_at,
+                c.ticket_id AS subquery_ticket_id
+         FROM diamante_comment c
+         GROUP BY c.ticket_id) s
+         ON (t.id = s.subquery_ticket_id)
+        WHERE {$dateDiffExpression} BETWEEN 3600 * 8 AND 3600 * 24
+        UNION ALL
+        SELECT date(t.created_at),
+               null as '0-1',
+               null as '1-8',
+               null as '8-24',
+               count(t.id) as 'more 24'
+        FROM diamante_ticket t
+        INNER JOIN
+        (SELECT min(c.created_at) AS c_created_at,
+                c.ticket_id AS subquery_ticket_id
+        FROM diamante_comment c
+        GROUP BY c.ticket_id) s
+        ON (t.id = s.subquery_ticket_id)
+        WHERE {$dateDiffExpression} > 3600 * 24) mT
+        where day is NOT NULL
+        GROUP BY day");
     }
 
     /**
@@ -64,10 +122,60 @@ class DoctrineReportRepository
     {
         $dateDiffExpression = $this->getDateDiffExpression();
         return $this->execute("
-              SELECT '0-1'     AS data_range, count(t.id) as data_count FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} BETWEEN 0 AND 3600
-        UNION SELECT '1-8'     AS data_range, count(t.id) as data_count FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} BETWEEN 3600 AND 3600 * 8
-        UNION SELECT '8-24'    AS data_range, count(t.id) as data_count FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} BETWEEN 3600 * 8 AND 3600 * 24
-        UNION SELECT 'more 24' AS data_range, count(t.id) as data_count FROM diamante_ticket t INNER JOIN (SELECT min(c.created_at) AS c_created_at, c.ticket_id AS subquery_ticket_id FROM diamante_comment c GROUP BY c.ticket_id) s ON (t.id = s.subquery_ticket_id) WHERE {$dateDiffExpression} > 3600 * 24");
+              SELECT '0-1'     AS data_range,
+                    count(t.id) as data_count
+              FROM diamante_ticket t
+              INNER JOIN
+              (SELECT min(c.created_at) AS c_created_at,
+                      c.ticket_id AS subquery_ticket_id
+              FROM diamante_comment c
+              GROUP BY c.ticket_id) s
+              ON (t.id = s.subquery_ticket_id)
+              WHERE {$dateDiffExpression} BETWEEN 0 AND 3600
+              UNION ALL
+              SELECT '1-8' AS data_range,
+                      count(t.id) as data_count
+              FROM diamante_ticket t
+              INNER JOIN
+              (SELECT min(c.created_at) AS c_created_at,
+                      c.ticket_id AS subquery_ticket_id
+              FROM diamante_comment c
+              GROUP BY c.ticket_id) s
+              ON (t.id = s.subquery_ticket_id)
+              WHERE {$dateDiffExpression} BETWEEN 3600 AND 3600 * 8
+              UNION ALL
+              SELECT '8-24' AS data_range,
+                     count(t.id) as data_count
+              FROM diamante_ticket t
+              INNER JOIN
+              (SELECT min(c.created_at) AS c_created_at,
+                      c.ticket_id AS subquery_ticket_id
+              FROM diamante_comment c
+              GROUP BY c.ticket_id) s
+              ON (t.id = s.subquery_ticket_id)
+              WHERE {$dateDiffExpression} BETWEEN 3600 * 8 AND 3600 * 24
+              UNION ALL
+              SELECT 'more 24' AS data_range,
+              count(t.id) as data_count
+              FROM diamante_ticket t
+              INNER JOIN
+              (SELECT min(c.created_at) AS c_created_at,
+                      c.ticket_id AS subquery_ticket_id
+              FROM diamante_comment c
+              GROUP BY c.ticket_id) s
+              ON (t.id = s.subquery_ticket_id)
+              WHERE {$dateDiffExpression} > 3600 * 24");
+    }
+
+    public function getTicketsByPriority()
+    {
+        return $this->execute("
+        select day,
+            sum(case when priority = 'low' then value else 0 end) as 'low',
+            sum(case when priority = 'medium' then value else 0 end) as 'medium',
+            sum(case when priority = 'high' then value else 0 end) as 'high'
+        from (SELECT date(t.created_at) as day, t.priority, count(t.priority) as value FROM diamantedesk.diamante_ticket t group by date(t.created_at), t.priority) mt
+        group by day");
     }
 
     /**
