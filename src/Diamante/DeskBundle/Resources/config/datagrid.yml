@@ -73,8 +73,8 @@ datagrid:
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
         mass_actions:
             delete:
-                type:               delete
-                label :             diamante.desk.branch.actions.remove_mass
+                type:               delete_branch
+                label:              diamante.desk.branch.actions.remove_mass
                 acl_resource:       DELETE;Entity:DiamanteDeskBundle:Branch
                 entity_name:        DiamanteDeskBundle:Branch
                 data_identifier:    b.id

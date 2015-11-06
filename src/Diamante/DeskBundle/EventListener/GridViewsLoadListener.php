@@ -50,13 +50,15 @@ class GridViewsLoadListener implements EventSubscriber
         $this->aclHelper = $aclHelper;
     }
 
-    public function getSubscribedEvents() {
+    public function getSubscribedEvents()
+    {
         return [
             'onViewsLoad',
         ];
     }
 
-    public function onViewsLoad(GridViewsLoadEvent $event) {
+    public function onViewsLoad(GridViewsLoadEvent $event)
+    {
 
         $gridName = $event->getGridName();
         $currentUser = $this->getCurrentUser();
@@ -72,8 +74,8 @@ class GridViewsLoadListener implements EventSubscriber
         foreach ($gridViews as $gridView) {
             $filtersData = $gridView->getFiltersData();
 
-            if(isset($filtersData['assigneeFullName']) && $filtersData['assigneeFullName'] !== false) {
-                if(strpos($filtersData['assigneeFullName'], self::FIXTURE_USERNAME) !== false) {
+            if (isset($filtersData['assigneeFullName']) && $filtersData['assigneeFullName'] !== false) {
+                if (strpos($filtersData['assigneeFullName'], self::FIXTURE_USERNAME) !== false) {
                     $filtersData['assigneeFullName'] = $currentUser->getFirstName() . ' ' . $currentUser->getLastName();
                     $gridView->setFiltersData($filtersData);
                 }

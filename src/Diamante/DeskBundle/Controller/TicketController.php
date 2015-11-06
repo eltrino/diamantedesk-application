@@ -76,10 +76,7 @@ class TicketController extends Controller
 
             return ['entity'  => $ticket, 'ticketKey' => (string)$ticket->getKey()];
         } catch (TicketMovedException $e) {
-            return $this->redirect(
-                $this->generateUrl('diamante_ticket_view', array('key' => $e->getTicketKey())
-                )
-            );
+            return $this->redirect($this->generateUrl('diamante_ticket_view', array('key' => $e->getTicketKey())));
         } catch (\Exception $e) {
             $this->handleException($e);
             throw $this->createNotFoundException($e->getMessage(), $e);
@@ -170,7 +167,11 @@ class TicketController extends Controller
             $ticket = $this->get('diamante.ticket.service')->createTicket($command);
 
             $this->addSuccessMessage('diamante.desk.ticket.messages.create.success');
-            $response = $this->getSuccessSaveResponse('diamante_ticket_update', 'diamante_ticket_view', ['key' => (string)$ticket->getKey()]);
+            $response = $this->getSuccessSaveResponse(
+                'diamante_ticket_update',
+                'diamante_ticket_view',
+                ['key' => (string)$ticket->getKey()]
+            );
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = array('form' => $formView);
@@ -211,7 +212,11 @@ class TicketController extends Controller
 
             $ticket = $this->get('diamante.ticket.service')->updateTicket($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.save.success');
-            $response = $this->getSuccessSaveResponse('diamante_ticket_update', 'diamante_ticket_view', ['key' => (string)$ticket->getKey()]);
+            $response = $this->getSuccessSaveResponse(
+                'diamante_ticket_update',
+                'diamante_ticket_view',
+                ['key' => (string)$ticket->getKey()]
+            );
         } catch (TicketMovedException $e) {
             return $this->redirect(
                 $this->generateUrl(
@@ -226,7 +231,10 @@ class TicketController extends Controller
                 'form' => $formView,
                 'branchId' => $ticket->getBranch()->getId(),
                 'branchName' => $ticket->getBranch()->getName(),
-                'branchLogoPathname' => $ticket->getBranch()->getLogo() ? $ticket->getBranch()->getLogo()->getPathname() : null
+                'branchLogoPathname' =>
+                    $ticket->getBranch()->getLogo()
+                    ? $ticket->getBranch()->getLogo()->getPathname()
+                    : null
             );
         }
         return $response;
@@ -268,7 +276,10 @@ class TicketController extends Controller
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $commandFactory = new CommandFactory();
-        $form = $this->createForm('diamante_attachment_form', $commandFactory->createAddTicketAttachmentCommand($ticket));
+        $form = $this->createForm(
+            'diamante_attachment_form',
+            $commandFactory->createAddTicketAttachmentCommand($ticket)
+        );
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,
@@ -293,7 +304,10 @@ class TicketController extends Controller
         $ticket = $ticketService->loadTicket($id);
         $response = null;
         $commandFactory = new CommandFactory();
-        $form = $this->createForm('diamante_attachment_form', $commandFactory->createAddTicketAttachmentCommand($ticket));
+        $form = $this->createForm(
+            'diamante_attachment_form',
+            $commandFactory->createAddTicketAttachmentCommand($ticket)
+        );
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,
@@ -555,7 +569,7 @@ class TicketController extends Controller
             $form->handleRequest($this->getRequest());
             $requestAssign = $this->getRequest()->get('assignee');
 
-            if(!isset($requestAssign)) {
+            if (!isset($requestAssign)) {
                 $assignee = $command->assignee;
             } else {
                 $assignee = $requestAssign;
@@ -563,7 +577,7 @@ class TicketController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->createAssigneeTicketCommand($ticket);
@@ -611,7 +625,7 @@ class TicketController extends Controller
             $form->handleRequest($this->getRequest());
             $requestStatus = $this->getRequest()->get('status');
 
-            if(!isset($requestStatus)) {
+            if (!isset($requestStatus)) {
                 $status = $command->status;
             } else {
                 $status = $requestStatus;
@@ -619,7 +633,7 @@ class TicketController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->createUpdateStatusCommandForView($ticket);
@@ -667,7 +681,7 @@ class TicketController extends Controller
             $form->handleRequest($this->getRequest());
             $requestBranch = $this->getRequest()->get('branch');
 
-            if(!isset($requestBranch)) {
+            if (!isset($requestBranch)) {
                 $branch = $command->branch;
             } else {
                 $branch = $requestBranch;
@@ -675,14 +689,14 @@ class TicketController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->createMoveTicketCommand($ticket);
 
                 $command->branch = $this->get('diamante.branch.service')->getBranch($branch);
 
-                if ($command->branch->getId() != $ticket->getBranch()->getId()){
+                if ($command->branch->getId() != $ticket->getBranch()->getId()) {
                     $this->get('diamante.ticket.service')->moveTicket($command);
                 }
             }
@@ -729,7 +743,7 @@ class TicketController extends Controller
             $form->handleRequest($this->getRequest());
             $requestWatcher = $this->getRequest()->get('branch');
 
-            if(!isset($requestWatcher)) {
+            if (!isset($requestWatcher)) {
                 $watcher = $command->watcher;
             } else {
                 $watcher = $requestWatcher;
@@ -737,7 +751,7 @@ class TicketController extends Controller
 
             $ids = explode(",", $this->getRequest()->get('ids'));
 
-            foreach($ids as $id) {
+            foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
                 $command = $this->get('diamante.command_factory')
                     ->addWatcherCommand($ticket);
