@@ -19,5 +19,5 @@ use Diamante\AutomationBundle\Api\Command\RuleCommand;
 
 interface RuleService
 {
-    public function actionRule($command, $action);
+    public function actionRule(RuleCommand $command, $action);
 }

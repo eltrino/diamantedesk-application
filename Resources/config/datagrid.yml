@@ -15,15 +15,15 @@ datagrid:
             id: ~
             view_link:
                 type:       url
-                route:      diamante_automation_view
+                route:      diamante_workflow_view
                 params:     [ id ]
             update_link:
                 type:       url
-                route:      diamante_automation_update
+                route:      diamante_workflow_update
                 params:     [ id ]
             delete_link:
                 type:       url
-                route:      diamante_automation_delete
+                route:      diamante_workflow_delete
                 params:     [ id ]
         columns:
             condition:
@@ -54,5 +54,63 @@ datagrid:
                 label :             diamante.automation.rule.actions.remove_mass
                 acl_resource:       DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
                 entity_name:        DiamanteAutomationBundle:WorkflowRule
+                data_identifier:    w.id
+                icon:               trash
+
+    diamante-business-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - w.id
+                    - w.condition
+                from:
+                    - { table: %diamante_automation.business_rule.entity.class%, alias: w }
+                where:
+                    and:
+                        - w.parent is null
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_business_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      diamante_business_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      diamante_business_delete
+                params:     [ id ]
+        columns:
+            condition:
+                label: diamante.automation.rule.columns.name
+        actions:
+            view:
+                type:          navigate
+                label:         diamante.automation.rule.actions.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+                acl_resource:  VIEW;Entity:DiamanteAutomationBundle:BusinessRule
+            update:
+                type:          navigate
+                label:         diamante.automation.rule.actions.edit
+                icon:          edit
+                link:          update_link
+                acl_resource:  EDIT;Entity:DiamanteAutomationBundle:BusinessRule
+            delete:
+                type:          delete
+                label:         diamante.automation.rule.actions.remove
+                icon:          trash
+                link:          delete_link
+                acl_resource:  DELETE;Entity:DiamanteAutomationBundle:BusinessRule
+        mass_actions:
+            delete:
+                type:               delete
+                label :             diamante.automation.rule.actions.remove_mass
+                acl_resource:       DELETE;Entity:DiamanteAutomationBundle:BusinessRule
+                entity_name:        DiamanteAutomationBundle:BusinessRule
                 data_identifier:    w.id
                 icon:               trash

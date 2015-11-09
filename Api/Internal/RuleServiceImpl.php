@@ -52,7 +52,7 @@ class RuleServiceImpl implements RuleService
      *
      * @return \Diamante\AutomationBundle\Model\Rule
      */
-    public function loadBusinessRule(RuleCommand $command)
+    public function loadBusinessRule($command)
     {
         $rule = $this->businessRuleRepository->get($command->id);
 
@@ -81,29 +81,41 @@ class RuleServiceImpl implements RuleService
 
     public function createBusinessRule(RuleCommand $command)
     {
+        return $this->createBusinessConditions($command->conditions);
+    }
+
+    private function createBusinessConditions($command)
+    {
+        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
+
         $rule = new BusinessRule(
             $command->expression,
-            $command->condition,
-            $command->action,
+            $condition,
+            null,
             $command->weight,
             $command->active,
             new Target($command->target),
             $command->parent
         );
 
-        $this->businessRuleRepository->store($rule);
+        $this->workflowRuleRepository->store($rule);
 
         if ($command->children) {
             foreach ($command->children as $child) {
                 $child->parent = $rule;
-                $this->createBusinessRule($child);
+                $this->createBusinessConditions($child);
             }
         }
 
-        return;
+        return $rule->getId();
     }
 
-    public function createWorkflowRule($command)
+    public function createWorkflowRule(RuleCommand $command)
+    {
+        return $this->createWorkflowConditions($command->conditions);
+    }
+
+    private function createWorkflowConditions($command)
     {
         $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
 
@@ -122,14 +134,19 @@ class RuleServiceImpl implements RuleService
         if ($command->children) {
             foreach ($command->children as $child) {
                 $child->parent = $rule;
-                $this->createWorkflowRule($child);
+                $this->createWorkflowConditions($child);
             }
         }
 
         return $rule->getId();
     }
 
-    public function updateWorkflowRule($command)
+    public function updateWorkflowRule(RuleCommand $command)
+    {
+        return $this->updateWorkflowConditions($command->conditions);
+    }
+
+    private function updateWorkflowConditions($command)
     {
         if (is_null($command->parent)) {
             $this->deleteWorkflowRule($command);
@@ -152,7 +169,7 @@ class RuleServiceImpl implements RuleService
         if ($command->children) {
             foreach ($command->children as $child) {
                 $child->parent = $rule;
-                $this->updateWorkflowRule($child);
+                $this->updateWorkflowConditions($child);
             }
         }
 
@@ -161,21 +178,40 @@ class RuleServiceImpl implements RuleService
 
     public function updateBusinessRule(RuleCommand $command)
     {
-        $rule = $this->loadBusinessRule($command);
-        $rule->update(
+        return $this->updateBusinessConditions($command->conditions);
+    }
+
+    private function updateBusinessConditions($command)
+    {
+        if (is_null($command->parent)) {
+            $this->deleteWorkflowRule($command);
+        }
+
+        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
+
+        $rule = new WorkflowRule(
             $command->expression,
-            $command->condition,
-            $command->action,
+            $condition,
+            null,
             $command->weight,
             $command->active,
             new Target($command->target),
             $command->parent
         );
 
-        $this->businessRuleRepository->store($rule);
+        $this->workflowRuleRepository->store($rule);
+
+        if ($command->children) {
+            foreach ($command->children as $child) {
+                $child->parent = $rule;
+                $this->updateBusinessConditions($child);
+            }
+        }
+
+        return $rule->getId();
     }
 
-    public function deleteBusinessRule(RuleCommand $command)
+    public function deleteBusinessRule($command)
     {
         $rule = $this->loadBusinessRule($command);
         $this->businessRuleRepository->remove($rule);
@@ -230,7 +266,7 @@ class RuleServiceImpl implements RuleService
      * @return \Diamante\AutomationBundle\Model\Rule|void
      * @throws \Exception
      */
-    public function actionRule($command, $action)
+    public function actionRule(RuleCommand $command, $action)
     {
         if ($command->mode !== EngineImpl::MODE_BUSINESS && $command->mode !== EngineImpl::MODE_WORKFLOW) {
             throw new \RuntimeException('Incorrect rule mode.');

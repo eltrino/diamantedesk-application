@@ -37,7 +37,7 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
 
     /**
      * @var Condition
-     * @ORM\Column(name="rule_condition", type="condition_type")
+     * @ORM\Column(name="rule_condition", type="condition_type", nullable=true)
      */
     protected $condition;
 
@@ -55,7 +55,7 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Diamante\AutomationBundle\Entity\BusinessRule", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Diamante\AutomationBundle\Entity\BusinessRule", mappedBy="parent", cascade={"persist", "remove"})
      */
     protected $children;
 

@@ -1,14 +1,14 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-{% set gridName = 'diamante-workflow-grid' %}
+{% set gridName = 'diamante-business-grid' %}
 
 {% set pageTitle = 'diamante.automation.rule.entity_plural_label'|trans %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:WorkflowRule') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:BusinessRule') %}
         {{
             UI.addButton({
-                'path' : path('diamante_workflow_create'),
+                'path' : path('diamante_business_create'),
                 'title' : 'diamante.automation.ui.create'|trans,
                 'label' : 'diamante.automation.ui.create'|trans
             })

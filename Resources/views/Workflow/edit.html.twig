@@ -3,10 +3,10 @@
 {% import 'DiamanteAutomationBundle:Rule/macros:conditions.html.twig' as _conditions %}
 {% import 'DiamanteAutomationBundle:Rule/macros:actions.html.twig' as _actions %}
 
-{% set formAction = form.vars.value.id ? path(updateAction, { 'id': form.vars.value.id }) : path(createAction) %}
+{% set formAction = form.vars.value.id ? path('diamante_workflow_update', { 'id': form.vars.value.id }) : path('diamante_workflow_create') %}
 
 {% block navButtons %}
-    {% set cancel_url = path(listAction) %}
+    {% set cancel_url = path('diamante_workflow_list') %}
     {{ UI.button({'path' : cancel_url, 'title' : 'diamante.automation.ui.cancel'|trans, 'label' : 'diamante.automation.ui.cancel'|trans}) }}
     {% set html = UI.saveAndCloseButton() %}
     {{ UI.dropdownSaveButton({'html': html}) }}
@@ -17,7 +17,7 @@
     {% if form.vars.value.id %}
         {% set breadcrumbs = {
         'entity':      form.vars.value,
-        'indexPath':   path(listAction),
+        'indexPath':   path('diamante_workflow_list'),
         'indexLabel':  'diamante.automation.rule.entity_plural_label'|trans,
         'entityTitle': form.vars.value.name|default('N/A'),
         'hasAvatar':   true,

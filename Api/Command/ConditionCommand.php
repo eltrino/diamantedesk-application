@@ -93,13 +93,6 @@ class ConditionCommand
      */
     public $expression;
 
-    /**
-     * @var string
-     *
-     * @Type("string")
-     */
-    public $mode = 'workflow';
-
     public static function createFromRule($rule)
     {
         return self::create($rule);

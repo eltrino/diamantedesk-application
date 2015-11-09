@@ -5,9 +5,9 @@
 {% oro_title_set({params : {"%rule.name%": entity.name|default('diamante.automation.common.not_available'|trans) }}) %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:WorkflowRule') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:BusinessRule') %}
         {{ UI.button({
-            'path': path('diamante_workflow_create', {'id': entity.id}),
+            'path': path('diamante_business_create', {'id': entity.id}),
             'iCss': 'icon-plus',
             'title': 'diamante.automation.rule.actions.add'|trans,
             'label': 'diamante.automation.rule.actions.add'|trans
@@ -15,7 +15,7 @@
     {% endif %}
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
-            'path': path('diamante_workflow_update', {'id': entity.id}),
+            'path': path('diamante_business_update', {'id': entity.id}),
             'iCss': 'icon-edit',
             'title': 'diamante.automation.rule.actions.edit'|trans,
             'label': 'diamante.automation.ui.edit'|trans
@@ -24,8 +24,8 @@
 
     {% if resource_granted('DELETE', entity) %}
         {{ UI.deleteButton({
-            'dataUrl': path('diamante_workflow_delete', {'id': entity.id}),
-            'dataRedirect': path('diamante_workflow_list'),
+            'dataUrl': path('diamante_business_delete', {'id': entity.id}),
+            'dataRedirect': path('diamante_business_list'),
             'aCss': 'no-hash remove-button',
             'dataId': entity.id,
             'id': 'btn-remove-account',
@@ -41,7 +41,7 @@
 {% block pageHeader %}
     {% set breadcrumbs = {
             'entity': entity,
-            'indexPath': path('diamante_workflow_list'),
+            'indexPath': path('diamante_business_list'),
             'indexLabel': 'diamante.automation.rule.entity_plural_label'|trans,
             'entityTitle': entity.name|default('diamante.automation.common.not_available'|trans),
             'hasAvatar': true,

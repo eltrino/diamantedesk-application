@@ -14,12 +14,6 @@
  */
 namespace Diamante\AutomationBundle\Api\Command;
 
-use Diamante\AutomationBundle\Rule\Condition\Condition;
-use Diamante\AutomationBundle\Model\Target;
-use Diamante\AutomationBundle\Model\Shared\AutomationRule;
-use Diamante\AutomationBundle\Model\Rule;
-use JMS\Serializer\Annotation\Type;
-
 /**
  * Class RuleCommand
  *
@@ -39,8 +33,6 @@ class RuleCommand
 
     /**
      * @var array
-     *
-     * @Type("array<Diamante\AutomationBundle\Api\Command\ConditionCommand>")
      */
     public $conditions;
 
@@ -49,5 +41,8 @@ class RuleCommand
      */
     public $actions;
 
+    /**
+     * @var string
+     */
     public $mode;
 }
