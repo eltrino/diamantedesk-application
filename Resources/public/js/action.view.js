@@ -24,28 +24,69 @@ define(['underscore',
         /**
          * Constructor
          */
-        initialize: function () {
-            this.mock = Mock.data;
+        initialize: function (options) {
+            //this.mock = Mock.data;
+            this.options = options;
             this.collection = new ActionCollection();
 
-            if (_.isObject(this.mock)) {
-                this.render();
+            this.listenTo(this.collection, 'toJson', this.toJson);
+            this.listenTo(this.collection, 'addNew', this.renderNew);
+
+            if (!_.isEmpty(options.actions)) {
+                this.actions = JSON.parse(options.actions);
+                this.renderStored();
             }
         },
 
-        addAction: function () {
-            var view = new ActionItemView();
-            this.$('#list-action').append(view.renderEdit().el);
+        toJson: function () {
+            if (this.options.actionsEl) {
+                this.$(this.options.actionsEl).val(JSON.stringify(this.collection.toJSON()));
+            }
         },
 
-        render: function() {
+        addAction: function (e) {
+            e.preventDefault();
+
+            var defaultAction = {
+                "action": "Send",
+                "property": "email",
+                "value": "reporter"
+            };
+            this.collection.add(defaultAction);
+            this.collection.trigger('addNew');
+
+            //var view = new ActionItemView();
+            //this.$('#list-action').append(view.renderEdit().el);
+        },
+
+        render: function(actions, getModel) {
+            var that = this,
+                parent = this.$('#list-action');
+
+            _.each(actions, function(item) {
+                var model = getModel(item);
+                var view = new ActionItemView({"model": model, "collection": that.collection});
+                parent.append(view.renderItemView().el);
+            });
+
+            this.collection.trigger("toJson");
+        },
+
+        renderStored: function () {
             var that = this;
 
-            _.each(this.mock, function(item) {
-                var model = new ActionModel(item);
-                that.collection.add(model);
-                var view = new ActionItemView({"model": model, "collection": that.collection});
-                that.$('#list-action').append(view.renderItemView().el);
+            this.render(this.actions, function (data) {
+                return that.collection.add(data, {"silent": true});
+            });
+        },
+
+        renderNew: function () {
+            this.$('#list-action').html('');
+            var jsonTree = this.collection.toJSON(),
+                that = this;
+
+            this.render(jsonTree, function (data) {
+                return that.collection.add(data, {"silent": true});
             });
         }
     });

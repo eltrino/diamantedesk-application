@@ -36,9 +36,11 @@
         require(['jquery', 'diamanteautomation/js/condition.view', 'diamanteautomation/js/action.view'],
                 function ($, ConditionView, ActionView) {
                     $(function () {
-                        var conditionsEl = $('#{{ form.conditions.vars.id }}');
+                        var conditionsEl = $('#{{ form.conditions.vars.id }}'),
+                            actionsEl = $('#{{ form.actions.vars.id }}');
+
                         new ConditionView({"conditions": conditionsEl.val(), "conditionsEl": conditionsEl});
-                        new ActionView({fieldId: '#{{ form.actions.vars.id }}'});
+                        new ActionView({"actions": actionsEl.val(), "actionsEl": actionsEl});
                     });
                 });
     </script>

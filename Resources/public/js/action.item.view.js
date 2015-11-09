@@ -12,7 +12,7 @@ define(['underscore', 'backbone', './mock'
         editTemplate: _.template($('#item-action-edit').html()),
 
         events: {
-            'click .delete': 'remove',
+            'click .delete': 'removeItem',
             'click .save': 'saveItem',
             'click .edit': 'editItem',
             'change select': 'changeSelectView'
@@ -65,6 +65,12 @@ define(['underscore', 'backbone', './mock'
 
         renderView: function () {
             return this.viewTemplate(this.model.attributes);
+        },
+
+        removeItem: function () {
+            this.collection.remove(this.model);
+            this.remove();
+            this.collection.trigger("toJson");
         }
     });
 });
