@@ -26,9 +26,9 @@
         <div class="edit-group x-hide"></div>
 
         {% if mode != 'view' %}
-            <span class="delete editable <%= this.cid %>">delete</span>
-            <span class="edit editable x-view <%= this.cid %>">edit</span>
-            <span class="save editable x-hide x-edit <%= this.cid %>">save</span>
+            <span class="delete editable">delete</span>
+            <span class="edit editable x-view">edit</span>
+            <span class="save editable x-hide x-edit">save</span>
         {% endif %}
     </script>
 
@@ -40,7 +40,7 @@
         Match
         <div class="selector">
             <span><%= expressions[attrs.expression].name %></span>
-            <select data-property="expression" class="condition <%= this.cid %>">
+            <select data-property="expression" class="expression">
                 <% _.each(expressions, function(item, key) { %>
                 <option
                 <% if (attrs.expression == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>

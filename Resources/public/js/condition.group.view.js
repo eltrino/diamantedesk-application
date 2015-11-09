@@ -10,24 +10,16 @@ define(['underscore', 'backbone', './mock'
         template: _.template($('#group-condition').html()),
         viewTemplate: _.template($('#group-condition-view').html()),
         editTemplate: _.template($('#group-condition-edit').html()),
+        events: {
+            'click .delete': 'removeGroup',
+            'click .save': 'saveGroup',
+            'click .edit': 'editGroup',
+            'change .expression': 'changeElement'
+        },
 
         initialize: function () {
-            var that = this,
-                events = {
-                    'click .delete': 'removeGroup',
-                    'click .save': 'saveGroup',
-                    'click .edit': 'editGroup',
-                    'change select': 'changeElement'
-                };
-
-            this.events = {};
             this.mock = Mock;
             this.model.view = this;
-
-            _.each(events, function (handler, event) {
-                var actionSelector = event + '.' + that.cid;
-                that.events[actionSelector] = handler;
-            });
 
             this.listenTo(this.model, 'expressionChanged', this.redrawEdit);
         },
@@ -39,20 +31,24 @@ define(['underscore', 'backbone', './mock'
         },
 
         redrawEdit: function() {
-            $('.edit-group', this.$el).html(this.renderEdit());
+            this.$el.children('.edit-group').html(this.renderEdit());
         },
 
-        editGroup: function () {
+        editGroup: function (e) {
+            e.stopPropagation();
+
             this.$el.children('.edit-group').html(this.renderEdit());
             this.$el.children('.edit-group, .save').removeClass('x-hide');
             this.$el.children('.view-group, .edit').addClass('x-hide');
         },
 
-        saveGroup: function () {
+        saveGroup: function (e) {
+            e.stopPropagation();
+
             this.$el.children('.view-group').html(this.renderView());
             this.$el.children('.edit-group, .save').addClass('x-hide');
             this.$el.children('.view-group, .edit').removeClass('x-hide');
-console.log(this.collection);
+
             this.collection.trigger("toJson");
         },
 

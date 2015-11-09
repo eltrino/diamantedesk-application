@@ -10,7 +10,7 @@ define(['underscore', 'backbone', './mock'
         template: _.template($('#item-condition').html()),
 
         events: {
-            'click .delete': 'removeView',
+            'click .delete': 'removeItem',
             'click .save': 'saveItem',
             'click .edit': 'editItem',
             'change select': 'changeElement',
@@ -27,7 +27,7 @@ define(['underscore', 'backbone', './mock'
             this.listenTo(this.model, 'change:target', this.changeModelField);
         },
 
-        removeView: function () {
+        removeItem: function () {
             this.collection.remove(this.model);
             this.remove();
             this.collection.trigger("toJson");
