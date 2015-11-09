@@ -81,130 +81,100 @@ class RuleServiceImpl implements RuleService
 
     public function createBusinessRule(RuleCommand $command)
     {
-        return $this->createBusinessConditions($command->conditions);
-    }
+        $rule = function ($command, $condition) {
+            return new BusinessRule(
+                $command->expression,
+                $condition,
+                null,
+                $command->weight,
+                $command->active,
+                new Target($command->target),
+                $command->parent
+            );
+        };
 
-    private function createBusinessConditions($command)
-    {
-        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
-
-        $rule = new BusinessRule(
-            $command->expression,
-            $condition,
-            null,
-            $command->weight,
-            $command->active,
-            new Target($command->target),
-            $command->parent
-        );
-
-        $this->workflowRuleRepository->store($rule);
-
-        if ($command->children) {
-            foreach ($command->children as $child) {
-                $child->parent = $rule;
-                $this->createBusinessConditions($child);
-            }
-        }
-
-        return $rule->getId();
+        return $this->updateConditions($command->conditions, $rule);
     }
 
     public function createWorkflowRule(RuleCommand $command)
     {
-        return $this->createWorkflowConditions($command->conditions);
-    }
+        $rule = function ($command, $condition) {
+            return new WorkflowRule(
+                $command->expression,
+                $condition,
+                null,
+                $command->weight,
+                $command->active,
+                new Target($command->target),
+                $command->parent
+            );
+        };
 
-    private function createWorkflowConditions($command)
-    {
-        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
-
-        $rule = new WorkflowRule(
-            $command->expression,
-            $condition,
-            null,
-            $command->weight,
-            $command->active,
-            new Target($command->target),
-            $command->parent
-        );
-
-        $this->workflowRuleRepository->store($rule);
-
-        if ($command->children) {
-            foreach ($command->children as $child) {
-                $child->parent = $rule;
-                $this->createWorkflowConditions($child);
-            }
-        }
-
-        return $rule->getId();
+        return $this->updateConditions($command->conditions, $rule);
     }
 
     public function updateWorkflowRule(RuleCommand $command)
     {
-        return $this->updateWorkflowConditions($command->conditions);
-    }
+        $rule = function ($command, $condition) {
+            return new WorkflowRule(
+                $command->expression,
+                $condition,
+                null,
+                $command->weight,
+                $command->active,
+                new Target($command->target),
+                $command->parent
+            );
+        };
 
-    private function updateWorkflowConditions($command)
-    {
-        if (is_null($command->parent)) {
-            $this->deleteWorkflowRule($command);
-        }
-
-        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
-
-        $rule = new WorkflowRule(
-            $command->expression,
-            $condition,
-            null,
-            $command->weight,
-            $command->active,
-            new Target($command->target),
-            $command->parent
-        );
-
-        $this->workflowRuleRepository->store($rule);
-
-        if ($command->children) {
-            foreach ($command->children as $child) {
-                $child->parent = $rule;
-                $this->updateWorkflowConditions($child);
+        $onUpdate = function ($command) {
+            if (is_null($command->parent)) {
+                $this->deleteWorkflowRule($command);
             }
-        }
+        };
 
-        return $rule->getId();
+        return $this->updateConditions($command->conditions, $rule, $onUpdate);
     }
 
     public function updateBusinessRule(RuleCommand $command)
     {
-        return $this->updateBusinessConditions($command->conditions);
+        $rule = function ($command, $condition) {
+            return new BusinessRule(
+                $command->expression,
+                $condition,
+                null,
+                $command->weight,
+                $command->active,
+                new Target($command->target),
+                $command->parent
+            );
+        };
+
+        $onUpdate = function ($command) {
+            if (is_null($command->parent)) {
+                $this->deleteBusinessRule($command);
+            }
+        };
+
+        return $this->updateConditions($command->conditions, $rule, $onUpdate);
     }
 
-    private function updateBusinessConditions($command)
+    private function updateConditions($command, $newRule, $onUpdate = null)
     {
-        if (is_null($command->parent)) {
-            $this->deleteWorkflowRule($command);
+        if (is_callable($onUpdate)) {
+            $onUpdate($command);
         }
 
         $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
 
-        $rule = new WorkflowRule(
-            $command->expression,
-            $condition,
-            null,
-            $command->weight,
-            $command->active,
-            new Target($command->target),
-            $command->parent
-        );
+        $rule = $newRule($command, $condition);
 
         $this->workflowRuleRepository->store($rule);
 
         if ($command->children) {
             foreach ($command->children as $child) {
                 $child->parent = $rule;
-                $this->updateBusinessConditions($child);
+                $this->updateConditions($child, $newRule);
             }
         }
 
