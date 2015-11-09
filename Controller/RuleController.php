@@ -44,13 +44,9 @@ abstract class RuleController extends Controller
     public function viewAction($id)
     {
         try {
-            $viewCommand = new RuleCommand();
-            $viewCommand->id = $id;
-            $viewCommand->mode = static::MODE;
-            $rule = $this->get('diamante.rule.service')->actionRule($viewCommand, self::LOAD);
-            $serializer = SerializerBuilder::create()->build();
-            $conditionCommand = ConditionCommand::createFromRule($rule);
-            $conditions = $serializer->serialize($conditionCommand, 'json');
+            $loadCommand = $this->createLoadRuleCommand($id);
+            $rule = $this->get('diamante.rule.service')->actionRule($loadCommand, self::LOAD);
+            $viewCommand = $this->createViewRuleCommand($rule);
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(
                 sprintf('Rule loading failed: %s', $e->getMessage())
@@ -59,7 +55,7 @@ abstract class RuleController extends Controller
             return new Response($e->getMessage(), 404);
         }
 
-        return ['entity' => $rule, 'conditions' => $conditions];
+        return ['entity' => $rule, 'conditions' => $viewCommand->conditions];
     }
 
     public function createAction()
