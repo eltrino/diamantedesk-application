@@ -92,9 +92,4 @@ interface UserService
      * @return void
      */
     public function resetPassword(User $user);
-
-    /**
-     * @param NotificationManager $notificationManager
-     */
-    public function setNotificationManager(NotificationManager $notificationManager);
 }

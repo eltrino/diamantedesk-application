@@ -54,11 +54,6 @@ class InitializationStep extends AbstractStep
             case 'requirejs':
                 return $this->handleAjaxAction('oro:requirejs:build', ['--ignore-errors' => true]);
             case 'finish':
-                try {
-                    $this->runCommand('doctrine:schema:update', ['--force' => true, '--quiet' => true]);
-                } catch (\Exception $e) {
-                    //@TODO: This should be refactored once we move to Oro Migrations for schema handling routines.
-                }
                 $this->get('event_dispatcher')->dispatch(InstallerEvents::FINISH);
                 // everything was fine - update installed flag in parameters.yml
                 $dumper = $this->get('oro_installer.yaml_persister');
@@ -78,11 +73,7 @@ class InitializationStep extends AbstractStep
     protected function handleSchemaUpdate()
     {
         $actions = [
-            ['oro:migration:load', ['--force' => true, '--exclude' => ['DiamanteEmbeddedFormBundle', 'DiamanteDeskBundle'], '--timeout' => 0]],
-            ['diamante:user:schema', []],
-            ['diamante:desk:schema', []],
-            ['oro:migration:load', ['--force' => true, '--bundles' => ['DiamanteDeskBundle'], '--timeout' => 0]],
-            ['diamante:embeddedform:schema', []]
+            ['oro:migration:load', ['--force' => true, '--timeout' => 0]]
         ];
 
         $exitCode = 0;
@@ -100,8 +91,7 @@ class InitializationStep extends AbstractStep
     protected function handleFixtures()
     {
         $actions = [
-            ['oro:migration:data:load', ['--no-interaction' => true]],
-            ['diamante:desk:data', []]
+            ['oro:migration:data:load', ['--no-interaction' => true, '--exclude' => ['DiamanteDistributionBundle']]],
         ];
 
         $exitCode = 0;

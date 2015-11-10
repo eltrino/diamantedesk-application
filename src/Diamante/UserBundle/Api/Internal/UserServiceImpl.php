@@ -22,6 +22,7 @@ use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Api\GravatarProvider;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Event\UserEvent;
 use Diamante\UserBundle\Infrastructure\DiamanteUserFactory;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
@@ -33,6 +34,7 @@ use Diamante\UserBundle\Entity\ApiUser as ApiUserEntity;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Oro\Bundle\AttachmentBundle\Manager\AttachmentManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class UserServiceImpl implements UserService, GravatarProvider
 {
@@ -56,22 +58,24 @@ class UserServiceImpl implements UserService, GravatarProvider
     protected $attachmentManager;
 
     /**
-     * @var NotificationManager
+     * @var EventDispatcherInterface
      */
-    protected $notifier;
+    protected $eventDispatcher;
 
     public function __construct(
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
         DiamanteUserFactory $factory,
         AttachmentManager $attachmentManager,
-        ApiUserRepository $diamanteApiUserRepository
+        ApiUserRepository $diamanteApiUserRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->oroUserManager               = $userManager;
         $this->diamanteUserRepository       = $diamanteUserRepository;
         $this->diamanteApiUserRepository    = $diamanteApiUserRepository;
         $this->factory                      = $factory;
         $this->attachmentManager            = $attachmentManager;
+        $this->eventDispatcher              = $eventDispatcher;
     }
 
     /**
@@ -195,7 +199,8 @@ class UserServiceImpl implements UserService, GravatarProvider
         $user->setDeleted(false);
         $user->setApiUser($apiUser);
 
-        $this->notifier->notifyByScenario('created', $user, ['activation_hash' => $user->getApiUser()->getHash()]);
+        $this->eventDispatcher->dispatch('user.notification', new UserEvent('created', $user));
+
         $this->diamanteUserRepository->store($user);
 
         return $user->getId();
@@ -333,7 +338,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $apiUser->setDiamanteUser($user);
         $this->diamanteApiUserRepository->store($apiUser);
 
-        $this->notifier->notifyByScenario('force_reset', $user, ['activation_hash' => $apiUser->getHash()]);
+        $this->eventDispatcher->dispatch('user.notification', new UserEvent('force_reset', $user));
     }
 
     /**
@@ -348,11 +353,4 @@ class UserServiceImpl implements UserService, GravatarProvider
         $this->resetPassword(new User($user->getId(), User::TYPE_DIAMANTE));
     }
 
-    /**
-     * @param NotificationManager $notificationManager
-     */
-    public function setNotificationManager(NotificationManager $notificationManager)
-    {
-        $this->notifier = $notificationManager;
-    }
 }

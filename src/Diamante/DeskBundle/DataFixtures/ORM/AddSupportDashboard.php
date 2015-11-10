@@ -2,12 +2,13 @@
 
 namespace Diamante\DeskBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\DashboardBundle\Migrations\Data\ORM\AbstractDashboardFixture;
 
 class AddSupportDashboard extends AbstractDashboardFixture
 {
-    /**
+     /**
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager)

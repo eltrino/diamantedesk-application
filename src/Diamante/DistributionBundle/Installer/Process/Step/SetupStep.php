@@ -74,6 +74,9 @@ class SetupStep extends AbstractStep
             }
             $configManager->flush();
 
+            $this->runCommand('diamante:desk:data');
+            $this->runCommand('oro:migration:data:load', ['--bundles' => ['DiamanteDistributionBundle']]);
+
             return $this->complete();
         }
 

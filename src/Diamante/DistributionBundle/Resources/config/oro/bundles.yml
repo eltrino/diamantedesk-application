@@ -1,2 +1,2 @@
 bundles:
-  - { name: Diamante\DistributionBundle\DiamanteDistributionBundle, priority: 120}
+  - { name: Diamante\DistributionBundle\DiamanteDistributionBundle, priority: 1005}

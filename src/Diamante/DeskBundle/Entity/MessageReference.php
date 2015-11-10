@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineMessageReferenceRepository")
- * @ORM\Table(name="diamante_ticket_message_reference")
+ * @ORM\Table(name="diamante_ticket_message_ref")
  */
 class MessageReference extends \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference
 {

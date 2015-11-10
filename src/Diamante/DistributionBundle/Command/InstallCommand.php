@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+
 namespace Diamante\DistributionBundle\Command;
 
 use Symfony\Bridge\Monolog\Logger;
@@ -35,6 +36,23 @@ class InstallCommand extends OroInstallCommand
      *
      */
     protected $logger;
+
+    /**
+     * @var InputOptionProvider
+     */
+    protected $inputOptionProvider;
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->logger = $this->getContainer()->get('monolog.logger.diamante');
+        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
+
+        if (false === $input->isInteractive()) {
+            $this->validate($input);
+        }
+
+        $this->commandExecutor = $this->getCommandExecutor($input, $output);
+    }
 
     /**
      * Configures the current command.
@@ -81,46 +99,23 @@ class InstallCommand extends OroInstallCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logger = $this->getContainer()->get('monolog.logger.diamante');
-
         $this->logger
             ->info(sprintf('DiamanteDesk installation started at %s', date('Y-m-d H:i:s')));
 
-        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
-        if (false === $input->isInteractive()) {
-            $this->validate($input);
-        }
-
         $forceInstall = $input->getOption('force');
-        $commandExecutor = $this->getCommandExecutor($input, $output);
 
         // if there is application is not installed or no --force option
         $isInstalled = $this->getContainer()->hasParameter('installed')
             && $this->getContainer()->getParameter('installed');
 
         if ($isInstalled && !$forceInstall) {
-            $output->writeln('<comment>ATTENTION</comment>: DiamanteDesk already installed.');
-            $output->writeln(
-                'To proceed with install - run command with <info>--force</info> option:'
-            );
-            $output->writeln(sprintf('    <info>%s --force</info>', $this->getName()));
-            $output->writeln(
-                'To reinstall over existing database - run command with <info>--force --drop-database</info> options:'
-            );
-            $output->writeln(sprintf('    <info>%s --force --drop-database</info>', $this->getName()));
-            $output->writeln(
-                '<comment>ATTENTION</comment>: All data will be lost. ' .
-                'Database backup is highly recommended before executing this command.'
-            );
-            $output->writeln('');
-
-            return 255;
+            return $this->alreadyInstalledMessage($output);
         }
 
         if ($forceInstall) {
             // if --force option we have to clear cache and set installed to false
             $this->updateInstalledFlag(false);
-            $commandExecutor->runCommand(
+            $this->commandExecutor->runCommand(
                 'cache:clear',
                 [
                     '--no-optional-warmers' => true,
@@ -132,62 +127,12 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('<info>Installing DiamanteDesk.</info>');
 
         $this->checkRequirementsStep($output);
-        $this->prepareStep($commandExecutor, $input->getOption('drop-database'));
+        $this->prepareStep($this->commandExecutor, $input->getOption('drop-database'))
+             ->loadDataStep($this->commandExecutor, $output);
 
-        // load data step
-        $output->writeln('<info>Setting up database.</info>');
-
-        $commandExecutor
-            ->runCommand(
-                'oro:migration:load',
-                [
-                    '--force'             => true,
-                    '--process-isolation' => true,
-                    '--exclude'           => array('DiamanteEmbeddedFormBundle', 'DiamanteDeskBundle'),
-                    '--timeout'           => $commandExecutor->getDefaultOption('process-timeout')
-                ]
-            );
-
-        $commandExecutor->runCommand('oro:workflow:definitions:load', ['--process-isolation' => true])
-            ->runCommand('oro:process:configuration:load', ['--process-isolation' => true])
-            ->runCommand('diamante:user:schema', ['--process-isolation' => true])
-            ->runCommand('diamante:desk:schema', ['--process-isolation' => true])
-            ->runCommand(
-                'oro:migration:load',
-                [
-                    '--force'             => true,
-                    '--process-isolation' => true,
-                    '--bundles'           => ['DiamanteDeskBundle'],
-                    '--timeout'           => $commandExecutor->getDefaultOption('process-timeout')
-                ]
-            )
-            ->runCommand('diamante:embeddedform:schema', ['--process-isolation' => true]);
-
-        $commandExecutor->runCommand(
-                'oro:migration:data:load',
-                [
-                    '--process-isolation' => true,
-                    '--no-interaction'    => true,
-                ]
-            );
-
-        $commandExecutor->runCommand('diamante:desk:data', ['--process-isolation' => true]);
-
-        $output->writeln('');
 
         $output->writeln('<info>Administration setup.</info>');
-
-        $this->updateSystemSettings();
-        $this->updateOrganization($commandExecutor);
-        $this->updateUser($commandExecutor);
-
-        $this->finalStep($commandExecutor, $output, $input);
-
-        try {
-            $commandExecutor->runCommand('doctrine:schema:update', ['--force' => true, '--quiet' => true]);
-        } catch (\Exception $e) {
-            $this->getContainer()->get('monolog.logger.diamante')->error(sprintf("Schema update failed upon installation: %e", $e->getMessage()));
-        }
+        $this->finalStep($this->commandExecutor, $output, $input);
 
         $output->writeln(
             sprintf(
@@ -210,99 +155,9 @@ class InstallCommand extends OroInstallCommand
     }
 
     /**
-     * Update the organization
-     *
-     * @param CommandExecutor $commandExecutor
-     */
-    protected function updateOrganization(CommandExecutor $commandExecutor)
-    {
-        /** @var ConfigManager $configManager */
-        $configManager             = $this->getContainer()->get('oro_config.global');
-        $defaultOrganizationName   = $configManager->get('diamante_distribution.organization_name');
-        $organizationNameValidator = function ($value) use (&$defaultOrganizationName) {
-            $len = strlen(trim($value));
-            if ($len === 0 && empty($defaultOrganizationName)) {
-                throw new \Exception('The organization name must not be empty');
-            }
-            if ($len > 15) {
-                throw new \Exception('The organization name must be not more than 15 characters long');
-            }
-            return $value;
-        };
-
-        $options = [
-            'organization-name' => [
-                'label'                  => 'Organization name',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$organizationNameValidator],
-                'defaultValue'           => $defaultOrganizationName,
-            ]
-        ];
-
-        $commandParameters = [];
-        foreach ($options as $optionName => $optionData) {
-            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
-                $optionName,
-                $optionData['label'],
-                $optionData['defaultValue'],
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
-            );
-        }
-
-        $commandExecutor->runCommand(
-            'oro:organization:update',
-            array_merge(
-                [
-                    'organization-name' => 'default',
-                    '--process-isolation' => true,
-                ],
-                $commandParameters
-            )
-        );
-    }
-
-    /**
-     * Update system settings such as app url, company name and short name
-     */
-    protected function updateSystemSettings()
-    {
-        /** @var ConfigManager $configManager */
-        $configManager = $this->getContainer()->get('oro_config.global');
-        $options       = [
-            'application-url' => [
-                'label'                  => 'Application URL',
-                'config_key'             => 'oro_ui.application_url',
-                'askMethod'              => 'ask',
-                'additionalAskArguments' => [],
-            ]
-        ];
-
-        foreach ($options as $optionName => $optionData) {
-            $configKey    = $optionData['config_key'];
-            $defaultValue = $configManager->get($configKey);
-
-            $value = $this->inputOptionProvider->get(
-                $optionName,
-                $optionData['label'],
-                $defaultValue,
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
-            );
-
-            // update setting if it's not empty and not equal to default value
-            if (!empty($value) && $value !== $defaultValue) {
-                $configManager->set($configKey, $value);
-            }
-        }
-
-        $configManager->flush();
-    }
-
-    /**
      * @param OutputInterface $output
      *
-     * @return InstallCommand
+     * @return $this
      * @throws \RuntimeException
      */
     protected function checkRequirementsStep(OutputInterface $output)
@@ -332,5 +187,175 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return $this;
+    }
+
+    /**
+     * @param CommandExecutor $commandExecutor
+     * @param OutputInterface $output
+     *
+     * @return InstallCommand
+     */
+    protected function loadDataStep(CommandExecutor $commandExecutor, OutputInterface $output)
+    {
+        $output->writeln('<info>Setting up database.</info>');
+
+        $commandExecutor
+            ->runCommand(
+                'oro:migration:load',
+                [
+                    '--force'             => true,
+                    '--process-isolation' => true,
+                    '--timeout'           => $commandExecutor->getDefaultOption('process-timeout')
+                ]
+            )
+            ->runCommand(
+                'oro:workflow:definitions:load',
+                [
+                    '--process-isolation' => true,
+                ]
+            )
+            ->runCommand(
+                'oro:process:configuration:load',
+                [
+                    '--process-isolation' => true
+                ]
+            )
+            ->runCommand(
+                'oro:migration:data:load',
+                [
+                    '--process-isolation' => true,
+                    '--no-interaction'    => true,
+                    '--exclude'           => ['DiamanteDistributionBundle']
+                ]
+            );
+
+        $output->writeln('');
+        $output->writeln('<info>Administration setup.</info>');
+
+        $this->updateSystemSettings();
+        $this->updateOrganization($commandExecutor);
+        $this->updateUser($commandExecutor);
+
+        $commandExecutor->runCommand('diamante:desk:data');
+
+        $commandExecutor->runCommand(
+            'oro:migration:data:load',
+            [
+                '--bundles' => ['DiamanteDistributionBundle'],
+                '--process-isolation' => true,
+                '--no-interaction'    => true,
+            ]
+        );
+
+
+        $output->writeln('');
+
+        return $this;
+    }
+
+    /**
+     * Update the organization
+     *
+     * @param CommandExecutor $commandExecutor
+     */
+    protected function updateOrganization(CommandExecutor $commandExecutor)
+    {
+        /** @var ConfigManager $configManager */
+        $configManager             = $this->getContainer()->get('oro_config.global');
+        $defaultOrganizationName   = $configManager->get('diamante_distribution.organization_name');
+        $organizationNameValidator = function ($value) use (&$defaultOrganizationName) {
+            $len = strlen(trim($value));
+            if ($len === 0 && empty($defaultOrganizationName)) {
+                throw new \Exception('The organization name must not be empty');
+            }
+            if ($len > 15) {
+                throw new \Exception('The organization name must be not more than 15 characters long');
+            }
+            return $value;
+        };
+        $options = [
+            'organization-name' => [
+                'label'                  => 'Organization name',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$organizationNameValidator],
+                'defaultValue'           => $defaultOrganizationName,
+            ]
+        ];
+        $commandParameters = [];
+        foreach ($options as $optionName => $optionData) {
+            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $optionData['defaultValue'],
+                $optionData['askMethod'],
+                $optionData['additionalAskArguments']
+            );
+        }
+        $commandExecutor->runCommand(
+            'oro:organization:update',
+            array_merge(
+                [
+                    'organization-name' => 'default',
+                    '--process-isolation' => true,
+                ],
+                $commandParameters
+            )
+        );
+    }
+    /**
+     * Update system settings such as app url, company name and short name
+     */
+    protected function updateSystemSettings()
+    {
+        /** @var ConfigManager $configManager */
+        $configManager = $this->getContainer()->get('oro_config.global');
+        $options       = [
+            'application-url' => [
+                'label'                  => 'Application URL',
+                'config_key'             => 'oro_ui.application_url',
+                'askMethod'              => 'ask',
+                'additionalAskArguments' => [],
+            ]
+        ];
+        foreach ($options as $optionName => $optionData) {
+            $configKey    = $optionData['config_key'];
+            $defaultValue = $configManager->get('diamante_distribution.application_url');
+            $value = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $defaultValue,
+                $optionData['askMethod'],
+                $optionData['additionalAskArguments']
+            );
+            // update setting if it's not empty and not equal to default value
+            if (!empty($value) && $value !== $defaultValue) {
+                $configManager->set($configKey, $value);
+            }
+        }
+        $configManager->flush();
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return int
+     */
+    protected function alreadyInstalledMessage(OutputInterface $output)
+    {
+        $output->writeln('<comment>ATTENTION</comment>: DiamanteDesk already installed.');
+        $output->writeln(
+            'To proceed with install - run command with <info>--force</info> option:'
+        );
+        $output->writeln(sprintf('    <info>%s --force</info>', $this->getName()));
+        $output->writeln(
+            'To reinstall over existing database - run command with <info>--force --drop-database</info> options:'
+        );
+        $output->writeln(sprintf('    <info>%s --force --drop-database</info>', $this->getName()));
+        $output->writeln(
+            '<comment>ATTENTION</comment>: All data will be lost. ' .
+            'Database backup is highly recommended before executing this command.'
+        );
+        $output->writeln('');
+
+        return 255;
     }
 }

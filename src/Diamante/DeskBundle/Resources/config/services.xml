@@ -139,7 +139,7 @@
             <argument type="service" id="diamante.report.chart_type_provider"/>
         </service>
 
-        <service id="diamante.notification_manager" class="%diamante.notification_manager.class%">
+        <service id="diamante.notification_manager" class="%diamante.notification_manager.class%" lazy="true">
             <argument id="twig" type="service"/>
             <argument id="swiftmailer.mailer" type="service"/>
             <argument id="translator" type="service"/>

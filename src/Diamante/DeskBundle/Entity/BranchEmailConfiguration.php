@@ -20,7 +20,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository")
- * @ORM\Table(name="diamante_branch_email_configuration")
+ * @ORM\Table(name="diamante_branch_email_config")
  * @Config(
  *      defaultValues={
  *         "dataaudit"={"auditable"=true}

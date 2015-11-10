@@ -37,7 +37,7 @@ class DefaultSupportDashboard extends AbstractDashboardFixture
             'time_of_response_widget'       => [1,0],
             'tickets_by_channels_widget'    => [0,1],
             'tickets_by_branch_widget'      => [1,2],
-            'tickets_by_priority'           => [0,2],
+            'tickets_by_priority_widget'    => [0,2],
         ];
 
         foreach ($widgetConfiguration as $name => $position) {

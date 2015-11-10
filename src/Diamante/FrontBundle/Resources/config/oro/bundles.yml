@@ -1,2 +1,2 @@
 bundles:
-    - Diamante\FrontBundle\DiamanteFrontBundle
+    - { name: Diamante\FrontBundle\DiamanteFrontBundle, priority: 1003 }

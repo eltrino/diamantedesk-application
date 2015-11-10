@@ -23,6 +23,7 @@
         <parameter key="diamante.notification.user.email.notifier.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailNotifier</parameter>
         <parameter key="diamante.user.notification.template_resolver.class">Diamante\UserBundle\Infrastructure\User\Notifications\EmailTemplateResolver</parameter>
         <parameter key="diamante.portal_url.twig.extension.class">Diamante\UserBundle\Twig\Extensions\PortalURLExtension</parameter>
+        <parameter key="diamante.user.notification.subscriber.class">Diamante\UserBundle\EventListener\UserNotificationSubscriber</parameter>
     </parameters>
 
     <services>
@@ -42,9 +43,7 @@
             <argument type="service" id="diamante.user_factory"/>
             <argument type="service" id="oro_attachment.manager"/>
             <argument type="service" id="diamante.api.user.repository"/>
-            <call method="setNotificationManager">
-                <argument type="service" id="diamante.notification_manager"/>
-            </call>
+            <argument type="service" id="event_dispatcher"/>
         </service>
 
         <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
@@ -111,5 +110,10 @@
 
         <service id="diamante.user.api_service" class="%diamante.user.api_service.class%" parent="diamante.user.service"/>
         <service id="diamante.user.api.service_oro" alias="diamante.user.api_service"/>
+
+        <service id="diamante.user.notification.subscriber" class="%diamante.user.notification.subscriber.class%">
+            <argument type="service" id="diamante.notification_manager"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>

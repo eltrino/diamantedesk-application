@@ -1,2 +1,2 @@
 bundles:
-    - Diamante\EmailProcessingBundle\DiamanteEmailProcessingBundle
+    - { name: Diamante\EmailProcessingBundle\DiamanteEmailProcessingBundle, priority: 1002 }
