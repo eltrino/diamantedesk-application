@@ -56,6 +56,7 @@ class UserDetailsExtension extends \Twig_Extension
             new \Twig_SimpleFunction('fetch_diamante_user',[$this, 'fetchDiamanteUser'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('get_gravatar',[$this, 'getGravatarForUser'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('render_user_name',[$this, 'renderUserName'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('is_diamante_user_deleted', [$this, 'isDiamanteUserDeleted'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -138,5 +139,20 @@ class UserDetailsExtension extends \Twig_Extension
         }
 
         return $this->userService->getGravatarLink($email, $size, $secure);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function isDiamanteUserDeleted(User $user)
+    {
+        if (!$user->isDiamanteUser()) {
+            return false;
+        }
+
+        $diamanteUser = $this->userService->getDiamanteUser($user);
+
+        return $diamanteUser->isDeleted();
     }
 }

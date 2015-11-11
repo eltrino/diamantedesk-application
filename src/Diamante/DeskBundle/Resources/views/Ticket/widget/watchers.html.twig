@@ -4,7 +4,7 @@
     <ul class="unstyled clearfix">
         {% for watcher in watchers %}
             <li class="diam-attachment">
-                {{ render_user_name(watcher) }}
+                <span class='{% if is_diamante_user_deleted(watcher) %}{{ "deleted-reporter" }}{% endif %}' >{{ render_user_name(watcher) }}</span>
                 <span class="pull-right">
                     <a href="{{ path('diamante_remove_watcher', { 'ticketId': ticket.id, 'user': watcher } ) }}">
                         <i class="icon-remove hide-text" title="{{ 'diamante.desk.ui.delete'|trans }}">
