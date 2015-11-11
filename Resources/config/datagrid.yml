@@ -5,12 +5,9 @@ datagrid:
             query:
                 select:
                     - w.id
-                    - w.condition
+                    - w.name
                 from:
                     - { table: %diamante_automation.workflow_rule.entity.class%, alias: w }
-                where:
-                    and:
-                        - w.parent is null
         properties:
             id: ~
             view_link:

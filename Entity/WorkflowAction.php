@@ -15,17 +15,14 @@
 
 namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\AutomationBundle\Model\Target;
-use Diamante\AutomationBundle\Rule\Condition\Condition;
 use Diamante\DeskBundle\Model\Shared\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
- * @ORM\Table(name="diamante_workflow_action")
+ * @ORM\Table(name="diamante_workflow_rule_action")
  */
-class WorkflowAction implements Entity
+class WorkflowAction extends \Diamante\AutomationBundle\Model\Action implements Entity
 {
     /**
      * @var int
@@ -42,14 +39,7 @@ class WorkflowAction implements Entity
     protected $action;
 
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity="WorkflowRule", inversedBy="actions")
      */
-    protected $property;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string")
-     */
-    protected $value;
+    protected $rule;
 }

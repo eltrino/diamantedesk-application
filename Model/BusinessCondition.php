@@ -12,39 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\AutomationBundle\Api\Command;
+ 
 
-use Symfony\Component\Validator\Constraints as Assert;
+namespace Diamante\AutomationBundle\Model;
 
-/**
- * Class RuleCommand
- *
- * @package Diamante\AutomationBundle\Api\Command
- */
-class RuleCommand
+class BusinessCondition extends Condition
 {
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var array
-     */
-    public $conditions;
-
-    /**
-     * @var array
-     */
-    public $actions;
-
-    /**
-     * @var string
-     */
-    public $mode;
 }

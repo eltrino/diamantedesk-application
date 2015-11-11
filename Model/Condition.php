@@ -16,13 +16,13 @@
 namespace Diamante\AutomationBundle\Model;
 
 use Diamante\AutomationBundle\Model\Shared\AutomationRule;
-use Diamante\AutomationBundle\Rule\Condition\Condition;
+use Diamante\AutomationBundle\Rule\Condition\Condition as RuleCondition;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Fact\Fact;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Shared\Entity;
 
-class Rule implements AutomationRule, Entity
+class Condition implements AutomationRule, Entity
 {
 
     const EXPRESSION_INCLUSIVE = 'AND';
@@ -34,14 +34,9 @@ class Rule implements AutomationRule, Entity
     protected $id;
 
     /**
-     * @var Condition
+     * @var RuleCondition
      */
     protected $condition;
-
-    /**
-     * @var string
-     */
-    protected $action;
 
     /**
      * @var int
@@ -68,50 +63,30 @@ class Rule implements AutomationRule, Entity
      */
     protected $active;
 
+    protected $rule;
+
     /**
      * @var string
      */
     protected $expression;
 
-    /**
-     * @var \DateTime
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     */
-    protected $updatedAt;
-
-    /**
-     * @param                                                        $expression
-     * @param                                                        $condition
-     * @param                                                        $action
-     * @param int                                                    $weight
-     * @param bool                                                   $active
-     * @param \Diamante\AutomationBundle\Model\Target                $target
-     * @param \Diamante\AutomationBundle\Model\Shared\AutomationRule $parent
-     * @throws \Exception
-     */
     public function __construct(
         $expression = self::EXPRESSION_INCLUSIVE,
         $condition,
-        $action = null,
         $weight = 0,
         $active = true,
+        $rule,
         Target $target = null,
         AutomationRule $parent = null
     ) {
         $this->expression   = $expression;
         $this->condition    = $condition;
-        $this->action       = $action;
         $this->weight       = $weight;
         $this->target       = $target;
         $this->children     = new ArrayCollection();
         $this->parent       = $parent;
         $this->active       = $active;
-        $this->createdAt    = new \DateTime('now', new \DateTimeZone('UTC'));
-        $this->updatedAt    = clone $this->createdAt;
+        $this->rule         = $rule;
     }
 
     /**
@@ -128,14 +103,6 @@ class Rule implements AutomationRule, Entity
     public function getCondition()
     {
         return $this->condition;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
     }
 
     /**
@@ -198,30 +165,31 @@ class Rule implements AutomationRule, Entity
     }
 
     /**
-     * @param                                                        $expression
-     * @param                                                        $condition
-     * @param                                                        $action
-     * @param                                                        $weight
-     * @param                                                        $active
-     * @param \Diamante\AutomationBundle\Model\Target                $target
-     * @param \Diamante\AutomationBundle\Model\Shared\AutomationRule $parent
+     * @param                     $expression
+     * @param null                $condition
+     * @param                     $weight
+     * @param                     $active
+     * @param Target              $target
+     * @param AutomationRule|null $parent
+     *
+     * @throws \Exception
      */
     public function update(
         $expression,
         $condition = null,
-        $action,
         $weight,
         $active,
+        $rule,
         Target $target,
         AutomationRule $parent = null
     ) {
         $this->expression   = $expression;
         $this->condition    = ConditionFactory::getConditionFor($condition);
-        $this->action       = $action;
         $this->weight       = $weight;
         $this->target       = $target;
         $this->parent       = $parent;
         $this->active       = $active;
+        $this->rule         = $rule;
     }
 
     public function isSatisfiedBy(Fact $fact)
@@ -242,26 +210,5 @@ class Rule implements AutomationRule, Entity
     public function hasChildren()
     {
         return count($this->getChildren());
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    public function getName()
-    {
-        return 'rule name';
     }
 }

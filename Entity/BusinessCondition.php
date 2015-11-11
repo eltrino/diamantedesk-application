@@ -16,15 +16,16 @@
 namespace Diamante\AutomationBundle\Entity;
 
 use Diamante\AutomationBundle\Model\Target;
+use Diamante\AutomationBundle\Rule\Condition\Condition as RuleCondition;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
- * @ORM\Table(name="diamante_workflow_rule")
+ * @ORM\Table(name="diamante_business_rule_condition")
  */
-class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule implements Entity
+class BusinessCondition extends \Diamante\AutomationBundle\Model\BusinessCondition implements Entity
 {
     /**
      * @var int
@@ -35,19 +36,51 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule impleme
     protected $id;
 
     /**
+     * @var RuleCondition
+     * @ORM\Column(name="rule_condition", type="condition_type", nullable=true)
+     */
+    protected $condition;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    protected $weight;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Diamante\AutomationBundle\Entity\BusinessCondition", mappedBy="parent", cascade={"persist", "remove"})
+     */
+    protected $children;
+
+    /**
+     * @var Target
+     * @ORM\Column(type="target_type")
+     */
+    protected $target;
+
+    /**
+     * @var \Diamante\AutomationBundle\Model\Shared\AutomationRule
+     * @ORM\ManyToOne(targetEntity="Diamante\AutomationBundle\Entity\BusinessCondition", inversedBy="children")
+     */
+    protected $parent;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $active;
+
+    /**
+     * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $name;
+    protected $expression;
 
     /**
-     * @ORM\OneToMany(targetEntity="WorkflowCondition", mappedBy="rule", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="BusinessRule", inversedBy="conditions")
      */
-    protected $conditions;
-
-    /**
-     * @ORM\OneToMany(targetEntity="WorkflowAction", mappedBy="rule", cascade={"persist", "remove"})
-     */
-    protected $actions;
+    protected $rule;
 
     /**
      * @var \DateTime

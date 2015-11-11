@@ -15,16 +15,14 @@
 
 namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\AutomationBundle\Model\Target;
 use Diamante\DeskBundle\Model\Shared\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
- * @ORM\Table(name="diamante_workflow_rule")
+ * @ORM\Table(name="diamante_business_rule_action")
  */
-class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule implements Entity
+class BusinessAction implements Entity
 {
     /**
      * @var int
@@ -35,31 +33,13 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule impleme
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     * @ORM\Column(type="string")
      */
-    protected $name;
+    protected $action;
 
     /**
-     * @ORM\OneToMany(targetEntity="WorkflowCondition", mappedBy="rule", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="BusinessRule", inversedBy="actions")
      */
-    protected $conditions;
-
-    /**
-     * @ORM\OneToMany(targetEntity="WorkflowAction", mappedBy="rule", cascade={"persist", "remove"})
-     */
-    protected $actions;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     */
-    protected $updatedAt;
+    protected $rule;
 }

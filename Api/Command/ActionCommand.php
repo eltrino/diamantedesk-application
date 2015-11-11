@@ -14,37 +14,46 @@
  */
 namespace Diamante\AutomationBundle\Api\Command;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Type;
+use Diamante\AutomationBundle\Api\Internal\RuleServiceImpl;
 
 /**
- * Class RuleCommand
+ * Class ActionCommand
  *
  * @package Diamante\AutomationBundle\Api\Command
  */
-class RuleCommand
+class ActionCommand
 {
     /**
      * @var int
+     *
+     * @Type("string")
      */
     public $id;
 
     /**
-     * @var string
+     * @Type("string")
      */
-    public $name;
+    public $action;
 
     /**
-     * @var array
+     * @Type("string")
      */
-    public $conditions;
+    public $property;
 
     /**
-     * @var array
+     * @Type("string")
      */
-    public $actions;
+    public $value;
 
-    /**
-     * @var string
-     */
-    public $mode;
+    public static function createFromAction($actionEntity)
+    {
+        $command = new self;
+        $command->id = $actionEntity->getId();
+        list($command->action, $command->property, $command->value) = RuleServiceImpl::parseAction(
+            $actionEntity->getAction()
+        );
+
+        return $command;
+    }
 }

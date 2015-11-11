@@ -16,16 +16,15 @@
 namespace Diamante\AutomationBundle\Entity;
 
 use Diamante\AutomationBundle\Model\Target;
-use Diamante\AutomationBundle\Rule\Condition\Condition;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRulesRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_business_rule")
  */
-class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule implements Entity
+class BusinessRule implements Entity
 {
     /**
      * @var int
@@ -36,69 +35,17 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule impleme
     protected $id;
 
     /**
-     * @var Condition
-     * @ORM\Column(name="rule_condition", type="condition_type", nullable=true)
-     */
-    protected $condition;
-
-    /**
-     * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $action;
+    protected $name;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="BusinessCondition", mappedBy="rule")
      */
-    protected $weight;
+    protected $conditions;
 
     /**
-     * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Diamante\AutomationBundle\Entity\BusinessRule", mappedBy="parent", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="BusinessAction", mappedBy="rule")
      */
-    protected $children;
-
-    /**
-     * @var Target
-     * @ORM\Column(type="target_type")
-     */
-    protected $target;
-
-    /**
-     * @var \Diamante\AutomationBundle\Model\Shared\AutomationRule
-     * @ORM\ManyToOne(targetEntity="Diamante\AutomationBundle\Entity\BusinessRule", inversedBy="children")
-     */
-    protected $parent;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    protected $active;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $expression;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     */
-    protected $updatedAt;
-
-    public static function getClassName()
-    {
-        return __CLASS__;
-    }
+    protected $actions;
 }

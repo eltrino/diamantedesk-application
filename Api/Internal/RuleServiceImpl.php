@@ -19,6 +19,10 @@ use Diamante\AutomationBundle\Api\Command\RuleCommand;
 use Diamante\AutomationBundle\Rule\Engine\EngineImpl;
 use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Entity\WorkflowCondition;
+use Diamante\AutomationBundle\Entity\BusinessCondition;
+use Diamante\AutomationBundle\Entity\WorkflowAction;
+use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\AutomationBundle\Model\Target;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
@@ -96,23 +100,6 @@ class RuleServiceImpl implements RuleService
         return $this->updateConditions($command->conditions, $rule);
     }
 
-    public function createWorkflowRule(RuleCommand $command)
-    {
-        $rule = function ($command, $condition) {
-            return new WorkflowRule(
-                $command->expression,
-                $condition,
-                null,
-                $command->weight,
-                $command->active,
-                new Target($command->target),
-                $command->parent
-            );
-        };
-
-        return $this->updateConditions($command->conditions, $rule);
-    }
-
     public function updateWorkflowRule(RuleCommand $command)
     {
         $rule = function ($command, $condition) {
@@ -159,7 +146,40 @@ class RuleServiceImpl implements RuleService
         return $this->updateConditions($command->conditions, $rule, $onUpdate);
     }
 
-    private function updateConditions($command, $newRule, $onUpdate = null)
+    public function createWorkflowRule(RuleCommand $command)
+    {
+        $rule = new WorkflowRule($command->name);
+        $conditionEntity = function ($command, $condition) use ($rule) {
+            return new WorkflowCondition(
+                $command->expression,
+                $condition,
+                $command->weight,
+                $command->active,
+                $rule,
+                new Target($command->target),
+                $command->parent
+            );
+        };
+
+        $this->addConditions($command->conditions, $conditionEntity, $rule);
+        $this->addActions($command->actions, $rule);
+
+        $this->workflowRuleRepository->store($rule);
+
+        return $rule->getId();
+    }
+
+    private function addActions($actions, $rule)
+    {
+        foreach ($actions as $command) {
+            $action = new WorkflowAction($this->createAction($command), $rule);
+            $rule->addAction($action);
+        }
+
+        return $this;
+    }
+
+    private function addConditions($command, $conditionEntity, $rule, $onUpdate = null)
     {
         if (is_callable($onUpdate)) {
             $onUpdate($command);
@@ -167,18 +187,22 @@ class RuleServiceImpl implements RuleService
 
         $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
 
-        $rule = $newRule($command, $condition);
+        $entity = $conditionEntity($command, $condition);
 
-        $this->workflowRuleRepository->store($rule);
+        if (!is_null($command->parent)) {
+            $command->parent->addChild($entity);
+        } else {
+            $rule->addCondition($entity);
+        }
 
         if ($command->children) {
             foreach ($command->children as $child) {
-                $child->parent = $rule;
-                $this->updateConditions($child, $newRule);
+                $child->parent = $entity;
+                $this->addConditions($child, $conditionEntity, $rule);
             }
         }
 
-        return $rule->getId();
+        return $this;
     }
 
     public function deleteBusinessRule($command)
@@ -227,6 +251,16 @@ class RuleServiceImpl implements RuleService
         $this->businessRuleRepository->store($rule);
 
         return $rule;
+    }
+
+    public function createAction($command)
+    {
+        return sprintf('%s|%s|%s', $command->action, $command->property, $command->value);
+    }
+
+    public static function parseAction($string)
+    {
+        return explode('|', $string);
     }
 
     /**

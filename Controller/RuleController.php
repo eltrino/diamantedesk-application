@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Diamante\AutomationBundle\Api\Command\RuleCommand;
 use Diamante\AutomationBundle\Api\Command\ConditionCommand;
+use Diamante\AutomationBundle\Api\Command\ActionCommand;
 use JMS\Serializer\SerializerBuilder;
 use Diamante\AutomationBundle\Form\Type\CreateRuleType;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -35,6 +36,7 @@ abstract class RuleController extends Controller
     const ACTIVATE = 'activate';
     const DEACTIVATE = 'deactivate';
     const CONDITION_COMMAND = 'Diamante\AutomationBundle\Api\Command\ConditionCommand';
+    const ACTION_COMMAND = 'array<Diamante\AutomationBundle\Api\Command\ActionCommand>';
 
     public function listAction()
     {
@@ -55,7 +57,11 @@ abstract class RuleController extends Controller
             return new Response($e->getMessage(), 404);
         }
 
-        return ['entity' => $rule, 'conditions' => $viewCommand->conditions];
+        return ['entity'     => $rule,
+                'name'       => $viewCommand->name,
+                'conditions' => $viewCommand->conditions,
+                'actions'    => $viewCommand->actions
+        ];
     }
 
     public function createAction()
@@ -132,9 +138,10 @@ abstract class RuleController extends Controller
         $response = null;
         try {
             $this->handle($form);
-            $editCommand = $this->createEditRuleCommand($command);
 
-            $rootRuleId = $callback($editCommand);
+            $command = $this->createEditRuleCommand($command);
+
+            $rootRuleId = $callback($command);
 
             $response = $this->getSuccessSaveResponse(
                 $this->getRoute(self::UPDATE),
@@ -254,16 +261,22 @@ abstract class RuleController extends Controller
         return sprintf('diamante_%s_%s', static::MODE, $action);
     }
 
-    private function createViewRuleCommand(AutomationRule $rule)
+    private function createViewRuleCommand($rule)
     {
         $serializer = SerializerBuilder::create()->build();
         $command = new RuleCommand();
-        $conditionCommand = ConditionCommand::createFromRule($rule);
+        $rootCondition = $rule->getConditions()->getValues()[0];
+        $conditionCommand = ConditionCommand::createFromCondition($rootCondition);
+
+        $actionCommand = [];
+        foreach ($rule->getActions()->getValues() as $action) {
+            $actionCommand[] = ActionCommand::createFromAction($action);
+        }
 
         $command->id = $rule->getId();
-        $command->name = 'name';
+        $command->name = $rule->getName();
         $command->conditions = $serializer->serialize($conditionCommand, 'json');
-        $command->actions = 'actions';
+        $command->actions = $serializer->serialize($actionCommand, 'json');
         $command->mode = static::MODE;
 
         return $command;
@@ -278,6 +291,13 @@ abstract class RuleController extends Controller
             self::CONDITION_COMMAND,
             'json'
         );
+
+        $command->actions = $serializer->deserialize(
+            $command->actions,
+            self::ACTION_COMMAND,
+            'json'
+        );
+
         $command->mode = static::MODE;
 
         return $command;

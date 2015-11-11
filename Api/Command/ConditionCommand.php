@@ -93,14 +93,14 @@ class ConditionCommand
      */
     public $expression;
 
-    public static function createFromRule($rule)
+    public static function createFromCondition($conditionEntity)
     {
-        return self::create($rule);
+        return self::create($conditionEntity);
     }
 
-    private static function create(Rule $rule, ConditionCommand $parentCommand = null) {
+    private static function create($conditionEntity, ConditionCommand $parentCommand = null) {
         $command = new self;
-        $condition = $rule->getCondition();
+        $condition = $conditionEntity->getCondition();
 
         if($condition) {
             $command->condition = $condition->getClass();
@@ -108,11 +108,11 @@ class ConditionCommand
             $command->value = $condition->getValue();
         }
 
-        $command->id = $rule->getId();
-        $command->weight = $rule->getWeight();
-        $command->expression = $rule->getExpression();
-        $command->target = strtolower($rule->getTarget());
-        $command->active = $rule->isActive();
+        $command->id = $conditionEntity->getId();
+        $command->weight = $conditionEntity->getWeight();
+        $command->expression = $conditionEntity->getExpression();
+        $command->target = strtolower($conditionEntity->getTarget());
+        $command->active = $conditionEntity->isActive();
         $command->children = [];
 
         if($parentCommand) {
@@ -120,8 +120,8 @@ class ConditionCommand
             $parentCommand->children[] = $command;
         }
 
-        if ($rule->getChildren()) {
-            foreach ($rule->getChildren() as $child) {
+        if ($conditionEntity->getChildren()) {
+            foreach ($conditionEntity->getChildren() as $child) {
                 self::create($child, $command);
             }
         }
