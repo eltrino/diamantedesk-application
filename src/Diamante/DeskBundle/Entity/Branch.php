@@ -108,11 +108,6 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      *
      * @ORM\Column(type="branch_logo")
      *
-     * @ConfigField(
-     *      defaultValues={
-     *          "dataaudit"={"auditable"=true}
-     *      }
-     * )
      */
     protected $logo;
 
