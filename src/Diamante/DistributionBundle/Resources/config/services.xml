@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="diamante.distribution.api.restriction.listener.class">Diamante\DistributionBundle\EventListener\OroApiCallRestrictionListener</parameter>
         <parameter key="diamante.distribution.shortcut.listener.class">Diamante\DistributionBundle\EventListener\ShortcutListener</parameter>
+        <parameter key="diamante.distribution.launchpad.listener.class">Diamante\DistributionBundle\EventListener\LaunchpadListener</parameter>
         <parameter key="diamante.distribution.user_role.listener.class">Diamante\DistributionBundle\EventListener\UserRoleListener</parameter>
         <parameter key="diamante.distribution.config.listener.class">Diamante\DistributionBundle\EventListener\ConfigurationListener</parameter>
         <parameter key="diamante.distribution.whitelist.provider.class">Diamante\DistributionBundle\Routing\Whitelist\WhitelistProviderImpl</parameter>
@@ -28,6 +29,11 @@
         <service id="diamante.distribution.shortcut.listener" class="%diamante.distribution.shortcut.listener.class%">
             <argument type="service" id="diamante.distribution.whitelist.provider"/>
             <tag name="kernel.event_listener" event="kernel.view" method="onKernelView"/>
+        </service>
+
+        <service id="diamante.distribution.launchpad.listener" class="%diamante.distribution.launchpad.listener.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
         </service>
 
         <service id="diamante.distribution.user_role.listener" class="%diamante.distribution.user_role.listener.class%">
