@@ -198,6 +198,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $apiUser->generateHash();
         $user->setDeleted(false);
         $user->setApiUser($apiUser);
+        $apiUser->setDiamanteUser($user);
 
         $this->eventDispatcher->dispatch('user.notification', new UserEvent('created', $user));
 

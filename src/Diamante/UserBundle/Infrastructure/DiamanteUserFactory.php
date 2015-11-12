@@ -15,7 +15,7 @@
 namespace Diamante\UserBundle\Infrastructure;
 
 use Diamante\DeskBundle\Model\Shared\AbstractEntityFactory;
-use Diamante\UserBundle\Model\DiamanteUser;
+use Diamante\UserBundle\Entity\DiamanteUser;
 
 class DiamanteUserFactory extends AbstractEntityFactory
 {
