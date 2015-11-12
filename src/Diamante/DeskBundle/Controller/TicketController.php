@@ -342,7 +342,7 @@ class TicketController extends Controller
         $removeTicketAttachment->attachmentId = $attachId;
 
         try {
-            $ticketKey = $ticketService->removeAttachmentFromTicket($removeTicketAttachment);
+            $ticketKey = $ticketService->removeAttachmentFromTicket($removeTicketAttachment, true);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
             $response = $this->redirect($this->generateUrl(
                 'diamante_ticket_view',
