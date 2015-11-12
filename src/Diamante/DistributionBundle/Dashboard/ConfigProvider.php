@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConfigProvider extends \Oro\Bundle\DashboardBundle\Model\ConfigProvider
 {
-    private $disabledWidgets = ['recent_emails'];
+    private $disabledWidgets = ['recent_emails', 'my_calendar', 'quick_launchpad'];
 
     /**
      * @param array $configs
