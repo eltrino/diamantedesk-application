@@ -15,6 +15,6 @@
 
 namespace Diamante\AutomationBundle\Model;
 
-class WorkflowRule extends Rule
+class BusinessRule extends Rule
 {
 }

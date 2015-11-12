@@ -81,18 +81,4 @@ class BusinessCondition extends \Diamante\AutomationBundle\Model\BusinessConditi
      * @ORM\ManyToOne(targetEntity="BusinessRule", inversedBy="conditions")
      */
     protected $rule;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     */
-    protected $updatedAt;
 }

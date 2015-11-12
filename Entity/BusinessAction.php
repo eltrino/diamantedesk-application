@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_business_rule_action")
  */
-class BusinessAction implements Entity
+class BusinessAction extends \Diamante\AutomationBundle\Model\BusinessAction implements Entity
 {
     /**
      * @var int

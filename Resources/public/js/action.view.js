@@ -25,7 +25,6 @@ define(['underscore',
          * Constructor
          */
         initialize: function (options) {
-            //this.mock = Mock.data;
             this.options = options;
             this.collection = new ActionCollection();
 
@@ -40,7 +39,11 @@ define(['underscore',
 
         toJson: function () {
             if (this.options.actionsEl) {
-                this.$(this.options.actionsEl).val(JSON.stringify(this.collection.toJSON()));
+                var json = this.collection.toJSON();
+                if (_.isEmpty(json)) {
+                    json = undefined;
+                }
+                this.$(this.options.actionsEl).val(JSON.stringify(json));
             }
         },
 
@@ -48,15 +51,12 @@ define(['underscore',
             e.preventDefault();
 
             var defaultAction = {
-                "action": "Send",
+                "action": "send",
                 "property": "email",
                 "value": "reporter"
             };
             this.collection.add(defaultAction);
             this.collection.trigger('addNew');
-
-            //var view = new ActionItemView();
-            //this.$('#list-action').append(view.renderEdit().el);
         },
 
         render: function(actions, getModel) {

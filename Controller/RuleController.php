@@ -57,10 +57,11 @@ abstract class RuleController extends Controller
             return new Response($e->getMessage(), 404);
         }
 
-        return ['entity'     => $rule,
-                'name'       => $viewCommand->name,
-                'conditions' => $viewCommand->conditions,
-                'actions'    => $viewCommand->actions
+        return [
+            'entity'     => $rule,
+            'name'       => $viewCommand->name,
+            'conditions' => $viewCommand->conditions,
+            'actions'    => $viewCommand->actions
         ];
     }
 
@@ -263,21 +264,27 @@ abstract class RuleController extends Controller
 
     private function createViewRuleCommand($rule)
     {
-        $serializer = SerializerBuilder::create()->build();
         $command = new RuleCommand();
-        $rootCondition = $rule->getConditions()->getValues()[0];
-        $conditionCommand = ConditionCommand::createFromCondition($rootCondition);
+
+        $command->id = $rule->getId();
+        $command->name = $rule->getName();
+        $command->mode = static::MODE;
+
+        $serializer = SerializerBuilder::create()->build();
+        $rootCondition = $rule->getRootCondition();
+        if ($rootCondition) {
+            $conditionCommand = ConditionCommand::createFromCondition($rootCondition);
+            $command->conditions = $serializer->serialize($conditionCommand, 'json');
+        }
 
         $actionCommand = [];
         foreach ($rule->getActions()->getValues() as $action) {
             $actionCommand[] = ActionCommand::createFromAction($action);
         }
 
-        $command->id = $rule->getId();
-        $command->name = $rule->getName();
-        $command->conditions = $serializer->serialize($conditionCommand, 'json');
-        $command->actions = $serializer->serialize($actionCommand, 'json');
-        $command->mode = static::MODE;
+        if (!empty($actionCommand)) {
+            $command->actions = $serializer->serialize($actionCommand, 'json');
+        }
 
         return $command;
     }
@@ -286,17 +293,21 @@ abstract class RuleController extends Controller
     {
         $serializer = SerializerBuilder::create()->build();
 
-        $command->conditions = $serializer->deserialize(
-            $command->conditions,
-            self::CONDITION_COMMAND,
-            'json'
-        );
+        if (!is_null($command->conditions)) {
+            $command->conditions = $serializer->deserialize(
+                $command->conditions,
+                self::CONDITION_COMMAND,
+                'json'
+            );
+        }
 
-        $command->actions = $serializer->deserialize(
-            $command->actions,
-            self::ACTION_COMMAND,
-            'json'
-        );
+        if (!is_null($command->actions)) {
+            $command->actions = $serializer->deserialize(
+                $command->actions,
+                self::ACTION_COMMAND,
+                'json'
+            );
+        }
 
         $command->mode = static::MODE;
 

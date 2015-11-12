@@ -1,4 +1,4 @@
-define(['underscore', 'backbone', './mock'
+define(['underscore', 'backbone', './actions.mock'
 ], function (_, Backbone, Mock) {
     'use strict';
 
@@ -15,11 +15,25 @@ define(['underscore', 'backbone', './mock'
             'click .delete': 'removeItem',
             'click .save': 'saveItem',
             'click .edit': 'editItem',
-            'change select': 'changeSelectView'
+            'change select': 'changeElement'
         },
 
         initialize: function () {
             this.mock = Mock;
+
+            this.listenTo(this.model, 'change', this.redrawEdit);
+        },
+
+        redrawEdit: function () {
+            $('.edit-action', this.$el).html(this.renderEdit());
+        },
+
+        changeElement: function (e) {
+            var el = $(e.target),
+                property = el.data('property'),
+                value = el.val();
+
+            this.model.set(property, value);
         },
 
         editItem: function () {
@@ -56,7 +70,9 @@ define(['underscore', 'backbone', './mock'
 
         renderEdit: function () {
             var data = {
-                'actions': this.mock.data,
+                'actions': this.mock.actions,
+                'properties': this.mock.properties,
+                'values': this.mock.values,
                 'attrs': this.model.attributes
             };
 
@@ -64,7 +80,14 @@ define(['underscore', 'backbone', './mock'
         },
 
         renderView: function () {
-            return this.viewTemplate(this.model.attributes);
+            var data = {
+                'actions': this.mock.actions,
+                'properties': this.mock.properties,
+                'values': this.mock.values,
+                'attrs': this.model.attributes
+            };
+
+            return this.viewTemplate(data);
         },
 
         removeItem: function () {

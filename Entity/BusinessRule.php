@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_business_rule")
  */
-class BusinessRule implements Entity
+class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule implements Entity
 {
     /**
      * @var int
@@ -40,12 +40,26 @@ class BusinessRule implements Entity
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="BusinessCondition", mappedBy="rule")
+     * @ORM\OneToMany(targetEntity="BusinessCondition", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $conditions;
 
     /**
-     * @ORM\OneToMany(targetEntity="BusinessAction", mappedBy="rule")
+     * @ORM\OneToMany(targetEntity="BusinessAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $actions;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     */
+    protected $updatedAt;
 }

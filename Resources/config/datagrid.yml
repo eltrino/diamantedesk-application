@@ -23,7 +23,7 @@ datagrid:
                 route:      diamante_workflow_delete
                 params:     [ id ]
         columns:
-            condition:
+            name:
                 label: diamante.automation.rule.columns.name
         actions:
             view:
@@ -60,12 +60,9 @@ datagrid:
             query:
                 select:
                     - w.id
-                    - w.condition
+                    - w.name
                 from:
                     - { table: %diamante_automation.business_rule.entity.class%, alias: w }
-                where:
-                    and:
-                        - w.parent is null
         properties:
             id: ~
             view_link:
@@ -81,7 +78,7 @@ datagrid:
                 route:      diamante_business_delete
                 params:     [ id ]
         columns:
-            condition:
+            name:
                 label: diamante.automation.rule.columns.name
         actions:
             view:

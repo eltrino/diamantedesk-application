@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_workflow_rule_action")
  */
-class WorkflowAction extends \Diamante\AutomationBundle\Model\Action implements Entity
+class WorkflowAction extends \Diamante\AutomationBundle\Model\WorkflowAction implements Entity
 {
     /**
      * @var int

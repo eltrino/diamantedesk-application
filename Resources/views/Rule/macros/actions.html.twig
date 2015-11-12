@@ -20,30 +20,39 @@
 
 {% macro renderTemplates(mode) %}
     <script type="text/template" id="item-action-view">
-        <span class="editable"><%= action %></span> notification by
-        <span class="editable"><%= property %></span> to
-        <span class="editable"><%= value %></span>
+        <span class="editable"><%= actions[attrs.action].name %></span> notification by
+        <span class="editable"><%= properties[attrs.property].name %></span> to
+        <span class="editable"><%= values[attrs.value].name %></span>
     </script>
 
     <script type="text/template" id="item-action-edit">
         <div class="selector" style="width: 72px;">
-            <span>Send</span>
-            <select class="">
-                <option value="send">Send</option>
+            <span><%= actions[attrs.action].name %></span>
+            <select data-property="action">
+                <% _.each(actions, function(item, key) { %>
+                <option
+                <% if (attrs.action == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>
+                <%}) %>
             </select>
         </div>
         notification by
         <div class="selector" style="width: 72px;">
-            <span>email</span>
-            <select class="">
-                <option value="email">email</option>
+            <span><%= properties[attrs.property].name %></span>
+            <select data-property="property">
+                <% _.each(properties, function(item, key) { %>
+                <option
+                <% if (attrs.property == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>
+                <%}) %>
             </select>
         </div>
         to
         <div class="selector" style="width: 72px;">
-            <span>reporter</span>
-            <select class="">
-                <option value="reporter">reporter</option>
+            <span><%= values[attrs.value].name %></span>
+            <select  data-property="value">
+                <% _.each(values, function(item, key) { %>
+                <option
+                <% if (attrs.value == key) { %> selected <% } %> value="<%= key %>"><%= item.name %></option>
+                <%}) %>
             </select>
         </div>
     </script>

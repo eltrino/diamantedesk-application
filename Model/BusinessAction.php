@@ -15,6 +15,13 @@
 
 namespace Diamante\AutomationBundle\Model;
 
-class WorkflowRule extends Rule
+use Diamante\AutomationBundle\Model\Shared\AutomationRule;
+use Diamante\AutomationBundle\Rule\Condition\Condition as RuleCondition;
+use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
+use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Doctrine\Common\Collections\ArrayCollection;
+use Diamante\DeskBundle\Model\Shared\Entity;
+
+class BusinessAction extends Action
 {
 }

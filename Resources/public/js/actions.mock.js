@@ -3,23 +3,38 @@ define(["underscore", "backbone"
     "use strict";
 
     return {
-        data: [
-            {
-                "action": "Send",
-                "property": "email",
-                "value": "reporter"
+        actions: {
+            "send": {
+                name: "Send"
             },
-            {
-                "action": "Send",
-                "property": "twitter",
-                "value": "assignee"
-            },
-            {
-                "action": "Change",
-                "property": "status",
-                "value": "Open"
+            "change": {
+                name: "Change"
             }
-        ]
+        },
+
+        properties: {
+            "email": {
+                name: "Email"
+            },
+            "status": {
+                name: "Status"
+            },
+            "twitter": {
+                name: "Twitter"
+            }
+        },
+
+        values: {
+            "open": {
+                name: "Open"
+            },
+            "reporter": {
+                name: "Reporter"
+            },
+            "assignee": {
+                name: "Assignee"
+            }
+        }
     }
 
 });

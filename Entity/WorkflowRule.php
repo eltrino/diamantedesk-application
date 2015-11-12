@@ -40,12 +40,12 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule impleme
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="WorkflowCondition", mappedBy="rule", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="WorkflowCondition", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $conditions;
 
     /**
-     * @ORM\OneToMany(targetEntity="WorkflowAction", mappedBy="rule", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="WorkflowAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $actions;
 
