@@ -15,12 +15,10 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
-use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
-use Diamante\UserBundle\Model\ApiUser\ApiUser;
-use Diamante\UserBundle\Model\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Query;
 
@@ -143,11 +141,10 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
-     * @param ApiUser|null $user
+     * @param null $callback
      * @return \Doctrine\Common\Collections\Collection|static
-     * @throws \Exception
      */
-    public function filter(array &$conditions, PagingProperties $pagingProperties, $user = null)
+    public function filter(array &$conditions, PagingProperties $pagingProperties, $callback = null)
     {
         if('key' == $pagingProperties->getSort()) {
             $qb = $this->orderByTicketKey($conditions, $pagingProperties);
@@ -155,17 +152,10 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             $qb = $this->createFilterQuery($conditions, $pagingProperties);
         }
 
-        if ($user instanceof DiamanteUser) {
-            $user = new User($user->getId(), User::TYPE_DIAMANTE);
-            $qb->andWhere(self::SELECT_ALIAS . '.reporter = :reporter');
-
-            $watchedTickets = $this->getWatchedTicketsIds($user);
-            if (!empty($watchedTickets)) {
-                $qb->orWhere($qb->expr()->in('e.id', array_reverse($watchedTickets)));
-            }
-            $qb->setParameter('reporter', $user);
-            $conditions[] = ['w', 'userType', 'eq', $user];
+        if (is_callable($callback)) {
+            $conditions = call_user_func_array($callback, ['qb' => $qb]);
         }
+
 
         $query = $qb->getQuery();
 
@@ -180,15 +170,16 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
     /**
      * @param array $criteria
+     * @param null $callback
      * @return int
      */
-    public function count(array $criteria = [])
+    public function count(array $criteria = [], $callback = null)
     {
         $qb = $this->_em->createQueryBuilder();
 
-        $qb->select($qb->expr()->count(self::SELECT_ALIAS))
-            ->from($this->_entityName, self::SELECT_ALIAS)
-            ->join(self::SELECT_ALIAS . '.watcherList', 'w');
+        if (is_callable($callback)) {
+            call_user_func_array($callback, ['qb' => $qb, 'entityName' => $this->_entityName]);
+        }
 
         foreach ($criteria as $condition) {
             $whereExpression = $this->buildWhereExpression($qb, $condition);

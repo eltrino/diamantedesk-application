@@ -23,15 +23,16 @@ use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 use Diamante\DeskBundle\Api\Command\RemoveTicketAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveTicketAttachmentCommand;
 use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Infrastructure\Ticket\Paging\StrategyProvider;
+use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\Filter\TicketFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Ticket\TicketSearchProcessor;
-use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
+use Diamante\UserBundle\Model\DiamanteUser;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\TagBundle\Entity\TagManager;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInterface
 {
@@ -460,18 +461,30 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
             $user = $this->userService->getUserFromApiUser($user);
         }
 
-        $pagingProperties = $this->buildPagination($criteriaProcessor, $repository, $ticketFilterCommand, $this->apiPagingService);
-        $criteria = $criteriaProcessor->getCriteria();
-
-        $tickets = $repository->filter($criteria, $pagingProperties, $user);
-        if ($this->loggedUser instanceof OroUser) {
-            foreach ($tickets as $ticket) {
-                /** @var Ticket $ticket */
-                $this->tagManager->loadTagging($ticket);
-            }
+        if ($user instanceof DiamanteUser) {
+            $userType = User::TYPE_DIAMANTE;
+        } else {
+            $userType = User::TYPE_ORO;
         }
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria);
+        $strategyProvider = new StrategyProvider(new User($user->getId(), $userType));
+        $strategy = $strategyProvider->getStrategy();
+
+        $pagingProperties = $this->buildPagination(
+            $criteriaProcessor,
+            $repository,
+            $ticketFilterCommand,
+            $this->apiPagingService,
+            $strategy->getCountCallback()
+        );
+
+        $criteria = $criteriaProcessor->getCriteria();
+
+        $tickets = $repository->filter($criteria, $pagingProperties, $strategy->getFilterCallback());
+
+        $tickets = $strategy->afterResult($tickets, $this->tagManager);
+
+        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria, $strategy->getCountCallback());
         $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
 
         return $tickets;
