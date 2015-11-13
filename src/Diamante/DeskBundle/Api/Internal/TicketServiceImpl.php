@@ -106,7 +106,6 @@ class TicketServiceImpl implements TicketService
      * @param Registry $doctrineRegistry
      * @param TicketBuilder $ticketBuilder
      * @param AttachmentManager $attachmentManager
-     * @param UserService $userService
      * @param AuthorizationService $authorizationService
      * @param EventDispatcherInterface $dispatcher
      * @param TagManager $tagManager
