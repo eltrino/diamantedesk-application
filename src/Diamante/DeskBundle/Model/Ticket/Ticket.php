@@ -605,7 +605,7 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
             }
 
             if (in_array(strtolower($name), ['status', 'priority', 'source'])) {
-                $propertyClass = strtoupper($name);
+                $propertyClass = __NAMESPACE__ . '\\' . ucfirst($name);
                 $value = new $propertyClass($value);
             }
 
