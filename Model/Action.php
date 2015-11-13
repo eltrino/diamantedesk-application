@@ -15,14 +15,10 @@
 
 namespace Diamante\AutomationBundle\Model;
 
-use Diamante\AutomationBundle\Model\Shared\AutomationRule;
-use Diamante\AutomationBundle\Rule\Condition\Condition as RuleCondition;
-use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
-use Doctrine\Common\Collections\ArrayCollection;
+use Diamante\AutomationBundle\Model\Shared\AutomationAction;
 use Diamante\DeskBundle\Model\Shared\Entity;
 
-class Action implements Entity
+class Action implements AutomationAction, Entity
 {
     protected $id;
 

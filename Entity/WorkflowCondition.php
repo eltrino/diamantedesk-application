@@ -60,7 +60,7 @@ class WorkflowCondition extends \Diamante\AutomationBundle\Model\WorkflowConditi
     protected $target;
 
     /**
-     * @var \Diamante\AutomationBundle\Model\Shared\AutomationRule
+     * @var \Diamante\AutomationBundle\Model\Shared\AutomationCondition
      * @ORM\ManyToOne(targetEntity="Diamante\AutomationBundle\Entity\WorkflowCondition", inversedBy="children")
      */
     protected $parent;

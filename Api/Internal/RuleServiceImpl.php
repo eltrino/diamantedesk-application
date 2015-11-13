@@ -86,20 +86,9 @@ class RuleServiceImpl implements RuleService
     public function createBusinessRule(RuleCommand $command)
     {
         $rule = new BusinessRule($command->name);
-        $conditionEntity = function ($command, $condition) use ($rule) {
-            return new BusinessCondition(
-                $command->expression,
-                $condition,
-                $command->weight,
-                $command->active,
-                $rule,
-                new Target($command->target),
-                $command->parent
-            );
-        };
-        $actionEntity = function($action, $rule) {
-            return new BusinessAction($action, $rule);
-        };
+
+        $conditionEntity = $this->getBusinessCondition($rule);
+        $actionEntity = $this->getBusinessAction();
 
         $this->addConditions($command->conditions, $conditionEntity, $rule);
         $this->addActions($command->actions, $rule, $actionEntity);
@@ -114,20 +103,8 @@ class RuleServiceImpl implements RuleService
         $rule = $this->loadBusinessRule($command);
         $rule->update($command->name);
 
-        $conditionEntity = function ($command, $condition) use ($rule) {
-            return new BusinessCondition(
-                $command->expression,
-                $condition,
-                $command->weight,
-                $command->active,
-                $rule,
-                new Target($command->target),
-                $command->parent
-            );
-        };
-        $actionEntity = function($action, $rule) {
-            return new BusinessAction($action, $rule);
-        };
+        $conditionEntity = $this->getBusinessCondition($rule);
+        $actionEntity = $this->getBusinessAction();
 
         $rule->removeActions();
         $rule->removeConditions();
@@ -144,20 +121,8 @@ class RuleServiceImpl implements RuleService
         $rule = $this->loadWorkflowRule($command);
         $rule->update($command->name);
 
-        $conditionEntity = function ($command, $condition) use ($rule) {
-            return new WorkflowCondition(
-                $command->expression,
-                $condition,
-                $command->weight,
-                $command->active,
-                $rule,
-                new Target($command->target),
-                $command->parent
-            );
-        };
-        $actionEntity = function($action, $rule) {
-            return new WorkflowAction($action, $rule);
-        };
+        $conditionEntity = $this->getWorkflowCondition($rule);
+        $actionEntity = $this->getWorkflowAction();
 
         $rule->removeActions();
         $rule->removeConditions();
@@ -172,20 +137,9 @@ class RuleServiceImpl implements RuleService
     public function createWorkflowRule(RuleCommand $command)
     {
         $rule = new WorkflowRule($command->name);
-        $conditionEntity = function ($command, $condition) use ($rule) {
-            return new WorkflowCondition(
-                $command->expression,
-                $condition,
-                $command->weight,
-                $command->active,
-                $rule,
-                new Target($command->target),
-                $command->parent
-            );
-        };
-        $actionEntity = function($action, $rule) {
-            return new WorkflowAction($action, $rule);
-        };
+
+        $conditionEntity = $this->getWorkflowCondition($rule);
+        $actionEntity = $this->getWorkflowAction();
 
         $this->addConditions($command->conditions, $conditionEntity, $rule);
         $this->addActions($command->actions, $rule, $actionEntity);
@@ -193,46 +147,6 @@ class RuleServiceImpl implements RuleService
         $this->workflowRuleRepository->store($rule);
 
         return $rule->getId();
-    }
-
-    private function addActions($actions, $rule, $actionEntity)
-    {
-        if (is_null($actions)) {
-            return $this;
-        }
-
-        foreach ($actions as $command) {
-            $action = $actionEntity($this->createAction($command), $rule);
-            $rule->addAction($action);
-        }
-
-        return $this;
-    }
-
-    private function addConditions($command, $conditionEntity, $rule)
-    {
-        if (is_null($command)) {
-            return $this;
-        }
-
-        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
-
-        $entity = $conditionEntity($command, $condition);
-
-        if (!is_null($command->parent)) {
-            $command->parent->addChild($entity);
-        } else {
-            $rule->addCondition($entity);
-        }
-
-        if ($command->children) {
-            foreach ($command->children as $child) {
-                $child->parent = $entity;
-                $this->addConditions($child, $conditionEntity, $rule);
-            }
-        }
-
-        return $this;
     }
 
     public function deleteBusinessRule($command)
@@ -315,5 +229,89 @@ class RuleServiceImpl implements RuleService
         $result = call_user_func([$this, $method], $command);
 
         return $result;
+    }
+
+    private function addConditions($command, $conditionEntity, $rule)
+    {
+        if (is_null($command)) {
+            return $this;
+        }
+
+        $condition = ConditionFactory::create($command->condition, $command->property, $command->value);
+
+        $entity = $conditionEntity($command, $condition);
+
+        if (!is_null($command->parent)) {
+            $command->parent->addChild($entity);
+        } else {
+            $rule->addCondition($entity);
+        }
+
+        if ($command->children) {
+            foreach ($command->children as $child) {
+                $child->parent = $entity;
+                $this->addConditions($child, $conditionEntity, $rule);
+            }
+        }
+
+        return $this;
+    }
+
+    private function addActions(array $actions, $rule, $actionEntity)
+    {
+        if (is_null($actions)) {
+            return $this;
+        }
+
+        foreach ($actions as $command) {
+            $action = $actionEntity($this->createAction($command), $rule);
+            $rule->addAction($action);
+        }
+
+        return $this;
+    }
+
+    private function getBusinessCondition($rule)
+    {
+        return function ($command, $condition) use ($rule) {
+            return new BusinessCondition(
+                $command->expression,
+                $condition,
+                $command->weight,
+                $command->active,
+                $rule,
+                new Target($command->target),
+                $command->parent
+            );
+        };
+    }
+
+    private function getBusinessAction()
+    {
+        return function($action, $rule) {
+            return new BusinessAction($action, $rule);
+        };
+    }
+
+    private function getWorkflowCondition($rule)
+    {
+        return function ($command, $condition) use ($rule) {
+            return new WorkflowCondition(
+                $command->expression,
+                $condition,
+                $command->weight,
+                $command->active,
+                $rule,
+                new Target($command->target),
+                $command->parent
+            );
+        };
+    }
+
+    private function getWorkflowAction()
+    {
+        return function($action, $rule) {
+            return new WorkflowAction($action, $rule);
+        };
     }
 }

@@ -19,6 +19,7 @@
         <parameter key="diamante_automation.email_notification_strategy.config_provider.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailConfigProvider</parameter>
 
         <parameter key="diamante_rule_form.type.class">Diamante\AutomationBundle\Form\Type\CreateRuleType</parameter>
+        <parameter key="diamante.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
     </parameters>
 
     <services>
@@ -83,5 +84,6 @@
             <tag name="form.type" alias="diamante_rule_form" />
         </service>
 
+        <service id="diamante_automation.command_factory" class="%diamante.command_factory.class%"/>
     </services>
 </container>

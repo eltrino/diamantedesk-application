@@ -15,14 +15,14 @@
 
 namespace Diamante\AutomationBundle\Model;
 
-use Diamante\AutomationBundle\Model\Shared\AutomationRule;
+use Diamante\AutomationBundle\Model\Shared\AutomationCondition;
 use Diamante\AutomationBundle\Rule\Condition\Condition as RuleCondition;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Fact\Fact;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Shared\Entity;
 
-class Condition implements AutomationRule, Entity
+class Condition implements AutomationCondition, Entity
 {
 
     const EXPRESSION_INCLUSIVE = 'AND';
@@ -54,7 +54,7 @@ class Condition implements AutomationRule, Entity
     protected $target;
 
     /**
-     * @var \Diamante\AutomationBundle\Model\Shared\AutomationRule
+     * @var \Diamante\AutomationBundle\Model\Shared\AutomationCondition
      */
     protected $parent;
 
@@ -77,7 +77,7 @@ class Condition implements AutomationRule, Entity
         $active = true,
         $rule,
         Target $target = null,
-        AutomationRule $parent = null
+        AutomationCondition $parent = null
     ) {
         $this->expression   = $expression;
         $this->condition    = $condition;
@@ -122,18 +122,18 @@ class Condition implements AutomationRule, Entity
     }
 
     /**
-     * @param \Diamante\AutomationBundle\Model\Shared\AutomationRule $rule
+     * @param \Diamante\AutomationBundle\Model\Shared\AutomationCondition $condition
      * @return $this
      */
-    public function addChild(AutomationRule $rule)
+    public function addChild(AutomationCondition $condition)
     {
-        $this->children->add($rule);
+        $this->children->add($condition);
 
         return $this;
     }
 
     /**
-     * @return AutomationRule
+     * @return AutomationCondition
      */
     public function getParent()
     {
@@ -165,12 +165,13 @@ class Condition implements AutomationRule, Entity
     }
 
     /**
-     * @param                     $expression
-     * @param null                $condition
-     * @param                     $weight
-     * @param                     $active
-     * @param Target              $target
-     * @param AutomationRule|null $parent
+     * @param                    $expression
+     * @param null               $condition
+     * @param                    $weight
+     * @param                    $active
+     * @param                    $rule
+     * @param Target             $target
+     * @param AutomationCondition|null $parent
      *
      * @throws \Exception
      */
@@ -181,7 +182,7 @@ class Condition implements AutomationRule, Entity
         $active,
         $rule,
         Target $target,
-        AutomationRule $parent = null
+        AutomationCondition $parent = null
     ) {
         $this->expression   = $expression;
         $this->condition    = ConditionFactory::getConditionFor($condition);

@@ -10,12 +10,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Diamante\AutomationBundle\Api\Command\RuleCommand;
-use Diamante\AutomationBundle\Api\Command\ConditionCommand;
-use Diamante\AutomationBundle\Api\Command\ActionCommand;
-use JMS\Serializer\SerializerBuilder;
-use Diamante\AutomationBundle\Form\Type\CreateRuleType;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Diamante\AutomationBundle\Model\Shared\AutomationRule;
 
 /**
  * Class RuleController
@@ -35,8 +30,6 @@ abstract class RuleController extends Controller
     const DELETE = 'delete';
     const ACTIVATE = 'activate';
     const DEACTIVATE = 'deactivate';
-    const CONDITION_COMMAND = 'Diamante\AutomationBundle\Api\Command\ConditionCommand';
-    const ACTION_COMMAND = 'array<Diamante\AutomationBundle\Api\Command\ActionCommand>';
 
     public function listAction()
     {
@@ -45,10 +38,11 @@ abstract class RuleController extends Controller
 
     public function viewAction($id)
     {
+        $commandFactory = $this->get('diamante_automation.command_factory');
+        $loadCommand = $commandFactory->createLoadRuleCommand($id, static::MODE);
         try {
-            $loadCommand = $this->createLoadRuleCommand($id);
             $rule = $this->get('diamante.rule.service')->actionRule($loadCommand, self::LOAD);
-            $viewCommand = $this->createViewRuleCommand($rule);
+            $viewCommand = $commandFactory->createViewRuleCommand($rule, static::MODE);
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(
                 sprintf('Rule loading failed: %s', $e->getMessage())
@@ -67,7 +61,8 @@ abstract class RuleController extends Controller
 
     public function createAction()
     {
-        $command = new RuleCommand();
+        $commandFactory = $this->get('diamante_automation.command_factory');
+        $command = $commandFactory->createCreateRuleCommand(static::MODE);
         try {
             $form = $this->createForm('diamante_rule_form', $command);
             $result = $this->edit(
@@ -95,11 +90,12 @@ abstract class RuleController extends Controller
 
     public function updateAction($id)
     {
-        $loadCommand = $this->createLoadRuleCommand($id);
-        $rule = $this->get('diamante.rule.service')->actionRule($loadCommand, self::LOAD);
-        $viewCommand = $this->createViewRuleCommand($rule);
+        $commandFactory = $this->get('diamante_automation.command_factory');
+        $loadCommand = $commandFactory->createLoadRuleCommand($id, static::MODE);
 
         try {
+            $rule = $this->get('diamante.rule.service')->actionRule($loadCommand, self::LOAD);
+            $viewCommand = $commandFactory->createViewRuleCommand($rule, static::MODE);
             $form = $this->createForm('diamante_rule_form', $viewCommand);
             $result = $this->edit(
                 $viewCommand,
@@ -139,15 +135,13 @@ abstract class RuleController extends Controller
         $response = null;
         try {
             $this->handle($form);
-
-            $command = $this->createEditRuleCommand($command);
-
-            $rootRuleId = $callback($command);
+            $command = $this->get('diamante_automation.command_factory')->createEditRuleCommand($command);
+            $ruleId = $callback($command);
 
             $response = $this->getSuccessSaveResponse(
                 $this->getRoute(self::UPDATE),
                 $this->getRoute(self::VIEW),
-                ['id' => $rootRuleId]
+                ['id' => $ruleId]
             );
         } catch (\Exception $e) {
             $this->handleException($e);
@@ -159,7 +153,8 @@ abstract class RuleController extends Controller
 
     public function deleteAction($id)
     {
-        $command = $this->createLoadRuleCommand($id);
+        $commandFactory = $this->get('diamante_automation.command_factory');
+        $command = $commandFactory->createLoadRuleCommand($id, static::MODE);
 
         try {
             $this->get('diamante.rule.service')->actionRule($command, self::DELETE);
@@ -260,66 +255,5 @@ abstract class RuleController extends Controller
     private function getRoute($action)
     {
         return sprintf('diamante_%s_%s', static::MODE, $action);
-    }
-
-    private function createViewRuleCommand($rule)
-    {
-        $command = new RuleCommand();
-
-        $command->id = $rule->getId();
-        $command->name = $rule->getName();
-        $command->mode = static::MODE;
-
-        $serializer = SerializerBuilder::create()->build();
-        $rootCondition = $rule->getRootCondition();
-        if ($rootCondition) {
-            $conditionCommand = ConditionCommand::createFromCondition($rootCondition);
-            $command->conditions = $serializer->serialize($conditionCommand, 'json');
-        }
-
-        $actionCommand = [];
-        foreach ($rule->getActions()->getValues() as $action) {
-            $actionCommand[] = ActionCommand::createFromAction($action);
-        }
-
-        if (!empty($actionCommand)) {
-            $command->actions = $serializer->serialize($actionCommand, 'json');
-        }
-
-        return $command;
-    }
-
-    private function createEditRuleCommand(RuleCommand $command)
-    {
-        $serializer = SerializerBuilder::create()->build();
-
-        if (!is_null($command->conditions)) {
-            $command->conditions = $serializer->deserialize(
-                $command->conditions,
-                self::CONDITION_COMMAND,
-                'json'
-            );
-        }
-
-        if (!is_null($command->actions)) {
-            $command->actions = $serializer->deserialize(
-                $command->actions,
-                self::ACTION_COMMAND,
-                'json'
-            );
-        }
-
-        $command->mode = static::MODE;
-
-        return $command;
-    }
-
-    private function createLoadRuleCommand($id)
-    {
-        $command = new RuleCommand();
-        $command->id = $id;
-        $command->mode = static::MODE;
-
-        return $command;
     }
 }

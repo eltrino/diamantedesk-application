@@ -60,7 +60,7 @@ class BusinessCondition extends \Diamante\AutomationBundle\Model\BusinessConditi
     protected $target;
 
     /**
-     * @var \Diamante\AutomationBundle\Model\Shared\AutomationRule
+     * @var \Diamante\AutomationBundle\Model\Shared\AutomationCondition
      * @ORM\ManyToOne(targetEntity="Diamante\AutomationBundle\Entity\BusinessCondition", inversedBy="children")
      */
     protected $parent;

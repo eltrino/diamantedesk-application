@@ -2,7 +2,7 @@
 
 namespace Diamante\AutomationBundle\Model\Shared;
 
-interface AutomationRule
+interface AutomationAction
 {
 
 }

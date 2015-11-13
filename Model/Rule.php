@@ -16,8 +16,10 @@
 namespace Diamante\AutomationBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Diamante\AutomationBundle\Model\Shared\AutomationRule;
+use Diamante\DeskBundle\Model\Shared\Entity;
 
-class Rule
+class Rule implements AutomationRule, Entity
 {
     /**
      * @var int

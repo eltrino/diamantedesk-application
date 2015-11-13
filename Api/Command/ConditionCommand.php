@@ -16,7 +16,7 @@ namespace Diamante\AutomationBundle\Api\Command;
 
 use Diamante\AutomationBundle\Rule\Condition\Condition;
 use Diamante\AutomationBundle\Model\Target;
-use Diamante\AutomationBundle\Model\Shared\AutomationRule;
+use Diamante\AutomationBundle\Model\Shared\AutomationCondition;
 use Diamante\AutomationBundle\Model\Rule;
 use JMS\Serializer\Annotation\Type;
 
