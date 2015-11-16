@@ -19,6 +19,7 @@ use Diamante\AutomationBundle\Api\Command\RuleCommand;
 use Diamante\AutomationBundle\Rule\Engine\EngineImpl;
 use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Entity\WorkflowCondition;
 use Diamante\AutomationBundle\Entity\BusinessCondition;
 use Diamante\AutomationBundle\Entity\WorkflowAction;
@@ -26,6 +27,7 @@ use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\AutomationBundle\Model\Target;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
+use Diamante\AutomationBundle\Action\ActionHandler;
 
 class RuleServiceImpl implements RuleService
 {
@@ -90,8 +92,8 @@ class RuleServiceImpl implements RuleService
         $conditionEntity = $this->getBusinessCondition($rule);
         $actionEntity = $this->getBusinessAction();
 
-        $this->addConditions($command->conditions, $conditionEntity, $rule);
-        $this->addActions($command->actions, $rule, $actionEntity);
+        $this->addConditions($rule, $command->conditions, $conditionEntity);
+        $this->addActions($rule, $command->actions, $actionEntity);
 
         $this->businessRuleRepository->store($rule);
 
@@ -108,8 +110,8 @@ class RuleServiceImpl implements RuleService
 
         $rule->removeActions();
         $rule->removeConditions();
-        $this->addConditions($command->conditions, $conditionEntity, $rule);
-        $this->addActions($command->actions, $rule, $actionEntity);
+        $this->addConditions($rule, $command->conditions, $conditionEntity);
+        $this->addActions($rule, $command->actions, $actionEntity);
 
         $this->businessRuleRepository->store($rule);
 
@@ -126,8 +128,8 @@ class RuleServiceImpl implements RuleService
 
         $rule->removeActions();
         $rule->removeConditions();
-        $this->addConditions($command->conditions, $conditionEntity, $rule);
-        $this->addActions($command->actions, $rule, $actionEntity);
+        $this->addConditions($rule, $command->conditions, $conditionEntity);
+        $this->addActions($rule, $command->actions, $actionEntity);
 
         $this->workflowRuleRepository->store($rule);
 
@@ -141,8 +143,8 @@ class RuleServiceImpl implements RuleService
         $conditionEntity = $this->getWorkflowCondition($rule);
         $actionEntity = $this->getWorkflowAction();
 
-        $this->addConditions($command->conditions, $conditionEntity, $rule);
-        $this->addActions($command->actions, $rule, $actionEntity);
+        $this->addConditions($rule, $command->conditions, $conditionEntity);
+        $this->addActions($rule, $command->actions, $actionEntity);
 
         $this->workflowRuleRepository->store($rule);
 
@@ -197,16 +199,6 @@ class RuleServiceImpl implements RuleService
         return $rule;
     }
 
-    public function createAction($command)
-    {
-        return sprintf('%s|%s|%s', $command->action, $command->property, $command->value);
-    }
-
-    public static function parseAction($string)
-    {
-        return explode('|', $string);
-    }
-
     /**
      * @param RuleCommand $command
      * @param             $action
@@ -231,7 +223,7 @@ class RuleServiceImpl implements RuleService
         return $result;
     }
 
-    private function addConditions($command, $conditionEntity, $rule)
+    private function addConditions(Rule $rule, $command, $conditionEntity)
     {
         if (is_null($command)) {
             return $this;
@@ -250,21 +242,22 @@ class RuleServiceImpl implements RuleService
         if ($command->children) {
             foreach ($command->children as $child) {
                 $child->parent = $entity;
-                $this->addConditions($child, $conditionEntity, $rule);
+                $this->addConditions($rule, $child, $conditionEntity);
             }
         }
 
         return $this;
     }
 
-    private function addActions(array $actions, $rule, $actionEntity)
+    private function addActions(Rule $rule, array $actions, $actionEntity)
     {
         if (is_null($actions)) {
             return $this;
         }
 
+        $handler = ActionHandler::getInstance();
         foreach ($actions as $command) {
-            $action = $actionEntity($this->createAction($command), $rule);
+            $action = $actionEntity($handler->create($command), $rule);
             $rule->addAction($action);
         }
 

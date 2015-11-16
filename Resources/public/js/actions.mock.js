@@ -4,35 +4,23 @@ define(["underscore", "backbone"
 
     return {
         actions: {
-            "send": {
+            "notifyByEmail": {
                 name: "Send"
-            },
-            "change": {
-                name: "Change"
             }
         },
 
         properties: {
-            "email": {
+            "recipients": {
                 name: "Email"
-            },
-            "status": {
-                name: "Status"
-            },
-            "twitter": {
-                name: "Twitter"
             }
         },
 
         values: {
-            "open": {
-                name: "Open"
+            "admin@mail.com": {
+                name: "Admin"
             },
-            "reporter": {
-                name: "Reporter"
-            },
-            "assignee": {
-                name: "Assignee"
+            "kolomiets@mail.com": {
+                name: "Alex Kolomiets"
             }
         }
     }

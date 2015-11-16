@@ -212,4 +212,9 @@ class Condition implements AutomationCondition, Entity
     {
         return count($this->getChildren());
     }
+
+    public function getRule()
+    {
+        return $this->rule;
+    }
 }

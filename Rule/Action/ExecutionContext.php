@@ -58,17 +58,10 @@ class ExecutionContext
 
     public function setAction($actionString)
     {
-        $matches = [];
-        $result = preg_match('/^(\w+)\[(.*)\]/', $actionString, $matches);
-
-        if (!$result) {
-            throw new \RuntimeException('Action of unknown type is configured');
-        }
-
-        $this->actionType = $matches[1];
         $parser = ArgumentParser::getInstance();
-        $this->actionArguments = $parser->parse($matches[2]);
-
+        $parser->parse($actionString);
+        $this->actionType = $parser->getActionType();
+        $this->actionArguments = $parser->getActionArguments();
     }
 
     public function getActionArguments()

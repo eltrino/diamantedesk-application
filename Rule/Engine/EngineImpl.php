@@ -17,10 +17,11 @@ namespace Diamante\AutomationBundle\Rule\Engine;
 
 use Diamante\AutomationBundle\Model\Agenda;
 use Diamante\AutomationBundle\Model\Fact;
-use Diamante\AutomationBundle\Model\Rule;
+use Diamante\AutomationBundle\Model\Condition;
+use Diamante\AutomationBundle\Model\Action;
 use Diamante\AutomationBundle\Rule\Action\ActionProvider;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
-use Diamante\AutomationBundle\Rule\Provider\RuleProvider;
+use Diamante\AutomationBundle\Rule\Provider\ConditionProvider;
 use Diamante\DeskBundle\Model\Shared\Entity;
 
 class EngineImpl implements Engine
@@ -29,9 +30,9 @@ class EngineImpl implements Engine
     const MODE_BUSINESS = 'business';
 
     /**
-     * @var \Diamante\AutomationBundle\Rule\Provider\RuleProvider
+     * @var \Diamante\AutomationBundle\Rule\Provider\ConditionProvider
      */
-    protected $ruleProvider;
+    protected $conditionProvider;
     /**
      * @var \Diamante\AutomationBundle\Rule\Action\ActionProvider
      */
@@ -50,20 +51,19 @@ class EngineImpl implements Engine
     /**
      * @var array
      */
-    protected $rulesets;
+    protected $conditionSets;
 
     /**
-     * @param RuleProvider   $ruleProvider
-     * @param ActionProvider $actionProvider
+     * @param ConditionProvider   $conditionProvider
+     * @param ActionProvider      $actionProvider
      */
     public function __construct(
-        RuleProvider $ruleProvider,
+        ConditionProvider $conditionProvider,
         ActionProvider $actionProvider
-    )
-    {
-        $this->ruleProvider             = $ruleProvider;
-        $this->actionProvider           = $actionProvider;
-        $this->agenda                   = new Agenda();
+    ) {
+        $this->conditionProvider = $conditionProvider;
+        $this->actionProvider = $actionProvider;
+        $this->agenda = new Agenda();
     }
 
     /**
@@ -76,26 +76,30 @@ class EngineImpl implements Engine
     {
         $result = false;
 
-        if (empty($this->rulesets[$mode][$fact->getTargetType()])) {
-            $this->loadRulesets($mode, $fact);
+        if (empty($this->conditionSets[$mode][$fact->getTargetType()])) {
+            $this->loadConditionSets($mode, $fact);
         }
 
-        $ruleset = $this->rulesets[$mode][$fact->getTargetType()];
+        $conditionSet = $this->conditionSets[$mode][$fact->getTargetType()];
 
-        if (!$ruleset) {
+        if (!$conditionSet) {
             return false;
         }
 
         $this->prepareExecutionContext($fact);
 
-        /** @var Rule $rule */
-        foreach ($ruleset as $rule) {
-            $result = $this->doCheck($fact, $rule);
+        /** @var Condition $conditionEntity */
+        foreach ($conditionSet as $conditionEntity) {
+            $result = $this->doCheck($fact, $conditionEntity);
 
             if ($result) {
-                $this->executionContext->setAction($rule->getAction());
-                $action = $this->actionProvider->getAction($this->executionContext);
-                $this->agenda->push($action);
+                $actionsSet = $conditionEntity->getRule()->getActions();
+                /** @var Action $actionEntity */
+                foreach ($actionsSet as $actionEntity) {
+                    $this->executionContext->setAction($actionEntity->getAction());
+                    $action = $this->actionProvider->getAction($this->executionContext);
+                    $this->agenda->push($action);
+                }
             }
         }
 
@@ -112,27 +116,27 @@ class EngineImpl implements Engine
     }
 
     /**
-     * @param Fact $fact
-     * @param Rule $rule
+     * @param Fact      $fact
+     * @param Condition $conditionEntity
      *
      * @return bool
      */
-    protected function doCheck(Fact $fact, Rule $rule)
+    protected function doCheck(Fact $fact, Condition $conditionEntity)
     {
-        if ($rule->hasChildren()) {
-            switch ($rule->getExpression()) {
-                case Rule::EXPRESSION_EXCLUSIVE:
-                    $result = $this->processExclusive($fact, $rule->getChildren());
+        if (is_null($conditionEntity->getCondition())) {
+            switch ($conditionEntity->getExpression()) {
+                case Condition::EXPRESSION_EXCLUSIVE:
+                    $result = $this->processExclusive($fact, $conditionEntity->getChildren());
                     break;
-                case Rule::EXPRESSION_INCLUSIVE:
-                    $result = $this->processInclusive($fact, $rule->getChildren());
+                case Condition::EXPRESSION_INCLUSIVE:
+                    $result = $this->processInclusive($fact, $conditionEntity->getChildren());
                     break;
                 default:
                     return false;
                     break;
             }
         } else {
-            $result = $rule->isSatisfiedBy($fact);
+            $result = $conditionEntity->isSatisfiedBy($fact);
         }
 
         return $result;
@@ -140,18 +144,18 @@ class EngineImpl implements Engine
 
     /**
      * @param Fact $fact
-     * @param      $ruleset
+     * @param      $conditionSet
      *
      * @return bool
      */
-    protected function processExclusive(Fact $fact, $ruleset)
+    protected function processExclusive(Fact $fact, $conditionSet)
     {
-        /** @var Rule $rule */
-        foreach ($ruleset as $rule) {
-            if (!$rule->hasChildren()) {
-                $result = $rule->isSatisfiedBy($fact);
+        /** @var Condition $conditionEntity */
+        foreach ($conditionSet as $conditionEntity) {
+            if ($conditionEntity->getCondition()) {
+                $result = $conditionEntity->isSatisfiedBy($fact);
             } else {
-                $result = $this->doCheck($fact, $rule);
+                $result = $this->doCheck($fact, $conditionEntity);
             }
 
             if ($result) {
@@ -164,18 +168,18 @@ class EngineImpl implements Engine
 
     /**
      * @param Fact $fact
-     * @param      $ruleset
+     * @param      $conditionEntitySet
      *
      * @return bool
      */
-    protected function processInclusive(Fact $fact, $ruleset)
+    protected function processInclusive(Fact $fact, $conditionEntitySet)
     {
-        /** @var Rule $rule */
-        foreach ($ruleset as $rule) {
-            if (!$rule->hasChildren()) {
-                $result = $rule->isSatisfiedBy($fact);
+        /** @var Condition $conditionEntity */
+        foreach ($conditionEntitySet as $conditionEntity) {
+            if ($conditionEntity->getCondition()) {
+                $result = $conditionEntity->isSatisfiedBy($fact);
             } else {
-                $result = $this->doCheck($fact, $rule);
+                $result = $this->doCheck($fact, $conditionEntity);
             }
 
             if (!$result) {
@@ -195,10 +199,11 @@ class EngineImpl implements Engine
     /**
      * @param Entity $entity
      * @param array  $entityChangeset
+     * @param string $actionType
      *
      * @return Fact
      */
-    public function createFact(Entity $entity, $entityChangeset = [], $actionType)
+    public function createFact(Entity $entity, $actionType, $entityChangeset = [])
     {
         return new Fact($entity, $entityChangeset, $actionType);
     }
@@ -218,27 +223,29 @@ class EngineImpl implements Engine
     }
 
     /**
-     * @param string $mode
-     * @param Fact   $fact
+     * @param $mode
+     * @param $fact
+     *
+     * @return bool
      */
-    protected function loadRulesets($mode, $fact)
+    protected function loadConditionSets($mode, $fact)
     {
         switch ($mode) {
             case self::MODE_WORKFLOW:
-                $ruleset = $this->ruleProvider->getWorkflowRules($fact);
+                $conditionSet = $this->conditionProvider->getWorkflowConditions($fact);
                 break;
             case self::MODE_BUSINESS:
-                $ruleset = $this->ruleProvider->getBusinessRules($fact);
+                $conditionSet = $this->conditionProvider->getBusinessConditions($fact);
                 break;
             default:
                 throw new \RuntimeException(sprintf("RuleEngine configured to use unknown mode: %s", (string)$mode));
                 break;
         }
 
-        if (empty($ruleset)) {
+        if (empty($conditionSet)) {
             return false;
         }
 
-        $this->rulesets[$mode][$fact->getTargetType()] = $ruleset;
+        $this->conditionSets[$mode][$fact->getTargetType()] = $conditionSet;
     }
 }

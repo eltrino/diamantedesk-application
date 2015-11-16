@@ -20,6 +20,10 @@ namespace Diamante\AutomationBundle\Action;
 
 class ArgumentParser
 {
+    private $actionType;
+
+    private $actionArguments;
+
     public static function getInstance()
     {
         return new self();
@@ -27,6 +31,15 @@ class ArgumentParser
 
     public function parse($string)
     {
+        $matches = [];
+        $result = preg_match('/^(\w+)\[(.*)\]/', $string, $matches);
+
+        if (!$result) {
+            throw new \RuntimeException('Action of unknown type is configured');
+        }
+
+        $this->actionType = $matches[1];
+
         $result = [];
 
         $groups = explode(', ', $string);
@@ -42,6 +55,17 @@ class ArgumentParser
             $result[$property] = $value;
         }
 
-        return (object)$result;
+        $this->actionArguments = (object)$result;
+        return $this;
+    }
+
+    public function getActionType()
+    {
+        return $this->actionType;
+    }
+
+    public function getActionArguments()
+    {
+        return $this->actionArguments;
     }
 }

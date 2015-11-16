@@ -51,9 +51,9 @@ define(['underscore',
             e.preventDefault();
 
             var defaultAction = {
-                "action": "send",
-                "property": "email",
-                "value": "reporter"
+                "action": "notifyByEmail",
+                "property": "recipients",
+                "value": "admin@mail.com"
             };
             this.collection.add(defaultAction);
             this.collection.trigger('addNew');

@@ -106,7 +106,7 @@ class WorkflowListener
         $lastEntityLog = $this->getLastEntityLog($entity);
         $changes = $this->computeChanges($entity, $lastEntityLog);
         $actionType = $this->getActionType($lastEntityLog);
-        $fact = $engine->createFact($entity, $changes, $actionType);
+        $fact = $engine->createFact($entity, $actionType, $changes);
 
         if ($engine->check($fact)) {
             $engine->runAgenda();

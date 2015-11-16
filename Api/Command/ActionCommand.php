@@ -16,6 +16,7 @@ namespace Diamante\AutomationBundle\Api\Command;
 
 use JMS\Serializer\Annotation\Type;
 use Diamante\AutomationBundle\Api\Internal\RuleServiceImpl;
+use Diamante\AutomationBundle\Action\ActionHandler;
 
 /**
  * Class ActionCommand
@@ -50,9 +51,8 @@ class ActionCommand
     {
         $command = new self;
         $command->id = $actionEntity->getId();
-        list($command->action, $command->property, $command->value) = RuleServiceImpl::parseAction(
-            $actionEntity->getAction()
-        );
+        $handler = ActionHandler::getInstance();
+        list($command->action, $command->property, $command->value) = $handler->parse($actionEntity->getAction());
 
         return $command;
     }
