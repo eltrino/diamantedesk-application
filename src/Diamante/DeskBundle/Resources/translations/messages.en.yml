@@ -313,3 +313,6 @@ oro:
               priority:        Priority
               ticket_unique_id:        Ticket unique id
               ticket_sequence_number:  Ticket sequence number
+
+oro_datagrid:
+  not_found_hint %entityHint%:  "No %entityHint% matching your search were found. Try modifying your search criteria."
