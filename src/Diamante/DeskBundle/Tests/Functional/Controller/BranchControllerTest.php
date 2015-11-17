@@ -56,9 +56,13 @@ class BranchControllerTest extends AbstractController
         $form = $crawler->selectButton('Save and Close')->form();
 
         $branchName = md5(time());
-        $form['diamante_branch_form[name]']             = $branchName;
-        $form['diamante_branch_form[description]']      = 'Test Description';
-        $form['diamante_branch_form[logoFile]']         = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'fixture' . DIRECTORY_SEPARATOR . 'test.jpg';
+        $form['diamante_branch_form[name]'] = $branchName;
+        $form['diamante_branch_form[description]'] = 'Test Description';
+        $form['diamante_branch_form[logoFile]'] = dirname(__FILE__)
+            . DIRECTORY_SEPARATOR
+            . 'fixture'
+            . DIRECTORY_SEPARATOR
+            . 'test.jpg';
         $form['diamante_branch_form[defaultAssignee]']  = 1;
         $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
         $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
@@ -78,7 +82,8 @@ class BranchControllerTest extends AbstractController
     {
         $generator = new DefaultBranchKeyGenerator();
         $crawler = $this->client->request(
-            'GET', $this->getUrl('diamante_branch_create')
+            'GET',
+            $this->getUrl('diamante_branch_create')
         );
 
         /** @var Form $form */
@@ -144,21 +149,33 @@ class BranchControllerTest extends AbstractController
 
     public function testDelete()
     {
-        $branch          = $this->chooseBranchFromGrid();
-        $branchDeleteUrl = $this->getUrl('diamante_branch_delete', array('id' => $branch['id']));
+        $branch           = $this->chooseBranchFromGrid();
+        $branchDeleteUrl  = $this->getUrl('diamante_branch_delete_form', array('id' => $branch['id']));
         $crawler          = $this->client->request('GET', $branchDeleteUrl);
-        $response         = $this->client->getResponse();
+        $form = $crawler->selectButton('Delete')->form();
 
-        $viewRequest  = $this->client->request(
+        $newBranchId = $form['diamante_delete_branch_form[newBranch]']->getValue();
+
+        $this->client->followRedirects(true);
+
+        $this->client->submit(
+            $form,
+            array('diamante_delete_branch_form[moveTickets]' => true,
+                'diamante_delete_branch_form[newBranch]' => $newBranchId
+            )
+        );
+
+        $response = $this->client->getResponse();
+
+        $this->client->request(
             'GET',
             $this->getUrl('diamante_branch_view', array('id' => $branch['id']))
         );
+
         $viewResponse = $this->client->getResponse();
 
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(404, $viewResponse->getStatusCode());
-
-        $this->assertFalse(file_exists($this->imagesDirectory . DIRECTORY_SEPARATOR . $branch['logo']));
     }
 
     private function chooseBranchFromGrid()

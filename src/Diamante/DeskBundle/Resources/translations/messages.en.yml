@@ -33,9 +33,12 @@ diamante:
               error:           Error occurred when saving the branch. Branch is not saved. Enter all required data and try again
               success:         Branch successfully saved.
             delete:
-              query:           Are you sure you want to delete this branch with all its tickets? Please note that it cannot be undone!
+              query:           Are you sure you want to delete this branch? WARNING! All tickets assigned to the branch will be deleted.
               success:         Branch deleted
               error:           Current branch is configured as a default for Email Processing and can't be deleted.
+              exist_tickets_error: One or more branchs have tickets and can't be deleted
+              move:            Do you want to move tickets to other branch?
+              select:          Select new branch
             get:
               error:           Branch loading failed. Branch not found.
 

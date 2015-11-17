@@ -23,16 +23,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
+use Diamante\DeskBundle\Controller\WidgetController;
 
 /**
  * @Route("tickets")
  */
-class TicketWidgetController extends Controller
+class TicketWidgetController extends WidgetController
 {
-    use Shared\FormHandlerTrait;
-    use Shared\ExceptionHandlerTrait;
-    use Shared\SessionFlashMessengerTrait;
-
     /**
      * @Route(
      *      "/status/ticket/{id}",
@@ -458,30 +455,5 @@ class TicketWidgetController extends Controller
         }
 
         return $response;
-    }
-
-    /**
-     * @param string|null $redirectUrl
-     * @param array $redirectParams
-     * @param bool|true $reload
-     * @return array
-     */
-    private function getWidgetResponse($redirectUrl = null, $redirectParams = [], $reload = true)
-    {
-        $response = ['reload_page' => $reload];
-
-        if (!is_null($redirectUrl) && !empty($redirectParams)) {
-            $response['redirect'] = $this->generateUrl($redirectUrl, $redirectParams);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @return bool
-     */
-    private function widgetRedirectRequested()
-    {
-        return !(bool)$this->container->get('request')->get('no_redirect');
     }
 }

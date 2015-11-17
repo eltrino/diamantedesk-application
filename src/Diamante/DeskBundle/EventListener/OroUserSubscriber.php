@@ -52,7 +52,7 @@ class OroUserSubscriber implements EventSubscriber
     public function preRemove(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
-        if($entity instanceof User || $entity instanceof DiamanteUser) {
+        if ($entity instanceof User || $entity instanceof DiamanteUser) {
             $type = $entity instanceof User ? UserModel::TYPE_ORO : UserModel::TYPE_DIAMANTE;
             $user = new UserModel($entity->getId(), $type);
             $this->container->get('diamante.user_cleanup.service')->cleanupUser($user);
