@@ -7849,7 +7849,12 @@ body {
 }
 .auth-page .logo {
   text-align: center;
-  margin: 0 0 75px;
+  margin: 0 0 25px;
+  background: url(../img/logo_auth.png) 0 0 no-repeat;
+  background-size: cover;
+}
+.auth-page .logo img {
+  opacity: 0;
 }
 .auth-page #main {
   background: transparent;
