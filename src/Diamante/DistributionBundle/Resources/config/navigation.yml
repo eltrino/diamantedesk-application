@@ -18,11 +18,6 @@ oro_menu_config:
             extras:
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
                 position: 90
-        diamante_automation_list:
-            label: 'Rules'
-            uri: '#'
-            extras:
-                position: 93
         diamante_report_list:
             label: 'Reports'
             uri: '#'
@@ -34,19 +29,6 @@ oro_menu_config:
           route: 'diamante_user_list'
           extras:
             position: 96
-
-        diamante_workflow_list:
-            label: 'Workflow rules'
-            route: diamante_workflow_list
-            extras:
-                routes: ['diamante_workflow_*']
-
-        diamante_business_list:
-            label: 'Business rules'
-            route: diamante_business_list
-            extras:
-                routes: ['diamante_business_*']
-
         #reports
         diamante_report_tickets_by_priority:
             label: 'Tickets By priority'
@@ -120,10 +102,6 @@ oro_menu_config:
             children:
                 diamante_branch_list: ~
                 diamante_ticket_list: ~
-                diamante_automation_list:
-                    children:
-                        diamante_workflow_list: ~
-                        diamante_business_list: ~
                 diamante_report_list:
                     children:
                         diamante_report_tickets_by_priority: ~
