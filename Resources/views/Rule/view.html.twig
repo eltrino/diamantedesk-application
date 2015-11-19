@@ -11,7 +11,7 @@
                     $(function () {
                         var conditions = '';
                         new ConditionView({"conditions": '{{ conditions|raw }}'});
-                        new ActionView({"actions": '{{ actions|raw }}'});
+                        new ActionView({"actions": '{{ actions|raw }}', "mode": "view"});
                     });
                 });
     </script>

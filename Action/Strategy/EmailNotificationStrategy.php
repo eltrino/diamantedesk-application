@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 class EmailNotificationStrategy implements ActionStrategy, NotificationStrategy
 {
-    const TYPE = 'notifyByEmail';
+    const TYPE = 'NotifyByEmail';
 
     /**
      * recipients in format email => name

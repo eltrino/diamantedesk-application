@@ -1,15 +1,11 @@
 define(['underscore',
     'backbone',
     './action.item.view',
-    './action.collection',
-    './action.model',
-    './actions.mock'
+    './action.collection'
 ], function (_,
              Backbone,
              ActionItemView,
-             ActionCollection,
-             ActionModel,
-             Mock) {
+             ActionCollection) {
     'use strict';
 
     var $ = Backbone.$;
@@ -51,22 +47,30 @@ define(['underscore',
             e.preventDefault();
 
             var defaultAction = {
-                "action": "notifyByEmail",
-                "property": "recipients",
-                "value": "admin@mail.com"
+                "type": "NotifyByEmail",
+                "notification": "email",
+                "addressee": "assignee"
             };
             this.collection.add(defaultAction);
             this.collection.trigger('addNew');
         },
 
-        render: function(actions, getModel) {
+        render: function (actions, getModel) {
             var that = this,
-                parent = this.$('#list-action');
+                parent = this.$('#list-action'),
+                renderItem;
 
-            _.each(actions, function(item) {
+            _.each(actions, function (item) {
                 var model = getModel(item);
                 var view = new ActionItemView({"model": model, "collection": that.collection});
-                parent.append(view.renderItemView().el);
+
+                if ('edit' == that.options.mode) {
+                    renderItem = view.renderItemEdit().el;
+                } else {
+                    renderItem = view.renderItemView().el;
+                }
+
+                parent.append(renderItem);
             });
 
             this.collection.trigger("toJson");

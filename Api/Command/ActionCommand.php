@@ -15,8 +15,7 @@
 namespace Diamante\AutomationBundle\Api\Command;
 
 use JMS\Serializer\Annotation\Type;
-use Diamante\AutomationBundle\Api\Internal\RuleServiceImpl;
-use Diamante\AutomationBundle\Action\ActionHandler;
+use Diamante\AutomationBundle\Rule\Action\Entity\ActionFactory;
 
 /**
  * Class ActionCommand
@@ -35,7 +34,22 @@ class ActionCommand
     /**
      * @Type("string")
      */
-    public $action;
+    public $type;
+
+    /**
+     * @Type("string")
+     */
+    public $notification;
+
+    /**
+     * @Type("string")
+     */
+    public $target;
+
+    /**
+     * @Type("string")
+     */
+    public $addressee;
 
     /**
      * @Type("string")
@@ -51,8 +65,11 @@ class ActionCommand
     {
         $command = new self;
         $command->id = $actionEntity->getId();
-        $handler = ActionHandler::getInstance();
-        list($command->action, $command->property, $command->value) = $handler->parse($actionEntity->getAction());
+        $actionProperties = ActionFactory::parse($actionEntity->getAction());
+
+        foreach ($actionProperties as $key => $property) {
+            $command->$key = $property;
+        }
 
         return $command;
     }

@@ -40,7 +40,7 @@
                             actionsEl = $('#{{ form.actions.vars.id }}');
 
                         new ConditionView({"conditions": conditionsEl.val(), "conditionsEl": conditionsEl});
-                        new ActionView({"actions": actionsEl.val(), "actionsEl": actionsEl});
+                        new ActionView({"actions": actionsEl.val(), "actionsEl": actionsEl, "mode": "edit"});
                     });
                 });
     </script>

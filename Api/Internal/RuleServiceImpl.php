@@ -27,7 +27,7 @@ use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\AutomationBundle\Model\Target;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
-use Diamante\AutomationBundle\Action\ActionHandler;
+use Diamante\AutomationBundle\Rule\Action\Entity\ActionFactory;
 
 class RuleServiceImpl implements RuleService
 {
@@ -255,9 +255,8 @@ class RuleServiceImpl implements RuleService
             return $this;
         }
 
-        $handler = ActionHandler::getInstance();
         foreach ($actions as $command) {
-            $action = $actionEntity($handler->create($command), $rule);
+            $action = $actionEntity(ActionFactory::create($command), $rule);
             $rule->addAction($action);
         }
 
