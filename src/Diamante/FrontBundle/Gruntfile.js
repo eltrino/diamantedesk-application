@@ -103,7 +103,7 @@ module.exports = function(grunt) {
       },
       main: {
         files: '<%= assetsDir %>/**',
-        tasks: ['sync', 'html']
+        tasks: ['sync']
       },
       less : {
         files: '<%= lessDir %>/**',

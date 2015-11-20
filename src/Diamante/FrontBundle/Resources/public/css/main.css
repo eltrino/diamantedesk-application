@@ -8065,6 +8065,12 @@ body {
   line-height: 1;
   border-radius: 40px;
 }
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus {
+  box-shadow: 0 0 8px #000000;
+  outline: 0 none;
+}
 .modal-body .alert {
   font-size: 95%;
 }
