@@ -213,8 +213,12 @@
     white-space: nowrap
 }
 
-.diam-branch-grid th.string-cell, td.string-cell{
+.diam-branch-grid td.string-cell{
     vertical-align: middle;
+}
+div[id^="grid-audit-grid"] th.number-cell,
+div[id^="grid-audit-grid"] td.number-cell {
+    text-align: center;
 }
 
 @keyframes blink {
