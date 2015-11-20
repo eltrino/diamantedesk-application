@@ -57,6 +57,9 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
     if(ticksCount > 20) {
       ticksCount = 20;
     }
+    if(ticksCount === 0) {
+      alert('fuck you !!!');
+    }
 
     var yAxis = d3.svg.axis()
         .scale(y)

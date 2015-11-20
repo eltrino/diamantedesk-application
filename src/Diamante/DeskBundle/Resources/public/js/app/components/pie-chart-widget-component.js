@@ -152,3 +152,4 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
   };
 
 });
+
