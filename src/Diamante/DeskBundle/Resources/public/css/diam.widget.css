@@ -8,9 +8,7 @@
   opacity: .3;
 }
 
-.dashboard-widget .widget-content::before {
-  content: 'No Data. There are no tickets available for analytics yet.';
-  display: block;
+.empty-widget {
   width: 75%;
   margin: auto;
   text-align: center;
@@ -26,8 +24,8 @@
   line-height: 1.25;
 }
 
-.dashboard-widget .widget-content {
-  background: no-repeat center top/60% 90% url('../img/Data-Combo-Chart-icon.png');
+.bg-for-empty-widget {
+  background: no-repeat center top/55% 90% url("../img/Data-Combo-Chart-icon.png");
 }
 
 .widget-content {
