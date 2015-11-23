@@ -5,6 +5,31 @@
 .diam-plot svg{
   width: 100%;
   height: 100%;
+  opacity: .3;
+}
+
+.empty-widget {
+  width: 75%;
+  margin: auto;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+     -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+       -o-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-size: 250%;
+  line-height: 1.25;
+}
+
+.bg-for-empty-widget {
+  background: no-repeat center top/55% 90% url("../img/Data-Combo-Chart-icon.png");
+}
+
+.widget-content {
+  position: relative;
 }
 
 .diam-plot .bar {
