@@ -24,6 +24,12 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         parent = parent.parent();
     }
 
+    console.log(data.length);
+
+    if ( !data.length) {
+      $('.widget-content').addClass('bg-for-empty-widget').prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+    }
+
     var w = elem.clientWidth,
         h = w / RATIO,
         margin = {top: 20, right: 20, bottom: 30, left: 40},

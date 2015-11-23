@@ -41,7 +41,7 @@ twig:
 
 # Assetic Configuration
 assetic:
-    debug:                    false
+    debug:                     false
     use_controller:           false
     filters:
         cssrewrite: ~
