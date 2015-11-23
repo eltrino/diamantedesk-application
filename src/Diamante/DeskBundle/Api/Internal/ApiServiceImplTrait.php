@@ -67,6 +67,7 @@ trait ApiServiceImplTrait
      * @param FilterableRepository $repository
      * @param FilteringCommand $command
      * @param ApiPagingService $service
+     * @param $countCallback
      *
      * @return \Diamante\DeskBundle\Model\Shared\Filter\PagingProperties
      */
@@ -74,13 +75,14 @@ trait ApiServiceImplTrait
         FilterCriteriaProcessor $processor,
         FilterableRepository $repository,
         FilteringCommand $command,
-        ApiPagingService $service
+        ApiPagingService $service,
+        $countCallback
     ){
         $processor->setCommand($command);
         $criteria = $processor->getCriteria();
         $pagingProperties = $processor->getPagingProperties();
 
-        $pagingInfo = $service->getPagingInfo($repository, $pagingProperties, $criteria);
+        $pagingInfo = $service->getPagingInfo($repository, $pagingProperties, $criteria, $countCallback);
         $this->populatePagingHeaders($service, $pagingInfo);
 
         return $pagingProperties;

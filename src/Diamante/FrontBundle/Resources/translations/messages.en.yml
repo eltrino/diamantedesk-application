@@ -2,7 +2,7 @@ eltrino:
     diamantedesk:
         branch:
           entity_label:        Branch
-          entity_plural_label: Branchs
+          entity_plural_label: Branches
         ticket:
           entity_label:        Ticket
           entity_plural_label: Tickets

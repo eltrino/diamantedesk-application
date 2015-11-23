@@ -1,0 +1,9 @@
+{% extends 'OroDashboardBundle:Dashboard:widget.html.twig' %}
+
+{% block content %}
+    {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+
+        {{ dataGrid.renderGrid('diamante-my-ticket-widget-grid', { userId:'null', reporterId:'null' }, {cssClass:'diam-tickets'}) }}
+
+{% endblock %}
+

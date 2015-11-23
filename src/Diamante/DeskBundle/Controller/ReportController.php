@@ -19,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * @Route("report")
  */
@@ -87,6 +86,36 @@ class ReportController extends Controller
             $this->handleException($e);
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
+    }
+
+
+    /**
+     * @Route(
+     *      "/widgetMyTickets/{id}",
+     *      name="diamante_mytickets_widget",
+     *      options={"expose"=true}
+     * )
+     *
+     *
+     * @param string $id
+     * @return array
+     */
+    public function myTicketsWidgetAction($id)
+    {
+        try {
+            $manager = $this->get('oro_dashboard.widget_configs');
+
+            $params = $manager->getWidgetAttributesForTwig($id);
+
+            return $this->render(
+                'DiamanteDeskBundle:Dashboard:ticketWidget.html.twig',
+                $params
+            );
+
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            throw $this->createNotFoundException($e->getMessage(), $e);
+        };
     }
 
     /**

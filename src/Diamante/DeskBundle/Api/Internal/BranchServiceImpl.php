@@ -154,7 +154,7 @@ class BranchServiceImpl implements BranchService
         $branch = $this->branchRepository->get($branchCommand->id);
 
         $assignee = $this->extractDefaultBranchAssignee($branchCommand);
-        if($branchCommand->isRemoveLogo() || $branchCommand->logoFile) {
+        if ($branchCommand->isRemoveLogo() || $branchCommand->logoFile) {
             $this->removeBranchLogo($branch);
         } 
 
@@ -293,4 +293,17 @@ class BranchServiceImpl implements BranchService
         $tags['owner'] = $tags['all'];
         $branch->setTags($tags);
     }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function isBranchHasTickets($id)
+    {
+        if ($this->registry->getRepository('DiamanteDeskBundle:Ticket')->findOneBy(array('branch' => $id))) {
+            return true;
+        }
+        return false;
+    }
 }
+

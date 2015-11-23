@@ -29,7 +29,6 @@ oro_menu_config:
           route: 'diamante_user_list'
           extras:
             position: 96
-
         #reports
         diamante_report_tickets_by_priority:
             label: 'Tickets By priority'

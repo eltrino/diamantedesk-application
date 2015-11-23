@@ -6,7 +6,7 @@
             {% for collKey, collValue in fieldValue.new %}
                 {{ collKey }}
                 <li>
-                    <b>{{ collKey }}:</b>
+                    <strong>{{ collKey }}:</strong>
 
                     {% if collKey == 'reporter' or collKey == 'userType' %}
                         {% set old_reporter = fetch_user_details(fieldValue.old[collKey]) %}
@@ -25,7 +25,7 @@
             {% endfor %}
         {% else %}
             <li>
-                <b>{{ fieldKey }}:</b>
+                <strong>{{ fieldKey }}:</strong>
 
                 {% if fieldKey == 'reporter' or fieldKey == 'userType' %}
                     {% set old_reporter = fetch_user_details(fieldValue.old) %}

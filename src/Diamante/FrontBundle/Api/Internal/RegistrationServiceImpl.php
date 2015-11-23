@@ -86,6 +86,7 @@ class RegistrationServiceImpl implements RegistrationService
         $apiUser = $this->apiUserFactory->create($command->email, $command->password);
 
         $diamanteUser->setApiUser($apiUser);
+        $apiUser->setDiamanteUser($diamanteUser);
 
         $this->diamanteUserRepository->store($diamanteUser);
 

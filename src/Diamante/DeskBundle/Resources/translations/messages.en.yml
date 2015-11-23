@@ -27,21 +27,24 @@ diamante:
 
           messages:
             create:
-              error:           Error occurred when creating the branch. Branch is not created. Enter all required data and try again.
+              error:           Error occurred while creating a branch. Branch is not created. Enter all the required data and try again.
               success:         Branch successfully created.
             save:
-              error:           Error occurred when saving the branch. Branch is not saved. Enter all required data and try again
+              error:           Error occurred while saving the branch. Branch is not saved. Enter all the required data and try again.
               success:         Branch successfully saved.
             delete:
-              query:           Are you sure you want to delete this branch with all its tickets? Please note that it cannot be undone!
-              success:         Branch deleted
-              error:           Current branch is configured as a default for Email Processing and can't be deleted.
+              query:           WARNING! Are you sure you want to delete this branch with ALL tickets assigned to it?
+              success:         Branch successfully deleted.
+              error:           Current branch is configured as default for Email Processing and cannot be deleted.
+              exist_tickets_error: One or more branches have tickets and cannot be deleted.
+              move:            Keep the tickets and move them to another branch.
+              select:          Select a new branch
             get:
               error:           Branch loading failed. Branch not found.
 
           placeholders:
-            form:              Choose branch...
-            default:           Current branch is configured as a default for Email Processing and can't be deleted.
+            form:              Choose a branch...
+            default:           Current branch is configured as default for Email Processing and cannot be deleted.
 
         ticket:
           entity_label:               Ticket
@@ -53,7 +56,7 @@ diamante:
           id.label:                   Ticket Id
           priority.label:             Priority
           reporter.label:             Reporter
-          assignee.label:             Asigner
+          assignee.label:             Assigner
           branch.label:               Branch
           comments.label:             Comments
           sequence_number.label:      Sequence Number
@@ -63,7 +66,7 @@ diamante:
           unique_id.label:            Unique Id
           updated_at.label:           Updated At
           attachments.label:          Attachments
-          watcher_list.label:         Watcher list
+          watcher_list.label:         Watcher List
 
           columns:
             key:               Key
@@ -84,7 +87,7 @@ diamante:
             delete:            Delete
             assign:            Assign
             create:            Create Ticket
-            change_status:     Change status
+            change_status:     Change Status
             move:              Move
             watch:             Watch
             unwatch:           Un-watch
@@ -92,26 +95,26 @@ diamante:
 
           messages:
             create:
-              error:           Error occurred while creating ticket
+              error:           Error occurred while creating a ticket.
               success:         Ticket successfully created.
             save:
-              error:           Error saving ticket
+              error:           Error occurred while saving the ticket.
               success:         Ticket successfully saved.
             delete:
               query:           Are you sure you want to delete this ticket?
-              error:           Error occurred while deleting ticket
+              error:           Error occurred while deleting the ticket.
               success:         Ticket successfully deleted.
             reassign:
-              error:           Error occurred while re-assiging ticket
+              error:           Error occurred while re-assiging the ticket.
               success:         Ticket successfully re-assigned.
             change_status:
-              error:           Error occurred while trying to change ticket status.
-              success:         Status successfully changed
+              error:           Error occurred while trying to change the ticket status.
+              success:         Status successfully changed.
             move:
-              error:           Error occurred while trying to move ticket.
+              error:           Error occurred while trying to move the ticket.
               success:         Ticket successfully moved.
             watch:
-              error:           Error occurred while trying to add watcher.
+              error:           Error occurred while trying to add a watcher.
               success:         Watcher successfully added.
             watcher_remove:
               success:         Watcher successfully removed.
@@ -148,10 +151,10 @@ diamante:
 
           messages:
             create:
-              error:           Error creating comment.
+              error:           Error occured while creating a comment.
               success:         Comment successfully created.
             save:
-              error:           Error saving comment.
+              error:           Error occured while saving the comment.
               success:         Comment successfully saved.
             delete:
               error:
@@ -187,7 +190,7 @@ diamante:
 
           messages:
             create:
-              error:           Error uploading attachment
+              error:           Error occured while uploading an attachment.
               success:         Attachment(s) successfully uploaded.
             delete:
               error:           Unable to remove attachment.
@@ -198,7 +201,7 @@ diamante:
             load:
               error:           Attachment loading failed, attachment not found.
             upload:
-              error:           Upload directory is not writable, doesn\'t exist or no space left on the disk.
+              error:           Upload directory is not writable, doesn't exist or no space left on the disk.
 
           placeholders:
             dropzone:          Drop File Here
@@ -206,7 +209,7 @@ diamante:
         file:
           messages:
             dump:
-              error:           File name can not be empty string.
+              error:           File name cannot be an empty string.
             type:
               error:           Value should be a File type.
 
@@ -218,9 +221,9 @@ diamante:
         watcher:
           messages:
             watch:
-              success:         Now you watching the ticket.
+              success:         You are watching the ticket now.
             unwatch:
-              success:         You successfully unsubscribe from watching of ticket
+              success:         You have successfully unsubscribed from watching the ticket.
 
         ui:
           create:              Create
@@ -246,7 +249,7 @@ diamante:
           watchers:            Watchers
           messages:
             validation:
-              failed:          Form is invalid. Please correctly fill in all required fields.
+              failed:          Form is invalid. Fill out all required fields correctly.
 
         forms:
           name:                Name
@@ -276,18 +279,18 @@ diamante:
         report:
           messages:
             build:
-              error:           Error building the report.
+              error:           Error occured while generating the report.
 
         tickethistory:
-          entity_label:        Ticket history
-          entity_plural_label: Tickets history
+          entity_label:        Ticket History
+          entity_plural_label: Tickets History
           id.label:            Id
           ticket_id.label:     Ticket id
-          ticket_key.label:    Ticket key
+          ticket_key.label:    Ticket Key
 
         tickettimeline:
-          entity_label:        Ticket timeline
-          entity_plural_label: Tickets timeline
+          entity_label:        Ticket Timeline
+          entity_plural_label: Tickets Timeline
           closed.label:        Closed
           date.label:          Date
           id.label:            Id
@@ -296,20 +299,23 @@ diamante:
           solved.label:        Solved
 
         watcherlist:
-          entity_label:        Watcher list
-          entity_plural_label: Watcher lists
+          entity_label:        Watcher List
+          entity_plural_label: Watcher Lists
           id.label:            Id
           ticket.label:        Ticket
-          user_type.label:     User type
+          user_type.label:     User Type
             
 oro:
     entity_extend:
         form:
             data_type:
               branch_logo:     Branch Logo
-              user_type:       User type
+              user_type:       User Type
               source:          Source
               status:          Status
               priority:        Priority
               ticket_unique_id:        Ticket unique id
               ticket_sequence_number:  Ticket sequence number
+
+oro_datagrid:
+  not_found_hint %entityHint%:  "No %entityHint% matching your search were found. Try modifying your search criteria."
