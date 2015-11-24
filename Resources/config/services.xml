@@ -5,99 +5,10 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="diamante_automation.workflow_rule.entity.class">Diamante\AutomationBundle\Entity\WorkflowRule</parameter>
-        <parameter key="diamante_automation.business_rule.entity.class">Diamante\AutomationBundle\Entity\BusinessRule</parameter>
-        <parameter key="diamante_automation.workflow_condition.entity.class">Diamante\AutomationBundle\Entity\WorkflowCondition</parameter>
-        <parameter key="diamante_automation.business_condition.entity.class">Diamante\AutomationBundle\Entity\BusinessCondition</parameter>
-        <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Rule\Action\ActionProviderImpl</parameter>
-        <parameter key="diamante_automation.repository.provider.class">Diamante\AutomationBundle\Rule\Repository\RepositoryProviderImpl</parameter>
-        <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Rule\Engine\EngineImpl</parameter>
-        <parameter key="diamante_automation.condition.provider.class">Diamante\AutomationBundle\Rule\Provider\ConditionProviderImpl</parameter>
-        <parameter key="diamante.business_rules.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRulesRepository</parameter>
-        <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
-        <parameter key="diamante_automation.event_listener.workflow.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
-        <parameter key="diamante_automation.provider.listed_entities.class">Diamante\AutomationBundle\Model\ListedEntity\ListedEntitiesProvider</parameter>
-        <parameter key="diamante_automation.email_notification_strategy.email_notification.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailNotification</parameter>
-        <parameter key="diamante_automation.email_notification_strategy.config_provider.class">Diamante\AutomationBundle\Action\Strategy\EmailNotificationStrategy\EmailConfigProvider</parameter>
-
-        <parameter key="diamante_rule_form.type.class">Diamante\AutomationBundle\Form\Type\CreateRuleType</parameter>
-        <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
+        <parameter key="diamante_automation.config.provider.class">Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider</parameter>
     </parameters>
 
     <services>
-        <service id="diamante_automation.workflow_rule.repository" class="%diamante.generic.repository.class%"
-                factory-service="doctrine.orm.entity_manager"
-                factory-method="getRepository"
-                >
-            <argument type="string">%diamante_automation.workflow_rule.entity.class%</argument>
-        </service>
-        <service id="diamante_automation.business_rule.repository" class="%diamante.business_rules.repository.class%"
-                factory-service="doctrine.orm.entity_manager"
-                factory-method="getRepository"
-                >
-            <argument type="string">%diamante_automation.business_rule.entity.class%</argument>
-        </service>
-        <service id="diamante_automation.workflow_condition.repository" class="%diamante.generic.repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository"
-                >
-            <argument type="string">%diamante_automation.workflow_condition.entity.class%</argument>
-        </service>
-        <service id="diamante_automation.business_condition.repository" class="%diamante.business_rules.repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository"
-                >
-            <argument type="string">%diamante_automation.business_condition.entity.class%</argument>
-        </service>
-
-        <service id="diamante_automation.action.provider" class="%diamante_automation.action.provider.class%"/>
-
-        <service id="diamante_automation.repository.provider" class="%diamante_automation.repository.provider.class%">
-            <argument type="service" id="diamante_automation.business_rule.repository"/>
-        </service>
-
-        <service id="diamante_automation.condition.provider" class="%diamante_automation.condition.provider.class%">
-            <argument type="service" id="diamante_automation.workflow_condition.repository"/>
-            <argument type="service" id="diamante_automation.business_condition.repository"/>
-        </service>
-
-        <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
-            <argument type="service" id="diamante_automation.condition.provider"/>
-            <argument type="service" id="diamante_automation.action.provider"/>
-        </service>
-
-        <service id="diamante.rule.service" class="%diamante.rule.service.class%">
-            <argument type="service" id="diamante_automation.workflow_rule.repository"/>
-            <argument type="service" id="diamante_automation.business_rule.repository"/>
-        </service>
-
-        <service id="diamante_automation.event_listener.workflow" class="%diamante_automation.event_listener.workflow.class%">
-            <argument type="service" id="service_container"/>
-            <tag name="kernel.event_listener" event="automation.workflow.process" method="processWorkflowRule" />
-        </service>
-
-        <service id="diamante_automation.provider.listed_entities" class="%diamante_automation.provider.listed_entities.class%">
-            <argument type="service" id="service_container"/>
-        </service>
-
-        <service id="diamante_automation.email_notification_strategy.email_notification" class="%diamante_automation.email_notification_strategy.email_notification.class%" >
-            <argument type="service" id="diamante.user.service"/>
-        </service>
-
-        <service id="diamante_automation.email_notification_strategy.config_provider" class="%diamante_automation.email_notification_strategy.config_provider.class%" >
-            <argument type="service" id="oro_config.global"/>
-            <argument type="string" key="transport">%mailer_transport%</argument>
-            <argument type="string" key="host">%mailer_host%</argument>
-            <argument type="string" key="port">%mailer_port%</argument>
-            <argument type="string" key="encryption">%mailer_encryption%</argument>
-            <argument type="string" key="user">%mailer_user%</argument>
-            <argument type="string" key="password">%mailer_password%</argument>
-        </service>
-
-        <service id="diamante_rule_form" class="%diamante_rule_form.type.class%">
-            <tag name="form.type" alias="diamante_rule_form" />
-        </service>
-
-        <service id="diamante_automation.command_factory" class="%diamante_automation.command_factory.class%"/>
+        <service id="diamante_automation.config.provider" class="%diamante_automation.config.provider.class%"/>
     </services>
 </container>

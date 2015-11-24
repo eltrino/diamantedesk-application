@@ -2,33 +2,23 @@
 
 namespace Diamante\AutomationBundle\DependencyInjection;
 
+use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
+use Diamante\AutomationBundle\Configuration\ConfigCacheDumper;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
 /**
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class DiamanteAutomationExtension extends Extension implements PrependExtensionInterface
+class DiamanteAutomationExtension extends Extension
 {
-    public function prepend(ContainerBuilder $container)
-    {
-        $loader = new CumulativeConfigLoader(
-            'diamante_automation',
-            new YamlCumulativeFileLoader('Resources/config/automation.yml')
-        );
-
-        $resources  = $loader->load();
-
-        $this->populateAutomationEntities($container, $resources);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -39,19 +29,68 @@ class DiamanteAutomationExtension extends Extension implements PrependExtensionI
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
-        $loader->load('actions.xml');
-        $loader->load('strategies.xml');
+
+        $this->loadAutomationConfig($container);
     }
 
-    private function populateAutomationEntities(ContainerBuilder $container, $resource)
+    /**
+     * @param ContainerBuilder $container
+     */
+    protected function loadAutomationConfig(ContainerBuilder $container)
     {
-        $entities = [];
-        foreach ($resource as $item) {
-            if (isset($item->data['entities'])) {
-                $entities = array_merge($entities, $item->data['entities']);
+        $config = $this->getConfig($container);
+        $schema = AutomationConfigurationProvider::getConfigStructure();
+
+        foreach ($schema as $section) {
+            if (array_key_exists($section, $config)) {
+                $container->setParameter(sprintf('diamante.automation.config.%s', $section), $config[$section]);
             }
         }
+    }
 
-        $container->setParameter('diamante.automation.listed_entities', $entities);
+    /**
+     * @param ContainerBuilder $container
+     * @return array|mixed
+     */
+    protected function getConfig(ContainerBuilder $container)
+    {
+        $cache = new ConfigCache(
+            sprintf(
+                "%s/cache/%s/automation_config.php",
+                $container->getParameter('kernel.root_dir'),
+                $container->getParameter('kernel.environment')
+            ),
+            $container->getParameter('kernel.environment') === 'dev' ? true : false
+        );
+
+        if (!$cache->isFresh()) {
+            $config = $this->doLoadConfig();
+            $cache->write(ConfigCacheDumper::dump($config));
+        }
+
+        $config = require $cache;
+
+        return $config;
+    }
+
+    /**
+     * @return array
+     */
+    protected function doLoadConfig()
+    {
+        $loader = new CumulativeConfigLoader(
+            'diamante_automation',
+            new YamlCumulativeFileLoader('Resources/config/automation.yml')
+        );
+
+        $resources = $loader->load();
+
+        $config = AutomationConfigurationProvider::getConfigStructure();
+
+        foreach ($resources as $resource) {
+            $config = array_merge($config, $resource->data['diamante_automation']);
+        }
+
+        return $config;
     }
 }

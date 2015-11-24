@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Rule\Condition\Specific;
+namespace Diamante\AutomationBundle\Configuration;
 
-use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
 
-class Neq extends AbstractCondition
+class ConfigCacheDumper
 {
-    public function isSatisfiedBy(Fact $fact)
+    public static function dump(array $config)
     {
-        $actualValue = $this->extractProperty($fact->getTarget());
+        $exportedConfig = var_export($config, true);
 
-        return $actualValue !== $this->expectedValue;
+        return <<<PHP
+<?php
+
+return {$exportedConfig};
+PHP;
     }
 }

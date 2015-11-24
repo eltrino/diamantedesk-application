@@ -1,7 +1,4 @@
-entities:
-    ticket:
-        entity: %diamante.ticket.entity.class%
-        processor: Diamante\AutomationBundle\Model\ListedEntity\Processor\TicketProcessor
-    comment:
-        entity: %diamante.comment.entity.class%
-        processor: Diamante\AutomationBundle\Model\ListedEntity\Processor\CommentProcessor
+diamante_automation:
+  entities: ~
+  conditions: ~
+  actions: ~
