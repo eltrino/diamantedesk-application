@@ -1,0 +1,52 @@
+<div class="widget-content form-horizontal box-content row-fluid">
+    {% if reload_page is defined and reload_page %}
+        <script type="text/javascript">
+            require(['oroui/js/widget-manager', 'oroui/js/mediator'],
+                    function(widgetManager, Mediator) {
+                        widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function (widget) {
+                            widget.remove();
+                        });
+                        {% if redirect is defined %}
+                        Mediator.execute('redirectTo', {url: '{{redirect}}'});
+                        {% else %}
+                        Mediator.execute('refreshPage');
+                        {% endif %}
+                    });
+        </script>
+    {% else %}
+        <div class="form-container">
+            <form id="{{ form.vars.name }}" action="{{ path('diamante_branch_delete_form', { 'id': form.vars.value.id, 'no_redirect': true} ) }}" method="post">
+                <fieldset class="form form-horizontal">
+                    <p>{{ 'diamante.desk.branch.messages.delete.query'|trans }}</p>
+                    <div class="span6">
+                            {{ form_row(form.moveTickets) }}
+                        <div id="moveTickets" style="display: none;">
+                            {{ form_row(form.newBranch) }}
+                        </div>
+                    </div>
+
+                    <div class="widget-actions form-actions">
+                        <button class="btn" type="reset">{{ 'diamante.desk.ui.cancel'|trans }}</button>
+                        <button class="btn btn-danger" type="submit">{{ 'diamante.desk.ui.delete'|trans }}</button>
+                    </div>
+                </fieldset>
+                {{ form_rest(form) }}
+            </form>
+        </div>
+        <script type="text/javascript">
+            require(['jquery'],
+                    function($) {
+                        $("input[name='diamante_delete_branch_form[moveTickets]']").click(
+                                function() {
+                                    if ($(this).is(":checked")) {
+                                        $("#moveTickets").show();
+                                    } else {
+                                        $("#moveTickets").hide();
+                                    }
+                                }
+                        )
+                    });
+        </script>
+    {% endif %}
+</div>
+

@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchHasTicketsException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class HandleException
@@ -86,6 +87,9 @@ class HandleException
 
             case $exception instanceof \RuntimeException:
                 return Codes::HTTP_NOT_FOUND;
+
+            case $exception instanceof BranchHasTicketsException:
+                return Codes::HTTP_CONFLICT;
 
             default:
                 return Codes::HTTP_INTERNAL_SERVER_ERROR;

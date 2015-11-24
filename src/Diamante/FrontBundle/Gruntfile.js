@@ -94,28 +94,6 @@ module.exports = function(grunt) {
       ]
     },
 
-    revision: {
-      options: {
-        property: 'meta.revision',
-        ref: 'HEAD',
-        short: true
-      }
-    },
-
-    'string-replace': {
-      dist: {
-        files: {
-          '<%= publicDir %>/js/modules/Footer/templates/footer.ejs' : '<%= assetsDir %>/js/modules/Footer/templates/footer.ejs'
-        },
-        options: {
-          replacements: [{
-            pattern: '{{revision}}',
-            replacement: '<%= meta.revision %>'
-          }]
-        }
-      }
-    },
-
     watch: {
       css: {
         files: ['<%= publicDir %>/css/main.css', '<%= publicDir %>/css/main.min.css'],
@@ -125,7 +103,7 @@ module.exports = function(grunt) {
       },
       main: {
         files: '<%= assetsDir %>/**',
-        tasks: ['sync', 'html']
+        tasks: ['sync']
       },
       less : {
         files: '<%= lessDir %>/**',
@@ -141,7 +119,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('js', ['jshint', 'requirejs']);
   grunt.registerTask('css', ['less', 'cssmin']);
-  grunt.registerTask('html', ['revision', 'string-replace']);
-  grunt.registerTask('default', ['js','sync', 'css', 'html']);
+  grunt.registerTask('default', ['js','sync', 'css']);
 
 };

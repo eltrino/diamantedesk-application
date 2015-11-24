@@ -23,14 +23,15 @@ interface FilterableRepository
     /**
      * @param array $criteria
      * @param PagingProperties $pagingProperties
-     * @param ApiUser|null $user
+     * @param null $callback
      * @return Entity[]
      */
-    public function filter(array &$criteria, PagingProperties $pagingProperties, $user = null);
+    public function filter(array &$criteria, PagingProperties $pagingProperties, $callback = null);
 
     /**
      * @param array $criteria
+     * @param null $callback
      * @return int
      */
-    public function count(array $criteria);
+    public function count(array $criteria, $callback = null);
 }

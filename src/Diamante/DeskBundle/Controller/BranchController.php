@@ -88,7 +88,7 @@ class BranchController extends Controller
                 $this->createBranchEmailConfiguration($command, $branch->getId());
                 return $branch->getId();
             });
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->handleException($e);
             return $this->redirect(
                 $this->generateUrl(
@@ -107,7 +107,8 @@ class BranchController extends Controller
     {
         $branchEmailConfigurationCommand = $command->getBranchEmailConfiguration();
         $branchEmailConfigurationCommand->branch = $branchId;
-        $this->get('diamante.branch_email_configuration.service')->createBranchEmailConfiguration($branchEmailConfigurationCommand);
+        $this->get('diamante.branch_email_configuration.service')
+            ->createBranchEmailConfiguration($branchEmailConfigurationCommand);
     }
 
     /**
@@ -118,7 +119,9 @@ class BranchController extends Controller
     {
         $branchEmailConfigurationCommand = $command->getBranchEmailConfiguration();
         $branchEmailConfigurationCommand->branch = $branchId;
-        $this->get('diamante.branch_email_configuration.service')->updateBranchEmailConfiguration($branchEmailConfigurationCommand);
+        $this->get('diamante.branch_email_configuration.service')->updateBranchEmailConfiguration(
+            $branchEmailConfigurationCommand
+        );
     }
 
     /**
@@ -138,8 +141,11 @@ class BranchController extends Controller
         $command = BranchCommand::fromBranch($branch);
 
         if ($this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id) !== null) {
-            $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id);
-            $branchEmailConfigurationCommand = BranchEmailConfigurationCommand::fromBranchEmailConfiguration($branchEmailConfiguration);
+            $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')
+                ->getConfigurationByBranchId($id);
+            $branchEmailConfigurationCommand = BranchEmailConfigurationCommand::fromBranchEmailConfiguration(
+                $branchEmailConfiguration
+            );
             $command->setBranchEmailConfiguration($branchEmailConfigurationCommand);
         }
 
@@ -160,7 +166,7 @@ class BranchController extends Controller
                     )
                 )
             );
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->handleException($e);
             return $this->redirect(
                 $this->generateUrl(
@@ -195,7 +201,11 @@ class BranchController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.branch.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse('diamante_branch_update', 'diamante_branch_view', ['id' => $branchId]);
+            $response = $this->getSuccessSaveResponse(
+                'diamante_branch_update',
+                'diamante_branch_view',
+                ['id' => $branchId]
+            );
         } catch (DuplicateBranchKeyException $e) {
             $this->addErrorMessage($e->getMessage());
             $formView = $form->createView();

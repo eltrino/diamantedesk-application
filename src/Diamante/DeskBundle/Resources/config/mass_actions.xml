@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante.desk.mass.action.delete_branch.handler.class">Diamante\DeskBundle\MassAction\Handler\DeleteBranchMassActionHandler</parameter>
+        <parameter key="diamante.mass_action.delete_branch.class">Diamante\DeskBundle\MassAction\Actions\Ajax\DeleteBranchAction</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante.desk.mass.action.delete_branch.handler" class="%diamante.desk.mass.action.delete_branch.handler.class%">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument id="translator" type="service"/>
+            <argument id="oro_security.security_facade" type="service"/>
+            <argument id="diamante.branch.service" type="service"/>
+        </service>
+        <service id="diamante.mass_action.delete_branch" class="%diamante.mass_action.delete_branch.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="delete_branch"/>
+        </service>
+    </services>
+
+</container>

@@ -24,18 +24,29 @@
         }) }}
     {% endif %}
 
+    {#'successMessage': 'diamante.desk.branch.messages.delete.success'|trans,#}
     {% if resource_granted('DELETE', entity) %}
-        {{ UI.deleteButton({
-            'dataUrl': path('diamante_branch_delete', {'id': entity.id}),
-            'dataRedirect': path('diamante_branch_list'),
-            'aCss': 'no-hash remove-button',
+        {{ UI.clientButton({
+            'dataUrl': path('diamante_branch_delete_form', {id: entity.id}),
+            'aCss': 'remove-brunch',
+            'iCss': 'icon-trash',
             'dataId': entity.id,
-            'id': 'btn-remove-account',
-            'dataMessage': 'diamante.desk.branch.messages.delete.query'|trans,
-            'successMessage': 'diamante.desk.branch.messages.delete.success'|trans,
-            'title': 'diamante.desk.branch.actions.remove'|trans,
-            'label': 'diamante.desk.ui.delete'|trans
-            })
+            'id': 'btn-delete-form',
+            'label': 'diamante.desk.ui.delete'|trans,
+            'widget' : {
+                'type' : 'dialog',
+                'multiple' : false,
+                'options' : {
+                    'alias': 'branch-delete-dialog',
+                    'stateEnabled' : false,
+                    'dialogOptions' : {
+                        'resizable' : false,
+                        'title': 'diamante.desk.branch.actions.remove'|trans,
+                        'autoResize': false
+                    }
+                }
+            }
+        })
         }}
     {% endif %}
 {% endblock navButtons %}

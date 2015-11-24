@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Command;
 use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Model\Branch\Filter\BranchFilterCriteriaProcessor;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchHasTicketsException;
 
 class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInterface
 {
@@ -31,7 +32,8 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
 
     /**
      * Retrieves list of all Branches. Filters branches with parameters provided within GET request
-     * Time filtering parameters as well as paging/sorting configuration parameters can be found in \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
+     * Time filtering parameters as well as paging/sorting configuration parameters can be found in
+     * \Diamante\DeskBundle\Api\Command\CommonFilterCommand class.
      * Time filtering values should be converted to UTC
      *
      * @ApiDoc(
@@ -166,16 +168,21 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
      *  statusCodes={
      *      204="Returned when successful",
      *      403="Returned when the user is not authorized to delete branch",
-     *      404="Returned when the branch is not found"
+     *      404="Returned when the branch is not found",
+     *      409="Branch has tickets and can't be deleted"
      *  }
      * )
      *
      * @param int $id
-     * @return void
+     * @throws BranchHasTicketsException
      */
     public function deleteBranch($id)
     {
-        parent::deleteBranch($id);
+        if (!parent::isBranchHasTickets($id)) {
+            parent::deleteBranch($id);
+        } else {
+            throw new BranchHasTicketsException();
+        }
     }
 
     /**

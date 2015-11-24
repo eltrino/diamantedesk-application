@@ -213,8 +213,12 @@
     white-space: nowrap
 }
 
-.diam-branch-grid th.string-cell, td.string-cell{
+.diam-branch-grid td.string-cell{
     vertical-align: middle;
+}
+div[id^="grid-audit-grid"] th.number-cell,
+div[id^="grid-audit-grid"] td.number-cell {
+    text-align: center;
 }
 
 @keyframes blink {
@@ -290,4 +294,25 @@
 
 .deleted-reporter {
     text-decoration: line-through;
+}
+
+.mce-tinymce + .diam-ticket-description {
+    display: block !important;
+    position: absolute;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    width:1px;
+    height: 1px;
+    left:-999em;
+}
+
+.validation-error .mce-tinymce.mce-panel {
+    border: 1px solid #e9322d;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(211,33,33,0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(211,33,33,0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(211,33,33,0.6);
 }

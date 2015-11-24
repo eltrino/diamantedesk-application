@@ -33,15 +33,17 @@ class ApiPagingServiceImpl implements ApiPagingService
     {
         $this->provider = $provider;
     }
+
     /**
      * @param FilterableRepository $repository
      * @param PagingProperties $pagingConfig
      * @param array $criteria
+     * @param null $countCallback
      * @return PagingInfo
      */
-    public function getPagingInfo(FilterableRepository $repository, PagingProperties $pagingConfig, array $criteria)
+    public function getPagingInfo(FilterableRepository $repository, PagingProperties $pagingConfig, array $criteria, $countCallback = null)
     {
-        $totalRecords = $repository->count($criteria);
+        $totalRecords = $repository->count($criteria, $countCallback);
 
         return new PagingInfo($totalRecords, $pagingConfig);
     }

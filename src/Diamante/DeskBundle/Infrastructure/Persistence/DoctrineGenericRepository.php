@@ -76,11 +76,10 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
-     * @param ApiUser|null $user
+     * @param null $callback
      * @return \Doctrine\Common\Collections\Collection|static
-     * @throws \Exception
      */
-    public function filter(array &$conditions, PagingProperties $pagingProperties, $user = null)
+    public function filter(array &$conditions, PagingProperties $pagingProperties, $callback = null)
     {
         $qb = $this->createFilterQuery($conditions, $pagingProperties);
         $query = $qb->getQuery();
@@ -151,9 +150,10 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
 
     /**
      * @param array $criteria
+     * @param null $callback
      * @return int
      */
-    public function count(array $criteria)
+    public function count(array $criteria, $callback = null)
     {
         $qb = $this->_em->createQueryBuilder();
 

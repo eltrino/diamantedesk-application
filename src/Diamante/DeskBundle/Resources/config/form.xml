@@ -25,6 +25,7 @@
         <parameter key="diamante_ticket_form_status_mass_change.type.class">Diamante\DeskBundle\Form\Type\MassChangeTicketStatusType</parameter>
         <parameter key="diamante_ticket_form_mass_move.type.class">Diamante\DeskBundle\Form\Type\MassMoveTicketType</parameter>
         <parameter key="diamante_ticket_form_mass_add_watcher.type.class">Diamante\DeskBundle\Form\Type\MassAddWatcherTicketType</parameter>
+        <parameter key="diamante_delete_branch_form.type.class">Diamante\DeskBundle\Form\Type\DeleteBranch</parameter>
     </parameters>
 
     <services>
@@ -51,6 +52,10 @@
         </service>
         <service id="diamante_branch_form" class="%diamante_branch_form.type.class%">
             <tag name="form.type" alias="diamante_branch_form"/>
+        </service>
+        <service id="diamante_delete_branch_form" class="%diamante_delete_branch_form.type.class%">
+            <argument type="service" id="diamante.branch.service"/>
+            <tag name="form.type" alias="diamante_delete_branch_form"/>
         </service>
         <service id="diamante_ticket_form" class="%diamante_ticket_form.type.class%">
             <tag name="form.type" alias="diamante_ticket_form"/>

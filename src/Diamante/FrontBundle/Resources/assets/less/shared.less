@@ -52,6 +52,14 @@
   border-width: 2px;
   text-transform: uppercase;
   .button-size(14px; 40px; 14px; 1; 40px);
+  &,
+  &:active,
+  &.active {
+    &:focus {
+      box-shadow:  0 0 8px rgb(0,0,0);
+      outline: 0 none;
+    }
+  }
 }
 
 .modal-body {

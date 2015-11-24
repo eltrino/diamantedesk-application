@@ -53,6 +53,7 @@
         <parameter key="diamante.audit_datagrid.configuration.provider.class">Diamante\DeskBundle\Datagrid\Provider\DataAuditConfigurationProvider</parameter>
         <parameter key="diamante.grid_views_load.class">Diamante\DeskBundle\EventListener\GridViewsLoadListener</parameter>
         <parameter key="diamante.data_audit.listener.class">Diamante\DeskBundle\EventListener\DataAuditGridListener</parameter>
+        <parameter key="diamante.pre_build.listener.class">Diamante\DeskBundle\EventListener\DataGridPreBuildListener</parameter>
     </parameters>
 
     <services>
@@ -213,6 +214,11 @@
 
         <service id="diamante.data_audit.listener" class="%diamante.data_audit.listener.class%">
             <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.before.audit-grid" method="onBuildBefore"/>
+        </service>
+
+        <service id="diamante.pre_build.listener" class="%diamante.pre_build.listener.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.pre" method="onPreBuild"/>
         </service>
     </services>
 </container>
