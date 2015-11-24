@@ -16,7 +16,7 @@ reports:
     tickets_by_priority_widget:
             label: "Tickets By Priority"
             chart:
-                type: bar-chart
+                type: pie-chart
                 y-axis: value
                 x-axis: priority
             source:
@@ -83,7 +83,7 @@ reports:
     tickets_by_branch_widget:
         label: "Tickets By Branch"
         chart:
-            type: bar-chart
+            type: pie-chart
             y-axis: data
             x-axis: branch
         source:
