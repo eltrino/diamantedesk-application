@@ -20,6 +20,11 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         parent = options._sourceElement.parent(),
         plot = d3.select(elem);
 
+    if ( !data.length) {
+      $('.widget-content').addClass('bg-for-empty-widget').prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+    }
+
+
     if (!parent.is('[data-wid]')) {
         parent = parent.parent();
     }
