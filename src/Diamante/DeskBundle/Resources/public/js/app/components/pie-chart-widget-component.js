@@ -24,6 +24,37 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         plot = d3.select(elem),
         sum = _.reduce(data, function(memo, elem){ return memo + toInt(elem.data); }, 0);
 
+        function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min).toString();
+        }
+
+    if ( !data.length) {
+      $('.diam-pie-chart-widget').css({
+        opacity: '.2',
+        pointerEvents: 'none',
+        backgroundColor: '#f2f2f7'
+      });
+
+      $('.widget-content').prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+      data = [
+        {
+          data: getRandomInt(10,0),
+          label: "Item1"
+        },
+          
+        {
+          data: getRandomInt(10,0),
+          label: "Item2"
+        },
+        
+        {
+          data: getRandomInt(10,0),
+          label: "Item3"
+        }
+      ]
+      sum = _.reduce(data, function(memo, elem){ return memo + toInt(elem.data); }, 0);
+    }
+
       if (!parent.is('[data-wid]')) {
           parent = parent.parent();
       }
