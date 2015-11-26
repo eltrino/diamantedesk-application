@@ -85,10 +85,14 @@ class DiamanteAutomationExtension extends Extension
 
         $resources = $loader->load();
 
-        $config = AutomationConfigurationProvider::getConfigStructure();
+        $schema = AutomationConfigurationProvider::getConfigStructure();
+
+        foreach ($schema as $section) {
+            $config[$section] = [];
+        }
 
         foreach ($resources as $resource) {
-            $config = array_merge($config, $resource->data['diamante_automation']);
+            $config = array_merge_recursive($config, $resource->data['diamante_automation']);
         }
 
         return $config;

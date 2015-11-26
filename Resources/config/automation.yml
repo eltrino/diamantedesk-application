@@ -1,4 +1,4 @@
 diamante_automation:
-  entities: ~
-  conditions: ~
-  actions: ~
+  entities: []
+  conditions: []
+  actions: []
