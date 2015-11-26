@@ -28,14 +28,21 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         return Math.floor(Math.random() * (max - min + 1) + min).toString();
         }
 
-    if ( !data.length) {
+        var outputData = data.length;
+
+    if ( !outputData) {
       $('.diam-pie-chart-widget').css({
         opacity: '.2',
         pointerEvents: 'none',
         backgroundColor: '#f2f2f7'
       });
 
-      $('.widget-content').prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+      $('.widget-content').each(function() {
+        if ( !$(this).hasClass('diamante-mytickets-widget-widget-content') ) {
+          $(this).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+        }
+      });
+
       data = [
         {
           data: getRandomInt(10,0),
@@ -107,6 +114,12 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         .attr("class", "slice")
         .attr("d", arc);
 
+        if ( !outputData ) {
+          $('path.slice').css('fill', '#646464');
+          $('path.slice:nth-child(2)').css('opacity', '.7');
+          $('path.slice:nth-child(3)').css('opacity', '.4');
+        }
+
     slice.exit()
         .remove();
 
@@ -125,7 +138,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
           return "translate(" + pos + ")";
         })
         .text(function(d) {
-          return d.data.label + ' ' + toPercent(d.data.data, sum) + "%" ;
+          return (outputData) ? (d.data.label + ' ' + toPercent(d.data.data, sum) + "%") : '';
         });
 
     text.exit()
@@ -139,7 +152,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         .attr("points", function(d){
           var pos = outerArc.centroid(d);
           pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
-          return [arc.centroid(d), outerArc.centroid(d), pos];
+          return (outputData) ? ([arc.centroid(d), outerArc.centroid(d), pos]) : '';
         });
 
     polyline.exit()

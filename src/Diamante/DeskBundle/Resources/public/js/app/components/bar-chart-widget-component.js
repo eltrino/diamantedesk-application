@@ -20,38 +20,6 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         parent = options._sourceElement.parent(),
         plot = d3.select(elem);
 
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min).toString();
-    }
-
-    if ( !data.length) {
-      $('.diam-bar-chart-widget').css({
-        opacity: '.2',
-        pointerEvents: 'none',
-        backgroundColor: '#f2f2f7'
-      });
-
-      $('.widget-content').prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
-      
-
-      data = [
-        {
-          x: "Item1",
-          y: getRandomInt(10,0)
-        },
-        
-        {
-          x: "Item2",
-          y: getRandomInt(10,0)
-        },
-        
-        {
-          x: "Item3",
-          y: getRandomInt(10,0)
-        }
-      ]
-    }
-
     if (!parent.is('[data-wid]')) {
         parent = parent.parent();
     }
