@@ -37,10 +37,16 @@ class Condition extends \Diamante\AutomationBundle\Model\Condition
     protected $id;
 
     /**
-     * @var RuleCondition
-     * @ORM\Column(name="rule_condition", type="string")
+     * @var string
+     * @ORM\Column(type="string")
      */
-    protected $condition;
+    protected $type;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $parameters;
 
     /**
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="conditions")

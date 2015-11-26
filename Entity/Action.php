@@ -37,7 +37,13 @@ class Action extends \Diamante\AutomationBundle\Model\Action
      * @var string
      * @ORM\Column(type="string")
      */
-    protected $action;
+    protected $type;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $parameters;
 
     /**
      * @var int
