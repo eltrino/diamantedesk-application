@@ -39,7 +39,7 @@ oro_dashboard_config:
             label:      My Tickets
             route:      diamante_mytickets_widget
             route_parameters: { id: diamante_mytickets_widget }
-            description: Show related tickets on dasboard.
+            description: This widget helps quickly filter out all the tickets where you were specified as a Reporter or as an Assignee.
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
     dashboards:
