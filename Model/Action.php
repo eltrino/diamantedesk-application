@@ -22,17 +22,17 @@ class Action implements Entity
 {
     protected $id;
 
-    protected $actionType;
+    protected $type;
 
-    protected $actionParameters;
+    protected $parameters;
 
     protected $rule;
 
-    public function __construct($actionType, $actionParameters, $rule)
+    public function __construct($type, $parameters, $rule)
     {
-        $this->id = (string)Uuid::uuid4();
-        $this->actionType = $actionType;
-        $this->actionParameters = $actionParameters;
+        $this->id = Uuid::uuid4();
+        $this->type = $type;
+        $this->parameters = $parameters;
         $this->rule = $rule;
     }
 
@@ -41,14 +41,14 @@ class Action implements Entity
         return $this->id;
     }
 
-    public function getActionType()
+    public function getType()
     {
-        return $this->actionType;
+        return $this->type;
     }
 
-    public function getActionParameters()
+    public function getParameters()
     {
-        return $this->actionParameters;
+        return $this->parameters;
     }
 
     public function getRule()

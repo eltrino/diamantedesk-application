@@ -32,10 +32,7 @@ abstract class Rule implements AutomationRule, Entity
      */
     protected $name;
 
-    /**
-     * @var ArrayCollection
-     */
-    protected $conditions;
+    protected $rootGroup;
 
     /**
      * @var ArrayCollection
@@ -59,9 +56,8 @@ abstract class Rule implements AutomationRule, Entity
 
     public function __construct($name, $active = true)
     {
-        $this->id = (string)Uuid::uuid4();
+        $this->id = Uuid::uuid4();
         $this->name = $name;
-        $this->conditions = new ArrayCollection();
         $this->actions = new ArrayCollection();
         $this->active = $active;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
@@ -78,18 +74,6 @@ abstract class Rule implements AutomationRule, Entity
         return $this->name;
     }
 
-    public function addCondition($condition)
-    {
-        $this->conditions->add($condition);
-
-        return $this;
-    }
-
-    public function getConditions()
-    {
-        return $this->conditions;
-    }
-
     public function addAction($action)
     {
         $this->actions->add($action);
@@ -100,6 +84,18 @@ abstract class Rule implements AutomationRule, Entity
     public function getActions()
     {
         return $this->actions;
+    }
+
+    public function getRootGroup()
+    {
+        return $this->rootGroup;
+    }
+
+    public function setRootGroup($group)
+    {
+        $this->rootGroup = $group;
+
+        return $this;
     }
 
     public function isActive()
@@ -134,15 +130,6 @@ abstract class Rule implements AutomationRule, Entity
     {
         foreach ($this->actions as $action) {
             $this->actions->removeElement($action);
-        }
-
-        return $this;
-    }
-
-    public function removeConditions()
-    {
-        foreach ($this->conditions as $condition) {
-            $this->conditions->removeElement($condition);
         }
 
         return $this;

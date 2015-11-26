@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Model;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Rhumsaa\Uuid\Uuid;
 
 class Group implements Entity
@@ -34,10 +35,14 @@ class Group implements Entity
      */
     protected $connector;
 
+    protected $children;
+
     /**
      * @var Group|null
      */
     protected $parent;
+
+    protected $conditions;
 
     protected $rule;
 
@@ -55,9 +60,12 @@ class Group implements Entity
      * @param string     $connector
      * @param Group|null $parent
      */
-    public function __construct($connector = self::INCLUSIVE_CONNECTOR, Group $parent = null) {
-        $this->id = (string)Uuid::uuid4();
+    public function __construct($connector = self::INCLUSIVE_CONNECTOR, Group $parent = null)
+    {
+        $this->id = Uuid::uuid4();
         $this->connector = $connector;
+        $this->children = new ArrayCollection();
+        $this->conditions = new ArrayCollection();
         $this->parent = $parent;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
@@ -68,6 +76,21 @@ class Group implements Entity
         return $this->parent;
     }
 
+    public function addChild(Group $group)
+    {
+        $this->children->add($group);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
     public function getConnector()
     {
         return $this->connector;
@@ -76,6 +99,18 @@ class Group implements Entity
     public function getRule()
     {
         return $this->rule;
+    }
+
+    public function getConditions()
+    {
+        return $this->conditions;
+    }
+
+    public function addCondition(Condition $condition)
+    {
+        $this->conditions->add($condition);
+
+        return $this;
     }
 
     /**

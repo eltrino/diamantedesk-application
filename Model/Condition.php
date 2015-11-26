@@ -25,7 +25,9 @@ class Condition implements Entity
      */
     protected $id;
 
-    protected $condition;
+    protected $type;
+
+    protected $parameters;
 
     /**
      * @var Group
@@ -38,12 +40,14 @@ class Condition implements Entity
     protected $weight;
 
     public function __construct(
-        $condition,
+        $type,
+        $parameters,
         Group $group,
         $weight = 0
     ) {
-        $this->id = (string)Uuid::uuid4();
-        $this->condition = $condition;
+        $this->id = Uuid::uuid4();
+        $this->type = $type;
+        $this->parameters = $parameters;
         $this->group = $group;
         $this->weight = $weight;
     }
@@ -59,9 +63,17 @@ class Condition implements Entity
     /**
      * @return string
      */
-    public function getCondition()
+    public function getType()
     {
-        return $this->condition;
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
     /**
@@ -72,11 +84,18 @@ class Condition implements Entity
         return $this->weight;
     }
 
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
     public function update(
-        $condition,
-        $weight
+        $type,
+        $parameters,
+        $weight = 0
     ) {
-        $this->condition = $condition;
+        $this->type = $type;
+        $this->parameters = $parameters;
         $this->weight = $weight;
     }
 }
