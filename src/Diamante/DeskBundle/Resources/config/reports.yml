@@ -17,8 +17,8 @@ reports:
             label: "Tickets By Priority"
             chart:
                 type: pie-chart
-                y-axis: value
-                x-axis: priority
+                label: priority
+                data: value
             source:
                 type: dql
                 dql: "SELECT t.priority, count(t.priority) as value FROM Diamante\\DeskBundle\\Entity\\Ticket t group by t.priority"
@@ -84,8 +84,8 @@ reports:
         label: "Tickets By Branch"
         chart:
             type: pie-chart
-            y-axis: data
-            x-axis: branch
+            label: branch
+            data: data
         source:
             type: dql
             dql: "select b.name as branch, count(t.branch) as data from Diamante\\DeskBundle\\Entity\\Ticket t LEFT JOIN Diamante\\DeskBundle\\Entity\\Branch b WITH b.id = t.branch GROUP BY t.branch"
