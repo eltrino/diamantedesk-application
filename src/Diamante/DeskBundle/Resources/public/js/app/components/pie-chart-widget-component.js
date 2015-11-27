@@ -1,4 +1,4 @@
-define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
+define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, palette, _) {
 
   "use strict";
 
@@ -64,8 +64,7 @@ define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
         .innerRadius(radius * 0.9)
         .outerRadius(radius * 0.9);
 
-    var color = d3.scale.category20();
-
+    var color = d3.scale.ordinal().domain(data).range(palette[data.length]);
 
     var slice = svg.select(".slices").selectAll("path.slice")
         .data(pie(data));

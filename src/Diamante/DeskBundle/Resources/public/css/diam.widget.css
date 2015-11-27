@@ -8,14 +8,12 @@
 }
 
 .diam-plot .bar {
-  fill: steelblue;
+  fill: #5EBCD2;
 }
 
 .diam-plot .bar:hover {
-  fill: brown;
+  fill-opacity: .8;
 }
-
-
 
 .diam-plot .axis {
   font: 10px sans-serif;
@@ -68,12 +66,12 @@
 }
 
 .diam-plot .slice:hover {
-  fill: brown !important;
+  fill-opacity: .5;
 }
 
 .diam-plot .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #5EBCD2;
   stroke-width: 2px;
 }
 
@@ -89,7 +87,7 @@
 }
 
 .diam-plot .tooltip-holder line {
-  stroke: steelblue;
+  stroke: #5EBCD2;
   stroke-width: 2px;
   opacity: 0;
   -webkit-transition: opacity .5s;

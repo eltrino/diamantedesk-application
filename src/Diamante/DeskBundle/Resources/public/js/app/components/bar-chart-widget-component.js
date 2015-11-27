@@ -1,4 +1,4 @@
-define(['d3', 'd3-tip', 'underscore'], function (d3, d3tip, _) {
+define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, palette, _) {
 
   "use strict";
 

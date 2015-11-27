@@ -1,4 +1,4 @@
-define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'], function (BaseComponent, d3, d3tip, _) {
+define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/palette', 'underscore'], function (BaseComponent, d3, d3tip, palette, _) {
 
   "use strict";
 
@@ -55,14 +55,14 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
 
       if (data.length == 0) {
           return;
-      };
+      }
 
       data = _.map(data, function(value, key){ value.date = parseDate(key); return value;})
           .sort(sortByDateAscending);
 
       if (!parent.is('[data-wid]')) {
           parent = parent.parent();
-      };
+      }
 
     var w = elem.clientWidth,
         h = w / RATIO,
@@ -100,8 +100,6 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         y = d3.scale.linear().range([height, 0]),
         y2 = d3.scale.linear().range([h2, 0]);
 
-    var color = d3.scale.category10();
-
     var keys = _.chain(data)
         .map(function(elem){ return d3.keys(elem)})
         .flatten()
@@ -109,7 +107,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'underscore'],
         .filter(function(key) { return key !== "date"; })
         .value();
 
-    color.domain(keys);
+    var color = d3.scale.ordinal().domain(keys).range(palette[keys.length]);
 
     populateData(data);
     var tickets = color.domain().map(function(name) {
