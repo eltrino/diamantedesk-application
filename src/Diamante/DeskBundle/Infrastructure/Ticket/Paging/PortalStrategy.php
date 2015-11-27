@@ -97,7 +97,10 @@ class PortalStrategy extends AbstractStrategy implements Strategy
     {
         $qb->select($qb->expr()->count(DoctrineGenericRepository::SELECT_ALIAS))
             ->from($entityName, DoctrineGenericRepository::SELECT_ALIAS)
-            ->join(DoctrineGenericRepository::SELECT_ALIAS . '.watcherList', 'w');
+            ->leftJoin(DoctrineGenericRepository::SELECT_ALIAS . '.watcherList', 'w')
+            ->orWhere('e.reporter = :user')
+            ->orWhere('w.userType = :user')
+            ->setParameter('user', (string)$this->user);
     }
 
     /**
