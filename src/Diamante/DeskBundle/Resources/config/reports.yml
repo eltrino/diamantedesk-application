@@ -1,6 +1,6 @@
 reports:
     tickets_by_priority:
-        label: "Tickets By Priority"
+        label: "Tickets by Priority"
         chart:
             type: grouped-line-chart
             x-axis: day
@@ -14,7 +14,7 @@ reports:
             repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTicketsByPriority"
 
     tickets_by_priority_widget:
-            label: "Tickets By Priority"
+            label: "Tickets by Priority"
             chart:
                 type: pie-chart
                 label: priority
@@ -49,7 +49,7 @@ reports:
             repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTimeOfResponseReportWidgetData"
 
     tickets_by_channels:
-        label: "Tickets By Channels"
+        label: "Tickets by Channels"
         chart:
             type: grouped-line-chart
             x-axis: day
@@ -60,7 +60,7 @@ reports:
             dql: "select date(t.createdAt) as day, t.source as source, count(t.source) as data from Diamante\\DeskBundle\\Entity\\Ticket t GROUP BY t.source, day"
 
     tickets_by_channels_widget:
-        label: "Tickets By Channels"
+        label: "Tickets by Channels"
         chart:
             type: pie-chart
             label: label
@@ -69,8 +69,8 @@ reports:
             type: dql
             dql: "select t.source as label, count(t.source) as data from  Diamante\\DeskBundle\\Entity\\Ticket t GROUP BY t.source"
 
-    tickets_by_branch:
-        label: "Tickets By Branch"
+    tickets_by_branches:
+        label: "Tickets by Branches"
         chart:
             type: grouped-line-chart
             x-axis: day
@@ -80,8 +80,8 @@ reports:
             type: dql
             dql: "select date(t.createdAt) as day, b.name as branch, count(t.branch) as data from Diamante\\DeskBundle\\Entity\\Ticket t LEFT JOIN Diamante\\DeskBundle\\Entity\\Branch b WITH b.id = t.branch GROUP BY t.branch, day"
 
-    tickets_by_branch_widget:
-        label: "Tickets By Branch"
+    tickets_by_branches_widget:
+        label: "Tickets by Branches"
         chart:
             type: pie-chart
             label: branch
@@ -90,8 +90,8 @@ reports:
             type: dql
             dql: "select b.name as branch, count(t.branch) as data from Diamante\\DeskBundle\\Entity\\Ticket t LEFT JOIN Diamante\\DeskBundle\\Entity\\Branch b WITH b.id = t.branch GROUP BY t.branch"
 
-    tickets_timeline:
-        label: "Tickets Timeline"
+    ticket_timeline:
+        label: "Ticket Timeline"
         chart:
             type: grouped-line-chart
             x-axis: day

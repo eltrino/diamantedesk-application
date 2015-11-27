@@ -1,14 +1,14 @@
 oro_dashboard_config:
     widgets:
         tickets_by_priority_widget:
-            label:      Tickets By priority
+            label:      Tickets by Priority
             route:      diamante_report_widget
             route_parameters: { id: tickets_by_priority_widget }
             description: See the full picture of requests according to their priorities and focus on core issues.
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
         time_of_response_widget:
-            label:      Time Of Response
+            label:      Time of Response
             route:      diamante_report_widget
             route_parameters: { id: time_of_response_widget }
             description: Measure your efficiency by analyzing the average speed of response for new tickets.
@@ -21,17 +21,17 @@ oro_dashboard_config:
             description: Find out which channels of ticket submitting are most actively used in your system (emails, web portal, embedded form or via a phone call).
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
-        tickets_by_branch_widget:
-            label:      Tickets by Branch
+        tickets_by_branches_widget:
+            label:      Tickets by Branches
             route:      diamante_report_widget
-            route_parameters: { id: tickets_by_branch_widget }
+            route_parameters: { id: tickets_by_branches_widget }
             description: See how many tickets are created in each branch for certain periods or daily and use this data to analyze which branches are most actively used for ticket creation.
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
-        tickets_timeline:
-            label:      Tickets TimeLine
+        ticket_timeline:
+            label:      Ticket Timeline
             route:      diamante_report_widget
-            route_parameters: { id: tickets_timeline }
+            route_parameters: { id: ticket_timeline }
             description: Check how many tickets were opened and closed per day for a given time period.
             icon:       bundles/orodashboard/img/quick_launchpad.png
 

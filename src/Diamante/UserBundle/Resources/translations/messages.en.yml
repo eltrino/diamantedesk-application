@@ -43,8 +43,6 @@ diamante:
           query:        Are you sure you want to reset password for this user?
           success:      User password successfully reset.
 
-      customer_management: Customers
-
       placeholder:
         email:          'Please enter an email address'
 

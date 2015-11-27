@@ -34,10 +34,10 @@ class AddSupportDashboard extends AbstractDashboardFixture
         $user = $this->getAdminUser($manager);
 
         $widgetConfiguration = [
-            'tickets_timeline'              => [0,0],
+            'ticket_timeline'               => [0,0],
             'time_of_response_widget'       => [1,0],
             'tickets_by_channels_widget'    => [0,1],
-            'tickets_by_branch_widget'      => [1,2],
+            'tickets_by_branches_widget'    => [1,2],
             'tickets_by_priority_widget'    => [0,2],
         ];
 

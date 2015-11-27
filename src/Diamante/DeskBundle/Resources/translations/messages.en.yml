@@ -277,6 +277,13 @@ diamante:
           support.label:       Support Dashboard
 
         report:
+          plural_label:   Reports
+          reports:
+            tickets_by_priority:        Tickets by Priority
+            tickets_by_response_time:   Time of Response
+            tickets_by_channels:        Tickets by Channels
+            tickets_by_branches:        Tickets by Branches
+            ticket_timeline:            Ticket Timeline
           messages:
             build:
               error:           Error occured while generating the report.
@@ -290,7 +297,6 @@ diamante:
 
         tickettimeline:
           entity_label:        Ticket Timeline
-          entity_plural_label: Tickets Timeline
           closed.label:        Closed
           date.label:          Date
           id.label:            Id

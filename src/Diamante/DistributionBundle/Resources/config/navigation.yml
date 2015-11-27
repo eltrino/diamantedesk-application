@@ -7,31 +7,31 @@ oro_menu_config:
                 position:   20
                 routes:     ['oro_embedded_form_*']
         diamante_branch_list:
-            label: 'Branches'
+            label: 'diamante.desk.branch.entity_plural_label'
             route: diamante_branch_list
             extras:
                 routes: ['diamante_branch_*']
                 position: 80
         diamante_ticket_list:
-            label: 'Tickets'
+            label: 'diamante.desk.ticket.entity_plural_label'
             route: diamante_ticket_list
             extras:
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
                 position: 90
         diamante_report_list:
-            label: 'Reports'
+            label: 'diamante.desk.report.plural_label'
             uri: '#'
             extras:
                 position: 95
 
         diamante_customer_management:
-          label: 'diamante.user.customer_management'
+          label: 'diamante.user.labels.entity.plural'
           route: 'diamante_user_list'
           extras:
             position: 96
         #reports
         diamante_report_tickets_by_priority:
-            label: 'Tickets By priority'
+            label: 'diamante.desk.report.reports.tickets_by_priority'
             route: diamante_report_view
             routeParameters:
                 id: 'tickets_by_priority'
@@ -39,7 +39,7 @@ oro_menu_config:
                 routes: ['diamante_report_*']
 
         diamante_report_time_of_response:
-            label: 'Time Of Response'
+            label: 'diamante.desk.report.reports.tickets_by_response_time'
             route: diamante_report_view
             routeParameters:
                 id: 'time_of_response'
@@ -47,39 +47,37 @@ oro_menu_config:
                 routes: ['diamante_report_*']
 
         diamante_report_tickets_by_channels:
-            label: 'Tickets by Channels'
+            label: 'diamante.desk.report.reports.tickets_by_channels'
             route: diamante_report_view
             routeParameters:
                 id: 'tickets_by_channels'
             extras:
                 routes: ['diamante_report_*']
 
-        diamante_report_tickets_by_branch:
-            label: 'Tickets by Branch'
+        diamante_report_tickets_by_branches:
+            label:  'diamante.desk.report.reports.tickets_by_branches'
             route: diamante_report_view
             routeParameters:
-                id: 'tickets_by_branch'
+                id: 'tickets_by_branches'
             extras:
                 routes: ['diamante_report_*']
 
-        diamante_report_tickets_timeline:
-            label: 'Tickets TimeLine'
+        diamante_report_ticket_timeline:
+            label:  'diamante.desk.report.reports.ticket_timeline'
             route: diamante_report_view
             routeParameters:
-                id: 'tickets_timeline'
+                id: 'ticket_timeline'
             extras:
                 routes: ['diamante_report_*']
 
         tags_management:
-            label: 'Tags'
+            label: 'oro.tag.entity_plural_label'
             route: 'oro_tag_index'
             extras:
                 position: 90
                 routes:      ['oro_tag_*']
                 description: 'oro.tag.menu.tag_list.description'
 
-#        dashboard_tab:
-#            display: false
         oro_calendar_view_default:
             display: false
         oro_email_user_emails:
@@ -107,8 +105,8 @@ oro_menu_config:
                         diamante_report_tickets_by_priority: ~
                         diamante_report_time_of_response: ~
                         diamante_report_tickets_by_channels: ~
-                        diamante_report_tickets_by_branch: ~
-                        diamante_report_tickets_timeline: ~
+                        diamante_report_tickets_by_branches: ~
+                        diamante_report_ticket_timeline: ~
                 diamante_customer_management: ~
                 diamante_config_tab:
                   children:
