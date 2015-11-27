@@ -174,7 +174,7 @@ class DoctrineReportRepository
             sum(case when priority = 'low' then value else 0 end) as 'low',
             sum(case when priority = 'medium' then value else 0 end) as 'medium',
             sum(case when priority = 'high' then value else 0 end) as 'high'
-        from (SELECT date(t.created_at) as day, t.priority, count(t.priority) as value FROM diamantedesk.diamante_ticket t group by date(t.created_at), t.priority) mt
+        from (SELECT date(t.created_at) as day, t.priority, count(t.priority) as value FROM diamante_ticket t group by date(t.created_at), t.priority) mt
         group by day");
     }
 
