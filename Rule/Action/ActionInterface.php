@@ -18,7 +18,24 @@ namespace Diamante\AutomationBundle\Rule\Action;
 
 interface ActionInterface
 {
+    /**
+     * @return void
+     */
     public function execute();
+
+    /**
+     * @param ExecutionContext $context
+     * @return void
+     */
     public function updateContext(ExecutionContext $context);
+
+    /**
+     * @return string
+     */
     public function getName();
+
+    /**
+     * @return ExecutionContext
+     */
+    public function getContext();
 }

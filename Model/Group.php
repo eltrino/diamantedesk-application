@@ -22,8 +22,8 @@ use Rhumsaa\Uuid\Uuid;
 class Group implements Entity
 {
 
-    const INCLUSIVE_CONNECTOR = 'AND';
-    const EXPRESSION_CONNECTOR = 'OR';
+    const CONNECTOR_INCLUSIVE = 'AND';
+    const CONNECTOR_EXCLUSIVE = 'OR';
 
     /**
      * @var int
@@ -60,7 +60,7 @@ class Group implements Entity
      * @param string     $connector
      * @param Group|null $parent
      */
-    public function __construct($connector = self::INCLUSIVE_CONNECTOR, Group $parent = null)
+    public function __construct($connector = self::CONNECTOR_INCLUSIVE, Group $parent = null)
     {
         $this->id = Uuid::uuid4();
         $this->connector = $connector;
@@ -127,5 +127,10 @@ class Group implements Entity
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    public function hasChildren()
+    {
+        return (bool)$this->children->count();
     }
 }

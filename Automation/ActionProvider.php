@@ -45,8 +45,8 @@ class ActionProvider
     public function getActions(Rule $rule)
     {
         $actions = [];
-        foreach ($rule->getActions() as $actiondDefinition) {
-            $actions[] = $this->loadAction($actiondDefinition);
+        foreach ($rule->getActions() as $actionDefinition) {
+            $actions[] = $this->loadAction($actionDefinition);
         }
 
         return $actions;
@@ -76,7 +76,7 @@ class ActionProvider
      */
     protected function validateAndGetServiceName(ActionEntity $actionEntity)
     {
-        $actionName = $actionEntity->getName();
+        $actionName = $actionEntity->getType();
 
         if (!$this->actions->has($actionName)) {
             throw new InvalidConfigurationException(sprintf("No action named '%s' found in configuration", $actionName));
