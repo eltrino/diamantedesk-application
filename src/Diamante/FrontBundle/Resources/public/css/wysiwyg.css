@@ -167,10 +167,10 @@ mark,
   color: #777777;
 }
 .text-primary {
-  color: #428bca;
+  color: #446e78;
 }
 a.text-primary:hover {
-  color: #3071a9;
+  color: #325057;
 }
 .text-success {
   color: #3c763d;
@@ -198,10 +198,10 @@ a.text-danger:hover {
 }
 .bg-primary {
   color: #fff;
-  background-color: #428bca;
+  background-color: #446e78;
 }
 a.bg-primary:hover {
-  background-color: #3071a9;
+  background-color: #325057;
 }
 .bg-success {
   background-color: #dff0d8;
@@ -355,6 +355,6 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #333333;
+  color: #000000;
   background-color: #ffffff;
 }

@@ -40,7 +40,7 @@
       text-transform: uppercase;
       padding: 5px;
       height: 40px;
-      text-indent: 30px;
+      text-indent: 20px;
       width: 40px;
       -webkit-transition: width @time cubic-bezier(0, 1.22, 0.66, 1), color @time, background @time;
               transition: width @time cubic-bezier(0, 1.22, 0.66, 1), color @time, background @time;
@@ -50,7 +50,7 @@
         background: @mainColor;
         -webkit-animation-direction: reverse;
                 animation-direction: reverse;
-        width: 146px;
+        width: 140px;
         &:before,
         &:after {
           border-color: #fff;
@@ -269,19 +269,18 @@
 @media (max-width: @screen-xs-max) {
   #header {
     .container {
-      min-height: 100px;
+      min-height: @header-mobile-height;
     }
-    position: static;
+    position: absolute;
     .logo {
       position: absolute;
-      left: 10px;
       text-align: left;
       margin-top: 20px;
       min-width: 221px;
     }
     .header-links {
       position: absolute;
-      top: 60px;
+      top: 0;
       left: 0;
       z-index: 1000;
       margin: 0;
@@ -299,6 +298,7 @@
     }
     .create-ticket {
       .btn {
+        text-indent: 40px;
         &:hover,
         &:focus {
           width: 40px;

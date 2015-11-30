@@ -1,10 +1,36 @@
 .ticket-list {
+  > thead > tr > th,
+  > tbody > tr > td {
+    padding: @table-cell-padding @table-cell-padding + 4px;
+  }
   > thead > tr > th {
     background: none;
-    background: none;
+    color:#000;
     white-space: nowrap;
     cursor: pointer;
-    border-bottom: 1px solid #E6E6E6;
+    border-bottom-width: 1px;
+    font-weight: normal;
+  }
+  td {
+    a {
+      padding: @table-cell-padding @table-cell-padding + 4px;
+      margin: -@table-cell-padding -(@table-cell-padding + 4px);
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+  .sortable {
+    padding-left: @table-cell-padding + 6px;
+    a {
+      margin-left: -(@table-cell-padding + 6px);
+      padding-left: @table-cell-padding + 6px;
+    }
+    .fa {
+      float: left;
+      line-height: inherit;
+      margin-left: -(@table-cell-padding + 6px);
+    }
   }
   .createdAt {
     width:1%;
@@ -19,23 +45,28 @@
     text-transform: capitalize;
     white-space: nowrap;
   }
-  td {
+  td.key {
+    color: #000;
+    font-weight: bold;
+  }
+  td.createdAt {
+    color: lighten(@text-color, 60%)
+  }
+  td.status {
+    background: #f8f8f8;
+  }
+  .subject {
     a {
-      padding: @table-cell-padding;
-      margin: -@table-cell-padding;
-      display: block;
-      color: @text-color;
-      text-decoration: none;
+      font-weight: bold;
+      color: #50828E;
+      &:hover {
+        color: darken(#50828E, 15%);
+      }
     }
   }
-  .subject,
-  .message {
+  tr:hover .subject {
     a {
-      color: @link-color;
-      &:hover {
-        text-decoration: underline;
-        color: @link-hover-color;
-      }
+      color: darken(#50828E, 15%);
     }
   }
   .message {
@@ -91,6 +122,21 @@
         height: 0;
         width: 14px;
       }
+    }
+  }
+
+
+  @media (max-width: @screen-xs-max) {
+    font-size: 10px;
+    tbody > tr > td {
+      vertical-align: middle;
+    }
+    td.subject {
+      font-size: 14px;
+    }
+    .priority,
+    .status {
+      text-align: center;
     }
   }
 }

@@ -7,6 +7,11 @@
   padding: (@header-height + @main-gutter) @main-gutter (@main-gutter + @footer-height);
   background: #fff;
   min-height: 100%;
+  @media (max-width: @screen-xs-max) {
+    padding-top: @header-mobile-height + @main-gutter;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .modal-header {
