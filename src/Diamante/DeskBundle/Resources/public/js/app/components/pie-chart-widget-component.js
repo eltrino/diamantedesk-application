@@ -22,7 +22,41 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         elem = options._sourceElement.get(0),
         parent = options._sourceElement.parent(),
         plot = d3.select(elem),
-        sum = _.reduce(data, function(memo, elem){ return memo + toInt(elem.data); }, 0);
+        sum = _.reduce(data, function(memo, elem){ return memo + toInt(elem.data); }, 0),
+        outputData = data.length,
+        getRandomInt = function(min, max) {
+          return Math.floor(Math.random() * (max - min + 1) + min).toString();
+        };
+
+    if ( !outputData) {
+      $('.diam-pie-chart-widget').css({
+        opacity: '.2',
+        pointerEvents: 'none',
+        backgroundColor: '#f2f2f7'
+      });
+
+      $('.widget-content').each(function() {
+        if ( !$(this).hasClass('diamante-mytickets-widget-widget-content') ) {
+          $(this).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+        }
+      });
+
+      data = [
+        {
+          data: getRandomInt(10,0),
+          label: "Item1"
+        },
+        {
+          data: getRandomInt(10,0),
+          label: "Item2"
+        },
+        {
+          data: getRandomInt(10,0),
+          label: "Item3"
+        }
+      ];
+      sum = _.reduce(data, function(memo, elem){ return memo + toInt(elem.data); }, 0);
+    }
 
       if (!parent.is('[data-wid]')) {
           parent = parent.parent();
@@ -75,6 +109,12 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .attr("class", "slice")
         .attr("d", arc);
 
+        if ( !outputData ) {
+          $('path.slice').css('fill', '#646464');
+          $('path.slice:nth-child(2)').css('opacity', '.7');
+          $('path.slice:nth-child(3)').css('opacity', '.4');
+        }
+
     slice.exit()
         .remove();
 
@@ -93,7 +133,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
           return "translate(" + pos + ")";
         })
         .text(function(d) {
-          return d.data.label + ' ' + toPercent(d.data.data, sum) + "%" ;
+          return (outputData) ? (d.data.label + ' ' + toPercent(d.data.data, sum) + "%") : '';
         });
 
     text.exit()
@@ -107,7 +147,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .attr("points", function(d){
           var pos = outerArc.centroid(d);
           pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
-          return [arc.centroid(d), outerArc.centroid(d), pos];
+          return (outputData) ? ([arc.centroid(d), outerArc.centroid(d), pos]) : '';
         });
 
     polyline.exit()
