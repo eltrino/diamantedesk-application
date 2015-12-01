@@ -18,7 +18,57 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
     var data = options.data,
         elem = options._sourceElement.get(0),
         parent = options._sourceElement.parent(),
-        plot = d3.select(elem);
+        plot = d3.select(elem),
+        outputData = data.length,
+        getRandomInt = function(min, max) {
+          return Math.floor(Math.random() * (max - min + 1) + min).toString();
+        };
+
+    if ( !outputData) {
+      $('.diam-bar-chart-widget').css({
+        opacity: '.2',
+        pointerEvents: 'none',
+        backgroundColor: '#f2f2f7'
+      });
+
+      $('.widget-content').each(function() {
+        if ( !$(this).hasClass('diamante-mytickets-widget-widget-content') ) {
+          $(this).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+        }
+      });
+
+      data = [
+        {
+          y: getRandomInt(10,0),
+          x: "Item1"
+        },
+          
+        {
+          y: getRandomInt(10,0),
+          x: "Item2"
+        },
+        
+        {
+          y: getRandomInt(10,0),
+          x: "Item3"
+        },
+
+        {
+          y: getRandomInt(10,0),
+          x: "Item4"
+        },
+
+        {
+          y: getRandomInt(10,0),
+          x: "Item5"
+        },
+
+        {
+          y: getRandomInt(10,0),
+          x: "Item6"
+        }
+      ]
+    }
 
     if (!parent.is('[data-wid]')) {
         parent = parent.parent();
@@ -97,6 +147,10 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .attr("height", function(d) { return height - y(d.y); })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
+
+        if ( !outputData ) {
+          $('rect.bar').css('fill', 'rgba(100,100,100,.7)');
+        }
 
     resizeBars[parent.id] = function () {
       var w = elem.clientWidth,

@@ -15,6 +15,34 @@
   fill-opacity: .8;
 }
 
+.empty-widget, .empty-report {
+  width: 75%;
+  margin: auto;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+     -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+       -o-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-size: 250%;
+  line-height: 1.25;
+
+}
+
+.empty-widget {
+  top: 50%;
+}
+
+.empty-report {
+  top: 38%;
+}
+
+.container-fluid, .widget-content {
+  position: relative;
+}
+
 .diam-plot .axis {
   font: 10px sans-serif;
 }

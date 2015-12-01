@@ -53,8 +53,28 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         parent = options._sourceElement.parent(),
         plot = d3.select(elem);
 
+        function getRandomInt(min, max) {
+          return Math.floor(Math.random() * (max - min + 1) + min).toString();
+        }
+
       if (data.length == 0) {
-          return;
+
+        data = {};
+        data.dateProp = {
+          date: new Date(),
+          item: getRandomInt(0,5)
+        };
+
+        $('.diam-grouped-line-chart-report').css({
+          opacity: '.2',
+          pointerEvents: 'none',
+          backgroundColor: '#f2f2f7'
+        });
+
+        $('.container-fluid').prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
+
+        $('path.line').css('stroke', 'rgba(100,100,100,.7)');
+
       }
 
       data = _.map(data, function(value, key){ value.date = parseDate(key); return value;})
@@ -311,6 +331,11 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
       focus.selectAll('.line').attr("d", function(d) { return line(d.values); });
       context.selectAll('.line').attr("d", function(d) { return line2(d.values); });
     };
+
+    if ( data.some(function (elem) { return elem.item; }) ) {
+      $('path.line').css('stroke', 'rgba(100,100,100,.7)');
+      $('g.context').css('display', 'none');
+    }
 
   };
 
