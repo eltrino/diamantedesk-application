@@ -15,14 +15,16 @@
 
 namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_rule_action")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"workflow" = "WorkflowAction", "business" = "BusinessAction"})
  */
-class Action extends \Diamante\AutomationBundle\Model\Action
+abstract class Action extends \Diamante\AutomationBundle\Model\Action
 {
     /**
      * @var \Rhumsaa\Uuid\Uuid
@@ -50,10 +52,4 @@ class Action extends \Diamante\AutomationBundle\Model\Action
      * @ORM\Column(type="integer")
      */
     protected $weight;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="WorkflowRule", inversedBy="actions")
-     * @ORM\ManyToOne(targetEntity="BusinessRule", inversedBy="actions")
-     */
-    protected $rule;
 }

@@ -41,13 +41,18 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule
     protected $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="Group", inversedBy="rule")
+     * @ORM\Column(type="boolean")
+     */
+    protected $active;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Group", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="root_group_id", referencedColumnName="id")
      */
     protected $rootGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="Action", mappedBy="rule", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="WorkflowAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $actions;
 

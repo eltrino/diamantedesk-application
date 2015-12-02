@@ -41,13 +41,23 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule
     protected $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="Group", inversedBy="rule")
+     * @ORM\Column(name="time_interval", type="string")
+     */
+    protected $timeInterval;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $active;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Group", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="root_group_id", referencedColumnName="id")
      */
     protected $rootGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="Action", mappedBy="rule", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="BusinessAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $actions;
 
