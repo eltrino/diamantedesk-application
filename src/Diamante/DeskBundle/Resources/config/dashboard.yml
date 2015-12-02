@@ -35,11 +35,11 @@ oro_dashboard_config:
             description: Check how many tickets were opened and closed per day for a given time period.
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
-        diamante_mytickets_widget:
-            label:      My Tickets
-            route:      diamante_mytickets_widget
-            route_parameters: { id: diamante_mytickets_widget }
-            description: This widget helps quickly filter out all the tickets where you were specified as a Reporter or as an Assignee.
+        diamante_myrecenttickets_widget:
+            label:      My Recent Tickets
+            route:      diamante_myrecenttickets_widget
+            route_parameters: { id: diamante_myrecenttickets_widget }
+            description: This widget quickly filters out 10 latest tickets (created or updated) where you are specified as a Reporter or as an Assignee.
             icon:       bundles/orodashboard/img/quick_launchpad.png
 
     dashboards:

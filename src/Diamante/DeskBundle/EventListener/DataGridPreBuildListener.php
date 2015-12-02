@@ -38,7 +38,7 @@ class DataGridPreBuildListener
     {
         /** @var \Oro\Bundle\DataGridBundle\Datagrid\Common\DatagridConfiguration $config */
         $config = $event->getConfig();
-        if ($config->getName() === 'diamante-my-ticket-widget-grid') {
+        if ($config->getName() === 'diamante-my-recent-tickets-widget-grid') {
             $parameters = $event->getParameters();
             $currentUserId = $this->container->get('oro_security.security_facade')->getLoggedUser()->getId();
             $parameters->add(

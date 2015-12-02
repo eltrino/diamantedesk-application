@@ -91,8 +91,8 @@ class ReportController extends Controller
 
     /**
      * @Route(
-     *      "/widgetMyTickets/{id}",
-     *      name="diamante_mytickets_widget",
+     *      "/widgetMyRecentTickets/{id}",
+     *      name="diamante_myrecenttickets_widget",
      *      options={"expose"=true}
      * )
      *
@@ -100,7 +100,7 @@ class ReportController extends Controller
      * @param string $id
      * @return array
      */
-    public function myTicketsWidgetAction($id)
+    public function myRecentTicketsWidgetAction($id)
     {
         try {
             $manager = $this->get('oro_dashboard.widget_configs');

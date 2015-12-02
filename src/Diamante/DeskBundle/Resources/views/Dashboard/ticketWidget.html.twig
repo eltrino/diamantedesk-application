@@ -2,8 +2,6 @@
 
 {% block content %}
     {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
-
-        {{ dataGrid.renderGrid('diamante-my-ticket-widget-grid', { userId:'null', reporterId:'null' }, {cssClass:'diam-tickets'}) }}
-
+    {{ dataGrid.renderGrid('diamante-my-recent-tickets-widget-grid', { userId:'null', reporterId:'null' }, {cssClass:'diam-tickets'}) }}
 {% endblock %}
 

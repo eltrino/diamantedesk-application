@@ -180,7 +180,7 @@ datagrid:
                 updatedAt:
                   data_name: i.updatedAt
             default:
-                updatedAt: DESC
+                updatedAt: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC
         filters:
             columns:
                 key:
@@ -328,85 +328,54 @@ datagrid:
         source:
             type: diamante_combined_users_datasource
 
-    diamante-my-ticket-widget-grid:
-            source:
-                type: orm
-                query:
-                    select:
-                        - i.id
-                        - CONCAT(branch.key, CONCAT('-', i.sequenceNumber)) as key
-                        - i.subject
-                        - i.status
-                    from:
-                        - { table: DiamanteDeskBundle:Ticket, alias: i }
-                    join:
-                        left:
-                            - { join: i.branch, alias: branch }
-                            - { join: i.assignee, alias: assignee }
-                    where:
-                        or:
-                            - i.assignee = :userId
-                            - i.reporter = :reporterId
-                bind_parameters:
-                       - userId
-                       - reporterId
-
-            properties:
-                id: ~
-                view_link:
-                    type:       url
-                    route:      diamante_ticket_view
-                    params:     [ key ]
-                update_link:
-                    type:       url
-                    route:      diamante_ticket_update
-                    params:     [ key ]
-                delete_link:
-                    type:       url
-                    route:      diamante_ticket_delete
-                    params:     [ key ]
-
-            columns:
-                status:
-                    label:   diamante.desk.ticket.columns.status
-                key:
-                    label:   diamante.desk.ticket.columns.key
-                subject:
-                    label: diamante.desk.ticket.columns.subject
-                    type: twig
-                    frontend_type: html
-                    template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
-
-            sorters:
-                columns:
-                    key:
-                      data_name: key
-                      apply_callback: Diamante\DeskBundle\Datagrid\SortHelper::getKeySortingFunction
-                    subject:
-                      data_name: i.subject
-                    status:
-                      data_name: i.status
-                default:
-                    updatedAt: DESC
-            actions:
-                view:
-                    type:          navigate
-                    label:         diamante.desk.ticket.actions.view
-                    icon:          eye-open
-                    link:          view_link
-                    rowAction:     true
-                    acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket
-                update:
-                    type:          navigate
-                    label:         diamante.desk.ticket.actions.edit
-                    icon:          edit
-                    link:          update_link
-                    acl_resource:  EDIT;Entity:DiamanteDeskBundle:Ticket
-                delete:
-                    type:          delete
-                    label:         diamante.desk.ticket.actions.remove
-                    icon:          trash
-                    link:          delete_link
-                    acl_resource:  DELETE;Entity:DiamanteDeskBundle:Ticket
-            options:
-                entityHint: tickets
+    diamante-my-recent-tickets-widget-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - i.id
+                    - CONCAT(branch.key, CONCAT('-', i.sequenceNumber)) as key
+                    - i.subject
+                    - i.status
+                    - i.updatedAt
+                from:
+                    - { table: DiamanteDeskBundle:Ticket, alias: i }
+                join:
+                    left:
+                        - { join: i.branch, alias: branch }
+                        - { join: i.assignee, alias: assignee }
+                where:
+                    or:
+                        - i.assignee = :userId
+                        - i.reporter = :reporterId
+                orderBy:
+                      - column: i.updatedAt
+                        dir: desc
+            bind_parameters:
+                   - userId
+                   - reporterId
+        columns:
+            updatedAt:
+                label: diamante.desk.ticket.columns.updated
+                frontend_type: datetime
+            status:
+                label: diamante.desk.ticket.columns.status
+            key:
+                label: diamante.desk.ticket.columns.key
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Ticket:Datagrid/Property/key_link.html.twig
+            subject:
+                label: diamante.desk.ticket.columns.subject
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
+        properties:
+            id: ~
+        options:
+            entityHint: tickets
+            toolbarOptions:
+                hide: true
+                pageSize:
+                    items: [10]
+                    default_per_page: 10

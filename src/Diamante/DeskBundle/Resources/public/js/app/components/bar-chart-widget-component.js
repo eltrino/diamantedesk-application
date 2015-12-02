@@ -32,7 +32,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
       });
 
       $('.widget-content').each(function() {
-        if ( !$(this).hasClass('diamante-mytickets-widget-widget-content') ) {
+        if ( !$(this).hasClass('diamante-myrecenttickets-widget-widget-content') ) {
           $(this).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
         }
       });
