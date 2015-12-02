@@ -34,22 +34,15 @@ class Condition implements Entity
      */
     protected $group;
 
-    /**
-     * @var int
-     */
-    protected $weight;
-
     public function __construct(
         $type,
         $parameters,
-        Group $group,
-        $weight = 0
+        Group $group
     ) {
         $this->id = Uuid::uuid4();
         $this->type = $type;
         $this->parameters = $parameters;
         $this->group = $group;
-        $this->weight = $weight;
     }
 
     /**
@@ -76,14 +69,6 @@ class Condition implements Entity
         return $this->parameters;
     }
 
-    /**
-     * @return int
-     */
-    public function getWeight()
-    {
-        return $this->weight;
-    }
-
     public function getGroup()
     {
         return $this->group;
@@ -91,11 +76,9 @@ class Condition implements Entity
 
     public function update(
         $type,
-        $parameters,
-        $weight = 0
+        $parameters
     ) {
         $this->type = $type;
         $this->parameters = $parameters;
-        $this->weight = $weight;
     }
 }

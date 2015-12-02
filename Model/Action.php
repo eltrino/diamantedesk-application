@@ -28,12 +28,15 @@ class Action implements Entity
 
     protected $rule;
 
-    public function __construct($type, $parameters, $rule)
+    protected $weight;
+
+    public function __construct($type, $parameters, $rule, $weight = 0)
     {
         $this->id = Uuid::uuid4();
         $this->type = $type;
         $this->parameters = $parameters;
         $this->rule = $rule;
+        $this->weight = $weight;
     }
 
     public function getId()
@@ -54,5 +57,13 @@ class Action implements Entity
     public function getRule()
     {
         return $this->rule;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWeight()
+    {
+        return $this->weight;
     }
 }

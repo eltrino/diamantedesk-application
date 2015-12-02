@@ -134,4 +134,11 @@ abstract class Rule implements AutomationRule, Entity
 
         return $this;
     }
+
+    public function removeRootGroup()
+    {
+        $this->rootGroup = null;
+
+        return $this;
+    }
 }

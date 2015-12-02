@@ -76,6 +76,13 @@ class Group implements Entity
         return $this->parent;
     }
 
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
     public function addChild(Group $group)
     {
         $this->children->add($group);
