@@ -46,7 +46,7 @@ class BranchCommand implements Taggable, Shared\Command
      *              message="This is a required field"
      * )
      * @Assert\Regex(
-     *    pattern = "/[^0-9!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]/u",
+     *    pattern = "/[a-zA-Z\p{Cyrillic}]/u",
      *    message = "Branch Name must contain letters. Only numbers, special characters and spaces are not allowed."
      * )
      * @Assert\Type(type="string")
