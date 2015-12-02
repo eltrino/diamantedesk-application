@@ -32,7 +32,7 @@ class BranchCommand implements Taggable, Shared\Command
     /**
      * @Assert\Regex(
      *    pattern = "/^[a-zA-Z\p{Cyrillic}]+$/u",
-     *    message = "Branch Key must contain letters only. Numbers, special characters and spaces are not allowed."
+     *    message = "Key must contain letters only. Numbers, special characters and spaces are not allowed."
      * )
      * @Assert\Type(type="string")
      * @Assert\Length(min = 2)
@@ -47,7 +47,7 @@ class BranchCommand implements Taggable, Shared\Command
      * )
      * @Assert\Regex(
      *    pattern = "/[a-zA-Z\p{Cyrillic}]/u",
-     *    message = "Branch Name must contain letters. Only numbers, special characters and spaces are not allowed."
+     *    message = "Name must contain letters. Only numbers, special characters and spaces are not allowed."
      * )
      * @Assert\Type(type="string")
      * @Assert\Length(min = 2)
