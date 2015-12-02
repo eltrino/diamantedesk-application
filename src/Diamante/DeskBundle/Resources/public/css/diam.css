@@ -316,3 +316,18 @@ div[id^="grid-audit-grid"] td.number-cell {
     -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(211,33,33,0.6);
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(211,33,33,0.6);
 }
+
+.diam-ticket-mass-dialog .form-horizontal .control-group{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.diam-ticket-mass-dialog .form-horizontal .control-group .control-label {
+    width: 100px;
+}
+
+.diam-ticket-mass-dialog .form-horizontal .control-group .controls {
+    margin-left: 112px;
+    margin-right: 112px;
+}
+

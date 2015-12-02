@@ -14,9 +14,7 @@
         <form id="{{ form.vars.name }}" action="{{ path('diamante_ticket_mass_status_change', {'no_redirect': true} ) }}" method="post">
             <fieldset class="form form-horizontal">
                 <input type="hidden" name="ids" value="{{ form.vars.value.ids }}" >
-                <div class="span6">
-                    {{ form_row(form.status) }}
-                </div>
+                {{ form_row(form.status) }}
                 <div class="widget-actions form-actions">
                     <button class="btn" type="reset">{{ 'diamante.desk.ui.cancel'|trans }}</button>
                     <button class="btn btn-primary" type="submit">{{ 'diamante.desk.ui.change'|trans }}</button>
