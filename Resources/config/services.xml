@@ -9,6 +9,9 @@
         <parameter key="diamante_automation.workflow_rule.entity.class">Diamante\AutomationBundle\Entity\WorkflowRule</parameter>
         <parameter key="diamante_automation.business_rule.entity.class">Diamante\AutomationBundle\Entity\BusinessRule</parameter>
         <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
+        <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Automation\Engine</parameter>
+        <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Automation\ActionProvider</parameter>
+        <parameter key="diamante_automation.condition.factory.class">Diamante\AutomationBundle\Rule\Condition\ConditionFactory</parameter>
     </parameters>
 
     <services>
@@ -31,6 +34,22 @@
         <service id="diamante.rule.service" class="%diamante.rule.service.class%">
             <argument type="service" id="diamante_automation.workflow_rule.repository"/>
             <argument type="service" id="diamante_automation.business_rule.repository"/>
+        </service>
+
+        <service id="diamante_automation.action.provider" class="%diamante_automation.action.provider.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.condition.factory" class="%diamante_automation.condition.factory.class%">
+            <argument type="service" id="diamante_automation.config.provider"/>
+        </service>
+
+        <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
+            <argument type="service" id="diamante_automation.config.provider"/>
+            <argument type="service" id="diamante_automation.action.provider"/>
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.condition.factory"/>
+            <argument type="service" id="monolog.logger.diamante"/>
         </service>
     </services>
 </container>
