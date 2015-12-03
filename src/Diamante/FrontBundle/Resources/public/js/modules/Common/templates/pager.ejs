@@ -1,19 +1,41 @@
 <% if(totalPages > 1) { %>
 <ul class="pagination">
   <% if(currentPage > 1) { %>
-  <li><a href="#first">&laquo;</a></li>
-  <li><a href="#prev">&lsaquo;</a></li>
+  <li><a class="fa fa-step-backward" href="#first"></a></li>
+  <li><a class="fa fa-caret-left" href="#prev"></a></li>
   <% } else { %>
-  <li class="disabled"><span>&laquo;</span></li>
-  <li class="disabled"><span>&lsaquo;</span></li>
+  <li class="disabled"><span class="fa fa-step-backward"></span></li>
+  <li class="disabled"><span class="fa fa-caret-left"></span></li>
   <% } %>
+  <%
+    var page = 1;
+    var index = 0;
+    var total = totalPages;
+    if(totalPages > pagePerSet) {
+      total = pagePerSet;
+      while(Math.ceil(total/2) < currentPage - index){
+        index++;
+      }
+      if(totalPages < total + index) {
+        index -= total + index - totalPages;
+      }
+      total += index;
+      page += index;
+    }
+  %>
+  <% for(; page <= total; page++){ %>
+  <% if(page == currentPage) { %>
   <li class="active"><span><%= currentPage %></span></li>
-  <% if(currentPage !== lastPage) { %>
-  <li><a href="#next">&rsaquo;</a></li>
-  <li><a href="#last">&raquo;</a></li>
   <% } else { %>
-  <li class="disabled"><span>&rsaquo;</span></li>
-  <li class="disabled"><span>&raquo;</span></li>
+  <li><a href="#<%= page %>"><%= page %></a></li>
+  <% } %>
+  <% } %>
+  <% if(currentPage !== lastPage) { %>
+  <li><a class="fa fa-caret-right" href="#next"></a></li>
+  <li><a class="fa fa-step-forward" href="#last"></a></li>
+  <% } else { %>
+  <li class="disabled"><span class="fa fa-caret-right"></span></li>
+  <li class="disabled"><span class="fa fa-step-forward"></span></li>
   <% } %>
 </ul>
 <% } %>

@@ -42,7 +42,8 @@ define([
       state: {
         pageSize: 10,
         sortKey: 'key',
-        order: 1
+        order: 1,
+        pagePerSet: 5
       },
 
       queryParams: {

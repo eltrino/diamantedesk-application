@@ -21,6 +21,7 @@ define([
       navigateToPage: function(e){
         e.preventDefault();
         var page = e.target.hash.replace('#','');
+        page = _.isFinite(page) ? parseInt(page, 10) : page;
         this.trigger('page:change', page);
       }
 
@@ -39,6 +40,7 @@ define([
 
         this.collection = options.collection;
         this.emptyView = options.emptyView;
+
 
         this.pagerView = new Pagination.PagerView({
           model: new Backbone.Model(this.collection.state)
