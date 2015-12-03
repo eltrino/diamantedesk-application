@@ -12,6 +12,7 @@
         <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Automation\Engine</parameter>
         <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Automation\ActionProvider</parameter>
         <parameter key="diamante_automation.condition.factory.class">Diamante\AutomationBundle\Rule\Condition\ConditionFactory</parameter>
+        <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Rule\Action\UpdateProperty</parameter>
     </parameters>
 
     <services>
@@ -42,6 +43,10 @@
 
         <service id="diamante_automation.condition.factory" class="%diamante_automation.condition.factory.class%">
             <argument type="service" id="diamante_automation.config.provider"/>
+        </service>
+
+        <service id="diamante_automation.update_property.action" class="%diamante_automation.update_property.class%">
+            <argument type="service" id="doctrine"/>
         </service>
 
         <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
