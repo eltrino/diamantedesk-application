@@ -43,7 +43,7 @@ abstract class Action extends \Diamante\AutomationBundle\Model\Action
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="array")
      */
     protected $parameters;
 

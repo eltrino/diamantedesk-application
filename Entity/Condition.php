@@ -44,7 +44,7 @@ class Condition extends \Diamante\AutomationBundle\Model\Condition
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="array")
      */
     protected $parameters;
 
