@@ -21,6 +21,6 @@ class DiamanteUserExistsException extends \RuntimeException implements Flashable
 {
     public function getFlashMessage()
     {
-        return 'diamante.user.exception.user_exists';
+        return 'diamante.user.exception.customer_exists';
     }
 }

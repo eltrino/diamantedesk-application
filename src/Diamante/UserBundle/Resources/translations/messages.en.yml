@@ -13,11 +13,11 @@ diamante:
         activated:      Email Confirmed
 
       actions:
-        create:         Create User
-        remove:         Delete User
-        view:           View User
-        update:         Update User
-        delete:         Delete User
+        create:         Create Customer
+        remove:         Delete Customer
+        view:           View Customer
+        update:         Update Customer
+        delete:         Delete Customer
         reset_pwd:      Reset Password
         mass:
           delete:
@@ -28,26 +28,26 @@ diamante:
           reset_pwd:
             label:      Reset passwords for customers.
             messages:
-              success:  Passwords for %count% selected users have been successfully reset.
+              success:  Passwords for %count% selected customers have been successfully reset.
               fail:     Error occured while resetting passwords.
 
       messages:
         delete:
-          query:        Are you sure you want to delete this user?
-          success:      User successfully deleted.
+          query:        Are you sure you want to delete this customer?
+          success:      Customer successfully deleted.
         create:
           success:      Customer successfully created.
         update:
           success:      Customer successfully updated.
         reset_pwd:
-          query:        Are you sure you want to reset password for this user?
+          query:        Are you sure you want to reset password for this customer?
           success:      User password successfully reset.
 
       placeholder:
         email:          'Please enter an email address'
 
-      details:          User Details
-      activity:         User Activity
+      details:          Customer Details
+      activity:         Customer Activity
 
       ui:
         yes:            Yes
@@ -58,4 +58,4 @@ diamante:
         force_reset:    Password reset notification
 
       exception:
-        user_exists:    User with such email already exists.
+        customer_exists:    Customer with such email already exists.
