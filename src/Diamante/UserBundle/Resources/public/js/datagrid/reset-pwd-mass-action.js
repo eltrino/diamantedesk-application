@@ -21,12 +21,12 @@ define([
         /** @property {Object} */
         defaultMessages: {
             confirm_title: 'Reset Password Confirmation',
-            confirm_content: 'Are you sure you want to reset password for selected users?',
+            confirm_content: 'Are you sure you want to reset password for selected customer(s)?',
             confirm_ok: 'Yes, Reset',
             confirm_cancel: 'Cancel',
-            success: 'Successfully reset password for selected users',
-            error: 'Error occured while trying to reset passwords.',
-            empty_selection: 'Please, select users to reset passwords for.'
+            success: 'Password(s) for selected customer(s) successfully reset.',
+            error: 'Error occurred while trying to reset password(s).',
+            empty_selection: 'Please, select customer(s) to reset password.'
         }
     });
 

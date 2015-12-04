@@ -26,9 +26,9 @@ diamante:
               success:  Selected customers successfully deleted.
               fail:     Failed to delete selected customers.
           reset_pwd:
-            label:      Reset passwords for customers.
+            label:      Reset passwords for customers
             messages:
-              success:  Passwords for %count% selected customers have been successfully reset.
+              success:  Passwords for %count% selected customer(s) have been successfully reset.
               fail:     Error occured while resetting passwords.
 
       messages:
