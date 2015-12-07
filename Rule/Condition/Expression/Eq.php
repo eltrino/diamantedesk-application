@@ -24,6 +24,7 @@ class Eq extends AbstractCondition
     {
         $actualValue = $this->extractPropertyValue($fact->getTarget());
 
-        return $actualValue === $this->expectedValue;
+        //@TODO: Possible issues with type juggling. Subject for an investigation
+        return $actualValue == $this->expectedValue;
     }
 }

@@ -49,3 +49,17 @@ diamante:
           failed:          Form is invalid. Please correctly fill in all required fields.
     forms:
       name:                Name
+
+    condition:
+      eq:       is equal to
+      neq:      is not equal to
+      gt:       is greater than
+      gte:      is greater than or equals to
+      lt:       is less than
+      lte:      is less than or equals to
+      in:       is one of the following
+      in_range: is in range
+      contains: contains
+
+    action:
+      update_property: update property

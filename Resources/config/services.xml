@@ -12,7 +12,7 @@
         <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Automation\Engine</parameter>
         <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Automation\ActionProvider</parameter>
         <parameter key="diamante_automation.condition.factory.class">Diamante\AutomationBundle\Rule\Condition\ConditionFactory</parameter>
-        <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Rule\Action\UpdateProperty</parameter>
+        <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
     </parameters>
 
     <services>
@@ -30,7 +30,9 @@
             <argument type="string">%diamante_automation.business_rule.entity.class%</argument>
         </service>
 
-        <service id="diamante_automation.config.provider" class="%diamante_automation.config.provider.class%"/>
+        <service id="diamante_automation.config.provider" class="%diamante_automation.config.provider.class%">
+            <argument type="service" id="service_container"/>
+        </service>
 
         <service id="diamante.rule.service" class="%diamante.rule.service.class%">
             <argument type="service" id="diamante_automation.workflow_rule.repository"/>
@@ -45,7 +47,7 @@
             <argument type="service" id="diamante_automation.config.provider"/>
         </service>
 
-        <service id="diamante_automation.update_property.action" class="%diamante_automation.update_property.class%">
+        <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%">
             <argument type="service" id="doctrine"/>
         </service>
 

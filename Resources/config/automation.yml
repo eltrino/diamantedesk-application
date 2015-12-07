@@ -1,4 +1,38 @@
 diamante_automation:
   entities: []
-  conditions: []
-  actions: []
+
+  conditions:
+    eq:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Eq"
+      frontend_label: diamante.automation.condition.eq
+    neq:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Neq"
+      frontend_label: diamante.automation.condition.neq
+    gt:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Gt"
+      frontend_label: diamante.automation.condition.gt
+    gte:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Gte"
+      frontend_label: diamante.automation.condition.gte
+    lt:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Lt"
+      frontend_label: diamante.automation.condition.lt
+    lte:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Lte"
+      frontend_label: diamante.automation.condition.lte
+    in:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\In"
+      frontend_label: diamante.automation.condition.in
+    in_range:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\InRange"
+      frontend_label: diamante.automation.condition.in_range
+    contains:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Contains"
+      frontend_label: diamante.automation.condition.contains
+
+
+  actions:
+    update_property:
+      id: @diamante_automation.action.update_property
+      frontend_label: diamante.automation.action.update_property
+      data_types: ['*', '!user', '!users']

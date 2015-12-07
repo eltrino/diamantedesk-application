@@ -23,6 +23,8 @@ class Lt extends AbstractCondition
 {
     public function isSatisfiedBy(Fact $fact)
     {
-        // TODO: Implement isSatisfiedBy() method.
+        $actualValue = $this->extractPropertyValue($fact->getTarget());
+
+        return $actualValue < $this->expectedValue;
     }
 }

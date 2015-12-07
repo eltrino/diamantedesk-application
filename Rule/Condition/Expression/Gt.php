@@ -15,16 +15,20 @@
 
 namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 
+
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
 use Diamante\AutomationBundle\Rule\Fact\Fact;
 
-class Neq extends AbstractCondition
+class Gt extends AbstractCondition
 {
+    /**
+     * @param Fact $fact
+     * @return mixed
+     */
     public function isSatisfiedBy(Fact $fact)
     {
         $actualValue = $this->extractPropertyValue($fact->getTarget());
 
-        //@TODO: Possible issues with type juggling. Subject for an investigation
-        return $actualValue != $this->expectedValue;
+        return $actualValue > $this->expectedValue;
     }
 }
