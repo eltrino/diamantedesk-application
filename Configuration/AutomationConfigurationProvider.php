@@ -17,9 +17,13 @@ namespace Diamante\AutomationBundle\Configuration;
 
 use Diamante\AutomationBundle\Exception\InvalidConfigurationException;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Translation\Translator;
 
 class AutomationConfigurationProvider
 {
+    const DATA_TYPE_WILDCARD = '*';
+
     protected $entities     = [];
     protected $conditions   = [];
     protected $actions      = [];
@@ -28,11 +32,12 @@ class AutomationConfigurationProvider
 
     protected static $configStructure     = ['entities', 'conditions', 'actions'];
 
-    public function setConfiguration(array $configuration)
+    public function __construct(ContainerInterface $container)
     {
-        foreach (array_keys(static::$configStructure) as $section) {
-            if (array_key_exists($section, $configuration)) {
-                $this->$section = array_merge($this->$section, $configuration[$section]);
+        foreach (static::$configStructure as $section) {
+            $paramName = sprintf("diamante.automation.config.%s", $section);
+            if ($container->hasParameter($paramName)) {
+                $this->$section = array_merge($this->$section, $container->getParameter($paramName));
             }
         }
 
@@ -45,7 +50,7 @@ class AutomationConfigurationProvider
             throw new InvalidConfigurationException(sprintf("Requested entity '%s' is not configured.", $target));
         }
 
-        return $this->entities[$target];
+        return new ParameterBag($this->entities[$target]);
     }
 
     public function getTargetByClass($object)
@@ -105,5 +110,120 @@ class AutomationConfigurationProvider
     public static function getConfigStructure()
     {
         return static::$configStructure;
+    }
+
+    /**
+     * @param $entity
+     * @param $property
+     * @return array
+     */
+    protected function getActionsForProperty($entity, $property)
+    {
+        $actions = [];
+
+        $config = $this->getEntityConfiguration($entity);
+
+        if (!$config->get(sprintf("properties.%s", $property))) {
+            return $actions;
+        }
+
+        $propertyDataType = $config->get(sprintf('properties.%s.type', $property));
+
+
+        foreach ($this->actions as $actionName => $definition) {
+            if (in_array(sprintf("!%s", $propertyDataType), $definition['data_types'])) {
+                continue;
+            }
+
+            if (in_array(self::DATA_TYPE_WILDCARD, $definition['data_types'])) {
+                $actions[] = $actionName;
+                continue;
+            }
+
+            if (in_array($propertyDataType, $definition['data_types'])) {
+                $actions[] = $actionName;
+            }
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @param Translator $translator
+     * @return array
+     */
+    public function prepareConfigDump(Translator $translator)
+    {
+        $config = [];
+
+        $config['entities']   = $this->dumpEntitiesConfig($translator);
+        $config['conditions'] = $this->dumpConditionsConfig($translator);
+        $config['actions']    = $this->dumpActionsConfig($translator);
+
+        return $config;
+    }
+
+    /**
+     * @param Translator $translator
+     * @return array
+     */
+    protected function dumpEntitiesConfig(Translator $translator)
+    {
+        $entities = [];
+
+        foreach ($this->entities as $name => $config) {
+            $entity = [
+                'label' => $translator->trans($config['frontend_label'])
+            ];
+
+            foreach ($config['properties'] as $propertyName => $propertyConfig) {
+                $property = [
+                    'label'   => $translator->trans($propertyConfig['frontend_label']),
+                    'type'    => $propertyConfig['type'],
+                    'actions' => $this->getActionsForProperty($name, $propertyName),
+                ];
+
+                $entity['properties'][$propertyName] = $property;
+            }
+
+            $entities[$name] = $entity;
+
+            unset($entity, $property, $name, $config, $propertyName, $propertyConfig);
+        }
+
+        return $entities;
+    }
+
+    /**
+     * @param Translator $translator
+     * @return array
+     */
+    protected function dumpConditionsConfig(Translator $translator)
+    {
+        $conditions = [];
+
+        foreach ($this->conditions as $name => $config) {
+            $conditions[$name] = $translator->trans($config['frontend_label']);
+        }
+
+        return $conditions;
+    }
+
+    /**
+     * @param Translator $translator
+     * @return array
+     */
+    protected function dumpActionsConfig(Translator $translator)
+    {
+        $actions = [];
+
+        foreach ($this->actions as $name => $config) {
+            $actions[$name] = [
+                "label"      => $translator->trans($config['frontend_label']),
+                "data_types" => $config['data_types']
+            ];
+        }
+
+        return $actions;
     }
 }
