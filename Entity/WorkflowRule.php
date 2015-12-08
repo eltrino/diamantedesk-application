@@ -57,6 +57,13 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule
     protected $actions;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $target;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")

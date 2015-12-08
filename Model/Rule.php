@@ -45,6 +45,11 @@ abstract class Rule implements AutomationRule, Entity
     protected $active;
 
     /**
+     * @var Entity
+     */
+    protected $target;
+
+    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -54,10 +59,11 @@ abstract class Rule implements AutomationRule, Entity
      */
     protected $updatedAt;
 
-    public function __construct($name, $active = true)
+    public function __construct($name, $target, $active = true)
     {
         $this->id = Uuid::uuid4();
         $this->name = $name;
+        $this->target = $target;
         $this->actions = new ArrayCollection();
         $this->active = $active;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
@@ -140,5 +146,13 @@ abstract class Rule implements AutomationRule, Entity
         $this->rootGroup = null;
 
         return $this;
+    }
+
+    /**
+     * @return Entity
+     */
+    public function getTarget()
+    {
+        return $this->target;
     }
 }

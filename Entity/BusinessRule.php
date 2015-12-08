@@ -62,6 +62,13 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule
     protected $actions;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    protected $target;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
