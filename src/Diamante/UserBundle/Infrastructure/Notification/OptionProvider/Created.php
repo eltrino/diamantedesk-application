@@ -105,4 +105,12 @@ class Created implements NotificationOptionsProvider
     {
         return true;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultOptions()
+    {
+        return [];
+    }
 }

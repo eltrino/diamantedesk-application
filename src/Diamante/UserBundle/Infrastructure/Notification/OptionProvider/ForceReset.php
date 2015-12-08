@@ -105,4 +105,12 @@ class ForceReset implements NotificationOptionsProvider
     {
         return true;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultOptions()
+    {
+        return [];
+    }
 }
