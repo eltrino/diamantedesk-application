@@ -223,20 +223,22 @@ class NotificationManager
      */
     public function notifyByScenario($name, $recipient, array $options = [])
     {
-        if (!$this->hasOptionsProvider($name)) {
+        if (!array_key_exists($name, $this->providers)) {
             throw new \RuntimeException(sprintf('Option provider with name "%s" is not found or was not properly configured', $name));
         }
 
         $provider = $this->providers[$name];
         $provider->setRecipient($recipient);
 
-        foreach ($provider->getRequiredParams() as $param) {
-            if (!array_key_exists($param, $options)) {
-                throw new \RuntimeException(sprintf('Required parameter "%s" is missing', $param));
-            }
+        $templateOptions = array_merge($provider->getDefaultOptions(), $options);
 
-            $this->addTemplateOption($param, $options[$param]);
+        foreach ($provider->getDefaultOptions() as $option) {
+            if (!array_key_exists($option, $templateOptions)) {
+                throw new \RuntimeException(sprintf("Required parameter %s is missing.", $option));
+            }
         }
+
+        $this->setTemplateOptions($templateOptions);
 
         $this->setTo($provider->getRecipientEmail(), $provider->getRecipientName());
         $this->addHtmlTemplate($provider->getHtmlTemplate());
@@ -250,14 +252,5 @@ class NotificationManager
 
         $this->notify();
         $this->clear();
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    protected function hasOptionsProvider($name)
-    {
-        return array_key_exists($name, $this->providers);
     }
 }

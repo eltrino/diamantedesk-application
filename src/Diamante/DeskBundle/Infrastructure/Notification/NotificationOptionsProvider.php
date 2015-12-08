@@ -59,4 +59,9 @@ interface NotificationOptionsProvider
      * @return bool
      */
     public function subjectIsTranslatable();
+
+    /**
+     * @return array
+     */
+    public function getDefaultOptions();
 }
