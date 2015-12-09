@@ -58,15 +58,15 @@
   .subject {
     a {
       font-weight: bold;
-      color: #50828E;
+      color: @mainColor;
       &:hover {
-        color: darken(#50828E, 15%);
+        color: darken(@mainColor, 15%);
       }
     }
   }
   tr:hover .subject {
     a {
-      color: darken(#50828E, 15%);
+      color: darken(@mainColor, 15%);
     }
   }
   .message {
@@ -105,7 +105,7 @@
       }
       &:before {
         content: '';
-        border-right: 2px solid #50828e;
+        border-right: 2px solid @mainColor;
         position: absolute;
         top: 11px;
         left: 17px;
@@ -115,7 +115,7 @@
       }
       &:after {
         content: '';
-        border-top: 2px solid #50828e;
+        border-top: 2px solid @mainColor;
         position: absolute;
         top: 17px;
         left: 11px;
@@ -131,6 +131,24 @@
     tbody > tr > td {
       vertical-align: middle;
     }
+    th.key, td.key {
+      display: none;
+    }
+    .sortable {
+      .fa { display: none; }
+      .fa-sort-desc,
+      .fa-sort-asc {
+        & + span {
+          border-bottom: 2px @mainColor solid;
+        }
+      }
+    }
+    td {
+      .key {
+        font-weight: bold;
+        color:@text-color;
+      }
+    }
     td.subject {
       font-size: 14px;
     }
@@ -140,3 +158,12 @@
     }
   }
 }
+
+.sortby-label {
+  padding-left: 14px;
+  margin-top: -10px;
+  font-size: 10px;
+  color: lighten(@text-color, 60%);
+}
+
+

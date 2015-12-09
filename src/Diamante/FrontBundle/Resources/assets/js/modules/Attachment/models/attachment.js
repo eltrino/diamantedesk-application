@@ -19,6 +19,7 @@ define([
     Attachment.Collection = Backbone.Collection.extend({
       url: Config.apiUrl+ '/desk/tickets/{ticketId}/attachments',
       model: Attachment.Model,
+      comparator: 'thumbnails',
 
       initialize: function(attr, options){
         if(options && options.ticket){

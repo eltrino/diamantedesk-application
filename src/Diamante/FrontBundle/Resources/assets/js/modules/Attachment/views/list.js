@@ -26,7 +26,7 @@ define([
 
     List.CollectionView = Marionette.CollectionView.extend({
       tagName: 'ul',
-      className: 'list-unstyled',
+      className: 'attachments-list list-unstyled',
       childView: List.ItemView
     });
 

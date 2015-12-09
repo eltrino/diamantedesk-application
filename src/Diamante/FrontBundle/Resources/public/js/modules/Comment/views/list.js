@@ -20,7 +20,7 @@ define([
         var author = this.model.get('authorModel'),
             avatar_url, author_name;
         if(author){
-          avatar_url = author.get('avatar') || 'http://www.gravatar.com/avatar/'+ MD5(author.get('email')) +'?s=32&d=identicon';
+          avatar_url = author.get('avatar') || 'http://www.gravatar.com/avatar/'+ MD5(author.get('email')) +'?s=40&d=identicon';
           author_name = author.get('name') || author.get('email');
         } else {
           avatar_url = 'http://www.gravatar.com/avatar/undefined?s=32&d=mm';

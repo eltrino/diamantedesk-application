@@ -1,14 +1,73 @@
 .comment-attachments-block {
-  padding-left: @grid-gutter-width/2;
+  border-top: 1px #e6e6e6 solid;
+  padding-left: 26px;
   margin-bottom: @grid-gutter-width/2;
+  &:before {
+    .fa-icon();
+    .fa-icon-rotate(135deg, 1.5);
+    font-size: 18px;
+    color: lighten(#000, 80%);
+    content: @fa-var-paperclip;
+    float: left;
+    margin-left: -26px;
+    position: relative;
+    top: 4px;
+  }
 }
 .comment-attachments {
   &:extend(.list-unstyled);
-  background: #efefef;
-  padding: 5px 5px 1px;
+  &:extend(.clearfix all);
+  padding: 10px 0 0;
   border-radius: 5px;
+  img {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 5px;
+  }
   li {
-    font-size: 90%;
-    margin: 0 0 4px;
+    float:left;
+    font-size: 11px;
+    width:18.4%;
+    margin: 0 2% 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &:nth-child(5n) {
+      margin-right: 0;
+    }
+    &:nth-child(5n+1) {
+      clear: left;
+    }
+    @media (max-width: @screen-sm-max){
+      width: 22%;
+      margin-right: 4%;
+      &:nth-child(5n) {
+        margin-right: 4%;
+      }
+      &:nth-child(5n+1) {
+        clear: none;
+      }
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+      &:nth-child(4n+1) {
+        clear: left;
+      }
+    }
+    @media (max-width: @screen-xs){
+      width: 30.66%;
+      &:nth-child(4n) {
+        margin-right: 4%;
+      }
+      &:nth-child(4n+1) {
+        clear: none;
+      }
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+      &:nth-child(3n+1) {
+        clear: left;
+      }
+    }
   }
 }

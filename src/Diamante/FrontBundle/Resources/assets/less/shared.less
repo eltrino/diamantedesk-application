@@ -1,3 +1,7 @@
+h1, .h1 {
+  font-size: 20px;
+}
+
 .table {
   thead {
     th, td{
@@ -48,10 +52,17 @@
   }
 }
 
+.form-control {
+  @media (max-width: @screen-xs-max) {
+    font-size: 16px;
+  }
+}
+
 .btn {
   border-width: 2px;
   text-transform: uppercase;
-  .button-size(14px; 40px; 14px; 1; 40px);
+  border-radius: 2em;
+  padding: 8px 25px;
   &,
   &:active,
   &.active {
@@ -65,6 +76,11 @@
 .modal-body {
   .alert {
     font-size: 95%;
+  }
+}
+.modal-footer {
+  .btn {
+    min-width: 126px;
   }
 }
 
@@ -111,6 +127,45 @@
       -ms-filter: none;
       -o-filter: none;
       filter: none;
+    }
+  }
+}
+
+.pagination-wrapper {
+  text-align: center;
+}
+
+.pagination {
+  @media (min-width: @screen-xs-max) {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    border: 1px @pagination-border solid;
+    border-width: 1px 0;
+    position: relative;
+    > li > a,
+    > li > span {
+      float: none;
+      display: inline-block;
+      margin-top: -1px;
+      margin-bottom: -1px;
+    }
+
+    .first-page {
+      position: absolute;
+      left: 0;
+    }
+
+    .last-page {
+      position: absolute;
+      right: 0;
     }
   }
 }

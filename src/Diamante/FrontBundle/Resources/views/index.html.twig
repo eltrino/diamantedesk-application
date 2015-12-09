@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Diamante</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DiamanteDesk</title>
     {% if app.environment == 'dev' %}
     <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.css') }}" type="text/css"/>
     {% else %}
@@ -40,7 +41,7 @@
                 apiUrl : '{{ apiUrl }}',
                 branchId : {{ branchId }},
                 logo : '{{ basePath }}/bundles/diamantefront/img/logo.png',
-                title : 'Diamante'
+                title : 'DiamanteDesk'
             }
         }
     });

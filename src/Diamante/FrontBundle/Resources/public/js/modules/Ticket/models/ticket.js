@@ -41,7 +41,7 @@ define([
 
       state: {
         pageSize: 10,
-        sortKey: 'key',
+        sortKey: 'createdAt',
         order: 1,
         pagePerSet: 5
       },

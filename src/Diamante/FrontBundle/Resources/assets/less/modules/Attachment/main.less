@@ -1,3 +1,83 @@
+.attachments-list {
+  &:extend(.clearfix all);
+  > li {
+    margin-bottom: 12px;
+    @media (max-width: @screen-xs-max){
+      float: left;
+      margin-right: 2.5%;
+      width: 18%;
+      &:nth-child(5n) {
+        margin-right: 0;
+      }
+      &:nth-child(5n+1) {
+        clear: left;
+      }
+    }
+    @media (max-width: 568px){
+      margin-right: 3.8%;
+      width: 22.15%;
+      &:nth-child(5n) {
+        margin-right: 3.8%;
+      }
+      &:nth-child(5n+1) {
+        clear: none;
+      }
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+      &:nth-child(4n+1) {
+        clear: left;
+      }
+    }
+    @media (max-width: @screen-xs){
+      margin-right: 4.5%;
+      width: 28.83%;
+      &:nth-child(5n),
+      &:nth-child(4n) {
+        margin-right: 4.5%;
+      }
+      &:nth-child(4n+1) {
+        clear: none;
+      }
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+      &:nth-child(3n+1) {
+        clear: left;
+      }
+    }
+    @media (max-width: 320px){
+      margin-right: 7%;
+      width: 46.5%;
+      &:nth-child(5n),
+      &:nth-child(4n),
+      &:nth-child(3n) {
+        margin-right: 7%;
+      }
+      &:nth-child(3n+1) {
+        clear: none;
+      }
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
+      &:nth-child(2n+1) {
+        clear: left;
+      }
+    }
+  }
+  img {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 5px;
+  }
+  a {
+    margin-right: 20px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 .attachment-tools {
   &:extend(.list-unstyled);
   li {
@@ -6,7 +86,7 @@
   }
   .btn {
     line-height: 1;
-    color: @text-color;
+    color: #D8D8D8;
     padding: 0;
     &:hover {
       color: @link-color;

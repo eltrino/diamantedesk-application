@@ -12,15 +12,14 @@
 </strong> answered <%= created_relative %> <small class="comment-date">(<%= created_at %>)</small>
 <div class="comment-content"><%= content %></div>
 <% if(attachments && attachments.length) { %>
+<% attachments = _.sortBy(attachments, 'thumbnails'); %>
 <div class="comment-attachments-block">
-  <strong>File attachments:</strong>
   <ul class="comment-attachments">
     <% _.each(attachments, function(attachment){ %>
       <li>
         <a href="<%= attachment.file.url %>" title="Download: <%= attachment.file.filename %>">
           <% if(attachment.thumbnails) { %>
             <img src="<%= attachment.thumbnails.url %>" title="Preview of <%= attachment.file.filename %>">
-            <br>
           <% } %>
           <%= attachment.file.filename %>
         </a>

@@ -1,36 +1,82 @@
+.btn-back {
+  border-radius: 0;
+  border-width: 1px;
+  margin-bottom: 15px;
+  color: @text-color;
+  padding-left: 15px;
+  padding-right: 20px;
+  &,
+  &:hover,
+  &:focus {
+    border-color: #e6e6e6;
+  }
+  .fa {
+    margin-right: 12px;
+  }
+}
 .ticket-view {
+  h1, h2 {
+    border-bottom: 1px #e6e6e6 solid;
+    margin-top: 10px;
+    padding-bottom: 7px;
+  }
   h2 {
-    text-transform: uppercase;
-    font-size: @font-size-h4;
+    font-size: 15px;
+    padding-bottom: 10px;
+  }
+  @media (max-width: @screen-xs-max) {
+    padding: 0 20px;
+    .btn {
+      padding:3px 18px;
+      line-height: 20px;
+      font-size: 10px;
+      &:not(.btn-back) .fa {
+        font-size: 14px;
+      }
+    }
   }
 }
 .ticket-meta {
-  overflow: hidden;
-  padding-top: @padding-base-vertical;
-  padding-bottom: @padding-base-vertical;
-  border: 1px solid #ccc;
-  border-radius: @border-radius-base;
-  text-transform: capitalize;
-  .row {
-    text-align: center;
-    font-size: @font-size-base;
-    line-height: @line-height-base;
+  font-size: 12px;
+  margin-bottom: 30px;
+  > span {
+    margin-right: 20px;
+    color: #a5a5a5;
+    > span {
+      color: #000;
+      text-transform: capitalize;
+    }
   }
-  [class^="col"] {
-    padding: 0 @padding-base-vertical;
+  .key { color:#000; font-weight: bold; }
+  @media (max-width: @screen-xs-max) {
+    font-size: 9px;
+    > span {
+      margin-right: 10px;
+    }
   }
 }
+
+.ticket-description {
+  margin-bottom: 30px;
+}
+
 .ticket-actions {
-  padding-left: 1ex;
+  .btn {
+    padding: 4px 8px;
+    margin: 4px -10px 0 0;
+  }
+  i {
+    border-bottom: 2px @mainColor solid;
+    padding-bottom: 2px;
+  }
 }
 
 .ticket-aside {
-  .group {
-    background: #efefef;
-    margin-bottom: @grid-gutter-width/2;
+  @media (min-width: @screen-sm-min) {
+    float: right;
+    margin-top: -10px;
   }
   .block {
-    padding: @grid-gutter-width/2;
-    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
   }
 }

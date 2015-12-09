@@ -5,6 +5,12 @@
   }
 }
 .comments-form {
+  h2 {
+    border-bottom: none;
+    color: lighten(#000, 60%);
+    font-weight: normal;
+    padding-bottom: 0;
+  }
   textarea {
     resize: vertical;
   }
@@ -13,8 +19,6 @@
   }
   .dropzone {
     margin-bottom: 15px;
-    @media (min-width: @screen-md-min) {
-      width: percentage((6 / @grid-columns));
-    }
+    br { display: none; }
   }
 }

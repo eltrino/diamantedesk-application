@@ -7,7 +7,7 @@ define(['app'], function(App){
       var attachmentCollection = options.collection,
           parentView = options.parentView,
           attachmentCollectionView = new List.CollectionView({
-            collection : attachmentCollection
+            collection : attachmentCollection.sort()
           });
 
       attachmentCollectionView.on('childview:attachment:delete', function(childView, attachmentModel){

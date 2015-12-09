@@ -71,15 +71,18 @@ define([
       },
 
       setProgress: function(state, value){
-        var progress = this.ui[state + 'Progress'],
+        var $el = this.$el,
+            progress = this.ui[state + 'Progress'],
             progressBar = this.ui[state + 'ProgressBar'];
         if(!progress.is(':visible')){
           progress.show();
+          $el.addClass('active');
         }
         progressBar.css('width', value+'%').attr('aria-valuenow', value);
         if(value == 100) {
           setTimeout(function(){
             progress.hide();
+            $el.removeClass('active');
             progressBar.css('width', '0%').attr('aria-valuenow', 0);
           },500);
         }

@@ -1,11 +1,11 @@
 <% if(totalPages > 1) { %>
 <ul class="pagination">
   <% if(currentPage > 1) { %>
-  <li><a class="fa fa-step-backward" href="#first"></a></li>
-  <li><a class="fa fa-caret-left" href="#prev"></a></li>
+    <li class="first-page"><a class="fa fa-step-backward" href="#first"></a></li>
+    <li class="prev-page"><a class="fa fa-caret-left" href="#prev"></a></li>
   <% } else { %>
-  <li class="disabled"><span class="fa fa-step-backward"></span></li>
-  <li class="disabled"><span class="fa fa-caret-left"></span></li>
+    <li class="first-page disabled"><span class="fa fa-step-backward"></span></li>
+    <li class="prev-page disabled"><span class="fa fa-caret-left"></span></li>
   <% } %>
   <%
     var page = 1;
@@ -24,18 +24,18 @@
     }
   %>
   <% for(; page <= total; page++){ %>
-  <% if(page == currentPage) { %>
-  <li class="active"><span><%= currentPage %></span></li>
-  <% } else { %>
-  <li><a href="#<%= page %>"><%= page %></a></li>
-  <% } %>
+    <% if(page == currentPage) { %>
+      <li class="active"><span><%= currentPage %></span></li>
+    <% } else { %>
+      <li class="page"><a href="#<%= page %>"><%= page %></a></li>
+    <% } %>
   <% } %>
   <% if(currentPage !== lastPage) { %>
-  <li><a class="fa fa-caret-right" href="#next"></a></li>
-  <li><a class="fa fa-step-forward" href="#last"></a></li>
+    <li class="next-page"><a class="fa fa-caret-right" href="#next"></a></li>
+    <li class="last-page"><a class="fa fa-step-forward" href="#last"></a></li>
   <% } else { %>
-  <li class="disabled"><span class="fa fa-caret-right"></span></li>
-  <li class="disabled"><span class="fa fa-step-forward"></span></li>
+    <li class="next-page disabled"><span class="fa fa-caret-right"></span></li>
+    <li class="last-page disabled"><span class="fa fa-step-forward"></span></li>
   <% } %>
 </ul>
 <% } %>

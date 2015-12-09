@@ -49,7 +49,7 @@ define([
       childView: List.ItemView,
 
       events: {
-        'click .sortable': 'sortHandle'
+        'click th.sortable': 'sortHandle'
       },
 
       sortHandle: function(e){

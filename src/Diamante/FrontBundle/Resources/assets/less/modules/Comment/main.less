@@ -3,19 +3,20 @@
 }
 .comments-item {
   &:extend(.list-unstyled);
-  padding-left: 42px;
+  padding-left: 64px;
   margin-bottom: 15px;
 }
 
 .comment-author-image {
   float: left;
-  margin:5px 0 0 -42px;
-  width:32px;
+  margin:5px 0 0 -64px;
+  width:40px;
 }
 
 .comment-date {
   font-size: inherit;
   color: @text-muted;
+  white-space: nowrap;
 }
 .comment-content {
   margin: 0 0 .5em;
@@ -27,11 +28,12 @@
   li {
     display: inline;
     cursor: pointer;
+    margin: 0 5px;
   }
   .btn {
     line-height: 1;
-    color: @text-color;
-    padding: @padding-base-vertical;
+    padding: 0;
+    color: #D8D8D8;
     &:hover {
       color: @link-color;
     }

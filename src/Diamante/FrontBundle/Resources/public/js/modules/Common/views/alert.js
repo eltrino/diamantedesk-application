@@ -1,6 +1,6 @@
 define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
 
-  return App.module('Common.Modal', function(Alert, App, Backbone, Marionette, $, _){
+  return App.module('Common.Alert', function(Alert, App, Backbone, Marionette, $, _){
 
     var body = $('body');
 

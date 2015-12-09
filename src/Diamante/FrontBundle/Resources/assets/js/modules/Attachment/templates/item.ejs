@@ -1,12 +1,16 @@
-<ul class="attachment-tools pull-right">
-    <li><button class="btn btn-link js-delete-attachment" title="Delete Comment"><i class="fa
-    fa-times"></i></button></li>
-</ul>
 <% if (typeof(file) !== 'undefined') { %>
   <% if (typeof(thumbnails) !== 'undefined') { %>
-      <img src="<%= thumbnails.url %>" alt="<%= file.filename %>"><br>
+      <img src="<%= thumbnails.url %>" alt="<%= file.filename %>">
   <% } %>
+  <ul class="attachment-tools pull-right">
+    <li><button class="btn btn-link js-delete-attachment" title="Delete Comment"><i class="fa
+      fa-times"></i></button></li>
+  </ul>
   <a href="<%= file.url %>" title="Download: <%= file.filename %>"><%= file.filename %></a>
 <% } else { %>
+  <ul class="attachment-tools pull-right">
+    <li><button class="btn btn-link js-delete-attachment" title="Delete Comment"><i class="fa
+      fa-times"></i></button></li>
+  </ul>
   <a href="<%= base64 %>" title="Download: <%= filename %>"><%= filename %></a>
 <% } %>

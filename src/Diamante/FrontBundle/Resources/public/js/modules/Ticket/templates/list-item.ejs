@@ -1,5 +1,10 @@
 <td class="key sortable"><a href="#tickets/<%= key %>"><%= key %></a></td>
-<td class="createdAt sortable"><a href="#tickets/<%= key %>"><%= created %></a></td>
+<td class="createdAt sortable">
+  <a href="#tickets/<%= key %>">
+    <div class="visible-xs-block key"><%= key %></div>
+    <%= created %>
+  </a>
+</td>
 <td class="subject sortable"><a href="#tickets/<%= key %>"><%= subject %></a></td>
 <td class="priority sortable"><a href="#tickets/<%= key %>"><%= priority %></a></td>
 <td class="status sortable"><a href="#tickets/<%= key %>"><%= status %></a></td>
