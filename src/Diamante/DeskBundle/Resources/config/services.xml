@@ -33,7 +33,8 @@
         <parameter key="diamante.datagrid.combined_users_datasource.class">Diamante\DeskBundle\Datagrid\CombinedUsersDatasource</parameter>
         <parameter key="diamante.datagrid.pager.combined_users_pager_extension.class">Diamante\DeskBundle\Datagrid\Pager\CombinedUsersPagerExtension</parameter>
         <parameter key="diamante.datagrid.pager.data_audit_extension.class">Diamante\DeskBundle\Datagrid\Pager\DataAuditPagerExtension</parameter>
-        <parameter key="diamante.datagrid.sorter.data_audit_extension.class">Diamante\DeskBundle\Datagrid\Sorter\AuditSorterExtension</parameter>
+        <parameter key="diamante.datagrid.sorter.combined_datasource_extension.class">Diamante\DeskBundle\Datagrid\Sorter\CombinedDatasourceSorterExtension</parameter>
+        <parameter key="diamante.datagrid.filter.combined_datasource_extension.class">Diamante\DeskBundle\Datagrid\Filter\CombinedDatasourceFilterExtension</parameter>
         <parameter key="diamante.render.url.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderUrlExtension</parameter>
         <parameter key="diamante.render.tag.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\RenderTagExtension</parameter>
         <parameter key="diamante.report.service.class">Diamante\DeskBundle\Report\Infrastructure\Internal\ReportServiceImpl</parameter>
@@ -77,8 +78,13 @@
             <tag name="oro_datagrid.extension"/>
         </service>
 
-        <service id="diamante.datagrid.sorter.data_audit" class="%diamante.datagrid.sorter.data_audit_extension.class%">
+        <service id="diamante.datagrid.sorter.combined_datasource" class="%diamante.datagrid.sorter.combined_datasource_extension.class%">
             <!--<argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>-->
+            <tag name="oro_datagrid.extension"/>
+        </service>
+
+        <service id="diamante.datagrid.filter.combined_datasource" class="%diamante.datagrid.filter.combined_datasource_extension.class%">
+            <argument id="translator" type="service"/>
             <tag name="oro_datagrid.extension"/>
         </service>
 

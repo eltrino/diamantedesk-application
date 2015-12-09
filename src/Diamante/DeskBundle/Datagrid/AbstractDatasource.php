@@ -121,19 +121,8 @@ abstract class AbstractDatasource implements DatasourceInterface
             usort(
                 $rows,
                 function ($a, $b) use ($sortProperty, $direction) {
-                    $a = is_array($a) ? $a[0] : $a;
-                    $b = is_array($b) ? $b[0] : $b;
-
-                    $reflectionA = new \ReflectionClass($a);
-                    $reflectionB = new \ReflectionClass($b);
-
-                    $propertyA = $reflectionA->getProperty($sortProperty);
-                    $propertyB = $reflectionB->getProperty($sortProperty);
-                    $propertyA->setAccessible(true);
-                    $propertyB->setAccessible(true);
-
-                    $valueA = $propertyA->getValue($a);
-                    $valueB = $propertyB->getValue($b);
+                    $valueA = isset($a[$sortProperty]) ? $a[$sortProperty] : null;
+                    $valueB = isset($b[$sortProperty]) ? $b[$sortProperty] : null;
 
                     $sortableArray = array($valueA, $valueB);
                     $originalSortableArray = $sortableArray;

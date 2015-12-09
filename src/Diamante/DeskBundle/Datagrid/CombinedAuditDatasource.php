@@ -35,6 +35,12 @@ class CombinedAuditDatasource extends AbstractDatasource
     /** @var  array */
     protected $config;
 
+    /** @var QueryBuilder */
+    protected $qbOroAudit;
+
+    /** @var QueryBuilder */
+    protected $qbDiamanteAudit;
+
     /**
      * @var AuditRepository
      */
@@ -50,6 +56,8 @@ class CombinedAuditDatasource extends AbstractDatasource
     ) {
         $this->doctrineRegistry = $doctrineRegistry;
         $this->auditRepository = $auditRepository;
+
+        $this->qbDiamanteAudit = $auditRepository->createQueryBuilder('a');
     }
 
     /**
@@ -59,6 +67,11 @@ class CombinedAuditDatasource extends AbstractDatasource
     public function process(DatagridInterface $grid, array $config)
     {
         $this->config = $config;
+
+        $queryConfig = array_intersect_key($this->config, array_flip(['query']));
+        $converter = new YamlConverter();
+        $this->qbOroAudit = $converter->parse($queryConfig, $this->doctrineRegistry->getManager()->createQueryBuilder('a'));
+
         parent::process($grid, $config);
     }
 
@@ -69,7 +82,10 @@ class CombinedAuditDatasource extends AbstractDatasource
     {
         $rows = [];
 
-        $audit = array_merge($this->getOroAudit(), $this->getDiamanteAudit());
+        $oroAudit = $this->getQbOroAudit()->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        $diamanteAudit = $this->getQbDiamanteAudit()->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
+        $audit = array_merge($oroAudit, $diamanteAudit);
         $this->applySorting($audit);
 
         foreach ($audit as $item) {
@@ -83,20 +99,27 @@ class CombinedAuditDatasource extends AbstractDatasource
     /**
      * @return array
      */
-    protected function getOroAudit()
+    protected function getQbOroAudit()
     {
-        $queryConfig = array_intersect_key($this->config, array_flip(['query']));
-        $converter = new YamlConverter();
-        $qb = $converter->parse($queryConfig, $this->doctrineRegistry->getManager()->createQueryBuilder());
-
-        return $qb->getQuery()->getResult();
+        return $this->qbOroAudit;
     }
 
     /**
      * @return array
      */
-    protected function getDiamanteAudit()
+    protected function getQbDiamanteAudit()
     {
-        return $this->auditRepository->findAll();
+        return $this->qbDiamanteAudit;
+    }
+
+    /**
+     * @return array
+     */
+    public function getQueryBuilders()
+    {
+        return [
+            $this->getQbDiamanteAudit(),
+            $this->getQbOroAudit()
+        ];
     }
 }

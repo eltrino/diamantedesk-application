@@ -27,10 +27,24 @@ class CombinedUsersDatasource extends AbstractDatasource
     const DIAMANTE_USER_TYPE_POSTFIX = '[diamante]';
     const ORO_USER_TYPE_POSTFIX = '[oro]';
 
+    /** @var QueryBuilder */
+    protected $qbDiamanteUsers;
+
+    /** @var QueryBuilder */
+    protected $qbOroUsers;
+
     public function __construct(
         Registry $doctrineRegistry
     ) {
         $this->doctrineRegistry = $doctrineRegistry;
+
+        $this->qbOroUsers = $this->doctrineRegistry->getManager()->getRepository('OroUserBundle:User')
+            ->createQueryBuilder('u');
+        $this->qbOroUsers->select('u');
+
+        $this->qbDiamanteUsers = $this->doctrineRegistry->getManager()->getRepository('DiamanteUserBundle:DiamanteUser')
+            ->createQueryBuilder('u');
+        $this->qbDiamanteUsers->select('u');
     }
 
     /**
@@ -40,18 +54,26 @@ class CombinedUsersDatasource extends AbstractDatasource
     {
         $rows = [];
 
-        foreach ($this->getDiamanteUsers() as $result) {
+        $diamanteUsers = $this->getQbDiamanteUsers()->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        foreach ($diamanteUsers as $result) {
             $result['id'] = User::TYPE_DIAMANTE . User::DELIMITER . $result['id'];
             $result['username'] = self::DIAMANTE_USERNAME_PLACEHOLDER;
             $result['enabled'] = true;
             $result['email'] = $result['email'] . ' ' . self::DIAMANTE_USER_TYPE_POSTFIX;
-            $rows[] = new ResultRecord($result);
+            $rows[] = $result;
         }
 
-        foreach ($this->getOroUsers() as $result) {
+        $oroUsers = $this->getQbOroUsers()->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        foreach ($oroUsers as $result) {
             $result['id'] = User::TYPE_ORO . User::DELIMITER . $result['id'];
             $result['email'] = $result['email'] . ' ' . self::ORO_USER_TYPE_POSTFIX;
-            $rows[] = new ResultRecord($result);
+            $rows[] = $result;
+        }
+
+        $this->applySorting($rows);
+
+        foreach ($rows as $key => $row) {
+            $rows[$key] = new ResultRecord($row);
         }
 
         $rows = $this->applyPagination($rows);
@@ -60,24 +82,29 @@ class CombinedUsersDatasource extends AbstractDatasource
     }
 
     /**
-     * @return array
+     * @return QueryBuilder
      */
-    protected function getOroUsers()
+    protected function getQbOroUsers()
     {
-        return $this->doctrineRegistry->getManager()->getRepository('OroUserBundle:User')
-            ->createQueryBuilder('e')
-            ->select('e')
-            ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return $this->qbOroUsers;
     }
 
     /**
+     * @return QueryBuilder
+     */
+    protected function getQbDiamanteUsers()
+    {
+        return $this->qbDiamanteUsers;
+    }
+    
+    /**
      * @return array
      */
-    protected function getDiamanteUsers()
+    public function getQueryBuilders()
     {
-        return $this->doctrineRegistry->getManager()->getRepository('DiamanteUserBundle:DiamanteUser')
-            ->createQueryBuilder('e')
-            ->select('e')
-            ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return [
+            $this->getQbDiamanteUsers(),
+            $this->getQbOroUsers()
+        ];
     }
 }

@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Datagrid\Sorter;
 
+use Diamante\DeskBundle\Datagrid\CombinedUsersDatasource;
 use Oro\Bundle\DataGridBundle\Datagrid\Builder;
 use Oro\Bundle\DataGridBundle\Datagrid\Common\DatagridConfiguration;
 use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
@@ -21,7 +22,7 @@ use Oro\Bundle\DataGridBundle\Extension\Sorter\Configuration;
 use Diamante\DeskBundle\Datagrid\CombinedAuditDatasource;
 use Oro\Bundle\DataGridBundle\Extension\Sorter\OrmSorterExtension;
 
-class AuditSorterExtension extends OrmSorterExtension
+class CombinedDatasourceSorterExtension extends OrmSorterExtension
 {
     /**
      * @param DatagridConfiguration $config
@@ -31,7 +32,8 @@ class AuditSorterExtension extends OrmSorterExtension
     public function isApplicable(DatagridConfiguration $config)
     {
         $columns      = $config->offsetGetByPath(Configuration::COLUMNS_PATH);
-        $isApplicable = $config->offsetGetByPath(Builder::DATASOURCE_TYPE_PATH) === CombinedAuditDatasource::TYPE
+        $type = $config->offsetGetByPath(Builder::DATASOURCE_TYPE_PATH);
+        $isApplicable = ($type == CombinedAuditDatasource::TYPE || $type = CombinedUsersDatasource::TYPE)
             && is_array($columns);
 
         return $isApplicable;

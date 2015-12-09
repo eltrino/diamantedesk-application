@@ -96,5 +96,6 @@ class DiamanteDeskBundle extends Bundle
         $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\TagCompilerPass());
         $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterSubscribersPass());
         $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterNotificationOptionsProvidersPass());
+        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\FilterTypesPass());
     }
 }
