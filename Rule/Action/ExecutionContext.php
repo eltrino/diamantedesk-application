@@ -40,7 +40,9 @@ class ExecutionContext
      */
     public function setFact(Fact $fact)
     {
-        $this->fact = $fact;
+        $this->fact             = $fact;
+        $this->executionResult  = self::EXECUTION_PENDING;
+        $this->errors           = [];
     }
 
     /**

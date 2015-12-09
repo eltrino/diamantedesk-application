@@ -17,6 +17,7 @@ namespace Diamante\AutomationBundle\Configuration;
 
 use Diamante\AutomationBundle\Exception\InvalidConfigurationException;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
+use Diamante\AutomationBundle\Model\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\Translator;
 
@@ -31,6 +32,11 @@ class AutomationConfigurationProvider
     protected $targetMap    = [];
 
     protected static $configStructure     = ['entities', 'conditions', 'actions'];
+
+    protected $connectorsMap = [
+        Group::CONNECTOR_EXCLUSIVE => 'diamante.automation.connector.exclusive',
+        Group::CONNECTOR_INCLUSIVE => 'diamante.automation.connector.inclusive'
+    ];
 
     public function __construct(ContainerInterface $container)
     {
@@ -95,7 +101,7 @@ class AutomationConfigurationProvider
 
     protected function rebuildTargetMap()
     {
-        foreach ($this->entities as $name=>$config) {
+        foreach ($this->entities as $name => $config) {
             if (!array_key_exists('class', $config) || empty($config['class'])) {
                 throw new InvalidConfigurationException(sprintf("Entity '%s' should have class configured", $name));
             }
@@ -159,6 +165,7 @@ class AutomationConfigurationProvider
         $config['entities']   = $this->dumpEntitiesConfig($translator);
         $config['conditions'] = $this->dumpConditionsConfig($translator);
         $config['actions']    = $this->dumpActionsConfig($translator);
+        $config['connectors'] = $this->dumpConnectorsConfig($translator);
 
         return $config;
     }
@@ -225,5 +232,16 @@ class AutomationConfigurationProvider
         }
 
         return $actions;
+    }
+
+    protected function dumpConnectorsConfig(Translator $translator)
+    {
+        $connectors = [];
+
+        foreach ($this->connectorsMap as $name => $label) {
+            $connectors[strtolower($name)]  = $translator->trans($label);
+        }
+
+        return $connectors;
     }
 }

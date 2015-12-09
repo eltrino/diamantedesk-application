@@ -17,6 +17,7 @@ namespace Diamante\AutomationBundle\Automation;
 
 
 use Diamante\AutomationBundle\Rule\Action\ActionInterface;
+use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
 use Diamante\AutomationBundle\Rule\Fact\Fact;
 use Symfony\Bridge\Monolog\Logger;
 
@@ -51,10 +52,15 @@ class Scheduler
                     foreach ($action->getContext()->getErrors() as $error) {
                         $this->logger->error($error);
                     }
+                    $action->getContext()->setExecutionResult(ExecutionContext::EXECUTION_FAILED);
+                    return;
                 }
+
+                $action->getContext()->setExecutionResult(ExecutionContext::EXECUTION_SUCCESS);
 
             } catch (\Exception $e) {
                 $this->hasErrors = true;
+                $action->getContext()->setExecutionResult(ExecutionContext::EXECUTION_FAILED);
                 $this->logger->error($e->getMessage());
             }
         }

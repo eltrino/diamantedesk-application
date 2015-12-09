@@ -18,6 +18,7 @@ namespace Diamante\AutomationBundle\Automation;
 
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\Group;
+use Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Fact\Fact;
@@ -68,12 +69,18 @@ class Engine
      */
     protected $rules;
 
+    /**
+     * @var GenericTargetEntityProvider
+     */
+    protected $targetProvider;
+
     public function __construct(
         AutomationConfigurationProvider $configurationProvider,
         ActionProvider                  $actionProvider,
         Registry                        $doctrineRegistry,
         ConditionFactory                $conditionFactory,
-        Logger                          $logger
+        Logger                          $logger,
+        GenericTargetEntityProvider     $targetProvider
     )
     {
         $this->configurationProvider = $configurationProvider;
@@ -82,6 +89,7 @@ class Engine
         $this->conditionFactory      = $conditionFactory;
         $this->logger                = $logger;
         $this->scheduler             = new Scheduler($this->logger);
+        $this->targetProvider        = $targetProvider;
     }
 
     /**
@@ -255,5 +263,34 @@ class Engine
         }
 
         return $result;
+    }
+
+    /**
+     * @param Rule $rule
+     * @param bool|false $dryRun
+     *
+     * @return int
+     */
+    public function processRule(Rule $rule, $dryRun = false)
+    {
+        $target = $rule->getTarget();
+        $targetClass = $this->configurationProvider->getEntityConfiguration($target)->get('class');
+
+        $targetEntities = $this->targetProvider->getTargets($rule, $targetClass);
+
+        foreach ($this->actionProvider->getActions($rule) as $action) {
+            $this->scheduler->addAction($action);
+        }
+
+        if (!$dryRun) {
+            foreach ($targetEntities as $entity) {
+                $fact = $this->createFact($entity);
+                $this->scheduler->run($fact);
+            }
+        }
+
+        $this->scheduler->reset();
+
+        return count($targetEntities);
     }
 }

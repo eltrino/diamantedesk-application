@@ -13,6 +13,7 @@
         <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Automation\ActionProvider</parameter>
         <parameter key="diamante_automation.condition.factory.class">Diamante\AutomationBundle\Rule\Condition\ConditionFactory</parameter>
         <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
+        <parameter key="diamante_automation.generic.target.provider.class">Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider</parameter>
     </parameters>
 
     <services>
@@ -57,6 +58,11 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="diamante_automation.condition.factory"/>
             <argument type="service" id="monolog.logger.diamante"/>
+            <argument type="service" id="diamante_automation.generic.target.provider"/>
+        </service>
+
+        <service id="diamante_automation.generic.target.provider" class="%diamante_automation.generic.target.provider.class%">
+            <argument type="service" id="doctrine"/>
         </service>
     </services>
 </container>

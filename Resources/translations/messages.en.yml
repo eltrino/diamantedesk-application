@@ -63,3 +63,7 @@ diamante:
 
     action:
       update_property: update property
+
+    connector:
+      inclusive: all of these are true
+      exclusive: any of these are true
