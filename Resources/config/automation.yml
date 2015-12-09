@@ -36,3 +36,6 @@ diamante_automation:
       id: @diamante_automation.action.update_property
       frontend_label: diamante.automation.action.update_property
       data_types: ['*', '!user', '!users']
+    notify_by_email:
+      id: @diamante_automation.action.notify_by_email
+      frontend_label: diamante.automation.action.notify_by_email

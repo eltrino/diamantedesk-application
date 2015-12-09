@@ -67,3 +67,13 @@ diamante:
     connector:
       inclusive: all of these are true
       exclusive: any of these are true
+
+    notification:
+      ticket:
+        created: Ticket was created
+        updated: Ticket was updated
+        removed: Ticket was removed
+      comment:
+        created: Comment was created
+        updated: Comment was updated
+        removed: Comment was removed
