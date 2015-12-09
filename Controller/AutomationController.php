@@ -1,103 +1,105 @@
 <?php
+/*
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ *
+ * Licensed under the Open Software License (OSL 3.0).
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://opensource.org/licenses/osl-3.0.php
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@eltrino.com so we can send you a copy immediately.
+ */
 
 namespace Diamante\AutomationBundle\Controller;
 
-use Diamante\AutomationBundle\Rule\Engine\EngineImpl;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Diamante\AutomationBundle\Api\Command\RuleCommand;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 /**
- * Class BusinessRuleController
+ * Class AutomationController
  *
  * @package Diamante\AutomationBundle\Controller
  *
- * @Route("business")
+ * @Route("automation")
  */
-class AutomationController extends RuleController
+class AutomationController
 {
-    const MODE = 'business';
-
-    const FORM = 'diamante_business_rule_form';
-
     /**
      * @Route(
-     *      "/{_format}",
-     *      name="diamante_business_list",
-     *      requirements={"_format"="html|json"},
+     *      "/{type}/{_format}",
+     *      name="diamante_automation_list",
+     *      requirements={"type"="\w+", "_format"="html|json"},
      *      defaults={"_format" = "html"}
      * )
-     * @Template("DiamanteAutomationBundle:Business:list.html.twig")
+     * @Template("DiamanteAutomationBundle:Automation:list.html.twig")
      */
-    public function listAction()
+    public function listAction($type)
     {
-        return parent::listAction();
+        return [];
     }
 
     /**
      * @Route(
-     *      "/view/{id}",
-     *      name="diamante_business_view",
-     *      requirements={"id"="^[a-zA-Z0-9-]*$"}
+     *      "/{type}/view/{id}",
+     *      name="diamante_automation_view",
+     *      requirements={"type"="\w+", "id"="^[a-zA-Z0-9-]*$"}
      * )
-     * @Template("DiamanteAutomationBundle:Business:view.html.twig")
+     * @Template("DiamanteAutomationBundle:Automation:view.html.twig")
      *
      * @param int $id
      *
      * @return array
      */
-    public function viewAction($id)
+    public function viewAction($type, $id)
     {
-        return parent::viewAction($id);
+        return new Response();
     }
 
     /**
      * @Route(
-     *      "/create",
-     *      name="diamante_business_create"
+     *      "/{type}/create",
+     *      name="diamante_automation_create",
+     *      requirements={"type"="\w+"}
      * )
-     * @Template("DiamanteAutomationBundle:Business:create.html.twig")
+     * @Template("DiamanteAutomationBundle:Automation:create.html.twig")
      */
-    public function createAction()
+    public function createAction($type)
     {
-        return parent::createAction();
+        return new Response();
     }
 
     /**
      * @Route(
-     *      "/update/{id}",
-     *      name="diamante_business_update",
-     *      requirements={"id"="^[a-zA-Z0-9-]*$"}
+     *      "/{type}/update/{id}",
+     *      name="diamante_automation_update",
+     *      requirements={"type"="\w+", "id"="^[a-zA-Z0-9-]*$"}
      * )
-     * @Template("DiamanteAutomationBundle:Business:update.html.twig")
+     * @Template("DiamanteAutomationBundle:Automation:update.html.twig")
      *
      * @param int $id
      *
      * @return array
      */
-    public function updateAction($id)
+    public function updateAction($type, $id)
     {
-        return parent::updateAction($id);
+        return new Response();
     }
 
     /**
      * @Route(
-     *      "/delete/{id}",
-     *      name="diamante_business_delete",
-     *      requirements={"id"="^[a-zA-Z0-9-]*$"}
+     *      "/{type}/delete/{id}",
+     *      name="diamante_automation_delete",
+     *      requirements={"type"="\w+", "id"="^[a-zA-Z0-9-]*$"}
      * )
      *
      * @param int $id
      *
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction($type, $id)
     {
-        return parent::deleteAction($id);
+        return new Response();
     }
 }
