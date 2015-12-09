@@ -232,7 +232,7 @@ class NotificationManager
 
         $templateOptions = array_merge($provider->getDefaultOptions(), $options);
 
-        foreach ($provider->getDefaultOptions() as $option) {
+        foreach ($provider->getDefaultOptions() as $option => $value) {
             if (!array_key_exists($option, $templateOptions)) {
                 throw new \RuntimeException(sprintf("Required parameter %s is missing.", $option));
             }

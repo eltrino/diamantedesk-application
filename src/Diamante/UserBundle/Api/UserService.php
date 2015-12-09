@@ -76,6 +76,13 @@ interface UserService
     public function getUserByEmail($email);
 
     /**
+     * @param $email
+     *
+     * @return DiamanteUser|OroUser
+     */
+    public function getUserInstanceByEmail($email);
+
+    /**
      * @param CreateDiamanteUserCommand $command
      * @return DiamanteUser
      */
