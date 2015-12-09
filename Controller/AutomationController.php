@@ -15,6 +15,9 @@
 
 namespace Diamante\AutomationBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -24,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Route("automation")
  */
-class AutomationController
+class AutomationController extends Controller
 {
     /**
      * @Route(
