@@ -80,3 +80,45 @@
   text-align: center;
 }
 
+.modal-alert {
+  .modal-dialog {
+    height: 100%;
+    width:100%;
+    margin: 0;
+    display: table;
+  }
+  .modal-content {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .modal-header, .modal-body {
+    width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .modal-header {
+    .status {
+      margin: 0 auto;
+      width: 72px;
+      height: 72px;
+      border: 5px solid;
+      text-align: center;
+      line-height: 62px;
+      font-size: 40px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      .fa {
+        line-height: inherit;
+        width: 62px;
+      }
+    }
+    .status-error {
+      color:#F17356;
+    }
+  }
+  .modal-body {
+    text-align: left;
+  }
+}
+

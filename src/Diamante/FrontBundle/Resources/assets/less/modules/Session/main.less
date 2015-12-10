@@ -1,7 +1,7 @@
 .auth-page {
   .logo {
     text-align: center;
-    margin:0 0 25px;
+    margin:0 0 60px;
     background: url(../img/logo_auth.png) 0 0 no-repeat;
     background-size: cover;
     img { opacity: 0 }
@@ -9,35 +9,81 @@
   
   #main {
     background: transparent;
-    padding:0;
-    width: 460px;
+    display: table;
+    width: 240px;
+    padding: 0;
+  }
+
+  #content {
+    display: table-cell;
+    vertical-align: middle;
   }
 
   #header, #footer {
     display: none;
   }
   .btn {
-    margin-bottom: 15px;
+    margin-top: 15px;
   }
   p {
     text-align: center;
   }
-  .forgot {
+  .form-group {
+    line-height: 1.2;
+    margin-bottom: 30px;
+  }
+  label {
+    color:lighten(#000, 60%);
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 0;
+  }
+  .form-control {
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px lighten(#000, 50%) solid;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    height: 36px;
+    font-size: 16px;
+  }
+  .has-error .form-control {
+    border-color: @state-danger-text;
+    color: @state-danger-text;
+  }
+  .checkbox {
+    label {
+      font-size: 14px;
+    }
+  }
+  a {
+    font-size: 12px;
+  }
+  .forgot, .register {
     position: relative;
     z-index: 1;
+    top:2px;
   }
   .messages {
     .alert {
       margin-top: 20px;
     }
   }
+  .progress {
+    height: 4px;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 5px 0;
+  }
+  .password-verdict {
+    color: #949696;
+    height: auto;
+    margin: 0;
+    text-align: left;
+  }
 }
 
 .auth-block {
-  margin-top: 25px;
-  margin-bottom: 25px;
-  padding: 45px 90px 45px;
-  box-shadow: 0 0 1px 2px #dedede;
-  border-radius:5px;
-  background: #fff;
+
 }

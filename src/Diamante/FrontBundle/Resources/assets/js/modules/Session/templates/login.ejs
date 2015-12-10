@@ -3,19 +3,27 @@
 </a>
 <form role="form">
     <div class="form-group">
+        <a class="register pull-right" href="#registration">Registration</a>
         <label class="control-label" for="email">Email</label>
-        <input type="text" class="form-control input-lg" id="email" name="email" placeholder="Enter Email">
+        <input type="text"
+               class="form-control input-lg"
+               id="email" name="email"
+               tabindex="1" placeholder="Enter Email">
     </div>
     <div class="form-group">
+        <a class="forgot pull-right" href="#resetpassword">Amnesia?</a>
         <label class="control-label" for="password">Password</label>
-        <input type="password" class="form-control input-lg" name="password" id="password" placeholder="Password">
+        <input type="password"
+               class="form-control input-lg"
+               name="password" id="password"
+               tabindex="2" placeholder="Password">
     </div>
-    <a class="forgot pull-right" href="#resetpassword">Forgot Password</a>
     <div class="checkbox">
         <label>
-            <input name="remember" id="remember" type="checkbox"> Remember me
+            <input name="remember" id="remember" type="checkbox" tabindex="3"> Remember me
         </label>
     </div>
-    <button type="submit" class="btn btn-primary btn-lg btn-block js-submit">Sign In</button>
-    <p>Don't have an account? &mdash; <a href="#registration">Registration</a></p>
+    <p>
+        <button type="submit" class="btn btn-lg btn-primary js-submit" tabindex="4">Sign In</button>
+    </p>
 </form>

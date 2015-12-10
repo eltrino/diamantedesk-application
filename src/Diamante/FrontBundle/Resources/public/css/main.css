@@ -7681,6 +7681,44 @@ body {
   border-top: 0;
   text-align: center;
 }
+.modal-alert .modal-dialog {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  display: table;
+}
+.modal-alert .modal-content {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.modal-alert .modal-header,
+.modal-alert .modal-body {
+  width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.modal-alert .modal-header .status {
+  margin: 0 auto;
+  width: 72px;
+  height: 72px;
+  border: 5px solid;
+  text-align: center;
+  line-height: 62px;
+  font-size: 40px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+.modal-alert .modal-header .status .fa {
+  line-height: inherit;
+  width: 62px;
+}
+.modal-alert .modal-header .status-error {
+  color: #F17356;
+}
+.modal-alert .modal-body {
+  text-align: left;
+}
 #footer {
   background: #525252;
 }
@@ -8118,7 +8156,7 @@ h1,
 }
 .auth-page .logo {
   text-align: center;
-  margin: 0 0 25px;
+  margin: 0 0 60px;
   background: url(../img/logo_auth.png) 0 0 no-repeat;
   background-size: cover;
 }
@@ -8127,33 +8165,74 @@ h1,
 }
 .auth-page #main {
   background: transparent;
+  display: table;
+  width: 240px;
   padding: 0;
-  width: 460px;
+}
+.auth-page #content {
+  display: table-cell;
+  vertical-align: middle;
 }
 .auth-page #header,
 .auth-page #footer {
   display: none;
 }
 .auth-page .btn {
-  margin-bottom: 15px;
+  margin-top: 15px;
 }
 .auth-page p {
   text-align: center;
 }
-.auth-page .forgot {
+.auth-page .form-group {
+  line-height: 1.2;
+  margin-bottom: 30px;
+}
+.auth-page label {
+  color: #999999;
+  font-size: 12px;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+.auth-page .form-control {
+  padding: 8px 0;
+  border: none;
+  border-bottom: 1px #808080 solid;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  height: 36px;
+  font-size: 16px;
+}
+.auth-page .has-error .form-control {
+  border-color: #a94442;
+  color: #a94442;
+}
+.auth-page .checkbox label {
+  font-size: 14px;
+}
+.auth-page a {
+  font-size: 12px;
+}
+.auth-page .forgot,
+.auth-page .register {
   position: relative;
   z-index: 1;
+  top: 2px;
 }
 .auth-page .messages .alert {
   margin-top: 20px;
 }
-.auth-block {
-  margin-top: 25px;
-  margin-bottom: 25px;
-  padding: 45px 90px 45px;
-  box-shadow: 0 0 1px 2px #dedede;
-  border-radius: 5px;
-  background: #fff;
+.auth-page .progress {
+  height: 4px;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 5px 0;
+}
+.auth-page .password-verdict {
+  color: #949696;
+  height: auto;
+  margin: 0;
+  text-align: left;
 }
 .comments-list {
   margin-bottom: 25px;

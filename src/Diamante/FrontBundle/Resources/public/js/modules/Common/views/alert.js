@@ -5,13 +5,14 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
     var body = $('body');
 
     Alert.View = Marionette.ItemView.extend({
-      className: 'modal fade',
+      className: 'modal modal-alert fade',
       template: alertTemplate,
 
       initialize: function(options){
         var opt = options || {},
             message;
         this.title = opt.title || 'Error';
+        this.status = opt.status || 'error';
         this.messages = opt.messages || 'An unprocessed error happened. Please try again!';
         if(opt.xhr && opt.xhr.responseJSON){
           message = opt.xhr.responseJSON.message || opt.xhr.responseJSON.error;
@@ -57,6 +58,7 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
         });
         return {
           title: this.title,
+          status: this.status,
           messages: messages
         };
       },
