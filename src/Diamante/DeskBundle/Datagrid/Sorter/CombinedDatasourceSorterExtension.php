@@ -33,7 +33,7 @@ class CombinedDatasourceSorterExtension extends OrmSorterExtension
     {
         $columns      = $config->offsetGetByPath(Configuration::COLUMNS_PATH);
         $type = $config->offsetGetByPath(Builder::DATASOURCE_TYPE_PATH);
-        $isApplicable = ($type == CombinedAuditDatasource::TYPE || $type = CombinedUsersDatasource::TYPE)
+        $isApplicable = ($type == CombinedAuditDatasource::TYPE || $type == CombinedUsersDatasource::TYPE)
             && is_array($columns);
 
         return $isApplicable;
