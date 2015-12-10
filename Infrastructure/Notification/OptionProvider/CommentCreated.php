@@ -15,10 +15,10 @@
 
 namespace Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider;
 
-class TicketCreated extends AbstractProvider
+class CommentCreated extends AbstractProvider
 {
-    const SUBJECT_IDENTIFIER = 'diamante.automation.notification.ticket.created';
-    const NAME = 'ticket_created';
+    const SUBJECT_IDENTIFIER = 'diamante.automation.notification.comment.created';
+    const NAME = 'comment_created';
 
     /**
      * @return array
@@ -26,7 +26,7 @@ class TicketCreated extends AbstractProvider
     public function getDefaultOptions()
     {
         $defaultOptions = parent::getDefaultOptions();
-        $defaultOptions['header'] = 'diamante.automation.notification.ticket.created';
+        $defaultOptions['header'] = 'diamante.automation.notification.comment.created';
 
         return $defaultOptions;
     }
