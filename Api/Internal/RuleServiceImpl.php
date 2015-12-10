@@ -75,7 +75,7 @@ class RuleServiceImpl implements RuleService
 
     public function createBusinessRule($data)
     {
-        $rule = new BusinessRule($data['name'], $data['timeInterval']);
+        $rule = new BusinessRule($data['name'], $data['target'], $data['timeInterval']);
         $this->addConditions($rule, $data['conditions']);
         $this->addActions($rule, $data['actions'], $this->getBusinessActionEntity());
 
@@ -116,7 +116,7 @@ class RuleServiceImpl implements RuleService
 
     public function createWorkflowRule($data)
     {
-        $rule = new WorkflowRule($data['name']);
+        $rule = new WorkflowRule($data['name'], $data['target']);
         $this->addConditions($rule, $data['conditions']);
         $this->addActions($rule, $data['actions'], $this->getWorkflowActionEntity());
 
