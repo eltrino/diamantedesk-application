@@ -319,12 +319,142 @@ datagrid:
                 link:          delete_link
 
     diamante-reporter-select-grid:
-        extends: users-select-grid
+        extended_entity_name: %oro_user.entity.class%
+        options:
+            entityHint: user
+            entity_pagination: true
+        columns:
+            email:
+                label:         diamante.user.labels.email
+            firstName:
+                label:         oro.user.first_name.label
+            lastName:
+                label:         oro.user.last_name.label
+            createdAt:
+                label:         oro.ui.created_at
+                frontend_type: datetime
+            updatedAt:
+                label:         oro.ui.updated_at
+                frontend_type: datetime
+            enabled:
+                label:         oro.user.enabled.label
+                frontend_type: select
+                choices:
+                   - Inactive
+                   - Active
+        properties:
+            id: ~
+        sorters:
+            columns:
+                email:
+                    data_name: u.email
+                firstName:
+                    data_name: u.firstName
+                lastName:
+                    data_name: u.lastName
+                createdAt:
+                    data_name: u.createdAt
+                updatedAt:
+                    data_name: u.updatedAt
+                enabled:
+                    data_name: u.enabled
+            default:
+                email: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC
+        filters:
+            columns:
+                email:
+                    type: string
+                    data_name: u.email
+                firstName:
+                    type: string
+                    data_name: u.firstName
+                lastName:
+                    type: string
+                    data_name: u.lastName
+                createdAt:
+                    type: datetime
+                    data_name: u.createdAt
+                updatedAt:
+                    type: datetime
+                    data_name: u.updatedAt
+                enabled:
+                    type: choice
+                    data_name: u.enabled
+                    options:
+                        field_options:
+                            choices:
+                                'false': Inactive
+                                'true':  Active
         source:
             type: diamante_combined_users_datasource
 
     diamante-watcher-select-grid:
-        extends: users-select-grid
+        extended_entity_name: %oro_user.entity.class%
+        options:
+            entityHint: user
+            entity_pagination: true
+        columns:
+            email:
+                label:         diamante.user.labels.email
+            firstName:
+                label:         oro.user.first_name.label
+            lastName:
+                label:         oro.user.last_name.label
+            createdAt:
+                label:         oro.ui.created_at
+                frontend_type: datetime
+            updatedAt:
+                label:         oro.ui.updated_at
+                frontend_type: datetime
+            enabled:
+                label:         oro.user.enabled.label
+                frontend_type: select
+                choices:
+                   - Inactive
+                   - Active
+        properties:
+            id: ~
+        sorters:
+            columns:
+                email:
+                    data_name: u.email
+                firstName:
+                    data_name: u.firstName
+                lastName:
+                    data_name: u.lastName
+                createdAt:
+                    data_name: u.createdAt
+                updatedAt:
+                    data_name: u.updatedAt
+                enabled:
+                    data_name: u.enabled
+            default:
+                email: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC
+        filters:
+            columns:
+                email:
+                    type: string
+                    data_name: u.email
+                firstName:
+                    type: string
+                    data_name: u.firstName
+                lastName:
+                    type: string
+                    data_name: u.lastName
+                createdAt:
+                    type: datetime
+                    data_name: u.createdAt
+                updatedAt:
+                    type: datetime
+                    data_name: u.updatedAt
+                enabled:
+                    type: choice
+                    data_name: u.enabled
+                    options:
+                        field_options:
+                            choices:
+                                'false': Inactive
+                                'true':  Active
         source:
             type: diamante_combined_users_datasource
 
