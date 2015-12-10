@@ -182,6 +182,7 @@ class CommentServiceImpl implements CommentService
 
         $this->createAttachments($command, $comment);
         $ticket->updateStatus(new Status($command->ticketStatus));
+        $ticket->updatedTimestamps();
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
 

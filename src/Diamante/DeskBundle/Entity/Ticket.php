@@ -25,6 +25,7 @@ use Diamante\UserBundle\Model\User as UserModel;
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketRepository")
  * @ORM\Table(name="diamante_ticket")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\EntityListeners({"Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener"})
  * @Config(
  *      defaultValues={
@@ -223,5 +224,14 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     public function __toString()
     {
         return sprintf('[%s] %s', $this->getKey() ? $this->getKey() : 'moved', $this->getSubject());
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 }
