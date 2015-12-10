@@ -225,13 +225,4 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     {
         return sprintf('[%s] %s', $this->getKey() ? $this->getKey() : 'moved', $this->getSubject());
     }
-
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function updatedTimestamps()
-    {
-        $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
-    }
 }
