@@ -18,6 +18,10 @@ define(['app','./routers/ticket'], function(App){
       }
     });
 
+    App.on('session:logout:success', function(){
+      Ticket.stop();
+    });
+
   });
 
 });
