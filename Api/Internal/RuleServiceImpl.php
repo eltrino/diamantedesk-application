@@ -152,7 +152,7 @@ class RuleServiceImpl implements RuleService
         $this->workflowRuleRepository->remove($rule);
     }
 
-    public function createBusinessRuleJob($ruleId)
+    public function createWorkflowRuleJob($ruleId)
     {
         $args = [
             '--rule-id=' . $ruleId
