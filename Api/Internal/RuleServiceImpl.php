@@ -29,7 +29,7 @@ class RuleServiceImpl implements RuleService
 {
     const MODE_BUSINESS = 'business';
     const MODE_WORKFLOW = 'workflow';
-    const JOB_NAME = 'diamante:automation:rule:run';
+    const JOB_NAME = 'diamante:workflow:rule:run';
 
     /**
      * @var string
@@ -162,6 +162,11 @@ class RuleServiceImpl implements RuleService
         $em = $this->registry->getManagerForClass('JMSJobQueueBundle:Job');
         $em->persist($job);
         $em->flush();
+    }
+
+    public function createCronJob()
+    {
+
     }
 
     public function actionRule($data, $action)
