@@ -43,6 +43,7 @@
         </service>
 
         <service id="diamante.rule.service" class="%diamante.rule.service.class%">
+            <argument type="service" id="doctrine"/>
             <argument type="service" id="diamante_automation.workflow_rule.repository"/>
             <argument type="service" id="diamante_automation.business_rule.repository"/>
         </service>

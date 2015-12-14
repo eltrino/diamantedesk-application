@@ -22,31 +22,46 @@ use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\AutomationBundle\Entity\WorkflowAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
-use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
+use JMS\JobQueueBundle\Entity\Job;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RuleServiceImpl implements RuleService
 {
     const MODE_BUSINESS = 'business';
     const MODE_WORKFLOW = 'workflow';
+    const JOB_NAME = 'diamante:automation:rule:run';
 
     /**
      * @var string
      */
     protected $mode;
+
+    /**
+     * @var RegistryInterface
+     */
+    protected $registry;
+
     /**
      * @var DoctrineGenericRepository
      */
     private $workflowRuleRepository;
+
     /**
      * @var DoctrineGenericRepository
      */
     private $businessRuleRepository;
 
-
+    /**
+     * @param RegistryInterface         $registry
+     * @param DoctrineGenericRepository $workflowRuleRepository
+     * @param DoctrineGenericRepository $businessRuleRepository
+     */
     public function __construct(
+        RegistryInterface $registry,
         DoctrineGenericRepository $workflowRuleRepository,
         DoctrineGenericRepository $businessRuleRepository
     ) {
+        $this->registry               = $registry;
         $this->workflowRuleRepository = $workflowRuleRepository;
         $this->businessRuleRepository = $businessRuleRepository;
     }
@@ -135,6 +150,18 @@ class RuleServiceImpl implements RuleService
     {
         $rule = $this->loadWorkflowRule($command);
         $this->workflowRuleRepository->remove($rule);
+    }
+
+    public function createBusinessRuleJob($ruleId)
+    {
+        $args = [
+            '--rule-id=' . $ruleId
+        ];
+
+        $job = new Job(self::JOB_NAME, $args);
+        $em = $this->registry->getManagerForClass('JMSJobQueueBundle:Job');
+        $em->persist($job);
+        $em->flush();
     }
 
     public function actionRule($data, $action)
