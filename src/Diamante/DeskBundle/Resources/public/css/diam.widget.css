@@ -125,3 +125,17 @@
 .diam-plot .tooltip-holder:hover line {
   opacity: 1;
 }
+
+.diam .legend {
+  font: 12px sans-serif;
+}
+
+.diam-plot .legend-block {
+  fill-opacity: .5;
+  rx: 5;
+  ry: 5;
+}
+
+.diam-plot .legend text {
+  fill: #fff;
+}

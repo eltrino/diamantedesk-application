@@ -130,6 +130,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
     var color = d3.scale.ordinal().domain(keys).range(palette[keys.length]);
 
     populateData(data);
+
     var tickets = color.domain().map(function(name) {
       return {
         name: name,
@@ -270,12 +271,55 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         .attr("y", -6)
         .attr("height", h2 + 7);
 
-    //ticket.append("text")
-    //    .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-    //    .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.state) + ")"; })
-    //    .attr("x", 3)
-    //    .attr("dy", ".35em")
-    //    .text(function(d) { return d.name; });
+    var legend = _.map(keys, function(key){
+      return {
+        key: key,
+        color: color(key)
+      };
+    });
+
+    var legendBox = focus.selectAll('.legend')
+        .data([true]).enter()
+        .append('g')
+        .attr('class', 'legend');
+
+    var legendBlock = legendBox.selectAll('.legend-block')
+        .data([true]).enter()
+        .append('rect')
+        .attr('class', 'legend-block');
+
+    var legendItem = legendBox.selectAll('.legend-item')
+        .data([true]).enter()
+        .append('g')
+        .attr('class', 'legend-item');
+
+    legendItem.selectAll("text")
+        .data(legend, function(d) { return d.key})
+        .call(function(d) { d.enter().append("text")})
+        .call(function(d) { d.exit().remove()})
+        .attr("y",function(d,i) { return i + 0.1+"em"})
+        .attr("x","1em")
+        .text(function(d) { return d.key; });
+
+    legendItem.selectAll("circle")
+        .data(legend, function(d) { return d.key})
+        .call(function(d) { d.enter().append("circle")})
+        .call(function(d) { d.exit().remove()})
+        .attr("cy",function(d,i) { return i-0.25+"em"})
+        .attr("cx",0)
+        .attr("r","0.4em")
+        .style("fill",function(d) { console.log(d.color); return d.color; });
+
+    var bbox = legendItem[0][0].getBBox(),
+        padding = 8;
+    legendBlock.attr("x",(bbox.x-padding))
+        .attr("y",(bbox.y-padding))
+        .attr("height",(bbox.height+2*padding))
+        .attr("width",(bbox.width+2*padding));
+
+
+    legendBox
+        .attr("transform", function(){ return "translate("+ (width - legendBlock.attr('width')) +", 30)"});
 
     resizeGroupedLine[parent.id] = function () {
       var w = elem.clientWidth,
@@ -327,6 +371,9 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
 
       context.select('.x.axis')
           .call(xAxis2);
+
+      legendBox
+          .attr("transform", function(){ return "translate("+ (width - legendBlock.attr('width')) +", 30)"});
 
       focus.selectAll('.line').attr("d", function(d) { return line(d.values); });
       context.selectAll('.line').attr("d", function(d) { return line2(d.values); });
