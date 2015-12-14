@@ -34,7 +34,6 @@ class RuleServiceImpl implements RuleService
     const HOUR_MAX_INTERVAL = 24;
     const MINUTE_MIN_INTERVAL = 1;
     const MINUTE_MAX_INTERVAL = 60;
-    const CRON_EXPRESSION = '*/m */h * * *';
 
     protected $cronExpressions
         = [
