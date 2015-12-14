@@ -22,7 +22,7 @@ use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\AutomationBundle\Entity\WorkflowAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
-use JMS\JobQueueBundle\Entity\Job;
+use Oro\Bundle\CronBundle\Entity\Schedule;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RuleServiceImpl implements RuleService
@@ -30,6 +30,17 @@ class RuleServiceImpl implements RuleService
     const MODE_BUSINESS = 'business';
     const MODE_WORKFLOW = 'workflow';
     const JOB_NAME = 'diamante:workflow:rule:run';
+    const HOUR_MIN_INTERVAL = 1;
+    const HOUR_MAX_INTERVAL = 24;
+    const MINUTE_MIN_INTERVAL = 1;
+    const MINUTE_MAX_INTERVAL = 60;
+    const CRON_EXPRESSION = '*/m */h * * *';
+
+    protected $cronExpressions
+        = [
+            'm' => '*/%d * * * *',
+            'h' => '0 */%d * * * '
+        ];
 
     /**
      * @var string
@@ -61,7 +72,7 @@ class RuleServiceImpl implements RuleService
         DoctrineGenericRepository $workflowRuleRepository,
         DoctrineGenericRepository $businessRuleRepository
     ) {
-        $this->registry               = $registry;
+        $this->registry = $registry;
         $this->workflowRuleRepository = $workflowRuleRepository;
         $this->businessRuleRepository = $businessRuleRepository;
     }
@@ -152,21 +163,18 @@ class RuleServiceImpl implements RuleService
         $this->workflowRuleRepository->remove($rule);
     }
 
-    public function createWorkflowRuleJob($ruleId)
+    public function createCronJob($ruleId, $name, $timeInterval)
     {
-        $args = [
-            '--rule-id=' . $ruleId
-        ];
+        $command = sprintf('%s --rule-id=%d', $name, $ruleId);
+        $schedule = new Schedule();
+        $schedule->setCommand($command)
+            ->setDefinition($this->getCronExpression($timeInterval));
 
-        $job = new Job(self::JOB_NAME, $args);
-        $em = $this->registry->getManagerForClass('JMSJobQueueBundle:Job');
-        $em->persist($job);
+        $em = $this->registry->getEntityManager();
+        $em->persist($schedule);
         $em->flush();
-    }
 
-    public function createCronJob()
-    {
-
+        return $schedule;
     }
 
     public function actionRule($data, $action)
@@ -235,5 +243,37 @@ class RuleServiceImpl implements RuleService
         return function ($action, $rule) {
             return new WorkflowAction($action['type'], $action['parameters'], $rule);
         };
+    }
+
+    private function getCronExpression($timeInterval)
+    {
+        preg_match('/^(\d+)(m|h)$/i', $timeInterval, $matches);
+        $value = $matches[1];
+        $timeUnit = $matches[2];
+
+        switch ($timeUnit) {
+            case 'm':
+                $this->inRange($value, self::MINUTE_MIN_INTERVAL, self::MINUTE_MAX_INTERVAL);
+                break;
+            case 'h':
+                $this->inRange($value, self::HOUR_MIN_INTERVAL, self::HOUR_MAX_INTERVAL);
+                break;
+            default:
+                throw new \RuntimeException('Incorrect time interval.');
+        }
+
+        $cronExpression = sprintf($this->cronExpressions[$timeUnit], $value);
+
+        return $cronExpression;
+    }
+
+    private function inRange($value, $min, $max)
+    {
+        $range = range($min, $max);
+        if (!in_array($value, $range)) {
+            throw new \RuntimeException('Incorrect time interval.');
+        }
+
+        return true;
     }
 }
