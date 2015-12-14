@@ -29,14 +29,12 @@ class RuleServiceImpl implements RuleService
 {
     const MODE_BUSINESS = 'business';
     const MODE_WORKFLOW = 'workflow';
-    const JOB_NAME = 'diamante:workflow:rule:run';
     const HOUR_MIN_INTERVAL = 1;
     const HOUR_MAX_INTERVAL = 24;
     const MINUTE_MIN_INTERVAL = 1;
     const MINUTE_MAX_INTERVAL = 60;
 
-    protected $cronExpressions
-        = [
+    protected $cronExpressions = [
             'm' => '*/%d * * * *',
             'h' => '0 */%d * * * '
         ];
@@ -162,6 +160,13 @@ class RuleServiceImpl implements RuleService
         $this->workflowRuleRepository->remove($rule);
     }
 
+    /**
+     * @param integer $ruleId
+     * @param string  $name
+     * @param string  $timeInterval
+     *
+     * @return Schedule
+     */
     public function createCronJob($ruleId, $name, $timeInterval)
     {
         $command = sprintf('%s --rule-id=%d', $name, $ruleId);
@@ -244,6 +249,11 @@ class RuleServiceImpl implements RuleService
         };
     }
 
+    /**
+     * @param string $timeInterval
+     *
+     * @return string
+     */
     private function getCronExpression($timeInterval)
     {
         preg_match('/^(\d+)(m|h)$/i', $timeInterval, $matches);
@@ -266,6 +276,13 @@ class RuleServiceImpl implements RuleService
         return $cronExpression;
     }
 
+    /**
+     * @param integer $value
+     * @param integer $min
+     * @param integer $max
+     *
+     * @return bool
+     */
     private function inRange($value, $min, $max)
     {
         $range = range($min, $max);
