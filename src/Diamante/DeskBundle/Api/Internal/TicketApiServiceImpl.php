@@ -484,9 +484,6 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
 
         $tickets = $strategy->afterResult($tickets, $this->tagManager);
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria, $strategy->getCountCallback());
-        $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
-
         return $tickets;
     }
 

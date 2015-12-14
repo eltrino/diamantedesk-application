@@ -177,13 +177,13 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     {
         $qb = $this->_em->createQueryBuilder();
 
-        if (is_callable($callback)) {
-            call_user_func_array($callback, ['qb' => $qb, 'entityName' => $this->_entityName]);
-        }
-
         foreach ($criteria as $condition) {
             $whereExpression = $this->buildWhereExpression($qb, $condition);
             $qb->orWhere($whereExpression);
+        }
+
+        if (is_callable($callback)) {
+            call_user_func_array($callback, ['qb' => $qb, 'entityName' => $this->_entityName]);
         }
 
         $query = $qb->getQuery();
