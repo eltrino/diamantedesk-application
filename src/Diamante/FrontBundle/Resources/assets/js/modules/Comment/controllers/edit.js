@@ -33,6 +33,10 @@ define(['app'], function(App){
                 require(['Comment/controllers/create'],function(Create){
                   formView.hideLoader();
                   Create.Controller(options);
+                  App.trigger('message:show', {
+                    status:'success',
+                    text: 'Your comment has been edited'
+                  });
                 });
               },
               error : function(model, xhr){

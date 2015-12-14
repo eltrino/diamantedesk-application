@@ -13,6 +13,12 @@ define(['app'], function(App){
       watcherCollectionView.on('childview:watcher:delete', function(childView, watcherModel){
         watcherModel.destroy({
           wait: true,
+          success : function(){
+            App.trigger('message:show', {
+              status:'success',
+              text: 'A watcher has been removed from the ticket'
+            });
+          },
           error : function(model, xhr){
             App.alert({
               title: "Delete Comment Error",

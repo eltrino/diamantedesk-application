@@ -13,6 +13,12 @@ define(['app'], function(App){
       commentCollectionView.on('childview:comment:delete', function(childView, commentModel){
         commentModel.destroy({
           wait: true,
+          success: function(){
+            App.trigger('message:show', {
+              status:'success',
+              text: 'Your comment was successfully deleted'
+            });
+          },
           error : function(model, xhr){
             App.alert({
               title: "Delete Comment Error",

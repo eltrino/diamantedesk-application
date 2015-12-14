@@ -26,6 +26,10 @@ define(['app'], function(App){
             success: function(model){
               watcherCollection.add(model);
               modalAddView.$el.modal('hide');
+              App.trigger('message:show', {
+                status:'success',
+                text: 'A new watcher has been successfully added to the ticket'
+              });
             },
             error: function(model, xhr){
               App.alert({

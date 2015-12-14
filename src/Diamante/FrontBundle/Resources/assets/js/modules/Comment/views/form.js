@@ -13,6 +13,7 @@ define([
         dropRegion : '#comment-attachment-drop'
       },
       initialize : function(options){
+        this.isNew = options.model.isNew();
         this.attachmentCollection = options.attachmentCollection;
       },
       onShow : function(){
@@ -38,6 +39,10 @@ define([
         });
 
         CommonForm.LayoutView.prototype.onShow.call(this);
+
+        if(!this.isNew) {
+          jQuery(window).add('body').animate({'scrollTop': this.$el.offset().top});
+        }
 
       }
     });
