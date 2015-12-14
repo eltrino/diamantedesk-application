@@ -115,7 +115,7 @@
 }
 
 .diam-plot .tooltip-holder line {
-  stroke: #5EBCD2;
+  stroke: #000;
   stroke-width: 2px;
   opacity: 0;
   -webkit-transition: opacity .5s;
