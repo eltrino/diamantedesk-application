@@ -43,3 +43,12 @@ input[type=text].hasDatepicker.ui-datepicker-dialog-is-below:focus,
 .datetimepicker-dialog-is-below.timepicker-error + span.validation-failed:after {
   left: 0;
 }
+
+
+/*
+ * DIAM-1358 Part of the mass action menu is hidden.
+ * temporary fix till oro fix bug with dropdowns in grid
+ */
+.container-fluid.grid-scrollable-container {
+  overflow: visible;
+}
