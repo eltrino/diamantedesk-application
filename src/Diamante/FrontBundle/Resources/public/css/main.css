@@ -8136,6 +8136,9 @@ h1,
   padding: 4px 8px;
   margin: 4px -10px 0 0;
 }
+.ticket-actions .btn:focus {
+  box-shadow: none;
+}
 .ticket-actions i {
   border-bottom: 2px #50828e solid;
   padding-bottom: 2px;
@@ -8264,6 +8267,9 @@ h1,
   line-height: 1;
   padding: 0;
   color: #D8D8D8;
+}
+.comment-tools .btn:focus {
+  box-shadow: none;
 }
 .comment-tools .btn:hover {
   color: #446e78;
@@ -8469,6 +8475,9 @@ h1,
   color: #D8D8D8;
   padding: 0;
 }
+.attachment-tools .btn:focus {
+  box-shadow: none;
+}
 .attachment-tools .btn:hover {
   color: #446e78;
 }
@@ -8529,8 +8538,11 @@ h1,
 .watchers-item .btn {
   float: right;
   line-height: 1;
-  color: #000000;
+  color: #D8D8D8;
   padding: 0;
+}
+.watchers-item .btn:focus {
+  box-shadow: none;
 }
 .watchers-item .btn:hover {
   color: #446e78;
