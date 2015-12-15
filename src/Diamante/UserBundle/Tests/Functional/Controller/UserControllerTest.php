@@ -24,7 +24,7 @@ class UserControllerTest extends AbstractController
     {
         $this->initClient(
             array(),
-            array_merge($this->generateBasicAuthHeader('admin', '31e1ce9C'), array('HTTP_X-CSRF-Header' => 1))
+            array_merge($this->generateBasicAuthHeader('admin', '123123q'), array('HTTP_X-CSRF-Header' => 1))
         );
     }
 
@@ -60,7 +60,7 @@ class UserControllerTest extends AbstractController
         $crawler = $this->client->request('POST', $createUrl);
 
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['diamante_user_create[email]']        = 'newly_created_user@example.com';
+        $form['diamante_user_create[email]']        = $this->getRandomMail();
         $form['diamante_user_create[firstName]']    = 'First';
         $form['diamante_user_create[lastName]']     = 'Last';
 
@@ -69,7 +69,7 @@ class UserControllerTest extends AbstractController
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Diamante User successfully created", $crawler->html());
+        $this->assertContains("Customer successfully created.", $crawler->html());
     }
 
     public function testUpdate()
@@ -79,7 +79,7 @@ class UserControllerTest extends AbstractController
         $crawler = $this->client->request('GET', $updateUrl);
 
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['diamante_user_update[email]']        = 'updated_email@example.com';
+        $form['diamante_user_update[email]']        = $this->getRandomMail();
         $form['diamante_user_update[firstName]']    = 'First';
         $form['diamante_user_update[lastName]']     = 'Last';
         $this->client->followRedirects(true);
@@ -87,7 +87,7 @@ class UserControllerTest extends AbstractController
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains("Diamante User successfully updated", $crawler->html());
+        $this->assertContains("Customer successfully updated.", $crawler->html());
     }
 
     public function testDelete()
@@ -108,6 +108,11 @@ class UserControllerTest extends AbstractController
         $response = $this->client->getResponse();
 
         $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    protected function getRandomMail()
+    {
+        return sprintf('newly_created_user%d@example.com', microtime(true) * 1000);
     }
 
     /**
