@@ -13,7 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider;
+namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
 class CommentUpdated extends AbstractProvider
 {
