@@ -67,6 +67,12 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $apiUserRepository;
 
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @Mock \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -75,7 +81,8 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
             $this->diamanteUserRepository,
             $this->diamanteUserFactory,
             $this->attachmentManager,
-            $this->apiUserRepository
+            $this->apiUserRepository,
+            $this->eventDispatcher
         );
     }
 
