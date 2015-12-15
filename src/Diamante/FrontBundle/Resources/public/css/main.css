@@ -7618,107 +7618,6 @@ body {
     padding-right: 0;
   }
 }
-.modal-header {
-  border-bottom: none;
-  text-transform: uppercase;
-}
-.modal-header .close {
-  display: none;
-}
-.modal-content {
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-}
-.modal-content .form-group {
-  margin-bottom: 35px;
-}
-.modal-content .form-group label {
-  font-size: 14px;
-  font-weight: normal;
-  color: #949696;
-  line-height: 14px;
-}
-.modal-content .form-group input[type="text"],
-.modal-content .form-group input[type="password"] {
-  box-shadow: none;
-  color: #000;
-  line-height: 17px;
-  font-size: 17px;
-  background: none;
-  border-radius: 0;
-  border: solid rgba(0, 0, 0, 0.5);
-  border-width: 0 0 1px;
-  height: 34px;
-  padding: 5px 0;
-}
-.modal-content .form-group .progress {
-  height: 4px;
-  border-radius: 0;
-  box-shadow: none;
-  margin: 5px 0;
-}
-.modal-content .form-group .progress .progress-bar {
-  height: 4px;
-  box-shadow: none;
-}
-.modal-content .form-group .password-verdict {
-  color: #949696;
-  height: auto;
-  margin: 0;
-  text-align: left;
-}
-.modal-content .dropzone {
-  background: none;
-  border-radius: 0;
-  border-color: #d0d0d0;
-}
-.modal-content .dropzone label {
-  color: #949696;
-  padding: 20px;
-}
-.modal-footer {
-  border-top: 0;
-  text-align: center;
-}
-.modal-alert .modal-dialog {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  display: table;
-}
-.modal-alert .modal-content {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}
-.modal-alert .modal-header,
-.modal-alert .modal-body {
-  width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.modal-alert .modal-header .status {
-  margin: 0 auto;
-  width: 72px;
-  height: 72px;
-  border: 5px solid;
-  text-align: center;
-  line-height: 62px;
-  font-size: 40px;
-  border-radius: 50%;
-  margin-bottom: 15px;
-}
-.modal-alert .modal-header .status .fa {
-  line-height: inherit;
-  width: 62px;
-}
-.modal-alert .modal-header .status-error {
-  color: #F17356;
-}
-.modal-alert .modal-body {
-  text-align: left;
-}
 #footer {
   background: #525252;
 }
@@ -7793,11 +7692,110 @@ h1,
   box-shadow: 0 0 8px #000000;
   outline: 0 none;
 }
+.modal-dialog {
+  height: 100%;
+  margin: 0 auto;
+  display: table;
+}
+.modal-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.modal-header {
+  border-bottom: none;
+  text-transform: uppercase;
+}
+.modal-header .close {
+  display: none;
+}
 .modal-body .alert {
   font-size: 95%;
 }
+.modal-content {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.modal-content .form-group {
+  margin-bottom: 35px;
+}
+.modal-content .form-group label {
+  font-size: 14px;
+  font-weight: normal;
+  color: #949696;
+  line-height: 14px;
+}
+.modal-content .form-group input[type="text"],
+.modal-content .form-group input[type="password"] {
+  box-shadow: none;
+  color: #000;
+  line-height: 17px;
+  font-size: 17px;
+  background: none;
+  border-radius: 0;
+  border: solid rgba(0, 0, 0, 0.5);
+  border-width: 0 0 1px;
+  height: 34px;
+  padding: 5px 0;
+}
+.modal-content .form-group .progress {
+  height: 4px;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 5px 0;
+}
+.modal-content .form-group .progress .progress-bar {
+  height: 4px;
+  box-shadow: none;
+}
+.modal-content .form-group .password-verdict {
+  color: #949696;
+  height: auto;
+  margin: 0;
+  text-align: left;
+}
+.modal-content .dropzone {
+  background: none;
+  border-radius: 0;
+  border-color: #d0d0d0;
+}
+.modal-content .dropzone label {
+  color: #949696;
+  padding: 20px;
+}
+.modal-footer {
+  border-top: 0;
+  text-align: center;
+}
 .modal-footer .btn {
   min-width: 126px;
+}
+.modal-alert .modal-dialog {
+  width: 320px;
+}
+.modal-alert .modal-content {
+  text-align: center;
+}
+.modal-alert .modal-header .status {
+  margin: 0 auto;
+  width: 72px;
+  height: 72px;
+  border: 5px solid;
+  text-align: center;
+  line-height: 62px;
+  font-size: 40px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+.modal-alert .modal-header .status .fa {
+  line-height: inherit;
+  width: 62px;
+}
+.modal-alert .modal-header .status-error {
+  color: #F17356;
+}
+.modal-alert .modal-body {
+  text-align: left;
 }
 .loader {
   font-size: 1.3em;
