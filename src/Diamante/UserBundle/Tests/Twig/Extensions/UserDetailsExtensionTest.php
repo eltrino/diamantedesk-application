@@ -44,7 +44,14 @@ class UserDetailsExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFunctions()
     {
-        $expectedFunctions = array('fetch_user_details', 'fetch_oro_user', 'get_gravatar', 'fetch_diamante_user', 'render_user_name');
+        $expectedFunctions = array(
+            'fetch_user_details',
+            'fetch_oro_user',
+            'get_gravatar',
+            'fetch_diamante_user',
+            'render_user_name',
+            'is_diamante_user_deleted'
+        );
 
         $actualFunctions = $this->userDetailsExtension->getFunctions();
 
