@@ -66,6 +66,7 @@ class DiamanteDeskExtension extends Extension implements PrependExtensionInterfa
         $loader->load('attachment.xml');
         $loader->load('ticket.xml');
         $loader->load('form.xml');
+        $loader->load('notifications.xml');
         $loader->load('mass_actions.xml');
     }
 }
