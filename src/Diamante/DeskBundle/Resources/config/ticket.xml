@@ -39,6 +39,7 @@
 
         <parameter key="diamante.comment.service.class">Diamante\DeskBundle\Api\Internal\CommentServiceImpl</parameter>
         <parameter key="diamante.comment.service.api.class">Diamante\DeskBundle\Api\Internal\CommentApiServiceImpl</parameter>
+        <parameter key="diamante.comment.serialize.handler.class">Diamante\DeskBundle\Serializer\CommentAuthorHandler</parameter>
         <parameter key="diamante.ticket.datagrid_status_helper.class">Diamante\DeskBundle\Datagrid\StatusHelper</parameter>
         <parameter key="diamante.ticket.datagrid_priority_helper.class">Diamante\DeskBundle\Datagrid\PriorityHelper</parameter>
 
@@ -146,6 +147,11 @@
         <service id="diamante.comment.api.service_diamante" alias="diamante.comment.api.service" />
 
         <service id="diamante.comment.api.service_oro" alias="diamante.comment.api.service" />
+
+        <service id="diamante.comment.serialize.handler" class="%diamante.comment.serialize.handler.class%">
+            <argument type="service" id="diamante.user.service"/>
+            <tag name="jms_serializer.subscribing_handler"/>
+        </service>
 
         <service id="diamante.ticket.datagrid_status_helper" class="%diamante.ticket.datagrid_status_helper.class%"/>
         <service id="diamante.ticket.datagrid_priority_helper" class="%diamante.ticket.datagrid_priority_helper.class%"/>

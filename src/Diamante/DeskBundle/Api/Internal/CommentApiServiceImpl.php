@@ -320,7 +320,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     {
         $criteriaProcessor = new CommentFilterCriteriaProcessor();
         $repository = $this->getCommentsRepository();
-        $pagingProperties = $this->buildPagination($criteriaProcessor, $repository, $command, $this->apiPagingService);
+        $pagingProperties = $this->buildPagination($criteriaProcessor, $repository, $command, $this->apiPagingService, null);
         $criteria = $criteriaProcessor->getCriteria();
 
         $comments = $repository->filter($criteria, $pagingProperties);
