@@ -116,14 +116,15 @@
 
 .diam-plot .tooltip-holder line {
   stroke: #000;
-  stroke-width: 2px;
-  opacity: 0;
+  stroke-width: 1px;
+  stroke-dasharray: 10,10;
+  opacity: .1;
   -webkit-transition: opacity .5s;
   transition: opacity .5s;
 }
 
 .diam-plot .tooltip-holder:hover line {
-  opacity: 1;
+  opacity: .5;
 }
 
 .diam .legend {
