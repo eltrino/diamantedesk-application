@@ -78,11 +78,15 @@ define(['app', 'config', 'tinymce'], function(App, Config){
       },
 
       onShow: function() {
-        var textarea = this.$('textarea');
+        var textarea = this.$('textarea'),
+            modal = textarea.parents(':hidden').last();
         if(textarea.tinymce()){
           textarea.tinymce().remove();
         }
+        // fix for tinymce height calculation
+        modal.show();
         textarea.tinymce(tinymce_options);
+        modal.hide();
       }
 
     });
