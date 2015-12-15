@@ -24,20 +24,12 @@ use Diamante\AutomationBundle\Entity\WorkflowAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Oro\Bundle\CronBundle\Entity\Schedule;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Diamante\AutomationBundle\Infrastructure\Shared\ExpressionValidator;
 
 class RuleServiceImpl implements RuleService
 {
     const MODE_BUSINESS = 'business';
     const MODE_WORKFLOW = 'workflow';
-    const HOUR_MIN_INTERVAL = 1;
-    const HOUR_MAX_INTERVAL = 24;
-    const MINUTE_MIN_INTERVAL = 1;
-    const MINUTE_MAX_INTERVAL = 60;
-
-    protected $cronExpressions = [
-            'm' => '*/%d * * * *',
-            'h' => '0 */%d * * * '
-        ];
 
     /**
      * @var string
@@ -170,9 +162,10 @@ class RuleServiceImpl implements RuleService
     public function createCronJob($ruleId, $name, $timeInterval)
     {
         $command = sprintf('%s --rule-id=%d', $name, $ruleId);
+        $cronExpression = ExpressionValidator::validate($timeInterval);
         $schedule = new Schedule();
         $schedule->setCommand($command)
-            ->setDefinition($this->getCronExpression($timeInterval));
+            ->setDefinition($cronExpression);
 
         $em = $this->registry->getEntityManager();
         $em->persist($schedule);
@@ -247,49 +240,5 @@ class RuleServiceImpl implements RuleService
         return function ($action, $rule) {
             return new WorkflowAction($action['type'], $action['parameters'], $rule);
         };
-    }
-
-    /**
-     * @param string $timeInterval
-     *
-     * @return string
-     */
-    private function getCronExpression($timeInterval)
-    {
-        preg_match('/^(\d+)(m|h)$/i', $timeInterval, $matches);
-        $value = $matches[1];
-        $timeUnit = $matches[2];
-
-        switch ($timeUnit) {
-            case 'm':
-                $this->inRange($value, self::MINUTE_MIN_INTERVAL, self::MINUTE_MAX_INTERVAL);
-                break;
-            case 'h':
-                $this->inRange($value, self::HOUR_MIN_INTERVAL, self::HOUR_MAX_INTERVAL);
-                break;
-            default:
-                throw new \RuntimeException('Incorrect time interval.');
-        }
-
-        $cronExpression = sprintf($this->cronExpressions[$timeUnit], $value);
-
-        return $cronExpression;
-    }
-
-    /**
-     * @param integer $value
-     * @param integer $min
-     * @param integer $max
-     *
-     * @return bool
-     */
-    private function inRange($value, $min, $max)
-    {
-        $range = range($min, $max);
-        if (!in_array($value, $range)) {
-            throw new \RuntimeException('Incorrect time interval.');
-        }
-
-        return true;
     }
 }
