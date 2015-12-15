@@ -15,12 +15,6 @@
         <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
         <parameter key="diamante_automation.generic.target.provider.class">Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider</parameter>
         <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction</parameter>
-        <parameter key="diamante_automation.notification.option_provider.ticket_created.class">Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider\TicketCreated</parameter>
-        <parameter key="diamante_automation.notification.option_provider.ticket_updated.class">Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider\TicketUpdated</parameter>
-        <parameter key="diamante_automation.notification.option_provider.ticket_removed.class">Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider\TicketRemoved</parameter>
-        <parameter key="diamante_automation.notification.option_provider.comment_created.class">Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider\CommentCreated</parameter>
-        <parameter key="diamante_automation.notification.option_provider.comment_updated.class">Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider\CommentUpdated</parameter>
-        <parameter key="diamante_automation.notification.option_provider.comment_removed.class">Diamante\AutomationBundle\Infrastructure\Notification\OptionProvider\CommentRemoved</parameter>
     </parameters>
 
     <services>
@@ -63,30 +57,6 @@
         <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%">
             <argument type="service" id="diamante.notification_manager"/>
             <argument type="service" id="service_container"/>
-        </service>
-
-        <service id="diamante_automation.notification.option_provider.ticket_created" class="%diamante_automation.notification.option_provider.ticket_created.class%">
-            <tag name="diamante.notification.options.provider"/>
-        </service>
-
-        <service id="diamante_automation.notification.option_provider.ticket_updated" class="%diamante_automation.notification.option_provider.ticket_updated.class%">
-            <tag name="diamante.notification.options.provider"/>
-        </service>
-
-        <service id="diamante_automation.notification.option_provider.ticket_removed" class="%diamante_automation.notification.option_provider.ticket_removed.class%">
-            <tag name="diamante.notification.options.provider"/>
-        </service>
-
-        <service id="diamante_automation.notification.option_provider.comment_created" class="%diamante_automation.notification.option_provider.comment_created.class%">
-            <tag name="diamante.notification.options.provider"/>
-        </service>
-
-        <service id="diamante_automation.notification.option_provider.comment_updated" class="%diamante_automation.notification.option_provider.comment_updated.class%">
-            <tag name="diamante.notification.options.provider"/>
-        </service>
-
-        <service id="diamante_automation.notification.option_provider.comment_removed" class="%diamante_automation.notification.option_provider.comment_removed.class%">
-            <tag name="diamante.notification.options.provider"/>
         </service>
 
         <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
