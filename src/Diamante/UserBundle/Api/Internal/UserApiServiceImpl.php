@@ -87,6 +87,41 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
     }
 
     /**
+     * Retrieves DiamanteUser data if one exists
+     *
+     * @ApiDoc(
+     *  description="Returns person data",
+     *  uri="/users/{id}.{_format}",
+     *  method="GET",
+     *  resource=true,
+     *  requirements={
+     *       {
+     *           "name"="id",
+     *           "dataType"="integer",
+     *           "description"="Diamante User Id"
+     *       }
+     *   },
+     *  statusCodes={
+     *      200="Returned when successful",
+     *      400="Returned when user not found",
+     *      403="Returned when the user is not authorized to view diamante users"
+     *  }
+     * )
+     *
+     * @param $id
+     * @return DiamanteUser
+     */
+    public function getDiamanteUserById($id)
+    {
+        $user = parent::getDiamanteUser(new User($id, User::TYPE_DIAMANTE));
+        if (!$user) {
+            throw new EntityNotFoundException('User not found.');
+        }
+
+        return $user;
+    }
+
+    /**
      * Retrieves all Diamante Users
      *
      * @ApiDoc(
