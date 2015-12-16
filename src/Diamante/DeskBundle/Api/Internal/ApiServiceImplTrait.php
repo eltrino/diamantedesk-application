@@ -76,7 +76,7 @@ trait ApiServiceImplTrait
         FilterableRepository $repository,
         FilteringCommand $command,
         ApiPagingService $service,
-        $countCallback
+        $countCallback = null
     ){
         $processor->setCommand($command);
         $criteria = $processor->getCriteria();
