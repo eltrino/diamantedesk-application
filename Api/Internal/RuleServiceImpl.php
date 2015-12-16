@@ -161,7 +161,7 @@ class RuleServiceImpl implements RuleService
      */
     public function createCronJob($ruleId, $name, $timeInterval)
     {
-        $command = sprintf('%s --rule-id=%d', $name, $ruleId);
+        $command = sprintf('%s --rule-id=%s', $name, $ruleId);
         $cronExpression = ExpressionValidator::validate($timeInterval);
         $schedule = new Schedule();
         $schedule->setCommand($command)
