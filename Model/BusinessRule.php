@@ -25,10 +25,11 @@ class BusinessRule extends Rule
         $this->timeInterval = $timeInterval;
     }
 
-    public function update($name, $timeInterval)
+    public function update($name, $timeInterval, $active)
     {
         $this->name = $name;
         $this->timeInterval = $timeInterval;
+        $this->active = $active;
     }
 
     public function getTimeInterval()

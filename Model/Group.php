@@ -71,12 +71,17 @@ class Group implements Entity
         $this->updatedAt = clone $this->createdAt;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function getParent()
     {
         return $this->parent;
     }
 
-    public function setParent($parent)
+    public function setParent(Group $parent)
     {
         $this->parent = $parent;
 
