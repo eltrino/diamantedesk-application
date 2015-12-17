@@ -82,7 +82,7 @@ define([
       },
       onShow: function(){
         if(this.isSearch){
-          this.$el.before('<p><a class="btn btn-link js-back" href="#tickets"><span class="fa fa-chevron-left"></span>View all tickets</a></p>');
+          this.$el.before('<p><a class="btn btn-link btn-back js-back" href="#tickets"><span class="fa fa-caret-left"></span>View all tickets</a></p>');
         }
       }
 

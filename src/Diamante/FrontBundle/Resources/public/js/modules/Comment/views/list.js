@@ -17,19 +17,11 @@ define([
       },
 
       templateHelpers: function(){
-        var author = this.model.get('authorModel'),
-            avatar_url, author_name;
-        if(author){
-          avatar_url = author.get('avatar') || 'http://www.gravatar.com/avatar/'+ MD5(author.get('email')) +'?s=40&d=identicon';
-          author_name = author.get('name') || author.get('email');
-        } else {
-          avatar_url = 'http://www.gravatar.com/avatar/undefined?s=32&d=mm';
-          author_name = 'Loading...';
-        }
+        var author = this.model.get('author');
         return {
-          is_author: this.model.get('author') === App.session.get('id'),
-          avatar_url : avatar_url,
-          author_name : author_name,
+          is_author: author.email === App.session.get('email'),
+          avatar_url : author.avatar || 'http://www.gravatar.com/avatar/'+ MD5(author.email) +'?s=40&d=identicon',
+          author_name : author.name || author.email,
           attach_link : function(hash){
             return Config.baseUrl.replace('diamantefront','desk') + 'attachments/download/file/' + hash;
           },

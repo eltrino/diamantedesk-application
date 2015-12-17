@@ -295,7 +295,7 @@ class TicketControllerTest extends AbstractController
         $this->client->followRedirects(true);
         $crawler = $this->client->request('GET', $ticketWatchUrl);
 
-        $this->assertContains("Now you watching the ticket.", $crawler->html());
+        $this->assertContains("You are watching the ticket now.", $crawler->html());
     }
 
     public function testUnWatch()
@@ -306,7 +306,7 @@ class TicketControllerTest extends AbstractController
         $this->client->followRedirects(true);
         $crawler = $this->client->request('GET', $ticketWatchUrl);
 
-        $this->assertContains("You successfully unsubscribe from watching of ticket", $crawler->html());
+        $this->assertContains("You have successfully unsubscribed from watching the ticket.", $crawler->html());
     }
 
     private function chooseBranchFromGrid()

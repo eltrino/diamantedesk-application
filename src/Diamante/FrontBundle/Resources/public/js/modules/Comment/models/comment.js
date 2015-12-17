@@ -13,7 +13,6 @@ define([
       },
 
       initialize: function(attr, options){
-        this.fetchAuthor();
         if(options.ticket){
           this.set({
             ticket : options.ticket.get('id'),
@@ -29,23 +28,6 @@ define([
         }
         if(!_.isEmpty(errors)){
           return errors;
-        }
-      },
-
-      fetchAuthor : function(){
-        var model = this,
-            author;
-        if(model.get('author')){
-          require(['Comment/models/author'], function(Author){
-            author = new Author.Model({}, { comment : model });
-            author.fetch({
-              success: function(){
-                model.set({
-                  'authorModel': author
-                });
-              }
-            });
-          });
         }
       }
 

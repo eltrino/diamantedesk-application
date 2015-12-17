@@ -7791,9 +7791,6 @@ h1,
   line-height: inherit;
   width: 62px;
 }
-.modal-alert .modal-header .status-error {
-  color: #F17356;
-}
 .modal-alert .modal-body {
   text-align: left;
 }
@@ -8294,9 +8291,6 @@ h1,
 }
 .comments-form .dropzone {
   margin-bottom: 15px;
-}
-.comments-form .dropzone br {
-  display: none;
 }
 .comment-attachments-block {
   border-top: 1px #e6e6e6 solid;
