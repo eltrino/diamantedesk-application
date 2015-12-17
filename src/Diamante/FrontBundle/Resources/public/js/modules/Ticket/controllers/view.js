@@ -100,7 +100,7 @@ define(['app'], function(App){
             key = decodeURIComponent(link.href.replace(model.urlRoot,'').replace('/',''));
             App.trigger('message:show', {
               status:'info',
-              text: 'This ticket was moved, so we automatically redirected you there'
+              text: 'While we were actively working on your ticket, its key was changed to ' + key
             });
             App.trigger('ticket:view', key, backUrl);
           } else {
