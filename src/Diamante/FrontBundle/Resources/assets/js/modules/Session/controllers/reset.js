@@ -28,7 +28,7 @@ define(['app'], function(App){
           } else {
             this.model.reset(data)
               .done(function(model){
-                App.alert({ title: 'Password Reset Info', messages: [{
+                App.alert({ title: 'Password Reset Info', status: 'info', messages: [{
                   status:'info',
                   text: 'We have sent you email to ' + model.get('email') + '.<br>' +
                   'Please click the link in that message to reset your password.'

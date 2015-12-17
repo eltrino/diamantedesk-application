@@ -6,7 +6,7 @@ define(['app'], function(App){
 
       App.session.confirm(hash)
         .done(function(){
-          App.alert({ title: 'Email Confirmation Success', messages: [{
+          App.alert({ title: 'Email Confirmation Success', status: 'success', messages: [{
             status: 'success',
             text: 'You may login and use application'}] });
           App.trigger('session:login');
@@ -22,7 +22,7 @@ define(['app'], function(App){
 
       App.session.reconfirm(email)
         .done(function(){
-          App.alert({ title: 'Email Confirmation Success', messages: [{
+          App.alert({ title: 'Email Confirmation Success', status: 'success', messages: [{
             status: 'success',
             text:
               'We have sent you email to ' + email + '.<br>'+

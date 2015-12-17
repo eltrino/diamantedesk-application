@@ -13,7 +13,7 @@ define(['app'], function(App){
         registrationView.on('form:submit', function(data){
           this.model.register(data).
             done(function(model){
-              App.alert({ title: 'Registration Success', messages: [{
+              App.alert({ title: 'Registration Success', status: 'success', messages: [{
                 status: 'success',
                 text: 'Thank you. <br>' +
                 'We have sent you email to ' + model.get('email') + '.<br>'+

@@ -7791,9 +7791,6 @@ h1,
   line-height: inherit;
   width: 62px;
 }
-.modal-alert .modal-header .status-error {
-  color: #F17356;
-}
 .modal-alert .modal-body {
   text-align: left;
 }
