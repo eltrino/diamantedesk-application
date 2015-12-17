@@ -8295,9 +8295,6 @@ h1,
 .comments-form .dropzone {
   margin-bottom: 15px;
 }
-.comments-form .dropzone br {
-  display: none;
-}
 .comment-attachments-block {
   border-top: 1px #e6e6e6 solid;
   padding-left: 26px;
