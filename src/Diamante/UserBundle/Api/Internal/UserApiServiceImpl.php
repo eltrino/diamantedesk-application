@@ -98,6 +98,7 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
      *       {
      *           "name"="id",
      *           "dataType"="integer",
+     *           "requirement"="\d+",
      *           "description"="Diamante User Id"
      *       }
      *   },
