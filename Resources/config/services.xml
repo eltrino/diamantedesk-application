@@ -15,6 +15,8 @@
         <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
         <parameter key="diamante_automation.generic.target.provider.class">Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider</parameter>
         <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction</parameter>
+        <parameter key="diamante_automation.queue_manager.class">Diamante\AutomationBundle\Automation\JobQueue\QueueManager</parameter>
+        <parameter key="diamante_automation.listener.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
     </parameters>
 
     <services>
@@ -70,6 +72,16 @@
 
         <service id="diamante_automation.generic.target.provider" class="%diamante_automation.generic.target.provider.class%">
             <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="diamante.automation.queue.manager" class="%diamante_automation.queue_manager.class%">
+            <tag name="kernel.event_listener" event="kernel.response" method="flush"/>
+        </service>
+
+        <service id="diamante.automation.listener" class="%diamante_automation.listener.class%">
+            <argument type="service" id="diamante_automation.config.provider"/>
+            <argument type="service" id="diamante.automation.queue.manager"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
         </service>
     </services>
 </container>

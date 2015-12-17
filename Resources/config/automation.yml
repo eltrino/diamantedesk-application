@@ -39,3 +39,4 @@ diamante_automation:
     notify_by_email:
       id: @diamante_automation.action.notify_by_email
       frontend_label: diamante.automation.action.notify_by_email
+      data_types: ['*']

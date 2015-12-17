@@ -15,21 +15,22 @@
 namespace Diamante\AutomationBundle\Api\Internal;
 
 use Diamante\AutomationBundle\Api\RuleService;
+use Diamante\AutomationBundle\Automation\Engine;
 use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Entity\BusinessRule;
 use Diamante\AutomationBundle\Entity\Group;
 use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\AutomationBundle\Entity\WorkflowAction;
+use Diamante\AutomationBundle\Infrastructure\Shared\CronExpressionMapper;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Oro\Bundle\CronBundle\Entity\Schedule;
+use Rhumsaa\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Diamante\AutomationBundle\Infrastructure\Shared\ExpressionValidator;
 
 class RuleServiceImpl implements RuleService
 {
-    const MODE_BUSINESS = 'business';
-    const MODE_WORKFLOW = 'workflow';
+    const BUSINESSRULE_COMMAND_NAME = 'diamante:automation:business:run';
 
     /**
      * @var string
@@ -96,6 +97,7 @@ class RuleServiceImpl implements RuleService
 
         $this->businessRuleRepository->store($rule);
 
+        $this->createBusinessRuleProcessingCronJob($rule->getId(), $rule->getTimeInterval());
         return $rule->getId();
     }
 
@@ -153,19 +155,17 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param integer $ruleId
-     * @param string  $name
+     * @param string|Uuid $ruleId
      * @param string  $timeInterval
      *
      * @return Schedule
      */
-    public function createCronJob($ruleId, $name, $timeInterval)
+    public function createBusinessRuleProcessingCronJob($ruleId, $timeInterval)
     {
-        $command = sprintf('%s --rule-id=%s', $name, $ruleId);
-        $cronExpression = ExpressionValidator::validate($timeInterval);
+        $command = sprintf('%s --rule-id=%s', self::BUSINESSRULE_COMMAND_NAME, $ruleId);
         $schedule = new Schedule();
         $schedule->setCommand($command)
-            ->setDefinition($cronExpression);
+            ->setDefinition(CronExpressionMapper::getMappedCronExpression($timeInterval));
 
         $em = $this->registry->getEntityManager();
         $em->persist($schedule);
@@ -176,7 +176,7 @@ class RuleServiceImpl implements RuleService
 
     public function actionRule($data, $action)
     {
-        if ($data['mode'] !== RuleServiceImpl::MODE_BUSINESS && $data['mode'] !== RuleServiceImpl::MODE_WORKFLOW) {
+        if ($data['mode'] !== Engine::MODE_BUSINESS && $data['mode'] !== Engine::MODE_WORKFLOW) {
             throw new \RuntimeException('Incorrect rule mode.');
         }
 

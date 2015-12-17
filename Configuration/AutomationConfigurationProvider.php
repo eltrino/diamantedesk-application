@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Configuration;
 
 use Diamante\AutomationBundle\Exception\InvalidConfigurationException;
+use Diamante\AutomationBundle\Infrastructure\Shared\CronExpressionMapper;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 use Diamante\AutomationBundle\Model\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -162,10 +163,11 @@ class AutomationConfigurationProvider
     {
         $config = [];
 
-        $config['entities']   = $this->dumpEntitiesConfig($translator);
-        $config['conditions'] = $this->dumpConditionsConfig($translator);
-        $config['actions']    = $this->dumpActionsConfig($translator);
-        $config['connectors'] = $this->dumpConnectorsConfig($translator);
+        $config['entities']         = $this->dumpEntitiesConfig($translator);
+        $config['conditions']       = $this->dumpConditionsConfig($translator);
+        $config['actions']          = $this->dumpActionsConfig($translator);
+        $config['connectors']       = $this->dumpConnectorsConfig($translator);
+        $config['time_intervals']   = $this->dumpTimeIntervalsConfig($translator);
 
         return $config;
     }
@@ -243,5 +245,22 @@ class AutomationConfigurationProvider
         }
 
         return $connectors;
+    }
+
+    protected function dumpTimeIntervalsConfig(Translator $translator)
+    {
+        $intervals = [];
+
+        $config = CronExpressionMapper::getFrontendOptionsConfig();
+
+        foreach ($config as $type => $values) {
+            foreach ($values as $item) {
+                $intervals[sprintf("%d%s", $item, $type)] = $translator->transChoice(
+                    sprintf("diamante.automation.cron.%s", $type), $item, ["%time%" => $item]
+                );
+            }
+        }
+
+        return $intervals;
     }
 }

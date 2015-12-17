@@ -77,3 +77,7 @@ diamante:
         created: Comment was created
         updated: Comment was updated
         removed: Comment was removed
+
+    cron:
+      h: every hour| every %time% hours
+      m: every %time% minutes
