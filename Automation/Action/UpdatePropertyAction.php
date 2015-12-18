@@ -47,7 +47,7 @@ class UpdatePropertyAction extends AbstractAction
     protected function getAccessorForProperty($property, $target)
     {
         $reflection = new \ReflectionClass($target);
-        $methods = $reflection->getMethods([\ReflectionMethod::IS_PUBLIC]);
+        $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         $setterNames = [
             sprintf("set%s", ucwords($property)),
@@ -66,7 +66,7 @@ class UpdatePropertyAction extends AbstractAction
     protected function update($target, $properties)
     {
         if (method_exists($target, 'updateProperties')) {
-            call_user_func_array([$target, 'updateProperties'], $properties);
+            call_user_func([$target, 'updateProperties'], $properties);
             return;
         }
 
