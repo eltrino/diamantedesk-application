@@ -13,7 +13,7 @@ diamante_user_api:
 diamante_user_bundle:
     resource:     "@DiamanteUserBundle/Controller"
     type:         annotation
-    prefix:       /desk/customer
+    prefix:       /desk/customers
 
 
 diamante_user_api_oro:

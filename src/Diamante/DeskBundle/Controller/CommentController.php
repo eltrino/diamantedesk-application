@@ -26,7 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * @Route("comment")
+ * @Route("comments")
  */
 class CommentController extends Controller
 {

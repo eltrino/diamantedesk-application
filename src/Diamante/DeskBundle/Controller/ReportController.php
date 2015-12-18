@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("report")
+ * @Route("reports")
  */
 class ReportController extends Controller
 {

@@ -17,8 +17,11 @@
         {% set cancel_url = path('diamante_user_list') %}
     {% endif %}
     {{ UI.button({'path' : cancel_url, 'title' : 'diamante.desk.ui.cancel'|trans, 'label' : 'diamante.desk.ui.cancel'|trans}) }}
-    {{ UI.saveAndStayButton() }}
-    {{ UI.saveAndCloseButton() }}
+    {% set html = UI.saveAndCloseButton() %}
+    {% if form.vars.data.id %}
+        {% set html = html ~ UI.saveAndStayButton() %}
+    {% endif %}
+    {{ UI.dropdownSaveButton({'html': html}) }}
 {% endblock %}
 
 {% block pageHeader %}
