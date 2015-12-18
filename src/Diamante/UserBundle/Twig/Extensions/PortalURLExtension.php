@@ -18,6 +18,7 @@ namespace Diamante\UserBundle\Twig\Extensions;
 
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\RequestContext;
 
 class PortalUrlExtension extends \Twig_Extension
 {
@@ -63,8 +64,10 @@ class PortalUrlExtension extends \Twig_Extension
      */
     public function getPasswordResetLink($hash)
     {
-        $this->updateRequestContext();
-        return sprintf('%s/#newpassword/%s', $this->getPortalLink(), $hash);
+        $origContext = $this->updateRequestContext();
+        $url = sprintf('%s/#newpassword/%s', $this->getPortalLink(), $hash);
+        $this->router->setContext($origContext);
+        return $url;
     }
 
     /**
@@ -72,10 +75,15 @@ class PortalUrlExtension extends \Twig_Extension
      */
     public function getPortalLink()
     {
-        $this->updateRequestContext();
-        return $this->router->generate('diamante_front', [], Router::ABSOLUTE_URL);
+        $origContext = $this->updateRequestContext();
+        $url = $this->router->generate('diamante_front', [], Router::ABSOLUTE_URL);
+        $this->router->setContext($origContext);
+        return $url;
     }
 
+    /**
+     * @return RequestContext
+     */
     private function updateRequestContext()
     {
         $url = $this->config->get('oro_ui.application_url');
@@ -84,35 +92,44 @@ class PortalUrlExtension extends \Twig_Extension
             throw new \RuntimeException('No Application URL configured, unable to generate links');
         }
 
-        list($scheme, $host, $baseUrl) = $this->getUrlParts($url);
-
         $context = $this->router->getContext();
-        $context->setScheme($scheme);
-        $context->setHost($host);
+        $origContext = clone $context;
+        $this->setUrlInContext($url, $context);
 
-        if (!empty($baseUrl)) {
-            $context->setBaseUrl($baseUrl);
-        }
+        return $origContext;
     }
 
     /**
      * @param $url
+     * @param RequestContext $context
      * @return array
      */
-    private function getUrlParts($url)
+    private function setUrlInContext($url, RequestContext $context)
     {
-        $result = preg_match('/^(http[s]?)\:\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)/',$url, $matches);
-
-        if (false === (bool)$result) {
+        $parts = parse_url($url);
+        if (false === (bool)$parts) {
             throw new \RuntimeException('Invalid Application URL configured. Unable to generate links');
         }
 
-        list($subject, $scheme, $host, $port, $baseUrl) = $matches;
-
-        if (!empty($baseUrl)) {
-            $baseUrl = rtrim($baseUrl, '/');
+        if (isset($parts['schema'])) {
+            $context->setScheme($parts['schema']);
         }
 
-        return [$scheme, $host, $baseUrl];
+        if (isset($parts['host'])) {
+            $context->setHost($parts['host']);
+        }
+
+        if (isset($parts['port'])) {
+            $context->setHttpPort($parts['port']);
+            $context->setHttpsPort($parts['port']);
+        }
+
+        if (isset($parts['path'])) {
+            $context->setBaseUrl(rtrim($parts['path'], '/'));
+        }
+
+        if (isset($parts['query'])) {
+            $context->setQueryString($parts['query']);
+        }
     }
 }

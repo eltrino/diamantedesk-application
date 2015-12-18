@@ -2,10 +2,7 @@
 
 namespace Diamante\UserBundle\Controller;
 
-use Diamante\DeskBundle\Controller\Shared\ExceptionHandlerTrait;
-use Diamante\DeskBundle\Controller\Shared\FormHandlerTrait;
-use Diamante\DeskBundle\Controller\Shared\ResponseHandlerTrait;
-use Diamante\DeskBundle\Controller\Shared\SessionFlashMessengerTrait;
+use Diamante\DeskBundle\Controller\Shared;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
@@ -21,10 +18,10 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class UserController extends Controller
 {
-    use FormHandlerTrait;
-    use ExceptionHandlerTrait;
-    use SessionFlashMessengerTrait;
-    use ResponseHandlerTrait;
+    use Shared\FormHandlerTrait;
+    use Shared\ExceptionHandlerTrait;
+    use Shared\SessionFlashMessengerTrait;
+    use Shared\ResponseHandlerTrait;
 
     /**
      * @Route("/", name="diamante_user_list")
@@ -69,7 +66,11 @@ class UserController extends Controller
             return $result;
         } catch (\RuntimeException $e) {
             $this->handleException($e);
-            return $this->redirect($this->get('router')->generate('diamante_user_list'));
+            return $this->redirect(
+                $this->generateUrl(
+                    'diamante_user_create'
+                )
+            );
         }
     }
 
@@ -153,8 +154,11 @@ class UserController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.user.messages.create.success');
             }
-
-            $response = $this->getSuccessSaveResponse('diamante_user_update', 'diamante_user_view', ['id' => $userId]);
+            $response = $this->getSuccessSaveResponse(
+                'diamante_user_update',
+                'diamante_user_view',
+                ['id' => $userId]
+            );
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = ['form' => $form->createView()];
