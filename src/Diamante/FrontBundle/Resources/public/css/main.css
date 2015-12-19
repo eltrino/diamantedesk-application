@@ -8312,6 +8312,7 @@ h1,
 .comment-attachments-block {
   border-top: 1px #e6e6e6 solid;
   padding-left: 26px;
+  padding-right: 5px;
   margin-bottom: 15px;
 }
 .comment-attachments-block:before {
@@ -8336,11 +8337,16 @@ h1,
 .comment-attachments {
   padding: 10px 0 0;
   border-radius: 5px;
+  overflow: hidden;
+}
+.comment-attachments a {
+  display: block;
 }
 .comment-attachments img {
   display: block;
   max-width: 100%;
   margin-bottom: 5px;
+  vertical-align: top;
 }
 .comment-attachments li {
   float: left;

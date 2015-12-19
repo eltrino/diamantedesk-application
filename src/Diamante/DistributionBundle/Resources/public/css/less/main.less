@@ -1,4 +1,4 @@
-@import "../../../../../../../vendor/oro/platform/src/Oro/Bundle/UIBundle/Resources/public/css/less/variables";
+@import "../../../../../../../vendor/oro/platform/src/Oro/Bundle/UIBundle/Resources/public/css/less/mixins";
 
 input:focus:invalid:focus,
 textarea:focus:invalid:focus,
@@ -44,11 +44,104 @@ input[type=text].hasDatepicker.ui-datepicker-dialog-is-below:focus,
   left: 0;
 }
 
-
 /*
  * DIAM-1358 Part of the mass action menu is hidden.
  * temporary fix till oro fix bug with dropdowns in grid
  */
 .container-fluid.grid-scrollable-container {
   overflow: visible;
+}
+
+
+@menuItemFirstLevelTextColor:  #b8c8d1;
+@menuBackGroundColor:          #313a45;
+@menuItemBorderTopColor:       lighten(@menuBackGroundColor, 3%);
+@menuItemBorderBottomColor:    darken(@menuBackGroundColor, 2%);
+.desktop-version .main-menu-sided.minimized .main-menu {
+  > li {
+    height: 36px;
+    position: relative;
+    border-width: 1px 0;
+    border-style: solid;
+    border-top-color: @menuItemBorderTopColor;
+    border-bottom-color: @menuItemBorderBottomColor;
+    > a {
+      font-size: 0;
+      line-height: 20px;
+      text-align: center;
+      color: transparent;
+
+      i[class^=icon-] {
+        font-size: 15px;
+        line-height: 34px;
+        color: #b8c8d1;
+      }
+    }
+    &:hover {
+      border-width: 0;
+      > a {
+        width: 100%;
+        background-color: #fff;
+        position: absolute;
+        z-index: @zindexFixedNavbar + 1;
+        i[class^=icon-] {
+          font-size: 18px;
+          line-height: 36px;
+          color: @menuBackGroundColor;
+        }
+      }
+      > .dropdown-menu {
+        display: block;
+      }
+    }
+    &.active {
+      #gradient > .vertical(lighten(@headerIconButtonColorStart, 5%), lighten(@headerIconButtonColorEnd, 1%));
+      border-top-color: darken(@headerIconButtonColorStart, 1%);
+      border-bottom-color: darken(@headerIconButtonColorEnd, 8%);
+      > a i[class^=icon-] {
+        color: #fff;
+      }
+      &:hover {
+        i[class^=icon-] {
+          color: @menuBackGroundColor;
+        }
+      }
+    }
+    .dropdown-menu {
+      border: 1px solid #e8e8e8;
+      width: auto;
+      padding: 0;
+      font-size: @baseFontSize;
+      .border-radius(0 3px 3px 0);
+      margin-top: 0;
+      top: 0;
+      left: 100%;
+      .box-shadow(1px 2px 4px rgba(0, 0, 0, 0.3));
+      a {
+        padding: 5px 10px;
+        color: @bodyColor;
+        white-space: nowrap;
+      }
+      .active > a{
+        background: none;
+      }
+      a:hover,
+      .active > a:hover {
+        background: #f3f3f3;
+      }
+      > a {
+        color: inherit;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 7px 15px;
+        display: block;
+        clear: both;
+        line-height: 20px;
+        white-space: nowrap;
+        i[class^=icon-] {
+          display: none !important;
+        }
+      }
+    }
+  }
 }

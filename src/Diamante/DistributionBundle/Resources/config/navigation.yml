@@ -10,25 +10,29 @@ oro_menu_config:
             label: 'diamante.desk.branch.entity_plural_label'
             route: diamante_branch_list
             extras:
+                icon: icon-archive
                 routes: ['diamante_branch_*']
                 position: 80
         diamante_ticket_list:
             label: 'diamante.desk.ticket.entity_plural_label'
             route: diamante_ticket_list
             extras:
+                icon: icon-check
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
                 position: 90
         diamante_report_list:
             label: 'diamante.desk.report.plural_label'
             uri: '#'
             extras:
+                icon: icon-bar-chart
                 position: 95
 
         diamante_customer_management:
-          label: 'diamante.user.labels.entity.plural'
-          route: 'diamante_user_list'
-          extras:
-            position: 96
+            label: 'diamante.user.labels.entity.plural'
+            route: 'diamante_user_list'
+            extras:
+                icon: icon-user
+                position: 96
         #reports
         diamante_report_tickets_by_priority:
             label: 'diamante.desk.report.reports.tickets_by_priority'
@@ -94,6 +98,7 @@ oro_menu_config:
           label: 'System'
           uri: '#'
           extras:
+              icon: icon-cog
               position: 100
     tree:
         application_menu:
