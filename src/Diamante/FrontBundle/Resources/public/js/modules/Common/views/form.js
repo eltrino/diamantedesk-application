@@ -87,6 +87,33 @@ define(['app', 'config', 'tinymce'], function(App, Config){
         modal.show();
         textarea.tinymce(tinymce_options);
         modal.hide();
+        this.applyPlaceholder();
+      },
+
+      applyPlaceholder : function(){
+        var textarea = this.$('textarea'),
+            editor = textarea.tinymce(),
+            $body = $(editor.getBody()),
+            contentAreaContainer = editor.getContentAreaContainer(),
+            placeholder = textarea.attr('placeholder');
+        if(!placeholder) { return; }
+        placeholder = $('<span />', { class: 'tinymce-placeholder', text: placeholder});
+        placeholder.prependTo(contentAreaContainer);
+        placeholder.on('click', function(){
+          placeholder.hide();
+          tinyMCE.execCommand('mceFocus', false, editor);
+        });
+        $body.on('focus', function(){
+          placeholder.hide();
+        });
+        $body.on('blur', function(){
+          if(!$.trim(editor.getContent({format:'text'}))){
+            console.log($.trim(editor.getContent({format:'text'})));
+            placeholder.show();
+          } else {
+            placeholder.hide();
+          }
+        });
       }
 
     });

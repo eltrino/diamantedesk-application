@@ -26,7 +26,8 @@ define([
         if(!trim(attrs.subject)) {
           errors.subject = "Can't be blank";
         }
-        if(!trim(attrs.description) || !trim(tinyMCE.activeEditor.getBody().textContent)) {
+        if(!trim(attrs.description) ||
+            !trim(tinymce.get('description').getContent({format:'text'}))) {
           errors.description = "Can't be blank";
         }
         if(!_.isEmpty(errors)){

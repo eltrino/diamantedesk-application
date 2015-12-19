@@ -600,7 +600,7 @@ ol ol {
   margin-bottom: 0;
 }
 .list-unstyled,
-.comments-item,
+.comments-list,
 .comment-tools,
 .comment-attachments,
 .attachment-tools {
@@ -7873,6 +7873,16 @@ h1,
     right: 0;
   }
 }
+.mce-container .tinymce-placeholder {
+  position: absolute;
+  padding: 8px;
+  width: 100%;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  white-space: normal;
+  color: #777;
+}
 .profile .loading {
   display: inline-block;
   padding-left: 0;
@@ -8233,11 +8243,18 @@ h1,
   text-align: left;
 }
 .comments-list {
+  margin-top: -5px;
   margin-bottom: 25px;
 }
 .comments-item {
-  padding-left: 64px;
-  margin-bottom: 15px;
+  padding: 5px 0 5px 69px;
+  margin-bottom: 5px;
+}
+.comments-item:nth-child(odd) {
+  background: #fafafa;
+}
+.comments-item:hover {
+  background: #eee;
 }
 .comment-author-image {
   float: left;

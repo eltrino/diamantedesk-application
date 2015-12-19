@@ -1,10 +1,17 @@
 .comments-list {
+  &:extend(.list-unstyled);
+  margin-top: -5px;
   margin-bottom: 25px;
 }
 .comments-item {
-  &:extend(.list-unstyled);
-  padding-left: 64px;
-  margin-bottom: 15px;
+  padding: 5px 0 5px 69px;
+  margin-bottom: 5px;
+  &:nth-child(odd){
+    background: #fafafa;
+  }
+  &:hover {
+    background: #eee;
+  }
 }
 
 .comment-author-image {

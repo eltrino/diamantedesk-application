@@ -51,10 +51,6 @@ define([
     });
 
     Create.ModalView = Modal.LayoutView.extend({
-      //onRoute: function(e){
-      //  window.history.pushState(null, null, e.originalEvent.oldURL);
-      //  Modal.LayoutView.prototype.onRoute.call(this);
-      //},
       submitModal: function(){
         this.modalBody.currentView.submitForm();
         this.trigger('modal:submit');
