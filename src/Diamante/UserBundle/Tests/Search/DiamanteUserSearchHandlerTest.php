@@ -63,10 +63,9 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertItem()
     {
-        $this->markTestIncomplete("Should be fixed User::isDeleted()");
-
         $id = 'diamante_1';
         $userObj = User::fromString($id);
+        $diamanteUser = $this->createDiamanteUser();
         $userDetails = $this->createUserDetails(User::TYPE_DIAMANTE);
 
         $this->userService
@@ -74,6 +73,12 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('fetchUserDetails')
             ->with($this->equalTo($userObj))
             ->will($this->returnValue($userDetails));
+
+        $this->userService
+            ->expects($this->any())
+            ->method('getByUser')
+            ->with($this->equalTo($userObj))
+            ->will($this->returnValue($diamanteUser));
 
         $result = $this->diamanteUserSearchHandler->convertItem($userObj);
 
@@ -210,5 +215,10 @@ class DiamanteUserSearchHandlerTest extends \PHPUnit_Framework_TestCase
     protected function createUserDetails($type)
     {
         return new UserDetails($type . User::DELIMITER . 1, $type, 'email@example.com', 'First', 'Last');
+    }
+
+    protected function createDiamanteUser()
+    {
+        return new DiamanteUser('mike@diamantedesk.com', 'Mike', 'Bot');
     }
 }
