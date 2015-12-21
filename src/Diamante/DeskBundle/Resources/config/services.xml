@@ -55,6 +55,7 @@
         <parameter key="diamante.grid_views_load.class">Diamante\DeskBundle\EventListener\GridViewsLoadListener</parameter>
         <parameter key="diamante.data_audit.listener.class">Diamante\DeskBundle\EventListener\DataAuditGridListener</parameter>
         <parameter key="diamante.pre_build.listener.class">Diamante\DeskBundle\EventListener\DataGridPreBuildListener</parameter>
+        <parameter key="diamante.branch.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\BranchExtension</parameter>
     </parameters>
 
     <services>
@@ -225,6 +226,11 @@
         <service id="diamante.pre_build.listener" class="%diamante.pre_build.listener.class%">
             <argument type="service" id="service_container"/>
             <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.pre" method="onPreBuild"/>
+        </service>
+
+        <service id="diamante.branch.twig.extension" class="%diamante.branch.twig.extension.class%">
+            <argument type="service" id="oro_config.manager"/>
+            <tag name="twig.extension"/>
         </service>
     </services>
 </container>

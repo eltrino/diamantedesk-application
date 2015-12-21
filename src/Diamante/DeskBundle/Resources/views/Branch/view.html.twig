@@ -25,7 +25,7 @@
     {% endif %}
 
     {#'successMessage': 'diamante.desk.branch.messages.delete.success'|trans,#}
-    {% if resource_granted('DELETE', entity) %}
+    {% if resource_granted('DELETE', entity) and not is_default_branch(entity) %}
         {{ UI.clientButton({
             'dataUrl': path('diamante_branch_delete_form', {id: entity.id}),
             'aCss': 'remove-brunch',
