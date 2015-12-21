@@ -67,113 +67,6 @@ class RuleServiceImpl implements RuleService
         $this->businessRuleRepository = $businessRuleRepository;
     }
 
-    public function loadBusinessRule($data)
-    {
-        $rule = $this->businessRuleRepository->get($data['id']);
-
-        if (is_null($rule)) {
-            throw new \RuntimeException('Rule loading failed. Rule not found.');
-        }
-
-        return $rule;
-    }
-
-    public function loadWorkflowRule($data)
-    {
-        $rule = $this->workflowRuleRepository->get($data['id']);
-
-        if (is_null($rule)) {
-            throw new \RuntimeException('Rule loading failed. Rule not found.');
-        }
-
-        return $rule;
-    }
-
-    public function createBusinessRule($data)
-    {
-        $rule = new BusinessRule($data['name'], $data['target'], $data['timeInterval']);
-        $this->addConditions($rule, $data['conditions']);
-        $this->addActions($rule, $data['actions'], $this->getBusinessActionEntity());
-
-        $this->businessRuleRepository->store($rule);
-
-        $this->createBusinessRuleProcessingCronJob($rule->getId(), $rule->getTimeInterval());
-        return $rule->getId();
-    }
-
-    public function updateBusinessRule($data)
-    {
-        $rule = $this->loadBusinessRule($data);
-        $rule->update($data['name'], $data['frequency']);
-
-        $rule->removeActions();
-        $rule->removeRootGroup();
-        $this->addConditions($rule, $data['conditions']);
-        $this->addActions($rule, $data['actions'], $this->getBusinessActionEntity());
-
-        $this->businessRuleRepository->store($rule);
-
-        return $rule->getId();
-    }
-
-    public function updateWorkflowRule($data)
-    {
-        $rule = $this->loadWorkflowRule($data);
-        $rule->update($data['name']);
-
-        $rule->removeActions();
-        $rule->removeRootGroup();
-        $this->addConditions($rule, $data['conditions']);
-        $this->addActions($rule, $data['actions'], $this->getWorkflowActionEntity());
-
-        $this->workflowRuleRepository->store($rule);
-
-        return $rule->getId();
-    }
-
-    public function createWorkflowRule($data)
-    {
-        $rule = new WorkflowRule($data['name'], $data['target']);
-        $this->addConditions($rule, $data['conditions']);
-        $this->addActions($rule, $data['actions'], $this->getWorkflowActionEntity());
-
-        $this->workflowRuleRepository->store($rule);
-
-        return $rule->getId();
-    }
-
-    public function deleteBusinessRule($command)
-    {
-        $rule = $this->loadBusinessRule($command);
-        $this->businessRuleRepository->remove($rule);
-    }
-
-    public function deleteWorkflowRule($command)
-    {
-        $rule = $this->loadWorkflowRule($command);
-        $this->workflowRuleRepository->remove($rule);
-    }
-
-    /**
-     * @param string|Uuid $ruleId
-     * @param string  $timeInterval
-     *
-     * @return Schedule
-     */
-    public function createBusinessRuleProcessingCronJob($ruleId, $timeInterval)
-    {
-        $command = sprintf('%s --rule-id=%s', self::BUSINESSRULE_COMMAND_NAME, $ruleId);
-        $schedule = new Schedule();
-        $schedule->setCommand($command)
-            ->setDefinition(CronExpressionMapper::getMappedCronExpression($timeInterval));
-
-        $em = $this->registry->getEntityManager();
-        $em->persist($schedule);
-        $em->flush();
-
-        return $schedule;
-    }
-
     public function actionRule($data, $action)
     {
         if ($data['mode'] !== Engine::MODE_BUSINESS && $data['mode'] !== Engine::MODE_WORKFLOW) {
@@ -189,6 +82,113 @@ class RuleServiceImpl implements RuleService
         $result = call_user_func([$this, $method], $data);
 
         return $result;
+    }
+
+    protected function loadBusinessRule($data)
+    {
+        $rule = $this->businessRuleRepository->get($data['id']);
+
+        if (is_null($rule)) {
+            throw new \RuntimeException('Rule loading failed. Rule not found.');
+        }
+
+        return $rule;
+    }
+
+    protected function loadWorkflowRule($data)
+    {
+        $rule = $this->workflowRuleRepository->get($data['id']);
+
+        if (is_null($rule)) {
+            throw new \RuntimeException('Rule loading failed. Rule not found.');
+        }
+
+        return $rule;
+    }
+
+    protected function createBusinessRule($data)
+    {
+        $rule = new BusinessRule($data['name'], $data['target'], $data['timeInterval']);
+        $this->addConditions($rule, $data['conditions']);
+        $this->addActions($rule, $data['actions'], $this->getBusinessActionEntity());
+
+        $this->businessRuleRepository->store($rule);
+
+        $this->createBusinessRuleProcessingCronJob($rule->getId(), $rule->getTimeInterval());
+        return $rule;
+    }
+
+    protected function updateBusinessRule($data)
+    {
+        $rule = $this->loadBusinessRule($data);
+        $rule->update($data['name'], $data['timeInterval'], $data['active']);
+
+        $rule->removeActions();
+        $rule->removeRootGroup();
+        $this->addConditions($rule, $data['conditions']);
+        $this->addActions($rule, $data['actions'], $this->getBusinessActionEntity());
+
+        $this->businessRuleRepository->store($rule);
+
+        return $rule;
+    }
+
+    protected function updateWorkflowRule($data)
+    {
+        $rule = $this->loadWorkflowRule($data);
+        $rule->update($data['name'], $data['active']);
+
+        $rule->removeActions();
+        $rule->removeRootGroup();
+        $this->addConditions($rule, $data['conditions']);
+        $this->addActions($rule, $data['actions'], $this->getWorkflowActionEntity());
+
+        $this->workflowRuleRepository->store($rule);
+
+        return $rule;
+    }
+
+    protected function createWorkflowRule($data)
+    {
+        $rule = new WorkflowRule($data['name'], $data['target']);
+        $this->addConditions($rule, $data['conditions']);
+        $this->addActions($rule, $data['actions'], $this->getWorkflowActionEntity());
+
+        $this->workflowRuleRepository->store($rule);
+
+        return $rule;
+    }
+
+    protected function deleteBusinessRule($data)
+    {
+        $rule = $this->loadBusinessRule($data);
+        $this->businessRuleRepository->remove($rule);
+    }
+
+    protected function deleteWorkflowRule($data)
+    {
+        $rule = $this->loadWorkflowRule($data);
+        $this->workflowRuleRepository->remove($rule);
+    }
+
+    /**
+     * @param string|Uuid $ruleId
+     * @param string  $timeInterval
+     *
+     * @return Schedule
+     */
+    protected function createBusinessRuleProcessingCronJob($ruleId, $timeInterval)
+    {
+        $command = sprintf('%s --rule-id=%s', self::BUSINESSRULE_COMMAND_NAME, $ruleId);
+        $schedule = new Schedule();
+        $schedule->setCommand($command)
+            ->setDefinition(CronExpressionMapper::getMappedCronExpression($timeInterval));
+
+        $em = $this->registry->getEntityManager();
+        $em->persist($schedule);
+        $em->flush();
+
+        return $schedule;
     }
 
     private function addConditions($rule, $data, Group $parent = null)
