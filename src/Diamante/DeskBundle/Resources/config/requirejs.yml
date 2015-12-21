@@ -2,6 +2,8 @@ config:
     paths:
         'd3': 'bundles/diamantedesk/lib/d3/d3.min.js'
         'd3-tip' : 'bundles/diamantedesk/lib/d3-tip/index.js'
+        'xregexp' : 'bundles/diamantedesk/lib/xregexp/xregexp-all.js'
         'diamante/attachments/draganddrop': 'bundles/diamantedesk/js/diam.attachments.js'
         'diamante/ajax.messages': 'bundles/diamantedesk/js/diam.ajax.messages.js'
         'diamante/palette': 'bundles/diamantedesk/js/palette.js'
+        'oroform/js/validator/regex' : 'bundles/diamantedesk/js/validator/regex.js'
