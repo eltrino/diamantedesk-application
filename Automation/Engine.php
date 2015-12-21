@@ -241,31 +241,6 @@ class Engine
     }
 
     /**
-     * @param Fact $fact
-     * @param Rule $rule
-     * @param bool|false $dryRun
-     *
-     * @return bool
-     */
-    public function processSingleRule(Fact $fact, Rule $rule, $dryRun = false)
-    {
-        $result = $this->doCheck($fact, $rule->getRootGroup());
-
-        if (true === $result) {
-            foreach ($this->actionProvider->getActions($rule) as $action) {
-                $this->scheduler->addAction($action);
-            }
-        }
-
-        if (!$dryRun) {
-            $this->scheduler->run($fact);
-            $this->scheduler->reset();
-        }
-
-        return $result;
-    }
-
-    /**
      * @param Rule $rule
      * @param bool|false $dryRun
      *
