@@ -18,6 +18,7 @@ namespace Diamante\UserBundle\MassAction\Handler;
 
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
+use Oro\Bundle\DataGridBundle\Datasource\ResultRecord;
 use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionHandlerArgs;
 use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionHandlerInterface;
 use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionResponse;
@@ -53,13 +54,11 @@ class ResetPasswordMassActionHandler implements MassActionHandlerInterface
     public function handle(MassActionHandlerArgs $args)
     {
         $iterations = 0;
-        $entities = $args->getData();
-
-        $entities = explode(',', $entities['values']);
 
         try {
-            foreach ($entities as $user) {
-                $this->userService->resetPassword(new User($user, User::TYPE_DIAMANTE));
+            /** @var ResultRecord $result */
+            foreach ($args->getResults() as $result) {
+                $this->userService->resetPassword(new User($result->getValue('id'), User::TYPE_DIAMANTE));
                 ++$iterations;
             }
         } catch (\Exception $e) {
