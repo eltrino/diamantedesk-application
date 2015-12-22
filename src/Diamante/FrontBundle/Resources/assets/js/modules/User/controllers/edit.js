@@ -40,9 +40,10 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
                   if(data.password){
                     App.session.update({ password : data.password });
                   }
-                  options.message = 'You have successfully updated your profile';
-                  App.trigger('user:view', options);
-
+                  App.trigger('message:show', {
+                    status: 'success',
+                    text: 'You have successfully updated your profile'
+                  });
                   modalEditView.$el.modal('hide');
                 },
                 error : function(model, xhr){
