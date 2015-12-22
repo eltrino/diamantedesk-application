@@ -1,4 +1,5 @@
-@import "../../../../../../../vendor/oro/platform/src/Oro/Bundle/UIBundle/Resources/public/css/less/mixins";
+@import "mixins";
+@import "variables";
 
 input:focus:invalid:focus,
 textarea:focus:invalid:focus,
@@ -53,10 +54,6 @@ input[type=text].hasDatepicker.ui-datepicker-dialog-is-below:focus,
 }
 
 
-@menuItemFirstLevelTextColor:  #b8c8d1;
-@menuBackGroundColor:          #313a45;
-@menuItemBorderTopColor:       lighten(@menuBackGroundColor, 3%);
-@menuItemBorderBottomColor:    darken(@menuBackGroundColor, 2%);
 .desktop-version .main-menu-sided.minimized .main-menu {
   > li {
     height: 36px;
