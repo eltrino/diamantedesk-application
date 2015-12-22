@@ -19,8 +19,8 @@ diamante:
             branch_key:        Branch Key
 
           actions:
+            create:            Create Branch
             view:              View Branch
-            add:               Add Branch
             edit:              Edit Branch
             remove:            Delete Branch
             remove_mass:       Delete Branches
