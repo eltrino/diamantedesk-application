@@ -6,6 +6,7 @@ use Diamante\DeskBundle\Controller\Shared;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\UserBundle\Exception\UserRemovalException;
 use Diamante\UserBundle\Model\User;
 use JMS\AopBundle\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -124,6 +125,8 @@ class UserController extends Controller
                 throw new MethodNotAllowedException("This won't work");
             }
 
+            $this->ensureUserHasNoRelatedEntities($id);
+
             $this->get('diamante.user.service')
                 ->removeDiamanteUser($id);
             return new Response(null, 204, array(
@@ -180,6 +183,7 @@ class UserController extends Controller
 
         try {
             foreach ($users as $user) {
+                $this->ensureUserHasNoRelatedEntities($user);
                 $this->get('diamante.user.service')->removeDiamanteUser($user);
             }
 
@@ -239,5 +243,25 @@ class UserController extends Controller
         }
 
         return $response;
+    }
+
+    protected function ensureUserHasNoRelatedEntities($userId)
+    {
+        $entityMap = [
+            'tickets' => ['DiamanteDeskBundle:Ticket', 'reporter']
+        ];
+
+        $user = new User($userId, User::TYPE_DIAMANTE);
+
+        foreach ($entityMap as $type => $entityConfig) {
+            list($mapping, $field) = $entityConfig;
+
+            $repo = $this->get('doctrine')->getRepository($mapping);
+            $entities = $repo->findBy([$field => $user]);
+
+            if (!empty($entities)) {
+                throw new UserRemovalException(sprintf("User has related %s, can not delete user", $type));
+            }
+        }
     }
 }

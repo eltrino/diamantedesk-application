@@ -42,6 +42,9 @@ diamante:
         reset_pwd:
           query:        Are you sure you want to reset password for this customer?
           success:      User password successfully reset.
+        remove:
+          failed:
+            related:    Error deleting user. User has related entities.
 
       placeholder:
         email:          'Please enter an email address'
