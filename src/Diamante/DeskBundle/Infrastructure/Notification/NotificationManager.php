@@ -230,7 +230,7 @@ class NotificationManager
         $provider = $this->providers[$name];
         $provider->setRecipient($recipient);
 
-        $templateOptions = array_merge($provider->getDefaultOptions(), $options);
+        $templateOptions = array_merge($provider->getDefaultOptions(), $options, $this->getUrlOptions());
 
         foreach ($provider->getDefaultOptions() as $option => $value) {
             if (!array_key_exists($option, $templateOptions)) {
@@ -252,5 +252,25 @@ class NotificationManager
 
         $this->notify();
         $this->clear();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUrlOptions()
+    {
+        $applicationUrl = $this->config->get('oro_ui.application_url');
+
+        if (empty($applicationUrl)) {
+            return [];
+        }
+
+        $urlParts = parse_url($applicationUrl);
+
+        if (!$urlParts || !isset($urlParts['scheme']) || !isset($urlParts['host'])) {
+            return [];
+        }
+
+        return ['host' => $urlParts['host'], 'scheme' => $urlParts['scheme']];
     }
 }

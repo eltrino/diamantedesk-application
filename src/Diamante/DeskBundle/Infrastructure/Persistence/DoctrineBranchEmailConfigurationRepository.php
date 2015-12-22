@@ -56,7 +56,7 @@ class DoctrineBranchEmailConfigurationRepository extends DoctrineGenericReposito
                (j.support_address = '' AND
                  j.customer_domains REGEXP :customerDomainRegExp) * 1
             AS criteria
-            FROM diamante_branch_email_configuration j ORDER BY criteria DESC LIMIT 1
+            FROM diamante_branch_email_config j ORDER BY criteria DESC LIMIT 1
         ", $rsm)
             ->setParameter('supportAddress', $supportAddress)
             ->setParameter('customerDomainRegExp', $customerDomainRegExp)
