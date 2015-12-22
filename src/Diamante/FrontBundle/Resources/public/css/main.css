@@ -8170,11 +8170,13 @@ h1,
 }
 .auth-page .logo img {
   opacity: 0;
+  max-width: 240px;
 }
 .auth-page #main {
   background: transparent;
   display: table;
   width: 240px;
+  height: 100%;
   padding: 0;
 }
 .auth-page #content {
