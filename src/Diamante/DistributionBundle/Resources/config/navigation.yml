@@ -31,7 +31,7 @@ oro_menu_config:
             label: 'diamante.user.labels.entity.plural'
             route: 'diamante_user_list'
             extras:
-                icon: icon-user
+                icon: icon-group
                 position: 96
         #reports
         diamante_report_tickets_by_priority:

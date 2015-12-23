@@ -7598,9 +7598,25 @@ body {
   top: 150px;
   position: fixed;
   z-index: 10;
+  width: 100%;
 }
 .fixed-messages .alert {
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+@media (min-width: 768px) {
+  .fixed-messages {
+    width: 670px;
+  }
+}
+@media (min-width: 992px) {
+  .fixed-messages {
+    width: 890px;
+  }
+}
+@media (min-width: 1200px) {
+  .fixed-messages {
+    width: 1090px;
+  }
 }
 .wrap {
   height: 100%;

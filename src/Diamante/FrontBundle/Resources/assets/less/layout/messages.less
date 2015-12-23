@@ -12,4 +12,14 @@
   .alert{
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   }
+  width:100%;
+  @media (min-width: @screen-sm-min) {
+    width: @container-sm - @main-gutter*2;
+  }
+  @media (min-width: @screen-md-min) {
+    width: @container-md - @main-gutter*2;
+  }
+  @media (min-width: @screen-lg-min) {
+    width: @container-lg - @main-gutter*2;
+  }
 }
