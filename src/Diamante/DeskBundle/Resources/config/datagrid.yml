@@ -22,7 +22,7 @@ datagrid:
                 params:     [ id ]
             delete_link:
                 type:       url
-                route:      diamante_branch_api_service_diamante_delete_branch
+                route:      diamante_branch_api_service_oro_delete_branch
                 params:     [ id ]
         sorters:
             columns:

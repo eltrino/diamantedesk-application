@@ -181,7 +181,7 @@ class BranchApiServiceImpl extends BranchServiceImpl implements RestServiceInter
         if (!parent::isBranchHasTickets($id)) {
             parent::deleteBranch($id);
         } else {
-            throw new BranchHasTicketsException();
+            throw new BranchHasTicketsException("Branch has tickets and can't be deleted");
         }
     }
 
