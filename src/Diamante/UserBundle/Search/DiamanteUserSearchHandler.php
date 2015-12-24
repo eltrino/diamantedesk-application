@@ -179,6 +179,12 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
             $converted['isDeleted'] = false;
         }
 
+        if ($item->getType() === User::TYPE_DIAMANTE) {
+            $converted['type_label'] = 'customer';
+        } else {
+            $converted['type_label'] = 'admin';
+        }
+
         return $converted;
     }
 
@@ -207,8 +213,10 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
 
             if ($type === User::TYPE_DIAMANTE) {
                 $converted['avatar'] = $this->userService->getGravatarLink($converted['email'], self::AVATAR_SIZE);
+                $converted['type_label'] = 'customer';
             } else {
                 $converted['avatar'] = $this->getPropertyValue('avatar', $user);
+                $converted['type_label'] = 'admin';
             }
 
             $result[] = $converted;

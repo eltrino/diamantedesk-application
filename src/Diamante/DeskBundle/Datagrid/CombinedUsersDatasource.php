@@ -24,8 +24,6 @@ class CombinedUsersDatasource extends AbstractDatasource
 {
     const TYPE = 'diamante_combined_users_datasource';
     const DIAMANTE_USERNAME_PLACEHOLDER = '-';
-    const DIAMANTE_USER_TYPE_POSTFIX = '[diamante]';
-    const ORO_USER_TYPE_POSTFIX = '[oro]';
 
     /** @var QueryBuilder */
     protected $qbDiamanteUsers;
@@ -59,14 +57,14 @@ class CombinedUsersDatasource extends AbstractDatasource
             $result['id'] = User::TYPE_DIAMANTE . User::DELIMITER . $result['id'];
             $result['username'] = self::DIAMANTE_USERNAME_PLACEHOLDER;
             $result['enabled'] = true;
-            $result['email'] = $result['email'] . ' ' . self::DIAMANTE_USER_TYPE_POSTFIX;
+            $result['type_label'] = 'customer';
             $rows[] = $result;
         }
 
         $oroUsers = $this->getQbOroUsers()->getQuery()->getResult(Query::HYDRATE_ARRAY);
         foreach ($oroUsers as $result) {
             $result['id'] = User::TYPE_ORO . User::DELIMITER . $result['id'];
-            $result['email'] = $result['email'] . ' ' . self::ORO_USER_TYPE_POSTFIX;
+            $result['type_label'] = 'admin';
             $rows[] = $result;
         }
 

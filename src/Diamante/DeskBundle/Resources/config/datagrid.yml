@@ -325,20 +325,23 @@ datagrid:
             entity_pagination: true
         columns:
             email:
-                label:         diamante.user.labels.email
+                label:          diamante.user.labels.email
+                type:           twig
+                frontend_type:  html
+                template:       DiamanteUserBundle:User:Datagrid/Property/email.html.twig
             firstName:
-                label:         oro.user.first_name.label
+                label:          oro.user.first_name.label
             lastName:
-                label:         oro.user.last_name.label
+                label:          oro.user.last_name.label
             createdAt:
-                label:         oro.ui.created_at
-                frontend_type: datetime
+                label:          oro.ui.created_at
+                frontend_type:  datetime
             updatedAt:
-                label:         oro.ui.updated_at
-                frontend_type: datetime
+                label:          oro.ui.updated_at
+                frontend_type:  datetime
             enabled:
-                label:         oro.user.enabled.label
-                frontend_type: select
+                label:          oro.user.enabled.label
+                frontend_type:  select
                 choices:
                    - Inactive
                    - Active
@@ -396,6 +399,9 @@ datagrid:
         columns:
             email:
                 label:         diamante.user.labels.email
+                type:          twig
+                frontend_type: html
+                template:      DiamanteUserBundle:User:Datagrid/Property/email.html.twig
             firstName:
                 label:         oro.user.first_name.label
             lastName:
