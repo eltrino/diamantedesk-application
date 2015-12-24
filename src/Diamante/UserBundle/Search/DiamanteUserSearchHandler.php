@@ -179,6 +179,8 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
             $converted['isDeleted'] = false;
         }
 
+        $converted['type'] = $item->getType();
+
         if ($item->getType() === User::TYPE_DIAMANTE) {
             $converted['type_label'] = 'customer';
         } else {

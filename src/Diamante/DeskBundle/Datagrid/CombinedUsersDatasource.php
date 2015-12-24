@@ -57,6 +57,7 @@ class CombinedUsersDatasource extends AbstractDatasource
             $result['id'] = User::TYPE_DIAMANTE . User::DELIMITER . $result['id'];
             $result['username'] = self::DIAMANTE_USERNAME_PLACEHOLDER;
             $result['enabled'] = true;
+            $result['type'] = 'diamante';
             $result['type_label'] = 'customer';
             $rows[] = $result;
         }
@@ -64,6 +65,7 @@ class CombinedUsersDatasource extends AbstractDatasource
         $oroUsers = $this->getQbOroUsers()->getQuery()->getResult(Query::HYDRATE_ARRAY);
         foreach ($oroUsers as $result) {
             $result['id'] = User::TYPE_ORO . User::DELIMITER . $result['id'];
+            $result['type'] = 'oro';
             $result['type_label'] = 'admin';
             $rows[] = $result;
         }
