@@ -29,16 +29,11 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         };
 
     if ( !outputData) {
-      $('.diam-pie-chart-widget').css({
+      parent.prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+      $(elem).css({
         opacity: '.2',
         pointerEvents: 'none',
         backgroundColor: '#f2f2f7'
-      });
-
-      $('.widget-content').each(function() {
-        if ( !$(this).hasClass('diamante-myrecenttickets-widget-widget-content') ) {
-          $(this).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
-        }
       });
 
       data = [
@@ -110,9 +105,9 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .attr("d", arc);
 
         if ( !outputData ) {
-          $('path.slice').css('fill', '#646464');
-          $('path.slice:nth-child(2)').css('opacity', '.7');
-          $('path.slice:nth-child(3)').css('opacity', '.4');
+          $('path.slice', elem).css('fill', '#646464');
+          $('path.slice:nth-child(2)', elem).css('opacity', '.7');
+          $('path.slice:nth-child(3)', elem).css('opacity', '.4');
         }
 
     slice.exit()

@@ -59,21 +59,21 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
 
       if (data.length == 0) {
 
+        $(elem).css({
+        opacity: '.2',
+        pointerEvents: 'none',
+        backgroundColor: '#f2f2f7'
+        });
+
+        $(parent).prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
+
         data = {};
         data.dateProp = {
           date: new Date(),
           item: getRandomInt(0,5)
         };
 
-        $('.diam-grouped-line-chart-report').css({
-          opacity: '.2',
-          pointerEvents: 'none',
-          backgroundColor: '#f2f2f7'
-        });
-
-        $('.container-fluid').prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
-
-        $('path.line').css('stroke', 'rgba(100,100,100,.7)');
+        $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
 
       }
 
@@ -380,8 +380,8 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
     };
 
     if ( data.some(function (elem) { return elem.item; }) ) {
-      $('path.line').css('stroke', 'rgba(100,100,100,.7)');
-      $('g.context').css('display', 'none');
+      $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
+      $('g.context', elem).css('display', 'none');
     }
 
   };
