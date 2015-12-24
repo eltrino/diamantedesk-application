@@ -382,6 +382,8 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
     if ( data.some(function (elem) { return elem.item; }) ) {
       $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
       $('g.context', elem).css('display', 'none');
+      $('g.legend', elem).css('display', 'none');
+
     }
 
   };
