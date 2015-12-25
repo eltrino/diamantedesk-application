@@ -15,7 +15,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
               '<% _.each(states, function(state){ %>' +
               '<li>' +
                   '<span class="color-label" style="background:<%= state.color %>"></span>' +
-                  '<%= state.name %> tickets: <%= state.value %>' +
+                  '<%= state.name %>: <%= state.value %>' +
               '</li>' +
               '<% }) %>' +
             '</ul>' +
@@ -184,7 +184,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
             date : dateFormat(d.date),
             states : _.map(keys, function(key){
                       return {
-                        name : key,
+                        name : key[0].toUpperCase() + key.slice(1),
                         value : d[key]? d[key] : 0,
                         color: color(key)
                       }
@@ -299,7 +299,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         .call(function(d) { d.exit().remove()})
         .attr("y",function(d,i) { return i + 0.1+"em"})
         .attr("x","1em")
-        .text(function(d) { return d.key; });
+        .text(function(d) { return d.key[0].toUpperCase() + d.key.slice(1); });
 
     legendItem.selectAll("circle")
         .data(legend, function(d) { return d.key})
