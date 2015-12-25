@@ -308,7 +308,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         .attr("cy",function(d,i) { return i-0.25+"em"})
         .attr("cx",0)
         .attr("r","0.4em")
-        .style("fill",function(d) { console.log(d.color); return d.color; });
+        .style("fill",function(d) { return d.color; });
 
     var bbox = legendItem[0][0].getBBox(),
         padding = 8;
