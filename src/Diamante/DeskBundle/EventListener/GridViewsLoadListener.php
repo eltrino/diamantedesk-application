@@ -71,7 +71,14 @@ class GridViewsLoadListener implements EventSubscriber
 
         foreach ($gridViews['views'] as &$gridView) {
             if (isset($gridView['filters']['assigneeFullName']) && $gridView['filters']['assigneeFullName'] !== false) {
-                if (strpos($gridView['filters']['assigneeFullName'], self::FIXTURE_USERNAME) !== false) {
+
+                if (is_array($gridView['filters']['assigneeFullName'])) {
+                    $value = $gridView['filters']['assigneeFullName']['value'];
+                } else {
+                    $value = $gridView['filters']['assigneeFullName'];
+                }
+
+                if (strpos($value, self::FIXTURE_USERNAME) !== false) {
                     $gridView['filters']['assigneeFullName'] = $currentUser->getFirstName() . ' ' . $currentUser->getLastName();
                 }
             }
