@@ -235,6 +235,7 @@ diamante:
           edit:                Edit
           add:                 Add
           change:              Change
+          select_watcher:      Select User
 
         common:
           general:             General
