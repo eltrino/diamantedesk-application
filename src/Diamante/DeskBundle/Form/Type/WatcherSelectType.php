@@ -30,7 +30,7 @@ class WatcherSelectType extends AbstractType
         $resolver->setDefaults(
             array(
                 'configs' => array(
-                    'placeholder' => Ticket::UNASSIGNED_LABEL,
+                    'placeholder' => 'diamante.desk.ui.select_watcher',
                     'result_template_twig'    => 'DiamanteDeskBundle:Search:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig'
                 ),
