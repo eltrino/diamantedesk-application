@@ -18,8 +18,8 @@
             <form id="{{ form.vars.name }}" action="{{ path('diamante_branch_delete_form', { 'id': form.vars.value.id, 'no_redirect': true} ) }}" method="post">
                 <fieldset class="form form-horizontal">
                     <p>{{ 'diamante.desk.branch.messages.delete.query'|trans }}</p>
-                    <div class="span6">
-                            {{ form_row(form.moveTickets) }}
+                    <div class="span11">
+                            {{ form_widget(form.moveTickets) }} {{ form_label(form.moveTickets) }}
                         <div id="moveTickets" style="display: none;">
                             {{ form_row(form.newBranch) }}
                         </div>
