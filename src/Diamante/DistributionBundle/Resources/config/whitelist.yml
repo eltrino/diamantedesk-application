@@ -81,3 +81,4 @@ whitelist:
     - '^oro_dashboard_[a-z_]+'
     - '^oro_tag_[a-z_]+'
     - '^oro_api_(get|post|put|delete)_navigationitems'
+    - 'oro_datagrid_api_rest_gridview_[a-z_]+'
