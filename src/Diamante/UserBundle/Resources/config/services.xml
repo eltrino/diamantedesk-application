@@ -43,6 +43,7 @@
             <argument type="service" id="diamante.user_factory"/>
             <argument type="service" id="oro_attachment.manager"/>
             <argument type="service" id="diamante.api.user.repository"/>
+            <argument type="service" id="diamante.watcher_list.repository"/>
             <argument type="service" id="event_dispatcher"/>
         </service>
 

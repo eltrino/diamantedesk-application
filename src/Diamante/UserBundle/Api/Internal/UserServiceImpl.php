@@ -17,6 +17,7 @@ namespace Diamante\UserBundle\Api\Internal;
 
 use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
+use Diamante\DeskBundle\Model\Ticket\WatcherListRepository;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Api\GravatarProvider;
@@ -62,12 +63,18 @@ class UserServiceImpl implements UserService, GravatarProvider
      */
     protected $eventDispatcher;
 
+    /**
+     * @var WatcherListRepository
+     */
+    private $watcherListRepository;
+
     public function __construct(
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
         DiamanteUserFactory $factory,
         AttachmentManager $attachmentManager,
         ApiUserRepository $diamanteApiUserRepository,
+        WatcherListRepository $watcherListRepository,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->oroUserManager               = $userManager;
@@ -75,6 +82,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $this->diamanteApiUserRepository    = $diamanteApiUserRepository;
         $this->factory                      = $factory;
         $this->attachmentManager            = $attachmentManager;
+        $this->watcherListRepository        = $watcherListRepository;
         $this->eventDispatcher              = $eventDispatcher;
     }
 
@@ -334,6 +342,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $user->getApiUser()->deactivate();
         $this->diamanteApiUserRepository->store($user->getApiUser());
         $this->diamanteUserRepository->store($user);
+        $this->watcherListRepository->removeByUser(new User($user->getId(), User::TYPE_DIAMANTE));
     }
 
     /**
