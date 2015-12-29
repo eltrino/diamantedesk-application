@@ -1,0 +1,14 @@
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+
+<div class="responsive-cell">
+    <div class="box-type1">
+        <div class="title">
+            <span class="widget-title">Support tickets</span>
+        </div>
+
+        <div class="row-fluid">
+            {{ dataGrid.renderGrid('diamante-orouser-ticket-grid', {userId: entity.id}) }}
+        </div>
+    </div>
+</div>
+

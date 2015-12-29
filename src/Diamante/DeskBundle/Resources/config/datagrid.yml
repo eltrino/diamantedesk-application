@@ -515,3 +515,94 @@ datagrid:
                 pageSize:
                     items: [10]
                     default_per_page: 10
+
+    diamante-orouser-ticket-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - CONCAT(branch.key, CONCAT('-', i.sequenceNumber)) as key
+                    - i.id
+                    - i.subject
+                    - i.status
+                    - i.createdAt
+                from:
+                    - { table:  Diamante\DeskBundle\Entity\Ticket, alias: i }
+                join:
+                    left:
+                        - { join: i.branch, alias: branch }
+                        -
+                            join: Oro\Bundle\UserBundle\Entity\User
+                            alias: u
+                            conditionType: WITH
+                            condition: "CONCAT('oro_', u.id) = i.reporter OR u.id = i.assignee"
+                where:
+                    and:
+                      - u.id IN (:userId)
+                groupBy: i.id
+
+            bind_parameters:
+                - userId
+
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      diamante_ticket_view
+                params:     [ key ]
+
+        columns:
+            key:
+                label:   diamante.desk.ticket.columns.key
+            subject:
+                label: diamante.desk.ticket.columns.subject
+                type: twig
+                frontend_type: html
+                template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
+            status:
+                label:   diamante.desk.ticket.columns.status
+            createdAt:
+                label:   diamante.desk.ticket.columns.created
+                frontend_type: datetime
+
+        sorters:
+            columns:
+                key:
+                  data_name: key
+                  apply_callback: Diamante\DeskBundle\Datagrid\SortHelper::getKeySortingFunction
+                subject:
+                  data_name: i.subject
+                status:
+                  data_name: i.status
+                createdAt:
+                  data_name: i.createdAt
+            default:
+                updatedAt: DESC
+
+        filters:
+            columns:
+                key:
+                    type:      string
+                    data_name: key
+                subject:
+                    type:      string
+                    data_name: i.subject
+                status:
+                    type: choice
+                    data_name: i.status
+                    options:
+                        field_options:
+                            multiple: true
+                            choices:  @diamante.ticket.datagrid_status_helper->getTicketStatuses
+                createdAt:
+                    type:      datetime
+                    data_name: i.createdAt
+
+        actions:
+            view:
+                type:          navigate
+                label:         diamante.desk.ticket.actions.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+                acl_resource:  VIEW;Entity:DiamanteDeskBundle:Ticket

@@ -3,9 +3,17 @@ placeholders:
         items:
             default_branch_notification: ~
 
+    view_content_data_additional_information:
+        items:
+            diamante_orouser_ticket_grid: ~
+
 items:
     default_branch_notification:
         template: DiamanteDeskBundle::defaultBranchNotification.html.twig
         applicable: @diamante.branch.placeholder->isDefault($entity$)
         data:
           default_branch: [entity]
+
+    diamante_orouser_ticket_grid:
+        template: DiamanteDeskBundle:OroUser:Grid.html.twig
+        applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %oro_user.entity.class%)
