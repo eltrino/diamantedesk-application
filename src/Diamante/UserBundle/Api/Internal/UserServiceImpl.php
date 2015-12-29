@@ -339,8 +339,12 @@ class UserServiceImpl implements UserService, GravatarProvider
         /** @var DiamanteUser $user */
         $user = $this->diamanteUserRepository->get($id);
         $user->setDeleted(true);
-        $user->getApiUser()->deactivate();
-        $this->diamanteApiUserRepository->store($user->getApiUser());
+
+        if ($user->getApiUser()) {
+            $user->getApiUser()->deactivate();
+            $this->diamanteApiUserRepository->store($user->getApiUser());
+        }
+
         $this->diamanteUserRepository->store($user);
         $this->watcherListRepository->removeByUser(new User($user->getId(), User::TYPE_DIAMANTE));
     }

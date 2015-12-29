@@ -32,4 +32,11 @@ interface DiamanteUserRepository extends Repository
      * @return DiamanteUser[]
      */
     public function searchByInput($query, array $fields);
+
+    /**
+     * Find users by DataGrid input parameters
+     * @param array $params
+     * @return DiamanteUser[]
+     */
+    public function findByDataGridParams(array $params);
 }

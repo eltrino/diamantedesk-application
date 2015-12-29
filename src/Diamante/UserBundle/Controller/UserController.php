@@ -175,16 +175,14 @@ class UserController extends Controller
      */
     public function massRemoveAction()
     {
-        $users = $this->get('request')->get('values');
-
-        if (!is_array($users)) {
-            $users = explode(',', $users);
-        }
+        $params = $this->parseGridParameters();
+        $repository = $this->get('diamante.user.repository');
+        $users = $repository->findByDataGridParams($params);
 
         try {
             foreach ($users as $user) {
                 $this->ensureUserHasNoRelatedEntities($user);
-                $this->get('diamante.user.service')->removeDiamanteUser($user);
+                $this->get('diamante.user.service')->removeDiamanteUser($user->getId());
             }
 
             $response = $this->getMassActionResponse('delete', 'user', true);
@@ -263,5 +261,14 @@ class UserController extends Controller
                 throw new UserRemovalException(sprintf("User has related %s, can not delete user", $type));
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function parseGridParameters()
+    {
+        $parametersParser = $this->container->get('oro_datagrid.mass_action.parameters_parser');
+        return $parametersParser->parse($this->get('request'));
     }
 }

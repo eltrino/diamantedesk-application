@@ -67,4 +67,41 @@ class DoctrineDiamanteUserRepository extends DoctrineGenericRepository implement
 
         return $result;
     }
+
+    /**
+     * @param array $params
+     * @return DiamanteUser[]
+     */
+    public function findByDataGridParams(array $params)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('u')->from($this->_entityName, 'u');
+
+        if (!isset($params['values']) && $params['values'] === false) {
+            return [];
+        }
+
+        if (isset($params['filters']) && count($params['filters'])) {
+            $metadata = $this->_em->getClassMetadata($this->_entityName);
+            foreach ($params['filters'] as $field => $data) {
+                if ($metadata->hasField($field)) {
+                    $qb->andWhere($qb->expr()->like("u.{$field}", $qb->expr()->literal("%{$data['value']}%")));
+                }
+            }
+        }
+
+        if (count($params['values']) === 0){
+            $params['values'][] = 0;
+        }
+
+        $valueWhereCondition =
+            $params['inset']
+                ? $qb->expr()->in('u.id', $params['values'])
+                : $qb->expr()->notIn('u.id', $params['values']);
+
+        $qb->andWhere($valueWhereCondition);
+        $qb->andWhere('u.isDeleted = 0');
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
 }
