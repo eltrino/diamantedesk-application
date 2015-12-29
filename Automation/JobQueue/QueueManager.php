@@ -33,12 +33,12 @@ class QueueManager
     /**
      * @var array
      */
-    protected $rawQueue;
+    protected $rawQueue = [];
 
     /**
      * @var array
      */
-    protected $persistedQueue;
+    protected $persistedQueue = [];
 
     public function setEntityManager(EntityManager $em)
     {

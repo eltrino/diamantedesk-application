@@ -34,6 +34,7 @@ class PersistentProcessingContext
         $this->targetEntityId        = $id;
         $this->targetEntityClass     = $class;
         $this->targetEntityChangeset = $changeSet;
+        $this->state                 = self::STATE_NEW;
     }
 
     /**
