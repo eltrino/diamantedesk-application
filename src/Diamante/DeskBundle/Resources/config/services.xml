@@ -216,6 +216,8 @@
         <service id="diamante.datagrid.combined_audit_datasource" class="%diamante.datagrid.combined_audit_datasource.class%">
             <argument id="doctrine" type="service"/>
             <argument id="diamante.audit.repository" type="service"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="oro_entity.query_hint_resolver"/>
             <tag name="oro_datagrid.datasource" type="diamante_combined_audit_datasource"/>
         </service>
 

@@ -16,9 +16,13 @@ namespace Diamante\DeskBundle\Datagrid;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DataGridBundle\Datagrid\DatagridInterface;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecord;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
+use Oro\Bundle\DataGridBundle\Event\OrmResultAfter;
+use Oro\Bundle\DataGridBundle\Event\OrmResultBefore;
+use Oro\Bundle\EntityBundle\ORM\QueryHintResolver;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Oro\Bundle\DataGridBundle\Datasource\Orm\QueryConverter\YamlConverter;
 use Diamante\DeskBundle\Model\Audit\AuditRepository;
@@ -47,17 +51,43 @@ class CombinedAuditDatasource extends AbstractDatasource
     protected $auditRepository;
 
     /**
-     * @param Registry        $doctrineRegistry
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
+    /**
+     * @var QueryHintResolver
+     */
+    protected $queryHintResolver;
+
+    /**
+     * @var array
+     */
+    protected $queryHints;
+
+    /**
+     * @var DataGridInterface
+     */
+    protected $grid;
+
+    /**
+     * @param Registry $doctrineRegistry
      * @param AuditRepository $auditRepository
+     * @param EventDispatcherInterface $dispatcher
+     * @param QueryHintResolver $queryHintResolver
      */
     public function __construct(
         Registry $doctrineRegistry,
-        AuditRepository $auditRepository
+        AuditRepository $auditRepository,
+        EventDispatcherInterface $dispatcher,
+        QueryHintResolver $queryHintResolver
     ) {
-        $this->doctrineRegistry = $doctrineRegistry;
-        $this->auditRepository = $auditRepository;
+        $this->doctrineRegistry     = $doctrineRegistry;
+        $this->auditRepository      = $auditRepository;
 
-        $this->qbDiamanteAudit = $auditRepository->createQueryBuilder('a');
+        $this->qbDiamanteAudit      = $auditRepository->createQueryBuilder('a');
+        $this->dispatcher           = $dispatcher;
+        $this->queryHintResolver    = $queryHintResolver;
     }
 
     /**
@@ -67,10 +97,15 @@ class CombinedAuditDatasource extends AbstractDatasource
     public function process(DatagridInterface $grid, array $config)
     {
         $this->config = $config;
+        $this->grid   = $grid;
 
         $queryConfig = array_intersect_key($this->config, array_flip(['query']));
         $converter = new YamlConverter();
         $this->qbOroAudit = $converter->parse($queryConfig, $this->doctrineRegistry->getManager()->createQueryBuilder('a'));
+
+        if (isset($config['hints'])) {
+            $this->queryHints = $config['hints'];
+        }
 
         parent::process($grid, $config);
     }
@@ -80,24 +115,44 @@ class CombinedAuditDatasource extends AbstractDatasource
      */
     public function getResults()
     {
-        $rows = [];
+        $audit = [];
+        $rows  = [];
 
-        $oroAudit = $this->getQbOroAudit()->getQuery()->getResult(Query::HYDRATE_ARRAY);
-        $diamanteAudit = $this->getQbDiamanteAudit()->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        /** @var $qb QueryBuilder $query */
+        foreach ($this->getQueryBuilders() as $qb) {
+            $query = $qb->getQuery();
 
-        $audit = array_merge($oroAudit, $diamanteAudit);
+            $this->queryHintResolver->resolveHints(
+                $query,
+                null !== $this->queryHints ? $this->queryHints : []
+            );
+
+            $beforeEvent = new OrmResultBefore($this->grid, $query);
+            $this->dispatcher->dispatch(OrmResultBefore::NAME, $beforeEvent);
+
+            $result = $beforeEvent->getQuery()->execute();
+
+            $audit = array_merge($audit, $result);
+            unset($result, $query, $beforeEvent);
+        }
+
         $this->applySorting($audit);
 
         foreach ($audit as $item) {
             $rows[] = new ResultRecord($item);
         }
 
-        return $this->applyPagination($rows);
+        $event = new OrmResultAfter($this->grid, $rows);
+        $this->dispatcher->dispatch(OrmResultAfter::NAME, $event);
+
+        $this->applyPagination($rows);
+
+        return $event->getRecords();
 
     }
 
     /**
-     * @return array
+     * @return QueryBuilder
      */
     protected function getQbOroAudit()
     {
@@ -105,7 +160,7 @@ class CombinedAuditDatasource extends AbstractDatasource
     }
 
     /**
-     * @return array
+     * @return QueryBuilder
      */
     protected function getQbDiamanteAudit()
     {
