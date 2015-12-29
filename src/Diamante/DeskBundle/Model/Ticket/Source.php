@@ -39,13 +39,13 @@ class Source
      */
     public function __construct($source)
     {
-        if (empty($source)) {
-            $source = self::WEB;
-        }
-
         static::initValueLabelsMap();
 
-        if (false === isset(static::$valueToLabelMap[$source])) {
+        if (!$source) {
+            $source = '';
+        }
+
+        if (false === isset(static::$valueToLabelMap[$source]) && $source !== '') {
             throw new \InvalidArgumentException('Given source is wrong');
         }
 
