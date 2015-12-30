@@ -92,7 +92,7 @@
   stroke: black;
   stroke-width: 2px;
 }
-
+1
 .diam-plot .slice:hover {
   fill-opacity: .5;
 }
@@ -139,4 +139,5 @@
 
 .diam-plot .legend text {
   fill: #fff;
+  text-transform: capitalize;
 }
