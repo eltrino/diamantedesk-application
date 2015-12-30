@@ -142,12 +142,14 @@ class CombinedAuditDatasource extends AbstractDatasource
             $rows[] = new ResultRecord($item);
         }
 
+        $this->applyPagination($rows);
+
         $event = new OrmResultAfter($this->grid, $rows);
         $this->dispatcher->dispatch(OrmResultAfter::NAME, $event);
 
-        $this->applyPagination($rows);
+        $records = $event->getRecords();
 
-        return $event->getRecords();
+        return $records;
 
     }
 

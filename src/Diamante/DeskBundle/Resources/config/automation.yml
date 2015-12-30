@@ -1,0 +1,25 @@
+diamante_automation:
+    entities:
+      ticket:
+        class: "Diamante\DeskBundle\Entity\Ticket"
+        frontend_label: diamante.desk.ticket.entity_label
+        properties:
+          status:
+            frontend_label: diamante.desk.ticket.status.label
+            type: status
+          priority:
+            frontend_label: diamante.desk.ticket.priority.label
+            type: priority
+          subject:
+            frontend_label: diamante.desk.ticket.subject.label
+            type: string
+          description:
+            frontend_label: diamante.desk.ticket.description.label
+            type: string
+      comment:
+        class: "Diamante\DeskBundle\Entity\Comment"
+        frontend_label: diamante.desk.comment.entity_label
+        properties:
+          content:
+            frontend_label: diamante.desk.comment.content.label
+            type: string
