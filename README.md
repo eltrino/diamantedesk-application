@@ -10,7 +10,7 @@ To install DiamanteDesk, follow this [link](http://docs.diamantedesk.com/en/late
 
 ### Usage ###
 
-It is a comprehensive help desk that is currently can be easily integrated into OroCRM but in a short time will be available for other CRMs. It can be also integrated with various web products designed via [Magento](http://docs.diamantedesk.com/en/latest/integration/magento/), [WordPress](http://docs.diamantedesk.com/en/latest/integration/wordpress/) and [PrestaShop](http://docs.diamantedesk.com/en/latest/integration/prestashop/).
+It is a comprehensive help desk that is currently can be easily integrated into OroCRM but in a short time will be available for other CRMs. It can be also integrated with various web products designed via [Magento](http://docs.diamantedesk.com/en/latest/integration/magento.html), [WordPress](http://docs.diamantedesk.com/en/latest/integration/wordpress.html) and [PrestaShop](http://docs.diamantedesk.com/en/latest/integration/prestashop.html).
 
 To learn more about DiamanteDesk and its features, click [here](http://docs.diamantedesk.com/en/latest/).
 
