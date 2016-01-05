@@ -22,7 +22,7 @@ datagrid:
                 params:     [ id ]
             delete_link:
                 type:       url
-                route:      diamante_branch_api_service_oro_delete_branch
+                route:      diamante_branch_list_delete_form
                 params:     [ id ]
         sorters:
             columns:
@@ -66,10 +66,19 @@ datagrid:
                 link:          update_link
                 acl_resource:  EDIT;Entity:DiamanteDeskBundle:Branch
             delete:
-                type:          delete
+                type:          dialog
                 label:         diamante.desk.branch.actions.remove
                 icon:          trash
                 link:          delete_link
+                widgetOptions:
+                    options:
+                        dialogOptions:
+                            title: Delete Branch
+                            width: 300
+                            allowMaximize: false
+                            allowMinimize: false
+                            modal: true
+                            maximizedHeightDecreaseBy: minimize-bar
                 acl_resource:  DELETE;Entity:DiamanteDeskBundle:Branch
         mass_actions:
             delete:

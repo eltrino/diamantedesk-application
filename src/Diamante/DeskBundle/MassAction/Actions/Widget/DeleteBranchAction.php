@@ -13,12 +13,12 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\MassAction\Actions\Ajax;
+namespace Diamante\DeskBundle\MassAction\Actions\Widget;
 
-use Oro\Bundle\DataGridBundle\Extension\MassAction\Actions\Ajax\DeleteMassAction;
+use Oro\Bundle\DataGridBundle\Extension\MassAction\Actions\Widget\WindowMassAction;
 use Oro\Bundle\DataGridBundle\Extension\Action\ActionConfiguration;
 
-class DeleteBranchAction extends DeleteMassAction
+class DeleteBranchAction extends WindowMassAction
 {
     public function getName()
     {
@@ -27,8 +27,8 @@ class DeleteBranchAction extends DeleteMassAction
 
     public function setOptions(ActionConfiguration $options)
     {
-        if (empty($options['handler'])) {
-            $options['handler'] = 'diamante.desk.mass.action.delete_branch.handler';
+        if (empty($options['route'])) {
+            $options['route'] = 'diamante_branch_mass_action';
         }
 
         return parent::setOptions($options);

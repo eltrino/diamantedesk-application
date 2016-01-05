@@ -7,20 +7,18 @@
 
 {% block navButtons %}
     {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Branch') %}
-        {{
-            UI.addButton({
-                'path' : path('diamante_branch_create'),
-                'title' : 'diamante.desk.branch.actions.create'|trans,
-                'label' : 'diamante.desk.branch.actions.create'|trans
-            })
-        }}
+        {{ UI.addButton({
+            'path' : path('diamante_branch_create'),
+            'title' : 'diamante.desk.branch.actions.create'|trans,
+            'label' : 'diamante.desk.branch.actions.create'|trans
+        }) }}
     {% endif %}
     <script>
-        require(['jquery',  'oroui/js/mediator'],
-            function($, mediator) {
-                mediator.on('grid_render:complete', function (element) {
-                    $(element).addClass('diam-branch-grid')
+        require(['jquery', 'oroui/js/mediator'],
+                function ($, mediator) {
+                    mediator.on('grid_render:complete', function (element) {
+                        $(element).addClass('diam-branch-grid')
+                    });
                 });
-            });
     </script>
 {% endblock %}

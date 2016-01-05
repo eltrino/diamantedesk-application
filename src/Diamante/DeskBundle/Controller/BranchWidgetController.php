@@ -14,10 +14,10 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
+use Diamante\DeskBundle\Entity\Ticket;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Diamante\DeskBundle\Controller\WidgetController;
 
 /**
  * @Route("branches")
@@ -26,56 +26,174 @@ class BranchWidgetController extends WidgetController
 {
     /**
      * @Route(
-     *      "/deleteBranchForm/{id}",
-     *      name="diamante_branch_delete_form",
+     *      "/deleteBranchViewForm/{id}",
+     *      name="diamante_branch_view_delete_form",
      *      requirements={"id"="\d+"}
      * )
      * @Template("DiamanteDeskBundle:Branch/widgets:deleteForm.html.twig")
      *
      */
-    public function deleteBranchForm($id)
+    public function deleteBranchViewForm($id)
     {
+        $response = $this->deleteBranchForm($id);
+        $response['delete_route'] = 'diamante_branch_view_delete_form';
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/deleteBranchListForm/{id}",
+     *      name="diamante_branch_list_delete_form",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Branch/widgets:deleteForm.html.twig")
+     *
+     */
+    public function deleteBranchListForm($id)
+    {
+        $response = $this->deleteBranchForm($id, false);
+        $response['delete_route'] = 'diamante_branch_list_delete_form';
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/{gridName}/massAction/{actionName}",
+     *      name="diamante_branch_mass_action",
+     *      requirements={"gridName"="[\w\:-]+", "actionName"="[\w-]+"},
+     *      options= {"expose"= true}
+     * )
+     *
+     * @Template("DiamanteDeskBundle:Branch/widgets:deleteMassForm.html.twig")
+     *
+     * @param string $gridName
+     * @param string $actionName
+     *
+     * @return Response
+     * @throws \LogicException
+     */
+    public function massActionAction($gridName, $actionName)
+    {
+        $request = $this->getRequest();
+
         try {
-            $form = $this->createForm('diamante_delete_branch_form', array('id' => $id));
+            $form = $this->createForm('diamante_mass_delete_branch_form', ['values' => $request->get('values')]);
 
             if (true === $this->widgetRedirectRequested()) {
-                $response = array('form' => $form->createView());
+                $response = ['form' => $form->createView()];
+
                 return $response;
             }
 
             $this->handle($form);
             $data = $form->getData();
 
-            $tickets = array();
+            $newBranchId = $data['newBranch'];
+            $removeBranches = explode(',', $data['removeBranches']);
+            $branchService = $this->get('diamante.branch.service');
+
+            if ($data['moveMassTickets']) {
+                foreach ($removeBranches as $branchId) {
+                    $tickets = $this->getAllTickets($branchId);
+
+                    foreach ($tickets as $ticket) {
+                        $this->moveTicket($ticket, $newBranchId);
+                    }
+
+                    $branchService->deleteBranch($branchId);
+                }
+            }
+
+            $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
+            $response = $this->getWidgetResponse();
+
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = ['form' => $form->createView()];
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param integer $id
+     * @param bool    $redirect
+     *
+     * @return array
+     */
+    private function deleteBranchForm($id, $redirect = true)
+    {
+        try {
+            $form = $this->createForm('diamante_delete_branch_form', ['id' => $id]);
+
+            if (true === $this->widgetRedirectRequested()) {
+                $response = ['form' => $form->createView()];
+                return $response;
+            }
+
+            $this->handle($form);
+            $data = $form->getData();
+
+            $tickets = [];
             $newBranchId = $data['newBranch'];
             $branchService = $this->get('diamante.branch.service');
 
             if ($data['moveTickets']) {
-                $tickets = $this->getDoctrine()
-                    ->getRepository('DiamanteDeskBundle:Ticket')
-                    ->findBy(array('branch' => $id));
+                $tickets = $this->getAllTickets($newBranchId);
             }
 
             foreach ($tickets as $ticket) {
-                $command = $this->get('diamante.command_factory')
-                    ->createMoveTicketCommand($ticket);
-
-                $command->branch = $branchService->getBranch($newBranchId);
-
-                if ($command->branch->getId() != $ticket->getBranch()->getId()) {
-                    $this->get('diamante.ticket.service')->moveTicket($command);
-                }
+                $this->moveTicket($ticket, $newBranchId);
             }
 
             $branchService->deleteBranch($id);
             $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
             $response = $this->getWidgetResponse();
-            $response['redirect'] = $this->generateUrl('diamante_branch_list');
+
+            if ($redirect) {
+                $response['redirect'] = $this->generateUrl('diamante_branch_list');
+            }
 
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = array('form' => $form->createView());
+            $response = ['form' => $form->createView()];
         }
+
         return $response;
+    }
+
+    /**
+     * @param $branchId
+     *
+     * @return array|\Diamante\DeskBundle\Entity\Ticket[]
+     */
+    private function getAllTickets($branchId)
+    {
+        return $this->getDoctrine()
+            ->getRepository('DiamanteDeskBundle:Ticket')
+            ->findBy(['branch' => $branchId]);
+    }
+
+    /**
+     * @param Ticket  $ticket
+     * @param integer $newBranchId
+     *
+     * @return $this
+     */
+    private function moveTicket(Ticket $ticket, $newBranchId)
+    {
+        $branchService = $this->get('diamante.branch.service');
+        $command = $this->get('diamante.command_factory')
+            ->createMoveTicketCommand($ticket);
+
+        $command->branch = $branchService->getBranch($newBranchId);
+
+        if ($command->branch->getId() != $ticket->getBranch()->getId()) {
+            $this->get('diamante.ticket.service')->moveTicket($command);
+        }
+
+        return $this;
     }
 }

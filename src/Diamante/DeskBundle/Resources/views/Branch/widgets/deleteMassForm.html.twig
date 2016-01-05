@@ -15,13 +15,16 @@
         </script>
     {% else %}
         <div class="form-container">
-            <form id="{{ form.vars.name }}" action="{{ path(delete_route, { 'id': form.vars.value.id, 'no_redirect': true} ) }}" method="post">
+            <form id="{{ form.vars.name }}" action="{{ path('diamante_branch_mass_action', {'gridName': 'diamante-branch-grid', 'actionName': 'delete', 'no_redirect': true} ) }}" method="post">
                 <fieldset class="form form-horizontal">
                     <p>{{ 'diamante.desk.branch.messages.delete.query'|trans }}</p>
-                    <div class="span11">
-                            {{ form_widget(form.moveTickets) }} {{ form_label(form.moveTickets) }}
-                        <div id="moveTickets" style="display: none;">
+                    <div class="span6">
+                            {{ form_row(form.moveMassTickets) }}
+                        <div id="moveMassTickets" style="display: none;">
                             {{ form_row(form.newBranch) }}
+                        </div>
+                        <div>
+                            {{ form_row(form.removeBranches) }}
                         </div>
                     </div>
 
@@ -35,16 +38,16 @@
         </div>
         <script type="text/javascript">
             require(['jquery'],
-                    function($) {
-                        $("input[name='diamante_delete_branch_form[moveTickets]']").click(
-                                function() {
-                                    if ($(this).is(":checked")) {
-                                        $("#moveTickets").show();
-                                    } else {
-                                        $("#moveTickets").hide();
-                                    }
-                                }
-                        )
+                    function ($) {
+                        var selector = '[id*=diamante_mass_delete_branch_form_moveMassTickets]';
+
+                        $(selector).bind('click', function () {
+                            if ($(this).is(':checked')) {
+                                $('#moveMassTickets').show();
+                            } else {
+                                $('#moveMassTickets').hide();
+                            }
+                        })
                     });
         </script>
     {% endif %}
