@@ -157,7 +157,7 @@ class GenericTargetEntityProvider
 
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", self::TARGET_ALIAS, $property), $value]
+            [sprintf("%s.%s", self::TARGET_ALIAS, $property), sprintf("'%s'", $value)]
         );
 
         return $condition;
