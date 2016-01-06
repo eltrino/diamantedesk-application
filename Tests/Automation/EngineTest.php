@@ -32,6 +32,7 @@ use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 
 class EngineTest extends \PHPUnit_Framework_TestCase
 {
@@ -93,6 +94,12 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     private $updatePropertyAction;
 
     /**
+     * @var \Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction
+     * @Mock Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction
+     */
+    private $notifyByEmailAction;
+
+    /**
      * @var Engine
      */
     private $service;
@@ -119,81 +126,41 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-        public function testCreateFact()
-        {
-            $ticket = $this->getTarget();
+    public function testCreateFact()
+    {
+        $ticket = $this->getTarget();
 
-            $this->configurationProvider
-                ->expects($this->once())
-                ->method('getTargetByClass')
-                ->will($this->returnValue('ticket'));
+        $this->configurationProvider
+            ->expects($this->once())
+            ->method('getTargetByClass')
+            ->will($this->returnValue('ticket'));
 
-            $fact = $this->service->createFact($ticket);
+        $fact = $this->service->createFact($ticket);
 
-            $this->assertEquals($ticket, $fact->getTarget());
-            $this->assertEquals('ticket', $fact->getTargetType());
-            $this->assertEquals(null, $fact->getTargetChangeset());
-        }
+        $this->assertEquals($ticket, $fact->getTarget());
+        $this->assertEquals('ticket', $fact->getTargetType());
+        $this->assertEquals(null, $fact->getTargetChangeset());
+    }
 
     /**
      * @test
      */
-        public function testProcess()
-        {
-            $ticket = $this->getTarget();
-            $rule = $this->getRule();
-            $fact = new Fact($ticket, 'ticket');
-            $context = new ExecutionContext(['status' => Status::CLOSED]);
-
-            $this->em
-                ->expects($this->once())
-                ->method('getRepository')
-                ->will($this->returnValue($this->ruleRepository));
-
-            $this->ruleRepository
-                ->expects($this->any())
-                ->method('findBy')
-                ->will($this->returnValue([$rule]));
-
-            $this->conditionFactory
-                ->expects($this->any())
-                ->method('getCondition')
-                ->will(
-                    $this->returnCallback(
-                        function ($type, $parameters) {
-                            $class = sprintf('Diamante\AutomationBundle\Rule\Condition\Expression\%s', $type);
-                            $property = key($parameters);
-                            $expectedValue = $parameters[$property];
-                            $conditions = new $class($property, $expectedValue);
-
-                            return $conditions;
-                        }
-                    )
-                );
-
-            $this->actionProvider
-                ->expects($this->once())
-                ->method('getActions')
-                ->will($this->returnValue([$this->updatePropertyAction]));
-
-            $this->updatePropertyAction
-                ->expects($this->any())
-                ->method('getContext')
-                ->will($this->returnValue($context));
-
-            $this->updatePropertyAction
-                ->expects($this->any())
-                ->method('execute');
-
-            $this->service->process($fact);
-        }
-
-    public function testProcessSingleRule()
+    public function testProcess()
     {
         $ticket = $this->getTarget();
         $rule = $this->getRule();
         $fact = new Fact($ticket, 'ticket');
         $context = new ExecutionContext(['status' => Status::CLOSED]);
+
+        $this->em
+            ->expects($this->once())
+            ->method('getRepository')
+            ->will($this->returnValue($this->ruleRepository));
+
+        $this->ruleRepository
+            ->expects($this->any())
+            ->method('findBy')
+            ->will($this->returnValue([$rule]));
 
         $this->conditionFactory
             ->expects($this->any())
@@ -225,11 +192,51 @@ class EngineTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('execute');
 
-        $result = $this->service->processSingleRule($fact, $rule);
-
-        $this->assertTrue($result);
+        $this->service->process($fact);
     }
 
+    /**
+     * @test
+     */
+    public function testProcessRule()
+    {
+        $ticket = $this->getTarget();
+        $rule = $this->getRule();
+        $context = new ExecutionContext(['status' => Status::CLOSED]);
+
+        $this->configurationProvider
+            ->expects($this->once())
+            ->method('getEntityConfiguration')
+            ->will($this->returnValue(new ParameterBag($this->getEntities()['ticket'])));
+
+        $this->targetProvider
+            ->expects($this->once())
+            ->method('getTargets')
+            ->will($this->returnValue([$ticket]));
+
+        $this->actionProvider
+            ->expects($this->any())
+            ->method('getActions')
+            ->will($this->returnValue([$this->notifyByEmailAction]));
+
+        $this->configurationProvider
+            ->expects($this->once())
+            ->method('getTargetByClass')
+            ->will($this->returnValue('ticket'));
+
+        $this->notifyByEmailAction
+            ->expects($this->any())
+            ->method('getContext')
+            ->will($this->returnValue($context));
+
+        $result = $this->service->processRule($rule);
+
+        $this->assertEquals(1, $result);
+    }
+
+    /**
+     * @return WorkflowRule
+     */
     private function getRule()
     {
         $rule = new WorkflowRule('workflow_rule', 'ticket');
@@ -246,6 +253,9 @@ class EngineTest extends \PHPUnit_Framework_TestCase
         return $rule;
     }
 
+    /**
+     * @return Ticket
+     */
     private function getTarget()
     {
         return new Ticket(
@@ -284,5 +294,22 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     private function createOroUser()
     {
         return new OroUser();
+    }
+
+    /**
+     * @return array
+     */
+    private function getEntities()
+    {
+        $entities = [
+            'ticket'  => [
+                'class' => 'Diamante\DeskBundle\Entity\Ticket'
+            ],
+            'comment' => [
+                'class' => 'Diamante\DeskBundle\Entity\Comment'
+            ]
+        ];
+
+        return $entities;
     }
 }
