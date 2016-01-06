@@ -18,6 +18,7 @@ namespace Diamante\AutomationBundle\Infrastructure;
 
 use Diamante\AutomationBundle\Entity\Group;
 use Diamante\AutomationBundle\Model\Rule;
+use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Condition\ConditionInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
@@ -34,13 +35,20 @@ class GenericTargetEntityProvider
     protected $em;
 
     /**
+     * @var ConditionFactory
+     */
+    protected $conditionFactory;
+
+    /**
      * GenericTargetEntityProvider constructor.
      * @param Registry $registry
+     * @param ConditionFactory $conditionFactory
      * @internal param EntityManager $em
      */
-    public function __construct(Registry $registry)
+    public function __construct(Registry $registry, ConditionFactory $conditionFactory)
     {
-        $this->em = $registry->getManager();
+        $this->em               = $registry->getManager();
+        $this->conditionFactory = $conditionFactory;
     }
 
     /**
@@ -110,6 +118,10 @@ class GenericTargetEntityProvider
         }
 
         foreach ($group->getConditions() as $conditionDefinition) {
+            $conditionDefinition = $this->conditionFactory->getCondition(
+                $conditionDefinition->getType(),
+                $conditionDefinition->getParameters()
+            );
             /** @var ConditionInterface $conditionDefinition */
             list($property, $expr, $value) = $conditionDefinition->export();
             $compiledCondition = $this->buildCondition($qb, $property, $expr, $value);

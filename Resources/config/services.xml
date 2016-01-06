@@ -72,6 +72,7 @@
 
         <service id="diamante_automation.generic.target.provider" class="%diamante_automation.generic.target.provider.class%">
             <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.condition.factory"/>
         </service>
 
         <service id="diamante.automation.queue.manager" class="%diamante_automation.queue_manager.class%">
