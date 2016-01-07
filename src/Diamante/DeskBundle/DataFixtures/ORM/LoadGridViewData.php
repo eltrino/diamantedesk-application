@@ -72,6 +72,17 @@ class LoadGridViewData extends AbstractFixture
 
         $manager->persist($myOpenTicketsFilter);
 
+        $myWatchedTicketsFilter = new GridView();
+        $myWatchedTicketsFilter->setOwner($user)
+            ->setOrganization($organization)
+            ->setName('My watched tickets')
+            ->setType(GridView::TYPE_PUBLIC)
+            ->setFiltersData(array('watcher' => array('value' => 'current')))
+            ->setSortersData(array())
+            ->setGridName('diamante-ticket-grid');
+
+        $manager->persist($myWatchedTicketsFilter);
+
         $manager->flush();
     }
 }

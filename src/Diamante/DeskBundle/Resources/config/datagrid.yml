@@ -119,6 +119,7 @@ datagrid:
                     - CONCAT(assignee.firstName, CONCAT(' ', assignee.lastName)) as assigneeFullName
                     - i.createdAt
                     - i.updatedAt
+                    - watchers.userType as watcher
                 from:
                     - { table: DiamanteDeskBundle:Ticket, alias: i }
                 join:
@@ -126,6 +127,7 @@ datagrid:
                         - { join: i.branch, alias: branch }
                         - { join: i.assignee, alias: assignee }
 #                        - { join: i.reporter, alias: reporter }
+                        - { join: i.watcherList, alias: watchers }
         properties:
             id: ~
             view_link:
@@ -231,6 +233,12 @@ datagrid:
                 updatedAt:
                     type:      datetime
                     data_name: i.updatedAt
+
+                watcher:
+                    type:      string
+                    data_name: watcher
+                    enabled:   false
+                    disabled:  false
         actions:
             view:
                 type:          navigate

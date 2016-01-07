@@ -26,6 +26,8 @@ class GridViewsLoadListener implements EventSubscriber
 {
 
     const FIXTURE_USERNAME = 'fixtureUser';
+    const CURRENT_USER_PLACEHOLDER = 'current';
+
     /** @var Registry */
     protected $registry;
 
@@ -81,6 +83,12 @@ class GridViewsLoadListener implements EventSubscriber
                 if (strpos($value, self::FIXTURE_USERNAME) !== false) {
                     $gridView['filters']['assigneeFullName'] = $currentUser->getFirstName() . ' ' . $currentUser->getLastName();
                 }
+            }
+
+            if (isset($gridView['filters']['watcher'])
+                && $gridView['filters']['watcher']['value'] === self::CURRENT_USER_PLACEHOLDER) {
+
+                $gridView['filters']['watcher']['value'] = sprintf("oro_%d", $currentUser->getId());
             }
         }
 
