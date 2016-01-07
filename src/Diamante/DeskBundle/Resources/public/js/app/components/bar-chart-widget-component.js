@@ -24,19 +24,17 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
           return Math.floor(Math.random() * (max - min + 1) + min).toString();
         };
 
-    if ( !outputData) {
-      $('.diam-bar-chart-widget').css({
+    if ( _.every(data), function (elem) {
+          return elem.y == 0;
+        }) {
+      $(elem).css({
         opacity: '.2',
         pointerEvents: 'none',
         backgroundColor: '#f2f2f7'
       });
-
-      $('.widget-content').each(function() {
-        if ( !$(this).hasClass('diamante-myrecenttickets-widget-widget-content') ) {
-          $(this).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
-        }
-      });
-
+          
+          $(parent).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+     
       data = [
         {
           y: getRandomInt(10,0),
@@ -151,8 +149,10 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
 
-        if ( !outputData ) {
-          $('rect.bar').css('fill', 'rgba(100,100,100,.7)');
+        if ( _.every(data), function (elem) {
+          return elem.y == 0;
+        }) {
+          $('rect.bar', elem).css('fill', 'rgba(100,100,100,.7)');
         }
 
     resizeBars[parent.id] = function () {

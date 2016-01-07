@@ -15,7 +15,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
               '<% _.each(states, function(state){ %>' +
               '<li>' +
                   '<span class="color-label" style="background:<%= state.color %>"></span>' +
-                  '<%= state.name %> tickets: <%= state.value %>' +
+                  '<%= state.name %>: <%= state.value %>' +
               '</li>' +
               '<% }) %>' +
             '</ul>' +
@@ -59,21 +59,21 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
 
       if (data.length == 0) {
 
+        $(elem).css({
+        opacity: '.2',
+        pointerEvents: 'none',
+        backgroundColor: '#f2f2f7'
+        });
+
+        $(parent).prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
+
         data = {};
         data.dateProp = {
           date: new Date(),
           item: getRandomInt(0,5)
         };
 
-        $('.diam-grouped-line-chart-report').css({
-          opacity: '.2',
-          pointerEvents: 'none',
-          backgroundColor: '#f2f2f7'
-        });
-
-        $('.container-fluid').prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
-
-        $('path.line').css('stroke', 'rgba(100,100,100,.7)');
+        $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
 
       }
 
@@ -184,7 +184,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
             date : dateFormat(d.date),
             states : _.map(keys, function(key){
                       return {
-                        name : key,
+                        name : key[0].toUpperCase() + key.slice(1),
                         value : d[key]? d[key] : 0,
                         color: color(key)
                       }
@@ -299,7 +299,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         .call(function(d) { d.exit().remove()})
         .attr("y",function(d,i) { return i + 0.1+"em"})
         .attr("x","1em")
-        .text(function(d) { return d.key; });
+        .text(function(d) { return d.key[0].toUpperCase() + d.key.slice(1); });
 
     legendItem.selectAll("circle")
         .data(legend, function(d) { return d.key})
@@ -380,8 +380,10 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
     };
 
     if ( data.some(function (elem) { return elem.item; }) ) {
-      $('path.line').css('stroke', 'rgba(100,100,100,.7)');
-      $('g.context').css('display', 'none');
+      $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
+      $('g.context', elem).css('display', 'none');
+      $('g.legend', elem).css('display', 'none');
+
     }
 
   };
