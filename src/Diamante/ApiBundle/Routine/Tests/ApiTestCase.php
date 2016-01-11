@@ -21,6 +21,8 @@ use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 
 abstract class ApiTestCase extends WebTestCase
 {
+    const DIAMANTE_EMAIL = 'admin@eltrino.com';
+
     /**
      * @var Client
      */
@@ -50,7 +52,7 @@ abstract class ApiTestCase extends WebTestCase
     {
         $this->oroUsername = 'admin';
         $this->oroApiKey = 'api_key';
-        $this->diamanteEmail = 'admin@eltrino.com';
+        $this->diamanteEmail = static::DIAMANTE_EMAIL;
         static::$kernel = static::createKernel();
         static::$kernel->boot();
         $this->initClient();

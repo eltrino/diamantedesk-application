@@ -63,7 +63,7 @@ class HandleException
         $exception = $event->getException();
 
         $this->container->get('monolog.logger.diamante')->
-            error("DiamanteAPI Exception::%s", $exception->getMessage());
+            error(sprintf("DiamanteAPI Exception::%s", $exception->getMessage()));
 
         $event->setResponse(
             $this->getFormattedResponse($request, $exception, $this->getStatusCode($exception))

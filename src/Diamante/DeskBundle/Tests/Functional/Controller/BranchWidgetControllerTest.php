@@ -29,7 +29,7 @@ class BranchWidgetControllerTest extends AbstractController
      */
     public function testDeleteBranchForm()
     {
-        $branchFormUrl = $this->getUrl('diamante_branch_delete_form', array('id' => 1));
+        $branchFormUrl = $this->getUrl('diamante_branch_view_delete_form', array('id' => 1));
         $crawler = $this->client->request('GET', $branchFormUrl);
 
         $this->assertEquals("Cancel", $crawler->selectButton('Cancel')->html());

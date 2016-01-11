@@ -18,7 +18,7 @@ use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
 use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 use FOS\RestBundle\Util\Codes;
 
-class UserApiServiceImplTest extends ApiTestCase
+class DiamanteUserApiServiceImplTest extends ApiTestCase
 {
     /**
      * @var ApiCommand
@@ -29,6 +29,7 @@ class UserApiServiceImplTest extends ApiTestCase
     {
         parent::setUp();
         $this->command = new ApiCommand();
+        $this->isDiamante = true;
     }
 
     /**

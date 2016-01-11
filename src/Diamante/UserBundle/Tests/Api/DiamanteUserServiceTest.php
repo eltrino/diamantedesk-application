@@ -68,6 +68,12 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
     private $apiUserRepository;
 
     /**
+     * @var \Diamante\DeskBundle\Model\Ticket\WatcherListRepository
+     * @Mock \Diamante\DeskBundle\Model\Ticket\WatcherListRepository
+     */
+    private $watcherListRepository;
+
+    /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      * @Mock \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
@@ -82,6 +88,7 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
             $this->diamanteUserFactory,
             $this->attachmentManager,
             $this->apiUserRepository,
+            $this->watcherListRepository,
             $this->eventDispatcher
         );
     }

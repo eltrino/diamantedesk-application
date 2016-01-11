@@ -150,7 +150,7 @@ class BranchControllerTest extends AbstractController
     public function testDelete()
     {
         $branch           = $this->chooseBranchFromGrid();
-        $branchDeleteUrl  = $this->getUrl('diamante_branch_delete_form', array('id' => $branch['id']));
+        $branchDeleteUrl  = $this->getUrl('diamante_branch_view_delete_form', array('id' => $branch['id']));
         $crawler          = $this->client->request('GET', $branchDeleteUrl);
         $form = $crawler->selectButton('Delete')->form();
 

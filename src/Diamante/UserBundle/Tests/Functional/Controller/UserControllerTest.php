@@ -15,6 +15,7 @@
 namespace Diamante\UserBundle\Tests\Functional\Controller;
 
 use Diamante\DeskBundle\Tests\Functional\Controller\AbstractController;
+use Diamante\ApiBundle\Routine\Tests\ApiTestCase;
 
 class UserControllerTest extends AbstractController
 {
@@ -124,6 +125,19 @@ class UserControllerTest extends AbstractController
         $this->assertEquals(200, $response->getStatusCode());
 
         $result = $this->jsonToArray($response->getContent());
-        return current($result['data']);
+
+        $selectedUser = null;
+        foreach ($result['data'] as $user) {
+            if ($user['email'] != ApiTestCase::DIAMANTE_EMAIL) {
+                $selectedUser = $user;
+                break;
+            }
+        }
+
+        if (is_null(($selectedUser))) {
+            throw new \RuntimeException('User does not exists.');
+        }
+
+        return $selectedUser;
     }
 }
