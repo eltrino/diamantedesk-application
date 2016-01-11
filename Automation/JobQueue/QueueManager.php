@@ -68,7 +68,6 @@ class QueueManager
         }
 
         $this->em->flush();
-        $this->em->clear();
 
         $this->rawQueue = [];
     }
@@ -91,7 +90,6 @@ class QueueManager
         }
 
         $this->em->flush();
-        $this->em->clear();
 
         $this->persistedQueue = [];
     }
