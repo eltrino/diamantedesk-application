@@ -174,7 +174,7 @@ class Engine
         foreach ($group->getConditions() as $conditionEntity) {
             $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters());
 
-            if (false === $condition->isSatisfiedBy($fact)); {
+            if (false === $condition->isSatisfiedBy($fact)) {
                 return false;
             }
         }
@@ -192,7 +192,7 @@ class Engine
         foreach ($group->getConditions() as $conditionEntity) {
             $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters());
 
-            if (true === $condition->isSatisfiedBy($fact)); {
+            if (true === $condition->isSatisfiedBy($fact)) {
                 return true;
             }
         }
