@@ -8,15 +8,18 @@ diamante:
         create:
           error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
           success:         Rule successfully created.
-      columns:
-        name: name
+
       actions:
         add: Add Rule
         view: View Rule
         edit: Edit Rule
         remove: Remove Rule
-        remove_mass: Remove Rules
-
+        mass:
+          remove: Remove Rules
+          activate: Activate Rules
+          deactivate: Deactivate Rules
+      business:
+        repetition_time: Repetition Interval
     ui:
       create:              Create
       ok:                  Ok
@@ -37,7 +40,9 @@ diamante:
       active:              Active
       expression:          Expression
       mode:                Mode
+
     common:
+      name:                Name
       general:             General
       created:             Created
       updated:             Updated
