@@ -21,5 +21,5 @@ use Diamante\UserBundle\Model\User;
 
 interface AuditRepository
 {
-
+    public function createQueryBuilder($alias);
 }
