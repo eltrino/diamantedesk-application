@@ -33,7 +33,7 @@ class AutomationController extends Controller
      * @Route(
      *      "/{type}/{_format}",
      *      name="diamante_automation_list",
-     *      requirements={"type"="\w+", "_format"="html|json"},
+     *      requirements={"type"="workflow|business", "_format"="html|json"},
      *      defaults={"_format" = "html"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:list.html.twig")
@@ -47,7 +47,7 @@ class AutomationController extends Controller
      * @Route(
      *      "/{type}/view/{id}",
      *      name="diamante_automation_view",
-     *      requirements={"type"="\w+", "id"="^[a-zA-Z0-9-]*$"}
+     *      requirements={"type"="workflow|business", "id"="^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:view.html.twig")
      *
@@ -64,7 +64,7 @@ class AutomationController extends Controller
      * @Route(
      *      "/{type}/create",
      *      name="diamante_automation_create",
-     *      requirements={"type"="\w+"}
+     *      requirements={"type"="workflow|business"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:create.html.twig")
      */
@@ -77,7 +77,7 @@ class AutomationController extends Controller
      * @Route(
      *      "/{type}/update/{id}",
      *      name="diamante_automation_update",
-     *      requirements={"type"="\w+", "id"="^[a-zA-Z0-9-]*$"}
+     *      requirements={"type"="workflow|business", "id"="^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:update.html.twig")
      *
@@ -94,7 +94,7 @@ class AutomationController extends Controller
      * @Route(
      *      "/{type}/delete/{id}",
      *      name="diamante_automation_delete",
-     *      requirements={"type"="\w+", "id"="^[a-zA-Z0-9-]*$"}
+     *      requirements={"type"="workflow|business", "id"="^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i"}
      * )
      *
      * @param int $id
