@@ -37,17 +37,24 @@ class AutomationController extends Controller
      *      defaults={"_format" = "html"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:list.html.twig")
+     *
+     * @param $type
+     *
+     * @return array
      */
     public function listAction($type)
     {
-        return [];
+        return ['type' => $type];
     }
 
     /**
      * @Route(
      *      "/{type}/view/{id}",
      *      name="diamante_automation_view",
-     *      requirements={"type"="workflow|business", "id"="^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i"}
+     *      requirements={
+     *          "type"="workflow|business",
+     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+     *      }
      * )
      * @Template("DiamanteAutomationBundle:Automation:view.html.twig")
      *
@@ -77,7 +84,10 @@ class AutomationController extends Controller
      * @Route(
      *      "/{type}/update/{id}",
      *      name="diamante_automation_update",
-     *      requirements={"type"="workflow|business", "id"="^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i"}
+     *      requirements={
+     *          "type"="workflow|business",
+     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+     *      }
      * )
      * @Template("DiamanteAutomationBundle:Automation:update.html.twig")
      *
@@ -94,7 +104,10 @@ class AutomationController extends Controller
      * @Route(
      *      "/{type}/delete/{id}",
      *      name="diamante_automation_delete",
-     *      requirements={"type"="workflow|business", "id"="^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i"}
+     *      requirements={
+     *          "type"="workflow|business",
+     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+     *      }
      * )
      *
      * @param int $id
