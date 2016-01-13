@@ -104,7 +104,7 @@ datagrid:
         select:
           - b.id
           - b.name
-          - b.timeInterval
+          - b.timeInterval as time
           - b.active
           - ('business') as type
         from:
@@ -145,8 +145,8 @@ datagrid:
         label: diamante.automation.common.name
       time:
         label: diamante.automation.rule.business.repetition_time
-#        frontend_type: select
-#        choices: @diamante_automation.datagrid.helper->getTimeIntervalChoices
+        frontend_type: select
+        choices: @diamante_automation.datagrid.helper->getTimeIntervalChoices
 
       active:
         label: diamante.automation.attributes.active

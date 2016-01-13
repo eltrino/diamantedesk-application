@@ -84,5 +84,5 @@ diamante:
         removed: Comment was removed
 
     cron:
-      h: every hour| every %time% hours
+      h: "{1} every hour|]1,Inf[ every %time% hours"
       m: every %time% minutes

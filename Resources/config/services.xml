@@ -17,6 +17,8 @@
         <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction</parameter>
         <parameter key="diamante_automation.queue_manager.class">Diamante\AutomationBundle\Automation\JobQueue\QueueManager</parameter>
         <parameter key="diamante_automation.listener.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
+        <parameter key="diamante_automation.datagrid.helper.class">Diamante\AutomationBundle\Infrastructure\Shared\DatagridHelper</parameter>
+        <parameter key="diamante_automation.business_rule.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRuleRepository</parameter>
     </parameters>
 
     <services>
@@ -27,7 +29,7 @@
             <argument type="string">%diamante_automation.workflow_rule.entity.class%</argument>
         </service>
 
-        <service id="diamante_automation.business_rule.repository" class="%diamante.generic.repository.class%"
+        <service id="diamante_automation.business_rule.repository" class="%diamante_automation.business_rule.repository.class%"
                  factory-service="doctrine.orm.entity_manager"
                  factory-method="getRepository"
                 >
@@ -59,6 +61,11 @@
         <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%">
             <argument type="service" id="diamante.notification_manager"/>
             <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.datagrid.helper" class="%diamante_automation.datagrid.helper.class%">
+            <argument type="service" id="translator"/>
+            <argument type="service" id="diamante_automation.business_rule.repository"/>
         </service>
 
         <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
