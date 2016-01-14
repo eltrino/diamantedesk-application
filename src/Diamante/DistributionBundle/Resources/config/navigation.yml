@@ -20,6 +20,11 @@ oro_menu_config:
                 icon: icon-check
                 routes: ['diamante_ticket_*', 'diamante_comment_*']
                 position: 90
+        diamante_automation_list:
+            label: 'diamante.automation.rule.entity_plural_label'
+            uri: '#'
+            extras:
+                position: 93
         diamante_report_list:
             label: 'diamante.desk.report.plural_label'
             uri: '#'
@@ -33,6 +38,23 @@ oro_menu_config:
             extras:
                 icon: icon-group
                 position: 96
+
+        diamante_workflow_list:
+            label: 'diamante.automation.rule.workflow.entity_label'
+            route: diamante_automation_list
+            routeParameters:
+                type: 'workflow'
+            extras:
+                routes: ['diamante_automation_*']
+
+        diamante_business_list:
+            label: 'diamante.automation.rule.business.entity_label'
+            route: diamante_automation_list
+            routeParameters:
+                type: 'business'
+            extras:
+                routes: ['diamante_automation_*']
+
         #reports
         diamante_report_tickets_by_priority:
             label: 'diamante.desk.report.reports.tickets_by_priority'
@@ -105,6 +127,10 @@ oro_menu_config:
             children:
                 diamante_branch_list: ~
                 diamante_ticket_list: ~
+                diamante_automation_list:
+                    children:
+                        diamante_business_list: ~
+                        diamante_workflow_list: ~
                 diamante_report_list:
                     children:
                         diamante_report_tickets_by_priority: ~
