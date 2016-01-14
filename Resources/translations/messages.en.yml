@@ -19,7 +19,10 @@ diamante:
           activate: Activate Rules
           deactivate: Deactivate Rules
       business:
+        entity_label: Business Rules
         repetition_time: Repetition Interval
+      workflow:
+        entity_label: Workflow Rules
     ui:
       create:              Create
       ok:                  Ok
