@@ -22,6 +22,9 @@ use Rhumsaa\Uuid\Uuid;
 
 abstract class Rule implements AutomationRule, Entity
 {
+    const TYPE_BUSINESS = 'business';
+    const TYPE_WORKFLOW = 'workflow';
+
     /**
      * @var int
      */

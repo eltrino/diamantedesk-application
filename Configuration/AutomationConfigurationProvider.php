@@ -26,19 +26,41 @@ class AutomationConfigurationProvider
 {
     const DATA_TYPE_WILDCARD = '*';
 
+    /**
+     * @var array
+     */
     protected $entities     = [];
+    /**
+     * @var array
+     */
     protected $conditions   = [];
+    /**
+     * @var array
+     */
     protected $actions      = [];
 
+    /**
+     * @var array
+     */
     protected $targetMap    = [];
 
+    /**
+     * @var array
+     */
     protected static $configStructure     = ['entities', 'conditions', 'actions'];
 
+    /**
+     * @var array
+     */
     protected $connectorsMap = [
         Group::CONNECTOR_EXCLUSIVE => 'diamante.automation.connector.exclusive',
         Group::CONNECTOR_INCLUSIVE => 'diamante.automation.connector.inclusive'
     ];
 
+    /**
+     * AutomationConfigurationProvider constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         foreach (static::$configStructure as $section) {
@@ -51,6 +73,10 @@ class AutomationConfigurationProvider
         $this->rebuildTargetMap();
     }
 
+    /**
+     * @param $target
+     * @return ParameterBag
+     */
     public function getEntityConfiguration($target)
     {
         if (!array_key_exists($target, $this->entities)) {
@@ -60,6 +86,10 @@ class AutomationConfigurationProvider
         return new ParameterBag($this->entities[$target]);
     }
 
+    /**
+     * @param $object
+     * @return int|null|string
+     */
     public function getTargetByClass($object)
     {
         $className = get_class($object);
@@ -73,6 +103,10 @@ class AutomationConfigurationProvider
         return null;
     }
 
+    /**
+     * @param bool|false $asArray
+     * @return array|ParameterBag
+     */
     public function getConfiguredEntities($asArray = false)
     {
         if ($asArray) {
@@ -82,6 +116,10 @@ class AutomationConfigurationProvider
         return new ParameterBag($this->entities);
     }
 
+    /**
+     * @param bool|false $asArray
+     * @return array|ParameterBag
+     */
     public function getConfiguredConditions($asArray = false)
     {
         if ($asArray) {
@@ -91,6 +129,10 @@ class AutomationConfigurationProvider
         return new ParameterBag($this->conditions);
     }
 
+    /**
+     * @param bool|false $asArray
+     * @return array|ParameterBag
+     */
     public function getConfiguredActions($asArray = false)
     {
         if ($asArray) {
@@ -100,6 +142,9 @@ class AutomationConfigurationProvider
         return new ParameterBag($this->actions);
     }
 
+    /**
+     *
+     */
     protected function rebuildTargetMap()
     {
         foreach ($this->entities as $name => $config) {
@@ -236,6 +281,10 @@ class AutomationConfigurationProvider
         return $actions;
     }
 
+    /**
+     * @param Translator $translator
+     * @return array
+     */
     protected function dumpConnectorsConfig(Translator $translator)
     {
         $connectors = [];
@@ -247,6 +296,10 @@ class AutomationConfigurationProvider
         return $connectors;
     }
 
+    /**
+     * @param Translator $translator
+     * @return array
+     */
     protected function dumpTimeIntervalsConfig(Translator $translator)
     {
         $intervals = [];

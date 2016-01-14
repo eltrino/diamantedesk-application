@@ -48,4 +48,9 @@ class CronExpressionMapper
             'h' => [1,2,4,8,12,24]
         ];
     }
+
+    public static function getConfiguredTimeIntervals()
+    {
+        return array_keys(static::$expressionMap);
+    }
 }

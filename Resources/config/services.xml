@@ -19,6 +19,7 @@
         <parameter key="diamante_automation.listener.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
         <parameter key="diamante_automation.datagrid.helper.class">Diamante\AutomationBundle\Infrastructure\Shared\DatagridHelper</parameter>
         <parameter key="diamante_automation.business_rule.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRuleRepository</parameter>
+        <parameter key="diamante_automation.rule.validator.class">Diamante\AutomationBundle\Automation\Validator\RuleValidator</parameter>
     </parameters>
 
     <services>
@@ -44,6 +45,7 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="diamante_automation.workflow_rule.repository"/>
             <argument type="service" id="diamante_automation.business_rule.repository"/>
+            <argument type="service" id="diamante.automation.rule.validator"/>
         </service>
 
         <service id="diamante_automation.action.provider" class="%diamante_automation.action.provider.class%">
@@ -90,6 +92,10 @@
             <argument type="service" id="diamante_automation.config.provider"/>
             <argument type="service" id="diamante.automation.queue.manager"/>
             <tag name="doctrine.event_listener" event="postPersist"/>
+        </service>
+
+        <service id="diamante.automation.rule.validator" class="%diamante_automation.rule.validator.class%">
+            <argument type="service" id="diamante_automation.config.provider"/>
         </service>
     </services>
 </container>
