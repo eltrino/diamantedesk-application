@@ -1,6 +1,6 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 
-{% set formAction = form.vars.value.id ? path(updateAction, { 'id': form.vars.value.id, 'type': type }) : path(createAction, {'type': type}) %}
+{% set formAction = form.vars.value.rule ? path(updateAction, { 'id': form.vars.value.rule, 'type': type }) : path(createAction, {'type': type}) %}
 
 {% block navButtons %}
     {% set cancel_url = path(listAction, {'type': type}) %}
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block pageHeader %}
-    {% if form.vars.value.id %}
+    {% if form.vars.value.rule %}
         {% set breadcrumbs = {
         'entity':      form.vars.value,
         'indexPath':   path(listAction, {'type': type}),

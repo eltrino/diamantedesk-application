@@ -100,10 +100,5 @@
         <service id="diamante.automation.rule.validator" class="%diamante_automation.rule.validator.class%">
             <argument type="service" id="diamante_automation.config.provider"/>
         </service>
-
-        <service id="diamante_automation_form" class="%diamante_automation_form.type.class%">
-            <tag name="form.type" alias="diamante_automation_form" />
-        </service>
-        <service id="diamante_automation.command_factory" class="%diamante_automation.command_factory.class%"/>
     </services>
 </container>

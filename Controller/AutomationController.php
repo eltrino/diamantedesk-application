@@ -21,8 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Diamante\DeskBundle\Controller\Shared;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
-use Diamante\AutomationBundle\Entity\BusinessRule;
 
 /**
  * Class AutomationController
@@ -73,7 +71,13 @@ class AutomationController extends Controller
      */
     public function viewAction($type, $id)
     {
-        return new Response();
+        try {
+            $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
+            return ["rule" => $rule, 'type' => $type];
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            return new Response(null, 404);
+        }
     }
 
     /**
@@ -88,7 +92,7 @@ class AutomationController extends Controller
     {
         $command = new UpdateRuleCommand();
         $form = $this->createForm('diamante_automation_update_rule_form', $command);
-        $formView = $form->createView($form);
+        $formView = $form->createView();
 
         $configProvider = $this->container->get('diamante_automation.config.provider');
         $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
@@ -163,6 +167,7 @@ class AutomationController extends Controller
      *      }
      * )
      *
+     * @param $type
      * @param int $id
      *
      * @return Response
