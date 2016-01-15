@@ -21,6 +21,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Diamante\DeskBundle\Controller\Shared;
+use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\BusinessRule;
 
 /**
  * Class AutomationController
@@ -71,13 +73,7 @@ class AutomationController extends Controller
      */
     public function viewAction($type, $id)
     {
-        try {
-            $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
-            return ["rule" => $rule, 'type' => $type];
-        } catch (\Exception $e) {
-            $this->handleException($e);
-            return new Response(null, 404);
-        }
+        return new Response();
     }
 
     /**
@@ -94,6 +90,8 @@ class AutomationController extends Controller
         $form = $this->createForm('diamante_automation_update_rule_form', $command);
         $formView = $form->createView($form);
 
+        $configProvider = $this->container->get('diamante_automation.config.provider');
+        $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
             $this->handle($form);
 
@@ -103,12 +101,12 @@ class AutomationController extends Controller
             $response = $this->getSuccessSaveResponse(
                 'diamante_automation_update',
                 'diamante_automation_view',
-                ['type' => $type, 'id' => $rule->getId()]
+                ['type' => $type, 'id' => $rule->getId(), 'config' => $config]
             );
 
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = ['form' => $formView, 'type' => $type];
+            $response = ['form' => $formView, 'type' => $type, 'config' => $config];
         }
 
         return $response;
@@ -165,7 +163,6 @@ class AutomationController extends Controller
      *      }
      * )
      *
-     * @param $type
      * @param int $id
      *
      * @return Response
