@@ -15,6 +15,7 @@
 
 namespace Diamante\AutomationBundle\Controller;
 
+use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,6 +31,7 @@ use Diamante\DeskBundle\Controller\Shared;
  */
 class AutomationController extends Controller
 {
+    use Shared\FormHandlerTrait;
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
     use Shared\ResponseHandlerTrait;
@@ -88,7 +90,28 @@ class AutomationController extends Controller
      */
     public function createAction($type)
     {
-        return new Response();
+        $command = new UpdateRuleCommand();
+        $form = $this->createForm('diamante_automation_update_rule_form', $command);
+        $formView = $form->createView($form);
+
+        try {
+            $this->handle($form);
+
+
+            $rule = $this->get('diamante.rule.service')->createRule($command->rule);
+            $this->addSuccessMessage('diamante.automation.rule.messages.create.success');
+            $response = $this->getSuccessSaveResponse(
+                'diamante_automation_update',
+                'diamante_automation_view',
+                ['type' => $type, 'id' => $rule->getId()]
+            );
+
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = ['form' => $formView, 'type' => $type];
+        }
+
+        return $response;
     }
 
     /**
@@ -108,7 +131,28 @@ class AutomationController extends Controller
      */
     public function updateAction($type, $id)
     {
-        return new Response();
+        $command = new UpdateRuleCommand();
+        $form = $this->createForm('diamante_automation_update_rule_form', $command);
+        $formView = $form->createView($form);
+
+        try {
+            $this->handle($form);
+
+            $rule = $this->get('diamante.rule.service')->updateRule($command->rule, $id);
+
+            $this->addSuccessMessage('diamante.automation.rule.messages.update.success');
+            $response = $this->getSuccessSaveResponse(
+                'diamante_automation_update',
+                'diamante_automation_view',
+                ['type' => $type, 'id' => $rule->getId()]
+            );
+
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            $response = ['form' => $formView, 'type' => $type];
+        }
+
+        return $response;
     }
 
     /**
@@ -121,6 +165,7 @@ class AutomationController extends Controller
      *      }
      * )
      *
+     * @param $type
      * @param int $id
      *
      * @return Response

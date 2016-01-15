@@ -147,15 +147,16 @@ class RuleServiceImpl implements RuleService
 
     /**
      * @param $data
+     * @param $id
      * @return \Diamante\DeskBundle\Model\Shared\Entity|null
      */
-    protected function updateBusinessRule($data)
+    protected function updateBusinessRule($data, $id)
     {
         if (!$this->validator->validate($data)) {
             throw new ValidationException("Given data is invalid. Can not update rule");
         }
 
-        $rule = $this->getBusinessRuleById($data['id']);
+        $rule = $this->getBusinessRuleById($id);
         $rule->update($data['name'], $data['timeInterval'], $data['active']);
 
         $rule->removeActions();
@@ -170,15 +171,16 @@ class RuleServiceImpl implements RuleService
 
     /**
      * @param $data
+     * @param $id
      * @return \Diamante\DeskBundle\Model\Shared\Entity|null
      */
-    protected function updateWorkflowRule($data)
+    protected function updateWorkflowRule($data, $id)
     {
         if (!$this->validator->validate($data)) {
             throw new ValidationException("Given data is invalid. Can not update rule");
         }
 
-        $rule = $this->getWorkflowRuleById($data['id']);
+        $rule = $this->getWorkflowRuleById($id);
         $rule->update($data['name'], $data['active']);
 
         $rule->removeActions();
@@ -314,11 +316,11 @@ class RuleServiceImpl implements RuleService
         return $rule;
     }
 
-    public function updateRule($input)
+    public function updateRule($input, $id)
     {
         $input = $this->getValidatedInput($input);
 
-        $rule = call_user_func([$this, sprintf("update%sRule", ucfirst($input['type']))], $input);
+        $rule = call_user_func_array([$this, sprintf("update%sRule", ucfirst($input['type']))], [$input, $id]);
 
         return $rule;
     }

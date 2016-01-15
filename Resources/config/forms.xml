@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="diamante_automation.form.update_rule.type.class">Diamante\AutomationBundle\Form\Type\UpdateRuleType</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante_automation.form.update_rule.type" class="%diamante_automation.form.update_rule.type.class%">
+            <tag name="form.type" alias="diamante_automation_update_rule_form"/>
+        </service>
+    </services>
+</container>
