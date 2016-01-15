@@ -70,7 +70,7 @@ class CombinedUsersDatasource extends AbstractDatasource
             $rows[] = $result;
         }
 
-        $this->applySorting($rows);
+        $this->applyUserSorting($rows);
 
         foreach ($rows as $key => $row) {
             $rows[$key] = new ResultRecord($row);
@@ -79,6 +79,19 @@ class CombinedUsersDatasource extends AbstractDatasource
         $rows = $this->applyPagination($rows);
 
         return $rows;
+    }
+
+    /**
+     * @param $rows
+     */
+    protected function applyUserSorting(&$rows)
+    {
+        $this->applySorting($rows, function ($a, $b, $sortProperty) {
+            $valueA = isset($a[$sortProperty]) ? $a[$sortProperty] : null;
+            $valueB = isset($b[$sortProperty]) ? $b[$sortProperty] : null;
+
+            return [$valueA, $valueB];
+        });
     }
 
     /**
