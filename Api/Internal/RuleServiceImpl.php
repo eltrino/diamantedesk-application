@@ -24,6 +24,7 @@ use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Infrastructure\Shared\CronExpressionMapper;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\DeskBundle\Model\Entity\Exception\ValidationException;
 use Oro\Bundle\CronBundle\Entity\Schedule;
 use Rhumsaa\Uuid\Uuid;
@@ -206,20 +207,20 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $data
+     * @param $id
      */
-    protected function deleteBusinessRule($data)
+    public function deleteBusinessRule($id)
     {
-        $rule = $this->loadBusinessRule($data);
+        $rule = $this->getBusinessRuleById($id);
         $this->businessRuleRepository->remove($rule);
     }
 
     /**
-     * @param $data
+     * @param $id
      */
-    protected function deleteWorkflowRule($data)
+    public function deleteWorkflowRule($id)
     {
-        $rule = $this->loadWorkflowRule($data);
+        $rule = $this->getWorkflowRuleById($id);
         $this->workflowRuleRepository->remove($rule);
     }
 
@@ -249,7 +250,7 @@ class RuleServiceImpl implements RuleService
      * @param Group|null $parent
      * @return $this
      */
-    private function addConditions($rule, $data, Group $parent = null)
+    private function addConditions(Rule $rule, $data, Group $parent = null)
     {
         $group = new Group($data['connector']);
         if (is_null($parent)) {
@@ -293,6 +294,13 @@ class RuleServiceImpl implements RuleService
         return $this;
     }
 
+    public function viewRule($type, $id)
+    {
+        $rule = $type == Rule::TYPE_WORKFLOW ? $this->getWorkflowRuleById($id) : $this->getBusinessRuleById($id);
+
+        return $rule;
+    }
+
     /**
      * @param $input
      * @return BusinessRule|WorkflowRule|void
@@ -315,6 +323,13 @@ class RuleServiceImpl implements RuleService
         return $rule;
     }
 
+    public function deleteRule($type, $id)
+    {
+        $method = $type == Rule::TYPE_BUSINESS ? 'deleteBusinessRule' : 'deleteWorkflowRule';
+
+        call_user_func([$this, $method], $id);
+    }
+
     protected function getValidatedInput($input)
     {
         if (!is_array($input)) {
@@ -326,5 +341,39 @@ class RuleServiceImpl implements RuleService
         }
 
         return $input;
+    }
+
+    public function activateRule($type, $id)
+    {
+        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
+
+        /** @var Rule $rule */
+        $rule = $repo->get($id);
+
+        if (empty($rule)) {
+            throw new EntityNotFoundException("Rule not found");
+        }
+
+        $rule->activate();
+        $repo->store($rule);
+
+        return $rule;
+    }
+
+    public function deactivateRule($type, $id)
+    {
+        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
+
+        /** @var Rule $rule */
+        $rule = $repo->get($id);
+
+        if (empty($rule)) {
+            throw new EntityNotFoundException("Rule not found");
+        }
+
+        $rule->deactivate();
+        $repo->store($rule);
+
+        return $rule;
     }
 }

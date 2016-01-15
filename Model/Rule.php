@@ -112,13 +112,6 @@ abstract class Rule implements AutomationRule, Entity
         return $this->active;
     }
 
-    public function setActive($active)
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
     /**
      * @return \DateTime
      */
@@ -157,5 +150,19 @@ abstract class Rule implements AutomationRule, Entity
     public function getTarget()
     {
         return $this->target;
+    }
+
+    public function activate()
+    {
+        $this->active = true;
+
+        return $this;
+    }
+
+    public function deactivate()
+    {
+        $this->active = false;
+
+        return $this;
     }
 }

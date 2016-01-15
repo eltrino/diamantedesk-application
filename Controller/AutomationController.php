@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Diamante\DeskBundle\Controller\Shared;
 
 /**
  * Class AutomationController
@@ -29,6 +30,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AutomationController extends Controller
 {
+    use Shared\ExceptionHandlerTrait;
+    use Shared\SessionFlashMessengerTrait;
+    use Shared\ResponseHandlerTrait;
+
     /**
      * @Route(
      *      "/{type}/{_format}",
@@ -64,7 +69,13 @@ class AutomationController extends Controller
      */
     public function viewAction($type, $id)
     {
-        return new Response();
+        try {
+            $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
+            return ["rule" => $rule, 'type' => $type];
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            return new Response(null, 404);
+        }
     }
 
     /**
@@ -116,6 +127,67 @@ class AutomationController extends Controller
      */
     public function deleteAction($type, $id)
     {
-        return new Response();
+        try {
+            $this->get('diamante.rule.service')->deleteRule($type, $id);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            return new Response(null, 500);
+        }
+
+        return new Response(null, 204);
+    }
+
+    /**
+     * @Route(
+     *      "/{type}/activate/{id}",
+     *      name="diamante_automation_update",
+     *      requirements={
+     *          "type"="workflow|business",
+     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+     *      }
+     * )
+     *
+     * @param $type
+     * @param int $id
+     *
+     * @return array
+     */
+    public function activateAction($type, $id)
+    {
+        try {
+            $this->get('diamante.rule.service')->activateRule($type, $id);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            return new Response(null, 500);
+        }
+
+        return new Response(null, 204);
+    }
+
+    /**
+     * @Route(
+     *      "/{type}/deactivate/{id}",
+     *      name="diamante_automation_update",
+     *      requirements={
+     *          "type"="workflow|business",
+     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+     *      }
+     * )
+     *
+     * @param $type
+     * @param int $id
+     *
+     * @return array
+     */
+    public function deactivateAction($type, $id)
+    {
+        try {
+            $this->get('diamante.rule.service')->deactivateRule($type, $id);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            return new Response(null, 500);
+        }
+
+        return new Response(null, 204);
     }
 }
