@@ -47,7 +47,7 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule
 
     /**
      * @ORM\OneToOne(targetEntity="Group", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="root_group_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="root_group_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $rootGroup;
 
