@@ -20,6 +20,10 @@
         <parameter key="diamante_automation.datagrid.helper.class">Diamante\AutomationBundle\Infrastructure\Shared\DatagridHelper</parameter>
         <parameter key="diamante_automation.business_rule.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRuleRepository</parameter>
         <parameter key="diamante_automation.rule.validator.class">Diamante\AutomationBundle\Automation\Validator\RuleValidator</parameter>
+        <parameter key="diamante_automation.mass_action.activate_rule.class">Diamante\AutomationBundle\MassAction\Actions\Ajax\ActivateRuleMassAction</parameter>
+        <parameter key="diamante_automation.mass_action.deactivate_rule.class">Diamante\AutomationBundle\MassAction\Actions\Ajax\DeactivateRuleMassAction</parameter>
+        <parameter key="diamante_automation.mass_action.handler.activate_rule.class">Diamante\AutomationBundle\MassAction\Handlers\ActivateRuleMassActionHandler</parameter>
+        <parameter key="diamante_automation.mass_action.handler.deactivate_rule.class">Diamante\AutomationBundle\MassAction\Handlers\DeactivateRuleMassActionHandler</parameter>
 
         <parameter key="diamante_automation_form.type.class">Diamante\AutomationBundle\Form\Type\AutomationType</parameter>
         <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
@@ -99,6 +103,26 @@
 
         <service id="diamante.automation.rule.validator" class="%diamante_automation.rule.validator.class%">
             <argument type="service" id="diamante_automation.config.provider"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.activate_rule" class="%diamante_automation.mass_action.activate_rule.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="activate_rule"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.deactivate_rule" class="%diamante_automation.mass_action.deactivate_rule.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="deactivate_rule"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.handler.activate_rule" class="%diamante_automation.mass_action.handler.activate_rule.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="oro_security.security_facade"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.handler.deactivate_rule" class="%diamante_automation.mass_action.handler.deactivate_rule.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="oro_security.security_facade"/>
         </service>
     </services>
 </container>

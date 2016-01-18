@@ -82,20 +82,20 @@ datagrid:
         entity_name: DiamanteAutomationBundle:WorkflowRule
         data_identifier: w.id
         icon: trash
-#      deactivate:
-#        type: deactivate
-#        label: diamante.automation.rule.actions.mass.deactivate
-#        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
-#        entity_name: DiamanteAutomationBundle:WorkflowRule
-#        data_identifier: w.id
-#        icon: close
-#      activate:
-#        type: activate
-#        label: diamante.automation.rule.actions.mass.activate
-#        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
-#        entity_name: DiamanteAutomationBundle:WorkflowRule
-#        data_identifier: w.id
-#        icon: check
+      deactivate_rule:
+        type: deactivate_rule
+        label: diamante.automation.rule.actions.mass.deactivate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
+        entity_name: DiamanteAutomationBundle:WorkflowRule
+        data_identifier: w.id
+        icon: remove
+      activate_rule:
+        type: activate_rule
+        label: diamante.automation.rule.actions.mass.activate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
+        entity_name: DiamanteAutomationBundle:WorkflowRule
+        data_identifier: w.id
+        icon: check
 
   diamante-automation-business-grid:
     source:
@@ -186,17 +186,17 @@ datagrid:
         entity_name: DiamanteAutomationBundle:BusinessRule
         data_identifier: b.id
         icon: trash
-#        deactivate:
-#          type: deactivate
-#          label: diamante.automation.rule.actions.mass.deactivate
-#          acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
-#          entity_name: DiamanteAutomationBundle:BusinessRule
-#          data_identifier: b.id
-#          icon: close
-#        activate:
-#          type: activate
-#          label: diamante.automation.rule.actions.mass.activate
-#          acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
-#          entity_name: DiamanteAutomationBundle:BusinessRule
-#          data_identifier: b.id
-#          icon: check
+      deactivate_rule:
+        type: deactivate_rule
+        label: diamante.automation.rule.actions.mass.deactivate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
+        entity_name: DiamanteAutomationBundle:BusinessRule
+        data_identifier: b.id
+        icon: remove
+      activate_rule:
+        type: activate_rule
+        label: diamante.automation.rule.actions.mass.activate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
+        entity_name: DiamanteAutomationBundle:BusinessRule
+        data_identifier: b.id
+        icon: check
