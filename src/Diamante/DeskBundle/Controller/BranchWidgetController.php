@@ -147,7 +147,7 @@ class BranchWidgetController extends WidgetController
             $branchService = $this->get('diamante.branch.service');
 
             if ($data['moveTickets']) {
-                $tickets = $this->getAllTickets($newBranchId);
+                $tickets = $this->getAllTickets($id);
             }
 
             foreach ($tickets as $ticket) {
