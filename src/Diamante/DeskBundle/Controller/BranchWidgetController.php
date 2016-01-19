@@ -18,6 +18,7 @@ use Diamante\DeskBundle\Entity\Ticket;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Diamante\DeskBundle\Model\Branch\Exception\DefaultBranchException;
 
 /**
  * @Route("branches")
@@ -133,6 +134,11 @@ class BranchWidgetController extends WidgetController
                 return $response;
             }
 
+            $systemSettings = $this->get('diamante.email_processing.mail_system_settings');
+            if ($systemSettings->getDefaultBranchId() == $id) {
+                throw new DefaultBranchException();
+            }
+
             $this->handle($form);
             $data = $form->getData();
 
@@ -156,6 +162,9 @@ class BranchWidgetController extends WidgetController
                 $response['redirect'] = $this->generateUrl('diamante_branch_list');
             }
 
+        } catch (DefaultBranchException $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = ['form' => $form->createView()];
