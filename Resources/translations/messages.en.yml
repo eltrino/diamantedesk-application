@@ -76,6 +76,7 @@ diamante:
 
     action:
       update_property: update property
+      notify_by_email: notify by email
 
     connector:
       inclusive: all of these are true

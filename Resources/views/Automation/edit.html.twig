@@ -21,7 +21,7 @@
         } %}
         {{ parent() }}
     {% else %}
-        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.automation.rule.entity_plural_label'|trans}) %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.automation.rule.entity_label'|trans}) %}
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
@@ -30,9 +30,12 @@
     {% set id = 'automation-form' %}
     {% set options  = {
         view : "diamanteautomation/js/app/views/automation-view",
-        options : config
+        config : config,
+        type : type
     } %}
     <div class="diam-automation"
          data-page-component-module="oroui/js/app/components/view-component"
          data-page-component-options="{{ options|json_encode }}"></div>
+
+    {{ dump(config) }}
 {% endblock content_data %}

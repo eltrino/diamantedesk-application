@@ -1,0 +1,5 @@
+<select name="actions[name]" id="automation-actions-name">
+    <% for(var key in config.actions) { %>
+    <option value="<%= key %>"<%= key == name ? ' selected' : ''%>><%= config.actions[key].label %></option>
+    <% } %>
+</select>
