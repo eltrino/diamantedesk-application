@@ -21,25 +21,29 @@ trait SessionFlashMessengerTrait
 {
     /**
      * @param string $message
+     * @param array  $parameters
+     * @param int    $number
      */
-    protected function addSuccessMessage($message)
+    protected function addSuccessMessage($message, $parameters = [], $number = 0)
     {
         /** @var Controller $this */
         $this->get('session')->getFlashBag()->add(
             'success',
-            $this->get('translator')->trans($message)
+            $this->get('translator')->transChoice($message, $number, $parameters)
         );
     }
 
     /**
      * @param string $message
+     * @param array  $parameters
+     * @param int    $number
      */
-    protected function addErrorMessage($message)
+    protected function addErrorMessage($message, $parameters = [], $number = 0)
     {
         /** @var Controller $this */
         $this->get('session')->getFlashBag()->add(
             'error',
-            $this->get('translator')->trans($message)
+            $this->get('translator')->transChoice($message, $number, $parameters)
         );
     }
 }

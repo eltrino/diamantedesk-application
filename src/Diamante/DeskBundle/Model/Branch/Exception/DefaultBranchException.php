@@ -15,12 +15,34 @@
 namespace Diamante\DeskBundle\Model\Branch\Exception;
 
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
-use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 
 class DefaultBranchException extends \RuntimeException implements Flashable
 {
+    protected $flashMessage;
+
+    protected $parameters;
+
+    protected $number;
+
+    public function __construct($message = "", array $parameters = [], $number = 0)
+    {
+        $this->flashMessage = $message;
+        $this->parameters = $parameters;
+        $this->number = $number;
+    }
+
     public function getFlashMessage()
     {
-        return 'diamante.desk.branch.messages.delete.error';
+        return $this->flashMessage;
+    }
+
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    public function getNumber()
+    {
+        return $this->number;
     }
 }
