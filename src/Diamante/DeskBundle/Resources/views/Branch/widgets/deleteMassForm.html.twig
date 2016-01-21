@@ -18,8 +18,8 @@
             <form id="{{ form.vars.name }}" action="{{ path('diamante_branch_mass_action', {'gridName': 'diamante-branch-grid', 'actionName': 'delete', 'no_redirect': true} ) }}" method="post">
                 <fieldset class="form form-horizontal">
                     <p>{{ 'diamante.desk.branch.messages.delete.query'|trans }}</p>
-                    <div class="span6">
-                            {{ form_row(form.moveMassTickets) }}
+                    <div class="span11">
+                        {{ form_widget(form.moveMassTickets) }} {{ form_label(form.moveMassTickets) }}
                         <div id="moveMassTickets" style="display: none;">
                             {{ form_row(form.newBranch) }}
                         </div>
