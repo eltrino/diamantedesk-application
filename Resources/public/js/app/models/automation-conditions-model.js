@@ -2,13 +2,10 @@ define(['oroui/js/app/models/base/model'
 ],function (BaseModel) {
     'use strict';
 
-    var AutomationActionsModel = BaseModel.extend({
+    var AutomationCoditionsModel = BaseModel.extend({
 
         defaults: {
-            name: '',
-            entity: '',
-            property: '',
-            value: ''
+            entity: ''
         },
 
         initialize: function(attr, options){
@@ -20,5 +17,5 @@ define(['oroui/js/app/models/base/model'
         }
     });
 
-    return AutomationActionsModel;
+    return AutomationCoditionsModel;
 });
