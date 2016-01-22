@@ -98,7 +98,7 @@ class TicketStrategy implements Strategy
         $diamanteUser = $this->diamanteUserService->getUserByEmail($message->getFrom()->getEmail());
 
         if (is_null($diamanteUser) || !$diamanteUser->isDiamanteUser()) {
-            $id = $this->diamanteUserService->createDiamanteUser($this->prepareCreateUserCommand($message));
+            $id = $this->diamanteUserService->createDiamanteUser($this->prepareCreateUserCommand($message->getFrom()));
             $diamanteUser = new User($id, User::TYPE_DIAMANTE);
         }
 
@@ -172,16 +172,16 @@ class TicketStrategy implements Strategy
 
 
     /**
-     * @param Message\MessageRecipient $recipient
+     * @param Message\Person $person
      * @return CreateDiamanteUserCommand
      */
-    protected function prepareCreateUserCommand(Message\MessageRecipient $recipient)
+    protected function prepareCreateUserCommand(Message\Person $person)
     {
         $command = new CreateDiamanteUserCommand();
-        $command->email     = $recipient->getEmail();
-        $command->username  = $recipient->getEmail();
-        $command->firstName = $recipient->getFirstName();
-        $command->lastName  = $recipient->getLastName();
+        $command->email     = $person->getEmail();
+        $command->username  = $person->getEmail();
+        $command->firstName = $person->getFirstName();
+        $command->lastName  = $person->getLastName();
 
         return $command;
     }
