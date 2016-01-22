@@ -177,7 +177,7 @@ class UserController extends Controller
     {
         $params = $this->parseGridParameters();
         $repository = $this->get('diamante.user.repository');
-        $users = $repository->findByDataGridParams($params);
+        $users = $repository->findByDataGridParams($params['values']);
 
         try {
             foreach ($users as $user) {
