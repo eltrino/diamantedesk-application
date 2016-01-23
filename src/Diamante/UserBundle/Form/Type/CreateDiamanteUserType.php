@@ -28,7 +28,7 @@ class CreateDiamanteUserType extends AbstractType
     {
         $builder->add(
             'email',
-            'text',
+            'email',
             [
                 'label'         => 'diamante.user.labels.email',
                 'required'      => true
@@ -63,7 +63,7 @@ class CreateDiamanteUserType extends AbstractType
             [
                 'data_class'            => 'Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand',
                 'intention'             => 'diamante_user',
-                'cascade_validation'    => true
+                'cascade_validation'    => true,
             ]
         );
     }
