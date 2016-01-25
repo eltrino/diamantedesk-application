@@ -18,7 +18,7 @@
             <form id="{{ form.vars.name }}" action="{{ path(delete_route, { 'id': form.vars.value.id, 'no_redirect': true} ) }}" method="post">
                 <fieldset class="form form-horizontal">
                     <p>{{ 'diamante.desk.branch.messages.delete.query'|trans }}</p>
-                    <div class="span11">
+                    <div class="span11 {% if form.newBranch.vars.choices is empty %}invisible{% endif %}">
                             {{ form_widget(form.moveTickets) }} {{ form_label(form.moveTickets) }}
                         <div id="moveTickets" style="display: none;">
                             {{ form_row(form.newBranch) }}
