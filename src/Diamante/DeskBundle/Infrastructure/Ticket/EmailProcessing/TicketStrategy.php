@@ -163,7 +163,8 @@ class TicketStrategy implements Strategy
             $user = $this->diamanteUserService->getUserByEmail($email);
 
             if (is_null($user)) {
-                $user = $this->diamanteUserService->createDiamanteUser($this->prepareCreateUserCommand($recipient));
+                $id = $this->diamanteUserService->createDiamanteUser($this->prepareCreateUserCommand($recipient));
+                $user = new User($id, User::TYPE_DIAMANTE);
             }
 
             $this->watchersService->addWatcher($ticket, $user);
