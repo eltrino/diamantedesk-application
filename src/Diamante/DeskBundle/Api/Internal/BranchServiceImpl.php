@@ -30,7 +30,6 @@ use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
 class BranchServiceImpl implements BranchService
 {
@@ -64,19 +63,13 @@ class BranchServiceImpl implements BranchService
      */
     private $registry;
 
-    /**
-     * @var ConfigManager
-     */
-    private $configManager;
-
     public function __construct(
         Registry $doctrineRegistry,
         BranchFactory $branchFactory,
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
         TagManager $tagManager,
-        AuthorizationService $authorizationService,
-        ConfigManager $configManager
+        AuthorizationService $authorizationService
     ) {
         $this->branchFactory        = $branchFactory;
         $this->branchRepository     = $branchRepository;
@@ -84,7 +77,6 @@ class BranchServiceImpl implements BranchService
         $this->tagManager           = $tagManager;
         $this->authorizationService = $authorizationService;
         $this->registry             = $doctrineRegistry;
-        $this->configManager        = $configManager;
     }
 
     /**
@@ -128,7 +120,6 @@ class BranchServiceImpl implements BranchService
 
         $logo = $this->uploadBranchLogoIfExists($branchCommand);
         $assignee = $this->extractDefaultBranchAssignee($branchCommand);
-        $setAsDefaultBranch = !$this->branchRepository->count();
 
         $branch = $this->branchFactory
             ->create(
@@ -143,11 +134,6 @@ class BranchServiceImpl implements BranchService
         $this->registry->getManager()->persist($branch);
         $this->registry->getManager()->flush();
         $this->tagManager->saveTagging($branch);
-
-        if ($setAsDefaultBranch) {
-            $this->configManager->set('diamante_email_processing.default_branch', $branch->getId());
-            $this->configManager->flush();
-        }
 
         return $branch;
     }
