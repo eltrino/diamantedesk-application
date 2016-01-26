@@ -1,8 +1,8 @@
 define([
     'oroui/js/app/models/base/model',
-    'diamanteautomation/js/app/models/automation-actions-model',
-    'diamanteautomation/js/app/models/automation-conditions-model'
-],function (BaseModel, AutomationActionsModel, AutomationConditionsModel) {
+    'diamanteautomation/js/app/models/actions/automation-actions-collection',
+    'diamanteautomation/js/app/models/conditions/automation-conditions-model'
+],function (BaseModel, AutomationActionsCollection, AutomationConditionsModel) {
     'use strict';
 
     var AutomationModel = BaseModel.extend({
@@ -12,11 +12,11 @@ define([
             timeInterval: ''
         },
 
-        initialize: function(attr, options){
+        initialize: function(attr){
             this.set('actions', attr.actions ?
-                new AutomationActionsModel(attr.actions, options) : new AutomationActionsModel({}, options));
+                new AutomationActionsCollection(attr.actions) : new AutomationActionsCollection([{}]));
             this.set('conditions', attr.conditions ?
-                new AutomationConditionsModel(attr.conditions, options) : new AutomationConditionsModel({}, options));
+                new AutomationConditionsModel(attr.conditions) : new AutomationConditionsModel({}));
         },
 
         validate: function(attrs, options) {

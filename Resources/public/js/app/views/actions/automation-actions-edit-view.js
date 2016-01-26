@@ -8,17 +8,20 @@ define([
     var AutomationActionsEditView = BaseView.extend({
         autoRender: true,
         template : AutomationActionsEditTemplate,
-        region: 'automation-actions',
 
         listen: {
             'change model': 'render'
         },
 
+        events: {
+            'click button[data-action="delete"]': 'removeItem'
+        },
+
         initialize: function(options){
             this.options = _.omit(options, 'model');
-            console.log(options.model);
+            console.log(options);
             this.delegate('change', ':input', this.change);
-            return AutomationActionsEditView.__super__.initialize.apply(this, arguments);
+            AutomationActionsEditView.__super__.initialize.apply(this, arguments);
         },
 
         getTemplateData: function() {
@@ -40,6 +43,10 @@ define([
         change: function (e) {
             var input = e.target;
             this.model.set(this.nameToAttr(input.name), input.value );
+        },
+
+        removeItem: function(){
+            this.model.destroy();
         }
 
     });

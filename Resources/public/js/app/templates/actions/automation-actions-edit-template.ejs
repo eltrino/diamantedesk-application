@@ -1,40 +1,42 @@
-<div class="control-group">
-    <div class="control-label wrap">
-        <label for="automation-actions-name">Actions</label>
-    </div>
-    <div class="controls">
-        <select name="actions[name]" id="automation-actions-name">
-            <% for(var key in config.actions) { %>
-            <option value="<%= key %>"<%= key == name ? ' selected' : ''%>><%= config.actions[key].label %></option>
+<div class="controls">
+    <select name="actions[name]" id="automation-actions-name">
+        <% for(var key in config.actions) { %>
+        <option value="<%= key %>"<%= key == name ? ' selected' : ''%>><%= config.actions[key].label %></option>
+        <% } %>
+    </select>
+    <% if(name == 'update_property'){ %>
+        <% var entities = config.entities; %>
+        <span>Of:</span>
+        <select name="actions[entity]" id="automation-actions-entity">
+            <% for(var key in entities) { %>
+            <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
             <% } %>
         </select>
-        <% if(name == 'update_property'){ %>
-            <% var entities = config.entities; %>
-            <span>Of:</span>
-            <select name="actions[entity]" id="automation-actions-entity">
-                <% for(var key in entities) { %>
-                <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
-                <% } %>
-            </select>
-            <% if(entity){ %>
-            <% var properties = entities[entity].properties %>
-            <span>Set: </span>
-            <select name="actions[property]" id="automation-actions-property">
-                <% for(var key in properties) { %>
-                <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
-                <% } %>
-            </select>
+        <% if(entity){ %>
+        <% var properties = entities[entity].properties %>
+        <span>Set: </span>
+        <select name="actions[property]" id="automation-actions-property">
+            <% for(var key in properties) { %>
+            <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
             <% } %>
-            <% if(property){ %>
-                <span>To: </span>
-                <% if(properties[property].type == 'string'){ %>
-                    <input type="text" name="actions[value]" value="<%= value %>" />
-                <% } %>
-            <% } %>
+        </select>
         <% } %>
-        <% if(name == 'notify_by_email'){ %>
+        <% if(property){ %>
             <span>To: </span>
-            <input type="text" name="actions[value]" value="<%= value %>" />
+            <% if(properties[property].type == 'string'){ %>
+                <input type="text" name="actions[value]" value="<%= value %>" />
+            <% } %>
         <% } %>
+    <% } %>
+    <% if(name == 'notify_by_email'){ %>
+        <span>To: </span>
+        <input type="text" name="actions[value]" value="<%= value %>" />
+    <% } %>
+    <div class="pull-right">
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger" data-action="delete">
+                Delete
+            </button>
+        </div>
     </div>
 </div>

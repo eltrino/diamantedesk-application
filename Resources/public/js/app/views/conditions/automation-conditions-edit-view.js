@@ -18,7 +18,7 @@ define([
             this.options = _.omit(options, 'model');
             console.log(options.model);
             this.delegate('change', ':input', this.change);
-            return AutomationConditionsEditView.__super__.initialize.apply(this, arguments);
+            AutomationConditionsEditView.__super__.initialize.apply(this, arguments);
         },
 
         getTemplateData: function() {

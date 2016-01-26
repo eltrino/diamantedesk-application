@@ -15,23 +15,28 @@ define([
             options.el = options._sourceElement;
             delete options['_sourceElement'];
             delete options['type'];
-            console.log(options.config);
-            options.model = options.model ? new AutomationModel(options.model, options) : new AutomationModel({type: type }, options);
+            this.model = options.model =
+                options.model ? new AutomationModel(options.model) : new AutomationModel({type: type });
         },
         initView: function (options) {
             this.view = new AutomationView(options);
-            require(['diamanteautomation/js/app/views/actions/automation-actions-edit-view'],function(ActionsView){
-                new ActionsView(_.extend(
-                    _.omit(options, 'el'),
-                    { model: options.model.get('actions') }
+            options = _.omit(options, 'el', 'model');
+            require([
+                'diamanteautomation/js/app/views/actions/automation-actions-collection-view'
+            ],function(ActionsCollectionView){
+                new ActionsCollectionView(
+                    _.extend( options,
+                        { collection: this.model.get('actions') }
+                    )
+                );
+            }.bind(this));
+            require([
+                'diamanteautomation/js/app/views/conditions/automation-conditions-edit-view'
+            ],function(ConditionsView){
+                new ConditionsView(_.extend( options,
+                    { model: this.model.get('conditions') }
                 ));
-            });
-            require(['diamanteautomation/js/app/views/conditions/automation-conditions-edit-view'],function(ConditionsView){
-                new ConditionsView(_.extend(
-                    _.omit(options, 'el'),
-                    { model: options.model.get('conditions') }
-                ));
-            });
+            }.bind(this));
         }
     });
 
