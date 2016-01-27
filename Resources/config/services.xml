@@ -27,6 +27,8 @@
 
         <parameter key="diamante_automation_form.type.class">Diamante\AutomationBundle\Form\Type\AutomationType</parameter>
         <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
+
+        <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
     </parameters>
 
     <services>
@@ -123,6 +125,10 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="translator"/>
             <argument type="service" id="oro_security.security_facade"/>
+        </service>
+
+        <service id="diamante.automation.frontend.options.resolver" class="%diamante_automation.frontend.options.resolver.class%">
+            <argument type="service" id="service_container"/>
         </service>
     </services>
 </container>

@@ -50,6 +50,11 @@ class AutomationConfigurationProvider
     protected static $configStructure     = ['entities', 'conditions', 'actions'];
 
     /**
+     * @var FrontendOptionsResolver
+     */
+    protected $frontendOptionsResolver;
+
+    /**
      * @var array
      */
     protected $connectorsMap = [
@@ -69,6 +74,8 @@ class AutomationConfigurationProvider
                 $this->$section = array_merge($this->$section, $container->getParameter($paramName));
             }
         }
+
+        $this->frontendOptionsResolver = $container->get('diamante.automation.frontend.options.resolver');
 
         $this->rebuildTargetMap();
     }
@@ -236,6 +243,10 @@ class AutomationConfigurationProvider
                     'type'    => $propertyConfig['type'],
                     'actions' => $this->getActionsForProperty($name, $propertyName),
                 ];
+
+                if (!empty($propertyConfig['frontend_options'])) {
+                    $property['frontend_options'] = $this->frontendOptionsResolver->resolve($propertyConfig['frontend_options']);
+                }
 
                 $entity['properties'][$propertyName] = $property;
             }
