@@ -3,7 +3,9 @@
 {% block content_data %}
     {% set logo %}
         <div class="control-group">
-            {{ form_label(form.logoFile, null, {'label_attr': {'class' : 'control-label'}}) }}
+            <div class="control-label wrap">
+                {{ form_label(form.logoFile) }}
+            </div>
             <div class="controls">
                 <div class="control-group" style="margin-bottom: 0">
                     {{ form_widget(form.logoFile, {'attr': {'accept' : 'image/jpeg, image/png'}}) }}
