@@ -90,4 +90,13 @@ class Source
     {
         return $this->getLabel();
     }
+
+    public static function getValueToLabelMap()
+    {
+        if (empty(static::$valueToLabelMap)) {
+            static::initValueLabelsMap();
+        }
+
+        return static::$valueToLabelMap;
+    }
 }

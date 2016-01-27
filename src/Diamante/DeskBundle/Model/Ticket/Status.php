@@ -121,4 +121,13 @@ class Status
     {
         return !$this->equals($status);
     }
+
+    public static function getValueToLabelMap()
+    {
+        if (empty(static::$valueToLabelMap)) {
+            static::initValueLabelsMap();
+        }
+
+        return static::$valueToLabelMap;
+    }
 }

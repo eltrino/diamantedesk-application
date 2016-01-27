@@ -78,4 +78,13 @@ class Priority
     {
         return $this->getLabel();
     }
+
+    public static function getValueToLabelMap()
+    {
+        if (empty(static::$valueToLabelMap)) {
+            static::initValueLabelsMap();
+        }
+
+        return static::$valueToLabelMap;
+    }
 }

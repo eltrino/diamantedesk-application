@@ -6,10 +6,16 @@ diamante_automation:
         properties:
           status:
             frontend_label: diamante.desk.ticket.status.label
+            frontend_options: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Status::getValueToLabelMap"
             type: status
           priority:
             frontend_label: diamante.desk.ticket.priority.label
+            frontend_options: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Priority::getValueToLabelMap"
             type: priority
+          source:
+            frontend_label: diamante.desk.ticket.source.label
+            frontend_options: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Source::getValueToLabelMap"
+            type: source
           subject:
             frontend_label: diamante.desk.ticket.subject.label
             type: string
