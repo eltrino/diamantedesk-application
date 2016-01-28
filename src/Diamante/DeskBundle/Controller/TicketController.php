@@ -155,6 +155,16 @@ class TicketController extends Controller
         try {
             $this->handle($form);
 
+            if (empty($command->branch)) {
+                $defaultBranchId = (int)$this->get('oro_config.manager')->get('diamante_desk.default_branch');
+
+                if (is_null($defaultBranchId)) {
+                    throw new \RuntimeException("Invalid configuration. DefaultBranch must be configured");
+                }
+
+                $command->branch = $this->get('diamante.branch.service')->getBranch($defaultBranchId);
+            }
+
             $branchAssignee = $command->branch->getDefaultAssignee();
             if ($command->assignee) {
                 $command->assignee = $command->assignee->getId();
