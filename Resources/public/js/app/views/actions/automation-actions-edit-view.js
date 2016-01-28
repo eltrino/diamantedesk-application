@@ -19,18 +19,17 @@ define([
 
         initialize: function(options){
             this.options = _.omit(options, 'model');
-            console.log(options);
             this.delegate('change', ':input', this.change);
-            AutomationActionsEditView.__super__.initialize.apply(this, arguments);
+            BaseView.prototype.initialize.apply(this, arguments);
         },
 
         getTemplateData: function() {
-            var data = AutomationActionsEditView.__super__.getTemplateData.call(this);
+            var data = BaseView.prototype.getTemplateData.call(this);
             return _.extend(data, this.options);
         },
 
         render: function () {
-            AutomationActionsEditView.__super__.render.apply(this, arguments);
+            BaseView.prototype.render.apply(this, arguments);
             this.$(':input').trigger('change');
             return this;
         },

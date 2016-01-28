@@ -1,13 +1,15 @@
-<div class="control-group">
-    <div class="control-label wrap">
-        <label for="automation-conditions-entity">Conditions</label>
-    </div>
-    <div class="controls">
-        <% var entities = config.entities; %>
-        <select name="conditions[entity]" id="automation-conditions-entity">
-            <% for(var key in entities) { %>
-            <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
-            <% } %>
-        </select>
+<div class="controls">
+    <% var entities = config.entities; %>
+    <select name="conditions[entity]" id="automation-conditions-entity">
+        <% for(var key in entities) { %>
+        <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
+        <% } %>
+    </select>
+    <div class="pull-right">
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger" data-action="delete">
+                Delete
+            </button>
+        </div>
     </div>
 </div>

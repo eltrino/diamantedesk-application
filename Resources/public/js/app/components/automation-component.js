@@ -7,6 +7,7 @@ define([
 
     var AutomationComponent = BaseComponent.extend({
         initialize: function (options) {
+            console.log(options.config);
             this.processOptions(options);
             this.initView(options);
         },
@@ -31,10 +32,10 @@ define([
                 );
             }.bind(this));
             require([
-                'diamanteautomation/js/app/views/conditions/automation-conditions-edit-view'
-            ],function(ConditionsView){
-                new ConditionsView(_.extend( options,
-                    { model: this.model.get('conditions') }
+                'diamanteautomation/js/app/views/conditions/automation-conditions-collection-view'
+            ],function(ConditionsCollectionsView){
+                new ConditionsCollectionsView(_.extend( options,
+                    { collection: this.model.get('conditions') }
                 ));
             }.bind(this));
         }

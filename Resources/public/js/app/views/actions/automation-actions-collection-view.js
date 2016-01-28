@@ -13,12 +13,13 @@ define([
         region: 'automation-actions',
 
         events: {
-            'click button[data-action="add"]': 'addItem'
+            'click button[data-action="add-item"]'  : 'addItem',
+            'click button[data-action="add-group"]' : 'addGroup'
         },
 
         initialize : function(options){
             this.options = _.omit(options, 'collection');
-            AutomationActionsCollection.__super__.initialize.apply(this, arguments);
+            BaseCollectionView.prototype.initialize.apply(this, arguments);
         },
 
         initItemView : function(model){
@@ -26,6 +27,11 @@ define([
         },
 
         addItem : function(e){
+            e.preventDefault();
+            this.collection.add({});
+        },
+
+        addGroup : function(e){
             e.preventDefault();
             this.collection.add({});
         }
