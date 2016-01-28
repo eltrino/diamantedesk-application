@@ -16,8 +16,7 @@ define([
         description: '',
         priority : 'medium',
         status: 'open',
-        source: 'web',
-        branch: Config.branchId
+        source: 'web'
       },
       idAttribute: 'key',
 
