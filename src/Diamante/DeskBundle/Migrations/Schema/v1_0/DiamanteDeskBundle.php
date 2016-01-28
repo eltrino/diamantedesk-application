@@ -32,7 +32,6 @@ class DiamanteDeskBundle implements Migration
         $this->createDiamanteAuditTable($schema);
         $this->createDiamanteAuditFieldTable($schema);
         $this->createDiamanteBranchTable($schema);
-        $this->createDiamanteBranchEmailConfigurationTable($schema);
         $this->createDiamanteCommentTable($schema);
         $this->createDiamanteCommentAttachmentsTable($schema);
         $this->createDiamanteTicketTable($schema);
@@ -46,7 +45,6 @@ class DiamanteDeskBundle implements Migration
         $this->addDiamanteAuditForeignKeys($schema);
         $this->addDiamanteAuditFieldForeignKeys($schema);
         $this->addDiamanteBranchForeignKeys($schema);
-        $this->addDiamanteBranchEmailConfigurationForeignKeys($schema);
         $this->addDiamanteCommentForeignKeys($schema);
         $this->addDiamanteCommentAttachmentsForeignKeys($schema);
         $this->addDiamanteTicketForeignKeys($schema);
@@ -154,24 +152,6 @@ class DiamanteDeskBundle implements Migration
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['branch_key'], 'UNIQ_EC6B5FECEE98ECC2');
         $table->addIndex(['default_assignee_id'], 'IDX_EC6B5FEC8D1F6ED6', []);
-    }
-
-    /**
-     * Create diamante_branch_email_config table
-     *
-     * @param Schema $schema
-     */
-    protected function createDiamanteBranchEmailConfigurationTable(Schema $schema)
-    {
-        $table = $schema->createTable('diamante_branch_email_config');
-        $table->addColumn('id', 'integer', ['autoincrement' => true]);
-        $table->addColumn('branch_id', 'integer', ['notnull' => false]);
-        $table->addColumn('customer_domains', 'text', ['notnull' => false]);
-        $table->addColumn('support_address', 'text', ['notnull' => false]);
-        $table->addColumn('created_at', 'datetime', []);
-        $table->addColumn('updated_at', 'datetime', []);
-        $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['branch_id'], 'UNIQ_E7D21C30DCD6CC49');
     }
 
     /**
@@ -360,22 +340,6 @@ class DiamanteDeskBundle implements Migration
             ['default_assignee_id'],
             ['id'],
             ['onDelete' => 'SET NULL', 'onUpdate' => null]
-        );
-    }
-
-    /**
-     * Add diamante_branch_email_config foreign keys.
-     *
-     * @param Schema $schema
-     */
-    protected function addDiamanteBranchEmailConfigurationForeignKeys(Schema $schema)
-    {
-        $table = $schema->getTable('diamante_branch_email_config');
-        $table->addForeignKeyConstraint(
-            $schema->getTable('diamante_branch'),
-            ['branch_id'],
-            ['id'],
-            ['onDelete' => 'CASCADE', 'onUpdate' => null]
         );
     }
 

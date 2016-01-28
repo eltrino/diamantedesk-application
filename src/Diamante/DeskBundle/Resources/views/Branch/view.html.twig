@@ -97,22 +97,6 @@
         }]
     ) %}
 
-    {% if branchEmailConfiguration %}
-        {% set notDefined %}
-        <span>{{ 'diamante.desk.common.not_defined'|trans }}</span>
-        {% endset %}
-        {% set supportAdress = EA.email_address_simple(branchEmailConfiguration.supportAddress) %}
-        {% set EmailConfDataSubBlocks = [UI.attibuteRow('Support Address', supportAdress ? supportAdress : notDefined)] %}
-        {% set EmailConfDataSubBlocks = EmailConfDataSubBlocks|merge([UI.attibuteRow('Customer Domains', branchEmailConfiguration.customerDomains ? branchEmailConfiguration.customerDomains : notDefined)]) %}
-
-        {% set dataBlocks = dataBlocks|merge([{
-            'title': 'Email Configuration',
-            'subblocks':[{
-                'data': EmailConfDataSubBlocks
-            }]
-        }]) %}
-    {% endif %}
-
     {% set dataBlocks = dataBlocks|merge([{
         'title' : 'diamante.desk.ticket.entity_plural_label'|trans,
         'subblocks': [

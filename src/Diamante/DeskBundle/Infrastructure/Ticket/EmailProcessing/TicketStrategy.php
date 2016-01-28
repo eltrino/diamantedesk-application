@@ -14,9 +14,9 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Internal\WatchersServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
-use Diamante\DeskBundle\Api\BranchEmailConfigurationService;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message;
@@ -26,7 +26,6 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\UserBundle\Entity\UserManager as OroUserManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TicketStrategy implements Strategy
 {
@@ -37,11 +36,6 @@ class TicketStrategy implements Strategy
      * @var MessageReferenceService
      */
     private $messageReferenceService;
-
-    /**
-     * @var BranchEmailConfigurationService
-     */
-    private $branchEmailConfigurationService;
 
     /**
      * @var SystemSettings
@@ -65,29 +59,29 @@ class TicketStrategy implements Strategy
 
     /**
      * @param MessageReferenceService $messageReferenceService
-     * @param BranchEmailConfigurationService $branchEmailConfigurationService
      * @param SystemSettings $settings
      * @param WatchersServiceImpl $watchersService
      * @param OroUserManager $oroUserManager
      * @param ConfigManager $configManager
      * @param UserService $diamanteUserService
+     * @param BranchService $branchService
      */
     public function __construct(MessageReferenceService $messageReferenceService,
-                                BranchEmailConfigurationService $branchEmailConfigurationService,
                                 SystemSettings $settings,
                                 WatchersServiceImpl $watchersService,
                                 OroUserManager $oroUserManager,
                                 ConfigManager $configManager,
-                                UserService $diamanteUserService
+                                UserService $diamanteUserService,
+                                BranchService $branchService
     )
     {
         $this->messageReferenceService         = $messageReferenceService;
-        $this->branchEmailConfigurationService = $branchEmailConfigurationService;
         $this->emailProcessingSettings         = $settings;
         $this->watchersService                 = $watchersService;
         $this->oroUserManager                  = $oroUserManager;
         $this->configManager                   = $configManager;
         $this->diamanteUserService             = $diamanteUserService;
+        $this->branchService                   = $branchService;
     }
 
     /**
@@ -105,10 +99,17 @@ class TicketStrategy implements Strategy
         $attachments = $message->getAttachments();
 
         if (!$message->getReference()) {
-            $branchId = $this->getAppropriateBranch($message->getFrom()->getEmail(), $message->getTo());
-            $assigneeId = $this->branchEmailConfigurationService->getBranchDefaultAssignee($branchId);
+                $defaultBranch = (int)$this->configManager->get('diamante_desk.default_branch');
 
-            $ticket = $this->messageReferenceService->createTicket($message->getMessageId(), $branchId,
+                if (is_null($defaultBranch)) {
+                    throw new \RuntimeException("Invalid configuration, default branch should be configured");
+                }
+
+                $branch = $this->branchService->getBranch($defaultBranch);
+
+                $assigneeId = $branch->getDefaultAssigneeId() ? $branch->getDefaultAssigneeId() : null;
+
+                $ticket = $this->messageReferenceService->createTicket($message->getMessageId(), $defaultBranch,
                 $message->getSubject(), $message->getContent(), (string)$diamanteUser, $assigneeId, $attachments);
         } else {
             $ticket = $this->messageReferenceService->createCommentForTicket($message->getContent(), (string)$diamanteUser,
@@ -116,29 +117,6 @@ class TicketStrategy implements Strategy
         }
 
         $this->processWatchers($message, $ticket);
-    }
-
-    /**
-     * @param $from
-     * @param $to
-     * @return int
-     */
-    private function getAppropriateBranch($from, $to)
-    {
-        $branchId = null;
-        preg_match('/@(.*)/', $from, $output);
-
-        if (isset($output[1])) {
-            $customerDomain = $output[1];
-
-            $branchId = $this->branchEmailConfigurationService
-                ->getConfigurationBySupportAddressAndCustomerDomain($to, $customerDomain);
-        }
-        if (null === $branchId) {
-            $branchId = $this->emailProcessingSettings->getDefaultBranchId();
-        }
-
-        return $branchId;
     }
 
     /**

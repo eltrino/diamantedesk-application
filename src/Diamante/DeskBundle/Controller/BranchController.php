@@ -16,7 +16,6 @@ namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
-use Diamante\DeskBundle\Api\Command\BranchEmailConfigurationCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -60,13 +59,9 @@ class BranchController extends Controller
     {
         try {
             $branch = $this->get('diamante.branch.service')->getBranch($id);
-            $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')
-                ->getConfigurationByBranchId($branch->getId());
             $this->container->get('oro_tag.tag.manager')->loadTagging($branch);
-            return [
-                'entity' => $branch,
-                'branchEmailConfiguration' => $branchEmailConfiguration
-            ];
+
+            return ['entity' => $branch];
         } catch (\Exception $e) {
             $this->handleException($e);
             throw $this->createNotFoundException($e->getMessage(), $e);
@@ -85,7 +80,6 @@ class BranchController extends Controller
 
             $result = $this->edit($command, $form, function ($command) {
                 $branch = $this->get('diamante.branch.service')->createBranch($command);
-                $this->createBranchEmailConfiguration($command, $branch->getId());
                 return $branch->getId();
             });
         } catch (\Exception $e) {
@@ -97,31 +91,6 @@ class BranchController extends Controller
             );
         }
         return $result;
-    }
-
-    /**
-     * @param $command
-     * @param $branchId
-     */
-    private function createBranchEmailConfiguration(BranchCommand $command, $branchId)
-    {
-        $branchEmailConfigurationCommand = $command->getBranchEmailConfiguration();
-        $branchEmailConfigurationCommand->branch = $branchId;
-        $this->get('diamante.branch_email_configuration.service')
-            ->createBranchEmailConfiguration($branchEmailConfigurationCommand);
-    }
-
-    /**
-     * @param $command
-     * @param $branchId
-     */
-    private function updateBranchEmailConfiguration(BranchCommand $command, $branchId)
-    {
-        $branchEmailConfigurationCommand = $command->getBranchEmailConfiguration();
-        $branchEmailConfigurationCommand->branch = $branchId;
-        $this->get('diamante.branch_email_configuration.service')->updateBranchEmailConfiguration(
-            $branchEmailConfigurationCommand
-        );
     }
 
     /**
@@ -140,21 +109,11 @@ class BranchController extends Controller
         $branch = $this->get('diamante.branch.service')->getBranch($id);
         $command = BranchCommand::fromBranch($branch);
 
-        if ($this->get('diamante.branch_email_configuration.service')->getConfigurationByBranchId($id) !== null) {
-            $branchEmailConfiguration = $this->get('diamante.branch_email_configuration.service')
-                ->getConfigurationByBranchId($id);
-            $branchEmailConfigurationCommand = BranchEmailConfigurationCommand::fromBranchEmailConfiguration(
-                $branchEmailConfiguration
-            );
-            $command->setBranchEmailConfiguration($branchEmailConfigurationCommand);
-        }
-
         try {
             $form = $this->createForm('diamante_update_branch_form', $command);
 
             $result = $this->edit($command, $form, function ($command) use ($branch) {
                 $branchId = $this->get('diamante.branch.service')->updateBranch($command);
-                $this->updateBranchEmailConfiguration($command, $branchId);
                 return $branchId;
             });
         } catch (MethodNotAllowedException $e) {

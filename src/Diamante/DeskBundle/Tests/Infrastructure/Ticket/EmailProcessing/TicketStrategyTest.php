@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
+use Diamante\DeskBundle\Api\BranchService;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
@@ -23,8 +24,8 @@ use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 {
-    const DEFAULT_BRANCH_ID  = '1';
-    const DUMMY_BRANCH_ID    = '2';
+    const DEFAULT_BRANCH_ID  = 1;
+    const DUMMY_BRANCH_ID    = 1;
 
     const DUMMY_UNIQUE_ID    = 'dummy_unique_id';
     const DUMMY_MESSAGE_ID   = 'dummy_message_id';
@@ -47,34 +48,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private $messageReferenceService;
 
     /**
-     * @var \Diamante\DeskBundle\Api\BranchEmailConfigurationService
-     * @Mock \Diamante\DeskBundle\Api\BranchEmailConfigurationService
-     */
-    private $branchEmailConfigurationService;
-
-    /**
-     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
-     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserRepository
-     */
-    private $diamanteUserRepository;
-
-    /**
-     * @var \Diamante\UserBundle\Infrastructure\DiamanteUserFactory
-     * @Mock \Diamante\UserBundle\Infrastructure\DiamanteUserFactory
-     */
-    private $diamanteUserFactory;
-
-    /**
      * @var \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      * @Mock \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
      */
     private $emailProcessingSettings;
-
-    /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
-     * @Mock \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    private $eventDispatcher;
 
     /**
      * @var \Diamante\DeskBundle\Api\Internal\WatchersServiceImpl
@@ -100,17 +77,29 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $userService;
 
+    /**
+     * @var BranchService
+     * @Mock \Diamante\DeskBundle\Api\BranchService
+     */
+    private $branchService;
+
+    /**
+     * @var \Diamante\DeskBundle\Entity\Branch
+     * @Mock \Diamante\DeskBundle\Entity\Branch
+     */
+    private $defaultBranch;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
         $this->ticketStrategy = new TicketStrategy(
             $this->messageReferenceService,
-            $this->branchEmailConfigurationService,
             $this->emailProcessingSettings,
             $this->watcherService,
             $this->oroUserManager,
             $this->configManager,
-            $this->userService
+            $this->userService,
+            $this->branchService
         );
     }
 
@@ -128,29 +117,24 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
 
-
-        $reporter = $this->getReporter($diamanteUser->getId());
-
-        preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
-        $customerDomain = $output[1];
-
-        $this->branchEmailConfigurationService->expects($this->once())
-            ->method('getConfigurationBySupportAddressAndCustomerDomain')
-            ->with(
-                $this->equalTo(self::DUMMY_MESSAGE_TO),
-                $this->equalTo($customerDomain)
-            )->will($this->returnValue(null));
-
-        $this->branchEmailConfigurationService
+        $this->configManager
             ->expects($this->once())
-            ->method('getBranchDefaultAssignee')
-            ->with($this->equalTo(1))
+            ->method('get')
+            ->with($this->equalTo('diamante_desk.default_branch'))
             ->will($this->returnValue(1));
 
-        $this->emailProcessingSettings->expects($this->once())
-            ->method('getDefaultBranchId')
-            ->will($this->returnValue(self::DEFAULT_BRANCH_ID));
+        $this->branchService
+            ->expects($this->once())
+            ->method('getBranch')
+            ->with($this->equalTo(1))
+            ->will($this->returnValue($this->defaultBranch));
 
+        $this->defaultBranch
+            ->expects($this->any())
+            ->method('getDefaultAssigneeId')
+            ->will($this->returnValue($assigneeId));
+
+        $reporter = $this->getReporter($diamanteUser->getId());
 
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
@@ -168,6 +152,23 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $assigneeId = 1;
 
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('diamante_desk.default_branch'))
+            ->will($this->returnValue(1));
+
+        $this->branchService
+            ->expects($this->once())
+            ->method('getBranch')
+            ->with($this->equalTo(1))
+            ->will($this->returnValue($this->defaultBranch));
+
+        $this->defaultBranch
+            ->expects($this->any())
+            ->method('getDefaultAssigneeId')
+            ->will($this->returnValue($assigneeId));
+
         $this->userService->expects($this->once())
             ->method('getUserByEmail')
             ->with(
@@ -181,31 +182,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 
         $reporter = new User($diamanteUser->getId(), User::TYPE_DIAMANTE);
 
-        preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
-        $customerDomain = $output[1];
-
-        $this->branchEmailConfigurationService->expects($this->once())
-            ->method('getConfigurationBySupportAddressAndCustomerDomain')
-            ->with(
-                $this->equalTo(self::DUMMY_MESSAGE_TO),
-                $this->equalTo($customerDomain)
-            )->will($this->returnValue(null));
-
-        $this->emailProcessingSettings->expects($this->once())
-            ->method('getDefaultBranchId')
-            ->will($this->returnValue(self::DEFAULT_BRANCH_ID));
-
-
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
             ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
                 $reporter, $assigneeId);
-
-        $this->branchEmailConfigurationService
-            ->expects($this->once())
-            ->method('getBranchDefaultAssignee')
-            ->with($this->equalTo(1))
-            ->will($this->returnValue(1));
 
         $this->ticketStrategy->process($message);
     }
@@ -224,34 +204,29 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
 
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('diamante_desk.default_branch'))
+            ->will($this->returnValue(1));
+
+        $this->branchService
+            ->expects($this->once())
+            ->method('getBranch')
+            ->with($this->equalTo(1))
+            ->will($this->returnValue($this->defaultBranch));
+
+        $this->defaultBranch
+            ->expects($this->any())
+            ->method('getDefaultAssigneeId')
+            ->will($this->returnValue($assigneeId));
 
         $reporter = $this->getReporter($diamanteUser->getId());
-
-        preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
-        $customerDomain = $output[1];
-
-        $this->branchEmailConfigurationService->expects($this->once())
-            ->method('getConfigurationBySupportAddressAndCustomerDomain')
-            ->with(
-                $this->equalTo(self::DUMMY_MESSAGE_TO),
-                $this->equalTo($customerDomain)
-            )->will($this->returnValue(null));
-
-        $this->emailProcessingSettings->expects($this->once())
-            ->method('getDefaultBranchId')
-            ->will($this->returnValue(self::DEFAULT_BRANCH_ID));
-
 
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
             ->with($this->equalTo($message->getMessageId()), self::DEFAULT_BRANCH_ID, $message->getSubject(), $message->getContent(),
                 $reporter, $assigneeId);
-
-        $this->branchEmailConfigurationService
-            ->expects($this->once())
-            ->method('getBranchDefaultAssignee')
-            ->with($this->equalTo($assigneeId))
-            ->will($this->returnValue(1));
 
         $this->ticketStrategy->process($message);
     }
@@ -270,24 +245,24 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
 
+        $this->configManager
+            ->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('diamante_desk.default_branch'))
+            ->will($this->returnValue(1));
+
+        $this->branchService
+            ->expects($this->once())
+            ->method('getBranch')
+            ->with($this->equalTo(1))
+            ->will($this->returnValue($this->defaultBranch));
+
+        $this->defaultBranch
+            ->expects($this->any())
+            ->method('getDefaultAssigneeId')
+            ->will($this->returnValue($assigneeId));
 
         $reporter = $this->getReporter($diamanteUser->getId());
-
-        preg_match('/@(.*)/', self::DUMMY_MESSAGE_FROM, $output);
-        $customerDomain = $output[1];
-
-        $this->branchEmailConfigurationService->expects($this->once())
-            ->method('getConfigurationBySupportAddressAndCustomerDomain')
-            ->with(
-                $this->equalTo(self::DUMMY_MESSAGE_TO),
-                $this->equalTo($customerDomain)
-            )->will($this->returnValue(self::DUMMY_BRANCH_ID));
-
-        $this->branchEmailConfigurationService
-            ->expects($this->once())
-            ->method('getBranchDefaultAssignee')
-            ->with($this->equalTo(2))
-            ->will($this->returnValue(1));
 
         $this->messageReferenceService->expects($this->once())
             ->method('createTicket')
