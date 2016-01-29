@@ -78,28 +78,6 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $data
-     * @param $action
-     * @return mixed
-     */
-    public function actionRule($data, $action)
-    {
-        if ($data['mode'] !== Engine::MODE_BUSINESS && $data['mode'] !== Engine::MODE_WORKFLOW) {
-            throw new \RuntimeException('Incorrect rule mode.');
-        }
-
-        $method = sprintf("%s%sRule", $action, ucfirst($data['mode']));
-
-        if (!method_exists($this, $method)) {
-            throw new \RuntimeException('Rule action does not exists.');
-        }
-
-        $result = call_user_func([$this, $method], $data);
-
-        return $result;
-    }
-
-    /**
      * @param $id
      * @return \Diamante\AutomationBundle\Entity\BusinessRule|null
      */
