@@ -15,12 +15,11 @@
 namespace Diamante\AutomationBundle\Api\Internal;
 
 use Diamante\AutomationBundle\Api\RuleService;
-use Diamante\AutomationBundle\Automation\Engine;
 use Diamante\AutomationBundle\Automation\Validator\RuleValidator;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Entity\BusinessRule;
-use Diamante\AutomationBundle\Entity\Group;
 use Diamante\AutomationBundle\Entity\Condition;
+use Diamante\AutomationBundle\Entity\Group;
+use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Infrastructure\Shared\CronExpressionMapper;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
@@ -35,14 +34,9 @@ class RuleServiceImpl implements RuleService
     const BUSINESSRULE_COMMAND_NAME = 'diamante:automation:business:run';
 
     /**
-     * @var string
-     */
-    protected $mode;
-
-    /**
      * @var RegistryInterface
      */
-    protected $registry;
+    private $registry;
 
     /**
      * @var DoctrineGenericRepository
@@ -57,13 +51,13 @@ class RuleServiceImpl implements RuleService
     /**
      * @var RuleValidator
      */
-    protected $validator;
+    private $validator;
 
     /**
-     * @param RegistryInterface $registry
+     * @param RegistryInterface         $registry
      * @param DoctrineGenericRepository $workflowRuleRepository
      * @param DoctrineGenericRepository $businessRuleRepository
-     * @param RuleValidator $validator
+     * @param RuleValidator             $validator
      */
     public function __construct(
         RegistryInterface $registry,
@@ -74,14 +68,132 @@ class RuleServiceImpl implements RuleService
         $this->registry = $registry;
         $this->workflowRuleRepository = $workflowRuleRepository;
         $this->businessRuleRepository = $businessRuleRepository;
-        $this->validator              = $validator;
+        $this->validator = $validator;
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     *
+     * @return BusinessRule|WorkflowRule
+     */
+    public function viewRule($type, $id)
+    {
+        $rule = $type == Rule::TYPE_WORKFLOW ? $this->getWorkflowRuleById($id) : $this->getBusinessRuleById($id);
+
+        return $rule;
+    }
+
+    /**
+     * @param $input
+     *
+     * @return BusinessRule|WorkflowRule
+     */
+    public function createRule($input)
+    {
+        $input = $this->getValidatedInput($input);
+
+        $rule = call_user_func([$this, sprintf("create%sRule", ucfirst($input['type']))], $input);
+
+        return $rule;
+    }
+
+    /**
+     * @param $input
+     * @param $id
+     *
+     * @return BusinessRule|WorkflowRule
+     */
+    public function updateRule($input, $id)
+    {
+        $input = $this->getValidatedInput($input);
+
+        $rule = call_user_func_array([$this, sprintf("update%sRule", ucfirst($input['type']))], [$input, $id]);
+
+        return $rule;
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     */
+    public function deleteRule($type, $id)
+    {
+        $method = $type == Rule::TYPE_BUSINESS ? 'deleteBusinessRule' : 'deleteWorkflowRule';
+
+        call_user_func([$this, $method], $id);
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     *
+     * @return Rule
+     */
+    public function activateRule($type, $id)
+    {
+        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
+
+        /** @var Rule $rule */
+        $rule = $repo->get($id);
+
+        if (empty($rule)) {
+            throw new EntityNotFoundException("Rule not found");
+        }
+
+        $rule->activate();
+        $repo->store($rule);
+
+        return $rule;
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     *
+     * @return Rule
+     */
+    public function deactivateRule($type, $id)
+    {
+        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
+
+        /** @var Rule $rule */
+        $rule = $repo->get($id);
+
+        if (empty($rule)) {
+            throw new EntityNotFoundException("Rule not found");
+        }
+
+        $rule->deactivate();
+        $repo->store($rule);
+
+        return $rule;
     }
 
     /**
      * @param $id
+     */
+    private function deleteBusinessRule($id)
+    {
+        $rule = $this->getBusinessRuleById($id);
+        $this->businessRuleRepository->remove($rule);
+    }
+
+    /**
+     * @param $id
+     */
+    private function deleteWorkflowRule($id)
+    {
+        $rule = $this->getWorkflowRuleById($id);
+        $this->workflowRuleRepository->remove($rule);
+    }
+
+    /**
+     * @param $id
+     *
      * @return \Diamante\AutomationBundle\Entity\BusinessRule|null
      */
-    public function getBusinessRuleById($id)
+    private function getBusinessRuleById($id)
     {
         $rule = $this->businessRuleRepository->get($id);
 
@@ -94,9 +206,10 @@ class RuleServiceImpl implements RuleService
 
     /**
      * @param $id
+     *
      * @return \Diamante\AutomationBundle\Entity\WorkflowRule|null
      */
-    public function getWorkflowRuleById($id)
+    private function getWorkflowRuleById($id)
     {
         $rule = $this->workflowRuleRepository->get($id);
 
@@ -109,9 +222,10 @@ class RuleServiceImpl implements RuleService
 
     /**
      * @param $data
+     *
      * @return BusinessRule
      */
-    protected function createBusinessRule($data)
+    private function createBusinessRule($data)
     {
         $rule = new BusinessRule($data['name'], $data['target'], $data['timeInterval'], $data['active']);
         $this->addConditions($rule, $data['grouping']);
@@ -120,15 +234,17 @@ class RuleServiceImpl implements RuleService
         $this->businessRuleRepository->store($rule);
 
         $this->createBusinessRuleProcessingCronJob($rule->getId(), $rule->getTimeInterval());
+
         return $rule;
     }
 
     /**
      * @param $data
      * @param $id
+     *
      * @return \Diamante\DeskBundle\Model\Shared\Entity|null
      */
-    protected function updateBusinessRule($data, $id)
+    private function updateBusinessRule($data, $id)
     {
         if (!$this->validator->validate($data)) {
             throw new ValidationException("Given data is invalid. Can not update rule");
@@ -150,9 +266,10 @@ class RuleServiceImpl implements RuleService
     /**
      * @param $data
      * @param $id
+     *
      * @return \Diamante\DeskBundle\Model\Shared\Entity|null
      */
-    protected function updateWorkflowRule($data, $id)
+    private function updateWorkflowRule($data, $id)
     {
         if (!$this->validator->validate($data)) {
             throw new ValidationException("Given data is invalid. Can not update rule");
@@ -173,9 +290,10 @@ class RuleServiceImpl implements RuleService
 
     /**
      * @param $data
+     *
      * @return WorkflowRule
      */
-    protected function createWorkflowRule($data)
+    private function createWorkflowRule($data)
     {
         $rule = new WorkflowRule($data['name'], $data['target']);
         $this->addConditions($rule, $data['conditions']);
@@ -187,30 +305,12 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $id
-     */
-    public function deleteBusinessRule($id)
-    {
-        $rule = $this->getBusinessRuleById($id);
-        $this->businessRuleRepository->remove($rule);
-    }
-
-    /**
-     * @param $id
-     */
-    public function deleteWorkflowRule($id)
-    {
-        $rule = $this->getWorkflowRuleById($id);
-        $this->workflowRuleRepository->remove($rule);
-    }
-
-    /**
      * @param string|Uuid $ruleId
-     * @param string  $timeInterval
+     * @param string      $timeInterval
      *
      * @return Schedule
      */
-    protected function createBusinessRuleProcessingCronJob($ruleId, $timeInterval)
+    private function createBusinessRuleProcessingCronJob($ruleId, $timeInterval)
     {
         $command = sprintf('%s --rule-id=%s', self::BUSINESSRULE_COMMAND_NAME, $ruleId);
         $schedule = new Schedule();
@@ -225,9 +325,10 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $rule
-     * @param $data
+     * @param            $rule
+     * @param            $data
      * @param Group|null $parent
+     *
      * @return $this
      */
     private function addConditions(Rule $rule, $data, Group $parent = null)
@@ -257,9 +358,10 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $rule
+     * @param       $rule
      * @param array $actions
-     * @param $ruleType
+     * @param       $ruleType
+     *
      * @return $this
      */
     private function addActions(Rule $rule, array $actions, $ruleType)
@@ -274,43 +376,7 @@ class RuleServiceImpl implements RuleService
         return $this;
     }
 
-    public function viewRule($type, $id)
-    {
-        $rule = $type == Rule::TYPE_WORKFLOW ? $this->getWorkflowRuleById($id) : $this->getBusinessRuleById($id);
-
-        return $rule;
-    }
-
-    /**
-     * @param $input
-     * @return BusinessRule|WorkflowRule|void
-     */
-    public function createRule($input)
-    {
-        $input = $this->getValidatedInput($input);
-
-        $rule = call_user_func([$this, sprintf("create%sRule", ucfirst($input['type']))], $input);
-
-        return $rule;
-    }
-
-    public function updateRule($input, $id)
-    {
-        $input = $this->getValidatedInput($input);
-
-        $rule = call_user_func_array([$this, sprintf("update%sRule", ucfirst($input['type']))], [$input, $id]);
-
-        return $rule;
-    }
-
-    public function deleteRule($type, $id)
-    {
-        $method = $type == Rule::TYPE_BUSINESS ? 'deleteBusinessRule' : 'deleteWorkflowRule';
-
-        call_user_func([$this, $method], $id);
-    }
-
-    protected function getValidatedInput($input)
+    private function getValidatedInput($input)
     {
         if (!is_array($input)) {
             $input = (array)json_decode($input, true);
@@ -321,39 +387,5 @@ class RuleServiceImpl implements RuleService
         }
 
         return $input;
-    }
-
-    public function activateRule($type, $id)
-    {
-        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
-
-        /** @var Rule $rule */
-        $rule = $repo->get($id);
-
-        if (empty($rule)) {
-            throw new EntityNotFoundException("Rule not found");
-        }
-
-        $rule->activate();
-        $repo->store($rule);
-
-        return $rule;
-    }
-
-    public function deactivateRule($type, $id)
-    {
-        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
-
-        /** @var Rule $rule */
-        $rule = $repo->get($id);
-
-        if (empty($rule)) {
-            throw new EntityNotFoundException("Rule not found");
-        }
-
-        $rule->deactivate();
-        $repo->store($rule);
-
-        return $rule;
     }
 }

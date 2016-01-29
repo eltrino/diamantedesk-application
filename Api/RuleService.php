@@ -15,7 +15,59 @@
 
 namespace Diamante\AutomationBundle\Api;
 
+use Diamante\AutomationBundle\Model\Rule;
+use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Entity\WorkflowRule;
+
+/**
+ * Interface RuleService
+ *
+ * @package Diamante\AutomationBundle\Api
+ */
 interface RuleService
 {
-    public function actionRule($command, $action);
+    /**
+     * @param $type
+     * @param $id
+     *
+     * @return BusinessRule|WorkflowRule
+     */
+    public function viewRule($type, $id);
+
+    /**
+     * @param $input
+     *
+     * @return BusinessRule|WorkflowRule
+     */
+    public function createRule($input);
+
+    /**
+     * @param $input
+     * @param $id
+     *
+     * @return BusinessRule|WorkflowRule
+     */
+    public function updateRule($input, $id);
+
+    /**
+     * @param $type
+     * @param $id
+     */
+    public function deleteRule($type, $id);
+
+    /**
+     * @param $type
+     * @param $id
+     *
+     * @return Rule
+     */
+    public function activateRule($type, $id);
+
+    /**
+     * @param $type
+     * @param $id
+     *
+     * @return Rule
+     */
+    public function deactivateRule($type, $id);
 }
