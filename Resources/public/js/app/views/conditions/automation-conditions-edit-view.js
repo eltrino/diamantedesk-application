@@ -31,6 +31,9 @@ define([
         render: function () {
             AutomationConditionsEditView.__super__.render.apply(this, arguments);
             this.$(':input').trigger('change');
+            if(this.model.collection.length == 1){
+                this.$('button[data-action="delete"]').hide();
+            }
             return this;
         },
 

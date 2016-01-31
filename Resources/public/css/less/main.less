@@ -1,0 +1,19 @@
+@import "mixins";
+
+.actions-list,
+.conditions-list {
+  > div {
+    .clearfix();
+  }
+  select, input {
+    width: 20%;
+  }
+}
+
+.conditions-list {
+  .control-group {
+    border: 3px rgba(#ccc, .5) solid;
+    border-radius: 5px;
+    padding: 5px;
+  }
+}

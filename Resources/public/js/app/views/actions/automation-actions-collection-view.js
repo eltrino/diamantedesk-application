@@ -11,10 +11,16 @@ define([
         template : AutomationActionsCollectionTemplate,
         listSelector: '.actions-list',
         region: 'automation-actions',
+        className: 'control-group',
+
+        listen: {
+            'add collection': 'update',
+            'remove collection': 'update',
+            'reset collection': 'update'
+        },
 
         events: {
-            'click button[data-action="add-item"]'  : 'addItem',
-            'click button[data-action="add-group"]' : 'addGroup'
+            'click button[data-action="add-item"]'  : 'addItem'
         },
 
         initialize : function(options){
@@ -31,10 +37,10 @@ define([
             this.collection.add({});
         },
 
-        addGroup : function(e){
-            e.preventDefault();
-            this.collection.add({});
+        update : function(e){
+            this.$('button[data-action="delete"]').toggle(this.collection.length != 1);
         }
+
     });
 
     return AutomationActionsCollection;

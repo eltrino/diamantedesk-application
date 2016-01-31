@@ -1,5 +1,5 @@
 <div class="controls">
-    <select name="actions[name]" id="automation-actions-name">
+    <select name="actions[name]">
         <% for(var key in config.actions) { %>
         <option value="<%= key %>"<%= key == name ? ' selected' : ''%>><%= config.actions[key].label %></option>
         <% } %>
@@ -7,7 +7,7 @@
     <% if(name == 'update_property'){ %>
         <% var entities = config.entities; %>
         <span>Of:</span>
-        <select name="actions[entity]" id="automation-actions-entity">
+        <select name="actions[entity]">
             <% for(var key in entities) { %>
             <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
             <% } %>
@@ -15,7 +15,7 @@
         <% if(entity){ %>
         <% var properties = entities[entity].properties %>
         <span>Set: </span>
-        <select name="actions[property]" id="automation-actions-property">
+        <select name="actions[property]">
             <% for(var key in properties) { %>
             <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
             <% } %>
@@ -25,6 +25,14 @@
             <span>To: </span>
             <% if(properties[property].type == 'string'){ %>
                 <input type="text" name="actions[value]" value="<%= value %>" />
+            <% } else if (properties[property].frontend_options){ %>
+                <select name="actions[value]">
+                    <% for(var key in properties[property].frontend_options) { %>
+                    <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
+                        <%= properties[property].frontend_options[key] %>
+                    </option>
+                    <% } %>
+                </select>
             <% } %>
         <% } %>
     <% } %>

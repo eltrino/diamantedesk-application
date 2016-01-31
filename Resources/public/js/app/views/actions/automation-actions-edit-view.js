@@ -14,12 +14,12 @@ define([
         },
 
         events: {
-            'click button[data-action="delete"]': 'removeItem'
+            'click button[data-action="delete"]': 'removeItem',
+            'change :input': 'change'
         },
 
         initialize: function(options){
             this.options = _.omit(options, 'model');
-            this.delegate('change', ':input', this.change);
             BaseView.prototype.initialize.apply(this, arguments);
         },
 
@@ -31,6 +31,9 @@ define([
         render: function () {
             BaseView.prototype.render.apply(this, arguments);
             this.$(':input').trigger('change');
+            if(this.model.collection.length == 1){
+                this.$('button[data-action="delete"]').hide();
+            }
             return this;
         },
 
