@@ -45,3 +45,11 @@ diamante_automation:
         id: @diamante.desk.automation.action.move_to_branch
         frontend_label: diamante.desk.automation.action.move_to_branch
         data_types: ['virtual']
+
+parameters:
+  diamante.automation.action.move_to_branch.class: Diamante\DeskBundle\Automation\Action\MoveToBranchAction
+
+services:
+  diamante.automation.action.move_to_branch:
+    class: %diamante.automation.action.move_to_branch.class%
+    arguments: @doctrine
