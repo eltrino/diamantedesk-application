@@ -35,13 +35,19 @@ class MessageReference implements Entity
     protected $ticket;
 
     /**
+     * @var string
+     */
+    protected $endpoint;
+
+    /**
      * @param $messageId
      * @param $ticket
      */
-    public function __construct($messageId, Ticket $ticket)
+    public function __construct($messageId, Ticket $ticket, $endpoint)
     {
         $this->messageId = $messageId;
-        $this->ticket  = $ticket;
+        $this->ticket    = $ticket;
+        $this->endpoint  = $endpoint;
     }
 
     /**
@@ -66,5 +72,13 @@ class MessageReference implements Entity
     public function getTicket()
     {
         return $this->ticket;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndpoint()
+    {
+        return $this->endpoint;
     }
 }

@@ -69,6 +69,7 @@ diamante:
           updated_at.label:           Updated At
           attachments.label:          Attachments
           watcher_list.label:         Watcher List
+          created_via_email:          Created via email to
 
           columns:
             key:               Key
@@ -313,7 +314,10 @@ diamante:
           id.label:            Id
           ticket.label:        Ticket
           user_type.label:     User Type
-            
+
+        automation:
+          condition:
+            sent_to:           created via email to
 oro:
     entity_extend:
         form:

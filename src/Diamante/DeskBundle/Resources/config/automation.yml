@@ -22,6 +22,11 @@ diamante_automation:
           description:
             frontend_label: diamante.desk.ticket.description.label
             type: string
+          sent_to:
+            frontend_label: diamante.desk.ticket.created_via_email
+            type: virtual
+            accessor: diamante.ticket.email_processing_message_reference.repository::getEndpointByTicket
+
       comment:
         class: "Diamante\DeskBundle\Entity\Comment"
         frontend_label: diamante.desk.comment.entity_label
@@ -29,3 +34,14 @@ diamante_automation:
           content:
             frontend_label: diamante.desk.comment.content.label
             type: string
+
+    conditions:
+      sent_to:
+        class: "Diamante\AutomationBundle\Rule\Condition\Expression\Veq"
+        frontend_label: diamante.desk.automation.condition.sent_to
+
+    actions:
+      move_to_branch:
+        id: @diamante.desk.automation.action.move_to_branch
+        frontend_label: diamante.desk.automation.action.move_to_branch
+        data_types: ['virtual']

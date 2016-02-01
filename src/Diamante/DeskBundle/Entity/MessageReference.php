@@ -46,6 +46,12 @@ class MessageReference extends \Diamante\DeskBundle\Model\Ticket\EmailProcessing
      */
     protected $ticket;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $endpoint;
+
     public static function getClassName()
     {
         return __CLASS__;

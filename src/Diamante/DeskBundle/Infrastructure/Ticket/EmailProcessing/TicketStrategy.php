@@ -109,8 +109,8 @@ class TicketStrategy implements Strategy
 
                 $assigneeId = $branch->getDefaultAssigneeId() ? $branch->getDefaultAssigneeId() : null;
 
-                $ticket = $this->messageReferenceService->createTicket($message->getMessageId(), $defaultBranch,
-                $message->getSubject(), $message->getContent(), (string)$diamanteUser, $assigneeId, $attachments);
+                $ticket = $this->messageReferenceService->createTicket($message, $defaultBranch,
+                    (string)$diamanteUser, $assigneeId, $attachments);
         } else {
             $ticket = $this->messageReferenceService->createCommentForTicket($message->getContent(), (string)$diamanteUser,
                 $message->getReference(), $attachments);

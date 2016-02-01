@@ -26,6 +26,7 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
+use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bridge\Monolog\Logger;
 
@@ -76,26 +77,26 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     /**
      * Creates Ticket and Message Reference fot it
      *
-     * @param $messageId
+     * @param Message $message
      * @param $branchId
-     * @param $subject
-     * @param $description
      * @param $reporter
      * @param $assigneeId
      * @param array|null $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporter, $assigneeId,
+    public function createTicket(Message $message, $branchId, $reporter, $assigneeId,
                                  array $attachments = null)
     {
-        if (empty($subject)) {
+        $subject = $message->getSubject();
+
+        if (empty($message->getSubject())) {
             $subject = self::EMPTY_SUBJECT_PLACEHOLDER;
         }
 
         $command = new CreateTicketCommand();
         $command->subject           = $subject;
-        $command->description       = $description;
+        $command->description       = $message->getContent();
         $command->branch            = $branchId;
         $command->reporter          = $reporter;
         $command->assignee          = $assigneeId;
@@ -105,7 +106,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $command->status            = Status::NEW_ONE;
 
         $ticket = $this->ticketService->createTicket($command);
-        $this->createMessageReference($messageId, $ticket);
+        $this->createMessageReference($message->getMessageId(), $ticket, $message->getTo());
 
         return $ticket;
     }
@@ -152,10 +153,11 @@ class MessageReferenceServiceImpl implements MessageReferenceService
      *
      * @param $messageId
      * @param Ticket $ticket
+     * @param $endpoint
      */
-    private function createMessageReference($messageId, $ticket)
+    private function createMessageReference($messageId, $ticket, $endpoint)
     {
-        $messageReference = new MessageReference($messageId, $ticket);
+        $messageReference = new MessageReference($messageId, $ticket, $endpoint);
         $this->messageReferenceRepository->store($messageReference);
     }
 
