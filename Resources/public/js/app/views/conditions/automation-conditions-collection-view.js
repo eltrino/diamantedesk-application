@@ -20,7 +20,8 @@ define([
 
         events: {
             'click > .conditions-buttons button[data-action="add-item"]': 'addItem',
-            'click > .conditions-buttons button[data-action="add-group"]' : 'addGroup'
+            'click > .conditions-buttons button[data-action="add-group"]' : 'addGroup',
+            'click > .conditions-buttons button[data-action="delete-group"]' : 'removeGroup'
         },
 
         listen: {
@@ -30,21 +31,21 @@ define([
         },
 
         initialize : function(options){
-            this.options = _.omit(options, 'collection');
+            this.options = _.omit(options, 'collection', 'region');
             this.options.hasParent = !!options.collection.parent;
             BaseCollectionView.prototype.initialize.apply(this, arguments);
         },
 
         initItemView : function(model){
             if(model.parent){
-                return new AutomationConditionsCollectionView(_.extend(
-                    this.options, {
+                return new AutomationConditionsCollectionView(_.extend({
                         collection: model,
                         region : null
-                    }
+                    },
+                    this.options
                 ));
             } else {
-                return new AutomationConditionsEditView(_.extend(this.options, { model: model }));
+                return new AutomationConditionsEditView(_.extend({ model: model }, this.options));
             }
         },
 
@@ -60,13 +61,19 @@ define([
 
         addGroup : function(e){
             var group = new AutomationConditionsCollection([{}], { parent : this.collection });
-            console.log(group);
-            this.collection.add(group, this.options);
+            this.collection.addSubCollection(group, this.options);
+            this.subviewsByName['itemView:' + group.cid].subviews[0].delegateEvents();
         },
 
-        update : function(){
-            this.$('> select[data-action="update-connector"]').toggle(this.collection.length != 1);
-            this.$('button[data-action="delete"]').toggle(this.collection.length != 1);
+        removeGroup : function(){
+            this.collection.destroy();
+        },
+
+        update : function(model){
+            var deleteButtons = this.$('> .conditions-list > div:not(".control-group") button[data-action="delete"]');
+            deleteButtons = deleteButtons.add(this.$(' > .conditions-list > .control-group > .conditions-buttons button[data-action="delete-group"]').parent());
+            this.$('> select[data-action="update-connector"]').toggle(this.collection.length > 1);
+            deleteButtons.toggle(this.collection.length != 1);
         }
 
     });

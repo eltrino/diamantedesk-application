@@ -1,6 +1,6 @@
 <div class="controls">
     <% var entities = config.entities; %>
-    <select name="conditions[entity]" id="automation-conditions-entity">
+    <select name="conditions[entity]" data-attr="entity">
         <% for(var key in entities) { %>
         <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
         <% } %>

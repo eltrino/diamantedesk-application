@@ -1,8 +1,9 @@
 define([
+    'jquery',
     'underscore',
     'tpl!diamanteautomation/js/app/templates/conditions/automation-conditions-edit-template.ejs',
     'oroui/js/app/views/base/view'
-],function (_, AutomationConditionsEditTemplate, BaseView) {
+],function ($, _, AutomationConditionsEditTemplate, BaseView) {
     'use strict';
 
     var AutomationConditionsEditView = BaseView.extend({
@@ -24,27 +25,26 @@ define([
         },
 
         getTemplateData: function() {
-            var data = BaseView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
+            var data = BaseView.prototype.getTemplateData.call(this),
+                def = _.clone(this.model.defaults);
+            for(var key in data) {
+                data[key] = data[key];
+            }
+            return _.extend(def, data, this.options);
         },
 
         render: function () {
             AutomationConditionsEditView.__super__.render.apply(this, arguments);
-            this.$(':input').trigger('change');
+            this.$(':input:not(button)').trigger('change');
             if(this.model.collection.length == 1){
                 this.$('button[data-action="delete"]').hide();
             }
             return this;
         },
 
-        nameToAttr: function(name){
-            var result =  name.match(/actions\[(.+?)\]/);
-            return result && result[1];
-        },
-
         change: function (e) {
-            var input = e.target;
-            this.model.set(this.nameToAttr(input.name), input.value );
+            var input = $(e.target);
+            this.model.set(input.data('attr'), input.val() );
         },
 
         removeItem: function(){

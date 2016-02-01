@@ -1,30 +1,33 @@
 define([
+    'underscore',
     'diamanteautomation/js/app/models/conditions/automation-conditions-model',
     'oroui/js/app/models/base/collection'
-],function (AutomationConditionsModel, BaseCollection) {
+],function (_, AutomationConditionsModel, BaseCollection) {
     'use strict';
 
     var AutomationConditionsCollection = BaseCollection.extend({
         model : AutomationConditionsModel,
 
         initialize : function(collection, options){
-            if(options){
+            if(options && options.parent){
                 this.parent = options.parent;
+                this.cid = _.uniqueId('c');
             }
         },
 
-        add: function(models, options){
-            if(!models.parent){
-                console.log(arguments);
+        addSubCollection: function(collection, options){
+            if(collection.parent){
+                this.models.push(collection);
+                this.length += collection.length;
+                BaseCollection.prototype._addReference.call(this, collection, options);
+                this.trigger('add', collection, this, options);
             }
-            if(models.parent){
-                this.models.push(models);
-                this.length += models.length;
-                this.trigger('add', models, this, options);
-            } else {
-                BaseCollection.prototype.add.apply(this, arguments);
-            }
+        },
+
+        destroy : function(options){
+            this.trigger('destroy', this, this.parent, options);
         }
+
     });
 
     return AutomationConditionsCollection;
