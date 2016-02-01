@@ -29,6 +29,9 @@ diamante_automation:
     contains:
       class: "Diamante\AutomationBundle\Rule\Condition\Expression\Contains"
       frontend_label: diamante.automation.condition.contains
+    veq:
+      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Veq"
+      frontend_label: diamante.automation.condition.veq
 
 
   actions:

@@ -172,7 +172,7 @@ class Engine
     protected function processInclusive(Fact $fact, Group $group)
     {
         foreach ($group->getConditions() as $conditionEntity) {
-            $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters());
+            $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters(), $fact->getTargetType());
 
             if (false === $condition->isSatisfiedBy($fact)) {
                 return false;
@@ -190,7 +190,7 @@ class Engine
     protected function processExclusive(Fact $fact, Group $group)
     {
         foreach ($group->getConditions() as $conditionEntity) {
-            $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters());
+            $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters(), $fact->getTargetType());
 
             if (true === $condition->isSatisfiedBy($fact)) {
                 return true;

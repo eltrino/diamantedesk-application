@@ -62,7 +62,7 @@
         </service>
 
         <service id="diamante_automation.condition.factory" class="%diamante_automation.condition.factory.class%">
-            <argument type="service" id="diamante_automation.config.provider"/>
+            <argument type="service" id="service_container"/>
         </service>
 
         <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%">

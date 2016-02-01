@@ -22,7 +22,8 @@ class FrontendOptionsResolver
 {
     const RESOLVE_MARKER_SERVICE   = '@';
     const RESOLVE_MARKER_CLASS     = '^';
-    const RESOLVE_MARKER_PARAMETER = "%";
+    const RESOLVE_MARKER_PARAMETER = '%';
+    const RESOLVE_MARKER_ROUTE     = '>';
 
     protected $container;
 
@@ -40,6 +41,9 @@ class FrontendOptionsResolver
         $marker = substr($configuration, 0, 1);
 
         switch ($marker) {
+            case self::RESOLVE_MARKER_ROUTE:
+                $data = trim($configuration, self::RESOLVE_MARKER_ROUTE);
+                break;
             case self::RESOLVE_MARKER_CLASS:
                 $data = $this->resolveFromClass($configuration);
                 break;
@@ -59,7 +63,7 @@ class FrontendOptionsResolver
 
     protected function resolveFromClass($config)
     {
-        $config = trim($config, '^');
+        $config = trim($config, self::RESOLVE_MARKER_CLASS);
 
         list($class, $method) = explode('::', $config);
 
@@ -78,7 +82,7 @@ class FrontendOptionsResolver
 
     protected function resolveFromContainerParameter($config)
     {
-        $config = trim($config, "%");
+        $config = trim($config, self::RESOLVE_MARKER_PARAMETER);
 
         if ($this->container->hasParameter($config)) {
             return $this->container->getParameter($config);
@@ -91,7 +95,7 @@ class FrontendOptionsResolver
     {
         $result = null;
 
-        $config = trim($config, "@");
+        $config = trim($config, self::RESOLVE_MARKER_SERVICE);
 
         list($service, $method) = explode('->', $config);
 
