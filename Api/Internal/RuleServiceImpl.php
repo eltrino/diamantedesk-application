@@ -72,8 +72,8 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      *
      * @return BusinessRule|WorkflowRule
      */
@@ -85,7 +85,7 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $input
+     * @param string $input
      *
      * @return BusinessRule|WorkflowRule
      */
@@ -99,8 +99,8 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $input
-     * @param $id
+     * @param string $input
+     * @param string $id
      *
      * @return BusinessRule|WorkflowRule
      */
@@ -114,8 +114,8 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      */
     public function deleteRule($type, $id)
     {
@@ -125,8 +125,8 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      *
      * @return Rule
      */
@@ -148,8 +148,8 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      *
      * @return Rule
      */
@@ -171,7 +171,7 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $id
+     * @param string $id
      */
     private function deleteBusinessRule($id)
     {
@@ -180,7 +180,7 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $id
+     * @param string $id
      */
     private function deleteWorkflowRule($id)
     {
@@ -189,9 +189,9 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $id
+     * @param string $id
      *
-     * @return \Diamante\AutomationBundle\Entity\BusinessRule|null
+     * @return BusinessRule
      */
     private function getBusinessRuleById($id)
     {
@@ -205,9 +205,9 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $id
+     * @param string $id
      *
-     * @return \Diamante\AutomationBundle\Entity\WorkflowRule|null
+     * @return WorkflowRule
      */
     private function getWorkflowRuleById($id)
     {
@@ -221,15 +221,15 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $data
+     * @param array $input
      *
      * @return BusinessRule
      */
-    private function createBusinessRule($data)
+    private function createBusinessRule(array $input)
     {
-        $rule = new BusinessRule($data['name'], $data['target'], $data['timeInterval'], $data['active']);
-        $this->addConditions($rule, $data['grouping']);
-        $this->addActions($rule, $data['actions'], Rule::TYPE_BUSINESS);
+        $rule = new BusinessRule($input['name'], $input['target'], $input['timeInterval'], $input['active']);
+        $this->addGrouping($rule, $input['grouping']);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
 
         $this->businessRuleRepository->store($rule);
 
@@ -239,24 +239,20 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $data
-     * @param $id
+     * @param array  $input
+     * @param string $id
      *
-     * @return \Diamante\DeskBundle\Model\Shared\Entity|null
+     * @return BusinessRule
      */
-    private function updateBusinessRule($data, $id)
+    private function updateBusinessRule(array $input, $id)
     {
-        if (!$this->validator->validate($data)) {
-            throw new ValidationException("Given data is invalid. Can not update rule");
-        }
-
         $rule = $this->getBusinessRuleById($id);
-        $rule->update($data['name'], $data['timeInterval'], $data['active']);
+        $rule->update($input['name'], $input['timeInterval'], $input['active']);
 
         $rule->removeActions();
         $rule->removeRootGroup();
-        $this->addConditions($rule, $data['conditions']);
-        $this->addActions($rule, $data['actions'], Rule::TYPE_BUSINESS);
+        $this->addGrouping($rule, $input['grouping']);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
 
         $this->businessRuleRepository->store($rule);
 
@@ -264,24 +260,20 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $data
-     * @param $id
+     * @param array  $input
+     * @param string $id
      *
      * @return \Diamante\DeskBundle\Model\Shared\Entity|null
      */
-    private function updateWorkflowRule($data, $id)
+    private function updateWorkflowRule(array $input, $id)
     {
-        if (!$this->validator->validate($data)) {
-            throw new ValidationException("Given data is invalid. Can not update rule");
-        }
-
         $rule = $this->getWorkflowRuleById($id);
-        $rule->update($data['name'], $data['active']);
+        $rule->update($input['name'], $input['active']);
 
         $rule->removeActions();
         $rule->removeRootGroup();
-        $this->addConditions($rule, $data['conditions']);
-        $this->addActions($rule, $data['actions'], Rule::TYPE_WORKFLOW);
+        $this->addGrouping($rule, $input['grouping']);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
 
         $this->workflowRuleRepository->store($rule);
 
@@ -289,19 +281,52 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param $data
+     * @param array $input
      *
      * @return WorkflowRule
      */
-    private function createWorkflowRule($data)
+    private function createWorkflowRule(array $input)
     {
-        $rule = new WorkflowRule($data['name'], $data['target']);
-        $this->addConditions($rule, $data['conditions']);
-        $this->addActions($rule, $data['actions'], Rule::TYPE_WORKFLOW);
+        $rule = new WorkflowRule($input['name'], $input['target']);
+        $this->addGrouping($rule, $input['grouping']);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
 
         $this->workflowRuleRepository->store($rule);
 
         return $rule;
+    }
+
+    /**
+     * @param Rule       $rule
+     * @param array      $grouping
+     * @param Group|null $parent
+     *
+     * @return $this
+     */
+    private function addGrouping(Rule $rule, array $grouping, Group $parent = null)
+    {
+        $group = new Group($grouping['connector']);
+        if (is_null($parent)) {
+            $rule->setRootGroup($group);
+        } else {
+            $parent->addChild($group);
+            $group->setParent($parent);
+        }
+
+        if (!empty($grouping['conditions'])) {
+            foreach ($grouping['conditions'] as $condition) {
+                $condition = new Condition($condition['type'], $condition['parameters'], $group);
+                $group->addCondition($condition);
+            }
+        }
+
+        if (!empty($grouping['children'])) {
+            foreach ($grouping['children'] as $child) {
+                $this->addGrouping($rule, $child['grouping'], $group);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -325,42 +350,9 @@ class RuleServiceImpl implements RuleService
     }
 
     /**
-     * @param            $rule
-     * @param            $data
-     * @param Group|null $parent
-     *
-     * @return $this
-     */
-    private function addConditions(Rule $rule, $data, Group $parent = null)
-    {
-        $group = new Group($data['connector']);
-        if (is_null($parent)) {
-            $rule->setRootGroup($group);
-        } else {
-            $parent->addChild($group);
-            $group->setParent($parent);
-        }
-
-        if (!empty($data['conditions'])) {
-            foreach ($data['conditions'] as $condition) {
-                $condition = new Condition($condition['type'], $condition['parameters'], $group);
-                $group->addCondition($condition);
-            }
-        }
-
-        if (!empty($data['children'])) {
-            foreach ($data['children'] as $child) {
-                $this->addConditions($rule, $child, $group);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param       $rule
-     * @param array $actions
-     * @param       $ruleType
+     * @param Rule   $rule
+     * @param array  $actions
+     * @param string $ruleType
      *
      * @return $this
      */
@@ -376,6 +368,11 @@ class RuleServiceImpl implements RuleService
         return $this;
     }
 
+    /**
+     * @param string $input
+     *
+     * @return array
+     */
     private function getValidatedInput($input)
     {
         if (!is_array($input)) {

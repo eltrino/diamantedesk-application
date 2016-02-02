@@ -52,7 +52,7 @@ class UpdateRuleType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'data_class' => 'Diamante\\AutomationBundle\\Api\\Command\\UpdateRuleCommand',
+                'data_class' => 'Diamante\AutomationBundle\Api\Command\UpdateRuleCommand',
                 'intention'  => 'rule'
             ]
         );

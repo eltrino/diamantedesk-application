@@ -73,7 +73,7 @@ class RuleValidator implements ValidatorInterface
     {
         $grouping = isset($subject['grouping']) ? $subject['grouping'] : null;
 
-        if (empty($grouping) || (!empty($grouping['children']) && !empty($grouping['conditions']))) {
+        if (empty($grouping) || (empty($grouping['children']) && empty($grouping['conditions']))) {
             return false;
         }
 

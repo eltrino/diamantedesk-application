@@ -27,45 +27,45 @@ use Diamante\AutomationBundle\Entity\WorkflowRule;
 interface RuleService
 {
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      *
      * @return BusinessRule|WorkflowRule
      */
     public function viewRule($type, $id);
 
     /**
-     * @param $input
+     * @param string $input
      *
      * @return BusinessRule|WorkflowRule
      */
     public function createRule($input);
 
     /**
-     * @param $input
-     * @param $id
+     * @param string $input
+     * @param string $id
      *
      * @return BusinessRule|WorkflowRule
      */
     public function updateRule($input, $id);
 
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      */
     public function deleteRule($type, $id);
 
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      *
      * @return Rule
      */
     public function activateRule($type, $id);
 
     /**
-     * @param $type
-     * @param $id
+     * @param string $type
+     * @param string $id
      *
      * @return Rule
      */
