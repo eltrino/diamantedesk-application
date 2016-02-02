@@ -45,7 +45,7 @@ class AutomationController extends Controller
      * )
      * @Template("DiamanteAutomationBundle:Automation:list.html.twig")
      *
-     * @param $type
+     * @param string $type
      *
      * @return array
      */
@@ -65,9 +65,10 @@ class AutomationController extends Controller
      * )
      * @Template("DiamanteAutomationBundle:Automation:view.html.twig")
      *
+     * @param string $type
      * @param int $id
      *
-     * @return array
+     * @return array|Response
      */
     public function viewAction($type, $id)
     {
@@ -87,6 +88,10 @@ class AutomationController extends Controller
      *      requirements={"type"="workflow|business"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:create.html.twig")
+     *
+     * @param string $type
+     *
+     * @return array
      */
     public function createAction($type)
     {
@@ -98,7 +103,6 @@ class AutomationController extends Controller
         $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
             $this->handle($form);
-
 
             $rule = $this->get('diamante.rule.service')->createRule($command->rule);
             $this->addSuccessMessage('diamante.automation.rule.messages.create.success');
@@ -127,7 +131,8 @@ class AutomationController extends Controller
      * )
      * @Template("DiamanteAutomationBundle:Automation:update.html.twig")
      *
-     * @param int $id
+     * @param string $type
+     * @param int    $id
      *
      * @return array
      */
@@ -167,7 +172,7 @@ class AutomationController extends Controller
      *      }
      * )
      *
-     * @param $type
+     * @param string $type
      * @param int $id
      *
      * @return Response
@@ -187,17 +192,17 @@ class AutomationController extends Controller
     /**
      * @Route(
      *      "/{type}/activate/{id}",
-     *      name="diamante_automation_update",
+     *      name="diamante_automation_activate",
      *      requirements={
      *          "type"="workflow|business",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
      *
-     * @param $type
+     * @param string $type
      * @param int $id
      *
-     * @return array
+     * @return Response
      */
     public function activateAction($type, $id)
     {
@@ -214,17 +219,17 @@ class AutomationController extends Controller
     /**
      * @Route(
      *      "/{type}/deactivate/{id}",
-     *      name="diamante_automation_update",
+     *      name="diamante_automation_deactivate",
      *      requirements={
      *          "type"="workflow|business",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
      *
-     * @param $type
+     * @param string $type
      * @param int $id
      *
-     * @return array
+     * @return Response
      */
     public function deactivateAction($type, $id)
     {
