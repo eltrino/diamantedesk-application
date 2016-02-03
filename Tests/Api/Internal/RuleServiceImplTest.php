@@ -16,12 +16,14 @@
 namespace Diamante\AutomationBundle\Tests\Api\Internal;
 
 use Diamante\AutomationBundle\Api\Internal\RuleServiceImpl;
-use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Diamante\AutomationBundle\Entity\WorkflowAction;
+use Diamante\AutomationBundle\Entity\BusinessAction;
+use Diamante\AutomationBundle\Entity\BusinessRule;
 use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\Group;
+use Diamante\AutomationBundle\Entity\WorkflowAction;
 use Diamante\AutomationBundle\Entity\WorkflowRule;
-use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Model\Rule;
+use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
 /**
  * Class RuleServiceImplTest
@@ -30,24 +32,11 @@ use Diamante\AutomationBundle\Entity\BusinessRule;
  */
 class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 {
-    const CREATE = 'create';
-    const UPDATE = 'update';
-    const LOAD = 'load';
-    const DELETE = 'delete';
-    const INCORRECT_ACTION = 'move';
-
     /**
      * @var \Symfony\Bridge\Doctrine\RegistryInterface
      * @Mock Symfony\Bridge\Doctrine\RegistryInterface
      */
     private $registry;
-
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     * @Mock Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
 
     /**
      * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
@@ -62,41 +51,32 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
     private $businessRuleRepository;
 
     /**
+     * @var \Diamante\AutomationBundle\Automation\Validator\RuleValidator
+     * @Mock Diamante\AutomationBundle\Automation\Validator\RuleValidator
+     */
+    private $validator;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     * @Mock Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
+
+    /**
      * @var RuleServiceImpl
      */
-    private $service;
+    private $ruleService;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
 
-        $this->service = new RuleServiceImpl(
+        $this->ruleService = new RuleServiceImpl(
             $this->registry,
             $this->workflowRuleRepository,
-            $this->businessRuleRepository
+            $this->businessRuleRepository,
+            $this->validator
         );
-    }
-
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Incorrect rule mode.
-     */
-    public function testIncorrectMode()
-    {
-        $data = ['mode' => 'incorrect_mode'];
-
-        $this->service->actionRule($data, self::CREATE);
-    }
-
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Rule action does not exists.
-     */
-    public function testIncorrectAction()
-    {
-        $data = ['mode' => 'workflow'];
-
-        $this->service->actionRule($data, self::INCORRECT_ACTION);
     }
 
     /**
@@ -104,33 +84,19 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateWorkflowRule()
     {
-        $data = [
-            'name'       => 'workflow_rule',
-            'target'     => 'ticket',
-            'conditions' => [
-                'connector'  => 'AND',
-                'conditions' => [
-                    [
-                        'type'       => 'Eq',
-                        'parameters' => ['status' => 'new']
-                    ]
-                ]
-            ],
-            'actions'    => [
-                [
-                    'type'       => 'UpdateProperty',
-                    'parameters' => ['status' => 'closed']
-                ]
-            ],
-            'mode'       => 'workflow'
-        ];
+        $input = $this->getJsonRule(Rule::TYPE_WORKFLOW);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->will($this->returnValue(true));
 
         $this->workflowRuleRepository
             ->expects($this->once())
             ->method('store')
             ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
 
-        $rule = $this->service->actionRule($data, self::CREATE);
+        $rule = $this->ruleService->createRule($input);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
@@ -141,27 +107,12 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateBusinessRule()
     {
-        $data = [
-            'name'         => 'business_rule',
-            'target'       => 'ticket',
-            'timeInterval' => '4h',
-            'conditions'   => [
-                'connector'  => 'AND',
-                'conditions' => [
-                    [
-                        'type'       => 'Eq',
-                        'parameters' => ['status' => 'new']
-                    ]
-                ]
-            ],
-            'actions'      => [
-                [
-                    'type'       => 'UpdateProperty',
-                    'parameters' => ['status' => 'closed']
-                ]
-            ],
-            'mode'         => 'business'
-        ];
+        $input = $this->getJsonRule(Rule::TYPE_BUSINESS);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->will($this->returnValue(true));
 
         $this->businessRuleRepository
             ->expects($this->once())
@@ -182,188 +133,10 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('flush');
 
-        $rule = $this->service->actionRule($data, self::CREATE);
+        $rule = $this->ruleService->createRule($input);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
-    }
-
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Rule loading failed. Rule not found.
-     */
-    public function testLoadBusinessRuleException()
-    {
-        $data = [
-            'id'   => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'mode' => 'business'
-        ];
-
-        $this->service->actionRule($data, self::LOAD);
-    }
-
-
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Rule loading failed. Rule not found.
-     */
-    public function testLoadWorkflowRuleException()
-    {
-        $data = [
-            'id'   => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'mode' => 'workflow'
-        ];
-
-        $this->service->actionRule($data, self::LOAD);
-    }
-
-    /**
-     * @test
-     */
-    public function testLoadBusinessRule()
-    {
-        $rule = $this->getBusinessRule();
-        $data = [
-            'id'   => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'mode' => 'business'
-        ];
-
-        $this->businessRuleRepository
-            ->expects($this->once())
-            ->method('get')
-            ->with($data['id'])
-            ->will($this->returnValue($rule));
-
-        $result = $this->service->actionRule($data, self::LOAD);
-
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testLoadWorkflowRule()
-    {
-        $rule = $this->getWorkflowRule();
-        $data = [
-            'id'   => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'mode' => 'workflow'
-        ];
-
-        $this->workflowRuleRepository
-            ->expects($this->once())
-            ->method('get')
-            ->with($data['id'])
-            ->will($this->returnValue($rule));
-
-        $result = $this->service->actionRule($data, self::LOAD);
-
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testDeleteWorkflowRule()
-    {
-        $rule = $this->getWorkflowRule();
-        $data = [
-            'id'   => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'mode' => 'workflow'
-        ];
-
-        $this->workflowRuleRepository
-            ->expects($this->once())
-            ->method('get')
-            ->with($data['id'])
-            ->will($this->returnValue($rule));
-
-        $this->workflowRuleRepository
-            ->expects($this->once())
-            ->method('remove')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
-
-        $this->service->actionRule($data, self::DELETE);
-    }
-
-    /**
-     * @test
-     */
-    public function testDeleteBusinessRule()
-    {
-        $rule = $this->getBusinessRule();
-        $data = [
-            'id'   => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'mode' => 'business'
-        ];
-
-        $this->businessRuleRepository
-            ->expects($this->once())
-            ->method('get')
-            ->with($data['id'])
-            ->will($this->returnValue($rule));
-
-        $this->businessRuleRepository
-            ->expects($this->once())
-            ->method('remove')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
-
-        $this->service->actionRule($data, self::DELETE);
-    }
-
-    /**
-     * @test
-     */
-    public function testUpdateBusinessRule()
-    {
-        $rule = $this->getBusinessRule();
-        $data = [
-            'id'           => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'name'         => 'business_rule',
-            'target'       => 'ticket',
-            'timeInterval' => '4h',
-            'conditions'   => [
-                'connector'  => 'AND',
-                'conditions' => [
-                    [
-                        'type'       => 'Eq',
-                        'parameters' => ['status' => 'new']
-                    ],
-                    [
-                        'type'       => 'Neq',
-                        'parameters' => ['status' => 'open']
-                    ]
-                ]
-            ],
-            'actions'      => [
-                [
-                    'type'       => 'NotifyByEmail',
-                    'parameters' => ['mike@diamantedesk.com']
-                ]
-            ],
-            'active'       => true,
-            'mode'         => 'business'
-        ];
-
-        $this->businessRuleRepository
-            ->expects($this->once())
-            ->method('get')
-            ->with($data['id'])
-            ->will($this->returnValue($rule));
-
-        $this->businessRuleRepository
-            ->expects($this->once())
-            ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
-
-        $result = $this->service->actionRule($data, self::UPDATE);
-
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $result->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $result);
-        $this->assertEquals(2, $result->getRootGroup()->getConditions()->count());
-        $this->assertEquals('NotifyByEmail', $result->getActions()->first()->getType());
     }
 
     /**
@@ -371,51 +144,213 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateWorkflowRule()
     {
-        $rule = $this->getWorkflowRule();
-        $data = [
-            'id'         => '2a9475e1-c81f-461e-a450-46790a77abfc',
-            'name'       => 'workflow_rule',
-            'target'     => 'ticket',
-            'conditions' => [
-                'connector'  => 'AND',
-                'conditions' => [
-                    [
-                        'type'       => 'Eq',
-                        'parameters' => ['status' => 'new']
-                    ],
-                    [
-                        'type'       => 'Neq',
-                        'parameters' => ['status' => 'open']
-                    ]
-                ]
-            ],
-            'actions'    => [
-                [
-                    'type'       => 'NotifyByEmail',
-                    'parameters' => ['mike@diamantedesk.com']
-                ]
-            ],
-            'active'     => true,
-            'mode'       => 'workflow'
-        ];
+        $workflowRule = $this->getWorkflowRule();
+        $input = $this->getJsonRule(Rule::TYPE_WORKFLOW);
+        $ruleId = 'rule_id';
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->will($this->returnValue(true));
 
         $this->workflowRuleRepository
             ->expects($this->once())
             ->method('get')
-            ->with($data['id'])
-            ->will($this->returnValue($rule));
+            ->with($ruleId)
+            ->will($this->returnValue($workflowRule));
 
         $this->workflowRuleRepository
             ->expects($this->once())
             ->method('store')
             ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
 
-        $result = $this->service->actionRule($data, self::UPDATE);
+        $rule = $this->ruleService->updateRule($input, $ruleId);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $result->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $result);
-        $this->assertEquals(2, $result->getRootGroup()->getConditions()->count());
-        $this->assertEquals('NotifyByEmail', $result->getActions()->first()->getType());
+        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
+        $this->assertEquals(2, $rule->getRootGroup()->getConditions()->count());
+        $this->assertEquals('update_property', $rule->getActions()->first()->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function testUpdateBusinessRule()
+    {
+        $businessRule = $this->getBusinessRule();
+        $input = $this->getJsonRule(Rule::TYPE_BUSINESS);
+        $ruleId = 'rule_id';
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->will($this->returnValue(true));
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($ruleId)
+            ->will($this->returnValue($businessRule));
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('store')
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+
+        $rule = $this->ruleService->updateRule($input, $ruleId);
+
+        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
+        $this->assertEquals(2, $rule->getRootGroup()->getConditions()->count());
+        $this->assertEquals('update_property', $rule->getActions()->first()->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function testDeleteWorkflowRule()
+    {
+        $ruleId = 'rule_id';
+        $workflowRule = $this->getWorkflowRule();
+
+        $this->workflowRuleRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($ruleId)
+            ->will($this->returnValue($workflowRule));
+
+        $this->workflowRuleRepository
+            ->expects($this->once())
+            ->method('remove')
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+
+        $this->ruleService->deleteRule(Rule::TYPE_WORKFLOW, $ruleId);
+    }
+
+    /**
+     * @test
+     */
+    public function testDeleteBusinessRule()
+    {
+        $ruleId = 'rule_id';
+        $businessRule = $this->getBusinessRule();
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($ruleId)
+            ->will($this->returnValue($businessRule));
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('remove')
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+
+        $this->ruleService->deleteRule(Rule::TYPE_BUSINESS, $ruleId);
+    }
+
+    /**
+     * @test
+     */
+    public function testActivateBusinessRule()
+    {
+        $ruleId = 'rule_id';
+        $businessRule = $this->getBusinessRule();
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($ruleId)
+            ->will($this->returnValue($businessRule));
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('store')
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+
+        $rule = $this->ruleService->activateRule(Rule::TYPE_BUSINESS, $ruleId);
+
+        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
+        $this->assertTrue($rule->isActive());
+    }
+
+    /**
+     * @test
+     */
+    public function testActivateWorkflowRule()
+    {
+        $ruleId = 'rule_id';
+        $workflowRule = $this->getWorkflowRule();
+
+        $this->workflowRuleRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($ruleId)
+            ->will($this->returnValue($workflowRule));
+
+        $this->workflowRuleRepository
+            ->expects($this->once())
+            ->method('store')
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+
+        $rule = $this->ruleService->activateRule(Rule::TYPE_WORKFLOW, $ruleId);
+
+        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
+        $this->assertTrue($rule->isActive());
+    }
+
+    /**
+     * @test
+     */
+    public function testDeactivateWorkflowRule()
+    {
+        $ruleId = 'rule_id';
+        $workflowRule = $this->getWorkflowRule();
+
+        $this->workflowRuleRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($ruleId)
+            ->will($this->returnValue($workflowRule));
+
+        $this->workflowRuleRepository
+            ->expects($this->once())
+            ->method('store')
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+
+        $rule = $this->ruleService->deactivateRule(Rule::TYPE_WORKFLOW, $ruleId);
+
+        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
+        $this->assertFalse($rule->isActive());
+    }
+
+    /**
+     * @test
+     */
+    public function testDeactivateBusinessRule()
+    {
+        $ruleId = 'rule_id';
+        $businessRule = $this->getBusinessRule();
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('get')
+            ->with($ruleId)
+            ->will($this->returnValue($businessRule));
+
+        $this->businessRuleRepository
+            ->expects($this->once())
+            ->method('store')
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+
+        $rule = $this->ruleService->deactivateRule(Rule::TYPE_BUSINESS, $ruleId);
+
+        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
+        $this->assertFalse($rule->isActive());
     }
 
     /**
@@ -446,7 +381,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $equalCondition = new Condition('Eq', ['status' => 'new'], $group);
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
-        $action = new WorkflowAction('UpdateProperty', ['status' => 'closed'], $rule);
+        $action = new BusinessAction('UpdateProperty', ['status' => 'closed'], $rule);
 
         $rule->setRootGroup($group);
         $rule->addAction($action);
@@ -454,5 +389,77 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
         $group->addCondition($notEqualCondition);
 
         return $rule;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return string
+     */
+    private function getJsonRule($type)
+    {
+        $rootChildren = [
+            [
+                'grouping' =>
+                    [
+                        'connector'  => 'and',
+                        'conditions' =>
+                            [
+                                [
+                                    'type'       => 'eq',
+                                    'parameters' => ['status' => 'open'],
+                                ],
+                            ],
+                    ],
+            ],
+        ];
+
+        $rootConditions = [
+            [
+                'type'       => 'eq',
+                'parameters' =>
+                    [
+                        'status' => 'open',
+                    ],
+            ],
+            [
+                'type'       => 'neq',
+                'parameters' =>
+                    [
+                        'status' => 'close',
+                    ],
+            ],
+        ];
+
+        $actions = [
+            [
+                'name'       => 'update_property',
+                'parameters' =>
+                    [
+                        'status' => 'close',
+                    ],
+                'weight'     => 0,
+            ],
+        ];
+
+        $rule = [
+            'type'     => $type,
+            'name'     => sprintf('%s rule', $type),
+            'grouping' =>
+                [
+                    'connector'  => 'and',
+                    'children'   => $rootChildren,
+                    'conditions' => $rootConditions,
+                ],
+            'actions'  => $actions,
+            'active'   => true,
+            'target'   => 'ticket'
+        ];
+
+        if (Rule::TYPE_BUSINESS == $type) {
+            $rule['timeInterval'] = '5m';
+        }
+
+        return json_encode($rule);
     }
 } 
