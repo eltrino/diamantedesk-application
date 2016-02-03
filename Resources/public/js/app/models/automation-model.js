@@ -5,6 +5,17 @@ define([
 ],function (BaseModel, AutomationActionsCollection, AutomationConditionsCollection) {
     'use strict';
 
+    function flatten(data){
+        for(var key in data){
+            if(_.isObject(data[key])){
+                data[key] = flatten(data[key])
+            } else {
+                data[key] = data[key];
+            }
+        }
+        return data;
+    }
+
     var AutomationModel = BaseModel.extend({
 
         defaults: {
@@ -21,6 +32,11 @@ define([
 
         validate: function(attrs, options) {
 
+        },
+
+        serializePlain: function(){
+            var result = BaseModel.prototype.serialize.apply(this);
+            return flatten(result);
         }
     });
 

@@ -21,16 +21,11 @@ define([
         initialize: function(options){
             this.options = _.omit(options, 'model');
             this.delegate('change', ':input', this.change);
-            BaseView.prototype.initialize.apply(this, arguments);
         },
 
         getTemplateData: function() {
-            var data = BaseView.prototype.getTemplateData.call(this),
-                def = _.clone(this.model.defaults);
-            for(var key in data) {
-                data[key] = data[key];
-            }
-            return _.extend(def, data, this.options);
+            var data = BaseView.prototype.getTemplateData.call(this);
+            return _.extend(data, this.options);
         },
 
         render: function () {
@@ -43,12 +38,20 @@ define([
         },
 
         change: function (e) {
-            var input = $(e.target);
-            this.model.set(input.data('attr'), input.val() );
+            var input = $(e.target),
+                model = this.model,
+                relAttr = input.data('rel-attr');
+            if(model.get(input.data('attr')) != input.val() && relAttr ){
+                _.each(relAttr.split(','), function(attr){
+                    model.unset(attr, {silent: true});
+                });
+            }
+            model.set( input.data('attr'), input.val() );
         },
 
         removeItem: function(){
-            this.model.destroy();
+            var success = this.model.destroy.bind(this.model);
+            this.$el.animate({ opacity: 0 }, 500, success);
         }
 
     });

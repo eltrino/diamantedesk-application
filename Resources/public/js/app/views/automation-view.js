@@ -16,7 +16,6 @@ define([
 
         initialize: function(options){
             this.options = _.omit(options, 'el', 'model');
-            return AutomationView.__super__.initialize.apply(this, arguments);
         },
 
         getTemplateData: function() {

@@ -5,10 +5,7 @@ define(['oroui/js/app/models/base/model'
     var AutomationActionsModel = BaseModel.extend({
 
         defaults: {
-            name: '',
-            entity: '',
-            property: '',
-            value: ''
+            name: ''
         },
 
         initialize: function(attr, options){

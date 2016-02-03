@@ -1,3 +1,8 @@
+<% var entities = config.entities; %>
+<% var entity = typeof entity !== 'undefined' && entity; %>
+<% var properties = !!entity && entities[entity].properties; %>
+<% var property = typeof property !== 'undefined' && property; %>
+<% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
     <select name="actions[name]" data-attr="name" data-rel-attr="entity,property,value">
         <% for(var key in config.actions) { %>
@@ -5,15 +10,13 @@
         <% } %>
     </select>
     <% if(name == 'update_property'){ %>
-        <% var entities = config.entities; %>
         <span>Of:</span>
         <select name="actions[entity]" data-attr="entity"  data-rel-attr="property,value">
             <% for(var key in entities) { %>
             <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
             <% } %>
         </select>
-        <% if(entity){ %>
-        <% var properties = entities[entity].properties; %>
+        <% if(properties){ %>
         <span>Set: </span>
         <select name="actions[property]" data-attr="property" data-rel-attr="value">
             <% for(var key in properties) { %>

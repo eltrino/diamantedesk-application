@@ -66,7 +66,8 @@ define([
         },
 
         removeGroup : function(){
-            this.collection.destroy();
+            var success = this.collection.destroy.bind(this.collection);
+            this.$el.animate({ opacity: 0 }, 500, success);
         },
 
         update : function(model){

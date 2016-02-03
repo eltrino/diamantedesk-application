@@ -18,6 +18,8 @@ define([
             delete options['type'];
             this.model = options.model =
                 options.model ? new AutomationModel(options.model) : new AutomationModel({type: type });
+
+            window.AutomationModel = this.model;
         },
         initView: function (options) {
             this.view = new AutomationView(options);

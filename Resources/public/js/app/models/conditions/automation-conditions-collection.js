@@ -26,6 +26,10 @@ define([
 
         destroy : function(options){
             this.trigger('destroy', this, this.parent, options);
+        },
+
+        getAttributes: function() {
+            return this.serialize();
         }
 
     });
