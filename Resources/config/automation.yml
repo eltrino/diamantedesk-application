@@ -3,34 +3,34 @@ diamante_automation:
 
   conditions:
     eq:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Eq"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Eq'
       frontend_label: diamante.automation.condition.eq
     neq:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Neq"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Neq'
       frontend_label: diamante.automation.condition.neq
     gt:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Gt"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Gt'
       frontend_label: diamante.automation.condition.gt
     gte:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Gte"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Gte'
       frontend_label: diamante.automation.condition.gte
     lt:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Lt"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Lt'
       frontend_label: diamante.automation.condition.lt
     lte:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Lte"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Lte'
       frontend_label: diamante.automation.condition.lte
     in:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\In"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\In'
       frontend_label: diamante.automation.condition.in
     in_range:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\InRange"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\InRange'
       frontend_label: diamante.automation.condition.in_range
     contains:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Contains"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Contains'
       frontend_label: diamante.automation.condition.contains
     veq:
-      class: "Diamante\AutomationBundle\Rule\Condition\Expression\Veq"
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Veq'
       frontend_label: diamante.automation.condition.veq
 
 

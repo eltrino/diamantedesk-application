@@ -80,7 +80,7 @@ class ConditionFactory
 
         $refClass = new \ReflectionClass($class);
 
-        if ($refClass->isSubclassOf('\\Diamante\\AutomationBundle\\Rule\\Action\\Condition\\AbstractAccessorAwareCondition')) {
+        if ($refClass->isSubclassOf('\\Diamante\\AutomationBundle\\Rule\\Condition\\AbstractAccessorAwareCondition')) {
             list($accessor, $accessorMethod) = $this->resolveAccessor($entityType, $property);
 
             return new $class($property, $expectedValue, $accessor, $accessorMethod);

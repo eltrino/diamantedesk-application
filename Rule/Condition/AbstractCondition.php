@@ -16,6 +16,8 @@
 namespace Diamante\AutomationBundle\Rule\Condition;
 
 
+use Diamante\DeskBundle\Model\Shared\Property;
+
 abstract class AbstractCondition implements ConditionInterface
 {
     /**
@@ -55,6 +57,14 @@ abstract class AbstractCondition implements ConditionInterface
 
         if (method_exists($object, $method) && property_exists($object, $this->property)) {
             $result = call_user_func([$object, $method]);
+        }
+
+        if (is_object($result)) {
+            if ($result instanceof Property) {
+                $result = $result->getValue();
+            } elseif (method_exists($result, '__toString')) {
+                $result = (string)$result;
+            }
         }
 
         return $result;
