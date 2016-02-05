@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-class Priority
+use Diamante\DeskBundle\Model\Shared\Property;
+
+class Priority implements Property
 {
     const PRIORITY_LOW = 'low';
     const PRIORITY_MEDIUM = 'medium';

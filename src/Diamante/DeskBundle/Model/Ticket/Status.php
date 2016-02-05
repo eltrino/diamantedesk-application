@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-class Status
+use Diamante\DeskBundle\Model\Shared\Property;
+
+class Status implements Property
 {
     const NEW_ONE     = 'new';
     const OPEN        = 'open';

@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-class Source
+use Diamante\DeskBundle\Model\Shared\Property;
+
+class Source implements Property
 {
     const PHONE     = 'phone';
     const WEB       = 'web';
