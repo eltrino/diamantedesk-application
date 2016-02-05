@@ -1,8 +1,17 @@
 define([
     'diamanteautomation/js/app/models/automation-model',
     'diamanteautomation/js/app/views/automation-view',
+    'diamanteautomation/js/app/views/actions/automation-actions-collection-view',
+    'diamanteautomation/js/app/views/groupings/automation-groupings-collection-view',
+    'diamanteautomation/js/app/views/groupings/automation-groupings-edit-view',
     'oroui/js/app/components/base/component'
-],function (AutomationModel,  AutomationView, BaseComponent) {
+],function (AutomationModel,
+            AutomationView,
+            AutomationActionsCollectionView,
+            AutomationGroupingsCollectionView,
+            AutomationGroupingsEditView,
+            BaseComponent) {
+
     'use strict';
 
     var AutomationComponent = BaseComponent.extend({
@@ -10,36 +19,27 @@ define([
             console.log(options.config);
             this.processOptions(options);
             this.initView(options);
+            this.el.parents('form').on('submit', function(){
+                this.el.find('input[name="rule"]').val(JSON.stringify(this.model.serializePlain()));
+            }.bind(this));
         },
         processOptions: function (options) {
             var type = options.type;
-            options.el = options._sourceElement;
+            this.el = options.el = options._sourceElement;
             delete options['_sourceElement'];
             delete options['type'];
             this.model = options.model =
                 options.model ? new AutomationModel(options.model) : new AutomationModel({type: type });
-
-            window.AutomationModel = this.model;
         },
         initView: function (options) {
             this.view = new AutomationView(options);
             options = _.omit(options, 'el', 'model');
-            require([
-                'diamanteautomation/js/app/views/actions/automation-actions-collection-view'
-            ],function(ActionsCollectionView){
-                new ActionsCollectionView(
-                    _.extend( options,
-                        { collection: this.model.get('actions') }
-                    )
-                );
-            }.bind(this));
-            require([
-                'diamanteautomation/js/app/views/conditions/automation-conditions-collection-view'
-            ],function(ConditionsCollectionsView){
-                new ConditionsCollectionsView(_.extend( options,
-                    { collection: this.model.get('conditions') }
-                ));
-            }.bind(this));
+            new AutomationActionsCollectionView(_.extend( options,
+                    { collection: this.model.get('actions') }
+            ));
+            new AutomationGroupingsEditView(_.extend( options,
+                { model: this.model.get('grouping'), collectionView: AutomationGroupingsCollectionView }
+            ));
         }
     });
 

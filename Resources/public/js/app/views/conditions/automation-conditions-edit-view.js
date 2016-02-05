@@ -15,12 +15,12 @@ define([
         },
 
         events: {
-            'click button[data-action="delete"]': 'removeItem'
+            'click button[data-action="delete"]': 'removeItem',
+            'change :input' : 'change'
         },
 
         initialize: function(options){
             this.options = _.omit(options, 'model');
-            this.delegate('change', ':input', this.change);
         },
 
         getTemplateData: function() {

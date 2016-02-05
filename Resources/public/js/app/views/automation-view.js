@@ -7,7 +7,12 @@ define([
 
     var AutomationView = BaseView.extend({
         autoRender: true,
+        className: 'container-fluid',
         template : AutomationTemplate,
+
+        events: {
+            'change > .control-group :input' : 'change'
+        },
 
         regions: {
             'automation-conditions': '#automation-conditions',
@@ -19,12 +24,13 @@ define([
         },
 
         getTemplateData: function() {
-            var data = AutomationView.__super__.getTemplateData.call(this);
+            var data = BaseView.prototype.getTemplateData.call(this);
             return _.extend(data, this.options);
         },
 
-        render: function () {
-            return AutomationView.__super__.render.apply(this, arguments);
+        change: function(e) {
+            var input = this.$(e.target);
+            this.model.set( input.data('attr'), input.val(), { silent: true });
         }
     });
 

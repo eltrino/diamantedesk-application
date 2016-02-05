@@ -15,14 +15,7 @@ define([
         autoRender: true,
         template : AutomationConditionsCollectionTemplate,
         listSelector: '.conditions-list',
-        region: 'automation-conditions',
         className: 'control-group',
-
-        events: {
-            'click > .conditions-buttons button[data-action="add-item"]': 'addItem',
-            'click > .conditions-buttons button[data-action="add-group"]' : 'addGroup',
-            'click > .conditions-buttons button[data-action="delete-group"]' : 'removeGroup'
-        },
 
         listen: {
             'add collection': 'update',
@@ -31,43 +24,18 @@ define([
         },
 
         initialize : function(options){
-            this.options = _.omit(options, 'collection', 'region');
+            this.options = _.omit(options, 'collection', 'container');
             this.options.hasParent = !!options.collection.parent;
             BaseCollectionView.prototype.initialize.apply(this, arguments);
         },
 
         initItemView : function(model){
-            if(model.parent){
-                return new AutomationConditionsCollectionView(_.extend({
-                        collection: model,
-                        region : null
-                    },
-                    this.options
-                ));
-            } else {
-                return new AutomationConditionsEditView(_.extend({ model: model }, this.options));
-            }
+            return new AutomationConditionsEditView(_.extend({ model: model }, this.options));
         },
 
         getTemplateData: function() {
             var data = BaseCollectionView.prototype.getTemplateData.call(this);
             return _.extend(data, this.options);
-        },
-
-        addItem : function(e){
-            e.preventDefault();
-            this.collection.add({});
-        },
-
-        addGroup : function(e){
-            var group = new AutomationConditionsCollection([{}], { parent : this.collection });
-            this.collection.addSubCollection(group, this.options);
-            this.subviewsByName['itemView:' + group.cid].subviews[0].delegateEvents();
-        },
-
-        removeGroup : function(){
-            var success = this.collection.destroy.bind(this.collection);
-            this.$el.animate({ opacity: 0 }, 500, success);
         },
 
         update : function(model){

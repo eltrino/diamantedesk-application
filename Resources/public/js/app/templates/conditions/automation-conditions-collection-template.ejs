@@ -1,32 +1,3 @@
-<% if(!hasParent) { %>
-<div class="control-label wrap">
-    <label for="automation-conditions-entity">Conditions</label>
-</div>
-<% } %>
-<select name="connector" data-action="update-connector" style="display: none;">
-    <% for(var key in config.connectors) { %>
-    <option value="<%= key %>"><%= config.connectors[key] %></option>
-    <% } %>
-</select>
 <div class="conditions-list">
 
-</div>
-<div class="conditions-buttons pull-right">
-    <div class="btn-group">
-        <button type="button" class="btn btn-success" data-action="add-group">
-            Add Group
-        </button>
-    </div>
-    <div class="btn-group">
-        <button type="button" class="btn btn-success" data-action="add-item">
-            Add Conditions
-        </button>
-    </div>
-    <% if(hasParent) { %>
-    <div class="btn-group">
-        <button type="button" class="btn btn-danger" data-action="delete-group">
-            Delete
-        </button>
-    </div>
-    <% } %>
 </div>

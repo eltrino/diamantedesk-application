@@ -37,7 +37,7 @@ define([
             this.collection.add({});
         },
 
-        update : function(e){
+        update : function(){
             this.$('button[data-action="delete"]').toggle(this.collection.length != 1);
         }
 
