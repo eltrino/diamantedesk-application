@@ -41,6 +41,11 @@ class PersistentProcessingContext extends \Diamante\AutomationBundle\Model\Persi
     protected $targetEntityClass;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $action;
+
+    /**
      * @ORM\Column(type="array")
      */
     protected $targetEntityChangeset;

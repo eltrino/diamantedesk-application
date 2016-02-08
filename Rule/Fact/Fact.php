@@ -31,14 +31,26 @@ class Fact
     protected $targetType;
 
     /**
+     * @var string
+     */
+    protected $action;
+
+    /**
      * @var array|null
      */
     protected $targetChangeset;
 
-    public function __construct($entity, $targetType, $targetChangeset = null)
+    /**
+     * @param      $entity
+     * @param      $targetType
+     * @param      $action
+     * @param null $targetChangeset
+     */
+    public function __construct($entity, $targetType, $action, $targetChangeset = null)
     {
         $this->target = $entity;
         $this->targetType = $targetType;
+        $this->action = $action;
         $this->targetChangeset = $targetChangeset;
     }
 
@@ -64,5 +76,10 @@ class Fact
     public function getTarget()
     {
         return $this->target;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
     }
 }

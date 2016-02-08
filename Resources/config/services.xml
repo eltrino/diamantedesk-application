@@ -101,6 +101,8 @@
             <argument type="service" id="diamante_automation.config.provider"/>
             <argument type="service" id="diamante.automation.queue.manager"/>
             <tag name="doctrine.event_listener" event="postPersist"/>
+            <tag name="doctrine.event_listener" event="postUpdate"/>
+            <tag name="doctrine.event_listener" event="preRemove"/>
         </service>
 
         <service id="diamante.automation.rule.validator" class="%diamante_automation.rule.validator.class%">

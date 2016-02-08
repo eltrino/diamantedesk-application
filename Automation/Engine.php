@@ -94,14 +94,15 @@ class Engine
 
     /**
      * @param $entity
+     * @param $action
      * @param null $entityChangeset
      * @return Fact
      */
-    public function createFact($entity, $entityChangeset = null)
+    public function createFact($entity, $action, $entityChangeset = null)
     {
         $entityType = $this->configurationProvider->getTargetByClass($entity);
 
-        return new Fact($entity, $entityType, $entityChangeset);
+        return new Fact($entity, $entityType, $action, $entityChangeset);
     }
 
     /**

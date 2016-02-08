@@ -23,6 +23,10 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class WorkflowListener
 {
+    const CREATED = 'created';
+    const UPDATED = 'updated';
+    const REMOVED = 'removed';
+
     /**
      * @var AutomationConfigurationProvider
      */
@@ -44,6 +48,25 @@ class WorkflowListener
 
     public function postPersist(LifecycleEventArgs $args)
     {
+        $this->handle($args, static::CREATED);
+    }
+
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        $this->handle($args, static::UPDATED);
+    }
+
+    public function preRemove(LifecycleEventArgs $args)
+    {
+        $this->handle($args, static::REMOVED);
+    }
+
+    /**
+     * @param LifecycleEventArgs $args
+     * @param string             $action
+     */
+    protected function handle(LifecycleEventArgs $args, $action)
+    {
         $entity     = $args->getObject();
         $em         = $args->getEntityManager();
         $changeset  = $em->getUnitOfWork()->getEntityChangeSet($entity);
@@ -55,6 +78,7 @@ class WorkflowListener
         $processingContext = new PersistentProcessingContext(
             $entity->getId(),
             get_class($entity),
+            $action,
             $changeset
         );
 

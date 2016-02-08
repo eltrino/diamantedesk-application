@@ -32,6 +32,11 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
     protected $target;
 
     /**
+     * @var string
+     */
+    protected $action;
+
+    /**
      * @var array
      */
     protected $changeset = null;
@@ -79,13 +84,16 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
         $this->target = $repo->get($processingContext->getTargetEntityId());
 
         if (empty($this->target)) {
-            throw new \RuntimeException(sprintf(
-                "Entity of %s class with id %d does not exist",
-                $processingContext->getTargetEntityClass(), $processingContext->getTargetEntityId()
-            )
+            throw new \RuntimeException(
+                sprintf(
+                    "Entity of %s class with id %d does not exist",
+                    $processingContext->getTargetEntityClass(),
+                    $processingContext->getTargetEntityId()
+                )
             );
         }
 
+        $this->action = $processingContext->getAction();
         $this->changeset = $processingContext->getTargetEntityChangeset();
 
         $processingContext->lock();
@@ -105,7 +113,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
         $dryRun = $input->hasParameterOption('--dry-run');
 
         $engine = $this->getContainer()->get('diamante_automation.engine');
-        $fact = $engine->createFact($this->target, $this->changeset);
+        $fact = $engine->createFact($this->target, $this->action, $this->changeset);
 
         try {
             $output->writeln("<info>Started rules processing</info>");

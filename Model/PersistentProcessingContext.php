@@ -26,13 +26,21 @@ class PersistentProcessingContext
     protected $id;
     protected $targetEntityId;
     protected $targetEntityClass;
+    protected $action;
     protected $targetEntityChangeset;
     protected $state = self::STATE_NEW;
 
-    public function __construct($id, $class, array $changeSet = [])
+    /**
+     * @param       $id
+     * @param       $class
+     * @param       $action
+     * @param array $changeSet
+     */
+    public function __construct($id, $class, $action, array $changeSet = [])
     {
         $this->targetEntityId        = $id;
         $this->targetEntityClass     = $class;
+        $this->action                = $action;
         $this->targetEntityChangeset = $changeSet;
         $this->state                 = self::STATE_NEW;
     }
@@ -59,6 +67,14 @@ class PersistentProcessingContext
     public function getTargetEntityClass()
     {
         return $this->targetEntityClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 
     /**

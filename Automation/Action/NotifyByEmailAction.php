@@ -47,14 +47,13 @@ class NotifyByEmailAction extends AbstractAction
     public function execute()
     {
         /**
-         * TODO get $action and $emails vars form fact
+         * TODO $emails vars form fact
          */
-        $action = 'created';
         $emails = ['akolomiec1989@gmail.com', 'mike@diamantedesk.com'];
         $fact = $this->getContext()->getFact();
         $target = $fact->getTarget();
         $targetType = $fact->getTargetType();
-        $provider = sprintf('%s_%s', $targetType, $action);
+        $provider = sprintf('%s_%s', $targetType, $fact->getAction());
 
         /**
          * TODO get changes and attachments form fact

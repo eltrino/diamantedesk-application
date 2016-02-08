@@ -46,7 +46,7 @@ class ExecutionContext
     }
 
     /**
-     * @return mixed
+     * @return Fact
      */
     public function getFact()
     {
