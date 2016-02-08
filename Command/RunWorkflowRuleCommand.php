@@ -102,7 +102,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dryRun = $input->hasOption('dry-run') ? true : false;
+        $dryRun = $input->hasParameterOption('--dry-run');
 
         $engine = $this->getContainer()->get('diamante_automation.engine');
         $fact = $engine->createFact($this->target, $this->changeset);
