@@ -46,33 +46,62 @@ class WorkflowListener
         $this->queueManager = $manager;
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postPersist(LifecycleEventArgs $args)
     {
         $this->handle($args, static::CREATED);
     }
 
+    /**
+     * @param LifecycleEventArgs $args
+     */
     public function postUpdate(LifecycleEventArgs $args)
     {
         $this->handle($args, static::UPDATED);
     }
 
-    public function preRemove(LifecycleEventArgs $args)
+    /**
+     * @param LifecycleEventArgs $args
+     */
+    public function postRemove(LifecycleEventArgs $args)
     {
-        $this->handle($args, static::REMOVED);
+        $callback = function ($changeset) {
+            array_walk(
+                $changeset,
+                function (&$item) {
+                    $item = array_reverse($item);
+                }
+            );
+
+            return $changeset;
+        };
+
+        $this->handle($args, static::REMOVED, $callback);
     }
 
     /**
      * @param LifecycleEventArgs $args
-     * @param string             $action
+     * @param                    $action
+     * @param callable|null      $callback
      */
-    protected function handle(LifecycleEventArgs $args, $action)
+    protected function handle(LifecycleEventArgs $args, $action, $callback = null)
     {
-        $entity     = $args->getObject();
-        $em         = $args->getEntityManager();
-        $changeset  = $em->getUnitOfWork()->getEntityChangeSet($entity);
+        $entity  = $args->getObject();
 
         if (empty($this->provider->getTargetByClass($entity))) {
             return;
+        }
+
+        $em = $args->getEntityManager();
+        $uow = $em->getUnitOfWork();
+        $metadata = $em->getClassMetadata(get_class($entity));
+        $uow->computeChangeSet($metadata, $entity);
+        $changeset = $uow->getEntityChangeSet($entity);
+
+        if (is_callable($callback)) {
+            $changeset = $callback($changeset);
         }
 
         $processingContext = new PersistentProcessingContext(
