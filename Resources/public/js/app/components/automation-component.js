@@ -20,7 +20,7 @@ define([
             this.processOptions(options);
             this.initView(options);
             this.el.parents('form').on('submit', function(){
-                this.el.find('input[name="rule"]').val(JSON.stringify(this.model.serializePlain()));
+                this.el.find('input[name="diamante_automation_update_rule_form[rule]"]').val(JSON.stringify(this.model.serializePlain()));
             }.bind(this));
         },
         processOptions: function (options) {
