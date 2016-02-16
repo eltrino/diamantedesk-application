@@ -108,12 +108,14 @@ define(['app', 'config', 'tinymce'], function(App, Config){
         });
         $body.on('blur', function(){
           if(!$.trim(editor.getContent({format:'text'}))){
-            console.log($.trim(editor.getContent({format:'text'})));
             placeholder.show();
           } else {
             placeholder.hide();
           }
         });
+        if($.trim(editor.getContent({format:'text'}))){
+          placeholder.hide();
+        }
       }
 
     });
