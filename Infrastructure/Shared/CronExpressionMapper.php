@@ -29,7 +29,11 @@ class CronExpressionMapper
         '4h'    => '0 */4 * * *',
         '8h'    => '0 */8 * * *',
         '12h'   => '0 */12 * * *',
-        '24h'   => '0 0 * * *'
+        '24h'   => '0 0 * * *',
+        '3d'    => '0 0 */3 * *',
+        '7d'    => '0 0 */7 * *',
+        '25d'   => '0 0 */25 * *',
+        '30d'   => '0 0 */30 * *'
     ];
 
     public static function getMappedCronExpression($humanReadableExpression)
@@ -45,7 +49,8 @@ class CronExpressionMapper
     {
         return [
             'm' => [5,10,15,20,30],
-            'h' => [1,2,4,8,12,24]
+            'h' => [1,2,4,8,12,24],
+            'd' => [3,7,25,30]
         ];
     }
 
