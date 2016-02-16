@@ -100,11 +100,14 @@ define(['app', 'config', 'tinymce'], function(App, Config){
         placeholder = $('<span />', { class: 'tinymce-placeholder', text: placeholder});
         placeholder.prependTo(contentAreaContainer);
         placeholder.on('click', function(){
-          placeholder.hide();
           tinyMCE.execCommand('mceFocus', false, editor);
         });
-        $body.on('focus', function(){
-          placeholder.hide();
+        $body.on('input', function(e){
+          if(!$.trim(editor.getContent({format:'text'}))){
+            placeholder.show();
+          } else {
+            placeholder.hide();
+          }
         });
         $body.on('blur', function(){
           if(!$.trim(editor.getContent({format:'text'}))){
