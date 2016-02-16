@@ -24,7 +24,7 @@ define(['app'], function(App){
             });
 
         modalCreateView.on('show', function(){
-          this.$el.modal();
+          this.$el.modal({backdrop: 'static'});
         });
 
         modalCreateView.on('modal:closed', function(){

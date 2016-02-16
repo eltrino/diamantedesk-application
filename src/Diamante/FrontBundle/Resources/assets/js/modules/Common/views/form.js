@@ -102,7 +102,7 @@ define(['app', 'config', 'tinymce'], function(App, Config){
         placeholder.on('click', function(){
           tinyMCE.execCommand('mceFocus', false, editor);
         });
-        $body.on('input', function(e){
+        $body.on('input', function(){
           if(!$.trim(editor.getContent({format:'text'}))){
             placeholder.show();
           } else {
