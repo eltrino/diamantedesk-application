@@ -28,6 +28,9 @@ class CreateDiamanteUserCommand
      * @Assert\NotNull(
      *              message="This is a required field"
      * )
+     * @Assert\Email(
+     *              message="This value should be a valid email"
+     * )
      */
     public $email;
     /**

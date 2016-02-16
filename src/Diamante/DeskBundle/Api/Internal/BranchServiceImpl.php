@@ -71,12 +71,12 @@ class BranchServiceImpl implements BranchService
         TagManager $tagManager,
         AuthorizationService $authorizationService
     ) {
-        $this->branchFactory     = $branchFactory;
-        $this->branchRepository  = $branchRepository;
-        $this->branchLogoHandler = $branchLogoHandler;
-        $this->tagManager        = $tagManager;
+        $this->branchFactory        = $branchFactory;
+        $this->branchRepository     = $branchRepository;
+        $this->branchLogoHandler    = $branchLogoHandler;
+        $this->tagManager           = $tagManager;
         $this->authorizationService = $authorizationService;
-        $this->registry          = $doctrineRegistry;
+        $this->registry             = $doctrineRegistry;
     }
 
     /**

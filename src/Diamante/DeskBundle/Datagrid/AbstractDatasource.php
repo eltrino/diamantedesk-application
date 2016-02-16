@@ -106,9 +106,9 @@ abstract class AbstractDatasource implements DatasourceInterface
 
     /**
      * @param $rows
-     * @return void
+     * @param $callback
      */
-    protected function applySorting(&$rows)
+    protected function applySorting(&$rows, $callback)
     {
         if (!$rows || empty($rows)) {
             return;
@@ -120,11 +120,9 @@ abstract class AbstractDatasource implements DatasourceInterface
 
             usort(
                 $rows,
-                function ($a, $b) use ($sortProperty, $direction) {
-                    $valueA = isset($a[$sortProperty]) ? $a[$sortProperty] : null;
-                    $valueB = isset($b[$sortProperty]) ? $b[$sortProperty] : null;
+                function ($a, $b) use ($sortProperty, $direction, $callback) {
+                    $sortableArray = $callback($a, $b, $sortProperty);
 
-                    $sortableArray = array($valueA, $valueB);
                     $originalSortableArray = $sortableArray;
 
                     asort($sortableArray);

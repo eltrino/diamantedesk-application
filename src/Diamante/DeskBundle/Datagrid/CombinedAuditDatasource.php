@@ -136,7 +136,7 @@ class CombinedAuditDatasource extends AbstractDatasource
             unset($result, $query, $beforeEvent);
         }
 
-        $this->applySorting($audit);
+        $this->applyAuditSorting($audit);
 
         foreach ($audit as $item) {
             $rows[] = new ResultRecord($item);
@@ -151,6 +151,33 @@ class CombinedAuditDatasource extends AbstractDatasource
 
         return $records;
 
+    }
+
+    /**
+     * @param $audit
+     */
+    protected function applyAuditSorting(&$audit)
+    {
+        $this->applySorting(
+            $audit,
+            function ($a, $b, $sortProperty) {
+                $a = is_array($a) ? $a[0] : $a;
+                $b = is_array($b) ? $b[0] : $b;
+
+                $reflectionA = new \ReflectionClass($a);
+                $reflectionB = new \ReflectionClass($b);
+
+                $propertyA = $reflectionA->getProperty($sortProperty);
+                $propertyB = $reflectionB->getProperty($sortProperty);
+                $propertyA->setAccessible(true);
+                $propertyB->setAccessible(true);
+
+                $valueA = $propertyA->getValue($a);
+                $valueB = $propertyB->getValue($b);
+
+                return [$valueA, $valueB];
+            }
+        );
     }
 
     /**

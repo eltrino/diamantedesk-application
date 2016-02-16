@@ -16,8 +16,7 @@ define([
         description: '',
         priority : 'medium',
         status: 'open',
-        source: 'web',
-        branch: Config.branchId
+        source: 'web'
       },
       idAttribute: 'key',
 
@@ -54,12 +53,13 @@ define([
       },
 
       setFilter: function(query) {
+        alert(1);
         this.params = { subject : query };
       },
 
       setParams: function(params) {
         if(params.search){
-          this.params = { subject : params.search };
+          this.params = { q : params.search };
         }
         if(params.page){
           this.state.currentPage = params.page;
@@ -74,8 +74,8 @@ define([
 
       getParams: function(){
         var str = [];
-        if(this.params && this.params.subject){
-          str.push('/search/' + this.params.subject);
+        if(this.params && this.params.q){
+          str.push('/search/' + this.params.q);
         }
         if(this.state.currentPage && this.state.currentPage !== 1){
           str.push('/page/' + this.state.currentPage);
@@ -127,10 +127,18 @@ define([
         var tickets = new Ticket.Collection(),
             defer = $.Deferred();
         tickets.setParams(params);
+        if(tickets.params && tickets.params.q){
+          tickets.url += '/search';
+        }
         tickets.fetch({
           data : tickets.params,
           success : function(data){
             defer.resolve(data);
+          },
+          complete : function(){
+            if(tickets.params && tickets.params.q){
+              tickets.url = tickets.url.replace('/search');
+            }
           }
         });
         return defer.promise();

@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-class Status
+use Diamante\DeskBundle\Model\Shared\Property;
+
+class Status implements Property
 {
     const NEW_ONE     = 'new';
     const OPEN        = 'open';
@@ -120,5 +122,14 @@ class Status
     public function notEquals(Status $status)
     {
         return !$this->equals($status);
+    }
+
+    public static function getValueToLabelMap()
+    {
+        if (empty(static::$valueToLabelMap)) {
+            static::initValueLabelsMap();
+        }
+
+        return static::$valueToLabelMap;
     }
 }

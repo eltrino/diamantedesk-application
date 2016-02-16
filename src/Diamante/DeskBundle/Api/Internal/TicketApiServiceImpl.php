@@ -213,12 +213,12 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      */
     public function createTicket(CreateTicketCommand $command)
     {
-        if (0 === $command->branch) {
-            $command->branch = (int)$this->configManager->get('diamante_email_processing.default_branch');
+        if (is_null($command->branch)) {
+            $command->branch = (int)$this->configManager->get('diamante_desk.default_branch');
         }
 
         if (empty($command->assignee)) {
-            $branch = $this->branchRepository->get((integer)$command->branch);
+            $branch = $this->branchRepository->get((int)$command->branch);
 
             if ($branch) {
                 $command->assignee = $branch->getDefaultAssigneeId();

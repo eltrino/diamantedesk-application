@@ -30,11 +30,6 @@ class CreateTicketCommand implements Taggable, Shared\Command
     public $id;
 
     /**
-     * @Assert\NotNull(
-     *              message="This is a required field"
-     * )
-     * @Any({@Assert\Type(type="integer"), @Assert\Type(type="object")})
-     *
      * @var int|Branch
      */
     public $branch;

@@ -20,15 +20,11 @@
 
     <parameters>
         <parameter key="diamante.branch.entity.class">Diamante\DeskBundle\Entity\Branch</parameter>
-        <parameter key="diamante.branch_email_configuration.entity.class">Diamante\DeskBundle\Entity\BranchEmailConfiguration</parameter>
         <parameter key="diamante.branch.default_key_generator.class">Diamante\DeskBundle\Model\Branch\DefaultBranchKeyGenerator</parameter>
         <parameter key="diamante.branch.entity.factory.class">Diamante\DeskBundle\Model\Branch\BranchFactory</parameter>
         <parameter key="diamante.branch.logo.handler.class">Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler</parameter>
         <parameter key="diamante.branch.service.class">Diamante\DeskBundle\Api\Internal\BranchServiceImpl</parameter>
         <parameter key="diamante.branch.service.api.class">Diamante\DeskBundle\Api\Internal\BranchApiServiceImpl</parameter>
-        <parameter key="diamante.branch_email_configuration.repository.class">Diamante\DeskBundle\Infrastructure\Persistence\DoctrineBranchEmailConfigurationRepository</parameter>
-        <parameter key="diamante.branch_email_configuration.entity.factory.class">Diamante\DeskBundle\Model\Branch\EmailProcessing\BranchEmailConfigurationFactory</parameter>
-        <parameter key="diamante.branch_email_configuration.service.class">Diamante\DeskBundle\Api\Internal\BranchEmailConfigurationServiceImpl</parameter>
         <parameter key="diamante.branch.placeholder.class">Diamante\DeskBundle\Placeholder\DefaultBranchPlaceholder</parameter>
     </parameters>
 
@@ -39,10 +35,6 @@
         <service id="diamante.branch.entity.factory" class="%diamante.branch.entity.factory.class%">
             <argument type="string">%diamante.branch.entity.class%</argument>
             <argument type="service" id="diamante.branch.default_key_generator"/>
-        </service>
-
-        <service id="diamante.branch_email_configuration.entity.factory" class="%diamante.branch_email_configuration.entity.factory.class%">
-            <argument type="string">%diamante.branch_email_configuration.entity.class%</argument>
         </service>
 
         <service id="diamante.branch.logo_handler" class="%diamante.branch.logo.handler.class%"
@@ -70,15 +62,6 @@
 
         <service id="diamante.branch.api.service_oro" alias="diamante.branch.api.service" />
 
-        <service id="diamante.branch_email_configuration.service" class="%diamante.branch_email_configuration.service.class%">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="diamante.branch_email_configuration.entity.factory"/>
-            <argument type="service" id="diamante.branch_email_configuration.repository"/>
-            <argument type="service" id="diamante.branch.repository"/>
-            <argument type="service" id="monolog.logger.diamante"/>
-            <tag name="monolog.logger" channel="diamante"/>
-        </service>
-
         <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
             <argument type="string">branch</argument>
             <argument type="constant">false</argument>
@@ -93,11 +76,6 @@
                 factory-service = "doctrine.orm.entity_manager"
                 factory-method  = "getRepository">
             <argument type="string">%diamante.branch.entity.class%</argument>
-        </service>
-
-        <service id="diamante.branch_email_configuration.repository" class="%diamante.branch_email_configuration.repository.class%"
-                factory-service="doctrine.orm.entity_manager" factory-method="getRepository">
-            <argument type="string">%diamante.branch_email_configuration.entity.class%</argument>
         </service>
 <!-- repositories end -->
     </services>

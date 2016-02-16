@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-class Priority
+use Diamante\DeskBundle\Model\Shared\Property;
+
+class Priority implements Property
 {
     const PRIORITY_LOW = 'low';
     const PRIORITY_MEDIUM = 'medium';
@@ -77,5 +79,14 @@ class Priority
     public function __toString()
     {
         return $this->getLabel();
+    }
+
+    public static function getValueToLabelMap()
+    {
+        if (empty(static::$valueToLabelMap)) {
+            static::initValueLabelsMap();
+        }
+
+        return static::$valueToLabelMap;
     }
 }

@@ -10,7 +10,6 @@
         <parameter key="diamante_assignee_select_form.type.class">Diamante\DeskBundle\Form\Type\AssigneeSelectType</parameter>
         <parameter key="diamante_ticket_form_assignee.type.class">Diamante\DeskBundle\Form\Type\AssigneeTicketType</parameter>
         <parameter key="diamante_attachment_form.type.class">Diamante\DeskBundle\Form\Type\AttachmentType</parameter>
-        <parameter key="diamante_branch_email_configuration_form.type.class">Diamante\DeskBundle\Form\Type\BranchEmailConfigurationType</parameter>
         <parameter key="diamante_comment_form.type.class">Diamante\DeskBundle\Form\Type\CommentType</parameter>
         <parameter key="diamante_branch_form.type.class">Diamante\DeskBundle\Form\Type\CreateBranchType</parameter>
         <parameter key="diamante_ticket_form.type.class">Diamante\DeskBundle\Form\Type\CreateTicketType</parameter>
@@ -44,9 +43,6 @@
         </service>
         <service id="diamante_attachment_form" class="%diamante_attachment_form.type.class%">
             <tag name="form.type" alias="diamante_attachment_form"/>
-        </service>
-        <service id="diamante_branch_email_configuration_form" class="%diamante_branch_email_configuration_form.type.class%">
-            <tag name="form.type" alias="diamante_branch_email_configuration_form"/>
         </service>
         <service id="diamante_comment_form" class="%diamante_comment_form.type.class%">
             <tag name="form.type" alias="diamante_comment_form"/>

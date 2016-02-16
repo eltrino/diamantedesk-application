@@ -83,11 +83,6 @@ class BranchCommand implements Taggable, Shared\Command
     public $logo;
 
     /**
-     * @var BranchEmailConfigurationCommand
-     */
-    public $branchEmailConfiguration;
-
-    /**
      * @var $removeLogo
      */
     public $removeLogo;
@@ -95,22 +90,6 @@ class BranchCommand implements Taggable, Shared\Command
     public function __construct()
     {
         $this->tags = new ArrayCollection();
-    }
-
-    /**
-     * @return BranchEmailConfigurationCommand
-     */
-    public function getBranchEmailConfiguration()
-    {
-        return $this->branchEmailConfiguration;
-    }
-
-    /**
-     * @param $branchEmailConfiguration
-     */
-    public function setBranchEmailConfiguration($branchEmailConfiguration)
-    {
-        $this->branchEmailConfiguration = $branchEmailConfiguration;
     }
 
     /**

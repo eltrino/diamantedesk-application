@@ -33,7 +33,8 @@ class CreateTicketType extends AbstractType
                 'label' => 'diamante.desk.attributes.branch',
                 'class' => 'DiamanteDeskBundle:Branch',
                 'property' => 'name',
-                'empty_value' => 'Choose branch...'
+                'empty_value' => 'Choose branch...',
+                'required'    => false
             )
         );
 

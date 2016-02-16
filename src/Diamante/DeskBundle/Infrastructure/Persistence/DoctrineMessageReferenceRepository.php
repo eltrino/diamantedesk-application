@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 use Diamante\DeskBundle\Entity\MessageReference;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
+use Doctrine\ORM\Query;
 
 class DoctrineMessageReferenceRepository extends DoctrineGenericRepository implements MessageReferenceRepository
 {
@@ -38,5 +39,30 @@ class DoctrineMessageReferenceRepository extends DoctrineGenericRepository imple
     public function findAllByTicket(Ticket $ticket)
     {
         return $this->findBy(array('ticket' => $ticket));
+    }
+
+    /**
+     * Get email which was specified in TO field, when ticket was created via EmailProcessing
+     *
+     * @param Ticket $ticket
+     * @return array|null
+     */
+    public function getEndpointByTicket(Ticket $ticket)
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb
+            ->select("r.endpoint")
+            ->from($this->_entityName, 'r')
+            ->where($qb->expr()->eq('r.ticket', $ticket->getId()))
+            ->setMaxResults(1);
+
+        try {
+            $result = $qb->getQuery()->getResult(Query::HYDRATE_SINGLE_SCALAR);
+        } catch (\Exception $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 }

@@ -14,7 +14,9 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket;
 
-class Source
+use Diamante\DeskBundle\Model\Shared\Property;
+
+class Source implements Property
 {
     const PHONE     = 'phone';
     const WEB       = 'web';
@@ -89,5 +91,14 @@ class Source
     public function __toString()
     {
         return $this->getLabel();
+    }
+
+    public static function getValueToLabelMap()
+    {
+        if (empty(static::$valueToLabelMap)) {
+            static::initValueLabelsMap();
+        }
+
+        return static::$valueToLabelMap;
     }
 }

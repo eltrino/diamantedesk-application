@@ -14,23 +14,22 @@
  */
 namespace Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services;
 
+use Diamante\EmailProcessingBundle\Model\Message;
+
 interface MessageReferenceService
 {
     /**
      * Creates Ticket and Message Reference fot it
      *
-     * @param $messageId
+     * @param Message $message
      * @param $branchId
-     * @param $subject
-     * @param $description
      * @param $reporterId
      * @param $assigneeId
      * @param array|null $attachments
      * @return \Diamante\DeskBundle\Model\Ticket\Ticket
      * @throws \RuntimeException if unable to load required branch, reporter, assignee
      */
-    public function createTicket($messageId, $branchId, $subject, $description, $reporterId, $assigneeId,
-                                 array $attachments = null);
+    public function createTicket(Message $message, $branchId, $reporterId, $assigneeId, array $attachments = null);
 
     /**
      * Creates Comment for Ticket

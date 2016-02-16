@@ -18,6 +18,7 @@ use Diamante\DeskBundle\Entity\Ticket;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Diamante\DeskBundle\Model\Branch\Exception\DefaultBranchException;
 
 /**
  * @Route("branches")
@@ -90,25 +91,47 @@ class BranchWidgetController extends WidgetController
             $this->handle($form);
             $data = $form->getData();
 
+            $iteration = 0;
             $newBranchId = $data['newBranch'];
             $removeBranches = explode(',', $data['removeBranches']);
             $branchService = $this->get('diamante.branch.service');
+            $systemSettings = $this->get('diamante.email_processing.mail_system_settings');
 
-            if ($data['moveMassTickets']) {
-                foreach ($removeBranches as $branchId) {
+            foreach ($removeBranches as $branchId) {
+                if ($systemSettings->getDefaultBranchId() == $branchId) {
+                    continue;
+                }
+
+                if ($data['moveMassTickets']) {
                     $tickets = $this->getAllTickets($branchId);
 
                     foreach ($tickets as $ticket) {
-                        $this->moveTicket($ticket, $newBranchId);
+                         $this->moveTicket($ticket, $newBranchId);
                     }
-
-                    $branchService->deleteBranch($branchId);
                 }
+
+                 $branchService->deleteBranch($branchId);
+                $iteration++;
             }
 
-            $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
+            if (in_array($systemSettings->getDefaultBranchId(), $removeBranches)) {
+                throw new DefaultBranchException(
+                    'diamante.desk.branch.messages.delete.mass_error',
+                    ['%count%' => $iteration],
+                    $iteration
+                );
+            }
+
+            $this->addSuccessMessage(
+                'diamante.desk.branch.messages.delete.mass_success',
+                ['%count%' => $iteration],
+                $iteration
+            );
             $response = $this->getWidgetResponse();
 
+        } catch (DefaultBranchException $e) {
+            $this->handleMassBranchException($e);
+            $response = $this->getWidgetResponse();
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = ['form' => $form->createView()];
@@ -133,6 +156,11 @@ class BranchWidgetController extends WidgetController
                 return $response;
             }
 
+            $systemSettings = $this->get('diamante.email_processing.mail_system_settings');
+            if ($systemSettings->getDefaultBranchId() == $id) {
+                throw new DefaultBranchException('diamante.desk.branch.messages.delete.error');
+            }
+
             $this->handle($form);
             $data = $form->getData();
 
@@ -141,7 +169,7 @@ class BranchWidgetController extends WidgetController
             $branchService = $this->get('diamante.branch.service');
 
             if ($data['moveTickets']) {
-                $tickets = $this->getAllTickets($newBranchId);
+                $tickets = $this->getAllTickets($id);
             }
 
             foreach ($tickets as $ticket) {
@@ -156,6 +184,9 @@ class BranchWidgetController extends WidgetController
                 $response['redirect'] = $this->generateUrl('diamante_branch_list');
             }
 
+        } catch (DefaultBranchException $e) {
+            $this->handleException($e);
+            $response = $this->getWidgetResponse();
         } catch (\Exception $e) {
             $this->handleException($e);
             $response = ['form' => $form->createView()];
@@ -195,5 +226,22 @@ class BranchWidgetController extends WidgetController
         }
 
         return $this;
+    }
+
+    /**
+     * @param DefaultBranchException $e
+     */
+    protected function handleMassBranchException(DefaultBranchException $e)
+    {
+        $message = $e->getFlashMessage();
+        $parameters = $e->getParameters();
+        $number = $e->getNumber();
+
+        $this->get('monolog.logger.diamante')
+            ->error(
+                sprintf("%s: %s", $message, $e->getMessage())
+            );
+
+        $this->addErrorMessage($message, $parameters, $number);
     }
 }

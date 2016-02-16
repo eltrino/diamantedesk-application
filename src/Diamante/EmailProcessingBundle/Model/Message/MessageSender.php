@@ -16,7 +16,7 @@
 namespace Diamante\EmailProcessingBundle\Model\Message;
 
 
-class MessageSender
+class MessageSender implements Person
 {
     /**
      * @var string

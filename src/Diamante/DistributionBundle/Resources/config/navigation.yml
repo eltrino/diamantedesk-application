@@ -96,6 +96,10 @@ oro_menu_config:
             extras:
                 routes: ['diamante_report_*']
 
+        dashboard_tab:
+            extras:
+                icon: icon-dashboard
+
         tags_management:
             label: 'oro.tag.entity_plural_label'
             route: 'oro_tag_index'

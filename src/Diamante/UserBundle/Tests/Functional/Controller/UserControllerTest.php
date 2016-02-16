@@ -73,6 +73,9 @@ class UserControllerTest extends AbstractController
         $this->assertContains("Customer successfully created.", $crawler->html());
     }
 
+    /**
+     * @depends testCreate
+     */
     public function testUpdate()
     {
         $user = $this->selectDiamanteUser();
@@ -91,20 +94,26 @@ class UserControllerTest extends AbstractController
         $this->assertContains("Customer successfully updated.", $crawler->html());
     }
 
-    public function testDelete()
+    /**
+     * @depends testUpdate
+     */
+    public function testResetPassword()
     {
         $user = $this->selectDiamanteUser();
-        $updateUrl = $this->getUrl('diamante_user_delete', ['id' => $user['id']]);
+        $updateUrl = $this->getUrl('diamante_user_force_reset', ['id' => $user['id']]);
         $crawler = $this->client->request('POST', $updateUrl);
         $response = $this->client->getResponse();
 
         $this->assertEquals(204, $response->getStatusCode());
     }
 
-    public function testResetPassword()
+    /**
+     * @depends testResetPassword
+     */
+    public function testDelete()
     {
         $user = $this->selectDiamanteUser();
-        $updateUrl = $this->getUrl('diamante_user_force_reset', ['id' => $user['id']]);
+        $updateUrl = $this->getUrl('diamante_user_delete', ['id' => $user['id']]);
         $crawler = $this->client->request('POST', $updateUrl);
         $response = $this->client->getResponse();
 

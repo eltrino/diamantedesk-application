@@ -86,13 +86,6 @@ class CreateBranchType extends AbstractType
                 'label' => 'oro.tag.entity_plural_label'
             )
         );
-
-        // Branch Email Configuration
-        $builder->add(
-            'branch_email_configuration',
-            new BranchEmailConfigurationType()
-        );
-
     }
 
     /**
