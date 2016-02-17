@@ -1,7 +1,15 @@
 oro_system_configuration:
     groups:
         diamante_desk_setup:
-            title: 'DiamanteDesk Setup'
+            title: 'DiamanteDesk'
+            priority: 30
+
+        diamante_desk_channels:
+            title: 'Channels'
+            icon: icon-desktop
+
+        diamante_desk_channels_general_group:
+            title: 'General'
 
         diamante_desk_notifications:
             title: 'Notifications'
@@ -20,6 +28,11 @@ oro_system_configuration:
                 choices:
                     - No
                     - Yes
+        diamante_desk.default_branch:
+            data_type: integer
+            type: diamante_desk_default_branch
+            options:
+                label: 'Default Branch'
 
     tree:
         system_configuration:
@@ -27,6 +40,12 @@ oro_system_configuration:
                 children:
                     diamante_desk_setup:
                         children:
+                            diamante_desk_channels:
+                                children:
+                                    diamante_desk_channels_general_group:
+                                        priority: 300
+                                        children:
+                                            - diamante_desk.default_branch
                             diamante_desk_notifications:
                                 children:
                                     diamante_desk_email_notifications_group:

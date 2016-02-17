@@ -53,6 +53,6 @@ class DefaultBranchType extends AbstractType
      */
     public function getName()
     {
-        return 'diamante_email_processing_default_branch';
+        return 'diamante_desk_default_branch';
     }
 }
