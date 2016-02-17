@@ -19,6 +19,7 @@ namespace Diamante\AutomationBundle\EventListener;
 use Diamante\AutomationBundle\Automation\JobQueue\QueueManager;
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\PersistentProcessingContext;
+use Diamante\AutomationBundle\Infrastructure\Shared\ChangesetBuilder;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class WorkflowListener
@@ -37,13 +38,20 @@ class WorkflowListener
      */
     protected $queueManager;
 
+    /**
+     * @var ChangesetBuilder
+     */
+    protected $changesetBuilder;
+
     public function __construct(
         AutomationConfigurationProvider $provider,
-        QueueManager $manager
+        QueueManager $manager,
+        ChangesetBuilder $changesetBuilder
     )
     {
         $this->provider = $provider;
         $this->queueManager = $manager;
+        $this->changesetBuilder = $changesetBuilder;
     }
 
     /**
@@ -51,7 +59,9 @@ class WorkflowListener
      */
     public function postPersist(LifecycleEventArgs $args)
     {
-        $this->handle($args, static::CREATED);
+        $this->handle($args, static::CREATED, function($entity) {
+            return $this->changesetBuilder->getChangesetForCreateAction($entity);
+        });
     }
 
     /**
@@ -59,7 +69,9 @@ class WorkflowListener
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
-        $this->handle($args, static::UPDATED);
+        $this->handle($args, static::UPDATED, function($entity) {
+            return $this->changesetBuilder->getChangesetForUpdateAction($entity);
+        });
     }
 
     /**
@@ -67,48 +79,30 @@ class WorkflowListener
      */
     public function postRemove(LifecycleEventArgs $args)
     {
-        $callback = function ($changeset) {
-            array_walk(
-                $changeset,
-                function (&$item) {
-                    $item = array_reverse($item);
-                }
-            );
-
-            return $changeset;
-        };
-
-        $this->handle($args, static::REMOVED, $callback);
+        $this->handle($args, static::REMOVED, function($entity) {
+            return $this->changesetBuilder->getChangesetForRemoveAction($entity);
+        });
     }
 
     /**
      * @param LifecycleEventArgs $args
      * @param                    $action
-     * @param callable|null      $callback
+     * @param callable|null      $getChangeset
      */
-    protected function handle(LifecycleEventArgs $args, $action, $callback = null)
+    protected function handle(LifecycleEventArgs $args, $action, $getChangeset)
     {
         $entity  = $args->getObject();
 
-        if (empty($this->provider->getTargetByClass($entity))) {
+        if (empty($this->provider->getTargetByEntity($entity))) {
             return;
         }
 
         $em = $args->getEntityManager();
-        $uow = $em->getUnitOfWork();
-        $metadata = $em->getClassMetadata(get_class($entity));
-        $uow->computeChangeSet($metadata, $entity);
-        $changeset = $uow->getEntityChangeSet($entity);
-
-        if (is_callable($callback)) {
-            $changeset = $callback($changeset);
-        }
-
         $processingContext = new PersistentProcessingContext(
             $entity->getId(),
             get_class($entity),
             $action,
-            $changeset
+            $getChangeset($entity)
         );
 
         $this->queueManager->setEntityManager($em);
