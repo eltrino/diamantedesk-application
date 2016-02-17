@@ -57,11 +57,10 @@ class DiamanteAutomationExtension extends Extension
     {
         $cache = new ConfigCache(
             sprintf(
-                "%s/cache/%s/automation_config.php",
-                $container->getParameter('kernel.root_dir'),
-                $container->getParameter('kernel.environment')
+                "%s/automation_config.php",
+                $container->getParameter('kernel.cache_dir')
             ),
-            $container->getParameter('kernel.environment') === 'dev' ? true : false
+            $container->getParameter('kernel.debug')
         );
 
         if (!$cache->isFresh()) {
