@@ -97,10 +97,21 @@ class AutomationConfigurationProvider
      * @param $object
      * @return int|null|string
      */
-    public function getTargetByClass($object)
+    public function getTargetByEntity($object)
     {
         $className = get_class($object);
 
+        foreach ($this->targetMap as $target => $class) {
+            if ($class === $className) {
+                return $target;
+            }
+        }
+
+        return null;
+    }
+
+    public function getTargetByClass($className)
+    {
         foreach ($this->targetMap as $target => $class) {
             if ($class === $className) {
                 return $target;

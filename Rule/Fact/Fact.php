@@ -46,7 +46,7 @@ class Fact
      * @param      $action
      * @param null $targetChangeset
      */
-    public function __construct($entity, $targetType, $action, $targetChangeset = null)
+    public function __construct($entity, $targetType, $action = null, $targetChangeset = null)
     {
         $this->target = $entity;
         $this->targetType = $targetType;

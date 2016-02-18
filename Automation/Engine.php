@@ -19,6 +19,7 @@ namespace Diamante\AutomationBundle\Automation;
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\Group;
 use Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider;
+use Diamante\AutomationBundle\Infrastructure\Shared\TargetMapper;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Fact\Fact;
@@ -92,16 +93,15 @@ class Engine
         $this->targetProvider        = $targetProvider;
     }
 
-    /**
-     * @param $entity
-     * @param $action
-     * @param null $entityChangeset
-     * @return Fact
-     */
-    public function createFact($entity, $action, $entityChangeset = null)
+    public function createFactByEntity($entity)
     {
-        $entityType = $this->configurationProvider->getTargetByClass($entity);
+        $entityType = $this->configurationProvider->getTargetByEntity($entity);
 
+        return new Fact($entity, $entityType);
+    }
+
+    public function createFact($entity, $entityType, $action, $entityChangeset)
+    {
         return new Fact($entity, $entityType, $action, $entityChangeset);
     }
 
@@ -235,7 +235,7 @@ class Engine
             }
         }
 
-        if (!$dryRun) {
+        if (!$dryRun && !$this->scheduler->isEmpty()) {
             $this->scheduler->run($fact);
             $this->scheduler->reset();
         }
@@ -260,7 +260,7 @@ class Engine
 
         if (!$dryRun) {
             foreach ($targetEntities as $entity) {
-                $fact = $this->createFact($entity);
+                $fact = $this->createFactByEntity(TargetMapper::fromEntity($entity));
                 $this->scheduler->run($fact);
             }
         }

@@ -66,6 +66,11 @@ class Scheduler
         }
     }
 
+    public function isEmpty()
+    {
+        return empty($this->queue);
+    }
+
     public function reset()
     {
         $this->queue = [];

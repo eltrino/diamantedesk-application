@@ -27,6 +27,7 @@
         <parameter key="diamante_automation_form.type.class">Diamante\AutomationBundle\Form\Type\AutomationType</parameter>
         <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
         <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
+        <parameter key="diamante.automation.email.resolver.class">Diamante\AutomationBundle\Infrastructure\Shared\EmailResolver</parameter>
         <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Shared\ChangesetBuilder</parameter>
     </parameters>
 
@@ -76,6 +77,10 @@
         <service id="diamante_automation.datagrid.helper" class="%diamante_automation.datagrid.helper.class%">
             <argument type="service" id="translator"/>
             <argument type="service" id="diamante_automation.business_rule.repository"/>
+        </service>
+
+        <service id="diamante_automation.changeset.builder" class="%diamante_automation.changeset.builder.class%">
+            <argument type="service" id="service_container"/>
         </service>
 
         <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
@@ -133,8 +138,8 @@
             <argument type="service" id="service_container"/>
         </service>
 
-        <service id="diamante_automation.changeset.builder" class="%diamante_automation.changeset.builder.class%">
-            <argument type="service" id="service_container"/>
+        <service id="diamante.automation.email.resolver" class="%diamante.automation.email.resolver.class%">
+            <argument type="service" id="diamante.user.service"/>
         </service>
     </services>
 </container>

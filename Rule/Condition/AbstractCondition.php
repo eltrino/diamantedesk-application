@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Rule\Condition;
 
 
+use Diamante\AutomationBundle\Rule\Fact\Fact;
 use Diamante\DeskBundle\Model\Shared\Property;
 
 abstract class AbstractCondition implements ConditionInterface
@@ -46,28 +47,31 @@ abstract class AbstractCondition implements ConditionInterface
         $this->name             = $this->getClassName();
     }
 
-    /**
-     * @param $object
-     * @return mixed|null
-     */
-    protected function extractPropertyValue($object)
+
+    protected function extractPropertyValue(Fact $fact)
     {
         $result = null;
-        $method = sprintf("get%s", ucwords($this->property));
+        $target = $fact->getTarget();
 
-        if (method_exists($object, $method) && property_exists($object, $this->property)) {
-            $result = call_user_func([$object, $method]);
+        if (array_key_exists($this->property, $target)) {
+            $result = $target[$this->property];
         }
 
-        if (is_object($result)) {
-            if ($result instanceof Property) {
-                $result = $result->getValue();
-            } elseif (method_exists($result, '__toString')) {
-                $result = (string)$result;
+        $result = $this->typeJuggling($result);
+
+        return $result;
+    }
+
+    protected function typeJuggling($property) {
+        if (is_object($property)) {
+            if ($property instanceof Property) {
+                $property = $property->getValue();
+            } elseif (method_exists($property, '__toString')) {
+                $property = (string)$property;
             }
         }
 
-        return $result;
+        return $property;
     }
 
     /**
