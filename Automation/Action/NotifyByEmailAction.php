@@ -46,12 +46,11 @@ class NotifyByEmailAction extends AbstractAction
 
     public function execute()
     {
-        /**
-         * TODO $emails vars form fact
-         */
-        $emails = ['akolomiec1989@gmail.com', 'mike@diamantedesk.com'];
-        $fact = $this->getContext()->getFact();
+        $context = $this->getContext();
+        $fact = $context->getFact();
+        $parameters = $context->getParameters()->all();
         $target = $fact->getTarget();
+        $emails = $this->container->get('diamante.automation.email.resolver')->getList($target, $parameters);
         $targetType = $fact->getTargetType();
         $provider = sprintf('%s_%s', $targetType, $fact->getAction());
 
