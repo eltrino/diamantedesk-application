@@ -28,7 +28,7 @@
         <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
         <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
         <parameter key="diamante.automation.email.resolver.class">Diamante\AutomationBundle\Infrastructure\Shared\EmailResolver</parameter>
-        <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Shared\ChangesetBuilder</parameter>
+        <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder</parameter>
     </parameters>
 
     <services>

@@ -27,7 +27,7 @@ class TargetMapper
         $target = [];
 
         foreach($changeset as $property => $values) {
-            list($outdate, $actual) = $values;
+            list($outdated, $actual) = $values;
             $target[$property] = $actual;
         }
 

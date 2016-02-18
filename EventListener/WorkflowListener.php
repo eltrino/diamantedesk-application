@@ -19,7 +19,7 @@ namespace Diamante\AutomationBundle\EventListener;
 use Diamante\AutomationBundle\Automation\JobQueue\QueueManager;
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\PersistentProcessingContext;
-use Diamante\AutomationBundle\Infrastructure\Shared\ChangesetBuilder;
+use Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class WorkflowListener
