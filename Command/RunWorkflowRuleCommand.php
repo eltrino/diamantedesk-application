@@ -18,6 +18,8 @@ namespace Diamante\AutomationBundle\Command;
 
 use Diamante\AutomationBundle\Automation\Engine;
 use Diamante\AutomationBundle\Entity\PersistentProcessingContext;
+use Diamante\AutomationBundle\Infrastructure\Shared\TargetMapper;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,6 +32,10 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
      * @var object
      */
     protected $target;
+    /**
+     * @var
+     */
+    protected $targetType;
 
     /**
      * @var string
@@ -39,7 +45,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
     /**
      * @var array
      */
-    protected $changeset = null;
+    protected $changeset;
 
     /**
      * @var EntityManager
@@ -80,21 +86,12 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
             throw new \RuntimeException("Invalid processing context provided");
         }
 
-        $repo = $this->getContainer()->get('doctrine')->getRepository($processingContext->getTargetEntityClass());
-        $this->target = $repo->get($processingContext->getTargetEntityId());
-
-        if (empty($this->target)) {
-            throw new \RuntimeException(
-                sprintf(
-                    "Entity of %s class with id %d does not exist",
-                    $processingContext->getTargetEntityClass(),
-                    $processingContext->getTargetEntityId()
-                )
-            );
-        }
-
+        $this->targetType = $this->getContainer()->get('diamante_automation.config.provider')->getTargetByClass(
+            $processingContext->getTargetEntityClass()
+        );
         $this->action = $processingContext->getAction();
         $this->changeset = $processingContext->getTargetEntityChangeset();
+        $this->target = TargetMapper::fromChangeset($this->changeset);
 
         $processingContext->lock();
         $this->em->persist($processingContext);
@@ -113,7 +110,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
         $dryRun = $input->hasParameterOption('--dry-run');
 
         $engine = $this->getContainer()->get('diamante_automation.engine');
-        $fact = $engine->createFact($this->target, $this->action, $this->changeset);
+        $fact = $engine->createFact($this->target, $this->targetType, $this->action, $this->changeset);
 
         try {
             $output->writeln("<info>Started rules processing</info>");
