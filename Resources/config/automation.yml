@@ -29,6 +29,15 @@ diamante_automation:
     contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Contains'
       frontend_label: diamante.automation.condition.contains
+    created:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Created'
+      frontend_label: diamante.automation.condition.created
+    updated:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Updated'
+      frontend_label: diamante.automation.condition.updated
+    removed:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Removed'
+      frontend_label: diamante.automation.condition.removed
     veq:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Veq'
       frontend_label: diamante.automation.condition.veq
