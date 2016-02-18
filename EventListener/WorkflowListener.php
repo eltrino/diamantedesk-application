@@ -93,10 +93,6 @@ class WorkflowListener
     {
         $entity  = $args->getObject();
 
-        if (empty($this->provider->getTargetByEntity($entity))) {
-            return;
-        }
-
         $em = $args->getEntityManager();
         $processingContext = new PersistentProcessingContext(
             $entity->getId(),

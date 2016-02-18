@@ -24,11 +24,10 @@
         <parameter key="diamante_automation.mass_action.deactivate_rule.class">Diamante\AutomationBundle\MassAction\Actions\Ajax\DeactivateRuleMassAction</parameter>
         <parameter key="diamante_automation.mass_action.handler.activate_rule.class">Diamante\AutomationBundle\MassAction\Handlers\ActivateRuleMassActionHandler</parameter>
         <parameter key="diamante_automation.mass_action.handler.deactivate_rule.class">Diamante\AutomationBundle\MassAction\Handlers\DeactivateRuleMassActionHandler</parameter>
-
         <parameter key="diamante_automation_form.type.class">Diamante\AutomationBundle\Form\Type\AutomationType</parameter>
         <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
-
         <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
+        <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Shared\ChangesetBuilder</parameter>
     </parameters>
 
     <services>
@@ -100,6 +99,7 @@
         <service id="diamante.automation.listener" class="%diamante_automation.listener.class%">
             <argument type="service" id="diamante_automation.config.provider"/>
             <argument type="service" id="diamante.automation.queue.manager"/>
+            <argument type="service" id="diamante_automation.changeset.builder"/>
             <tag name="doctrine.event_listener" event="postPersist"/>
             <tag name="doctrine.event_listener" event="postUpdate"/>
             <tag name="doctrine.event_listener" event="postRemove"/>
@@ -130,6 +130,10 @@
         </service>
 
         <service id="diamante.automation.frontend.options.resolver" class="%diamante_automation.frontend.options.resolver.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.changeset.builder" class="%diamante_automation.changeset.builder.class%">
             <argument type="service" id="service_container"/>
         </service>
     </services>
