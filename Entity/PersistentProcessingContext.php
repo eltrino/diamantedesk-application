@@ -31,7 +31,7 @@ class PersistentProcessingContext extends \Diamante\AutomationBundle\Model\Persi
     protected $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $targetEntityId;
 
