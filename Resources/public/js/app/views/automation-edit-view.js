@@ -1,14 +1,18 @@
 define([
     'underscore',
-    'tpl!diamanteautomation/js/app/templates/automation-template.ejs',
+    'tpl!diamanteautomation/js/app/templates/automation-edit-template.ejs',
     'oroui/js/app/views/base/view'
-],function (_, AutomationTemplate, BaseView) {
+],function (_, AutomationEditTemplate, BaseView) {
     'use strict';
 
-    var AutomationView = BaseView.extend({
+    var AutomationEditView = BaseView.extend({
         autoRender: true,
         className: 'container-fluid',
-        template : AutomationTemplate,
+        template : AutomationEditTemplate,
+
+        events: {
+            'change > .control-group :input' : 'change'
+        },
 
         regions: {
             'automation-conditions': '#automation-conditions',
@@ -22,8 +26,13 @@ define([
         getTemplateData: function() {
             var data = BaseView.prototype.getTemplateData.call(this);
             return _.extend(data, this.options);
+        },
+
+        change: function(e) {
+            var input = this.$(e.target);
+            this.model.set( input.data('attr'), input.val(), { silent: true });
         }
     });
 
-    return AutomationView;
+    return AutomationEditView;
 });

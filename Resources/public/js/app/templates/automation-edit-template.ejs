@@ -1,0 +1,25 @@
+<input type="hidden" name="diamante_automation_update_rule_form[rule]" value="">
+<div class="control-group">
+    <div class="control-label wrap">
+        <label for="automation-name" class="required">Name<em>*</em></label>
+    </div>
+    <div class="controls">
+        <input type="text" id="automation-name" name="name" data-attr="name" required="required" value="<%= name %>">
+    </div>
+</div>
+<% if(type == 'business') { %>
+<div class="control-group">
+    <div class="control-label wrap">
+        <label for="automation-timeInterval" class="required">Frequency<em>*</em></label>
+    </div>
+    <div class="controls">
+        <select name="timeInterval"  data-attr="timeInterval" id="automation-timeInterval">
+        <% for(var key in config.time_intervals) { %>
+        <option value="<%= key %>"<%= key == timeInterval ? ' selected' : ''%>><%= config.time_intervals[key] %></option>
+        <% } %>
+        </select>
+    </div>
+</div>
+<% } %>
+<div id="automation-conditions"></div>
+<div id="automation-actions"></div>

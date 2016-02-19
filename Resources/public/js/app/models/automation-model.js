@@ -6,8 +6,6 @@ define([
     'use strict';
 
     function flatten(data){
-        // TODO
-        data['target'] = 'ticket';
         for(var key in data){
             if(_.isObject(data[key])){
                 data[key] = flatten(data[key])
@@ -40,6 +38,8 @@ define([
 
         serializePlain: function(){
             var result = BaseModel.prototype.serialize.apply(this);
+            // TODO
+            result['target'] = 'ticket';
             return flatten(result);
         }
     });

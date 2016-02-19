@@ -1,0 +1,40 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+            'entity': entity,
+            'indexPath': path('diamante_automation_list', {'type': type}),
+            'indexLabel': 'diamante.automation.rule.entity_plural_label'|trans,
+            'entityTitle': entity.name|default('N/A'),
+            'hasAvatar':   true,
+            'imagePath':   null
+        }
+    %}
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {#{% set id = 'some_id' %}#}
+    {#{% set dataBlocks =#}
+        {#[{#}
+        {#'title': 'title'|trans,#}
+        {#'class': 'active',#}
+        {#'subblocks': [{#}
+            {#'title': 'title'|trans,#}
+            {#'data' : []#}
+            {#}]#}
+        {#}]#}
+    {#%}#}
+    {#{% set data = {'dataBlocks': dataBlocks} %}#}
+    {#{{ parent() }}#}
+    {% set options  = {
+        config : config,
+        type : type,
+        model : rule,
+        edit : false
+    } %}
+    <div class="diam-automation container-fluid"
+         data-page-component-module="diamanteautomation/js/app/components/automation-component"
+         data-page-component-options="{{ options|json_encode }}"></div>
+{% endblock content_data %}

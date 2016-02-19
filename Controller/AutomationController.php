@@ -21,6 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Diamante\DeskBundle\Controller\Shared;
+use JMS\Serializer\Serializer;
 
 /**
  * Class AutomationController
@@ -72,9 +73,21 @@ class AutomationController extends Controller
      */
     public function viewAction($type, $id)
     {
+        $configProvider = $this->container->get('diamante_automation.config.provider');
+        $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
             $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
-            return ["rule" => $rule, 'type' => $type];
+            // FIXME
+            $json = [
+                "name" => $rule->getName(),
+                "type" => $type
+            ];
+            return [
+                "entity" => $rule,
+                "rule" => $json,
+                "config" => $config,
+                "type" => $type
+            ];
         } catch (\Exception $e) {
             $this->handleException($e);
             return new Response(null, 404);
