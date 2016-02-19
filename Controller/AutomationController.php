@@ -77,14 +77,10 @@ class AutomationController extends Controller
         $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
             $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
-            // FIXME
-            $json = [
-                "name" => $rule->getName(),
-                "type" => $type
-            ];
+            $serializer = $this->get('serializer');
             return [
                 "entity" => $rule,
-                "rule" => $json,
+                "rule" => $serializer->serialize($rule, 'json'),
                 "config" => $config,
                 "type" => $type
             ];
