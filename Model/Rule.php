@@ -35,7 +35,7 @@ abstract class Rule implements AutomationRule, Entity
      */
     protected $name;
 
-    protected $rootGroup;
+    protected $grouping;
 
     /**
      * @var ArrayCollection
@@ -95,14 +95,14 @@ abstract class Rule implements AutomationRule, Entity
         return $this->actions;
     }
 
-    public function getRootGroup()
+    public function getGrouping()
     {
-        return $this->rootGroup;
+        return $this->grouping;
     }
 
-    public function setRootGroup($group)
+    public function setGrouping($group)
     {
-        $this->rootGroup = $group;
+        $this->grouping = $group;
 
         return $this;
     }
@@ -137,9 +137,9 @@ abstract class Rule implements AutomationRule, Entity
         return $this;
     }
 
-    public function removeRootGroup()
+    public function removeGrouping()
     {
-        $this->rootGroup = null;
+        $this->grouping = null;
 
         return $this;
     }

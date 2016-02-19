@@ -247,7 +247,7 @@ class EngineTest extends \PHPUnit_Framework_TestCase
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
         $action = new WorkflowAction('UpdateProperty', ['status' => 'closed'], $rule);
 
-        $rule->setRootGroup($group);
+        $rule->setGrouping($group);
         $rule->addAction($action);
         $group->addCondition($equalCondition);
         $group->addCondition($notEqualCondition);

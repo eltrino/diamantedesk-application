@@ -168,7 +168,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
-        $this->assertEquals(2, $rule->getRootGroup()->getConditions()->count());
+        $this->assertEquals(2, $rule->getGrouping()->getConditions()->count());
         $this->assertEquals('update_property', $rule->getActions()->first()->getType());
     }
 
@@ -201,7 +201,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
-        $this->assertEquals(2, $rule->getRootGroup()->getConditions()->count());
+        $this->assertEquals(2, $rule->getGrouping()->getConditions()->count());
         $this->assertEquals('update_property', $rule->getActions()->first()->getType());
     }
 
@@ -364,7 +364,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
         $action = new WorkflowAction('UpdateProperty', ['status' => 'closed'], $rule);
 
-        $rule->setRootGroup($group);
+        $rule->setGrouping($group);
         $rule->addAction($action);
         $group->addCondition($equalCondition);
         $group->addCondition($notEqualCondition);
@@ -383,7 +383,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
         $action = new BusinessAction('UpdateProperty', ['status' => 'closed'], $rule);
 
-        $rule->setRootGroup($group);
+        $rule->setGrouping($group);
         $rule->addAction($action);
         $group->addCondition($equalCondition);
         $group->addCondition($notEqualCondition);

@@ -57,10 +57,10 @@ class BusinessRuleTest extends \PHPUnit_Framework_TestCase
     {
         $rule = $this->createRule();
         $group = new Group();
-        $rule->setRootGroup($group);
+        $rule->setGrouping($group);
 
-        $this->assertEquals($group, $rule->getRootGroup());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\Group', $rule->getRootGroup());
+        $this->assertEquals($group, $rule->getGrouping());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\Group', $rule->getGrouping());
     }
 
     /**

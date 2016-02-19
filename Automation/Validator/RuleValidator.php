@@ -124,11 +124,11 @@ class RuleValidator implements ValidatorInterface
         $configuredActions = $this->configurationProvider->getConfiguredActions();
 
         foreach ($actions as $action) {
-            if (!isset($action['name'])) {
+            if (!isset($action['type'])) {
                 return false;
             }
 
-            if (!$configuredActions->has(strtolower($action['name']))) {
+            if (!$configuredActions->has(strtolower($action['type']))) {
                 return false;
             }
         }

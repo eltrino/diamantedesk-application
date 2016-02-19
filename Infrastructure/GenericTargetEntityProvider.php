@@ -59,7 +59,7 @@ class GenericTargetEntityProvider
     public function getTargets(Rule $rule, $targetClass)
     {
         try {
-            $query = $this->buildQuery($rule->getRootGroup(), $targetClass);
+            $query = $this->buildQuery($rule->getGrouping(), $targetClass);
             $result = $query->getResult();
         } catch (\Exception $e) {
             $result = null;

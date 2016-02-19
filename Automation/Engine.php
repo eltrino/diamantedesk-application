@@ -226,7 +226,7 @@ class Engine
     public function process(Fact $fact, $mode = self::MODE_WORKFLOW, $dryRun = false)
     {
         foreach ($this->getRules($fact, $mode) as $rule) {
-            $result = $this->doCheck($fact, $rule->getRootGroup());
+            $result = $this->doCheck($fact, $rule->getGrouping());
 
             if (true === $result) {
                 foreach ($this->actionProvider->getActions($rule) as $action) {

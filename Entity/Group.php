@@ -60,8 +60,8 @@ class Group extends \Diamante\AutomationBundle\Model\Group
     protected $conditions;
 
     /**
-     * @ORM\OneToOne(targetEntity="WorkflowRule", mappedBy="rootGroup")
-     * @ORM\OneToOne(targetEntity="BusinessRule", mappedBy="rootGroup")
+     * @ORM\OneToOne(targetEntity="WorkflowRule", mappedBy="grouping")
+     * @ORM\OneToOne(targetEntity="BusinessRule", mappedBy="grouping")
      */
     protected $rule;
 }

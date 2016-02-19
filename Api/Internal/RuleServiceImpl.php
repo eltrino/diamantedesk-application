@@ -250,7 +250,7 @@ class RuleServiceImpl implements RuleService
         $rule->update($input['name'], $input['timeInterval'], $input['active']);
 
         $rule->removeActions();
-        $rule->removeRootGroup();
+        $rule->removeGrouping();
         $this->addGrouping($rule, $input['grouping']);
         $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
 
@@ -271,7 +271,7 @@ class RuleServiceImpl implements RuleService
         $rule->update($input['name'], $input['active']);
 
         $rule->removeActions();
-        $rule->removeRootGroup();
+        $rule->removeGrouping();
         $this->addGrouping($rule, $input['grouping']);
         $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
 
@@ -307,7 +307,7 @@ class RuleServiceImpl implements RuleService
     {
         $group = new Group($grouping['connector']);
         if (is_null($parent)) {
-            $rule->setRootGroup($group);
+            $rule->setGrouping($group);
         } else {
             $parent->addChild($group);
             $group->setParent($parent);
@@ -361,7 +361,7 @@ class RuleServiceImpl implements RuleService
 
         foreach ($actions as $action) {
             $class = sprintf("Diamante\\AutomationBundle\\Entity\\%sAction", ucfirst($ruleType));
-            $entity = new $class($action['name'], $action['parameters'], $rule);
+            $entity = new $class($action['type'], $action['parameters'], $rule);
             $rule->addAction($entity);
         }
 
