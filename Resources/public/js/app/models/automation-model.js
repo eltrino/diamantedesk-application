@@ -1,14 +1,20 @@
 define([
+    'underscore',
     'diamanteautomation/js/app/models/actions/automation-actions-collection',
     'diamanteautomation/js/app/models/groupings/automation-groupings-model',
     'oroui/js/app/models/base/model'
-],function (AutomationActionsCollection, AutomationGroupingsModel, BaseModel) {
+],function (_, AutomationActionsCollection, AutomationGroupingsModel, BaseModel) {
     'use strict';
 
     function flatten(data){
         for(var key in data){
-            if(_.isObject(data[key])){
+            if(_.isObject(data[key]) && key != 'parameters'){
                 data[key] = flatten(data[key])
+            } else if(key === 'property' || key === 'value'){
+                data.parameters = {};
+                data.parameters[data['property']] = data['value'];
+                delete data['property'];
+                delete data['value'];
             } else {
                 data[key] = data[key];
             }
@@ -38,9 +44,10 @@ define([
 
         serializePlain: function(){
             var result = BaseModel.prototype.serialize.apply(this);
-            // TODO
+            // FIXME
             result['target'] = 'ticket';
-            return flatten(result);
+            result = flatten(result);
+            return result;
         }
     });
 

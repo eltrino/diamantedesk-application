@@ -1,4 +1,5 @@
 define([
+    'underscore',
     'diamanteautomation/js/app/models/automation-model',
     'diamanteautomation/js/app/views/automation-view',
     'diamanteautomation/js/app/views/automation-edit-view',
@@ -6,7 +7,8 @@ define([
     'diamanteautomation/js/app/views/groupings/automation-groupings-collection-view',
     'diamanteautomation/js/app/views/groupings/automation-groupings-edit-view',
     'oroui/js/app/components/base/component'
-],function (AutomationModel,
+],function (_,
+            AutomationModel,
             AutomationView,
             AutomationEditView,
             AutomationActionsCollectionView,
@@ -18,7 +20,6 @@ define([
 
     var AutomationComponent = BaseComponent.extend({
         initialize: function (options) {
-            console.log(options.model);
             console.log(options.config);
             this.processOptions(options);
             this.initView(options);
@@ -34,7 +35,7 @@ define([
             delete options['_sourceElement'];
             delete options['type'];
             this.model = options.model =
-                options.model ? new AutomationModel(options.model) : new AutomationModel({type: type });
+                options.model ? new AutomationModel(JSON.parse(options.model)) : new AutomationModel({type: type });
         },
         initView: function (options) {
             if(options.edit){

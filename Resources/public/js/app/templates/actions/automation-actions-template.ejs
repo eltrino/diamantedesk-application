@@ -4,12 +4,10 @@
 <% var property = typeof property !== 'undefined' && property; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
-    <select name="actions[type]" data-attr="type" data-rel-attr="entity,property,value">
-        <% for(var key in config.actions) { %>
-        <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= config.actions[key].label %></option>
-        <% } %>
-    </select>
-    <% if(type == 'update_property'){ %>
+    <strong>
+        <%= config.actions[type].label %>
+    </strong>
+    <% if(name == 'update_property'){ %>
         <span>Of:</span>
         <select name="actions[entity]" data-attr="entity"  data-rel-attr="property,value">
             <% for(var key in entities) { %>
@@ -39,7 +37,7 @@
             <% } %>
         <% } %>
     <% } %>
-    <% if(type == 'notify_by_email'){ %>
+    <% if(name == 'notify_by_email'){ %>
         <span>To: </span>
         <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
     <% } %>

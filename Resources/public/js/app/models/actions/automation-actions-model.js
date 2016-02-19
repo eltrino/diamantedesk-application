@@ -5,11 +5,21 @@ define(['oroui/js/app/models/base/model'
     var AutomationActionsModel = BaseModel.extend({
 
         defaults: {
-            name: ''
+            type: ''
         },
 
         initialize: function(attr, options){
-
+            var parameters = attr.parameters;
+            if(parameters){
+                for(var key in parameters){
+                    this.set({
+                        property: key,
+                        value: parameters[key]
+                    })
+                }
+                this.unset('parameters');
+            }
+            console.log(attr);
         },
 
         validate: function(attrs, options) {

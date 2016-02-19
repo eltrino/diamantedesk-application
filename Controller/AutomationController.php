@@ -80,7 +80,7 @@ class AutomationController extends Controller
             $serializer = $this->get('serializer');
             return [
                 "entity" => $rule,
-                "rule" => $serializer->serialize($rule, 'json'),
+                "model" => $serializer->serialize($rule, 'json'),
                 "config" => $config,
                 "type" => $type
             ];

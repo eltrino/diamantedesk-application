@@ -1,9 +1,14 @@
 define([
     'underscore',
+    'diamanteautomation/js/app/views/actions/automation-actions-view',
     'diamanteautomation/js/app/views/actions/automation-actions-edit-view',
     'tpl!diamanteautomation/js/app/templates/actions/automation-actions-collection-template.ejs',
     'oroui/js/app/views/base/collection-view'
-],function (_, AutomationActionsEditView, AutomationActionsCollectionTemplate, BaseCollectionView) {
+],function (_,
+            AutomationActionsView,
+            AutomationActionsEditView,
+            AutomationActionsCollectionTemplate,
+            BaseCollectionView) {
     'use strict';
 
     var AutomationActionsCollection = BaseCollectionView.extend({
@@ -29,7 +34,16 @@ define([
         },
 
         initItemView : function(model){
-            return new AutomationActionsEditView(_.extend(this.options, { model: model }));
+            if(this.options.edit){
+                return new AutomationActionsEditView(_.extend(this.options, { model: model }));
+            } else {
+                return new AutomationActionsView(_.extend(this.options, { model: model }));
+            }
+        },
+
+        getTemplateData: function() {
+            var data = BaseCollectionView.prototype.getTemplateData.call(this);
+            return _.extend(data, this.options);
         },
 
         addItem : function(e){
