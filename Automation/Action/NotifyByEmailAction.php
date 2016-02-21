@@ -16,11 +16,11 @@
 namespace Diamante\AutomationBundle\Automation\Action;
 
 use Diamante\AutomationBundle\Rule\Action\AbstractAction;
-use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class NotifyByEmailAction extends AbstractAction
 {
@@ -50,7 +50,11 @@ class NotifyByEmailAction extends AbstractAction
         $fact = $context->getFact();
         $parameters = $context->getParameters()->all();
         $target = $fact->getTarget();
-        $emails = $this->container->get('diamante.automation.email.resolver')->getList($target, $parameters);
+        $emails = $this->container->get('diamante.automation.email.resolver')->getList(
+            $target,
+            $fact->getTargetType(),
+            $parameters
+        );
         $targetType = $fact->getTargetType();
         $provider = sprintf('%s_%s', $targetType, $fact->getAction());
 
