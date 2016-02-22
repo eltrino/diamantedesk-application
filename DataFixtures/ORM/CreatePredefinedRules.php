@@ -13,7 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\DataFixtures\ORM;
+namespace Diamante\AutomationBundle\DataFixtures\ORM;
 
 use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\AutomationBundle\Entity\BusinessRule;
@@ -28,7 +28,7 @@ use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 /**
  * Class CreatePredefinedRules
  *
- * @package Diamante\DeskBundle\DataFixtures\ORM
+ * @package Diamante\AutomationBundle\DataFixtures\ORM
  */
 class CreatePredefinedRules extends ContainerAwareFixture
 {
