@@ -60,7 +60,8 @@ class CreatePredefinedRules extends ContainerAwareFixture
     {
         try {
             foreach ($this->rules as $rule) {
-                $this->$rule($manager);
+                $rule = $this->$rule();
+                $manager->persist($rule);
             }
 
             $manager->flush();
@@ -73,11 +74,11 @@ class CreatePredefinedRules extends ContainerAwareFixture
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function NotifyReporterTicketWasOpen(ObjectManager $manager)
+    private function NotifyReporterTicketWasOpen()
     {
-        $rule = $rule = new WorkflowRule('Notify reporter that ticket was open', 'ticket');
+        $rule = new WorkflowRule('Notify reporter that ticket was open', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('Eq', ['status' => Status::OPEN], $group);
         $action = new WorkflowAction('notify_by_email', ['reporter'], $rule);
@@ -85,15 +86,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyReporterCommentWasAdded(ObjectManager $manager)
+    private function notifyReporterCommentWasAdded()
     {
-        $rule = $rule = new WorkflowRule('Notify reporter that comment was added', 'comment');
+        $rule = new WorkflowRule('Notify reporter that comment was added', 'comment');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('Created', [], $group);
         $action = new WorkflowAction('notify_by_email', ['reporter'], $rule);
@@ -101,15 +102,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyAssigneeCommentWasAdded(ObjectManager $manager)
+    private function notifyAssigneeCommentWasAdded()
     {
-        $rule = $rule = new WorkflowRule('Notify assignee that comment was added', 'comment');
+        $rule = new WorkflowRule('Notify assignee that comment was added', 'comment');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('Created', [], $group);
         $action = new WorkflowAction('notify_by_email', ['assignee'], $rule);
@@ -117,15 +118,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyWatchersCommentWasAdded(ObjectManager $manager)
+    private function notifyWatchersCommentWasAdded()
     {
-        $rule = $rule = new WorkflowRule('Notify watchers that comment was added', 'comment');
+        $rule = new WorkflowRule('Notify watchers that comment was added', 'comment');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('Created', [], $group);
         $action = new WorkflowAction('notify_by_email', ['watchers'], $rule);
@@ -133,15 +134,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyReporterTicketStatusChanged(ObjectManager $manager)
+    private function notifyReporterTicketStatusChanged()
     {
-        $rule = $rule = new WorkflowRule('Notify reporter that ticket status was changed', 'ticket');
+        $rule = new WorkflowRule('Notify reporter that ticket status was changed', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('PropertyChanged', ['status'], $group);
         $action = new WorkflowAction('notify_by_email', ['reporter'], $rule);
@@ -149,15 +150,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyAssigneeTicketStatusChanged(ObjectManager $manager)
+    private function notifyAssigneeTicketStatusChanged()
     {
-        $rule = $rule = new WorkflowRule('Notify assignee that ticket status was changed', 'ticket');
+        $rule = new WorkflowRule('Notify assignee that ticket status was changed', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('PropertyChanged', ['status'], $group);
         $action = new WorkflowAction('notify_by_email', ['assignee'], $rule);
@@ -165,15 +166,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyWatchersTicketStatusChanged(ObjectManager $manager)
+    private function notifyWatchersTicketStatusChanged()
     {
-        $rule = $rule = new WorkflowRule('Notify watchers that ticket status was changed', 'ticket');
+        $rule = new WorkflowRule('Notify watchers that ticket status was changed', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('PropertyChanged', ['status'], $group);
         $action = new WorkflowAction('notify_by_email', ['watchers'], $rule);
@@ -181,15 +182,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyAssigneeTicketCreated(ObjectManager $manager)
+    private function notifyAssigneeTicketCreated()
     {
-        $rule = $rule = new WorkflowRule('Notify assignee that ticket was created', 'ticket');
+        $rule = new WorkflowRule('Notify assignee that ticket was created', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('Created', [], $group);
         $action = new WorkflowAction('notify_by_email', ['assignee'], $rule);
@@ -197,15 +198,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyAssigneeTicketReassigned(ObjectManager $manager)
+    private function notifyAssigneeTicketReassigned()
     {
-        $rule = $rule = new WorkflowRule('Notify assignee that ticket was reassigned', 'ticket');
+        $rule = new WorkflowRule('Notify assignee that ticket was reassigned', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('PropertyChanged', ['assignee'], $group);
         $action = new WorkflowAction('notify_by_email', ['assignee'], $rule);
@@ -213,15 +214,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return WorkflowRule
      */
-    private function notifyWatchersTicketReassigned(ObjectManager $manager)
+    private function notifyWatchersTicketReassigned()
     {
-        $rule = $rule = new WorkflowRule('Notify watchers that ticket was reassigned', 'ticket');
+        $rule = new WorkflowRule('Notify watchers that ticket was reassigned', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('PropertyChanged', ['assignee'], $group);
         $action = new WorkflowAction('notify_by_email', ['watchers'], $rule);
@@ -229,15 +230,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return BusinessRule
      */
-    private function notifyAssigneeTicketNew24Hours(ObjectManager $manager)
+    private function notifyAssigneeTicketNew24Hours()
     {
-        $rule = $rule = new BusinessRule('Notify assignee that ticket is new for 24 hours', 'ticket', '24h');
+        $rule = new BusinessRule('Notify assignee that ticket is new for 24 hours', 'ticket', '24h');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('Eq', ['status' => Status::NEW_ONE], $group);
         $action = new BusinessAction('notify_by_email', ['assignee'], $rule);
@@ -245,15 +246,15 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return BusinessRule
      */
-    private function notifyAssigneeTicketNew3Days(ObjectManager $manager)
+    private function notifyAssigneeTicketNew3Days()
     {
-        $rule = $rule = new BusinessRule('Notify assignee that ticket is new for 3 days', 'ticket', '3d');
+        $rule = new BusinessRule('Notify assignee that ticket is new for 3 days', 'ticket', '3d');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('Eq', ['status' => Status::NEW_ONE], $group);
         $action = new BusinessAction('notify_by_email', ['assignee'], $rule);
@@ -261,13 +262,13 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return BusinessRule
      */
-    private function closeTicketWithPendingStatus(ObjectManager $manager)
+    private function closeTicketWithPendingStatus()
     {
         $rule
             =
@@ -279,13 +280,13 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return BusinessRule
      */
-    private function notifyReporterTicketPending7Days(ObjectManager $manager)
+    private function notifyReporterTicketPending7Days()
     {
         $rule
             = $rule = new BusinessRule(
@@ -300,13 +301,13 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 
     /**
-     * @param ObjectManager $manager
+     * @return BusinessRule
      */
-    private function notifyReporterTicketSupportClose25Days(ObjectManager $manager)
+    private function notifyReporterTicketSupportClose25Days()
     {
         $rule
             = $rule = new BusinessRule(
@@ -321,6 +322,6 @@ class CreatePredefinedRules extends ContainerAwareFixture
         $rule->addAction($action);
         $group->addCondition($condition);
 
-        $manager->persist($rule);
+        return $rule;
     }
 }
