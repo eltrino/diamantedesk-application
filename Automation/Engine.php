@@ -75,6 +75,16 @@ class Engine
      */
     protected $targetProvider;
 
+    /**
+     * Engine constructor.
+     *
+     * @param AutomationConfigurationProvider $configurationProvider
+     * @param ActionProvider                  $actionProvider
+     * @param Registry                        $doctrineRegistry
+     * @param ConditionFactory                $conditionFactory
+     * @param Logger                          $logger
+     * @param GenericTargetEntityProvider     $targetProvider
+     */
     public function __construct(
         AutomationConfigurationProvider $configurationProvider,
         ActionProvider                  $actionProvider,
@@ -93,15 +103,30 @@ class Engine
         $this->targetProvider        = $targetProvider;
     }
 
+    /**
+     * @param $entity
+     *
+     * @return Fact
+     */
     public function createFactByEntity($entity)
     {
         $entityType = $this->configurationProvider->getTargetByEntity($entity);
+        $entity = TargetMapper::fromEntity($entity);
 
         return new Fact($entity, $entityType);
     }
 
-    public function createFact($entity, $entityType, $action, $entityChangeset)
+    /**
+     * @param $entityType
+     * @param $action
+     * @param $entityChangeset
+     *
+     * @return Fact
+     */
+    public function createFact($entityType, $action, $entityChangeset)
     {
+        $entity = TargetMapper::fromChangeset($entityChangeset);
+
         return new Fact($entity, $entityType, $action, $entityChangeset);
     }
 
@@ -258,9 +283,9 @@ class Engine
             $this->scheduler->addAction($action);
         }
 
-        if (!$dryRun) {
+        if (!$dryRun && !$this->scheduler->isEmpty()) {
             foreach ($targetEntities as $entity) {
-                $fact = $this->createFactByEntity(TargetMapper::fromEntity($entity));
+                $fact = $this->createFactByEntity($entity);
                 $this->scheduler->run($fact);
             }
         }

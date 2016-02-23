@@ -29,10 +29,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RunWorkflowRuleCommand extends ContainerAwareCommand
 {
     /**
-     * @var object
-     */
-    protected $target;
-    /**
      * @var
      */
     protected $targetType;
@@ -91,7 +87,6 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
         );
         $this->action = $processingContext->getAction();
         $this->changeset = $processingContext->getTargetEntityChangeset();
-        $this->target = TargetMapper::fromChangeset($this->changeset);
 
         $processingContext->lock();
         $this->em->persist($processingContext);
@@ -110,7 +105,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
         $dryRun = $input->hasParameterOption('--dry-run');
 
         $engine = $this->getContainer()->get('diamante_automation.engine');
-        $fact = $engine->createFact($this->target, $this->targetType, $this->action, $this->changeset);
+        $fact = $engine->createFact($this->targetType, $this->action, $this->changeset);
 
         try {
             $output->writeln("<info>Started rules processing</info>");

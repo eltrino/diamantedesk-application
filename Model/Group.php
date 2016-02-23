@@ -22,8 +22,8 @@ use Rhumsaa\Uuid\Uuid;
 class Group implements Entity
 {
 
-    const CONNECTOR_INCLUSIVE = 'AND';
-    const CONNECTOR_EXCLUSIVE = 'OR';
+    const CONNECTOR_INCLUSIVE = 'and';
+    const CONNECTOR_EXCLUSIVE = 'or';
 
     /**
      * @var int

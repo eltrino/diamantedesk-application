@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Infrastructure;
 
 
+use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\Group;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
@@ -40,15 +41,26 @@ class GenericTargetEntityProvider
     protected $conditionFactory;
 
     /**
-     * GenericTargetEntityProvider constructor.
-     * @param Registry $registry
-     * @param ConditionFactory $conditionFactory
-     * @internal param EntityManager $em
+     * @var AutomationConfigurationProvider
      */
-    public function __construct(Registry $registry, ConditionFactory $conditionFactory)
+    protected $configurationProvider;
+
+    /**
+     * GenericTargetEntityProvider constructor.
+     *
+     * @param Registry                        $registry
+     * @param ConditionFactory                $conditionFactory
+     * @param AutomationConfigurationProvider $configurationProvider
+     */
+    public function __construct(
+        Registry $registry,
+        ConditionFactory $conditionFactory,
+        AutomationConfigurationProvider $configurationProvider
+    )
     {
-        $this->em               = $registry->getManager();
-        $this->conditionFactory = $conditionFactory;
+        $this->em                    = $registry->getManager();
+        $this->conditionFactory      = $conditionFactory;
+        $this->configurationProvider = $configurationProvider;
     }
 
     /**
@@ -75,12 +87,13 @@ class GenericTargetEntityProvider
      */
     protected function buildQuery(Group $group, $targetClass)
     {
+        $targetType = $this->configurationProvider->getTargetByClass($targetClass);
         $qb = $this->em->createQueryBuilder();
 
         $qb->select(self::TARGET_ALIAS)
             ->from($targetClass, self::TARGET_ALIAS);
 
-        $where = $this->buildGroupCondition($qb, $group);
+        $where = $this->buildGroupCondition($qb, $group, $targetType);
 
         $qb->where($where);
 
@@ -92,7 +105,7 @@ class GenericTargetEntityProvider
      * @param Group $group
      * @return Expr\Andx|Expr\Orx
      */
-    protected function buildGroupCondition(QueryBuilder $qb, Group $group)
+    protected function buildGroupCondition(QueryBuilder $qb, Group $group, $targetType)
     {
         $connector = $group->getConnector();
 
@@ -118,9 +131,11 @@ class GenericTargetEntityProvider
         }
 
         foreach ($group->getConditions() as $conditionDefinition) {
+            $rule = $group->getRule();
             $conditionDefinition = $this->conditionFactory->getCondition(
                 $conditionDefinition->getType(),
-                $conditionDefinition->getParameters()
+                $conditionDefinition->getParameters(),
+                $targetType
             );
             /** @var ConditionInterface $conditionDefinition */
             list($property, $expr, $value) = $conditionDefinition->export();

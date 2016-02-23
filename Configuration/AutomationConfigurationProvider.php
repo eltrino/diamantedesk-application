@@ -95,7 +95,7 @@ class AutomationConfigurationProvider
 
     /**
      * @param $object
-     * @return int|null|string
+     * @return null|string
      */
     public function getTargetByEntity($object)
     {
@@ -110,6 +110,11 @@ class AutomationConfigurationProvider
         return null;
     }
 
+    /**
+     * @param $className
+     *
+     * @return null|string
+     */
     public function getTargetByClass($className)
     {
         foreach ($this->targetMap as $target => $class) {

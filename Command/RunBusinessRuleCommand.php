@@ -45,7 +45,7 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $id = (int)$input->getOption('rule-id');
+        $id = $input->getOption('rule-id');
         $this->rule = $this->getContainer()
             ->get('doctrine')
             ->getRepository("DiamanteAutomationBundle:BusinessRule")
@@ -65,7 +65,7 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $engine = $this->getContainer()->get('diamante_automation.engine');
-        $dryRun = $input->hasOption("dry-run") ? true : false;
+        $dryRun = $input->hasParameterOption("--dry-run");
 
         $output->writeln(sprintf("<info>Started processing rule: %s</info>", $this->rule->getName()));
 

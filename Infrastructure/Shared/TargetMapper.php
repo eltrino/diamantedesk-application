@@ -22,6 +22,11 @@ namespace Diamante\AutomationBundle\Infrastructure\Shared;
  */
 class TargetMapper
 {
+    /**
+     * @param array $changeset
+     *
+     * @return array
+     */
     public static function fromChangeset(array $changeset)
     {
         $target = [];
@@ -34,6 +39,11 @@ class TargetMapper
         return $target;
     }
 
+    /**
+     * @param object $entity
+     *
+     * @return array
+     */
     public static function fromEntity($entity)
     {
         $target = [];
