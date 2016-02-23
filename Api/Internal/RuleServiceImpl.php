@@ -227,7 +227,6 @@ class RuleServiceImpl implements RuleService
      */
     private function createBusinessRule(array $input)
     {
-        $input['active'] = true;
         $rule = new BusinessRule($input['name'], $input['target'], $input['timeInterval'], $input['active']);
         $this->addGrouping($rule, $input['grouping']);
         $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
