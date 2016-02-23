@@ -14,7 +14,7 @@ define([
         },
 
         initialize: function(attr, options){
-            if (attr.children) {
+            if (attr.children && attr.children.length) {
                 this.set('children', new AutomationGroupingsCollection(attr.children, { model: AutomationGroupingsModel }));
             } else if(attr.conditions) {
                 this.set('conditions', new AutomationConditionCollection(attr.conditions));

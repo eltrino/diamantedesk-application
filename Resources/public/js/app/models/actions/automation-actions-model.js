@@ -19,7 +19,6 @@ define(['oroui/js/app/models/base/model'
                 }
                 this.unset('parameters');
             }
-            console.log(attr);
         },
 
         validate: function(attrs, options) {

@@ -46,6 +46,7 @@ define([
             var result = BaseModel.prototype.serialize.apply(this);
             // FIXME
             result['target'] = 'ticket';
+            result['active'] = 'true';
             result = flatten(result);
             return result;
         }

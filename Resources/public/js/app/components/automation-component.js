@@ -5,6 +5,7 @@ define([
     'diamanteautomation/js/app/views/automation-edit-view',
     'diamanteautomation/js/app/views/actions/automation-actions-collection-view',
     'diamanteautomation/js/app/views/groupings/automation-groupings-collection-view',
+    'diamanteautomation/js/app/views/groupings/automation-groupings-view',
     'diamanteautomation/js/app/views/groupings/automation-groupings-edit-view',
     'oroui/js/app/components/base/component'
 ],function (_,
@@ -13,6 +14,7 @@ define([
             AutomationEditView,
             AutomationActionsCollectionView,
             AutomationGroupingsCollectionView,
+            AutomationGroupingsView,
             AutomationGroupingsEditView,
             BaseComponent) {
 
@@ -47,9 +49,15 @@ define([
             new AutomationActionsCollectionView(_.extend( options,
                     { collection: this.model.get('actions') }
             ));
-            new AutomationGroupingsEditView(_.extend( options,
-                { model: this.model.get('grouping'), collectionView: AutomationGroupingsCollectionView }
-            ));
+            if(options.edit){
+                new AutomationGroupingsEditView(_.extend( options,
+                    { model: this.model.get('grouping'), collectionView: AutomationGroupingsCollectionView }
+                ));
+            } else {
+                new AutomationGroupingsView(_.extend( options,
+                    { model: this.model.get('grouping'), collectionView: AutomationGroupingsCollectionView }
+                ));
+            }
         }
     });
 

@@ -1,10 +1,12 @@
 define([
     'underscore',
+    'diamanteautomation/js/app/views/conditions/automation-conditions-view',
     'diamanteautomation/js/app/views/conditions/automation-conditions-edit-view',
     'diamanteautomation/js/app/models/conditions/automation-conditions-collection',
     'tpl!diamanteautomation/js/app/templates/conditions/automation-conditions-collection-template.ejs',
     'oroui/js/app/views/base/collection-view'
 ],function (_,
+            AutomationConditionsView,
             AutomationConditionsEditView,
             AutomationConditionsCollection,
             AutomationConditionsCollectionTemplate,
@@ -30,7 +32,11 @@ define([
         },
 
         initItemView : function(model){
-            return new AutomationConditionsEditView(_.extend({ model: model }, this.options));
+            if(this.options.edit){
+                return new AutomationConditionsEditView(_.extend({ model: model }, this.options));
+            } else {
+                return new AutomationConditionsView(_.extend({ model: model }, this.options));
+            }
         },
 
         getTemplateData: function() {
