@@ -23,6 +23,12 @@ define([
             this.options = _.omit(options, 'el', 'model');
         },
 
+        render: function () {
+            BaseView.prototype.render.apply(this, arguments);
+            this.$('> .control-group :input').trigger('change');
+            return this;
+        },
+
         getTemplateData: function() {
             var data = BaseView.prototype.getTemplateData.call(this);
             return _.extend(data, this.options);

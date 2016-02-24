@@ -1,43 +1,26 @@
 <% var entities = config.entities; %>
-<% var entity = typeof entity !== 'undefined' && entity; %>
-<% var properties = !!entity && entities[entity].properties; %>
+<% var properties = entities['ticket'].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
     <strong>
         <%= config.actions[type].label %>
     </strong>
-    <% if(name == 'update_property'){ %>
-        <span>Of:</span>
-        <select name="actions[entity]" data-attr="entity"  data-rel-attr="property,value">
-            <% for(var key in entities) { %>
-            <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
-            <% } %>
-        </select>
+    <% if(type == 'update_property'){ %>
         <% if(properties){ %>
         <span>Set: </span>
-        <select name="actions[property]" data-attr="property" data-rel-attr="value">
-            <% for(var key in properties) { %>
-            <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
-            <% } %>
-        </select>
+        <strong><%= properties[property].label %></strong>
         <% } %>
         <% if(property){ %>
             <span>To: </span>
             <% if(properties[property].type == 'string'){ %>
-                <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
+                <strong><%= value %>" /></strong>
             <% } else if (properties[property].frontend_options){ %>
-                <select name="actions[value]" data-attr="value">
-                    <% for(var key in properties[property].frontend_options) { %>
-                    <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
-                        <%= properties[property].frontend_options[key] %>
-                    </option>
-                    <% } %>
-                </select>
+                <strong><%= properties[property].frontend_options[value] %></strong>
             <% } %>
         <% } %>
     <% } %>
-    <% if(name == 'notify_by_email'){ %>
+    <% if(type == 'notify_by_email'){ %>
         <span>To: </span>
         <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
     <% } %>
