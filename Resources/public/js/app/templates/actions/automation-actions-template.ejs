@@ -1,3 +1,4 @@
+<% 'TEMPLATE: automation-actions-template' %>
 <% var entities = config.entities; %>
 <% var properties = entities['ticket'].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
@@ -7,6 +8,8 @@
         <%= config.actions[type].label %>
     </strong>
     <% if(type == 'update_property'){ %>
+        <span>Of:</span>
+        <strong><%= entities[entity].label %></strong>
         <% if(properties){ %>
         <span>Set: </span>
         <strong><%= properties[property].label %></strong>

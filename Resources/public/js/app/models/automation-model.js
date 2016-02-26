@@ -26,14 +26,28 @@ define([
 
         defaults: {
             name: '',
-            timeInterval: ''
+            timeInterval: '',
+            target: ''
         },
 
-        initialize: function(attr){
+        initialize: function(attr, options){
+            var config = options.config;
+            if(!attr.target) {
+                this.set('target', _.keys(config.entities)[0]);
+                options.target = _.keys(config.entities)[0];
+            } else {
+                options.target = attr.target
+            }
+            if(!attr.timeInterval && attr.type === 'business') {
+                this.set('timeInterval', _.keys(config.time_intervals)[0])
+            }
+            delete options.model;
             this.set('actions', attr.actions ?
-                new AutomationActionsCollection(attr.actions) : new AutomationActionsCollection([{}]));
+                new AutomationActionsCollection(attr.actions, options) :
+                new AutomationActionsCollection([{}], options));
             this.set('grouping', attr.grouping ?
-                new AutomationGroupingsModel(attr.grouping) : new AutomationGroupingsModel({}));
+                new AutomationGroupingsModel(attr.grouping, options) :
+                new AutomationGroupingsModel({}, options));
 
             window.AutomationModel = this;
         },
@@ -45,7 +59,6 @@ define([
         serializePlain: function(){
             var result = BaseModel.prototype.serialize.apply(this);
             // FIXME
-            result['target'] = 'ticket';
             result['active'] = 'true';
             result = flatten(result);
             return result;

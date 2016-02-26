@@ -2,15 +2,15 @@ define([
     'jquery',
     'underscore',
     'tpl!diamanteautomation/js/app/templates/actions/automation-actions-edit-template.ejs',
-    'oroui/js/app/views/base/view'
-],function ($, _, AutomationActionsEditTemplate, BaseView) {
+    'diamanteautomation/js/app/views/abstract/view'
+],function ($, _, AutomationActionsEditTemplate, AbstractView) {
     'use strict';
 
-    var AutomationActionsEditView = BaseView.extend({
-        autoRender: true,
+    var AutomationActionsEditView = AbstractView.extend({
         template : AutomationActionsEditTemplate,
 
         listen: {
+            'change:entity model': 'entityChanged',
             'change model': 'render'
         },
 
@@ -19,17 +19,8 @@ define([
             'change :input': 'change'
         },
 
-        initialize: function(options){
-            this.options = _.omit(options, 'model');
-        },
-
-        getTemplateData: function() {
-            var data = BaseView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
-        },
-
-        render: function () {
-            BaseView.prototype.render.apply(this, arguments);
+        render: function (model) {
+            AbstractView.prototype.render.apply(this, arguments);
             this.$(':input:not(button)').last().trigger('change');
             if(this.model.collection.length == 1){
                 this.$('button[data-action="delete"]').hide();
@@ -47,6 +38,12 @@ define([
                 });
             }
             model.set( input.data('attr'), input.val() );
+        },
+
+        entityChanged: function(model, attr){
+            this.options.target = attr;
+            this.model.unset('property', {silent: true});
+            this.model.unset('value', {silent: true});
         },
 
         removeItem: function(){

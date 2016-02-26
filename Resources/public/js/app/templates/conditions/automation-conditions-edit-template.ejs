@@ -1,3 +1,4 @@
+<% 'TEMPLATE: automation-conditions-edit-template' %>
 <% var entities = config.entities; %>
 <% var conditions = config.conditions; %>
 <% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
@@ -6,14 +7,10 @@
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
     <span>If</span>
-    <select name="conditions[entity]" data-attr="entity" data-rel-attr="value">
-        <% for(var key in entities) { %>
-        <option value="<%= key %>"<%= key == entity ? ' selected' : ''%>><%= entities[key].label %></option>
-        <% } %>
-    </select>
+    <strong><%= entities[entity].label %></strong>
     <% if(properties){ %>
         <span>Property</span>
-        <select name="conditions[property]" data-attr="property">
+        <select name="conditions[property]" data-attr="property" data-rel-attr="value">
             <% for(var key in properties) { %>
             <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
             <% } %>

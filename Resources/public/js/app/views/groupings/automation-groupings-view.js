@@ -2,14 +2,14 @@ define([
     'underscore',
     'diamanteautomation/js/app/views/conditions/automation-conditions-collection-view',
     'tpl!diamanteautomation/js/app/templates/groupings/automation-groupings-template.ejs',
-    'oroui/js/app/views/base/view'
+    'diamanteautomation/js/app/views/abstract/view'
 ],function ( _,
              AutomationConditionsCollectionView,
              AutomationGroupingsTemplate,
-             BaseView) {
+             AbstractView) {
     'use strict';
 
-    var AutomationGroupingsView = BaseView.extend({
+    var AutomationGroupingsView = AbstractView.extend({
         autoRender: true,
         template : AutomationGroupingsTemplate,
         region: 'automation-conditions',
@@ -22,16 +22,11 @@ define([
             this.options.hasChildren = !!options.children;
         },
 
-        getTemplateData: function() {
-            var data = BaseView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
-        },
-
         render: function () {
             var moreThanOne = this.model.get('children') ?
                 this.model.get('children').length > 1 :
                 this.model.get('conditions') && this.model.get('conditions').length;
-            BaseView.prototype.render.apply(this, arguments);
+            AbstractView.prototype.render.apply(this, arguments);
             this.renderSubViews();
             this.$('> .groupings-connector').toggle(moreThanOne);
             return this;

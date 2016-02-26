@@ -6,6 +6,7 @@
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
     <span>If</span>
+    <strong><%= entities[entity].label %></strong>
     <% if(properties){ %>
         <strong><%= properties[property].label %></strong>
         <strong><%= conditions[type] %></strong>

@@ -19,6 +19,9 @@ define(['oroui/js/app/models/base/model'
                 }
                 this.unset('parameters');
             }
+            if(options.target){
+                this.set('entity', options.target);
+            }
         },
 
         validate: function(attrs, options) {

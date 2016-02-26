@@ -14,12 +14,14 @@ define([
         },
 
         initialize: function(attr, options){
+            options = _.omit(options, 'el', 'model');
             if (attr.children && attr.children.length) {
-                this.set('children', new AutomationGroupingsCollection(attr.children, { model: AutomationGroupingsModel }));
+                options.model = AutomationGroupingsModel;
+                this.set('children', new AutomationGroupingsCollection(attr.children, options));
             } else if(attr.conditions) {
-                this.set('conditions', new AutomationConditionCollection(attr.conditions));
+                this.set('conditions', new AutomationConditionCollection(attr.conditions, options));
             } else {
-                this.set('conditions', new AutomationConditionCollection([{}]));
+                this.set('conditions', new AutomationConditionCollection([{}], options));
             }
         },
 
@@ -27,16 +29,29 @@ define([
 
         },
 
-        addGroup: function(collection) {
+        addGroup: function(options) {
             var conditions = this.get('conditions');
-            var children = new AutomationGroupingsCollection(
+            var children = this.get('children');
+            var child = new AutomationGroupingsCollection(
                 [{ conditions: conditions ? conditions.serialize() : {} }],
-                { model: AutomationGroupingsModel });
+                _.extend({ model: AutomationGroupingsModel }, options)
+            );
             if(conditions) {
                 conditions.dispose();
                 this.unset('conditions');
             }
-            this.set('children', children);
+            if(children){
+                children.add({}, options);
+            } else {
+                this.set('children', child);
+            }
+        },
+
+        removeGroups: function(options) {
+            var children = this.get('children');
+            children.dispose();
+            this.unset('children');
+            this.set('conditions', new AutomationConditionCollection([{}], options));
         }
     });
 

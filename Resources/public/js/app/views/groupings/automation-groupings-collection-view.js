@@ -2,28 +2,22 @@ define([
     'underscore',
     'diamanteautomation/js/app/views/groupings/automation-groupings-edit-view',
     'tpl!diamanteautomation/js/app/templates/groupings/automation-groupings-collection-template.ejs',
-    'oroui/js/app/views/base/collection-view'
+    'diamanteautomation/js/app/views/abstract/collection-view'
 ],function (_,
             AutomationGroupingsEditView,
             AutomationGroupingsCollectionTemplate,
-            BaseCollectionView) {
+            AbstractCollectionView) {
     'use strict';
 
-    var AutomationGroupingsCollectionView = BaseCollectionView.extend({
+    var AutomationGroupingsCollectionView = AbstractCollectionView.extend({
         autoRender: true,
         template : AutomationGroupingsCollectionTemplate,
         listSelector: '.grouping-children-list',
 
-        listen: {
-            'add collection': 'update',
-            'remove collection': 'update',
-            'reset collection': 'update'
-        },
-
         initialize : function(options){
             this.options = _.omit(options, 'collection', 'container');
             this.options.hasParent = !!options.parent;
-            BaseCollectionView.prototype.initialize.apply(this, arguments);
+            AbstractCollectionView.prototype.initialize.apply(this, arguments);
         },
 
         initItemView : function(model){
@@ -34,20 +28,26 @@ define([
             }, this.options));
         },
 
-        getTemplateData: function() {
-            var data = BaseCollectionView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
-        },
-
-        removeGroup : function(){
-            var success = this.collection.destroy.bind(this.collection);
-            this.$el.animate({ opacity: 0 }, 500, success);
-        },
-
-        update : function(model){
+        update : function(model, collection){
+            if(collection.length === 0){
+                this.options.parent.trigger('children:empty');
+            }
             //var deleteButtons = this.$('> .conditions-list > div:not(".control-group") button[data-action="delete"]');
             //deleteButtons = deleteButtons.add(this.$(' > .conditions-list > .control-group > .conditions-buttons button[data-action="delete-group"]').parent());
             //deleteButtons.toggle(this.collection.length != 1);
+        },
+
+        parentChanged : function(attr){
+            this.options.target = attr;
+            this.collection.each(function(model){
+                var children = model.get('children');
+                var conditions = model.get('conditions');
+                if(children) {
+                    children.trigger('parent:change', attr);
+                } else if (conditions){
+                    conditions.trigger('parent:change', attr);
+                }
+            });
         }
 
     });

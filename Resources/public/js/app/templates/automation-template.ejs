@@ -1,12 +1,21 @@
+<% 'TEMPLATE: automation-template' %>
 <% if(timeInterval) { %>
 <div class="control-group">
     <div class="control-label wrap">
-        <label for="automation-timeInterval" class="required">Frequency<em>*</em></label>
+        <label for="automation-timeInterval">Frequency</label>
     </div>
     <div class="controls">
-        <%= config.time_intervals[timeInterval] %>
+        <strong><%= config.time_intervals[timeInterval] %></strong>
     </div>
 </div>
 <% } %>
+<div class="control-group">
+    <div class="control-label wrap">
+        <label for="automation-target">Target</label>
+    </div>
+    <div class="controls">
+        <strong><%= config.entities[target].label %></strong>
+    </div>
+</div>
 <div id="automation-conditions"></div>
 <div id="automation-actions"></div>

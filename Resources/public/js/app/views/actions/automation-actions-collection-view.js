@@ -3,56 +3,38 @@ define([
     'diamanteautomation/js/app/views/actions/automation-actions-view',
     'diamanteautomation/js/app/views/actions/automation-actions-edit-view',
     'tpl!diamanteautomation/js/app/templates/actions/automation-actions-collection-template.ejs',
-    'oroui/js/app/views/base/collection-view'
+    'diamanteautomation/js/app/views/abstract/collection-view'
 ],function (_,
             AutomationActionsView,
             AutomationActionsEditView,
             AutomationActionsCollectionTemplate,
-            BaseCollectionView) {
+            AbstractCollectionView) {
     'use strict';
 
-    var AutomationActionsCollection = BaseCollectionView.extend({
-        autoRender: true,
+    var AutomationActionsCollection = AbstractCollectionView.extend({
         template : AutomationActionsCollectionTemplate,
+        itemView: AutomationActionsView,
+        editView: AutomationActionsEditView,
         listSelector: '.actions-list',
         region: 'automation-actions',
         className: 'control-group',
-
-        listen: {
-            'add collection': 'update',
-            'remove collection': 'update',
-            'reset collection': 'update'
-        },
 
         events: {
             'click button[data-action="add-item"]'  : 'addItem'
         },
 
-        initialize : function(options){
-            this.options = _.omit(options, 'collection');
-            BaseCollectionView.prototype.initialize.apply(this, arguments);
-        },
-
-        initItemView : function(model){
-            if(this.options.edit){
-                return new AutomationActionsEditView(_.extend(this.options, { model: model }));
-            } else {
-                return new AutomationActionsView(_.extend(this.options, { model: model }));
-            }
-        },
-
-        getTemplateData: function() {
-            var data = BaseCollectionView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
-        },
-
         addItem : function(e){
             e.preventDefault();
-            this.collection.add({});
+            this.collection.add({}, this.options);
         },
 
         update : function(){
             this.$('button[data-action="delete"]').toggle(this.collection.length != 1);
+        },
+
+        parentChanged : function(attr){
+            this.options.target = attr;
+            this.collection.invoke('set', {entity: attr });
         }
 
     });

@@ -2,18 +2,22 @@ define([
     'underscore',
     'diamanteautomation/js/app/views/conditions/automation-conditions-collection-view',
     'tpl!diamanteautomation/js/app/templates/groupings/automation-groupings-edit-template.ejs',
-    'oroui/js/app/views/base/view'
+    'diamanteautomation/js/app/views/abstract/view'
 ],function ( _,
              AutomationConditionsCollectionView,
              AutomationGroupingsEditTemplate,
-             BaseView) {
+             AbstractView) {
     'use strict';
 
-    var AutomationGroupingsEditView = BaseView.extend({
-        autoRender: true,
+    var AutomationGroupingsEditView = AbstractView.extend({
         template : AutomationGroupingsEditTemplate,
         region: 'automation-conditions',
         className: 'control-group',
+
+        listen: {
+            'parent:change model' : 'parentChanged',
+            'children:empty' : 'childrenEmptied'
+        },
 
         events: {
             'change > .groupings-connector' : 'change',
@@ -29,16 +33,11 @@ define([
             this.options.hasChildren = !!options.children;
         },
 
-        getTemplateData: function() {
-            var data = BaseView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
-        },
-
         render: function () {
             var moreThanOne = this.model.get('children') ?
                 this.model.get('children').length > 1 :
                 this.model.get('conditions') && this.model.get('conditions').length;
-            BaseView.prototype.render.apply(this, arguments);
+            AbstractView.prototype.render.apply(this, arguments);
             this.renderSubViews();
             this.$('> .groupings-connector').trigger('change');
             this.$('> .groupings-connector').toggle(moreThanOne);
@@ -63,6 +62,24 @@ define([
             }
         },
 
+        parentChanged: function(attr){
+            var children = this.model.get('children');
+            var conditions = this.model.get('conditions');
+            this.options.target = attr;
+            if(children) {
+                children.trigger('parent:change', attr);
+            } else if (conditions){
+                conditions.trigger('parent:change', attr);
+            }
+        },
+
+        childrenEmptied: function(){
+            delete this.children;
+            this.model.removeGroups(this.options);
+            this.$('> .groupings-buttons button[data-action="add-item"]').show();
+            this.renderSubViews();
+        },
+
         change: function (e) {
             var input = this.$(e.target);
             this.model.set( input.data('attr'), input.val(), { silent: true });
@@ -70,13 +87,17 @@ define([
 
         addCondition: function(e){
             e.preventDefault();
-            this.conditions.collection.add({});
+            this.conditions.add();
         },
 
-        addGroup: function(){
-            this.model.addGroup();
-            delete this.conditions;
-            this.renderSubViews();
+        addGroup: function(e){
+            e.preventDefault();
+            this.model.addGroup(this.options);
+            if(this.conditions){
+                delete this.conditions;
+                this.$('> .groupings-buttons button[data-action="add-item"]').hide();
+                this.renderSubViews();
+            }
         },
 
         removeGroup: function(){

@@ -1,42 +1,29 @@
 define([
     'underscore',
     'tpl!diamanteautomation/js/app/templates/automation-edit-template.ejs',
-    'oroui/js/app/views/base/view'
-],function (_, AutomationEditTemplate, BaseView) {
+    'diamanteautomation/js/app/views/automation-view'
+],function (_, AutomationEditTemplate, AutomationView) {
     'use strict';
 
-    var AutomationEditView = BaseView.extend({
-        autoRender: true,
-        className: 'container-fluid',
+    var AutomationEditView = AutomationView.extend({
         template : AutomationEditTemplate,
 
         events: {
             'change > .control-group :input' : 'change'
         },
 
-        regions: {
-            'automation-conditions': '#automation-conditions',
-            'automation-actions': '#automation-actions'
-        },
-
-        initialize: function(options){
-            this.options = _.omit(options, 'el', 'model');
-        },
-
-        render: function () {
-            BaseView.prototype.render.apply(this, arguments);
-            this.$('> .control-group :input').trigger('change');
-            return this;
-        },
-
-        getTemplateData: function() {
-            var data = BaseView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
+        listen: {
+            'change:target model': 'updateTarget'
         },
 
         change: function(e) {
             var input = this.$(e.target);
-            this.model.set( input.data('attr'), input.val(), { silent: true });
+            this.model.set( input.data('attr'), input.val());
+        },
+
+        updateTarget: function(model, attr){
+            this.model.get('actions').trigger('parent:change', attr);
+            this.model.get('grouping').trigger('parent:change', attr);
         }
     });
 

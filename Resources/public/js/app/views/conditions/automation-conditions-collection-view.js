@@ -4,44 +4,26 @@ define([
     'diamanteautomation/js/app/views/conditions/automation-conditions-edit-view',
     'diamanteautomation/js/app/models/conditions/automation-conditions-collection',
     'tpl!diamanteautomation/js/app/templates/conditions/automation-conditions-collection-template.ejs',
-    'oroui/js/app/views/base/collection-view'
+    'diamanteautomation/js/app/views/abstract/collection-view'
 ],function (_,
             AutomationConditionsView,
             AutomationConditionsEditView,
             AutomationConditionsCollection,
             AutomationConditionsCollectionTemplate,
-            BaseCollectionView) {
+            AbstractCollectionView) {
     'use strict';
 
-    var AutomationConditionsCollectionView = BaseCollectionView.extend({
-        autoRender: true,
+    var AutomationConditionsCollectionView = AbstractCollectionView.extend({
         template : AutomationConditionsCollectionTemplate,
+        itemView: AutomationConditionsView,
+        editView: AutomationConditionsEditView,
         listSelector: '.conditions-list',
         className: 'control-group',
 
-        listen: {
-            'add collection': 'update',
-            'remove collection': 'update',
-            'reset collection': 'update'
-        },
-
         initialize : function(options){
-            this.options = _.omit(options, 'collection', 'container');
+            this.options = _.omit(options, 'collection');
             this.options.hasParent = !!options.collection.parent;
-            BaseCollectionView.prototype.initialize.apply(this, arguments);
-        },
-
-        initItemView : function(model){
-            if(this.options.edit){
-                return new AutomationConditionsEditView(_.extend({ model: model }, this.options));
-            } else {
-                return new AutomationConditionsView(_.extend({ model: model }, this.options));
-            }
-        },
-
-        getTemplateData: function() {
-            var data = BaseCollectionView.prototype.getTemplateData.call(this);
-            return _.extend(data, this.options);
+            AbstractCollectionView.prototype.initialize.apply(this, arguments);
         },
 
         update : function(model){
@@ -49,6 +31,15 @@ define([
             deleteButtons = deleteButtons.add(this.$(' > .conditions-list > .control-group > .conditions-buttons button[data-action="delete-group"]').parent());
             this.$('> select[data-action="update-connector"]').toggle(this.collection.length > 1);
             deleteButtons.toggle(this.collection.length != 1);
+        },
+
+        parentChanged : function(attr){
+            this.options.target = attr;
+            this.collection.invoke('set', {entity: attr });
+        },
+
+        add: function(){
+            this.collection.add({}, this.options);
         }
 
     });
