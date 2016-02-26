@@ -77,7 +77,7 @@ class RuleValidator implements ValidatorInterface
             return false;
         }
 
-        if (!in_array(strtoupper($grouping['connector']), [Group::CONNECTOR_EXCLUSIVE, Group::CONNECTOR_INCLUSIVE])) {
+        if (!in_array($grouping['connector'], [Group::CONNECTOR_EXCLUSIVE, Group::CONNECTOR_INCLUSIVE])) {
             return false;
         }
 
