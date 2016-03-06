@@ -149,8 +149,10 @@ class AutomationController extends Controller
     {
         $command = new UpdateRuleCommand();
         $form = $this->createForm('diamante_automation_update_rule_form', $command);
-        $formView = $form->createView($form);
+        $formView = $form->createView();
 
+        $configProvider = $this->container->get('diamante_automation.config.provider');
+        $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
             $this->handle($form);
 
@@ -160,12 +162,12 @@ class AutomationController extends Controller
             $response = $this->getSuccessSaveResponse(
                 'diamante_automation_update',
                 'diamante_automation_view',
-                ['type' => $type, 'id' => $rule->getId()]
+                ['type' => $type, 'id' => $rule->getId(), 'config' => $config]
             );
 
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = ['form' => $formView, 'type' => $type];
+            $response = ['form' => $formView, 'type' => $type, 'config' => $config];
         }
 
         return $response;

@@ -1,6 +1,42 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 
+{% block navButtons %}
+    {% set ruleType = app.request.get('type') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
+        {{ UI.button({
+            'path': path('diamante_automation_create', {'type': ruleType}),
+            'iCss': 'icon-plus',
+            'title': 'Create rule'|trans,
+            'label': 'Create rule'|trans
+        }) }}
+    {% endif %}
+
+    {% if resource_granted('EDIT', entity) %}
+        {{ UI.button({
+            'path': path('diamante_automation_update', {'type': ruleType, 'id': entity.id}),
+            'iCss': 'icon-edit',
+            'title': 'Edit Rule'|trans,
+            'label': 'Edit'|trans
+        }) }}
+    {% endif %}
+
+    {% if resource_granted('DELETE', entity) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('diamante_automation_delete', {'type': ruleType, 'id': entity.id}),
+            'dataRedirect': path('diamante_automation_list', {'type': ruleType}),
+            'aCss': 'no-hash remove-button',
+            'dataId': entity.id,
+            'id': 'btn-remove-account',
+            'dataMessage': 'diamante.user.messages.delete.query'|trans,
+            'successMessage': 'diamante.user.messages.delete.success'|trans,
+            'title': 'Delete Rule'|trans,
+            'label': 'Delete'|trans
+        })
+        }}
+    {% endif %}
+{% endblock navButtons %}
+
 {% block pageHeader %}
     {% set breadcrumbs = {
             'entity': entity,
