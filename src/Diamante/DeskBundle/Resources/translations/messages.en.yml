@@ -57,7 +57,7 @@ diamante:
           description.label:          Description
           id.label:                   Ticket Id
           priority.label:             Priority
-          reporter.label:             Reporter
+          reporter_email.label:       Reporter Email
           assignee.label:             Assigner
           branch.label:               Branch
           comments.label:             Comments
