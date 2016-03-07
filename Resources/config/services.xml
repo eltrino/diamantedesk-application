@@ -12,6 +12,7 @@
         <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Automation\Engine</parameter>
         <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Automation\ActionProvider</parameter>
         <parameter key="diamante_automation.condition.factory.class">Diamante\AutomationBundle\Rule\Condition\ConditionFactory</parameter>
+        <parameter key="diamante_automation.ticket.property.time_interval_calculator.class">Diamante\AutomationBundle\Rule\Property\TicketTimeIntervalCalculator</parameter>
         <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
         <parameter key="diamante_automation.generic.target.provider.class">Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider</parameter>
         <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction</parameter>
@@ -75,6 +76,10 @@
 
         <service id="diamante_automation.condition.factory" class="%diamante_automation.condition.factory.class%">
             <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.ticket.property.time_interval_calculator" class="%diamante_automation.ticket.property.time_interval_calculator.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
 
         <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%">
