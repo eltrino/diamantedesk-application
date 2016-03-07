@@ -92,8 +92,9 @@ class WorkflowListener
     protected function handle(LifecycleEventArgs $args, $action, $getChangeset)
     {
         $entity = $args->getObject();
+        $target = $this->provider->getTargetByEntity($entity);
 
-        if (empty($this->provider->getTargetByEntity($entity))) {
+        if (empty($target)) {
             return;
         }
 

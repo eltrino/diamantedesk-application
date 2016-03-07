@@ -49,6 +49,7 @@ class ChangesetBuilder
         $changeset = [];
         $reflect = new \ReflectionClass($entity);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+
         foreach ($props as $refProperty) {
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
@@ -67,17 +68,19 @@ class ChangesetBuilder
     public function getChangesetForUpdateAction($entity)
     {
         $changeset = [];
-        $oldProps = $this->getUpdatedProperties($entity);
+        $uow = $this->container->get('doctrine.orm.entity_manager')->getUnitOfWork();
+        $uowChangeset = $uow->getEntityChangeSet($entity);
         $reflect = new \ReflectionClass($entity);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+
         foreach ($props as $refProperty) {
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
             $new = $refProperty->getValue($entity);
             $old = $new;
 
-            if(array_key_exists($name, $oldProps)) {
-                $old = $oldProps[$name];
+            if(array_key_exists($name, $uowChangeset)) {
+                $old = $uowChangeset[$name][0];
             }
 
             $changeset[$name] = [$old, $new];
@@ -96,6 +99,7 @@ class ChangesetBuilder
         $changeset = [];
         $reflect = new \ReflectionClass($entity);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+
         foreach ($props as $refProperty) {
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
@@ -104,27 +108,5 @@ class ChangesetBuilder
         }
 
         return $changeset;
-    }
-
-    /**
-     * @param $entity
-     *
-     * @return array
-     */
-    private function getUpdatedProperties($entity)
-    {
-        $properties = [];
-        $uow = $this->container->get('doctrine.orm.entity_manager')->getUnitOfWork();
-        $changeset = $uow->getEntityChangeSet($entity);
-
-        foreach($changeset as $property => $values) {
-            list($old, $new) = $values;
-
-            if ($old != $new) {
-                $properties[$property] = $old;
-            }
-        }
-
-        return $properties;
     }
 }
