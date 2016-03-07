@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Configuration;
 
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FrontendOptionsResolver
@@ -32,29 +33,42 @@ class FrontendOptionsResolver
         $this->container = $container;
     }
 
-    public function resolve($configuration)
+    /**
+     * @param array $configuration
+     *
+     * @return array|mixed|null|string
+     */
+    public function resolve(array $configuration)
     {
-        if (is_array($configuration)) {
-            return $configuration;
+        if (!array_key_exists('source', $configuration)) {
+            throw new \RuntimeException('Source type not specified');
         }
 
-        $marker = substr($configuration, 0, 1);
+        $source = $configuration['source'];
+
+        $marker = substr($source, 0, 1);
 
         switch ($marker) {
             case self::RESOLVE_MARKER_ROUTE:
-                $data = trim($configuration, self::RESOLVE_MARKER_ROUTE);
+                $data = trim($source, self::RESOLVE_MARKER_ROUTE);
                 break;
             case self::RESOLVE_MARKER_CLASS:
-                $data = $this->resolveFromClass($configuration);
+                $data = $this->resolveFromClass($source);
                 break;
             case self::RESOLVE_MARKER_PARAMETER:
-                $data = $this->resolveFromContainerParameter($configuration);
+                $data = $this->resolveFromContainerParameter($source);
                 break;
             case self::RESOLVE_MARKER_SERVICE:
-                $data = $this->resolveFromContainerService($configuration);
+                $propertyList = null;
+
+                if (array_key_exists('property_list', $configuration)) {
+                    $propertyList = $configuration['property_list'];
+                }
+
+                $data = $this->resolveFromContainerService($source, $propertyList);
                 break;
             default:
-                throw new \RuntimeException("Invalid configuration");
+                throw new \RuntimeException('Invalid configuration');
                 break;
         }
 
@@ -91,7 +105,7 @@ class FrontendOptionsResolver
         return null;
     }
 
-    protected function resolveFromContainerService($config)
+    protected function resolveFromContainerService($config, $propertyList = null)
     {
         $result = null;
 
@@ -109,6 +123,28 @@ class FrontendOptionsResolver
             }
         } catch (\Exception $e) {
             throw new \RuntimeException("Invalid configuration");
+        }
+
+        if ($service instanceof ObjectRepository) {
+
+            if (empty($propertyList)) {
+                throw new \RuntimeException('Property list can\'t be empty.');
+            }
+
+            $filtered = [];
+
+            foreach ($result as $row) {
+                $filteredItem = [];
+
+                foreach ($propertyList as $property) {
+                    $method = sprintf('get%s', ucfirst($property));
+                    $filteredItem[$property] = $row->$method();
+                }
+
+                $filtered[] = $filteredItem;
+            }
+
+            return $filtered;
         }
 
         return $result;
