@@ -9,6 +9,7 @@
         <parameter key="diamante.user.entity.class">Diamante\UserBundle\Entity\DiamanteUser</parameter>
         <parameter key="diamante.user_factory.class">Diamante\UserBundle\Infrastructure\DiamanteUserFactory</parameter>
         <parameter key="diamante.user.service.class">Diamante\UserBundle\Api\Internal\UserServiceImpl</parameter>
+        <parameter key="diamante.autocomplete.user.service.class">Diamante\UserBundle\Infrastructure\User\AutocompleteUserServiceImpl</parameter>
         <parameter key="diamante.user.api_service.class">Diamante\UserBundle\Api\Internal\UserApiServiceImpl</parameter>
         <parameter key="diamante.user.repository.class">Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository</parameter>
         <parameter key="diamante.user.details.twig.extension.class">Diamante\UserBundle\Twig\Extensions\UserDetailsExtension</parameter>
@@ -45,6 +46,28 @@
             <argument type="service" id="diamante.api.user.repository"/>
             <argument type="service" id="diamante.watcher_list.repository"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="collection">
+                <argument type="string">email</argument>
+                <argument type="string">firstName</argument>
+                <argument type="string">lastName</argument>
+                <argument type="string">fullName</argument>
+                <argument type="string">username</argument>
+                <argument type="string">type</argument>
+            </argument>
+        </service>
+
+        <service id="diamante.autocomplete.user.service" class="%diamante.autocomplete.user.service.class%">
+            <argument type="service" id="oro_user.manager"/>
+            <argument type="service" id="diamante.user.repository"/>
+            <argument type="service" id="diamante.user.service"/>
+            <argument type="collection">
+                <argument type="string">email</argument>
+                <argument type="string">firstName</argument>
+                <argument type="string">lastName</argument>
+                <argument type="string">fullName</argument>
+                <argument type="string">username</argument>
+                <argument type="string">type</argument>
+            </argument>
         </service>
 
         <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
