@@ -54,9 +54,20 @@ class ParameterBag implements \IteratorAggregate, \Countable
         return $this->searchRecursive($pathParts, $this->configParameters);
     }
 
-    public function has($key)
+    public function has($path)
     {
-        return array_key_exists($key, $this->configParameters);
+        $needles = explode(self::CONFIG_PATH_SEPARATOR, $path);
+        $params = $this->configParameters;
+
+        foreach ($needles as $needle) {
+            if (!array_key_exists($needle, $params)) {
+                return false;
+            }
+
+            $params = &$params[$needle];
+        }
+
+        return true;
     }
 
     public function keys()
@@ -84,7 +95,9 @@ class ParameterBag implements \IteratorAggregate, \Countable
             return $haystack;
         }
 
-        if (is_array($haystack[$needle])) {
+        if (!array_key_exists($needle, $haystack)) {
+            return null;
+        } elseif (is_array($haystack[$needle])) {
             $result = $this->searchRecursive($needles, $haystack[$needle]);
         } else {
             $result = $haystack[$needle];
