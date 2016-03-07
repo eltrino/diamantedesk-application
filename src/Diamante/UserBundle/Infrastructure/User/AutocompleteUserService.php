@@ -16,5 +16,18 @@ namespace Diamante\UserBundle\Infrastructure\User;
 
 interface AutocompleteUserService
 {
+    /**
+     * @return array
+     */
+    public function getUsers();
 
+    /**
+     * @return array
+     */
+    public function getOroUsers();
+
+    /**
+     * @return array
+     */
+    public function getDiamanteUsers();
 }
