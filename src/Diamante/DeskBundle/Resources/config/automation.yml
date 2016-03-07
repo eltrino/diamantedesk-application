@@ -65,43 +65,43 @@ diamante_automation:
             type: virtual
             conditions: ['gt', 'gte', 'lt', 'lte']
             rule: ['business']
-            accessor:
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceUpdate
           since_open:
             frontend_label: diamante.desk.ticket.since_open
             type: virtual
             conditions: ['gt', 'gte', 'lt', 'lte']
             rule: ['business']
-            accessor:
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceOpen
           since_pending:
             frontend_label: diamante.desk.ticket.since_pending
             type: virtual
             conditions: ['gt', 'gte', 'lt', 'lte']
             rule: ['business']
-            accessor:
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sincePending
           since_progress:
             frontend_label: diamante.desk.ticket.since_progress
             type: virtual
             conditions: ['gt', 'gte', 'lt', 'lte']
             rule: ['business']
-            accessor:
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceProgress
           since_close:
             frontend_label: diamante.desk.ticket.since_close
             type: virtual
             conditions: ['gt', 'gte', 'lt', 'lte']
             rule: ['business']
-            accessor:
-          since_requester_update:
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceClose
+          since_reporter_update:
             frontend_label: diamante.desk.ticket.since_requester_update
             type: virtual
             conditions: ['gt', 'gte', 'lt', 'lte']
             rule: ['business']
-            accessor:
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceReporter
           since_assignee_update:
             frontend_label: diamante.desk.ticket.since_assignee_update
             type: virtual
             conditions: ['gt', 'gte', 'lt', 'lte']
             rule: ['business']
-            accessor:
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceAssigneeUpdate
       comment:
         class: "Diamante\DeskBundle\Entity\Comment"
         frontend_label: diamante.desk.comment.entity_label
@@ -125,7 +125,7 @@ diamante_automation:
             frontend_label: diamante.desk.comment.author_email.label
             type: virtual
             conditions: ['contains', 'not_contains']
-            accessor: diamante.ticket.email_processing_message_reference.repository::getEndpointByTicket
+            accessor:
 
     actions:
       move_to_branch:
