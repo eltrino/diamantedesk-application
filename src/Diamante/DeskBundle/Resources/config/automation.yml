@@ -124,7 +124,7 @@ diamante_automation:
             frontend_label: diamante.desk.comment.author_email.label
             type: virtual
             conditions: ['contains', 'not_contains']
-            accessor: accessor: diamante_automation.comment.property.processor::getAuthorEmail
+            accessor: diamante_automation.comment.property.processor::getAuthorEmail
 
     actions:
       move_to_branch:
