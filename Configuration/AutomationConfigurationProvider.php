@@ -19,12 +19,14 @@ use Diamante\AutomationBundle\Exception\InvalidConfigurationException;
 use Diamante\AutomationBundle\Infrastructure\Shared\CronExpressionMapper;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 use Diamante\AutomationBundle\Model\Group;
+use Diamante\AutomationBundle\Model\Rule;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\Translator;
 
 class AutomationConfigurationProvider
 {
     const DATA_TYPE_WILDCARD = '*';
+    const VIRTUAL = 'virtual';
 
     /**
      * @var array
@@ -224,6 +226,52 @@ class AutomationConfigurationProvider
     }
 
     /**
+     * @param $entity
+     * @param $property
+     *
+     * @return array|null
+     */
+    protected function getConditionsForProperty($entity, $property)
+    {
+        $config = $this->getEntityConfiguration($entity);
+        $conditions = $config->get(sprintf("properties.%s.conditions", $property));
+
+        return $conditions;
+    }
+
+    /**
+     * @param $entity
+     *
+     * @return array|null
+     */
+    protected function getConditionsForEntity($entity)
+    {
+        $config = $this->getEntityConfiguration($entity);
+        $conditions = $config->get("conditions");
+
+        return $conditions;
+    }
+
+    /**
+     * @param $entity
+     * @param $property
+     *
+     * @return array
+     */
+    protected function getSupportedRulesForProperty($entity, $property)
+    {
+        $defaultRules = [Rule::TYPE_BUSINESS, Rule::TYPE_WORKFLOW];
+        $config = $this->getEntityConfiguration($entity);
+        $rules = $config->get(sprintf("properties.%s.rules", $property));
+
+        if(is_array($rules)) {
+            return $rules;
+        }
+
+        return $defaultRules;
+    }
+
+    /**
      * @param Translator $translator
      * @return array
      */
@@ -241,6 +289,24 @@ class AutomationConfigurationProvider
     }
 
     /**
+     * @param string $entityType
+     * @param string $property
+     *
+     * @return bool
+     */
+    public function isVirtualProperty($entityType, $property)
+    {
+        $path = sprintf('%s.properties.%s.type', $entityType, $property);
+        $propertyType = $this->getConfiguredEntities()->get($path);
+
+        if (static::VIRTUAL == $propertyType) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param Translator $translator
      * @return array
      */
@@ -250,14 +316,17 @@ class AutomationConfigurationProvider
 
         foreach ($this->entities as $name => $config) {
             $entity = [
-                'label' => $translator->trans($config['frontend_label'])
+                'label'      => $translator->trans($config['frontend_label']),
+                'conditions' => $this->getConditionsForEntity($name)
             ];
 
             foreach ($config['properties'] as $propertyName => $propertyConfig) {
                 $property = [
-                    'label'   => $translator->trans($propertyConfig['frontend_label']),
-                    'type'    => $propertyConfig['type'],
-                    'actions' => $this->getActionsForProperty($name, $propertyName),
+                    'label'      => $translator->trans($propertyConfig['frontend_label']),
+                    'type'       => $propertyConfig['type'],
+                    'actions'    => $this->getActionsForProperty($name, $propertyName),
+                    'conditions' => $this->getConditionsForProperty($name, $propertyName),
+                    'rules'      => $this->getSupportedRulesForProperty($name, $propertyName)
                 ];
 
                 if (!empty($propertyConfig['frontend_options'])) {

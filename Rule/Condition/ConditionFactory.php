@@ -78,12 +78,11 @@ class ConditionFactory
         $property = key($parameters);
         $expectedValue = $parameters[$property];
 
-        $refClass = new \ReflectionClass($class);
 
-        if ($refClass->isSubclassOf('\\Diamante\\AutomationBundle\\Rule\\Condition\\AbstractAccessorAwareCondition')) {
-            list($accessor, $accessorMethod) = $this->resolveAccessor($entityType, $property);
+        if ($this->configProvider->isVirtualProperty($entityType, $property)) {
+            $propertyAccessor = $this->resolveAccessor($entityType, $property);
 
-            return new $class($property, $expectedValue, $accessor, $accessorMethod);
+            return new $class($property, $expectedValue, $propertyAccessor);
         }
 
         return new $class($property, $expectedValue);
@@ -93,8 +92,7 @@ class ConditionFactory
     {
         $entity = $this->configProvider->getEntityConfiguration($entityType);
 
-        if (!$entity->has('properties.'.$property)
-            ||!$entity->has('properties.'.$property.'.accessor')) {
+        if (!$entity->has('properties.'.$property) || !$entity->has('properties.'.$property.'.accessor')) {
             throw new \RuntimeException("Invalid configuration for property accessor");
         }
 

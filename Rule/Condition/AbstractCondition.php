@@ -29,6 +29,8 @@ abstract class AbstractCondition implements ConditionInterface
      * @var mixed
      */
     protected $expectedValue;
+
+    protected $propertyAccessor;
     /**
      * @var string
      */
@@ -36,22 +38,56 @@ abstract class AbstractCondition implements ConditionInterface
 
     /**
      * AbstractCondition constructor.
-     * @param $property
-     * @param $expectedValue
+     *
+     * @param            $property
+     * @param            $expectedValue
+     * @param array|null $propertyAccessor
      */
-    public function __construct($property, $expectedValue)
+    public function __construct($property, $expectedValue, array $propertyAccessor = null)
     {
         $this->property         = $property;
         $this->expectedValue    = $expectedValue;
+        $this->propertyAccessor = $propertyAccessor;
 
         $this->name             = $this->getClassName();
     }
 
-
+    /**
+     * @param Fact $fact
+     *
+     * @return null|string
+     */
     protected function extractPropertyValue(Fact $fact)
     {
-        $result = null;
         $target = $fact->getTarget();
+
+        if ($this->isVirtualProperty()) {
+            return $this->extractVirtualProperty($target);
+        }
+
+        return $this->extractRealProperty($target);
+    }
+
+    /**
+     * @param array $target
+     *
+     * @return mixed
+     */
+    protected function extractVirtualProperty(array $target)
+    {
+        list($accessor, $accessorMethod) = $this->propertyAccessor;
+
+        return call_user_func([$accessor, $accessorMethod], $target);
+    }
+
+    /**
+     * @param array $target
+     *
+     * @return null|string
+     */
+    protected function extractRealProperty(array $target)
+    {
+        $result = null;
 
         if (array_key_exists($this->property, $target)) {
             $result = $target[$this->property];
@@ -60,6 +96,15 @@ abstract class AbstractCondition implements ConditionInterface
         $result = $this->typeJuggling($result);
 
         return $result;
+    }
+
+    protected function isVirtualProperty()
+    {
+        if (!is_null($this->propertyAccessor)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function typeJuggling($property) {
