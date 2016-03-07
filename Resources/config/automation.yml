@@ -29,6 +29,9 @@ diamante_automation:
     contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Contains'
       frontend_label: diamante.automation.condition.contains
+    not_contains:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\NotContains'
+      frontend_label: diamante.automation.condition.contains
     created:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Created'
       frontend_label: diamante.automation.condition.created
@@ -38,9 +41,27 @@ diamante_automation:
     removed:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Removed'
       frontend_label: diamante.automation.condition.removed
-    veq:
-      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Veq'
-      frontend_label: diamante.automation.condition.veq
+    changed:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Changed'
+      frontend_label: diamante.automation.condition.changed
+    changed_from:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\ChangedFrom'
+      frontend_label: diamante.automation.condition.changed_from
+    changed_to:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\ChangedTo'
+      frontend_label: diamante.automation.condition.changed_to
+    'true':
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\True'
+      frontend_label: diamante.automation.condition.true
+    'false':
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\False'
+      frontend_label: diamante.automation.condition.false
+    is_customer:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\IsCustomer'
+      frontend_label: diamante.automation.condition.customer
+    is_admin:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\IsAdmin'
+      frontend_label: diamante.automation.condition.admin
 
 
   actions:
