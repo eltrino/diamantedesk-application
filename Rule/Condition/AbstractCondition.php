@@ -18,6 +18,7 @@ namespace Diamante\AutomationBundle\Rule\Condition;
 
 use Diamante\AutomationBundle\Rule\Fact\Fact;
 use Diamante\DeskBundle\Model\Shared\Property;
+use Diamante\DeskBundle\Model\Shared\Weightable;
 
 abstract class AbstractCondition implements ConditionInterface
 {
@@ -109,7 +110,12 @@ abstract class AbstractCondition implements ConditionInterface
 
     protected function typeJuggling($property) {
         if (is_object($property)) {
-            if ($property instanceof Property) {
+            if  ($property instanceof Weightable) {
+                $this->expectedValue = $property->getWeight($this->expectedValue);
+                $property = $property->getWeight($property->getValue());
+
+            }
+            elseif ($property instanceof Property) {
                 $property = $property->getValue();
             } elseif (method_exists($property, '__toString')) {
                 $property = (string)$property;
