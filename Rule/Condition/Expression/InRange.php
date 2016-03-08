@@ -40,7 +40,7 @@ class InRange extends AbstractCondition
      */
     public function isSatisfiedBy(Fact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact->getTarget());
+        $actualValue = $this->extractPropertyValue($fact);
 
         switch ($this->strategy) {
             case (self::RANGE_LIMITS_EXCLUDE):

@@ -27,7 +27,7 @@ class Lte extends AbstractCondition
      */
     public function isSatisfiedBy(Fact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact->getTarget());
+        $actualValue = $this->extractPropertyValue($fact);
 
         return $actualValue <= $this->expectedValue;
     }
