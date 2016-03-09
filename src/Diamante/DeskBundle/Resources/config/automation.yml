@@ -3,42 +3,128 @@ diamante_automation:
       ticket:
         class: "Diamante\DeskBundle\Entity\Ticket"
         frontend_label: diamante.desk.ticket.entity_label
+        conditions: ['created', 'updated', 'removed']
         properties:
           status:
             frontend_label: diamante.desk.ticket.status.label
-            frontend_options: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Status::getValueToLabelMap"
+            frontend_options:
+              source: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Status::getValueToLabelMap"
             type: status
+            conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to']
           priority:
             frontend_label: diamante.desk.ticket.priority.label
-            frontend_options: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Priority::getValueToLabelMap"
+            frontend_options:
+              source: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Priority::getValueToLabelMap"
             type: priority
+            conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to', 'gt', 'gte', 'lt', 'lte']
+          branch:
+            frontend_label: diamante.desk.ticket.branch.label
+            frontend_options:
+              source: "@diamante.branch.repository->getAll"
+              property_list: ['id', 'name']
+            type: branch
+            conditions: ['eq', 'neq', 'contains']
+          assignee:
+            frontend_label: diamante.desk.ticket.assignee.label
+            frontend_options:
+              source: "@diamante.autocomplete.user.service->getOroUsers"
+            type: user
+            conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to']
+          reporter_email:
+            frontend_label: diamante.desk.ticket.reporter_email.label
+            type: virtual
+            conditions: ['eq', 'neq', 'contains', 'not_contains']
+            accessor: diamante_automation.ticket.property.processor::getReporterEmail
           source:
             frontend_label: diamante.desk.ticket.source.label
-            frontend_options: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Source::getValueToLabelMap"
+            frontend_options:
+              source: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Source::getValueToLabelMap"
             type: source
+            conditions: ['eq', 'neq']
           subject:
             frontend_label: diamante.desk.ticket.subject.label
             type: string
           description:
             frontend_label: diamante.desk.ticket.description.label
             type: string
+            conditions: ['contains', 'not_contains']
           sent_to:
             frontend_label: diamante.desk.ticket.created_via_email
             type: virtual
+            conditions: ['eq', 'neq', 'contains', 'not_contains']
             accessor: diamante.ticket.email_processing_message_reference.repository::getEndpointByTicket
-
+          since_create:
+            frontend_label: diamante.desk.ticket.since_create
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceCreate
+          since_update:
+            frontend_label: diamante.desk.ticket.since_update
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceUpdate
+          since_open:
+            frontend_label: diamante.desk.ticket.since_open
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceOpen
+          since_pending:
+            frontend_label: diamante.desk.ticket.since_pending
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sincePending
+          since_progress:
+            frontend_label: diamante.desk.ticket.since_progress
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceProgress
+          since_close:
+            frontend_label: diamante.desk.ticket.since_close
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceClose
+          since_reporter_update:
+            frontend_label: diamante.desk.ticket.since_requester_update
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceReporter
+          since_assignee_update:
+            frontend_label: diamante.desk.ticket.since_assignee_update
+            type: virtual
+            conditions: ['gt', 'gte', 'lt', 'lte']
+            rules: ['business']
+            accessor: diamante_automation.ticket.property.time_interval_calculator::sinceAssigneeUpdate
       comment:
         class: "Diamante\DeskBundle\Entity\Comment"
         frontend_label: diamante.desk.comment.entity_label
+        conditions: ['created', 'updated', 'removed']
         properties:
           content:
             frontend_label: diamante.desk.comment.content.label
             type: string
-
-    conditions:
-      sent_to:
-        class: "Diamante\AutomationBundle\Rule\Condition\Expression\Veq"
-        frontend_label: diamante.desk.automation.condition.sent_to
+            conditions: ['contains', 'not_contains']
+          private:
+            frontend_label: diamante.desk.comment.private.label
+            type: bool
+            conditions: ['eq', 'neq', 'true', 'false']
+          author:
+            frontend_label: diamante.desk.comment.author.label
+            frontend_options:
+              source: "@diamante.autocomplete.user.service->getUsers"
+            type: user
+            conditions: ['is_admin', 'is_customer']
+          author_email:
+            frontend_label: diamante.desk.comment.author_email.label
+            type: virtual
+            conditions: ['contains', 'not_contains']
+            accessor: diamante_automation.comment.property.processor::getAuthorEmail
 
     actions:
       move_to_branch:

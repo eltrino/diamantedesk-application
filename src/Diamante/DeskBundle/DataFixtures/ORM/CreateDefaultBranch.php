@@ -16,23 +16,31 @@
 namespace Diamante\DeskBundle\DataFixtures\ORM;
 
 use Diamante\DeskBundle\Api\Command\BranchCommand;
+use Diamante\DeskBundle\Entity\Branch;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 
+/**
+ * Class CreateDefaultBranch
+ *
+ * @package Diamante\DeskBundle\DataFixtures\ORM
+ */
 class CreateDefaultBranch extends ContainerAwareFixture
 {
     const DEFAULT_BRANCH_NAME = "Default branch";
 
+    /**
+     * @param ObjectManager $manager
+     *
+     * @throws \Exception
+     */
     public function load(ObjectManager $manager)
     {
         $command = new BranchCommand();
         $command->name = self::DEFAULT_BRANCH_NAME;
 
         try {
-            $branch = $this->container->get('diamante.branch.service')->createBranch($command);
-            $manager->persist($branch);
-            $manager->flush();
-            $manager->clear();
+            $branch = $this->createBranch($command, $manager);
 
             $this->container->get('oro_config.manager')
                 ->set('diamante_desk.default_branch', $branch->getId());
@@ -42,5 +50,25 @@ class CreateDefaultBranch extends ContainerAwareFixture
                 ->error("Adding default branch failed. Reason: " . $e->getMessage());
             throw $e;
         }
+    }
+
+    /**
+     * @param BranchCommand $branchCommand
+     * @param ObjectManager $manager
+     *
+     * @return Branch
+     */
+    private function createBranch(BranchCommand $branchCommand, ObjectManager $manager)
+    {
+        $branch = $this->container->get('diamante.branch.entity.factory')->create(
+            $branchCommand->name,
+            $branchCommand->description
+        );
+
+        $manager->persist($branch);
+        $manager->flush();
+        $manager->clear();
+
+        return $branch;
     }
 }

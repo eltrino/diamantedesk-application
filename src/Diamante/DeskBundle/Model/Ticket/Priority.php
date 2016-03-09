@@ -15,8 +15,9 @@
 namespace Diamante\DeskBundle\Model\Ticket;
 
 use Diamante\DeskBundle\Model\Shared\Property;
+use Diamante\DeskBundle\Model\Shared\Weightable;
 
-class Priority implements Property
+class Priority implements Property, Weightable
 {
     const PRIORITY_LOW = 'low';
     const PRIORITY_MEDIUM = 'medium';
@@ -88,5 +89,18 @@ class Priority implements Property
         }
 
         return static::$valueToLabelMap;
+    }
+
+    public function getWeight($priority)
+    {
+        $priorities = [
+            static::PRIORITY_LOW,
+            static::PRIORITY_MEDIUM,
+            static::PRIORITY_HIGH
+        ];
+
+        $priorities = array_flip($priorities);
+
+        return $priorities[$priority];
     }
 }

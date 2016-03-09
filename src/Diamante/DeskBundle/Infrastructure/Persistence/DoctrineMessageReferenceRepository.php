@@ -44,17 +44,17 @@ class DoctrineMessageReferenceRepository extends DoctrineGenericRepository imple
     /**
      * Get email which was specified in TO field, when ticket was created via EmailProcessing
      *
-     * @param Ticket $ticket
+     * @param array $ticket
      * @return array|null
      */
-    public function getEndpointByTicket(Ticket $ticket)
+    public function getEndpointByTicket(array $ticket)
     {
         $qb = $this->_em->createQueryBuilder();
 
         $qb
             ->select("r.endpoint")
             ->from($this->_entityName, 'r')
-            ->where($qb->expr()->eq('r.ticket', $ticket->getId()))
+            ->where($qb->expr()->eq('r.ticket', $ticket['id']))
             ->setMaxResults(1);
 
         try {
