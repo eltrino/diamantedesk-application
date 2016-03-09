@@ -38,7 +38,7 @@ class TicketTimeIntervalCalculator
         );
     }
 
-    public function sinceCreate(array $target)
+    public function sinceCreated(array $target)
     {
         /** @var PersistentProcessingContext $processingContext */
         $processingContext = $this->processingContextRepository
@@ -49,7 +49,7 @@ class TicketTimeIntervalCalculator
         return $hours;
     }
 
-    public function sinceLastUpdate(array $target)
+    public function sinceLastUpdated(array $target)
     {
         /** @var PersistentProcessingContext $processingContext */
         $processingContext = $this->processingContextRepository
