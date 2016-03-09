@@ -118,7 +118,7 @@ class AutomationController extends Controller
             $response = $this->getSuccessSaveResponse(
                 'diamante_automation_update',
                 'diamante_automation_view',
-                ['type' => $type, 'id' => $rule->getId(), 'config' => $config]
+                ['type' => $type, 'id' => $rule->getId()]
             );
 
         } catch (\Exception $e) {
@@ -162,7 +162,7 @@ class AutomationController extends Controller
             $response = $this->getSuccessSaveResponse(
                 'diamante_automation_update',
                 'diamante_automation_view',
-                ['type' => $type, 'id' => $rule->getId(), 'config' => $config]
+                ['type' => $type, 'id' => $rule->getId()]
             );
 
         } catch (\Exception $e) {
