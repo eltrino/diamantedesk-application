@@ -16,12 +16,12 @@
 namespace Diamante\AutomationBundle\Controller;
 
 use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Diamante\DeskBundle\Controller\Shared;
 use JMS\Serializer\Serializer;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Class AutomationController
@@ -151,6 +151,8 @@ class AutomationController extends Controller
         $form = $this->createForm('diamante_automation_update_rule_form', $command);
         $formView = $form->createView();
 
+        $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
+        $serializer = $this->get('serializer');
         $configProvider = $this->container->get('diamante_automation.config.provider');
         $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
@@ -167,7 +169,11 @@ class AutomationController extends Controller
 
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = ['form' => $formView, 'type' => $type, 'config' => $config];
+            $response = ['form'   => $formView,
+                         'type'   => $type,
+                         'config' => $config,
+                         'model'  => $serializer->serialize($rule, 'json')
+            ];
         }
 
         return $response;
