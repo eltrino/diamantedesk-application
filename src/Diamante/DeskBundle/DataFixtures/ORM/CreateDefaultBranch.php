@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\DataFixtures\ORM;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Diamante\DeskBundle\Entity\Branch;
 use Doctrine\Common\Persistence\ObjectManager;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 
 /**
@@ -42,8 +43,10 @@ class CreateDefaultBranch extends ContainerAwareFixture
         try {
             $branch = $this->createBranch($command, $manager);
 
-            $this->container->get('oro_config.manager')
-                ->set('diamante_desk.default_branch', $branch->getId());
+            /** @var $configManager ConfigManager */
+            $configManager = $this->get('oro_config.manager');
+            $configManager->set('diamante_desk.default_branch', $branch->getId());
+            $configManager->flush();
 
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')
