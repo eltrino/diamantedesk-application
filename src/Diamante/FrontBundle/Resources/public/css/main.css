@@ -7368,122 +7368,6 @@ body {
 #header .navbar-nav > li > a:hover {
   background: none;
 }
-#header .user-wrapper {
-  margin: 40px 0 0;
-  position: relative;
-  height: 40px;
-}
-#header .user-wrapper .user-actions {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-#header .user-wrapper .user-actions .user-action {
-  display: block;
-}
-#header .user-wrapper .user-actions .user-edit {
-  color: #fff;
-  display: inline-block;
-  border-radius: 20px;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 40px;
-  width: 40px;
-  vertical-align: bottom;
-  z-index: 2;
-  -webkit-transition: right 0.3s ease-out;
-  transition: right 0.3s ease-out;
-}
-#header .user-wrapper .user-actions .user-edit:after {
-  content: "\f007";
-  opacity: 0;
-  display: inline-block;
-  font: normal normal normal 24px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  font-size: 24px;
-  line-height: 40px;
-  height: 40px;
-  width: 40px;
-  vertical-align: bottom;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  -webkit-transition: opacity 0.2s ease-out;
-  -moz-transition: opacity 0.2s ease-out;
-  -ms-transition: opacity 0.2s ease-out;
-  -o-transition: opacity 0.2s ease-out;
-  transition: opacity 0.2s ease-out;
-}
-#header .user-wrapper .user-actions .user-edit:before {
-  content: '';
-  background: #000;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 40px;
-  width: 40px;
-}
-#header .user-wrapper .user-actions .user-logout {
-  color: #fff;
-  background: #47747e;
-  border-radius: 20px;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 40px;
-  width: 40px;
-  text-align: right;
-  -webkit-transition: width 0.3s ease-out;
-  transition: width 0.3s ease-out;
-}
-#header .user-wrapper .user-actions .user-logout:after {
-  opacity: .5;
-  content: "\f011";
-  display: inline-block;
-  font: normal normal normal 24px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  font-size: 24px;
-  line-height: 40px;
-  height: 40px;
-  width: 40px;
-  vertical-align: bottom;
-  -webkit-transition: opacity 0.2s ease-out;
-  -moz-transition: opacity 0.2s ease-out;
-  -ms-transition: opacity 0.2s ease-out;
-  -o-transition: opacity 0.2s ease-out;
-  transition: opacity 0.2s ease-out;
-}
-#header .user-wrapper .user-actions .user-logout:hover:after {
-  opacity: 1;
-}
-#header .user-wrapper .user-actions:hover .user-edit {
-  right: 40px;
-}
-#header .user-wrapper .user-actions:hover .user-edit:before {
-  opacity: .7;
-}
-#header .user-wrapper .user-actions:hover .user-edit:after {
-  opacity: .5;
-}
-#header .user-wrapper .user-actions:hover .user-edit:hover:after {
-  opacity: 1;
-}
-#header .user-wrapper .user-actions:hover .user-logout {
-  width: 80px;
-}
 .logo {
   display: block;
 }
@@ -7898,6 +7782,107 @@ h1,
   box-sizing: border-box;
   white-space: normal;
   color: #777;
+}
+.user-wrapper {
+  margin: 40px 0 0;
+  position: relative;
+  height: 40px;
+}
+.user-wrapper .user-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.user-wrapper .user-actions .user-action {
+  display: block;
+}
+.user-wrapper .user-actions .user-edit {
+  color: #fff;
+  display: inline-block;
+  border-radius: 20px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 40px;
+  width: 40px;
+  vertical-align: bottom;
+  z-index: 2;
+  -webkit-transition: right 0.3s ease-out;
+  transition: right 0.3s ease-out;
+}
+.user-wrapper .user-actions .user-edit .fa {
+  opacity: 0;
+  text-align: center;
+  font-size: 24px;
+  line-height: 40px;
+  height: 40px;
+  width: 40px;
+  vertical-align: bottom;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  -webkit-transition: opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out;
+}
+.user-wrapper .user-actions .user-edit:before {
+  content: '';
+  background: #000;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 40px;
+  width: 40px;
+}
+.user-wrapper .user-actions .user-edit img.offline {
+  display: none;
+}
+.user-wrapper .user-actions .user-edit img.offline + .fa {
+  opacity: .7;
+  background: #000;
+}
+.user-wrapper .user-actions .user-logout {
+  color: #fff;
+  background: #47747e;
+  border-radius: 20px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 40px;
+  width: 40px;
+  text-align: right;
+  -webkit-transition: width 0.3s ease-out;
+  transition: width 0.3s ease-out;
+}
+.user-wrapper .user-actions .user-logout .fa {
+  opacity: .5;
+  text-align: center;
+  font-size: 24px;
+  line-height: 40px;
+  height: 40px;
+  width: 40px;
+  float: left;
+  vertical-align: bottom;
+  -webkit-transition: opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out;
+}
+.user-wrapper .user-actions .user-logout:hover .fa {
+  opacity: 1;
+}
+.user-wrapper .user-actions:hover .user-edit:before {
+  opacity: .7;
+}
+.user-wrapper .user-actions:hover .user-edit .fa {
+  opacity: .5;
+}
+.user-wrapper .user-actions:hover .user-edit:hover .fa {
+  opacity: 1;
+}
+.user-wrapper .user-actions:hover .user-logout {
+  width: 80px;
 }
 .profile .loading {
   display: inline-block;
