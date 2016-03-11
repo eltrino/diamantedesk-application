@@ -33,6 +33,9 @@
         type : type,
         edit : true
     } %}
+    {% if model is defined %}
+        {% set options = options|merge({ model: model })  %}
+    {% endif %}
     <div class="diam-automation container-fluid"
          data-page-component-module="diamanteautomation/js/app/components/automation-component"
          data-page-component-options="{{ options|json_encode }}"></div>

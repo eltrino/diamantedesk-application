@@ -48,7 +48,7 @@ define([
             var container = this.$('> .grouping-list');
             var children = this.model.get('children');
             var conditions = this.model.get('conditions');
-            if(children){
+            if(children && children.length){
                 this.children = new this.collectionView(_.extend({
                     collection: children,
                     container: container,

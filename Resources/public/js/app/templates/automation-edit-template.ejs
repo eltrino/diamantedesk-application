@@ -1,6 +1,10 @@
 <% 'TEMPLATE: automation-edit-template' %>
 <% var entities = config.entities; %>
 <% var time_intervals = config.time_intervals; %>
+<% var type = typeof type !== 'undefined' && type; %>
+<% if(!type) {
+    type = timeInterval ? 'business' : 'workflow';
+}%>
 <input type="hidden" name="diamante_automation_update_rule_form[rule]" value="">
 <div class="control-group">
     <div class="control-label wrap">
