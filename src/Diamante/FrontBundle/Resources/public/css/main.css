@@ -8163,6 +8163,14 @@ h1,
 .ticket-edit-form textarea {
   resize: vertical;
 }
+.auth-page {
+  display: table;
+  width: 100%;
+}
+.auth-page .wrap {
+  display: table-cell;
+  vertical-align: middle;
+}
 .auth-page .logo {
   text-align: center;
   margin: 0 0 60px;
@@ -8175,14 +8183,9 @@ h1,
 }
 .auth-page #main {
   background: transparent;
-  display: table;
   width: 240px;
-  height: 100%;
+  min-height: 0;
   padding: 0;
-}
-.auth-page #content {
-  display: table-cell;
-  vertical-align: middle;
 }
 .auth-page #header,
 .auth-page #footer {
