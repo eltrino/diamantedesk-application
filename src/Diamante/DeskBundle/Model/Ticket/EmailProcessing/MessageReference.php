@@ -42,6 +42,7 @@ class MessageReference implements Entity
     /**
      * @param $messageId
      * @param $ticket
+     * @param $endpoint
      */
     public function __construct($messageId, Ticket $ticket, $endpoint)
     {

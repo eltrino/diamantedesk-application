@@ -90,7 +90,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
     {
         $subject = $message->getSubject();
 
-        if (empty($message->getSubject())) {
+        if (empty($subject)) {
             $subject = self::EMPTY_SUBJECT_PLACEHOLDER;
         }
 
