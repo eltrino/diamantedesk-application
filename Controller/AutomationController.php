@@ -18,10 +18,10 @@ namespace Diamante\AutomationBundle\Controller;
 use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
 use Diamante\DeskBundle\Controller\Shared;
 use JMS\Serializer\Serializer;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AutomationController
@@ -169,10 +169,12 @@ class AutomationController extends Controller
 
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = ['form'   => $formView,
-                         'type'   => $type,
-                         'config' => $config,
-                         'model'  => $serializer->serialize($rule, 'json')
+            $response = [
+                'form'   => $formView,
+                'type'   => $type,
+                'config' => $config,
+                'model'  => $serializer->serialize($rule, 'json'),
+                'ruleId' => $rule->getId()
             ];
         }
 

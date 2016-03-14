@@ -1,6 +1,10 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
 
-{% set formAction = form.vars.value.rule ? path(updateAction, { 'id': form.vars.value.rule, 'type': type }) : path(createAction, {'type': type}) %}
+{% set createAction = 'diamante_automation_create' %}
+{% set updateAction = 'diamante_automation_update' %}
+{% set listAction = 'diamante_automation_list' %}
+
+{% set formAction = ruleId ? path(updateAction, { 'id': ruleId, 'type': type }) : path(createAction, {'type': type}) %}
 
 {% block navButtons %}
     {% set cancel_url = path(listAction, {'type': type}) %}
