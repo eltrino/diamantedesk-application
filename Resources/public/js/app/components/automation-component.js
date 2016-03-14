@@ -37,7 +37,7 @@ define([
             delete options['_sourceElement'];
             delete options['type'];
             this.model = options.model =
-                options.model ? new AutomationModel(JSON.parse(options.model), options) :
+                options.model ? new AutomationModel(_.extend(JSON.parse(options.model), {type: type }), options) :
                                 new AutomationModel({type: type }, options);
         },
         initView: function (options) {
