@@ -196,6 +196,20 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     protected $updatedAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="status_updated_since", type="datetime")
+     */
+    protected $statusUpdatedSince;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="assigned_since", type="datetime")
+     */
+    protected $assignedSince;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="source")

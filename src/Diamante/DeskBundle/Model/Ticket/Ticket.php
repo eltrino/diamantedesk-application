@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\DeskBundle\Model\Shared\Updatable;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
@@ -116,6 +117,16 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     protected $updatedAt;
 
     /**
+     * @var \DateTime
+     */
+    protected $statusUpdatedSince;
+
+    /**
+     * @var \DateTime
+     */
+    protected $assignedSince;
+
+    /**
      * @var ArrayCollection
      */
     protected $tags;
@@ -160,6 +171,8 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         $this->watcherList = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
+        $this->statusUpdatedSince = clone $this->createdAt;
+        $this->assignedSince = clone $this->createdAt;
         $this->source = $source;
         $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
     }
@@ -321,6 +334,22 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStatusUpdatedSince()
+    {
+        return $this->statusUpdatedSince;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getAssignedSince()
+    {
+        return $this->assignedSince;
     }
 
     /**
@@ -633,11 +662,22 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     }
 
     /**
-     * @ORM\PrePersist
      * @ORM\PreUpdate
+     *
+     * @param PreUpdateEventArgs $event
      */
-    public function updatedTimestamps()
+    public function updatedTimestamps(PreUpdateEventArgs $event)
     {
-        $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
+        $now = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        if ($event->hasChangedField('status')) {
+            $this->statusUpdatedSince = $now;
+        }
+
+        if ($event->hasChangedField('assignee')) {
+            $this->assignedSince = $now;
+        }
+
+        $this->updatedAt = $now;
     }
 }
