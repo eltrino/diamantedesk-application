@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\ArrayInput;
+use Diamante\DeskBundle\Command\FixturesPurgeCommand;
 
 use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
 
@@ -47,6 +48,13 @@ if (true === (bool)$autoloadFlag) {
     $kernelDir = $kernel->getRootDir();
 
     $loadCommand = new LoadDataFixturesDoctrineCommand();
+    $purgeCommand = new FixturesPurgeCommand();
+
+    $application->add($purgeCommand);
+    $purgeInput = new ArrayInput(array(
+        'command'              => 'diamante:desk:fixtures:purge',
+        '--no-interaction'     => true,
+    ));
 
     $application->add($loadCommand);
     $input = new ArrayInput(array(
@@ -58,6 +66,8 @@ if (true === (bool)$autoloadFlag) {
     ));
 
     try {
+        $output->writeln("\033[32m\033[1mRemoving previously loaded test fixtures\033[0m");
+        $purgeCommand->run($purgeInput, $output);
         $output->writeln("Loading fixtures for User Bundle...\n");
         $loadCommand->run($input, $output);
     } catch (\Exception $e) {

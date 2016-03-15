@@ -64,8 +64,6 @@ class BranchControllerTest extends AbstractController
             . DIRECTORY_SEPARATOR
             . 'test.jpg';
         $form['diamante_branch_form[defaultAssignee]']  = 1;
-        $form['diamante_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
-        $form['diamante_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
 
         $this->client->followRedirects(true);
 
@@ -134,8 +132,6 @@ class BranchControllerTest extends AbstractController
         $form['diamante_update_branch_form[description]'] = 'Branch Description Changed';
         $form['diamante_update_branch_form[logoFile]'] = $logoFile;
         $form['diamante_update_branch_form[defaultAssignee]'] = 1;
-        $form['diamante_update_branch_form[branch_email_configuration][supportAddress]'] = 'test@gmail.com';
-        $form['diamante_update_branch_form[branch_email_configuration][customerDomains]'] = 'gmail.com, yahoo.com';
 
         $this->client->followRedirects(true);
 
