@@ -4,7 +4,7 @@
 {% set updateAction = 'diamante_automation_update' %}
 {% set listAction = 'diamante_automation_list' %}
 
-{% set formAction = ruleId ? path(updateAction, { 'id': ruleId, 'type': type }) : path(createAction, {'type': type}) %}
+{% set formAction = ruleId is defined ? path(updateAction, { 'id': ruleId, 'type': type }) : path(createAction, {'type': type}) %}
 
 {% block navButtons %}
     {% set cancel_url = path(listAction, {'type': type}) %}
