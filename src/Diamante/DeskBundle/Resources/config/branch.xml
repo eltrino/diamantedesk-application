@@ -26,6 +26,7 @@
         <parameter key="diamante.branch.service.class">Diamante\DeskBundle\Api\Internal\BranchServiceImpl</parameter>
         <parameter key="diamante.branch.service.api.class">Diamante\DeskBundle\Api\Internal\BranchApiServiceImpl</parameter>
         <parameter key="diamante.branch.placeholder.class">Diamante\DeskBundle\Placeholder\DefaultBranchPlaceholder</parameter>
+        <parameter key="diamante.autocomplete.branch.service.class">Diamante\DeskBundle\Infrastructure\Branch\AutocompleteBranchServiceImpl</parameter>
     </parameters>
 
     <services>
@@ -41,6 +42,10 @@
                  factory-class="%diamante.branch.logo.handler.class%" factory-method="create">
             <argument>%kernel.root_dir%</argument>
             <argument type="service" id="filesystem"/>
+        </service>
+
+        <service id="diamante.autocomplete.branch.service" class="%diamante.autocomplete.branch.service.class%">
+            <argument type="service" id="diamante.branch.repository"/>
         </service>
 
         <service id="diamante.branch.service" class="%diamante.branch.service.class%">
