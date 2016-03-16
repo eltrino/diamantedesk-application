@@ -49,27 +49,35 @@ diamante:
             default:           Current branch is configured as default for Email Processing and cannot be deleted.
 
         ticket:
-          entity_label:               Ticket
-          entity_plural_label:        Tickets
-          details:                    Ticket Details
-          all:                        All Tickets
-          created_at.label:           Created At
-          description.label:          Description
-          id.label:                   Ticket Id
-          priority.label:             Priority
-          reporter_email.label:       Reporter Email
-          assignee.label:             Assigner
-          branch.label:               Branch
-          comments.label:             Comments
-          sequence_number.label:      Sequence Number
-          source.label:               Source
-          status.label:               Status
-          subject.label:              Subject
-          unique_id.label:            Unique Id
-          updated_at.label:           Updated At
-          attachments.label:          Attachments
-          watcher_list.label:         Watcher List
-          created_via_email:          Created via email to
+          entity_label:                     Ticket
+          entity_plural_label:              Tickets
+          details:                          Ticket Details
+          all:                              All Tickets
+          created_at.label:                 Created At
+          description.label:                Description
+          id.label:                         Ticket Id
+          priority.label:                   Priority
+          reporter_email.label:             Reporter Email
+          assignee.label:                   Assigner
+          branch.label:                     Branch
+          comments.label:                   Comments
+          sequence_number.label:            Sequence Number
+          source.label:                     Source
+          status.label:                     Status
+          subject.label:                    Subject
+          unique_id.label:                  Unique Id
+          updated_at.label:                 Updated At
+          attachments.label:                Attachments
+          watcher_list.label:               Watcher List
+          created_via_email.label:          Created via email to
+          since_created.label:              Since created
+          since_updated.label:              Since updated
+          since_opened.label:               Since status opened
+          since_pending.label:              Since status pending
+          since_progress.label:             Since status in progress
+          since_closed.label:               Since status closed
+          since_reporter_updated.label:     Since reporter updated
+          since_assignee_updated.label:     Since assignee updated
 
           columns:
             key:               Key
@@ -147,6 +155,7 @@ diamante:
           private.label:       Private
           ticket.label:        Ticket
           updated_at.label:    Updated at
+          author_email.label:  Author email
 
           actions:
             edit:              Edit Comment
