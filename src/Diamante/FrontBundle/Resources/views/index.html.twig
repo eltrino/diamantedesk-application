@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DiamanteDesk</title>
+
+    <link rel="manifest" href="{{ asset('bundles/diamantedistribution/img/ico/manifest.json') }}">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="{{ asset('bundles/diamantedistribution/img/ico/apple-touch-icon-57x57.png')}}" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="{{ asset('bundles/diamantedistribution/img/ico/apple-touch-icon-60x60.png')}}" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('bundles/diamantedistribution/img/ico/apple-touch-icon-72x72.png')}}" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="{{ asset('bundles/diamantedistribution/img/ico/apple-touch-icon-76x76.png')}}" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('bundles/diamantedistribution/img/ico/apple-touch-icon-114x114.png')}}" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{ asset('bundles/diamantedistribution/img/ico/apple-touch-icon-120x120.png')}}" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('bundles/diamantedistribution/img/ico/apple-touch-icon-144x144.png')}}" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset("bundles/diamantedistribution/img/ico/apple-touch-icon-152x152.png")}}" />
+
+    <link rel="icon" type="image/png" href="{{ asset('bundles/diamantedistribution/img/ico/favicon-16x16.png')}}" sizes="16x16" />
+    <link rel="icon" type="image/png" href="{{ asset('bundles/diamantedistribution/img/ico/favicon-32x32.png')}}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{{ asset('bundles/diamantedistribution/img/ico/favicon-96x96.png')}}" sizes="96x96" />
+    <link rel="icon" type="image/png" href="{{ asset('bundles/diamantedistribution/img/ico/favicon-194x194.png')}}" sizes="194x194" />
+
+    <meta name="application-name" content="DiamanteDesk"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="{{ asset('bundles/diamantedistribution/img/ico/mstile-144x144.png') }}" />
+    <meta name="theme-color" content="#ffffff">
+
     {% if app.environment == 'dev' %}
     <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.css') }}" type="text/css"/>
     {% else %}
