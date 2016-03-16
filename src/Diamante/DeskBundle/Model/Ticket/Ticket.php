@@ -664,7 +664,7 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     /**
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps()
+    public function updateTimestamps()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
@@ -674,11 +674,14 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
      *
      * @param PreUpdateEventArgs $event
      */
-    public function updatedPropertiesTimestamp(PreUpdateEventArgs $event)
+    public function updatePropertiesTimestamp(PreUpdateEventArgs $event)
     {
         $now = new \DateTime('now', new \DateTimeZone('UTC'));
 
-        if ($event->hasChangedField('status')) {
+        $newStatusValue = $event->getNewValue('status')->getValue();
+        $oldStatusValue = $event->getOldValue('status')->getValue();
+
+        if ($newStatusValue != $oldStatusValue) {
             $this->statusUpdatedSince = $now;
         }
 
