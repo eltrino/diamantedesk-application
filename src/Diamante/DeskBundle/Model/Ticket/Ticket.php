@@ -663,10 +663,18 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
 
     /**
      * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
+    }
+
+    /**
+     * @ORM\PreUpdate
      *
      * @param PreUpdateEventArgs $event
      */
-    public function updatedTimestamps(PreUpdateEventArgs $event)
+    public function updatedPropertiesTimestamp(PreUpdateEventArgs $event)
     {
         $now = new \DateTime('now', new \DateTimeZone('UTC'));
 
@@ -677,7 +685,5 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         if ($event->hasChangedField('assignee')) {
             $this->assignedSince = $now;
         }
-
-        $this->updatedAt = $now;
     }
 }
