@@ -53,7 +53,7 @@ if (true === (bool)$autoloadFlag) {
 
     $application->add($purgeCommand);
     $purgeInput = new ArrayInput(array(
-        'command'              => 'diamante:fixtures:purge',
+        'command'              => 'diamante:desk:fixtures:purge',
         '--no-interaction'     => true,
     ));
 

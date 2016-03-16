@@ -1,4 +1,10 @@
 .auth-page {
+  display: table;
+  width: 100%;
+  .wrap {
+    display: table-cell;
+    vertical-align: middle;
+  }
   .logo {
     text-align: center;
     margin:0 0 60px;
@@ -9,15 +15,13 @@
   
   #main {
     background: transparent;
-    display: table;
     width: 240px;
-    height: 100%;
+    min-height: 0;
     padding: 0;
   }
 
   #content {
-    display: table-cell;
-    vertical-align: middle;
+
   }
 
   #header, #footer {

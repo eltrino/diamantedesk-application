@@ -111,6 +111,8 @@ class FixturesPurgeCommand extends ContainerAwareCommand
             $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Comment::getClassName()),
             $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName()),
             $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\TicketHistory::getClassName()),
+            $this->entityManager->getClassMetadata(\Diamante\UserBundle\Entity\ApiUser::getClassName()),
+            $this->entityManager->getClassMetadata(\Diamante\UserBundle\Entity\DiamanteUser::getClassName()),
             $this->entityManager->getClassMetadata('\Oro\Bundle\TagBundle\Entity\Tag'),
             $this->entityManager->getClassMetadata('\Oro\Bundle\TagBundle\Entity\Tagging')
         );

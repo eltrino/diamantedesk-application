@@ -30,7 +30,7 @@ define(['app'], function(App){
               .done(function(model){
                 App.alert({ title: 'Password Reset Info', status: 'info', messages: [{
                   status:'info',
-                  text: 'We have sent you email to ' + model.get('email') + '.<br>' +
+                  text: 'We have sent you email to ' + model.get('email') + '. ' +
                   'Please click the link in that message to reset your password.'
                 }] });
                 App.trigger('session:login');

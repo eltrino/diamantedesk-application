@@ -31,6 +31,7 @@ class LoadDiamanteUsersData extends AbstractFixture
             $user = new DiamanteUser($email, 'Test', 'User');
             $apiUser = new ApiUser($email, UserServiceImpl::generateRandomSequence(20), UserServiceImpl::generateRandomSequence(20));
             $apiUser->activate($apiUser->getHash());
+            $apiUser->setDiamanteUser($user);
             $user->setApiUser($apiUser);
             $user->setDeleted(false);
 

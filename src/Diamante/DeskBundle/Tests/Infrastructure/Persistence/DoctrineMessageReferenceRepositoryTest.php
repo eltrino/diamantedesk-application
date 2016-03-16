@@ -138,7 +138,7 @@ class DoctrineMessageReferenceRepositoryTest extends \PHPUnit_Framework_TestCase
         );
 
         return new MessageReference(
-            'dummmy_message_id', $ticket
+            'dummmy_message_id', $ticket, 'mike@diamantedesk.com'
         );
     }
 }

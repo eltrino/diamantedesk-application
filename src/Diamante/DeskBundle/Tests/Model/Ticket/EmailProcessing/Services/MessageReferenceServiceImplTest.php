@@ -15,18 +15,20 @@
 namespace Diamante\DeskBundle\Tests\Model\Ticket\EmailProcessing\Services;
 
 use Diamante\DeskBundle\Entity\MessageReference;
+use Diamante\DeskBundle\Model\Branch\Branch;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
+use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing\TicketStrategyTest;
+use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
+use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
-use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
-use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Model\Branch\Branch;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\DeskBundle\Model\Ticket\Status;
-use Diamante\EmailProcessingBundle\Infrastructure\Message\Attachment;
 
 class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
 {
@@ -141,27 +143,27 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatTicketCreatesWithNoAttachments()
     {
-        $branchId = 1;
         $assigneeId = 3;
+        $endpoint = TicketStrategyTest::DUMMY_MESSAGE_TO;
         $reporter = $this->createReporter();
+
 
         $this->ticketService
             ->expects($this->once())
             ->method('createTicket')
             ->will($this->returnValue($this->ticket));
 
-        $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket);
+        $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket, $endpoint);
 
         $this->messageReferenceRepository->expects($this->once())->method('store')
             ->with($this->equalTo($messageReference));
 
         $this->messageReferenceService->createTicket(
-            self::DUMMY_MESSAGE_ID,
-            $branchId,
-            self::SUBJECT,
-            self::DESCRIPTION,
-            (string)$reporter,
-            $assigneeId
+            $this->createMessage(),
+            TicketStrategyTest::DEFAULT_BRANCH_ID,
+            $reporter,
+            $assigneeId,
+            $this->attachments()
         );
     }
 
@@ -170,8 +172,8 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     public function thatTicketCreatesWithAttachments()
     {
-        $branchId = 1;
         $assigneeId = 3;
+        $endpoint = TicketStrategyTest::DUMMY_MESSAGE_TO;
         $reporter = $this->createReporter();
 
         $this->ticketService
@@ -179,17 +181,15 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('createTicket')
             ->will($this->returnValue($this->ticket));
 
-        $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket);
+        $messageReference = new MessageReference(self::DUMMY_MESSAGE_ID, $this->ticket, $endpoint);
 
         $this->messageReferenceRepository->expects($this->once())
             ->method('store')
             ->with($this->equalTo($messageReference));
 
         $this->messageReferenceService->createTicket(
-            self::DUMMY_MESSAGE_ID,
-            $branchId,
-            self::SUBJECT,
-            self::DESCRIPTION,
+            $this->createMessage(),
+            TicketStrategyTest::DEFAULT_BRANCH_ID,
             $reporter,
             $assigneeId,
             $this->attachments()
@@ -301,5 +301,24 @@ class MessageReferenceServiceImplTest extends \PHPUnit_Framework_TestCase
     private function attachments()
     {
         return array(new Attachment(self::DUMMY_FILENAME, self::DUMMY_FILE_CONTENT));
+    }
+
+    private function getDummyFrom()
+    {
+        return new Message\MessageSender(TicketStrategyTest::DUMMY_MESSAGE_FROM, 'Dummy User');
+    }
+
+    private function createMessage() {
+        $dummyFrom = $this->getDummyFrom();
+        $message = new Message(
+            TicketStrategyTest::DUMMY_UNIQUE_ID,
+            TicketStrategyTest::DUMMY_MESSAGE_ID,
+            TicketStrategyTest::DUMMY_SUBJECT,
+            TicketStrategyTest::DUMMY_CONTENT,
+            $dummyFrom,
+            TicketStrategyTest::DUMMY_MESSAGE_TO
+        );
+
+        return $message;
     }
 }

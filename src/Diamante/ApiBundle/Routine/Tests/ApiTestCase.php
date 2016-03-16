@@ -21,7 +21,7 @@ use Diamante\ApiBundle\Routine\Tests\Command\ApiCommand;
 
 abstract class ApiTestCase extends WebTestCase
 {
-    const DIAMANTE_EMAIL = 'admin@eltrino.com';
+    const DIAMANTE_EMAIL = 'test1@example.com';
 
     /**
      * @var Client

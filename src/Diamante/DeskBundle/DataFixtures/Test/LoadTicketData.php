@@ -44,7 +44,8 @@ class LoadTicketData extends AbstractContainerAwareFixture implements DependentF
     public function getDependencies()
     {
         return [
-            'Diamante\DeskBundle\DataFixtures\Test\LoadBranchData'
+            'Diamante\DeskBundle\DataFixtures\Test\LoadBranchData',
+            'Diamante\UserBundle\DataFixtures\Test\LoadDiamanteUsersData'
         ];
     }
 

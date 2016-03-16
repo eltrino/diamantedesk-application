@@ -58,6 +58,16 @@ class TicketStrategy implements Strategy
     private $configManager;
 
     /**
+     * @var UserService
+     */
+    private $diamanteUserService;
+
+    /**
+     * @var BranchService
+     */
+    private $branchService;
+
+    /**
      * @param MessageReferenceService $messageReferenceService
      * @param SystemSettings $settings
      * @param WatchersServiceImpl $watchersService

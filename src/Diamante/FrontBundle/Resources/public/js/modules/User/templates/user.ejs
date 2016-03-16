@@ -2,11 +2,15 @@
   <ul class="user-actions">
     <li class="user-action">
       <a href="#edit-user" class="user-edit js-edit-user">
-        <img src="<%=avatar_url %>?s=40&d=identicon" class="user-image" alt="<%=first_name %> <%=last_name %>" />
+        <img src="<%=avatar_url %>?s=40&d=identicon"
+             class="user-image"
+             onerror="this.className += ' offline'"
+             alt="<%=first_name %> <%=last_name %>" />
+        <i class="fa fa-user"></i>
       </a>
     </li>
     <li class="user-action">
-      <a href="#" class="user-logout js-logout" title="Log Out"></a>
+      <a href="#" class="user-logout js-logout" title="Log Out"><i class="fa fa-power-off"></i></a>
     </li>
   </ul>
 </div>
