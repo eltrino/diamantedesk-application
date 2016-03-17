@@ -72,11 +72,7 @@ diamante:
           created_via_email.label:          Created via email to
           since_created.label:              Since created
           since_updated.label:              Since updated
-          since_opened.label:               Since status opened
-          since_pending.label:              Since status pending
-          since_progress.label:             Since status in progress
-          since_closed.label:               Since status closed
-          since_reporter_updated.label:     Since reporter updated
+          since_status_updated.label:       Since status updated
           since_assignee_updated.label:     Since assignee updated
 
           columns:
