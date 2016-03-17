@@ -30,6 +30,13 @@ class GenericTargetEntityProvider
 {
     const TARGET_ALIAS = 't';
 
+    protected static $conditionTimeMap = [
+        'gt' => 'lt',
+        'gte' => 'lte',
+        'lt' => 'gt',
+        'lte' => 'gte',
+    ];
+
     /**
      * @var EntityManager
      */
@@ -102,7 +109,8 @@ class GenericTargetEntityProvider
 
     /**
      * @param QueryBuilder $qb
-     * @param Group $group
+     * @param Group        $group
+     * @param string       $targetType
      * @return Expr\Andx|Expr\Orx
      */
     protected function buildGroupCondition(QueryBuilder $qb, Group $group, $targetType)
@@ -123,7 +131,7 @@ class GenericTargetEntityProvider
 
         if ($group->hasChildren()) {
             foreach ($group->getChildren() as $childGroup) {
-                $childGroupCondition = $this->buildGroupCondition($qb, $childGroup);
+                $childGroupCondition = $this->buildGroupCondition($qb, $childGroup, $targetType);
                 $condition->add($childGroupCondition);
             }
 
@@ -131,7 +139,6 @@ class GenericTargetEntityProvider
         }
 
         foreach ($group->getConditions() as $conditionDefinition) {
-            $rule = $group->getRule();
             $conditionDefinition = $this->conditionFactory->getCondition(
                 $conditionDefinition->getType(),
                 $conditionDefinition->getParameters(),
@@ -139,7 +146,7 @@ class GenericTargetEntityProvider
             );
             /** @var ConditionInterface $conditionDefinition */
             list($property, $expr, $value) = $conditionDefinition->export();
-            $compiledCondition = $this->buildCondition($qb, $property, $expr, $value);
+            $compiledCondition = $this->buildCondition($qb, $property, $expr, $value, $targetType);
             $condition->add($compiledCondition);
         }
 
@@ -151,29 +158,27 @@ class GenericTargetEntityProvider
      * @param $property
      * @param $expr
      * @param $value
+     * @param string $targetType
      * @return mixed
      */
-    protected function buildCondition(QueryBuilder $qb, $property, $expr, $value)
+    protected function buildCondition(QueryBuilder $qb, $property, $expr, $value, $targetType)
     {
         if (!method_exists($qb->expr(), $expr)) {
             throw new \RuntimeException(sprintf("Operator '%s' does not exist. Please verify export format", $expr));
         }
 
-        if (is_array($value) && $expr !== 'in') {
-            $compiledValue = [];
-            foreach ($value as $subCondition) {
-                list ($subProperty, $subExpr, $subValue) = $subCondition;
-                $subConditionCompiled = $this->buildCondition($qb, $subProperty, $subExpr, $subValue);
-                $compiledValue[] = $subConditionCompiled;
-            }
-
-            $value = $qb->expr()->andX()->addMultiple($compiledValue);
+        if ($this->configurationProvider->isDatetimeProperty($targetType, $property)) {
+            $value = new \DateTime(sprintf("-%s hours", $value), new \DateTimeZone("UTC"));
+            $expr = static::$conditionTimeMap[$expr];
         }
 
+        $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
+        $fieldName = $this->em->getClassMetadata($targetClass)->getFieldName($property);
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", self::TARGET_ALIAS, $property), sprintf("'%s'", $value)]
+            [sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
         );
+        $qb->setParameter($fieldName, $value);
 
         return $condition;
     }

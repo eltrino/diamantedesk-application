@@ -27,6 +27,7 @@ class AutomationConfigurationProvider
 {
     const DATA_TYPE_WILDCARD = '*';
     const VIRTUAL = 'virtual';
+    const DATETIME = 'datetime';
 
     /**
      * @var array
@@ -296,10 +297,33 @@ class AutomationConfigurationProvider
      */
     public function isVirtualProperty($entityType, $property)
     {
+        return $this->typeCheck($entityType, $property, static::VIRTUAL);
+    }
+
+    /**
+     * @param string $entityType
+     * @param string $property
+     *
+     * @return bool
+     */
+    public function isDatetimeProperty($entityType, $property)
+    {
+        return $this->typeCheck($entityType, $property, static::DATETIME);
+    }
+
+    /**
+     * @param $entityType
+     * @param $property
+     * @param $expectedType
+     *
+     * @return bool
+     */
+    protected function typeCheck($entityType, $property, $expectedType)
+    {
         $path = sprintf('%s.properties.%s.type', $entityType, $property);
         $propertyType = $this->getConfiguredEntities()->get($path);
 
-        if (static::VIRTUAL == $propertyType) {
+        if ($expectedType == $propertyType) {
             return true;
         }
 
