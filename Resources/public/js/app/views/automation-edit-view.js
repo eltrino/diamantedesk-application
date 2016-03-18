@@ -1,8 +1,9 @@
 define([
     'underscore',
+    'oroui/js/mediator',
     'tpl!diamanteautomation/js/app/templates/automation-edit-template.ejs',
     'diamanteautomation/js/app/views/automation-view'
-],function (_, AutomationEditTemplate, AutomationView) {
+],function (_, mediator , AutomationEditTemplate, AutomationView) {
     'use strict';
 
     var AutomationEditView = AutomationView.extend({
@@ -24,6 +25,11 @@ define([
         updateTarget: function(model, attr){
             this.model.get('actions').trigger('parent:change', attr);
             this.model.get('grouping').trigger('parent:change', attr);
+        },
+
+        render: function(){
+            AutomationView.prototype.render.apply(this, arguments);
+            mediator.execute('layout:init', this.$el)
         }
     });
 

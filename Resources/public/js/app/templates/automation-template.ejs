@@ -5,17 +5,17 @@
         <label for="automation-timeInterval">Frequency</label>
     </div>
     <div class="controls">
-        <strong><%= config.time_intervals[timeInterval] %></strong>
+        <strong class="value"><%= config.time_intervals[timeInterval] %></strong>
     </div>
 </div>
 <% } %>
-<div class="control-group">
+<!--div class="control-group">
     <div class="control-label wrap">
         <label for="automation-target">Target</label>
     </div>
     <div class="controls">
-        <strong><%= config.entities[target].label %></strong>
+        <label class="value"><%= config.entities[target].label %></label>
     </div>
-</div>
+</div --!>
 <div id="automation-conditions"></div>
 <div id="automation-actions"></div>

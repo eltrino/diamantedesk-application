@@ -11,10 +11,10 @@
         <% } %>
     </select>
     <% if(type == 'update_property'){ %>
-        <span>Of:</span>
-        <strong><%= entities[entity].label %></strong>
+        <span class="label">Of:</span>
+        <label for="automation-target" class="value"><%= entities[entity].label %></label>
         <% if(properties){ %>
-        <span>Set: </span>
+        <span class="label">Set: </span>
         <select name="actions[property]" data-attr="property" data-rel-attr="value">
             <% for(var key in properties) { %>
             <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
@@ -22,7 +22,7 @@
         </select>
         <% } %>
         <% if(property){ %>
-            <span>To: </span>
+            <span class="label">To: </span>
             <% if(properties[property].type == 'string'){ %>
                 <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
             <% } else if (properties[property].frontend_options){ %>
@@ -37,7 +37,7 @@
         <% } %>
     <% } %>
     <% if(type == 'notify_by_email'){ %>
-        <span>To: </span>
+        <span class="label">To: </span>
         <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
     <% } %>
     <div class="pull-right">

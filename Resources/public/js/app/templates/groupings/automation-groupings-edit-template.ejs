@@ -3,11 +3,13 @@
     <label for="automation-conditions-entity">Conditions</label>
 </div>
 <% } %>
-<select name="groupings[connector]" class="groupings-connector" data-attr="connector">
-    <% for(var key in config.connectors) { %>
-    <option value="<%= key %>"><%= config.connectors[key] %></option>
-    <% } %>
-</select>
+<div class="select">
+    <select name="groupings[connector]" class="groupings-connector" data-attr="connector">
+        <% for(var key in config.connectors) { %>
+        <option value="<%= key %>"><%= config.connectors[key] %></option>
+        <% } %>
+    </select>
+</div>
 <div class="grouping-list">
 
 </div>

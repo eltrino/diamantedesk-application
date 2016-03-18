@@ -6,10 +6,10 @@
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
-    <span>If</span>
-    <strong><%= entities[entity].label %></strong>
+    <span class="label">If</span>
+    <label for="automation-target" class="value"><%= entities[entity].label %></label>
     <% if(properties){ %>
-        <span>Property</span>
+        <span class="label">Property</span>
         <select name="conditions[property]" data-attr="property" data-rel-attr="value">
             <% for(var key in properties) { %>
             <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>

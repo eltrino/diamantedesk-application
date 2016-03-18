@@ -2,6 +2,31 @@
 
 .diam-automation .control-group {
   .clearfix();
+  .selector,
+  .select2-container{
+    display: inline-block;
+    vertical-align: middle;
+  }
+  input {
+    margin-bottom: 0;
+  }
+  .value {
+    display: inline-block;
+    line-height: 28px;
+    height: 30px;
+    vertical-align: middle;
+    padding: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin: 0;
+    font-weight: bold;
+  }
+  label.value {
+    text-transform: uppercase !important;
+  }
+  .controls {
+    margin-bottom: 10px;
+  }
 }
 
 .actions-list,
@@ -11,13 +36,27 @@
   }
   select, input {
     width: 20%;
+    vertical-align: middle;
   }
+  .select2-container {
+    width: 20%;
+  }
+  .selector {
+    width: 20% !important;
+    span {
+      width: 100% !important;
+    }
+  }
+}
+
+.grouping-list {
+  margin-top: 10px;
 }
 
 .grouping-children-list {
   > .control-group {
-    border: 3px rgba(#ccc, .5) solid;
-    border-radius: 5px;
-    padding: 5px;
+    padding: 10px 10px 10px 20px;
+    margin: 0 0 10px;
+    border: 3px solid #eee
   }
 }

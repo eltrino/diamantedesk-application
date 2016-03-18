@@ -1,9 +1,11 @@
 define([
     'underscore',
+    'oroui/js/mediator',
     'diamanteautomation/js/app/views/conditions/automation-conditions-collection-view',
     'tpl!diamanteautomation/js/app/templates/groupings/automation-groupings-edit-template.ejs',
     'diamanteautomation/js/app/views/abstract/view'
 ],function ( _,
+             mediator,
              AutomationConditionsCollectionView,
              AutomationGroupingsEditTemplate,
              AbstractView) {
@@ -15,6 +17,8 @@ define([
         className: 'control-group',
 
         listen: {
+            'addedToDOM' : 'onCreate',
+            'addedToParent' : 'onAdd',
             'parent:change model' : 'parentChanged',
             'children:empty' : 'childrenEmptied'
         },
@@ -41,6 +45,7 @@ define([
             this.renderSubViews();
             this.$('> .groupings-connector').trigger('change');
             this.$('> .groupings-connector').toggle(moreThanOne);
+            this.onAdd();
             return this;
         },
 
@@ -103,6 +108,18 @@ define([
         removeGroup: function(){
             var success = this.model.destroy.bind(this.model);
             this.$el.animate({ opacity: 0 }, 500, success);
+        },
+
+        onCreate: function(){
+            mediator.execute('layout:dispose', this.$el);
+            mediator.execute('layout:init', this.$el)
+        },
+
+        onAdd: function(){
+            if(this.$el.is(':visible')){
+                mediator.execute('layout:dispose', this.$el);
+                mediator.execute('layout:init', this.$el)
+            }
         }
 
     });

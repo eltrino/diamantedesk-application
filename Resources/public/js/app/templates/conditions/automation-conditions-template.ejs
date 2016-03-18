@@ -5,16 +5,16 @@
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
-    <span>If</span>
-    <strong><%= entities[entity].label %></strong>
+    <span class="label">If</span>
+    <label class="value"><%= entities[entity].label %></label>
     <% if(properties){ %>
-        <strong><%= properties[property].label %></strong>
-        <strong><%= conditions[type] %></strong>
+        <strong class="value"><%= properties[property].label %></strong>
+        <strong class="value"><%= conditions[type] %></strong>
         <% if(property && properties[property]){ %>
             <% if(properties[property].type == 'string'){ %>
-                <strong><%= value %>"</strong>
+                <strong class="value"><%= value %>"</strong>
             <% } else if (properties[property].frontend_options){ %>
-                <strong><%= properties[property].frontend_options[value] %></strong>
+                <strong class="value"><%= properties[property].frontend_options[value] %></strong>
             <% } %>
         <% } %>
     <% } %>

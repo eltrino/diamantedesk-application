@@ -1,9 +1,10 @@
 define([
     'jquery',
     'underscore',
+    'oroui/js/mediator',
     'tpl!diamanteautomation/js/app/templates/conditions/automation-conditions-edit-template.ejs',
     'diamanteautomation/js/app/views/abstract/view'
-],function ($, _, AutomationConditionsEditTemplate, AbstractView) {
+],function ($, _, mediator, AutomationConditionsEditTemplate, AbstractView) {
     'use strict';
 
     var AutomationConditionsEditView = AbstractView.extend({
@@ -11,6 +12,7 @@ define([
         template : AutomationConditionsEditTemplate,
 
         listen: {
+            'addedToParent' : 'onAdd',
             'change:entity model': 'entityChanged',
             'change model': 'render'
         },
@@ -26,6 +28,7 @@ define([
             if(this.model.collection.length == 1){
                 this.$('button[data-action="delete"]').hide();
             }
+            this.onAdd();
             return this;
         },
 
@@ -49,6 +52,12 @@ define([
         removeItem: function(){
             var success = this.model.destroy.bind(this.model);
             this.$el.animate({ opacity: 0 }, 500, success);
+        },
+
+        onAdd: function(){
+            if(this.$el.is(':visible')){
+                mediator.execute('layout:init', this.$el)
+            }
         }
 
     });

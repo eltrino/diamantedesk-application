@@ -1,7 +1,8 @@
 define([
     'underscore',
+    'oroui/js/mediator',
     'oroui/js/app/views/base/collection-view'
-],function (_, BaseCollectionView) {
+],function (_, mediator, BaseCollectionView) {
     'use strict';
 
     var AbstractCollectionView = BaseCollectionView.extend({
@@ -10,6 +11,7 @@ define([
         editView: {},
 
         listen: {
+            'addedToDOM' : 'onCreate',
             'add collection': 'update',
             'remove collection': 'update',
             'reset collection': 'update'
@@ -41,7 +43,12 @@ define([
         },
 
         update: function(){},
-        parentChanged: function(){ }
+        parentChanged: function(){ },
+
+        onCreate: function(){
+            mediator.execute('layout:dispose', this.$el);
+            mediator.execute('layout:init', this.$el)
+        }
 
     });
 
