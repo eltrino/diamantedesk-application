@@ -94,6 +94,7 @@
 
         <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%">
             <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.config.provider"/>
         </service>
 
         <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%">

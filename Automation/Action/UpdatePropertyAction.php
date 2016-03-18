@@ -16,7 +16,11 @@
 namespace Diamante\AutomationBundle\Automation\Action;
 
 use Diamante\AutomationBundle\Rule\Action\AbstractAction;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Model\Shared\Updatable;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
+
 
 class UpdatePropertyAction extends AbstractAction
 {
@@ -26,22 +30,30 @@ class UpdatePropertyAction extends AbstractAction
     private $registry;
 
     /**
+     * @var AutomationConfigurationProvider
+     */
+    private $configurationProvider;
+
+    /**
      * @param Registry $registry
      */
-    public function __construct(Registry $registry)
+    public function __construct(Registry $registry, AutomationConfigurationProvider $configurationProvider)
     {
         $this->registry = $registry;
+        $this->configurationProvider = $configurationProvider;
     }
 
     public function execute()
     {
         $context = $this->getContext();
         $target = $context->getFact()->getTarget();
+        $targetType = $context->getFact()->getTargetType();
         $properties = $context->getParameters()->all();
+        $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
 
-        $this->update($target, $properties);
+        $entity = $this->update($target, $targetClass, $properties);
 
-        $this->registry->getManager()->persist($target);
+        $this->registry->getManager()->persist($entity);
     }
 
     protected function getAccessorForProperty($property, $target)
@@ -63,13 +75,24 @@ class UpdatePropertyAction extends AbstractAction
         throw new \RuntimeException(sprintf("Given target has no publicly available setter for property %s", $property));
     }
 
-    protected function update($target, $properties)
+    protected function update(array $target, $targetClass, $properties)
     {
-        if (method_exists($target, 'updateProperties')) {
-            call_user_func([$target, 'updateProperties'], $properties);
-            return;
+        $targetEntity = new \ReflectionClass($targetClass);
+
+        if ($targetEntity->hasMethod('updateProperties')) {
+            /** @var DoctrineGenericRepository $repository */
+            $repository = $this->registry->getManager()->getRepository($targetClass);
+            /** @var Updatable $entity */
+            $entity = $repository->get($target['id']);
+            $entity->updateProperties($properties);
+
+            return $entity;
         }
 
+        /**
+         * External entities
+         * @TODO add support of array target
+         */
         foreach ($properties as $property => $value) {
             if (property_exists($target, $property)) {
                 $accessorMethod = $this->getAccessorForProperty($property, $target);
@@ -77,5 +100,7 @@ class UpdatePropertyAction extends AbstractAction
                 call_user_func_array([$target, $accessorMethod], [$value]);
             }
         }
+
+        return $this;
     }
 }
