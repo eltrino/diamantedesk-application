@@ -19,17 +19,16 @@ class BusinessRule extends Rule
 {
     protected $timeInterval;
 
-    public function __construct($name, $target, $timeInterval, $active = true)
+    public function __construct($name, $target, $timeInterval)
     {
-        parent::__construct($name, $target, $active);
+        parent::__construct($name, $target);
         $this->timeInterval = $timeInterval;
     }
 
-    public function update($name, $timeInterval, $active)
+    public function update($name, $timeInterval)
     {
         $this->name = $name;
         $this->timeInterval = $timeInterval;
-        $this->active = $active;
     }
 
     public function getTimeInterval()

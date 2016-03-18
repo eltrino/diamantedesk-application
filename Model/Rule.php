@@ -62,13 +62,13 @@ abstract class Rule implements AutomationRule, Entity
      */
     protected $updatedAt;
 
-    public function __construct($name, $target, $active = true)
+    public function __construct($name, $target)
     {
         $this->id = Uuid::uuid4();
         $this->name = $name;
         $this->target = $target;
         $this->actions = new ArrayCollection();
-        $this->active = $active;
+        $this->active = true;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
     }

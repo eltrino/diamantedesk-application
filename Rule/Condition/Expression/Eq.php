@@ -24,10 +24,6 @@ class Eq extends AbstractCondition
     {
         $actualValue = $this->extractPropertyValue($fact);
 
-        $changeset = $fact->getTargetChangeset();
-        list($old, $new) = $changeset[$this->property];
-
-
         return $actualValue == $this->expectedValue;
     }
 }

@@ -227,7 +227,7 @@ class RuleServiceImpl implements RuleService
      */
     private function createBusinessRule(array $input)
     {
-        $rule = new BusinessRule($input['name'], $input['target'], $input['timeInterval'], $input['active']);
+        $rule = new BusinessRule($input['name'], $input['target'], $input['timeInterval']);
         $this->addGrouping($rule, $input['grouping']);
         $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
 
@@ -247,7 +247,7 @@ class RuleServiceImpl implements RuleService
     private function updateBusinessRule(array $input, $id)
     {
         $rule = $this->getBusinessRuleById($id);
-        $rule->update($input['name'], $input['timeInterval'], $input['active']);
+        $rule->update($input['name'], $input['timeInterval']);
 
         $rule->removeActions();
         $rule->removeGrouping();
@@ -268,7 +268,7 @@ class RuleServiceImpl implements RuleService
     private function updateWorkflowRule(array $input, $id)
     {
         $rule = $this->getWorkflowRuleById($id);
-        $rule->update($input['name'], $input['active']);
+        $rule->update($input['name']);
 
         $rule->removeActions();
         $rule->removeGrouping();
@@ -287,7 +287,7 @@ class RuleServiceImpl implements RuleService
      */
     private function createWorkflowRule(array $input)
     {
-        $rule = new WorkflowRule($input['name'], $input['target'], $input['active']);
+        $rule = new WorkflowRule($input['name'], $input['target']);
         $this->addGrouping($rule, $input['grouping']);
         $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
 
