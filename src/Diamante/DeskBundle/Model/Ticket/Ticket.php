@@ -678,11 +678,13 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     {
         $now = new \DateTime('now', new \DateTimeZone('UTC'));
 
-        $newStatusValue = $event->getNewValue('status')->getValue();
-        $oldStatusValue = $event->getOldValue('status')->getValue();
+        if ($event->hasChangedField('status')) {
+            $newStatusValue = $event->getNewValue('status')->getValue();
+            $oldStatusValue = $event->getOldValue('status')->getValue();
 
-        if ($newStatusValue != $oldStatusValue) {
-            $this->statusUpdatedSince = $now;
+            if ($newStatusValue != $oldStatusValue) {
+                $this->statusUpdatedSince = $now;
+            }
         }
 
         if ($event->hasChangedField('assignee')) {
