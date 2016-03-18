@@ -321,8 +321,6 @@ diamante:
           user_type.label:     User Type
 
         automation:
-          condition:
-            sent_to:           created via email to
           action:
             move_to_branch:    move to branch
 oro:
