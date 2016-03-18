@@ -323,6 +323,8 @@ diamante:
         automation:
           condition:
             sent_to:           created via email to
+          action:
+            move_to_branch:    move to branch
 oro:
     entity_extend:
         form:
