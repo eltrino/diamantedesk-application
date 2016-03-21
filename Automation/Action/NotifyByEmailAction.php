@@ -16,9 +16,8 @@
 namespace Diamante\AutomationBundle\Automation\Action;
 
 use Diamante\AutomationBundle\Rule\Action\AbstractAction;
-use Diamante\DeskBundle\Entity\Comment;
-use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -62,7 +61,7 @@ class NotifyByEmailAction extends AbstractAction
          * TODO get changes and attachments form fact
          */
         $options = [
-            'ticketKey' => $this->getTicketKey($target),
+            'ticketKey' => $this->getTicketKey($target, $targetType),
             'changes' => [],
             'attachments' => []
         ];
@@ -81,14 +80,26 @@ class NotifyByEmailAction extends AbstractAction
         }
     }
 
-    private function getTicketKey($target)
+    /**
+     * @param array  $target
+     * @param string $targetType
+     *
+     * @return mixed
+     */
+    private function getTicketKey(array $target, $targetType)
     {
-        if ($target instanceof Ticket) {
-            return $target->getKey();
-        } elseif ($target instanceof Comment) {
-            return $target->getTicket()->getKey();
+        $keyGetter = function ($ticket) {
+            $key = new TicketKey($ticket['branch']->getKey(), $ticket['sequenceNumber']->getValue());
+
+            return $key;
+        };
+
+        if ('ticket' == $targetType) {
+            return $keyGetter($target);
+        } elseif ('comment' == $targetType) {
+            return $keyGetter($target['ticket']);
         }
 
-        return null;
+        throw new \RuntimeException('Could not get the key');
     }
 }
