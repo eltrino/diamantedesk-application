@@ -31,7 +31,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RuleServiceImpl implements RuleService
 {
-    const BUSINESSRULE_COMMAND_NAME = 'diamante:automation:business:run';
+    const BUSINESSRULE_COMMAND_NAME = 'dbr';
 
     /**
      * @var RegistryInterface

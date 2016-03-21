@@ -35,6 +35,7 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName("diamante:automation:business:run")
+            ->setAliases(['dbr'])
             ->addOption("rule-id", "id", InputOption::VALUE_REQUIRED, "Business rule id")
             ->addOption("dry-run", "d", InputOption::VALUE_OPTIONAL, "Do not execute actions configured in rule");
     }
