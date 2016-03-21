@@ -67,11 +67,10 @@ datagrid:
         rowAction: true
         acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
       delete:
-        type: navigate
-        label: diamante.automation.rule.actions.delete
+        type: delete
+        label: diamante.automation.rule.actions.remove
         icon: trash
         link: delete_link
-        rowAction: true
         acl_resource: DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
 
     mass_actions:
@@ -171,11 +170,10 @@ datagrid:
         rowAction: true
         acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
       delete:
-        type: navigate
+        type: delete
         label: diamante.automation.rule.actions.delete
         icon: trash
         link: delete_link
-        rowAction: true
         acl_resource: DELETE;Entity:DiamanteAutomationBundle:BusinessRule
 
     mass_actions:
