@@ -23,8 +23,8 @@
         <% } %>
         <% if(property){ %>
             <span class="label">To: </span>
-            <% if(properties[property].type == 'string'){ %>
-                <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
+            <% if(properties[property].type == 'string' || properties[property].type == 'datetime'){ %>
+                <input type="text" name="actions[value]" data-attr="value" value="<%= value %>"/>
             <% } else if (properties[property].frontend_options){ %>
                 <select name="actions[value]" data-attr="value">
                     <% for(var key in properties[property].frontend_options) { %>

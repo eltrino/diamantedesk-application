@@ -21,8 +21,8 @@
             <% } %>
         </select>
         <% if(property && properties[property]){ %>
-            <% if(properties[property].type == 'string'){ %>
-                <input type="text" name="conditions[value]" data-attr="value" value="<%= value %>" />
+            <% if(properties[property].type == 'string' || properties[property].type == 'datetime'){ %>
+                <input type="text" name="conditions[value]" data-attr="value" value="<%= value %>"/>
             <% } else if (properties[property].frontend_options){ %>
                 <select name="conditions[value]" data-attr="value">
                 <% for(var key in properties[property].frontend_options) { %>
