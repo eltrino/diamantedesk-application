@@ -15,6 +15,7 @@
 
 namespace Diamante\AutomationBundle\Automation\Action;
 
+use Diamante\AutomationBundle\Infrastructure\Changeset\Changeset;
 use Diamante\AutomationBundle\Rule\Action\AbstractAction;
 use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
@@ -55,16 +56,30 @@ class NotifyByEmailAction extends AbstractAction
             $parameters
         );
         $targetType = $fact->getTargetType();
-        $provider = sprintf('%s_%s', $targetType, $fact->getAction());
+        $action = $fact->getAction();
+        $provider = sprintf('%s_%s', $targetType, $action);
 
         /**
          * TODO get changes and attachments form fact
          */
-        $options = [
-            'ticketKey' => $this->getTicketKey($target, $targetType),
-            'changes' => [],
-            'attachments' => []
-        ];
+        $options = ['ticketKey' => $this->getTicketKey($target, $targetType)];
+
+        $changeset = new Changeset($fact->getTargetChangeset(), $action);
+        $changesetDiff = $changeset->getDiff();
+        if (!empty($changesetDiff)) {
+            $additionalOptions = $attachments = [];
+
+            if (array_key_exists('attachments', $changesetDiff)) {
+                $attachments = $changesetDiff['attachments']['new'];
+                $additionalOptions['attachments'] = $attachments;
+                unset($changesetDiff['attachments']);
+            }
+
+            $additionalOptions['changes'] = $changesetDiff;
+
+            $options = array_merge($options, $additionalOptions);
+        }
+
         foreach ($emails as $email) {
             $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
             $options['isOroUser'] = false;
