@@ -51,7 +51,6 @@ define(['app', 'config', 'tinymce'], function(App, Config){
             data[elem.name] = elem.value;
           }
         }
-        console.log(data);
         this.ui.submitButton.blur();
         this.trigger('form:submit', data);
       },
