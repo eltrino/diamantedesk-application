@@ -45,7 +45,7 @@ class CreateDefaultBranch extends ContainerAwareFixture
             $branch = $this->createBranch($command, $manager);
 
             /** @var $configManager ConfigManager */
-            $configManager = $this->get('oro_config.manager');
+            $configManager = $this->container->get('oro_config.manager');
             $configManager->setScopeName(static::GLOBAL_SCOPE);
             $configManager->set('diamante_desk.default_branch', $branch->getId());
             $configManager->flush();
