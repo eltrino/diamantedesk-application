@@ -10,6 +10,10 @@ define(['app', 'config', 'tinymce'], function(App, Config){
     content_css: Config.basePath + '/bundles/diamantefront/css/wysiwyg.css'
   };
 
+  function strip_tags(str){
+    return str.replace(/<\/?[^>]+>/gi, '');
+  }
+
   return App.module('Common.Form', function(Form, App, Backbone, Marionette, $, _){
 
     Form.LayoutView = Marionette.LayoutView.extend({
@@ -35,13 +39,16 @@ define(['app', 'config', 'tinymce'], function(App, Config){
         if(e) {
           e.preventDefault();
         }
-        var arr = this.$('form').serializeArray(), i = arr.length, data = {}, elem;
+        var form = this.$('form')[0],
+            arr = this.$('form').serializeArray(), i = arr.length, data = {}, elem;
         for(;i--;) {
-          elem = arr[i];
-          if(elem.type === 'text' || elem.type === 'textarea'){
+          elem = form[arr[i].name];
+          if(elem.type === 'text'){
+            data[elem.name] = strip_tags(elem.value);
+          } else if(elem.type === 'textarea'){
             data[elem.name] = arr[i].value.toString();
           } else {
-            data[elem.name] = arr[i].value;
+            data[elem.name] = elem.value;
           }
         }
         this.ui.submitButton.blur();

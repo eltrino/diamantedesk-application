@@ -7671,7 +7671,7 @@ h1,
   min-width: 126px;
 }
 .modal-alert .modal-dialog {
-  width: 320px;
+  width: auto;
 }
 .modal-alert .modal-content {
   text-align: center;
@@ -8233,9 +8233,6 @@ h1,
   z-index: 1;
   top: 2px;
 }
-.auth-page .messages .alert {
-  margin-top: 20px;
-}
 .auth-page .progress {
   height: 4px;
   border-radius: 0;
@@ -8247,6 +8244,16 @@ h1,
   height: auto;
   margin: 0;
   text-align: left;
+}
+.auth-page .messages {
+  position: relative;
+  height: 52px;
+}
+.auth-page .messages .alert {
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  white-space: nowrap;
 }
 .comments-list {
   margin-top: -5px;
