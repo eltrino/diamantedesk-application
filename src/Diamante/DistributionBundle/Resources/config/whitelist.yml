@@ -50,7 +50,7 @@ whitelist:
     - 'oro_embedded_form_info'
 
     # Api
-    - 'nelmio_api_doc_index''
+    - 'nelmio_api_doc_index'
 
     #@TODO:REMOVE THESE ON RELEASE
     - 'oro_email_dashboard_recent_emails'
