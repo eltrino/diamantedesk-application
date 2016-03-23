@@ -14,8 +14,9 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 
-use Diamante\DeskBundle\Api\BranchService;
 use Diamante\DeskBundle\Api\Internal\WatchersServiceImpl;
+use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
@@ -63,9 +64,9 @@ class TicketStrategy implements Strategy
     private $diamanteUserService;
 
     /**
-     * @var BranchService
+     * @var DoctrineGenericRepository
      */
-    private $branchService;
+    private $branchRepository;
 
     /**
      * @param MessageReferenceService $messageReferenceService
@@ -74,7 +75,7 @@ class TicketStrategy implements Strategy
      * @param OroUserManager $oroUserManager
      * @param ConfigManager $configManager
      * @param UserService $diamanteUserService
-     * @param BranchService $branchService
+     * @param DoctrineGenericRepository $branchRepository
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 SystemSettings $settings,
@@ -82,7 +83,7 @@ class TicketStrategy implements Strategy
                                 OroUserManager $oroUserManager,
                                 ConfigManager $configManager,
                                 UserService $diamanteUserService,
-                                BranchService $branchService
+                                DoctrineGenericRepository $branchRepository
     )
     {
         $this->messageReferenceService         = $messageReferenceService;
@@ -91,7 +92,7 @@ class TicketStrategy implements Strategy
         $this->oroUserManager                  = $oroUserManager;
         $this->configManager                   = $configManager;
         $this->diamanteUserService             = $diamanteUserService;
-        $this->branchService                   = $branchService;
+        $this->branchRepository                = $branchRepository;
     }
 
     /**
@@ -115,7 +116,7 @@ class TicketStrategy implements Strategy
                     throw new \RuntimeException("Invalid configuration, default branch should be configured");
                 }
 
-                $branch = $this->branchService->getBranch($defaultBranch);
+                $branch = $this->getBranch($defaultBranch);
 
                 $assigneeId = $branch->getDefaultAssigneeId() ? $branch->getDefaultAssigneeId() : null;
 
@@ -159,6 +160,20 @@ class TicketStrategy implements Strategy
         }
     }
 
+    /**
+     * @param int $id
+     *
+     * @return \Diamante\DeskBundle\Entity\Branch
+     */
+    private function getBranch($id) {
+        $branch = $this->branchRepository->get($id);
+
+        if (is_null($branch)) {
+            throw new BranchNotFoundException();
+        }
+
+        return $branch;
+    }
 
     /**
      * @param Message\Person $person

@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\Automation\Action;
 use Diamante\AutomationBundle\Rule\Action\AbstractAction;
 use Diamante\DeskBundle\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Proxies\__CG__\Diamante\DeskBundle\Entity\Branch;
 
 class MoveToBranchAction extends AbstractAction
 {
@@ -26,6 +27,11 @@ class MoveToBranchAction extends AbstractAction
      */
     protected $em;
 
+    /**
+     * MoveToBranchAction constructor.
+     *
+     * @param Registry $doctrine
+     */
     public function __construct(Registry $doctrine)
     {
         $this->em = $doctrine->getManager();
@@ -33,8 +39,10 @@ class MoveToBranchAction extends AbstractAction
 
     public function execute()
     {
+        $target = $this->context->getFact()->getTarget();
         /** @var Ticket $ticket */
-        $ticket = $this->context->getFact()->getTarget();
+        $ticket = $this->em->getRepository('DiamanteDeskBundle:Ticket')->get($target['id']);
+
 
         $branchId = $this->context->getParameters()->has('branch') ? $this->context->getParameters()->get('branch') : null;
 
@@ -42,12 +50,13 @@ class MoveToBranchAction extends AbstractAction
             throw new \RuntimeException("Invalid rule configuration");
         }
 
+        /** @var Branch $branch */
         $branch = $this->em->getRepository('DiamanteDeskBundle:Branch')->get($branchId);
 
         $ticket->move($branch);
 
+        $this->disableListeners();
         $this->em->persist($ticket);
         $this->em->flush();
-        $this->em->clear($ticket);
     }
 }
