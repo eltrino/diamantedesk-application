@@ -110,7 +110,7 @@ module.exports = function(grunt) {
         tasks: ['css']
       },
       js : {
-        files: '<%=assetsDir%>/js/**/*.js',
+        files: ['<%=assetsDir%>/js/**/*.js','<%=assetsDir%>/js/**/*.ejs'],
         tasks: ['js']
       }
     }
