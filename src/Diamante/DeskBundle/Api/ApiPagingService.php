@@ -25,10 +25,11 @@ interface ApiPagingService
      * @param FilterableRepository $repository
      * @param PagingProperties $pagingConfig
      * @param array $criteria
+     * @param null $searchQuery
      * @param null $countCallback
      * @return PagingInfo
      */
-    public function getPagingInfo(FilterableRepository $repository, PagingProperties $pagingConfig, array $criteria, $countCallback = null);
+    public function getPagingInfo(FilterableRepository $repository, PagingProperties $pagingConfig, array $criteria, $searchQuery = null, $countCallback = null);
 
     /**
      * @param PagingInfo $pagingMetadata

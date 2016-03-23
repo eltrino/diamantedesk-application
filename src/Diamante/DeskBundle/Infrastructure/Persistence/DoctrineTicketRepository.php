@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
+use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
@@ -170,11 +171,16 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
     /**
      * @param array $criteria
+     * @param null $searchQuery
      * @param null $callback
      * @return int
      */
-    public function count(array $criteria = [], $callback = null)
+    public function count(array $criteria = [], $searchQuery = null, $callback = null)
     {
+        if ($searchQuery) {
+            return $this->countBySearchQuery($searchQuery);
+        }
+
         $qb = $this->_em->createQueryBuilder();
 
         foreach ($criteria as $condition) {
@@ -195,6 +201,16 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $searchQuery
+     * @return int
+     */
+    public function countBySearchQuery($searchQuery)
+    {
+        $result = $this->search($searchQuery, array(), new FilterPagingProperties(null, PHP_INT_MAX));
+        return count($result);
     }
 
     /**
