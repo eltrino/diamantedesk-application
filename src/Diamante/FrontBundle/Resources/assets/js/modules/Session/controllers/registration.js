@@ -16,7 +16,7 @@ define(['app'], function(App){
               App.alert({ title: 'Registration Success', status: 'success', messages: [{
                 status: 'success',
                 text: 'Thank you. ' +
-                'We have sent you email to ' + model.get('email') + '. '+
+                'We have sent you email to ' + model.get('email') + '.\n'+
                 'Please click the link in that message to activate your account.'
               }] });
               App.trigger('session:login');

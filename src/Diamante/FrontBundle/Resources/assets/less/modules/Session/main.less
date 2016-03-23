@@ -70,11 +70,6 @@
     z-index: 1;
     top:2px;
   }
-  .messages {
-    .alert {
-      margin-top: 20px;
-    }
-  }
   .progress {
     height: 4px;
     border-radius: 0;
@@ -86,6 +81,17 @@
     height: auto;
     margin: 0;
     text-align: left;
+  }
+
+  .messages {
+    position: relative;
+    height: 52px;
+    .alert {
+      left: 50%;
+      transform: translateX(-50%);
+      position: absolute;
+      white-space: nowrap;
+    }
   }
 }
 
