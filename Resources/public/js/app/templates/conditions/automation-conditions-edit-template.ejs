@@ -22,15 +22,20 @@
         </select>
         <% if(property && properties[property]){ %>
             <% if(properties[property].type == 'string' || properties[property].type == 'datetime'){ %>
-                <input type="text" name="conditions[value]" data-attr="value" value="<%= value %>"/>
+            <div class="control-item">
+                <input type="text"
+                       name="conditions[value]" data-attr="value" value="<%= value %>"
+                       data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}"
+                       required="required"/>
+            </div>
             <% } else if (properties[property].frontend_options){ %>
-                <select name="conditions[value]" data-attr="value">
+            <select name="conditions[value]" data-attr="value">
                 <% for(var key in properties[property].frontend_options) { %>
-                    <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
-                        <%= properties[property].frontend_options[key] %>
-                    </option>
+                <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
+                    <%= properties[property].frontend_options[key] %>
+                </option>
                 <% } %>
-                </select>
+            </select>
             <% } %>
         <% } %>
     <% } %>

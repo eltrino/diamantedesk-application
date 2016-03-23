@@ -29,7 +29,16 @@ define([
 
         render: function(){
             AutomationView.prototype.render.apply(this, arguments);
+            this.initForm();
             mediator.execute('layout:init', this.$el)
+        },
+
+        initForm: function(){
+            this.form = this.$el.parents('form');
+            this.input = this.$('input[name="diamante_automation_update_rule_form[rule]"]');
+            this.form.on('submit', function(){
+                this.input.val(JSON.stringify(this.model.serializePlain()));
+            }.bind(this));
         }
     });
 

@@ -24,21 +24,30 @@
         <% if(property){ %>
             <span class="label">To: </span>
             <% if(properties[property].type == 'string' || properties[property].type == 'datetime'){ %>
-                <input type="text" name="actions[value]" data-attr="value" value="<%= value %>"/>
+            <div class="control-item">
+                <input type="text"
+                       name="actions[value]" data-attr="value" value="<%= value %>"
+                       data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}"
+                       required="required"/>
+            </div>
             <% } else if (properties[property].frontend_options){ %>
-                <select name="actions[value]" data-attr="value">
-                    <% for(var key in properties[property].frontend_options) { %>
-                    <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
-                        <%= properties[property].frontend_options[key] %>
-                    </option>
-                    <% } %>
-                </select>
+            <select name="actions[value]" data-attr="value">
+                <% for(var key in properties[property].frontend_options) { %>
+                <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
+                    <%= properties[property].frontend_options[key] %>
+                </option>
+                <% } %>
+            </select>
             <% } %>
         <% } %>
     <% } %>
     <% if(type == 'notify_by_email'){ %>
         <span class="label">To: </span>
-        <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
+        <div class="control-item">
+            <input type="email" name="actions[value]"
+                   data-attr="value" value="<%= value %>"  required="required"
+                   data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null},&quot;Email&quot;:{&quot;message&quot;:&quot;This value should be a valid email&quot;,&quot;checkMX&quot;:false,&quot;checkHost&quot;:false,&quot;strict&quot;:null,&quot;payload&quot;:null}}"/>
+        </div>
     <% } %>
     <div class="pull-right">
         <div class="btn-group">

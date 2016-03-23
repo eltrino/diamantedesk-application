@@ -7,7 +7,9 @@
         <label for="automation-name" class="required">Name<em>*</em></label>
     </div>
     <div class="controls">
-        <input type="text" id="automation-name" name="name" data-attr="name" required="required" value="<%= name %>">
+        <input type="text" id="automation-name" name="name"
+               data-attr="name" required="required" value="<%= name %>"
+               data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}" />
     </div>
 </div>
 <% if(type == 'business') { %>

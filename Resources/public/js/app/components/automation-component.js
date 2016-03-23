@@ -25,11 +25,6 @@ define([
             console.log(options.config);
             this.processOptions(options);
             this.initView(options);
-            if(options.edit){
-                this.el.parents('form').on('submit', function(){
-                    this.el.find('input[name="diamante_automation_update_rule_form[rule]"]').val(JSON.stringify(this.model.serializePlain()));
-                }.bind(this));
-            }
         },
         processOptions: function (options) {
             var type = options.type;
