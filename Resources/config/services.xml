@@ -128,6 +128,7 @@
 
         <service id="diamante.automation.queue.manager" class="%diamante_automation.queue_manager.class%">
             <tag name="kernel.event_listener" event="kernel.response" method="flush"/>
+            <tag name="kernel.event_listener" event="console.terminate" method="flush"/>
         </service>
 
         <service id="diamante.automation.listener" class="%diamante_automation.listener.class%">

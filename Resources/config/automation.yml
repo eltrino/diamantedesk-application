@@ -31,7 +31,7 @@ diamante_automation:
       frontend_label: diamante.automation.condition.contains
     not_contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\NotContains'
-      frontend_label: diamante.automation.condition.contains
+      frontend_label: diamante.automation.condition.not_contains
     created:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Created'
       frontend_label: diamante.automation.condition.created

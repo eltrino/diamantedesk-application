@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Rule\Action;
 
 use Diamante\AutomationBundle\Exception\InvalidConfigurationException;
+use Oro\Bundle\EntityBundle\Event\OroEventManager;
 
 abstract class AbstractAction implements ActionInterface
 {
@@ -93,5 +94,14 @@ abstract class AbstractAction implements ActionInterface
     public function getApplicablePropertyTypes()
     {
         return $this->applicablePropertyTypes;
+    }
+
+    /**
+     * to avoid update action entry in PersistentProcessingContext entity
+     */
+    protected function disableListeners() {
+        /** @var OroEventManager $event */
+        $event = $this->em->getEventManager();
+        $event->disableListeners();
     }
 }
