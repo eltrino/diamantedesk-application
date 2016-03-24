@@ -1,8 +1,8 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% set gridName = 'diamante-automation-' ~ type ~ '-grid' %}
-
-{% set pageTitle = 'diamante.automation.rule.entity_plural_label'|trans %}
+{% set ruleLabel = 'diamante.automation.rule.' ~ type ~ '_entity_plural_label' %}
+{% set pageTitle = ruleLabel|trans %}
 
 {% block navButtons %}
     {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:' ~ type|capitalize ~ 'Rule') %}

@@ -1,9 +1,11 @@
 diamante:
   automation:
     rule:
-      entity_label:               Rule
-      entity_plural_label:        Rules
-      details :                   Rule Details
+      entity_label:                        Rule
+      entity_plural_label:                 Rules
+      workflow_entity_plural_label:        Workflow Rules
+      business_entity_plural_label:        Business Rules
+      details :                            Rule Details
       messages:
         create:
           error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
