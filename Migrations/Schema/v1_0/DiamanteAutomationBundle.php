@@ -1,17 +1,28 @@
 <?php
-
-namespace Diamante\AutomationBundle\Migrations\Schema\v1_0;
+/*
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ *
+ * Licensed under the Open Software License (OSL 3.0).
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://opensource.org/licenses/osl-3.0.php
+ *
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@eltrino.com so we can send you a copy immediately.
+ */
+namespace Diamante\AutomationBundle\Migrations\Schema;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
-
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
-class DiamanteAutomationBundle implements Installation
+class DiamanteAutomationBundleInstaller implements Installation
 {
     /**
      * {@inheritdoc}
@@ -27,6 +38,7 @@ class DiamanteAutomationBundle implements Installation
     public function up(Schema $schema, QueryBag $queries)
     {
         /** Tables generation **/
+        $this->createDiamanteAutomationContextTable($schema);
         $this->createDiamanteBusinessRuleTable($schema);
         $this->createDiamanteRuleActionTable($schema);
         $this->createDiamanteRuleConditionTable($schema);
@@ -35,10 +47,26 @@ class DiamanteAutomationBundle implements Installation
 
         /** Foreign keys generation **/
         $this->addDiamanteBusinessRuleForeignKeys($schema);
-        $this->addDiamanteRuleActionForeignKeys($schema);
         $this->addDiamanteRuleConditionForeignKeys($schema);
         $this->addDiamanteRuleGroupForeignKeys($schema);
         $this->addDiamanteWorkflowRuleForeignKeys($schema);
+    }
+
+    /**
+     * Create diamante_automation_context table
+     *
+     * @param Schema $schema
+     */
+    protected function createDiamanteAutomationContextTable(Schema $schema)
+    {
+        $table = $schema->createTable('diamante_automation_context');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('targetEntityId', 'integer', ['notnull' => false]);
+        $table->addColumn('targetEntityClass', 'string', ['length' => 255]);
+        $table->addColumn('action', 'string', ['length' => 255]);
+        $table->addColumn('targetEntityChangeset', 'array', ['comment' => '(DC2Type:array)']);
+        $table->addColumn('state', 'string', ['length' => 255]);
+        $table->setPrimaryKey(['id']);
     }
 
     /**
@@ -54,6 +82,9 @@ class DiamanteAutomationBundle implements Installation
         $table->addColumn('name', 'string', ['length' => 255]);
         $table->addColumn('created_at', 'datetime', []);
         $table->addColumn('updated_at', 'datetime', []);
+        $table->addColumn('time_interval', 'string', ['length' => 255]);
+        $table->addColumn('active', 'boolean', []);
+        $table->addColumn('target', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['root_group_id'], 'UNIQ_5182F28A8509B3A1');
     }
@@ -69,8 +100,9 @@ class DiamanteAutomationBundle implements Installation
         $table->addColumn('id', 'string', ['length' => 255]);
         $table->addColumn('rule_id', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('type', 'string', ['length' => 255]);
-        $table->addColumn('parameters', 'string', ['length' => 255]);
+        $table->addColumn('parameters', 'array', ['comment' => '(DC2Type:array)']);
         $table->addColumn('weight', 'integer', []);
+        $table->addColumn('discr', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['rule_id'], 'IDX_93441185744E0351', []);
     }
@@ -86,7 +118,7 @@ class DiamanteAutomationBundle implements Installation
         $table->addColumn('id', 'string', ['length' => 255]);
         $table->addColumn('group_id', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('type', 'string', ['length' => 255]);
-        $table->addColumn('parameters', 'string', ['length' => 255]);
+        $table->addColumn('parameters', 'array', ['comment' => '(DC2Type:array)']);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['group_id'], 'IDX_8333C227FE54D947', []);
     }
@@ -119,6 +151,8 @@ class DiamanteAutomationBundle implements Installation
         $table->addColumn('name', 'string', ['length' => 255]);
         $table->addColumn('created_at', 'datetime', []);
         $table->addColumn('updated_at', 'datetime', []);
+        $table->addColumn('active', 'boolean', []);
+        $table->addColumn('target', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['root_group_id'], 'UNIQ_4486E0BC8509B3A1');
     }
@@ -135,23 +169,7 @@ class DiamanteAutomationBundle implements Installation
             $schema->getTable('diamante_rule_group'),
             ['root_group_id'],
             ['id'],
-            ['onDelete' => null, 'onUpdate' => null]
-        );
-    }
-
-    /**
-     * Add diamante_rule_action foreign keys.
-     *
-     * @param Schema $schema
-     */
-    protected function addDiamanteRuleActionForeignKeys(Schema $schema)
-    {
-        $table = $schema->getTable('diamante_rule_action');
-        $table->addForeignKeyConstraint(
-            $schema->getTable('diamante_workflow_rule'),
-            ['rule_id'],
-            ['id'],
-            ['onDelete' => null, 'onUpdate' => null]
+            ['onDelete' => 'CASCADE', 'onUpdate' => null]
         );
     }
 
@@ -199,8 +217,7 @@ class DiamanteAutomationBundle implements Installation
             $schema->getTable('diamante_rule_group'),
             ['root_group_id'],
             ['id'],
-            ['onDelete' => null, 'onUpdate' => null]
+            ['onDelete' => 'CASCADE', 'onUpdate' => null]
         );
     }
 }
-
