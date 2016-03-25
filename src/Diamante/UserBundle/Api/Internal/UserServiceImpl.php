@@ -17,6 +17,7 @@ namespace Diamante\UserBundle\Api\Internal;
 
 use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
+use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Ticket\WatcherListRepository;
 use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
@@ -59,6 +60,11 @@ class UserServiceImpl implements UserService, GravatarProvider
     protected $attachmentManager;
 
     /**
+     * @var ApiUserRepository
+     */
+    protected $diamanteApiUserRepository;
+
+    /**
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
@@ -68,6 +74,11 @@ class UserServiceImpl implements UserService, GravatarProvider
      */
     private $watcherListRepository;
 
+    /**
+     * @var AuthorizationService
+     */
+    private $authorizationService;
+
     public function __construct(
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
@@ -75,7 +86,8 @@ class UserServiceImpl implements UserService, GravatarProvider
         AttachmentManager $attachmentManager,
         ApiUserRepository $diamanteApiUserRepository,
         WatcherListRepository $watcherListRepository,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        AuthorizationService $authorizationService
     ) {
         $this->oroUserManager               = $userManager;
         $this->diamanteUserRepository       = $diamanteUserRepository;
@@ -84,6 +96,7 @@ class UserServiceImpl implements UserService, GravatarProvider
         $this->attachmentManager            = $attachmentManager;
         $this->watcherListRepository        = $watcherListRepository;
         $this->eventDispatcher              = $eventDispatcher;
+        $this->authorizationService         = $authorizationService;
     }
 
     /**
@@ -375,6 +388,23 @@ class UserServiceImpl implements UserService, GravatarProvider
         $this->diamanteApiUserRepository->store($apiUser);
 
         $this->eventDispatcher->dispatch('user.notification', new UserEvent('force_reset', $user));
+    }
+
+    /**
+     * @return string
+     */
+    public function resolveCurrentUserType()
+    {
+        $user = $this->authorizationService->getLoggedUser();
+        if ($user instanceof ApiUser) {
+            $user = $this->getUserFromApiUser($user);
+        }
+
+        if ($user instanceof DiamanteUser) {
+            return User::TYPE_DIAMANTE;
+        }
+
+        return User::TYPE_ORO;
     }
 
     /**

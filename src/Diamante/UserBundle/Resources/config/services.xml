@@ -46,6 +46,7 @@
             <argument type="service" id="diamante.api.user.repository"/>
             <argument type="service" id="diamante.watcher_list.repository"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="diamante.authorization_manager.service"/>
             <argument type="collection">
                 <argument type="string">email</argument>
                 <argument type="string">firstName</argument>
