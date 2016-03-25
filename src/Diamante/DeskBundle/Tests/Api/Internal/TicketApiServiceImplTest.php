@@ -266,6 +266,11 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getPagingInfo')
             ->will($this->returnValue($pagingInfo));
 
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('resolveCurrentUserType')
+            ->will($this->returnValue(User::TYPE_ORO));
+
         $retrievedTickets = $this->ticketService->searchTickets($command);
 
         $this->assertNotNull($retrievedTickets);
