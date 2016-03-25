@@ -79,6 +79,12 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $eventDispatcher;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     * @Mock \Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService
+     */
+    private $authorizationService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -89,7 +95,8 @@ class DiamanteUserServiceTest extends \PHPUnit_Framework_TestCase
             $this->attachmentManager,
             $this->apiUserRepository,
             $this->watcherListRepository,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            $this->authorizationService
         );
     }
 
