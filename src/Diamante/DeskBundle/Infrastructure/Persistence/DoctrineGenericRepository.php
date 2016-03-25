@@ -150,10 +150,11 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
 
     /**
      * @param array $criteria
+     * @param null $searchQuery
      * @param null $callback
      * @return int
      */
-    public function count(array $criteria = [], $callback = null)
+    public function count(array $criteria = [], $searchQuery = null, $callback = null)
     {
         $qb = $this->_em->createQueryBuilder();
 

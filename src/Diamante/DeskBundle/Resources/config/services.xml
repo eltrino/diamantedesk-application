@@ -56,6 +56,7 @@
         <parameter key="diamante.data_audit.listener.class">Diamante\DeskBundle\EventListener\DataAuditGridListener</parameter>
         <parameter key="diamante.pre_build.listener.class">Diamante\DeskBundle\EventListener\DataGridPreBuildListener</parameter>
         <parameter key="diamante.branch.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\BranchExtension</parameter>
+        <parameter key="diamante.automation.action.move_to_branch.class">Diamante\DeskBundle\Automation\Action\MoveToBranchAction</parameter>
     </parameters>
 
     <services>
@@ -233,6 +234,10 @@
         <service id="diamante.branch.twig.extension" class="%diamante.branch.twig.extension.class%">
             <argument type="service" id="oro_config.manager"/>
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.desk.automation.action.move_to_branch" class="%diamante.automation.action.move_to_branch.class%">
+            <argument type="service" id="doctrine"/>
         </service>
     </services>
 </container>

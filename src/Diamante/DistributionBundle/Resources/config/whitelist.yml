@@ -29,7 +29,7 @@ whitelist:
     - 'oro_activity_list_api_get_list'
     - 'oro_comment_form'
     - 'orocrm_task_user_tasks'
-    - 'oro_api_delete_user'
+    - 'oro_user_apigen'
 
     #Dashboard
     - 'oro_api_post_dashboard_widget_add_widget'
@@ -50,9 +50,7 @@ whitelist:
     - 'oro_embedded_form_info'
 
     # Api
-    - 'oro_api_get_users'
     - 'nelmio_api_doc_index'
-    - 'oro_api_get_user_filter'
 
     #@TODO:REMOVE THESE ON RELEASE
     - 'oro_email_dashboard_recent_emails'
@@ -81,5 +79,6 @@ whitelist:
     - '^_imagine[a-z_]+'
     - '^oro_dashboard_[a-z_]+'
     - '^oro_tag_[a-z_]+'
+    - '^oro_api_[a-z_]+_user.*'
     - '^oro_api_(get|post|put|delete)_navigationitems'
     - 'oro_datagrid_api_rest_gridview_[a-z_]+'

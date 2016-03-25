@@ -82,7 +82,7 @@ trait ApiServiceImplTrait
         $criteria = $processor->getCriteria();
         $pagingProperties = $processor->getPagingProperties();
 
-        $pagingInfo = $service->getPagingInfo($repository, $pagingProperties, $criteria, $countCallback);
+        $pagingInfo = $service->getPagingInfo($repository, $pagingProperties, $criteria, null, $countCallback);
         $this->populatePagingHeaders($service, $pagingInfo);
 
         return $pagingProperties;

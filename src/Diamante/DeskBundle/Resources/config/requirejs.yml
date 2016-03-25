@@ -2,6 +2,8 @@ config:
     map:
         '*':
             'oro/datagrid/action/delete-action': 'diamante/datagrid/action/delete-action'
+            'orodatagrid/js/app/plugins/grid/floating-header-plugin': 'diamantedesk/js/app/plugins/grid/floating-header-plugin'
+            'orodatagrid/js/app/components/datagrid-component': 'diamantedesk/js/app/components/datagrid-component'
         'diamante/datagrid/action/delete-action': 'oro/datagrid/action/delete-action'
 
     paths:
