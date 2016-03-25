@@ -109,6 +109,12 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $securityFacade;
 
+    /**
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock \Diamante\UserBundle\Api\UserService
+     */
+    private $userService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -266,10 +272,17 @@ class TicketApiServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('getPagingInfo')
             ->will($this->returnValue($pagingInfo));
 
-        $this->authorizationService
+        $this->userService
             ->expects($this->once())
             ->method('resolveCurrentUserType')
             ->will($this->returnValue(User::TYPE_ORO));
+
+        $this->authorizationService
+            ->expects($this->once())
+            ->method('getLoggedUser')
+            ->will($this->returnValue($this->createOroUser()));
+
+        $this->ticketService->setUserService($this->userService);
 
         $retrievedTickets = $this->ticketService->searchTickets($command);
 
