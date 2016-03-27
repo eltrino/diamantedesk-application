@@ -1,0 +1,112 @@
+diamante:
+  automation:
+    rule:
+      entity_label:                        Rule
+      entity_plural_label:                 Rules
+      workflow_entity_plural_label:        Workflow Rules
+      business_entity_plural_label:        Business Rules
+      details :                            Rule Details
+      messages:
+        create:
+          error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
+          success:         Rule successfully created.
+        delete:
+          query:        Are you sure you want to delete this rule?
+          success:      Rule successfully deleted.
+
+      actions:
+        add: Add Rule
+        view: View Rule
+        edit: Edit Rule
+        remove: Remove Rule
+        mass:
+          remove: Remove Rules
+          activate: Activate Rules
+          deactivate: Deactivate Rules
+          response:
+            activate:
+              success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
+            deactivate:
+              success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
+      business:
+        entity_label: Business Rules
+        repetition_time: Repetition Interval
+      workflow:
+        entity_label: Workflow Rules
+    ui:
+      create:              Create
+      ok:                  Ok
+      cancel:              Cancel
+      save:                Save
+      delete:              Delete
+      save_and_close:      Save and close
+      edit:                Edit
+      add:                 Add
+      change:              Change
+
+    attributes:
+      condition:           Condition
+      action:              Action
+      weight:              Weight
+      target:              Target
+      parent:              Parent
+      active:              Active
+      expression:          Expression
+      mode:                Mode
+
+    common:
+      name:                Name
+      general:             General
+      created:             Created
+      updated:             Updated
+      not_available:       N/A
+      not_defined:         Not defined
+      delete_confirmation: Confirm Deletion
+      messages:
+        validation:
+          failed:          Form is invalid. Please correctly fill in all required fields.
+    forms:
+      name:                Name
+
+    condition:
+      eq:           is equal to
+      neq:          is not equal to
+      gt:           is greater than
+      gte:          is greater than or equals to
+      lt:           is less than
+      lte:          is less than or equals to
+      in:           is one of the following
+      in_range:     is in range
+      contains:     contains
+      created:      created
+      updated:      updated
+      removed:      removed
+      changed:      changed
+      changed_from: changed from
+      changed_to:   changed to
+      "true":       "true"
+      "false":      "false"
+      customer:     is customer
+      admin:        is admin
+
+    action:
+      update_property: update property
+      notify_by_email: notify by email
+
+    connector:
+      inclusive: all of these are true
+      exclusive: any of these are true
+
+    notification:
+      ticket:
+        created: Ticket was created
+        updated: Ticket was updated
+        removed: Ticket was removed
+      comment:
+        created: Comment was created
+        updated: Comment was updated
+        removed: Comment was removed
+
+    cron:
+      h: "{1} every hour|]1,Inf[ every %time% hours"
+      m: every %time% minutes

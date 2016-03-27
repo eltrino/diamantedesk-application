@@ -1,0 +1,48 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+
+{% set createAction = 'diamante_automation_create' %}
+{% set updateAction = 'diamante_automation_update' %}
+{% set listAction = 'diamante_automation_list' %}
+
+{% set formAction = ruleId is defined ? path(updateAction, { 'id': ruleId, 'type': type }) : path(createAction, {'type': type}) %}
+
+{% block navButtons %}
+    {% set cancel_url = path(listAction, {'type': type}) %}
+    {{ UI.button({'path' : cancel_url, 'title' : 'diamante.automation.ui.cancel'|trans, 'label' : 'diamante.automation.ui.cancel'|trans}) }}
+    {{ UI.saveAndStayButton() }}
+    {{ UI.saveAndCloseButton() }}
+{% endblock %}
+
+{% block pageHeader %}
+    {% if form.vars.value.rule %}
+        {% set breadcrumbs = {
+        'entity':      form.vars.value,
+        'indexPath':   path(listAction, {'type': type}),
+        'indexLabel':  'diamante.automation.rule.entity_plural_label'|trans,
+        'entityTitle': form.vars.value.name|default('N/A'),
+        'hasAvatar':   true,
+        'imagePath':   null
+        } %}
+        {{ parent() }}
+    {% else %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'diamante.automation.rule.entity_label'|trans}) %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+    {% endif %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'automation-form' %}
+    {% set options  = {
+        config : config,
+        type : type,
+        edit : true
+    } %}
+    {% if model is defined %}
+        {% set options = options|merge({ model: model })  %}
+    {% endif %}
+    <div class="diam-automation container-fluid"
+         data-page-component-module="diamanteautomation/js/app/components/automation-component"
+         data-page-component-options="{{ options|json_encode }}"></div>
+    {{ form_row(form._token) }}
+
+{% endblock content_data %}

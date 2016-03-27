@@ -1,0 +1,3 @@
+config:
+    paths:
+        'diamanteautomation/js/app/views/automation-view': 'bundles/diamanteautomation/js/app/views/automation-view.js'

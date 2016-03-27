@@ -1,0 +1,174 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante_automation.config.provider.class">Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider</parameter>
+        <parameter key="diamante_automation.workflow_rule.entity.class">Diamante\AutomationBundle\Entity\WorkflowRule</parameter>
+        <parameter key="diamante_automation.business_rule.entity.class">Diamante\AutomationBundle\Entity\BusinessRule</parameter>
+        <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
+        <parameter key="diamante_automation.engine.class">Diamante\AutomationBundle\Automation\Engine</parameter>
+        <parameter key="diamante_automation.action.provider.class">Diamante\AutomationBundle\Automation\ActionProvider</parameter>
+        <parameter key="diamante_automation.condition.factory.class">Diamante\AutomationBundle\Rule\Condition\ConditionFactory</parameter>
+        <parameter key="diamante_automation.ticket.property.time_interval_calculator.class">Diamante\AutomationBundle\Rule\Property\TicketTimeIntervalCalculator</parameter>
+        <parameter key="diamante_automation.ticket.property.processor.class">Diamante\AutomationBundle\Rule\Property\TicketPropertyProcessor</parameter>
+        <parameter key="diamante_automation.comment.property.processor.class">Diamante\AutomationBundle\Rule\Property\CommentPropertyProcessor</parameter>
+        <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
+        <parameter key="diamante_automation.generic.target.provider.class">Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider</parameter>
+        <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction</parameter>
+        <parameter key="diamante_automation.queue_manager.class">Diamante\AutomationBundle\Automation\JobQueue\QueueManager</parameter>
+        <parameter key="diamante_automation.listener.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
+        <parameter key="diamante_automation.datagrid.helper.class">Diamante\AutomationBundle\Infrastructure\Shared\DatagridHelper</parameter>
+        <parameter key="diamante_automation.business_rule.repository.class">Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRuleRepository</parameter>
+        <parameter key="diamante_automation.rule.validator.class">Diamante\AutomationBundle\Automation\Validator\RuleValidator</parameter>
+        <parameter key="diamante_automation.mass_action.activate_rule.class">Diamante\AutomationBundle\MassAction\Actions\Ajax\ActivateRuleMassAction</parameter>
+        <parameter key="diamante_automation.mass_action.deactivate_rule.class">Diamante\AutomationBundle\MassAction\Actions\Ajax\DeactivateRuleMassAction</parameter>
+        <parameter key="diamante_automation.mass_action.handler.activate_rule.class">Diamante\AutomationBundle\MassAction\Handlers\ActivateRuleMassActionHandler</parameter>
+        <parameter key="diamante_automation.mass_action.handler.deactivate_rule.class">Diamante\AutomationBundle\MassAction\Handlers\DeactivateRuleMassActionHandler</parameter>
+        <parameter key="diamante_automation_form.type.class">Diamante\AutomationBundle\Form\Type\AutomationType</parameter>
+        <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
+        <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
+        <parameter key="diamante.automation.email.resolver.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailResolver</parameter>
+        <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder</parameter>
+        <parameter key="diamante_automation.email.ticket_provider.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider\Ticket</parameter>
+        <parameter key="diamante_automation.email.comment_provider.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider\Comment</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante_automation.email.ticket_provider" class="%diamante_automation.email.ticket_provider.class%">
+            <argument type="service" id="diamante.user.service"/>
+            <tag name="diamante_automation.email.provider"/>
+        </service>
+
+        <service id="diamante_automation.email.comment_provider" class="%diamante_automation.email.comment_provider.class%">
+            <argument type="service" id="diamante.user.service"/>
+            <tag name="diamante_automation.email.provider"/>
+        </service>
+
+        <service id="diamante_automation.workflow_rule.repository" class="%diamante.generic.repository.class%"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository"
+                >
+            <argument type="string">%diamante_automation.workflow_rule.entity.class%</argument>
+        </service>
+
+        <service id="diamante_automation.business_rule.repository" class="%diamante_automation.business_rule.repository.class%"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository"
+                >
+            <argument type="string">%diamante_automation.business_rule.entity.class%</argument>
+        </service>
+
+        <service id="diamante_automation.config.provider" class="%diamante_automation.config.provider.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante.rule.service" class="%diamante.rule.service.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.workflow_rule.repository"/>
+            <argument type="service" id="diamante_automation.business_rule.repository"/>
+            <argument type="service" id="diamante.automation.rule.validator"/>
+        </service>
+
+        <service id="diamante_automation.action.provider" class="%diamante_automation.action.provider.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.condition.factory" class="%diamante_automation.condition.factory.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.ticket.property.time_interval_calculator" class="%diamante_automation.ticket.property.time_interval_calculator.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
+
+        <service id="diamante_automation.ticket.property.processor" class="%diamante_automation.ticket.property.processor.class%">
+            <argument type="service" id="diamante.user.service"/>
+        </service>
+
+        <service id="diamante_automation.comment.property.processor" class="%diamante_automation.comment.property.processor.class%">
+            <argument type="service" id="diamante.user.service"/>
+        </service>
+
+        <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.config.provider"/>
+        </service>
+
+        <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%">
+            <argument type="service" id="diamante.notification_manager"/>
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.datagrid.helper" class="%diamante_automation.datagrid.helper.class%">
+            <argument type="service" id="translator"/>
+            <argument type="service" id="diamante_automation.business_rule.repository"/>
+        </service>
+
+        <service id="diamante_automation.changeset.builder" class="%diamante_automation.changeset.builder.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
+            <argument type="service" id="diamante_automation.config.provider"/>
+            <argument type="service" id="diamante_automation.action.provider"/>
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.condition.factory"/>
+            <argument type="service" id="monolog.logger.diamante"/>
+            <argument type="service" id="diamante_automation.generic.target.provider"/>
+        </service>
+
+        <service id="diamante_automation.generic.target.provider" class="%diamante_automation.generic.target.provider.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.condition.factory"/>
+            <argument type="service" id="diamante_automation.config.provider"/>
+        </service>
+
+        <service id="diamante.automation.queue.manager" class="%diamante_automation.queue_manager.class%">
+            <tag name="kernel.event_listener" event="kernel.response" method="flush"/>
+            <tag name="kernel.event_listener" event="console.terminate" method="flush"/>
+        </service>
+
+        <service id="diamante.automation.listener" class="%diamante_automation.listener.class%">
+            <argument type="service" id="diamante_automation.config.provider"/>
+            <argument type="service" id="diamante.automation.queue.manager"/>
+            <argument type="service" id="diamante_automation.changeset.builder"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
+            <tag name="doctrine.event_listener" event="postUpdate"/>
+            <tag name="doctrine.event_listener" event="postRemove"/>
+        </service>
+
+        <service id="diamante.automation.rule.validator" class="%diamante_automation.rule.validator.class%">
+            <argument type="service" id="diamante_automation.config.provider"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.activate_rule" class="%diamante_automation.mass_action.activate_rule.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="activate_rule"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.deactivate_rule" class="%diamante_automation.mass_action.deactivate_rule.class%">
+            <tag name="oro_datagrid.extension.mass_action.type" type="deactivate_rule"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.handler.activate_rule" class="%diamante_automation.mass_action.handler.activate_rule.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="oro_security.security_facade"/>
+        </service>
+
+        <service id="diamante_automation.mass_action.handler.deactivate_rule" class="%diamante_automation.mass_action.handler.deactivate_rule.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="oro_security.security_facade"/>
+        </service>
+
+        <service id="diamante.automation.frontend.options.resolver" class="%diamante_automation.frontend.options.resolver.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante.automation.email.resolver" class="%diamante.automation.email.resolver.class%">
+        </service>
+    </services>
+</container>

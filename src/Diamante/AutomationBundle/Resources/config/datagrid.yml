@@ -1,0 +1,200 @@
+datagrid:
+  diamante-automation-workflow-grid:
+    source:
+      type: orm
+      query:
+        select:
+          - w.id
+          - w.name
+          - w.active
+          - ('workflow') as type
+        from:
+          - { table: %diamante_automation.workflow_rule.entity.class%, alias: w}
+
+    properties:
+      id: ~
+      type: ~
+
+      view_link:
+        type: url
+        route: diamante_automation_view
+        params: [type, id]
+
+      update_link:
+        type: url
+        route: diamante_automation_update
+        params: [type, id]
+
+      delete_link:
+        type: url
+        route: diamante_automation_delete
+        params: [type, id]
+
+    sorters:
+      columns:
+        name:
+          data_name: w.name
+
+    filters:
+      columns:
+        name:
+          type: string
+          data_name: w.name
+
+    columns:
+      name:
+        label: diamante.automation.common.name
+      active:
+        label: diamante.automation.attributes.active
+        frontend_type: select
+        choices:
+          0: No
+          1: Yes
+
+    actions:
+      view:
+        type: navigate
+        label: diamante.automation.rule.actions.view
+        icon: eye-open
+        link: view_link
+        rowAction: true
+        acl_resource: VIEW;Entity:DiamanteAutomationBundle:WorkflowRule
+      update:
+        type: navigate
+        label: diamante.automation.rule.actions.update
+        icon: edit
+        link: update_link
+        rowAction: true
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
+      delete:
+        type: delete
+        label: diamante.automation.rule.actions.remove
+        icon: trash
+        link: delete_link
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
+
+    mass_actions:
+      delete:
+        type: delete
+        label: diamante.automation.rule.actions.mass.remove
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
+        entity_name: DiamanteAutomationBundle:WorkflowRule
+        data_identifier: w.id
+        icon: trash
+      deactivate_rule:
+        type: deactivate_rule
+        label: diamante.automation.rule.actions.mass.deactivate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
+        entity_name: DiamanteAutomationBundle:WorkflowRule
+        data_identifier: w.id
+        icon: remove
+      activate_rule:
+        type: activate_rule
+        label: diamante.automation.rule.actions.mass.activate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
+        entity_name: DiamanteAutomationBundle:WorkflowRule
+        data_identifier: w.id
+        icon: check
+
+  diamante-automation-business-grid:
+    source:
+      type: orm
+      query:
+        select:
+          - b.id
+          - b.name
+          - b.timeInterval as time
+          - b.active
+          - ('business') as type
+        from:
+          - { table: %diamante_automation.business_rule.entity.class%, alias: b}
+
+    properties:
+      id: ~
+      type: ~
+
+      view_link:
+        type: url
+        route: diamante_automation_view
+        params: [type, id]
+
+      update_link:
+        type: url
+        route: diamante_automation_update
+        params: [type, id]
+
+      delete_link:
+        type: url
+        route: diamante_automation_delete
+        params: [type, id]
+
+    sorters:
+      columns:
+        name:
+          data_name: b.name
+
+    filters:
+      columns:
+        name:
+          type: string
+          data_name: b.name
+
+    columns:
+      name:
+        label: diamante.automation.common.name
+      time:
+        label: diamante.automation.rule.business.repetition_time
+        frontend_type: select
+        choices: @diamante_automation.datagrid.helper->getTimeIntervalChoices
+
+      active:
+        label: diamante.automation.attributes.active
+        frontend_type: select
+        choices:
+          0: No
+          1: Yes
+
+    actions:
+      view:
+        type: navigate
+        label: diamante.automation.rule.actions.view
+        icon: eye-open
+        link: view_link
+        rowAction: true
+        acl_resource: VIEW;Entity:DiamanteAutomationBundle:BusinessRule
+      update:
+        type: navigate
+        label: diamante.automation.rule.actions.update
+        icon: edit
+        link: update_link
+        rowAction: true
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
+      delete:
+        type: delete
+        label: diamante.automation.rule.actions.delete
+        icon: trash
+        link: delete_link
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:BusinessRule
+
+    mass_actions:
+      delete:
+        type: delete
+        label: diamante.automation.rule.actions.mass.remove
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:BusinessRule
+        entity_name: DiamanteAutomationBundle:BusinessRule
+        data_identifier: b.id
+        icon: trash
+      deactivate_rule:
+        type: deactivate_rule
+        label: diamante.automation.rule.actions.mass.deactivate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
+        entity_name: DiamanteAutomationBundle:BusinessRule
+        data_identifier: b.id
+        icon: remove
+      activate_rule:
+        type: activate_rule
+        label: diamante.automation.rule.actions.mass.activate
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
+        entity_name: DiamanteAutomationBundle:BusinessRule
+        data_identifier: b.id
+        icon: check

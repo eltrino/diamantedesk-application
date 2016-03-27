@@ -1,0 +1,30 @@
+<% 'TEMPLATE: automation-actions-template' %>
+<% var entities = config.entities; %>
+<% var properties = entities['ticket'].properties; %>
+<% var property = typeof property !== 'undefined' && property; %>
+<% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
+<div class="controls">
+    <strong class="value">
+        <%= config.actions[type].label %>
+    </strong>
+    <% if(type == 'update_property'){ %>
+        <span class="label">Of:</span>
+        <label class="value"><%= entities[entity].label %></label>
+        <% if(properties){ %>
+        <span class="label">Set: </span>
+        <strong class="value"><%= properties[property].label %></strong>
+        <% } %>
+        <% if(property){ %>
+            <span class="label">To: </span>
+            <% if(properties[property].type == 'string'){ %>
+                <strong class="value"><%= value %>" /></strong>
+            <% } else if (properties[property].frontend_options){ %>
+                <strong class="value"><%= properties[property].frontend_options[value] %></strong>
+            <% } %>
+        <% } %>
+    <% } %>
+    <% if(type == 'notify_by_email'){ %>
+        <span class="label">To: </span>
+        <input type="text" name="actions[value]" data-attr="value" value="<%= value %>" />
+    <% } %>
+</div>
