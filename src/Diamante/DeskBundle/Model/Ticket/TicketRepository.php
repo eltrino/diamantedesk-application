@@ -46,8 +46,9 @@ interface TicketRepository extends Repository, FilterableRepository
      * @param string $searchQuery
      * @param array $conditions
      * @param PagingProperties $pagingProperties
+     * @param null $callback
      * @return \Diamante\DeskBundle\Entity\Ticket[]
      */
-    public function search($searchQuery, array $conditions, PagingProperties $pagingProperties);
+    public function search($searchQuery, array $conditions, PagingProperties $pagingProperties, $callback = null);
 
 }

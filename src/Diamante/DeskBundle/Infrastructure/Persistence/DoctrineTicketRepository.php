@@ -102,9 +102,10 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      * @param string $searchQuery
      * @param array $conditions
      * @param PagingProperties $pagingProperties
+     * @param null $callback
      * @return \Diamante\DeskBundle\Entity\Ticket[]
      */
-    public function search($searchQuery, array $conditions, PagingProperties $pagingProperties)
+    public function search($searchQuery, array $conditions, PagingProperties $pagingProperties, $callback = null)
     {
         $qb = $this->_em->createQueryBuilder();
         $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
@@ -127,6 +128,10 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             $qb->expr()->like(sprintf('%s.%s', self::SELECT_ALIAS, 'subject'), $literal)
         );
         $qb->andWhere($whereExpression);
+
+        if (is_callable($callback)) {
+            call_user_func_array($callback, ['qb' => $qb, 'entityName' => $this->_entityName]);
+        }
 
         $query = $qb->getQuery();
 
@@ -178,7 +183,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     public function count(array $criteria = [], $searchQuery = null, $callback = null)
     {
         if ($searchQuery) {
-            return $this->countBySearchQuery($searchQuery);
+            return $this->countBySearchQuery($searchQuery, $callback);
         }
 
         $qb = $this->_em->createQueryBuilder();
@@ -205,11 +210,12 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
     /**
      * @param string $searchQuery
+     * @param null $countCallback
      * @return int
      */
-    public function countBySearchQuery($searchQuery)
+    public function countBySearchQuery($searchQuery, $countCallback = null)
     {
-        $result = $this->search($searchQuery, array(), new FilterPagingProperties(null, PHP_INT_MAX));
+        $result = $this->search($searchQuery, array(), new FilterPagingProperties(null, PHP_INT_MAX), $countCallback);
         return count($result);
     }
 

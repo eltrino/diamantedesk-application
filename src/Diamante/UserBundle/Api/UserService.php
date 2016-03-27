@@ -99,4 +99,9 @@ interface UserService
      * @return void
      */
     public function resetPassword(User $user);
+
+    /**
+     * @return string
+     */
+    public function resolveCurrentUserType();
 }

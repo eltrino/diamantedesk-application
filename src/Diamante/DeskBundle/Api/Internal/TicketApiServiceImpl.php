@@ -456,16 +456,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
         $criteriaProcessor = new TicketFilterCriteriaProcessor();
         $repository = $this->getTicketRepository();
         $user = $this->getAuthorizationService()->getLoggedUser();
-
-        if ($user instanceof ApiUser) {
-            $user = $this->userService->getUserFromApiUser($user);
-        }
-
-        if ($user instanceof DiamanteUser) {
-            $userType = User::TYPE_DIAMANTE;
-        } else {
-            $userType = User::TYPE_ORO;
-        }
+        $userType = $this->userService->resolveCurrentUserType();
 
         $strategyProvider = new StrategyProvider(new User($user->getId(), $userType));
         $strategy = $strategyProvider->getStrategy();
@@ -518,10 +509,23 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
 
         $pagingProperties = $searchProcessor->getPagingProperties();
 
-        $repository = $this->getTicketRepository();
-        $tickets = $repository->search($query, $criteria, $pagingProperties);
+        $user = $this->getAuthorizationService()->getLoggedUser();
+        $userType = $this->userService->resolveCurrentUserType();
 
-        $pagingInfo = $this->apiPagingService->getPagingInfo($repository, $pagingProperties, $criteria, $query);
+        $strategyProvider = new StrategyProvider(new User($user->getId(), $userType));
+        $strategy = $strategyProvider->getStrategy();
+
+        $repository = $this->getTicketRepository();
+        $tickets = $repository->search($query, $criteria, $pagingProperties, $strategy->getFilterCallback());
+
+        $pagingInfo = $this->apiPagingService->getPagingInfo(
+            $repository,
+            $pagingProperties,
+            $criteria,
+            $query,
+            $strategy->getFilterCallback()
+        );
+
         $this->populatePagingHeaders($this->apiPagingService, $pagingInfo);
 
         return $tickets;
