@@ -18,17 +18,13 @@
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/eltrino/DiamanteAutomationBundle.git"
-    },
-    {
-      "type": "git",
       "url": "https://github.com/orocrm/composer.git"
     }
   ],
   "require": {
     "php": ">=5.4.4",
-    "oro/platform": "1.7.*",
-    "diamante/desk-bundle": "dev-master"
+    "oro/platform": "1.8.*",
+    "diamante/desk-bundle": "self.version"
   },
   "require-dev": {
     "eltrino/phpunit-mockannotations": "*"
@@ -37,7 +33,7 @@
   "prefer-stable": true,
   "extra": {
     "branch-alias": {
-      "dev-master": "1.0.x-dev"
+      "dev-master": "1.1.x-dev"
     }
   }
 }
