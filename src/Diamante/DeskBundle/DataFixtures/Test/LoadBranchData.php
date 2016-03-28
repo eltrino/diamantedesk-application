@@ -14,12 +14,15 @@
  */
 namespace Diamante\DeskBundle\DataFixtures\Test;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Diamante\DeskBundle\Entity\Branch;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
 
-class LoadBranchData extends AbstractFixture
+class LoadBranchData extends ContainerAwareFixture
 {
+    const GLOBAL_SCOPE = 'global';
+
     public function load(ObjectManager $manager)
     {
 
@@ -37,6 +40,12 @@ class LoadBranchData extends AbstractFixture
         }
 
         $manager->flush();
+
+        /** @var $configManager ConfigManager */
+        $configManager = $this->container->get('oro_config.manager');
+        $configManager->setScopeName(static::GLOBAL_SCOPE);
+        $configManager->set('diamante_desk.default_branch', $branch->getId());
+        $configManager->flush();
     }
 
 }
