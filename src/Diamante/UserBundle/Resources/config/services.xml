@@ -83,6 +83,7 @@
                 <argument type="string">fullName</argument>
                 <argument type="string">username</argument>
                 <argument type="string">type</argument>
+                <argument type="string">avatar</argument>
             </argument>
             <tag name="oro_form.autocomplete.search_handler" alias="diamante_user" acl_resource="oro_user_user_view"/>
         </service>
