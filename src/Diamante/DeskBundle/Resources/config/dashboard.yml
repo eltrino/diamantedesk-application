@@ -5,42 +5,42 @@ oro_dashboard_config:
             route:      diamante_report_widget
             route_parameters: { id: tickets_by_priority_widget }
             description: See the full picture of requests according to their priorities and focus on core issues.
-            icon:       bundles/diamantedesk/img/fa-area-chart.png
+            icon:       bundles/diamantedesk/img/widget-pie-chart.png
 
         time_of_response_widget:
             label:      Time Of Response
             route:      diamante_report_widget
             route_parameters: { id: time_of_response_widget }
             description: Measure your efficiency by analyzing the average speed of response for new tickets.
-            icon:       bundles/diamantedesk/img/fa-area-chart.png
+            icon:       bundles/diamantedesk/img/widget-bar-chart.png
 
         tickets_by_channels_widget:
             label:      Tickets By Channels
             route:      diamante_report_widget
             route_parameters: { id: tickets_by_channels_widget }
             description: Find out which channels of ticket submitting are most actively used in your system (emails, web portal, embedded form or via a phone call).
-            icon:       bundles/diamantedesk/img/fa-area-chart.png
+            icon:       bundles/diamantedesk/img/widget-pie-chart.png
 
         tickets_by_branches_widget:
             label:      Tickets By Branches
             route:      diamante_report_widget
             route_parameters: { id: tickets_by_branches_widget }
             description: See how many tickets are created in each branch for certain periods or daily and use this data to analyze which branches are most actively used for ticket creation.
-            icon:       bundles/diamantedesk/img/fa-area-chart.png
+            icon:       bundles/diamantedesk/img/widget-pie-chart.png
 
         ticket_timeline:
             label:      Ticket Timeline
             route:      diamante_report_widget
             route_parameters: { id: ticket_timeline }
             description: Check how many tickets were opened and closed per day for a given time period.
-            icon:       bundles/diamantedesk/img/fa-area-chart.png
+            icon:       bundles/diamantedesk/img/widget-line-chart.png
 
         diamante_myrecenttickets_widget:
             label:      My Recent Tickets
             route:      diamante_myrecenttickets_widget
             route_parameters: { id: diamante_myrecenttickets_widget }
             description: This widget quickly filters out 10 latest tickets (created or updated) where you are specified as a Reporter or as an Assignee.
-            icon:       bundles/diamantedesk/img/fa-area-chart.png
+            icon:       bundles/diamantedesk/img/widget-grid.png
 
     dashboards:
         diamante_support:
