@@ -141,3 +141,12 @@
   fill: #fff;
   text-transform: capitalize;
 }
+
+.dashboard-widgets-wrapper .dashboard-widget-container .dashboard-widget-small-column:nth-child(2) {
+  width: 50px;
+}
+
+.dashboard-widgets-wrapper .dashboard-widget-container .dashboard-widget-icon {
+  width: 100%;
+  height: auto;
+}
