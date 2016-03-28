@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
-use Diamante\DeskBundle\Api\BranchService;
+use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\UserBundle\Model\User;
@@ -76,10 +76,10 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
     private $userService;
 
     /**
-     * @var BranchService
-     * @Mock \Diamante\DeskBundle\Api\BranchService
+     * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
+     * @Mock \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
      */
-    private $branchService;
+    private $branchRepository;
 
     /**
      * @var \Diamante\DeskBundle\Entity\Branch
@@ -97,7 +97,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             $this->oroUserManager,
             $this->configManager,
             $this->userService,
-            $this->branchService
+            $this->branchRepository
         );
     }
 
@@ -121,9 +121,9 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('diamante_desk.default_branch'))
             ->will($this->returnValue(1));
 
-        $this->branchService
+        $this->branchRepository
             ->expects($this->once())
-            ->method('getBranch')
+            ->method('get')
             ->with($this->equalTo(1))
             ->will($this->returnValue($this->defaultBranch));
 
@@ -160,9 +160,9 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('diamante_desk.default_branch'))
             ->will($this->returnValue(1));
 
-        $this->branchService
+        $this->branchRepository
             ->expects($this->once())
-            ->method('getBranch')
+            ->method('get')
             ->with($this->equalTo(1))
             ->will($this->returnValue($this->defaultBranch));
 
@@ -214,9 +214,9 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('diamante_desk.default_branch'))
             ->will($this->returnValue(1));
 
-        $this->branchService
+        $this->branchRepository
             ->expects($this->once())
-            ->method('getBranch')
+            ->method('get')
             ->with($this->equalTo(1))
             ->will($this->returnValue($this->defaultBranch));
 
@@ -258,9 +258,9 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('diamante_desk.default_branch'))
             ->will($this->returnValue(1));
 
-        $this->branchService
+        $this->branchRepository
             ->expects($this->once())
-            ->method('getBranch')
+            ->method('get')
             ->with($this->equalTo(1))
             ->will($this->returnValue($this->defaultBranch));
 
