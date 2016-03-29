@@ -34,7 +34,8 @@ class ActionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $action->getId());
         $this->assertEquals('NotifyByEmail', $action->getType());
-        $this->assertEquals('mike@diamantedesk.com', array_pop($action->getParameters()));
+        $email = array_pop($action->getParameters());
+        $this->assertEquals('mike@diamantedesk.com', $email);
         $this->assertEquals('workflow_rule_name', $action->getRule()->getName());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $action->getRule());
         $this->assertEquals(0, $action->getWeight());
@@ -53,7 +54,8 @@ class ActionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $action->getId());
         $this->assertEquals('NotifyByEmail', $action->getType());
-        $this->assertEquals('mike@diamantedesk.com', array_pop($action->getParameters()));
+        $email = array_pop($action->getParameters());
+        $this->assertEquals('mike@diamantedesk.com', $email);
         $this->assertEquals('business_rule_name', $action->getRule()->getName());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $action->getRule());
         $this->assertEquals(0, $action->getWeight());
