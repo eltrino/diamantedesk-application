@@ -24,7 +24,7 @@ define([
         },
 
         events: {
-            'change > .groupings-connector' : 'change',
+            'change > .select .groupings-connector' : 'change',
             'click > .groupings-buttons button[data-action="add-item"]': 'addCondition',
             'click > .groupings-buttons button[data-action="add-group"]' : 'addGroup',
             'click > .groupings-buttons button[data-action="delete-group"]' : 'removeGroup'
