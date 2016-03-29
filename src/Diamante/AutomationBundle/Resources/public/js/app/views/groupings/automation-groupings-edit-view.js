@@ -37,14 +37,17 @@ define([
             this.options.hasChildren = !!options.children;
         },
 
+        moreThanOne: function(){
+            return this.model.get('children') ?
+                        this.model.get('children').length > 1 :
+                        this.model.get('conditions') && this.model.get('conditions').length > 1;
+        },
+
         render: function () {
-            var moreThanOne = this.model.get('children') ?
-                this.model.get('children').length > 1 :
-                this.model.get('conditions') && this.model.get('conditions').length;
             AbstractView.prototype.render.apply(this, arguments);
             this.renderSubViews();
-            this.$('> .groupings-connector').trigger('change');
-            this.$('> .groupings-connector').toggle(moreThanOne);
+            this.$('> .select .groupings-connector').trigger('change');
+            this.$('> .select').toggle(this.moreThanOne());
             this.onAdd();
             return this;
         },
@@ -93,6 +96,7 @@ define([
         addCondition: function(e){
             e.preventDefault();
             this.conditions.add();
+            this.$('> .select').toggle(this.moreThanOne());
         },
 
         addGroup: function(e){
@@ -103,6 +107,7 @@ define([
                 this.$('> .groupings-buttons button[data-action="add-item"]').hide();
                 this.renderSubViews();
             }
+            this.$('> .select').toggle(this.moreThanOne());
         },
 
         removeGroup: function(){
