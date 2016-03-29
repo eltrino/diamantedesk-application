@@ -114,7 +114,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
                 $output->writeln("<info>Dry run option is enabled, no configured actions will be run.</info>");
             }
 
-            $engine->process($fact, Engine::MODE_WORKFLOW, $dryRun);
+            $engine->process($fact, $dryRun);
             $output->writeln("<info>Rule processing finished successfully.</info>");
 
             $this->context->release();

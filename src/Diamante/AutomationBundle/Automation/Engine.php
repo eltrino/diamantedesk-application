@@ -29,8 +29,7 @@ use Symfony\Bridge\Monolog\Logger;
 
 class Engine
 {
-    const MODE_WORKFLOW = 'workflow';
-    const MODE_BUSINESS = 'business';
+    const WORKFLOW_ENTITY = 'DiamanteAutomationBundle:WorkflowRule';
 
     /**
      * @var AutomationConfigurationProvider
@@ -56,14 +55,6 @@ class Engine
      * @var Logger
      */
     protected $logger;
-
-    /**
-     * @var array
-     */
-    protected $entityMap = [
-        self::MODE_WORKFLOW => 'DiamanteAutomationBundle:WorkflowRule',
-        self::MODE_BUSINESS => 'DiamanteAutomationBundle:BusinessRule'
-    ];
 
     /**
      * @var array
@@ -228,29 +219,27 @@ class Engine
 
     /**
      * @param Fact $fact
-     * @param string $mode
      * @return Rule[]
      */
-    protected function getRules(Fact $fact, $mode)
+    protected function getRules(Fact $fact)
     {
-        if (empty($this->rules[$fact->getTargetType()][$mode])) {
-            $repository = $this->em->getRepository($this->entityMap[$mode]);
+        if (empty($this->rules[$fact->getTargetType()])) {
+            $repository = $this->em->getRepository(static::WORKFLOW_ENTITY);
 
-            $this->rules[$fact->getTargetType()][$mode] = $repository->findBy(['active' => true, 'target' => $fact->getTargetType()]);
+            $this->rules[$fact->getTargetType()] = $repository->findBy(['active' => true, 'target' => $fact->getTargetType()]);
         }
 
-        return $this->rules[$fact->getTargetType()][$mode];
+        return $this->rules[$fact->getTargetType()];
     }
 
     /**
      * Check single entity against the set of rules
      * @param Fact $fact
-     * @param string $mode
      * @param bool $dryRun
      */
-    public function process(Fact $fact, $mode = self::MODE_WORKFLOW, $dryRun = false)
+    public function process(Fact $fact, $dryRun = false)
     {
-        foreach ($this->getRules($fact, $mode) as $rule) {
+        foreach ($this->getRules($fact) as $rule) {
             $result = $this->doCheck($fact, $rule->getGrouping());
 
             if (true === $result) {
