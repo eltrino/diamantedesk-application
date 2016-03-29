@@ -43,9 +43,9 @@ class BusinessRuleTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $rule = $this->createRule();
-        $rule->update('business_rule_name_updated', '10m', false);
+        $rule->update('business_rule_name_updated', '10m');
 
-        $this->assertEquals(false, $rule->isActive());
+        $this->assertEquals(true, $rule->isActive());
         $this->assertEquals('business_rule_name_updated', $rule->getName());
         $this->assertEquals('10m', $rule->getTimeInterval());
     }

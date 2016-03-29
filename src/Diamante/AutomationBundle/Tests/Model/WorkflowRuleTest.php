@@ -42,9 +42,9 @@ class WorkflowRuleTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $rule = $this->createRule();
-        $rule->update('workflow_rule_name_updated', false);
+        $rule->update('workflow_rule_name_updated');
 
-        $this->assertEquals(false, $rule->isActive());
+        $this->assertEquals(true, $rule->isActive());
         $this->assertEquals('workflow_rule_name_updated', $rule->getName());
     }
 

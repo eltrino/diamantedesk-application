@@ -15,12 +15,13 @@
 
 namespace Diamante\AutomationBundle\Automation;
 
-use Diamante\AutomationBundle\Entity\WorkflowAction;
 use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\Group;
+use Diamante\AutomationBundle\Entity\WorkflowAction;
 use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
@@ -28,11 +29,9 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
 use Diamante\UserBundle\Model\User;
-use Diamante\DeskBundle\Entity\Branch;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EngineTest extends \PHPUnit_Framework_TestCase
 {
@@ -128,18 +127,14 @@ class EngineTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFact()
     {
-        $ticket = $this->getTarget();
+        $action = 'created';
+        $changeset = $this->getChangeset();
 
-        $this->configurationProvider
-            ->expects($this->once())
-            ->method('getTargetByClass')
-            ->will($this->returnValue('ticket'));
+        $fact = $this->service->createFact('ticket', $action, $changeset);
 
-        $fact = $this->service->createFact($ticket);
-
-        $this->assertEquals($ticket, $fact->getTarget());
+        $this->assertInternalType('array', $fact->getTarget());
         $this->assertEquals('ticket', $fact->getTargetType());
-        $this->assertEquals(null, $fact->getTargetChangeset());
+        $this->assertInternalType('array', $fact->getTargetChangeset());
     }
 
     /**
@@ -147,11 +142,10 @@ class EngineTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcess()
     {
-        $this->markTestIncomplete('Conditions are not fully implemented.');
-
-        $ticket = $this->getTarget();
+        $action = 'created';
+        $changeset = $this->getChangeset();
         $rule = $this->getRule();
-        $fact = new Fact($ticket, 'ticket');
+        $fact = $this->service->createFact('ticket', $action, $changeset);
         $context = new ExecutionContext(['status' => Status::CLOSED]);
 
         $this->em
@@ -223,7 +217,7 @@ class EngineTest extends \PHPUnit_Framework_TestCase
 
         $this->configurationProvider
             ->expects($this->once())
-            ->method('getTargetByClass')
+            ->method('getTargetByEntity')
             ->will($this->returnValue('ticket'));
 
         $this->notifyByEmailAction
@@ -313,5 +307,26 @@ class EngineTest extends \PHPUnit_Framework_TestCase
         ];
 
         return $entities;
+    }
+
+    /**
+     * @return array
+     */
+    private function getChangeset()
+    {
+        $ticketChangeset = [
+            'uniqueId'       => [null, new UniqueId('unique_id')],
+            'sequenceNumber' => [null, new TicketSequenceNumber(13)],
+            'subject'        => [null, self::SUBJECT],
+            'description'    => [null, self::DESCRIPTION],
+            'branch'         => [null, $this->createBranch()],
+            'reporter'       => [null, new User(1, User::TYPE_DIAMANTE)],
+            'assignee'       => [null, $this->createAssignee()],
+            'source'         => [null, new Source(Source::PHONE)],
+            'priority'       => [null, new Priority(Priority::PRIORITY_LOW)],
+            'status'         => [null, new Status(Status::NEW_ONE)]
+        ];
+
+        return $ticketChangeset;
     }
 }

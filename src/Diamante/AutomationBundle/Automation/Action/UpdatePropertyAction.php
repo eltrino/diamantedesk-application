@@ -56,25 +56,13 @@ class UpdatePropertyAction extends AbstractAction
         $this->registry->getManager()->persist($entity);
     }
 
-    protected function getAccessorForProperty($property, $target)
-    {
-        $reflection = new \ReflectionClass($target);
-        $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-
-        $setterNames = [
-            sprintf("set%s", ucwords($property)),
-            sprintf("update%s", ucwords($property))
-        ];
-
-        foreach ($methods as $method) {
-            if (in_array($method->getName(), $setterNames)) {
-                return $method->getName();
-            }
-        }
-
-        throw new \RuntimeException(sprintf("Given target has no publicly available setter for property %s", $property));
-    }
-
+    /**
+     * @param array $target
+     * @param       $targetClass
+     * @param       $properties
+     *
+     * @return $this|Updatable
+     */
     protected function update(array $target, $targetClass, $properties)
     {
         $targetEntity = new \ReflectionClass($targetClass);
@@ -87,18 +75,6 @@ class UpdatePropertyAction extends AbstractAction
             $entity->updateProperties($properties);
 
             return $entity;
-        }
-
-        /**
-         * External entities
-         * @TODO add support of array target
-         */
-        foreach ($properties as $property => $value) {
-            if (property_exists($target, $property)) {
-                $accessorMethod = $this->getAccessorForProperty($property, $target);
-
-                call_user_func_array([$target, $accessorMethod], [$value]);
-            }
         }
 
         return $this;

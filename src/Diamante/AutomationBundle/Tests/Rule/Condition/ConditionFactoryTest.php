@@ -27,6 +27,12 @@ use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 class ConditionFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @Mock Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+
+    /**
      * @var \Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider
      * @Mock Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider
      */
@@ -35,18 +41,19 @@ class ConditionFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ConditionFactory
      */
-    private $service;
+    private $conditionFactory;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
 
-        $this->configurationProvider
+        $this->container
             ->expects($this->any())
-            ->method('getConfiguredConditions')
-            ->will($this->returnValue(new ParameterBag($this->getConditions())));
+            ->method('get')
+            ->with($this->equalTo('diamante_automation.config.provider'))
+            ->will($this->returnValue($this->configurationProvider));
 
-        $this->service = new ConditionFactory($this->configurationProvider);
+        $this->conditionFactory = new ConditionFactory($this->container);
     }
 
     /**
@@ -54,7 +61,12 @@ class ConditionFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncorrectType()
     {
-        $this->service->getCondition('incorrect_type', ['status' => 'open']);
+        $this->configurationProvider
+            ->expects($this->any())
+            ->method('getConfiguredConditions')
+            ->will($this->returnValue(new ParameterBag($this->getConditions())));
+
+        $this->conditionFactory->getCondition('incorrect_type', ['status' => 'open'], 'ticket');
     }
 
     /**
@@ -62,7 +74,12 @@ class ConditionFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testNonExistingClass()
     {
-        $this->service->getCondition('test_condition', ['status' => 'open']);
+        $this->configurationProvider
+            ->expects($this->any())
+            ->method('getConfiguredConditions')
+            ->will($this->returnValue(new ParameterBag($this->getConditions())));
+
+        $this->conditionFactory->getCondition('test_condition', ['status' => 'open'], 'ticket');
     }
 
     /**
@@ -70,7 +87,13 @@ class ConditionFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCondition()
     {
-        $condition = $this->service->getCondition('eq', ['status' => 'open']);
+        $this->configurationProvider
+            ->expects($this->any())
+            ->method('getConfiguredConditions')
+            ->will($this->returnValue(new ParameterBag($this->getConditions())));
+
+        $condition = $this->conditionFactory->getCondition('eq', ['status' => 'open'], 'ticket');
+
         $this->assertEquals('eq', $condition->getName());
         $this->assertInstanceOf('Diamante\AutomationBundle\Rule\Condition\Expression\Eq', $condition);
     }

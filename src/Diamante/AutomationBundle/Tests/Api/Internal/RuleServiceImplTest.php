@@ -433,7 +433,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $actions = [
             [
-                'name'       => 'update_property',
+                'type'       => 'update_property',
                 'parameters' =>
                     [
                         'status' => 'close',
