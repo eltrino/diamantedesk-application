@@ -18,7 +18,7 @@ diamante:
         add: Add Rule
         view: View Rule
         edit: Edit Rule
-        remove: Remove Rule
+        delete: Delete Rule
         mass:
           remove: Remove Rules
           activate: Activate Rules

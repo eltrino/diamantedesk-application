@@ -61,14 +61,14 @@ datagrid:
         acl_resource: VIEW;Entity:DiamanteAutomationBundle:WorkflowRule
       update:
         type: navigate
-        label: diamante.automation.rule.actions.update
+        label: diamante.automation.rule.actions.edit
         icon: edit
         link: update_link
         rowAction: true
         acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
       delete:
         type: delete
-        label: diamante.automation.rule.actions.remove
+        label: diamante.automation.rule.actions.delete
         icon: trash
         link: delete_link
         acl_resource: DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
@@ -164,7 +164,7 @@ datagrid:
         acl_resource: VIEW;Entity:DiamanteAutomationBundle:BusinessRule
       update:
         type: navigate
-        label: diamante.automation.rule.actions.update
+        label: diamante.automation.rule.actions.edit
         icon: edit
         link: update_link
         rowAction: true
