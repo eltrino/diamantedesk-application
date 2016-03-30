@@ -3,7 +3,7 @@
 <% var conditions = config.conditions; %>
 <% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
-<% var property_type = typeof property !== 'undefined' && properties[property].type; %>
+<% var property_type = typeof property !== 'undefined' && properties[property] && properties[property].type; %>
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
