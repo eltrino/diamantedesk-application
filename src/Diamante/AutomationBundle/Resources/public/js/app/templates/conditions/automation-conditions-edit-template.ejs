@@ -3,6 +3,7 @@
 <% var conditions = config.conditions; %>
 <% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
+<% var custom_conditions = typeof property !== 'undefined' && properties[property] && properties[property].conditions; %>
 <% var property_type = typeof property !== 'undefined' && properties[property] && properties[property].type; %>
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
@@ -17,8 +18,14 @@
             <% } %>
         </select>
         <select name="conditions[type]" data-attr="type">
-            <% for(var key in conditions) { %>
-            <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+            <% if(custom_conditions){ %>
+                <% _.each(custom_conditions, function(key){ %>
+                    <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                <% }); %>
+            <% } else { %>
+                <% for(var key in conditions) { %>
+                <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                <% } %>
             <% } %>
         </select>
         <% if(property && properties[property]){ %>
