@@ -78,6 +78,7 @@ diamante:
       in:           is one of the following
       in_range:     is in range
       contains:     contains
+      not_contains: not contains
       created:      created
       updated:      updated
       removed:      removed
