@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRuleRepository")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="diamante_business_rule")
  */
 class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule

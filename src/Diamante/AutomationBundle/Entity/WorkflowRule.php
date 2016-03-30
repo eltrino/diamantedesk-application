@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="diamante_workflow_rule")
  */
 class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule

@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\AutomationBundle\Model\Shared\AutomationRule;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Rhumsaa\Uuid\Uuid;
+use Doctrine\ORM\Mapping as ORM;
 
 abstract class Rule implements AutomationRule, Entity
 {
@@ -164,5 +165,13 @@ abstract class Rule implements AutomationRule, Entity
         $this->active = false;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamps()
+    {
+        $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 }
