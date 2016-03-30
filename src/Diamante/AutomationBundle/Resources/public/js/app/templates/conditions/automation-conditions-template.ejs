@@ -1,6 +1,7 @@
+<% 'TEMPLATE: automation-conditions-template' %>
 <% var entities = config.entities; %>
 <% var conditions = config.conditions; %>
-<% var properties = typeof entity !== 'undefined' && config.entities['ticket'] && config.entities['ticket'].properties; %>
+<% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
 <% var property_type = typeof property !== 'undefined' && properties[property] && properties[property].type; %>
 <% var type = typeof type !== 'undefined' && type; %>
@@ -13,8 +14,8 @@
         <strong class="value"><%= conditions[type] %></strong>
         <% if(property && properties[property]){ %>
             <% if(property_type == 'string' || property_type == 'datetime' || property_type == 'virtual'){ %>
-                <strong class="value"><%= value %>"</strong>
-                <% if(property_type == 'datetime') { %> <span class="label">Hours</span> <% }%>
+                <strong class="value"><%= value %></strong>
+                <% if(property_type == 'datetime') { %> <span class="label">Hours</span> <% } %>
             <% } else if (properties[property].frontend_options){ %>
                 <strong class="value"><%= properties[property].frontend_options[value] %></strong>
             <% } %>

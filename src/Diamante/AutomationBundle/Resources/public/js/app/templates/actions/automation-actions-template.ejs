@@ -1,6 +1,6 @@
 <% 'TEMPLATE: automation-actions-template' %>
 <% var entities = config.entities; %>
-<% var properties = entities['ticket'].properties; %>
+<% var properties = entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
@@ -17,7 +17,7 @@
         <% if(property){ %>
             <span class="label">To: </span>
             <% if(properties[property].type == 'string'){ %>
-                <strong class="value"><%= value %>" /></strong>
+                <strong class="value"><%= value %></strong>
             <% } else if (properties[property].frontend_options){ %>
                 <strong class="value"><%= properties[property].frontend_options[value] %></strong>
             <% } %>

@@ -13,6 +13,9 @@ define([
             } else if(key === 'property' || key === 'value'){
                 data.parameters = {};
                 data.parameters[data['property']] = data['value'];
+                if(!data['value']){
+                    data.parameters[data['property']] = data['type'];
+                }
                 delete data['property'];
                 delete data['value'];
             } else {
@@ -58,7 +61,6 @@ define([
 
         serializePlain: function(){
             var result = BaseModel.prototype.serialize.apply(this);
-            // FIXME
             result['active'] = 'true';
             result = flatten(result);
             return result;
