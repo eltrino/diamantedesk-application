@@ -36,6 +36,7 @@
                        data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}"
                        required="required"/>
             </div>
+            <% if(property_type == 'datetime') { %> <span class="label">Hours</span> <% }%>
             <% } else if (properties[property].frontend_options){ %>
             <select name="conditions[value]" data-attr="value">
                 <% for(var key in properties[property].frontend_options) { %>
