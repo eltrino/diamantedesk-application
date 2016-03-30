@@ -19,53 +19,24 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         elem = options._sourceElement.get(0),
         parent = options._sourceElement.parent(),
         plot = d3.select(elem),
-        outputData = data.length,
+        isEmpty =  _.every(data, function (elem) { return elem.y == 0;}) ,
         getRandomInt = function(min, max) {
           return Math.floor(Math.random() * (max - min + 1) + min).toString();
         };
 
-    if ( _.every(data), function (elem) {
-          return elem.y == 0;
-        }) {
+    if ( isEmpty ) {
       $(elem).css({
         opacity: '.2',
         pointerEvents: 'none',
         backgroundColor: '#f2f2f7'
       });
           
-          $(parent).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+      $(parent).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
      
-      data = [
-        {
-          y: getRandomInt(10,0),
-          x: "Item1"
-        },
-          
-        {
-          y: getRandomInt(10,0),
-          x: "Item2"
-        },
-        
-        {
-          y: getRandomInt(10,0),
-          x: "Item3"
-        },
-
-        {
-          y: getRandomInt(10,0),
-          x: "Item4"
-        },
-
-        {
-          y: getRandomInt(10,0),
-          x: "Item5"
-        },
-
-        {
-          y: getRandomInt(10,0),
-          x: "Item6"
-        }
-      ]
+      data  = _.map(data, function(elem){
+          elem.y = getRandomInt(0,10);
+          return elem
+      })
     }
 
     if (!parent.is('[data-wid]')) {
@@ -149,9 +120,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
 
-        if ( _.every(data), function (elem) {
-          return elem.y == 0;
-        }) {
+        if ( isEmpty ) {
           $('rect.bar', elem).css('fill', 'rgba(100,100,100,.7)');
         }
 

@@ -52,7 +52,6 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         elem = options._sourceElement.get(0),
         parent = options._sourceElement.parent(),
         plot = d3.select(elem);
-
         function getRandomInt(min, max) {
           return Math.floor(Math.random() * (max - min + 1) + min).toString();
         }
@@ -60,18 +59,17 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
       if (data.length == 0) {
 
         $(elem).css({
-        opacity: '.2',
-        pointerEvents: 'none',
-        backgroundColor: '#f2f2f7'
+            opacity: '.2',
+            pointerEvents: 'none',
+            backgroundColor: '#f2f2f7'
         });
 
         $(parent).prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
 
         data = {};
-        data.dateProp = {
-          date: new Date(),
-          item: getRandomInt(0,5)
-        };
+        data[new Date().getFullYear()+'-'+new Date().getMonth() + '-' + (new Date().getDate()-1)] = { item : getRandomInt(0,5)};
+        data[new Date().getFullYear()+'-'+new Date().getMonth() + '-' + new Date().getDate()] = { item : getRandomInt(0,5)};
+        data[new Date().getFullYear()+'-'+new Date().getMonth() + '-' + (1+new Date().getDate())] = { item : getRandomInt(0,5)};
 
         $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
 
