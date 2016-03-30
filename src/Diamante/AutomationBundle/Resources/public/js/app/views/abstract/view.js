@@ -13,6 +13,7 @@ define([
 
         getTemplateData: function() {
             var data = BaseView.prototype.getTemplateData.call(this);
+            data.index = this.cid;
             return _.extend(data, this.options);
         }
     });
