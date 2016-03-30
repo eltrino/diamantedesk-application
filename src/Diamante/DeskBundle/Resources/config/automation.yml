@@ -85,7 +85,7 @@ diamante_automation:
           private:
             frontend_label: diamante.desk.comment.private.label
             type: bool
-            conditions: ['eq', 'neq', 'true', 'false']
+            conditions: ['true', 'false']
           author:
             frontend_label: diamante.desk.comment.author.label
             frontend_options:
