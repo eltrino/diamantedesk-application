@@ -3,6 +3,7 @@
 <% var conditions = config.conditions; %>
 <% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
+<% var property_type = typeof property !== 'undefined' && properties[property].type; %>
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
@@ -21,7 +22,7 @@
             <% } %>
         </select>
         <% if(property && properties[property]){ %>
-            <% if(properties[property].type == 'string' || properties[property].type == 'datetime'){ %>
+            <% if(property_type == 'string' || property_type == 'datetime' || property_type == 'virtual'){ %>
             <div class="control-item">
                 <input type="text"
                        name="conditions[value]" data-attr="value" value="<%= value %>"
