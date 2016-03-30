@@ -10,6 +10,9 @@ diamante:
         create:
           error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
           success:         Rule successfully created.
+        update:
+          error:           Error occurred when updating the rule. Rule is not updated. Enter all required data and try again.
+          success:         Rule successfully updated.
         delete:
           query:        Are you sure you want to delete this rule?
           success:      Rule successfully deleted.
