@@ -6,11 +6,12 @@
 
 {% block navButtons %}
     {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:' ~ type|capitalize ~ 'Rule') %}
+        {% set ruleCreateLabel = 'diamante.automation.ui.' ~ type ~ '.create' %}
         {{
         UI.addButton({
             'path' : path('diamante_' ~ type ~ '_create', {'type': type}),
-            'title' : 'diamante.automation.ui.create'|trans,
-            'label' : 'diamante.automation.ui.create'|trans
+            'title' : ruleCreateLabel|trans,
+            'label' : ruleCreateLabel|trans
         })
         }}
     {% endif %}

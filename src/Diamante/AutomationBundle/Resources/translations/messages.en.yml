@@ -46,6 +46,11 @@ diamante:
       edit:                Edit
       add:                 Add
       change:              Change
+      workflow:
+        create:              Create Workflow Rule
+      business:
+        create:              Create Business Rule
+
 
     attributes:
       condition:           Condition
