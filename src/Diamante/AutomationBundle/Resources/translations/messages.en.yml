@@ -117,5 +117,6 @@ diamante:
         removed: Comment was removed
 
     cron:
+      d: "{1} every day|]1,Inf[ every %time% days"
       h: "{1} every hour|]1,Inf[ every %time% hours"
       m: every %time% minutes
