@@ -43,6 +43,7 @@ diamante_automation:
           subject:
             frontend_label: diamante.desk.ticket.subject.label
             type: string
+            conditions: ['eq', 'neq', 'contains', 'not_contains']
           description:
             frontend_label: diamante.desk.ticket.description.label
             type: string
