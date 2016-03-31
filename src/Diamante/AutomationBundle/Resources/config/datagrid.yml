@@ -17,17 +17,17 @@ datagrid:
 
       view_link:
         type: url
-        route: diamante_automation_view
+        route: diamante_workflow_view
         params: [type, id]
 
       update_link:
         type: url
-        route: diamante_automation_update
+        route: diamante_workflow_update
         params: [type, id]
 
       delete_link:
         type: url
-        route: diamante_automation_delete
+        route: diamante_workflow_delete
         params: [type, id]
 
     sorters:
@@ -115,17 +115,17 @@ datagrid:
 
       view_link:
         type: url
-        route: diamante_automation_view
+        route: diamante_business_view
         params: [type, id]
 
       update_link:
         type: url
-        route: diamante_automation_update
+        route: diamante_business_update
         params: [type, id]
 
       delete_link:
         type: url
-        route: diamante_automation_delete
+        route: diamante_business_delete
         params: [type, id]
 
     sorters:

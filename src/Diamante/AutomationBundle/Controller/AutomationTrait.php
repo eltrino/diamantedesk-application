@@ -17,92 +17,37 @@ namespace Diamante\AutomationBundle\Controller;
 
 use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
 use Diamante\DeskBundle\Controller\Shared;
-use JMS\Serializer\Serializer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Class AutomationController
- *
- * @package Diamante\AutomationBundle\Controller
- *
- * @Route("automation")
- */
-class AutomationController extends Controller
+trait AutomationTrait
 {
-    use Shared\FormHandlerTrait;
-    use Shared\ExceptionHandlerTrait;
-    use Shared\SessionFlashMessengerTrait;
-    use Shared\ResponseHandlerTrait;
-
-    /**
-     * @Route(
-     *      "/{type}/{_format}",
-     *      name="diamante_automation_list",
-     *      requirements={"type"="workflow|business", "_format"="html|json"},
-     *      defaults={"_format" = "html"}
-     * )
-     * @Template("DiamanteAutomationBundle:Automation:list.html.twig")
-     *
-     * @param string $type
-     *
-     * @return array
-     */
-    public function listAction($type)
+    protected function getList($type)
     {
         return ['type' => $type];
     }
 
-    /**
-     * @Route(
-     *      "/{type}/view/{id}",
-     *      name="diamante_automation_view",
-     *      requirements={
-     *          "type"="workflow|business",
-     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
-     *      }
-     * )
-     * @Template("DiamanteAutomationBundle:Automation:view.html.twig")
-     *
-     * @param string $type
-     * @param int $id
-     *
-     * @return array|Response
-     */
-    public function viewAction($type, $id)
+    protected function view($type, $id)
     {
         $configProvider = $this->container->get('diamante_automation.config.provider');
         $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
             $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
             $serializer = $this->get('serializer');
+
             return [
                 "entity" => $rule,
-                "model" => $serializer->serialize($rule, 'json'),
+                "model"  => $serializer->serialize($rule, 'json'),
                 "config" => $config,
-                "type" => $type
+                "type"   => $type
             ];
         } catch (\Exception $e) {
             $this->handleException($e);
+
             return new Response(null, 404);
         }
     }
 
-    /**
-     * @Route(
-     *      "/{type}/create",
-     *      name="diamante_automation_create",
-     *      requirements={"type"="workflow|business"}
-     * )
-     * @Template("DiamanteAutomationBundle:Automation:create.html.twig")
-     *
-     * @param string $type
-     *
-     * @return array
-     */
-    public function createAction($type)
+    protected function create($type)
     {
         $command = new UpdateRuleCommand();
         $form = $this->createForm('diamante_automation_update_rule_form', $command);
@@ -116,8 +61,8 @@ class AutomationController extends Controller
             $rule = $this->get('diamante.rule.service')->createRule($command->rule);
             $this->addSuccessMessage('diamante.automation.rule.messages.create.success');
             $response = $this->getSuccessSaveResponse(
-                'diamante_automation_update',
-                'diamante_automation_view',
+                $this->getRuleRoute($type, 'update'),
+                $this->getRuleRoute($type, 'view'),
                 ['type' => $type, 'id' => $rule->getId()]
             );
 
@@ -129,23 +74,7 @@ class AutomationController extends Controller
         return $response;
     }
 
-    /**
-     * @Route(
-     *      "/{type}/update/{id}",
-     *      name="diamante_automation_update",
-     *      requirements={
-     *          "type"="workflow|business",
-     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
-     *      }
-     * )
-     * @Template("DiamanteAutomationBundle:Automation:update.html.twig")
-     *
-     * @param string $type
-     * @param int    $id
-     *
-     * @return array
-     */
-    public function updateAction($type, $id)
+    protected function update($type, $id)
     {
         $command = new UpdateRuleCommand();
         $form = $this->createForm('diamante_automation_update_rule_form', $command);
@@ -162,8 +91,8 @@ class AutomationController extends Controller
 
             $this->addSuccessMessage('diamante.automation.rule.messages.update.success');
             $response = $this->getSuccessSaveResponse(
-                'diamante_automation_update',
-                'diamante_automation_view',
+                $this->getRuleRoute($type, 'update'),
+                $this->getRuleRoute($type, 'view'),
                 ['type' => $type, 'id' => $rule->getId()]
             );
 
@@ -174,61 +103,46 @@ class AutomationController extends Controller
                 'type'   => $type,
                 'config' => $config,
                 'model'  => $serializer->serialize($rule, 'json'),
-                'ruleId' => $rule->getId()
+                'rule' => $rule
             ];
         }
 
         return $response;
     }
 
-    /**
-     * @Route(
-     *      "/{type}/delete/{id}",
-     *      name="diamante_automation_delete",
-     *      requirements={
-     *          "type"="workflow|business",
-     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
-     *      }
-     * )
-     *
-     * @param string $type
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function deleteAction($type, $id)
+    protected function delete($type, $id)
     {
         try {
             $this->get('diamante.rule.service')->deleteRule($type, $id);
         } catch (\Exception $e) {
             $this->handleException($e);
+
             return new Response(null, 500);
         }
 
         return new Response(null, 204);
     }
 
-    /**
-     * @Route(
-     *      "/{type}/activate/{id}",
-     *      name="diamante_automation_activate",
-     *      requirements={
-     *          "type"="workflow|business",
-     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
-     *      }
-     * )
-     *
-     * @param string $type
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function activateAction($type, $id)
+    protected function activate($type, $id)
     {
         try {
             $this->get('diamante.rule.service')->activateRule($type, $id);
         } catch (\Exception $e) {
             $this->handleException($e);
+
+            return new Response(null, 500);
+        }
+
+        return new Response(null, 204);
+    }
+
+    protected function deactivate($type, $id)
+    {
+        try {
+            $this->get('diamante.rule.service')->deactivateRule($type, $id);
+        } catch (\Exception $e) {
+            $this->handleException($e);
+
             return new Response(null, 500);
         }
 
@@ -236,29 +150,13 @@ class AutomationController extends Controller
     }
 
     /**
-     * @Route(
-     *      "/{type}/deactivate/{id}",
-     *      name="diamante_automation_deactivate",
-     *      requirements={
-     *          "type"="workflow|business",
-     *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
-     *      }
-     * )
-     *
      * @param string $type
-     * @param int $id
+     * @param string $action
      *
-     * @return Response
+     * @return string
      */
-    public function deactivateAction($type, $id)
+    private function getRuleRoute($type, $action)
     {
-        try {
-            $this->get('diamante.rule.service')->deactivateRule($type, $id);
-        } catch (\Exception $e) {
-            $this->handleException($e);
-            return new Response(null, 500);
-        }
-
-        return new Response(null, 204);
+        return sprintf('diamante_%s_%s', $type, $action);
     }
 }

@@ -1,5 +1,11 @@
 {% extends 'DiamanteAutomationBundle:Automation:edit.html.twig' %}
 
+{% set createAction = 'diamante_' ~ type ~ '_create' %}
+{% set updateAction = 'diamante_' ~ type ~ '_update' %}
+{% set formAction = path(updateAction, { 'id': rule.id, 'type': type }) %}
+
+{% oro_title_set({params : {"%rule.name%": rule.name }}) %}
+
 {% block content_data %}
     {{ parent() }}
 {% endblock content_data %}
