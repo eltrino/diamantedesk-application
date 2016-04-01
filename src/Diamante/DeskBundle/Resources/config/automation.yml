@@ -22,6 +22,7 @@ diamante_automation:
             frontend_options:
               source: "@diamante.autocomplete.branch.service->getBranches"
             type: branch
+            updatable: false
             conditions: ['eq', 'neq', 'contains']
           assignee:
             frontend_label: diamante.desk.ticket.assignee.label

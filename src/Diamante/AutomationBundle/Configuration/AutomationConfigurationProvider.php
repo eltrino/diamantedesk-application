@@ -240,6 +240,19 @@ class AutomationConfigurationProvider
         return $conditions;
     }
 
+    protected function getUpdatable($entity, $property)
+    {
+        $default = true;
+        $config = $this->getEntityConfiguration($entity);
+        $custom = $config->get(sprintf("properties.%s.updatable", $property));
+
+        if(!is_null($custom)) {
+            return $custom;
+        }
+
+        return $default;
+    }
+
     /**
      * @param $entity
      *
@@ -349,6 +362,7 @@ class AutomationConfigurationProvider
                     'label'      => $translator->trans($propertyConfig['frontend_label']),
                     'type'       => $propertyConfig['type'],
                     'actions'    => $this->getActionsForProperty($name, $propertyName),
+                    'updatable'  => $this->getUpdatable($name, $propertyName),
                     'conditions' => $this->getConditionsForProperty($name, $propertyName),
                     'rules'      => $this->getSupportedRulesForProperty($name, $propertyName)
                 ];
