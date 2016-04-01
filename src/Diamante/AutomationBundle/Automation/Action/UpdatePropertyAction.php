@@ -25,6 +25,11 @@ use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 class UpdatePropertyAction extends AbstractAction
 {
     /**
+     * @var \Doctrine\Common\Persistence\ObjectManager|object
+     */
+    protected $em;
+
+    /**
      * @var Registry
      */
     private $registry;
@@ -41,6 +46,7 @@ class UpdatePropertyAction extends AbstractAction
     {
         $this->registry = $registry;
         $this->configurationProvider = $configurationProvider;
+        $this->em = $registry->getManager();
     }
 
     public function execute()
@@ -52,7 +58,7 @@ class UpdatePropertyAction extends AbstractAction
         $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
 
         $entity = $this->update($target, $targetClass, $properties);
-
+        $this->disableListeners();
         $this->registry->getManager()->persist($entity);
     }
 
