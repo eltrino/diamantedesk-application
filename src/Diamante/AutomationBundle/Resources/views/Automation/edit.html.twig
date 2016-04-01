@@ -5,8 +5,9 @@
 {% block navButtons %}
     {% set cancel_url = path(listAction, {'type': type}) %}
     {{ UI.button({'path' : cancel_url, 'title' : 'diamante.automation.ui.cancel'|trans, 'label' : 'diamante.automation.ui.cancel'|trans}) }}
-    {{ UI.saveAndStayButton() }}
-    {{ UI.saveAndCloseButton() }}
+    {% set html = UI.saveAndCloseButton() %}
+    {% set html = html ~ UI.saveAndStayButton() %}
+    {{ UI.dropdownSaveButton({'html': html}) }}
 {% endblock %}
 
 {% block pageHeader %}
