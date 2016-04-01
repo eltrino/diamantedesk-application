@@ -40,7 +40,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class CommentServiceImpl implements CommentService
 {
     use Shared\AttachmentTrait;
-    use Shared\WorkflowTrait;
 
     /**
      * @var Repository
@@ -186,12 +185,6 @@ class CommentServiceImpl implements CommentService
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
 
-        $this->dispatchWorkflowEvent(
-            $this->registry,
-            $this->dispatcher,
-            $comment
-        );
-
         return $comment;
     }
 
@@ -289,12 +282,6 @@ class CommentServiceImpl implements CommentService
         $this->updateTicketStatus($ticket, $command);
 
         $this->registry->getManager()->flush();
-
-        $this->dispatchWorkflowEvent(
-            $this->registry,
-            $this->dispatcher,
-            $comment
-        );
     }
 
     /**
@@ -321,12 +308,6 @@ class CommentServiceImpl implements CommentService
             $this->registry->getManager()->flush();
         }
 
-        $this->dispatchWorkflowEvent(
-            $this->registry,
-            $this->dispatcher,
-            $comment
-        );
-
         return $comment;
     }
 
@@ -350,12 +331,6 @@ class CommentServiceImpl implements CommentService
         }
 
         $this->registry->getManager()->flush();
-
-        $this->dispatchWorkflowEvent(
-            $this->registry,
-            $this->dispatcher,
-            $comment
-        );
     }
 
     /**
