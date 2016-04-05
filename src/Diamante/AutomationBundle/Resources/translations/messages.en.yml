@@ -83,8 +83,6 @@ diamante:
       gte:          is greater than or equals to
       lt:           is less than
       lte:          is less than or equals to
-      in:           is one of the following
-      in_range:     is in range
       contains:     contains
       not_contains: not contains
       created:      created

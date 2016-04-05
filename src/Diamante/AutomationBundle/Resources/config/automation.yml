@@ -20,12 +20,6 @@ diamante_automation:
     lte:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Lte'
       frontend_label: diamante.automation.condition.lte
-    in:
-      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\In'
-      frontend_label: diamante.automation.condition.in
-    in_range:
-      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\InRange'
-      frontend_label: diamante.automation.condition.in_range
     contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Contains'
       frontend_label: diamante.automation.condition.contains
