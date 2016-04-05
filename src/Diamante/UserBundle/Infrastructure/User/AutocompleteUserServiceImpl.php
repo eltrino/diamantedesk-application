@@ -23,6 +23,10 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
 {
     const ID_FIELD_NAME = 'id';
     const AVATAR_SIZE   = 16;
+    const WATCHERS = '[Watchers]';
+    const REPORTER = '[Reporter]';
+    const ASSIGNEE = '[Assignee]';
+    const COMMENT_AUTHOR = '[Comment author]';
 
     /**
      * @var UserService
@@ -73,6 +77,21 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
         $oroUsers = $this->getOroUsers();
 
         return array_merge($diamanteUsers, $oroUsers);
+    }
+
+    /**
+     * @return array
+     */
+    public function getNotifyActionList()
+    {
+        $groups = [
+            ['group' => static::WATCHERS],
+            ['group' => static::ASSIGNEE],
+            ['group' => static::REPORTER],
+            ['group' => static::COMMENT_AUTHOR]
+        ];
+
+        return array_merge($groups, $this->getUsers());
     }
 
     /**

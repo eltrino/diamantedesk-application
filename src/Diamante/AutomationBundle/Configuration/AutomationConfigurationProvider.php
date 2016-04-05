@@ -410,6 +410,10 @@ class AutomationConfigurationProvider
                 "label"      => $translator->trans($config['frontend_label']),
                 "data_types" => $config['data_types']
             ];
+
+            if (!empty($config['frontend_options'])) {
+                $actions[$name]['frontend_options'] = $this->frontendOptionsResolver->resolve($config['frontend_options']);
+            }
         }
 
         return $actions;

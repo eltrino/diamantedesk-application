@@ -30,4 +30,9 @@ interface AutocompleteUserService
      * @return array
      */
     public function getDiamanteUsers();
+
+    /**
+     * @return array
+     */
+    public function getNotifyActionList();
 }
