@@ -22,10 +22,11 @@ class TicketHistory implements Entity
      * @var integer
      */
     protected $id;
+
     /**
-     * @var integer
+     * @var Ticket
      */
-    protected $ticketId;
+    protected $ticket;
 
     /**
      * @var string
@@ -33,12 +34,11 @@ class TicketHistory implements Entity
     protected $ticketKey;
 
     /**
-     * @param integer $ticketId
-     * @param string $ticketKey
+     * @param Ticket $ticket
      */
-    public function __construct($ticketId, $ticketKey) {
-        $this->ticketId = $ticketId;
-        $this->ticketKey = $ticketKey;
+    public function __construct(Ticket $ticket) {
+        $this->ticket = $ticket;
+        $this->ticketKey = $ticket->getKey();
     }
 
     /**
@@ -50,11 +50,11 @@ class TicketHistory implements Entity
     }
 
     /**
-     * @return integer
+     * @return Ticket
      */
-    public function getTicketId()
+    public function getTicket()
     {
-        return $this->ticketId;
+        return $this->ticket;
     }
 
     /**

@@ -14,33 +14,32 @@
  */
 namespace Diamante\DeskBundle\Api\Internal;
 
-use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Api\Command;
+use Diamante\DeskBundle\Api\TicketService;
+use Diamante\DeskBundle\Entity\TicketHistory;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineTicketHistoryRepository;
 use Diamante\DeskBundle\Model\Attachment\Exception\AttachmentNotFoundException;
-use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Attachment\Manager as AttachmentManager;
+use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
+use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
+use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
-use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\DeskBundle\Model\Ticket\TicketBuilder;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
-use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
-use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\ApiUser\ApiUser;
-use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Diamante\DeskBundle\Entity\TicketHistory;
-use Oro\Bundle\TagBundle\Entity\TagManager;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Oro\Bundle\TagBundle\Entity\TagManager;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TicketServiceImpl implements TicketService
 {
@@ -102,39 +101,42 @@ class TicketServiceImpl implements TicketService
     protected $loggedUser;
 
     /**
-     * @param Registry $doctrineRegistry
-     * @param TicketBuilder $ticketBuilder
-     * @param AttachmentManager $attachmentManager
-     * @param AuthorizationService $authorizationService
+     * @param Registry                 $doctrineRegistry
+     * @param TicketBuilder            $ticketBuilder
+     * @param AttachmentManager        $attachmentManager
+     * @param AuthorizationService     $authorizationService
      * @param EventDispatcherInterface $dispatcher
-     * @param TagManager $tagManager
-     * @param SecurityFacade $securityFacade
+     * @param TagManager               $tagManager
+     * @param SecurityFacade           $securityFacade
      */
-    public function __construct(Registry $doctrineRegistry,
-                                TicketBuilder $ticketBuilder,
-                                AttachmentManager $attachmentManager,
-                                AuthorizationService $authorizationService,
-                                EventDispatcherInterface $dispatcher,
-                                TagManager $tagManager,
-                                SecurityFacade $securityFacade
+    public function __construct(
+        Registry $doctrineRegistry,
+        TicketBuilder $ticketBuilder,
+        AttachmentManager $attachmentManager,
+        AuthorizationService $authorizationService,
+        EventDispatcherInterface $dispatcher,
+        TagManager $tagManager,
+        SecurityFacade $securityFacade
     ) {
-        $this->doctrineRegistry        = $doctrineRegistry;
-        $this->ticketBuilder           = $ticketBuilder;
-        $this->attachmentManager       = $attachmentManager;
-        $this->authorizationService    = $authorizationService;
-        $this->dispatcher              = $dispatcher;
-        $this->tagManager              = $tagManager;
+        $this->doctrineRegistry = $doctrineRegistry;
+        $this->ticketBuilder = $ticketBuilder;
+        $this->attachmentManager = $attachmentManager;
+        $this->authorizationService = $authorizationService;
+        $this->dispatcher = $dispatcher;
+        $this->tagManager = $tagManager;
 
-        $this->ticketRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
-        $this->branchRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
+        $this->ticketRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
+        $this->branchRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
         $this->ticketHistoryRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:TicketHistory');
-        $this->oroUserRepository       = $this->doctrineRegistry->getRepository('OroUserBundle:User');
-        $this->loggedUser              = $securityFacade->getLoggedUser();
+        $this->oroUserRepository = $this->doctrineRegistry->getRepository('OroUserBundle:User');
+        $this->loggedUser = $securityFacade->getLoggedUser();
     }
 
     /**
      * Load Ticket by given ticket id
+     *
      * @param int $id
+     *
      * @return Ticket
      *
      * @throws TicketNotFoundException
@@ -146,12 +148,15 @@ class TicketServiceImpl implements TicketService
         $this->loadTagging($ticket);
 
         $this->isGranted('VIEW', $ticket);
+
         return $ticket;
     }
 
     /**
      * Load Ticket by given Ticket Key
+     *
      * @param string $key
+     *
      * @return Ticket
      *
      * @throws ForbiddenException
@@ -161,7 +166,7 @@ class TicketServiceImpl implements TicketService
     {
         $ticketHistory = $this->ticketHistoryRepository->findOneByTicketKey($key);
         if ($ticketHistory) {
-            $ticket = $this->ticketRepository->get($ticketHistory->getTicketId());
+            $ticket = $this->ticketRepository->get($ticketHistory->getTicket()->getId());
             $currentKey = (string)$ticket->getKey();
             throw new TicketMovedException($currentKey);
         } else {
@@ -178,6 +183,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * @param TicketKey $ticketKey
+     *
      * @return Ticket
      *
      * @throws TicketNotFoundException
@@ -197,6 +203,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * @param int $id
+     *
      * @return Ticket
      * @throws TicketNotFoundException if Ticket does not exists
      */
@@ -215,7 +222,9 @@ class TicketServiceImpl implements TicketService
 
     /**
      * List Ticket attachments
+     *
      * @param int $id
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection
      *
      * @throws TicketNotFoundException
@@ -225,12 +234,15 @@ class TicketServiceImpl implements TicketService
     {
         $ticket = $this->loadTicket($id);
         $this->isGranted('VIEW', $ticket);
+
         return $ticket->getAttachments();
     }
 
     /**
      * Retrieves Ticket Attachment
+     *
      * @param Command\RetrieveTicketAttachmentCommand $command
+     *
      * @return \Diamante\DeskBundle\Entity\Attachment
      *
      * @throws TicketNotFoundException
@@ -247,12 +259,15 @@ class TicketServiceImpl implements TicketService
         if (empty($attachment)) {
             throw new AttachmentNotFoundException();
         }
+
         return $attachment;
     }
 
     /**
      * Adds Attachments for Ticket
+     *
      * @param Command\AddTicketAttachmentCommand $command
+     *
      * @return array
      *
      * @throws TicketNotFoundException
@@ -276,8 +291,10 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Remove Attachment from Ticket
+     *
      * @param Command\RemoveTicketAttachmentCommand $command
-     * @param boolean $flush
+     * @param boolean                               $flush
+     *
      * @return TicketKey
      *
      * @throws TicketNotFoundException
@@ -309,10 +326,11 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Create Ticket
-     * @param Command\CreateTicketCommand $command
-     * @return Ticket
      *
-     * @throws ForbiddenException
+     * @param Command\CreateTicketCommand $command
+     *
+     * @return Ticket
+     * @throws \Exception
      */
     public function createTicket(Command\CreateTicketCommand $command)
     {
@@ -321,28 +339,37 @@ class TicketServiceImpl implements TicketService
         \Assert\that($command->attachmentsInput)->nullOr()->all()
             ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
 
-        $this->ticketBuilder
-            ->setSubject($command->subject)
-            ->setDescription($command->description)
-            ->setBranchId($command->branch)
-            ->setReporter($command->reporter)
-            ->setAssignee($command->assignee)
-            ->setPriority($command->priority)
-            ->setSource($command->source)
-            ->setStatus($command->status)
-            ->setTags($command->tags);
+        $em = $this->doctrineRegistry->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            $this->ticketBuilder
+                ->setSubject($command->subject)
+                ->setDescription($command->description)
+                ->setBranchId($command->branch)
+                ->setReporter($command->reporter)
+                ->setAssignee($command->assignee)
+                ->setPriority($command->priority)
+                ->setSource($command->source)
+                ->setStatus($command->status)
+                ->setTags($command->tags);
 
-        $ticket = $this->ticketBuilder->build();
+            $ticket = $this->ticketBuilder->build();
+            $em->lock($ticket->getBranch(), LockMode::PESSIMISTIC_READ);
 
-        $this->createAttachments($command, $ticket);
+            $this->createAttachments($command, $ticket);
 
-        $this->doctrineRegistry->getManager()->persist($ticket);
-        $this->doctrineRegistry->getManager()->flush();
+            $em->persist($ticket);
+            $em->flush();
+            $em->getConnection()->commit();
 
-        if ($this->loggedUser instanceof OroUser) {
-            $this->tagManager->saveTagging($ticket);
-            $ticket->setTags(null);
-            $this->loadTagging($ticket);
+            if ($this->loggedUser instanceof OroUser) {
+                $this->tagManager->saveTagging($ticket);
+                $ticket->setTags(null);
+                $this->loadTagging($ticket);
+            }
+        } catch (\Exception $e) {
+            $em->getConnection()->rollback();
+            throw $e;
         }
 
         return $ticket;
@@ -352,6 +379,7 @@ class TicketServiceImpl implements TicketService
      * Update Ticket
      *
      * @param Command\UpdateTicketCommand $command
+     *
      * @return Ticket
      *
      * @throws \RuntimeException if unable to load required ticket and assignee
@@ -405,6 +433,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * @param Command\UpdateStatusCommand $command
+     *
      * @return Ticket
      *
      * @throws \RuntimeException if unable to load required ticket
@@ -428,29 +457,29 @@ class TicketServiceImpl implements TicketService
      */
     public function moveTicket(Command\MoveTicketCommand $command)
     {
-        $ticket = $this->loadTicketById($command->id);
+        $em = $this->doctrineRegistry->getManager();
+        $em->getConnection()->beginTransaction();
 
         try {
-            $this->ticketHistoryRepository->store(new TicketHistory($ticket->getId(), $ticket->getKey()));
+            $ticket = $this->loadTicketById($command->id);
+            $em->lock($command->branch, LockMode::PESSIMISTIC_READ);
+
+            $this->ticketHistoryRepository->store(new TicketHistory($ticket));
             $ticket->move($command->branch);
-            $this->doctrineRegistry->getManager()->persist($ticket);
-            $this->doctrineRegistry->getManager()->flush();
-            $newKey = $ticket->getKey();
-
-            //Remove old key from history to prevent loop redirects
-            if ($oldHistory = $this->ticketHistoryRepository->findOneByTicketKey($newKey)) {
-                $this->doctrineRegistry->getManager()->remove($oldHistory);
-                $this->doctrineRegistry->getManager()->flush();
-            }
-
+            $em->persist($ticket);
+            $em->flush();
+            $em->getConnection()->commit();
         } catch (\Exception $e) {
+            $em->getConnection()->rollback();
             throw new TicketMovedException($e->getMessage());
         }
     }
 
     /**
      * Assign Ticket to specified User
+     *
      * @param Command\AssigneeTicketCommand $command
+     *
      * @throws \RuntimeException if unable to load required ticket, assignee
      */
     public function assignTicket(Command\AssigneeTicketCommand $command)
@@ -474,7 +503,9 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Delete Ticket by id
+     *
      * @param $id
+     *
      * @return null
      *
      * @throws \RuntimeException if unable to load required ticket
@@ -488,7 +519,9 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Delete Ticket by key
+     *
      * @param string $key
+     *
      * @return void
      *
      * @throws TicketNotFoundException
@@ -503,6 +536,7 @@ class TicketServiceImpl implements TicketService
 
     /**
      * @param Ticket $ticket
+     *
      * @return void
      */
     private function processDeleteTicket(Ticket $ticket)
@@ -512,14 +546,16 @@ class TicketServiceImpl implements TicketService
         foreach ($attachments as $attachment) {
             $this->attachmentManager->deleteAttachment($attachment);
         }
+
         $this->ticketRepository->remove($ticket);
     }
 
     /**
      * Verify permissions through Oro Platform security bundle
      *
-     * @param string $operation
+     * @param string        $operation
      * @param string|Ticket $entity
+     *
      * @throws ForbiddenException
      */
     private function isGranted($operation, $entity)
@@ -533,6 +569,7 @@ class TicketServiceImpl implements TicketService
      * Verify that current user assignee is current user
      *
      * @param Ticket $entity
+     *
      * @throws ForbiddenException
      */
     private function isAssigneeGranted(Ticket $entity)
@@ -545,7 +582,9 @@ class TicketServiceImpl implements TicketService
 
     /**
      * Update certain properties of the Ticket
+     *
      * @param Command\UpdatePropertiesCommand $command
+     *
      * @return Ticket
      *
      * @throws TicketNotFoundException
@@ -561,13 +600,15 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository->store($ticket);
 
         $this->loadTagging($ticket);
-        
+
         return $ticket;
     }
 
     /**
      * Update certain properties of the Ticket by key
+     *
      * @param Command\UpdatePropertiesCommand $command
+     *
      * @return Ticket
      *
      * @throws TicketNotFoundException

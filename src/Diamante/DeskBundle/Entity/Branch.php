@@ -112,6 +112,13 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
     protected $logo;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="number", type="integer")
+     */
+    protected $sequenceNumber = 1;
+
+    /**
      * @var ArrayCollection
      */
     protected $tags;

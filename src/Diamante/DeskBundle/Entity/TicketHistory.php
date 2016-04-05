@@ -44,9 +44,10 @@ class TicketHistory extends \Diamante\DeskBundle\Model\Ticket\TicketHistory
     /**
      * @var integer
      *
-     * @ORM\Column(name="ticket_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Ticket")
+     * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $ticketId;
+    protected $ticket;
 
     /**
      * @var string

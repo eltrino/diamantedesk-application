@@ -53,6 +53,11 @@ class Branch implements Taggable, Entity
     protected $logo;
 
     /**
+     * @var integer
+     */
+    protected $sequenceNumber;
+
+    /**
      * @var ArrayCollection
      */
     protected $tags;
@@ -229,6 +234,25 @@ class Branch implements Taggable, Entity
         $this->tags = $tags;
 
         return $this;
+    }
+
+    public function setName($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function setSequenceNumber($sequenceNumber)
+    {
+        $this->sequenceNumber = $sequenceNumber;
+
+        return $this;
+    }
+
+    public function getSequenceNumber()
+    {
+        return $this->sequenceNumber;
     }
 
     /**

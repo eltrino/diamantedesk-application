@@ -25,20 +25,22 @@ class TicketListener
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
-     * @param Ticket $ticket
+     *
+     * @param Ticket             $ticket
      * @param LifecycleEventArgs $event
+     *
+     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Exception
      */
     public function prePersistHandler(Ticket $ticket, LifecycleEventArgs $event)
     {
         if ($ticket->getSequenceNumber()->getValue()) {
             return;
         }
-        $em = $event->getEntityManager();
-        $query = $em->createQuery("SELECT MAX(t.sequenceNumber) FROM DiamanteDeskBundle:Ticket t WHERE t.branch = :branchId")
-            ->setParameter('branchId', $ticket->getBranch()->getId());
-        $ticketSequenceNumberValue = $query->getSingleScalarResult();
-        $ticketSequenceNumberValue++;
+
         $ticketSequenceNumber = $ticket->getSequenceNumber();
+        $ticketSequenceNumberValue = $ticket->getBranch()->getSequenceNumber();
+        $ticket->getBranch()->setSequenceNumber($ticketSequenceNumberValue + 1);
 
         $ref = new \ReflectionClass($ticketSequenceNumber);
         $property = $ref->getProperty(self::TICKET_SEQUENCE_NUMBER_FIELD_TO_UPDATE);
