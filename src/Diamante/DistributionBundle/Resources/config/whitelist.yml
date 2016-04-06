@@ -25,6 +25,7 @@ whitelist:
     - 'oro_dataaudit_history'
     - 'oro_resize_attachment'
     - 'oro_filtered_attachment'
+    - 'oro_importexport_export_instant'
 
     #OroUserBundle
     - 'oro_activity_list_api_get_list'
