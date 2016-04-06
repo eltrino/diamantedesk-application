@@ -88,7 +88,7 @@ class WatchersApiServiceImpl extends WatchersServiceImpl implements RestServiceI
      * )
      *
      * @param Command\AddWatcherByEmailCommand $command
-     * @return null
+     * @return \Diamante\UserBundle\Model\UserDetails
      */
     public function addWatcherByEmail(Command\AddWatcherByEmailCommand $command)
     {

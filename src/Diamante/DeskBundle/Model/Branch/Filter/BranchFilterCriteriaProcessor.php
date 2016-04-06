@@ -27,7 +27,7 @@ class BranchFilterCriteriaProcessor extends AbstractFilterCriteriaProcessor
 
             if (!empty($propertyValue)) {
                 $value = urldecode($propertyValue);
-                if (in_array($property, array('name','description','key'))) {
+                if (in_array($property, array('name', 'description', 'key'))) {
                     $operator = self::LIKE_OPERATOR;
                 }
                 array_push($this->criteria, array($property, $operator, $value));

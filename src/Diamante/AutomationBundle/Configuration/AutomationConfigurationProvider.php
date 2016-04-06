@@ -32,25 +32,25 @@ class AutomationConfigurationProvider
     /**
      * @var array
      */
-    protected $entities     = [];
+    protected $entities = [];
     /**
      * @var array
      */
-    protected $conditions   = [];
+    protected $conditions = [];
     /**
      * @var array
      */
-    protected $actions      = [];
+    protected $actions = [];
 
     /**
      * @var array
      */
-    protected $targetMap    = [];
+    protected $targetMap = [];
 
     /**
      * @var array
      */
-    protected static $configStructure     = ['entities', 'conditions', 'actions'];
+    protected static $configStructure = ['entities', 'conditions', 'actions'];
 
     /**
      * @var FrontendOptionsResolver
@@ -246,7 +246,7 @@ class AutomationConfigurationProvider
         $config = $this->getEntityConfiguration($entity);
         $custom = $config->get(sprintf("properties.%s.updatable", $property));
 
-        if(!is_null($custom)) {
+        if (!is_null($custom)) {
             return $custom;
         }
 
@@ -278,7 +278,7 @@ class AutomationConfigurationProvider
         $config = $this->getEntityConfiguration($entity);
         $rules = $config->get(sprintf("properties.%s.rules", $property));
 
-        if(is_array($rules)) {
+        if (is_array($rules)) {
             return $rules;
         }
 
@@ -325,9 +325,9 @@ class AutomationConfigurationProvider
     }
 
     /**
-     * @param $entityType
-     * @param $property
-     * @param $expectedType
+     * @param string $entityType
+     * @param string $property
+     * @param string $expectedType
      *
      * @return bool
      */
@@ -428,7 +428,7 @@ class AutomationConfigurationProvider
         $connectors = [];
 
         foreach ($this->connectorsMap as $name => $label) {
-            $connectors[strtolower($name)]  = $translator->trans($label);
+            $connectors[strtolower($name)] = $translator->trans($label);
         }
 
         return $connectors;

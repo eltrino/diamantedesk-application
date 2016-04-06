@@ -17,7 +17,7 @@ trait FormHandlerTrait
     protected function handle(Form $form)
     {
         if (false === $this->getRequest()->isMethod('POST')) {
-            throw new MethodNotAllowedException(array('POST'),'Form can be posted only by "POST" method.');
+            throw new MethodNotAllowedException(array('POST'), 'Form can be posted only by "POST" method.');
         }
 
         $form->handleRequest($this->getRequest());

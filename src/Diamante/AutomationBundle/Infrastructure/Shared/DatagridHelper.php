@@ -53,7 +53,7 @@ class DatagridHelper
             $options = [];
             $result = $this->businessRuleRepository->getTimeIntervalChoices();
 
-            foreach ((array) $result as $value) {
+            foreach ((array)$result as $value) {
                 $type = substr($value['timeInterval'], -1);
                 $time = rtrim($value['timeInterval'], 'mh');
 

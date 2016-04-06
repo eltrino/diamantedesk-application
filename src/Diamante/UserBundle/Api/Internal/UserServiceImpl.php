@@ -190,7 +190,7 @@ class UserServiceImpl implements UserService, GravatarProvider
     {
         $user = $this->diamanteUserRepository->get($user->getId());
 
-        if(!$user) {
+        if (!$user) {
             return false;
         }
 
@@ -335,7 +335,7 @@ class UserServiceImpl implements UserService, GravatarProvider
 
     /**
      * @param ApiUser $apiUser
-     * @return DiamanteUser|null
+     * @return DiamanteUser
      */
     public function getUserFromApiUser(ApiUser $apiUser)
     {
@@ -370,7 +370,7 @@ class UserServiceImpl implements UserService, GravatarProvider
     {
         $charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
 
-        return substr( str_shuffle( $charmap ), 0, $length );
+        return substr(str_shuffle($charmap), 0, $length);
     }
 
     /**

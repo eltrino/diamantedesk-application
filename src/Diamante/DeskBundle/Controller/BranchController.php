@@ -78,7 +78,7 @@ class BranchController extends Controller
         try {
             $form = $this->createForm('diamante_branch_form', $command);
 
-            $result = $this->edit($command, $form, function ($command) {
+            $result = $this->edit($command, $form, function($command) {
                 $branch = $this->get('diamante.branch.service')->createBranch($command);
                 return $branch->getId();
             });
@@ -112,7 +112,7 @@ class BranchController extends Controller
         try {
             $form = $this->createForm('diamante_update_branch_form', $command);
 
-            $result = $this->edit($command, $form, function ($command) use ($branch) {
+            $result = $this->edit($command, $form, function($command) use ($branch) {
                 $branchId = $this->get('diamante.branch.service')->updateBranch($command);
                 return $branchId;
             });
@@ -142,7 +142,7 @@ class BranchController extends Controller
 
     /**
      * @param BranchCommand $command
-     * @param $callback
+     * @param \Closure $callback
      * @param Form $form
      * @return array
      */

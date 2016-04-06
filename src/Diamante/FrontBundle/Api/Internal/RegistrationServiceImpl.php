@@ -71,7 +71,7 @@ class RegistrationServiceImpl implements RegistrationService
     {
         $existingUser = $this->diamanteUserRepository->findUserByEmail($command->email);
 
-        if($existingUser && !$existingUser->isDeleted()){
+        if ($existingUser && !$existingUser->isDeleted()) {
             throw new \RuntimeException('An account with this email address already exists');
         }
 

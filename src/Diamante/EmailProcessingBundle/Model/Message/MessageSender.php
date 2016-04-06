@@ -53,7 +53,7 @@ class MessageSender implements Person
             $name = trim($name, "\"");
             $name = $this->canonicalizeName($name);
 
-            if (strpos($name," ")) {
+            if (strpos($name, " ")) {
                 list($firstName, $lastName) = explode(" ", $name);
             } else {
                 $firstName = $name;

@@ -92,7 +92,7 @@ class TicketController extends Controller
      *
      * @param int $ticketId
      * @param string $user
-     * @return array|Response
+     * @return RedirectResponse
      */
     public function deleteWatcherAction($ticketId, $user)
     {
@@ -186,7 +186,7 @@ class TicketController extends Controller
             $this->handleException($e);
             $response = array('form' => $formView);
         }
-         return $response;
+            return $response;
     }
 
     /**
@@ -335,7 +335,7 @@ class TicketController extends Controller
             } else {
                 $response = $this->get('oro_ui.router')->redirectAfterSave(
                     ['route' => 'diamante_attachment_attach', 'parameters' => []],
-                    ['route' => 'diamante_ticket_view', 'parameters' => ['key' => (string) $ticket->getKey()]]
+                    ['route' => 'diamante_ticket_view', 'parameters' => ['key' => (string)$ticket->getKey()]]
                 );
             }
         } catch (\Exception $e) {
@@ -498,7 +498,7 @@ class TicketController extends Controller
      *
      * @param int $ticketId
      * @param Attachment[] $attachments
-     * @return array
+     * @return JsonResponse
      */
     private function prepareDropzoneAttachmentsResponse($ticketId, $attachments)
     {
@@ -517,7 +517,7 @@ class TicketController extends Controller
                 array('ticketId' => $ticketId, 'attachId' => $attachment->getId())
             );
 
-            if (in_array($attachment->getFile()->getExtension(), array('jpg','png','gif','bmp', 'jpeg'))) {
+            if (in_array($attachment->getFile()->getExtension(), array('jpg', 'png', 'gif', 'bmp', 'jpeg'))) {
                 $previewLink = $this->get('router')->generate(
                     '_imagine_attach_preview_img',
                     array('path' => $attachment->getFile()->getPathname())

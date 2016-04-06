@@ -96,14 +96,14 @@ class NotifyByEmailAction extends AbstractAction
     }
 
     /**
-     * @param array  $target
+     * @param \Diamante\DeskBundle\Model\Shared\Entity  $target
      * @param string $targetType
      *
      * @return mixed
      */
     private function getTicketKey(array $target, $targetType)
     {
-        $keyGetter = function ($ticket) {
+        $keyGetter = function($ticket) {
             $key = new TicketKey($ticket['branch']->getKey(), $ticket['sequenceNumber']->getValue());
 
             return $key;

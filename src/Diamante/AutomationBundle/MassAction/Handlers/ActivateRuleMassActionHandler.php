@@ -36,7 +36,7 @@ class ActivateRuleMassActionHandler extends RuleStateMassActionHandler
     {
         return $this->handleState(
             $args,
-            function (Rule $entity) {
+            function(Rule $entity) {
                 $entity->activate();
             }
         );

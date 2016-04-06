@@ -102,8 +102,8 @@ class WsseProvider implements AuthenticationProviderInterface
      * @param $digest
      * @param $nonce
      * @param $created
-     * @param $secret
-     * @param $salt
+     * @param string $secret
+     * @param string|null $salt
      * @param UserInterface $user
      * @return bool
      */
@@ -122,7 +122,7 @@ class WsseProvider implements AuthenticationProviderInterface
 
         //validate that nonce is unique within specified lifetime
         //if it is not, this could be a replay attack
-        if($this->nonceCache->contains($nonce))
+        if ($this->nonceCache->contains($nonce))
         {
             throw new NonceExpiredException('Previously used nonce detected.');
         }

@@ -31,7 +31,7 @@ class TargetMapper
     {
         $target = [];
 
-        foreach($changeset as $property => $values) {
+        foreach ($changeset as $property => $values) {
             list($outdated, $actual) = $values;
             $target[$property] = $actual;
         }
@@ -49,7 +49,7 @@ class TargetMapper
         $target = [];
         $reflect = new \ReflectionClass($entity);
         $props   = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
-        foreach($props as $refProperty) {
+        foreach ($props as $refProperty) {
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
             $value = $refProperty->getValue($entity);

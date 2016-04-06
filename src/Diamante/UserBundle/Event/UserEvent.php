@@ -23,7 +23,7 @@ class UserEvent extends Event
     protected $scenario;
     protected $user;
 
-    public function __construct($scenario, DiamanteUser $user )
+    public function __construct($scenario, DiamanteUser $user)
     {
         $this->scenario = $scenario;
         $this->user     = $user;

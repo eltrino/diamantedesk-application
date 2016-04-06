@@ -46,6 +46,6 @@ class TicketSequenceNumber
      */
     public function __toString()
     {
-        return (string) $this->number;
+        return (string)$this->number;
     }
 }

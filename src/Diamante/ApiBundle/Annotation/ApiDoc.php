@@ -66,7 +66,7 @@ class ApiDoc extends \Nelmio\ApiDocBundle\Annotation\ApiDoc
     {
         $requirements = array();
 
-        foreach($this->getRequirements() as $key => $item) {
+        foreach ($this->getRequirements() as $key => $item) {
             if (array_key_exists('requirement', $item)) {
                 $requirements[$key] = $item['requirement'];
             }

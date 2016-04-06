@@ -52,7 +52,7 @@ class CombinedDatasourceFilterExtension extends OrmFilterExtension
 
         $datasourceAdapters = [];
         foreach ($datasource->getQueryBuilders() as $qb) {
-            $datasourceAdapters[] =  new OrmFilterDatasourceAdapter($qb);
+            $datasourceAdapters[] = new OrmFilterDatasourceAdapter($qb);
         }
 
         foreach ($filters as $filter) {

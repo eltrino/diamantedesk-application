@@ -126,7 +126,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setSubject($subject)
     {
-        $this->subject = (string) $subject;
+        $this->subject = (string)$subject;
         return $this;
     }
 
@@ -136,7 +136,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setDescription($description)
     {
-        $this->description = (string) $description;
+        $this->description = (string)$description;
         return $this;
     }
 
@@ -146,7 +146,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setBranchId($id)
     {
-        $branch = $this->branchRepository->get((integer) $id);
+        $branch = $this->branchRepository->get((integer)$id);
         if (is_null($branch)) {
             throw new \LogicException('Branch loading failed, branch not found.');
         }
@@ -177,7 +177,7 @@ class CommonTicketBuilder implements TicketBuilder
         }
 
         if (!empty($identity)) {
-            $assignee = $this->userService->getByUser(new User((integer) $identity, User::TYPE_ORO));
+            $assignee = $this->userService->getByUser(new User((integer)$identity, User::TYPE_ORO));
             $this->assignee = $assignee;
         }
         return $this;
@@ -189,7 +189,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setPriority($priority)
     {
-        $this->priority = new Priority((string) $priority);
+        $this->priority = new Priority((string)$priority);
         return $this;
     }
 
@@ -199,7 +199,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setSource($source)
     {
-        $this->source = new Source((string) $source);
+        $this->source = new Source((string)$source);
         return $this;
     }
 
@@ -209,7 +209,7 @@ class CommonTicketBuilder implements TicketBuilder
      */
     public function setStatus($status)
     {
-        $this->status = new Status((string) $status);
+        $this->status = new Status((string)$status);
         return $this;
     }
 

@@ -30,7 +30,7 @@ class UserValidator extends ConstraintValidator
             return;
         }
 
-        if($value instanceof UserModel || is_string($value) && preg_match('/^(diamante|oro)_\d+$/i', $value)) {
+        if ($value instanceof UserModel || is_string($value) && preg_match('/^(diamante|oro)_\d+$/i', $value)) {
             return;
         }
 

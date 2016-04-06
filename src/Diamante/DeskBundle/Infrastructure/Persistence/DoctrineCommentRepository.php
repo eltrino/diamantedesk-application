@@ -70,7 +70,7 @@ class DoctrineCommentRepository extends DoctrineGenericRepository implements Com
     {
         $qb = $this->_em->createQueryBuilder();
         $orderByField = sprintf('%s.%s', self::SELECT_ALIAS, $pagingProperties->getSort());
-        $offset = ($pagingProperties->getPage()-1) * $pagingProperties->getLimit();
+        $offset = ($pagingProperties->getPage() - 1) * $pagingProperties->getLimit();
 
         $qb->select(self::SELECT_ALIAS)->from($this->_entityName, self::SELECT_ALIAS);
 

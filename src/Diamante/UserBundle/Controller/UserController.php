@@ -59,7 +59,7 @@ class UserController extends Controller
         $command = new CreateDiamanteUserCommand();
         try {
             $form = $this->createForm('diamante_user_create', $command);
-            $result = $this->edit($command, $form, function ($command){
+            $result = $this->edit($command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->createDiamanteUser($command);
                 return $userId;
             });
@@ -99,7 +99,7 @@ class UserController extends Controller
 
         try {
             $form = $this->createForm('diamante_user_update', $command);
-            $result = $this->edit($command, $form, function ($command){
+            $result = $this->edit($command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->updateDiamanteUser($command);
                 return $userId;
             });
@@ -121,7 +121,7 @@ class UserController extends Controller
     public function deleteAction($id)
     {
         try {
-            if (!in_array($this->get('request')->getMethod(), ['POST', 'PUT','DELETE'])) {
+            if (!in_array($this->get('request')->getMethod(), ['POST', 'PUT', 'DELETE'])) {
                 throw new MethodNotAllowedException("This won't work");
             }
 
@@ -139,9 +139,9 @@ class UserController extends Controller
     }
 
     /**
-     * @param $command
+     * @param CreateDiamanteUserCommand $command
      * @param Form $form
-     * @param $callback
+     * @param \Closure $callback
      * @return array|null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     protected function edit($command, Form $form, $callback)

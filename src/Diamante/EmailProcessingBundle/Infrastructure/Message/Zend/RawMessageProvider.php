@@ -29,6 +29,9 @@ class RawMessageProvider extends AbstractMessageProvider implements MessageProvi
      */
     private $converter;
 
+    /**
+     * @param string $input
+     */
     public function __construct($input, MessageConverter $converter)
     {
         $this->validate($input);
@@ -45,7 +48,7 @@ class RawMessageProvider extends AbstractMessageProvider implements MessageProvi
 
     /**
      * Fetch messages that should be processed
-     * @return array|Message[]
+     * @return Message[]
      * @throws MessageProcessingException
      */
     public function fetchMessagesToProcess()
@@ -62,7 +65,7 @@ class RawMessageProvider extends AbstractMessageProvider implements MessageProvi
         $messageTo          = $this->processTo($headers);
         $messageReference   = $this->processMessageReference($headers);
         $messageAttachments = $this->processAttachments($zendMailMessage);
-        $recipients          = $this->processRecipients($headers);
+        $recipients = $this->processRecipients($headers);
 
         $message = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
             $messageFrom, $messageTo, $messageReference, $messageAttachments, $recipients);

@@ -107,7 +107,7 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
      * Retrieves Message Content
      *
      * @param \Zend\Mail\Storage\Message $imapMessage
-     * @return string|null
+     * @return string
      */
     private function processContent($imapMessage)
     {
@@ -242,7 +242,7 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
 
     /**
      * @param \Zend\Mail\Storage\Part $part
-     * @return mixed
+     * @return string
      */
     private function getMessageContentDecoded($part)
     {

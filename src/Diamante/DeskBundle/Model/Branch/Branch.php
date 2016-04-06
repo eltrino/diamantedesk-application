@@ -219,7 +219,7 @@ class Branch implements Taggable, Entity
      */
     public function getTags()
     {
-        $this->tags = $this->tags?:new ArrayCollection();
+        $this->tags = $this->tags ?: new ArrayCollection();
         return $this->tags;
     }
 

@@ -137,8 +137,8 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
         foreach ($users as $user) {
             $converted = array();
 
-            foreach($this->properties as $property) {
-                $converted[$property]  = $this->getPropertyValue($property, $user);
+            foreach ($this->properties as $property) {
+                $converted[$property] = $this->getPropertyValue($property, $user);
             }
 
             $converted['type'] = $type;

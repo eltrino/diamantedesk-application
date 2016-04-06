@@ -86,7 +86,7 @@ class OroApiCallRestrictionListener
             $route = $request->attributes->get('_master_request_route');
         }
 
-        if (!$this->provider->isItemWhitelisted($route)){
+        if (!$this->provider->isItemWhitelisted($route)) {
             $notFoundException = new NotFoundHttpException('Sorry, the page that you requested was not found.');
             $statusCode = $notFoundException->getStatusCode();
             $parameters = [
@@ -107,7 +107,7 @@ class OroApiCallRestrictionListener
 
     /**
      * @param Request $request
-     * @param         $statusCode
+     * @param         integer $statusCode
      * @param         $debug
      *
      * @return TemplateReference
@@ -121,7 +121,7 @@ class OroApiCallRestrictionListener
 
         // when not in debug, try to find a template for the specific HTTP status code and format
         if (!$debug) {
-            $template = new TemplateReference('TwigBundle', 'Exception', $name.$statusCode, self::VIEW_FORMAT, 'twig');
+            $template = new TemplateReference('TwigBundle', 'Exception', $name . $statusCode, self::VIEW_FORMAT, 'twig');
             if ($this->templating->exists($template)) {
                 return $template;
             }

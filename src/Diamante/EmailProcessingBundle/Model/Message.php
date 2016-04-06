@@ -71,12 +71,12 @@ class Message
 
     /**
      * @param               $uniqueId
-     * @param               $messageId
-     * @param               $subject
-     * @param               $content
+     * @param               string|null $messageId
+     * @param               string|null $subject
+     * @param               string|null $content
      * @param MessageSender $from
-     * @param               $to
-     * @param null          $reference
+     * @param               string $to
+     * @param string|null          $reference
      * @param array         $attachments
      * @param bool          $isFailed
      * @param array         $recipients

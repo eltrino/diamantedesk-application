@@ -47,9 +47,9 @@ class LoadCommentData extends AbstractContainerAwareFixture implements Dependent
     public function load(ObjectManager $manager)
     {
         $author = $this->userRepository->findOneBy(array('id' => 1));
-        for ($i = 1; $i <= 10; $i ++) {
+        for ($i = 1; $i <= 10; $i++) {
             $ticket = $this->ticketRepository->findOneBy(array('subject' => 'ticketSubject' . $i));
-            for($j = 1; $j <= 10; $j++) {
+            for ($j = 1; $j <= 10; $j++) {
                 $comment = new Comment(
                     'commentContent' . $i . '-' . $j,
                     $ticket,

@@ -95,7 +95,7 @@ class InstallCommand extends OroInstallCommand
      * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      *
-     * @return null|integer null or 0 if everything went fine, or an error code
+     * @return integer null or 0 if everything went fine, or an error code
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -128,7 +128,7 @@ class InstallCommand extends OroInstallCommand
 
         $this->checkRequirementsStep($output);
         $this->prepareStep($this->commandExecutor, $input->getOption('drop-database'))
-             ->loadDataStep($this->commandExecutor, $output);
+                ->loadDataStep($this->commandExecutor, $output);
 
 
         $output->writeln('<info>Administration setup.</info>');
@@ -263,7 +263,7 @@ class InstallCommand extends OroInstallCommand
         /** @var ConfigManager $configManager */
         $configManager             = $this->getContainer()->get('oro_config.global');
         $defaultOrganizationName   = $configManager->get('diamante_distribution.organization_name');
-        $organizationNameValidator = function ($value) use (&$defaultOrganizationName) {
+        $organizationNameValidator = function($value) use (&$defaultOrganizationName) {
             $len = strlen(trim($value));
             if ($len === 0 && empty($defaultOrganizationName)) {
                 throw new \Exception('The organization name must not be empty');

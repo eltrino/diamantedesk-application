@@ -21,11 +21,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait AutomationTrait
 {
+    /**
+     * @param string $type
+     */
     protected function getList($type)
     {
         return ['type' => $type];
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected function view($type, $id)
     {
         $configProvider = $this->container->get('diamante_automation.config.provider');
@@ -47,6 +54,9 @@ trait AutomationTrait
         }
     }
 
+    /**
+     * @param string $type
+     */
     protected function create($type)
     {
         $command = new UpdateRuleCommand();
@@ -74,6 +84,10 @@ trait AutomationTrait
         return $response;
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected function update($type, $id)
     {
         $command = new UpdateRuleCommand();
@@ -110,6 +124,10 @@ trait AutomationTrait
         return $response;
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected function delete($type, $id)
     {
         try {
@@ -123,6 +141,10 @@ trait AutomationTrait
         return new Response(null, 204);
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected function activate($type, $id)
     {
         try {
@@ -136,6 +158,10 @@ trait AutomationTrait
         return new Response(null, 204);
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected function deactivate($type, $id)
     {
         try {

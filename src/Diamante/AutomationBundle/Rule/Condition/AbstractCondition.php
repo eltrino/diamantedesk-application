@@ -70,7 +70,7 @@ abstract class AbstractCondition implements ConditionInterface
     }
 
     /**
-     * @param array $target
+     * @param \Diamante\DeskBundle\Model\Shared\Entity $target
      *
      * @return mixed
      */
@@ -82,7 +82,7 @@ abstract class AbstractCondition implements ConditionInterface
     }
 
     /**
-     * @param array $target
+     * @param \Diamante\DeskBundle\Model\Shared\Entity $target
      *
      * @return null|string
      */
@@ -110,12 +110,11 @@ abstract class AbstractCondition implements ConditionInterface
 
     protected function typeJuggling($property) {
         if (is_object($property)) {
-            if  ($property instanceof Weightable) {
+            if ($property instanceof Weightable) {
                 $this->expectedValue = $property->getWeight($this->expectedValue);
                 $property = $property->getWeight($property->getValue());
 
-            }
-            elseif ($property instanceof Property) {
+            } elseif ($property instanceof Property) {
                 $property = $property->getValue();
             } elseif (method_exists($property, '__toString')) {
                 $property = (string)$property;

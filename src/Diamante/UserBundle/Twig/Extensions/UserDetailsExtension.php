@@ -32,7 +32,7 @@ class UserDetailsExtension extends \Twig_Extension
 
     public function __construct(UserService $userService)
     {
-        $this->userService        = $userService;
+        $this->userService = $userService;
     }
 
     /**
@@ -51,11 +51,11 @@ class UserDetailsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('fetch_user_details',[$this, 'fetchUserDetails'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('fetch_oro_user',[$this, 'fetchOroUser'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('fetch_diamante_user',[$this, 'fetchDiamanteUser'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('get_gravatar',[$this, 'getGravatarForUser'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('render_user_name',[$this, 'renderUserName'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('fetch_user_details', [$this, 'fetchUserDetails'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('fetch_oro_user', [$this, 'fetchOroUser'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('fetch_diamante_user', [$this, 'fetchDiamanteUser'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_gravatar', [$this, 'getGravatarForUser'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('render_user_name', [$this, 'renderUserName'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('is_diamante_user_deleted', [$this, 'isDiamanteUserDeleted'], ['is_safe' => ['html']]),
         ];
     }

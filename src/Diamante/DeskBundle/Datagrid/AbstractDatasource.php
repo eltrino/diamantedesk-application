@@ -120,7 +120,7 @@ abstract class AbstractDatasource implements DatasourceInterface
 
             usort(
                 $rows,
-                function ($a, $b) use ($sortProperty, $direction, $callback) {
+                function($a, $b) use ($sortProperty, $direction, $callback) {
                     $sortableArray = $callback($a, $b, $sortProperty);
 
                     $originalSortableArray = $sortableArray;

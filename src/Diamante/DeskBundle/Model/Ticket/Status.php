@@ -57,7 +57,7 @@ class Status implements Property
             throw new \InvalidArgumentException('Given status is wrong');
         }
 
-        $this->status = (string) $status;
+        $this->status = (string)$status;
     }
 
     /**

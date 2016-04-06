@@ -79,7 +79,7 @@ class ChangesetBuilder
             $new = $refProperty->getValue($entity);
             $old = $new;
 
-            if(array_key_exists($name, $uowChangeset)) {
+            if (array_key_exists($name, $uowChangeset)) {
                 $old = $uowChangeset[$name][0];
             }
 

@@ -169,7 +169,7 @@ class Audit extends AbstractLogEntry implements Entity
      */
     public function getField($field)
     {
-        return $this->fields->filter(function (AuditField $auditField) use ($field) {
+        return $this->fields->filter(function(AuditField $auditField) use ($field) {
             return $auditField->getField() === $field;
         })->first();
     }
@@ -256,7 +256,7 @@ class Audit extends AbstractLogEntry implements Entity
      */
     protected function getVisibleFields()
     {
-        return $this->getFields()->filter(function (AuditField $field) {
+        return $this->getFields()->filter(function(AuditField $field) {
             return $field->isVisible();
         });
     }

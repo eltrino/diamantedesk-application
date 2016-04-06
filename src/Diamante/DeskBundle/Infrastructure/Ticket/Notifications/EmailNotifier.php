@@ -110,7 +110,6 @@ class EmailNotifier implements Notifier
      * @param Container                  $container
      * @param \Twig_Environment          $twig
      * @param \Swift_Mailer              $mailer
-     * @param TemplateResolver           $templateResolver
      * @param TicketRepository           $ticketRepository
      * @param MessageReferenceRepository $messageReferenceRepository
      * @param UserService                $userService
@@ -170,13 +169,13 @@ class EmailNotifier implements Notifier
             $userType = $watcher->getUserType();
             $user = User::fromString($userType);
             $isOroUser = $user->isOroUser();
-            if($isOroUser) {
+            if ($isOroUser) {
                 $loadedUser = $this->oroUserManager->findUserBy(['id' => $user->getId()]);
             } else {
                 $loadedUser = $this->diamanteUserRepository->get($user->getId());
             }
 
-            if(!$isOroUser && $notification->isTagUpdated()) {
+            if (!$isOroUser && $notification->isTagUpdated()) {
                 continue;
             }
 
@@ -279,7 +278,7 @@ class EmailNotifier implements Notifier
     }
 
     /**
-     * @param OroUser|ApiUser|int $user
+     * @param User $user
      * @return \Diamante\UserBundle\Entity\DiamanteUser|\Oro\Bundle\UserBundle\Entity\User
      */
     private function getUserDependingOnType($user)
@@ -329,7 +328,7 @@ class EmailNotifier implements Notifier
     private function getFormattedUserName(Notification $notification, Ticket $ticket)
     {
         $author = $notification->getAuthor();
-        if(is_null($author)) {
+        if (is_null($author)) {
             $reporterId = $ticket->getReporter()->getId();
             $user = $this->diamanteUserRepository->get($reporterId);
         } else {
@@ -341,13 +340,13 @@ class EmailNotifier implements Notifier
             $format = $this->nameFormatter->getNameFormat();
 
             $name = str_replace(
-                array('%first_name%','%last_name%','%prefix%','%middle_name%','%suffix%'),
-                array($user->getFirstName(), $user->getLastName(),'','',''),
+                array('%first_name%', '%last_name%', '%prefix%', '%middle_name%', '%suffix%'),
+                array($user->getFirstName(), $user->getLastName(), '', '', ''),
                 $format
             );
         }
 
-        $name = preg_replace('/\s+/', ' ',$name);
+        $name = preg_replace('/\s+/', ' ', $name);
 
         return trim($name);
     }

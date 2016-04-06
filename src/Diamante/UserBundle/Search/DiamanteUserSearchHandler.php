@@ -113,7 +113,7 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
         }
 
         if (!isset($isDiamanteUserSearch)) {
-            $oroUsers      = $this->oroUserSearchHandler->search($query, $page, $perPage, $searchById);
+            $oroUsers = $this->oroUserSearchHandler->search($query, $page, $perPage, $searchById);
         }
 
 
@@ -146,7 +146,7 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
     /**
      * Gets entity name that is handled by search
      *
-     * @return mixed
+     * @return string
      */
     public function getEntityName()
     {
@@ -157,7 +157,7 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
      * @param User $item
      * @return array
      */
-    protected function convertItemFromObject( User $item)
+    protected function convertItemFromObject(User $item)
     {
         $converted = array();
 
@@ -202,8 +202,8 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
         foreach ($users as $user) {
             $converted = array();
 
-            foreach($this->properties as $property) {
-                $converted[$property]  = $this->getPropertyValue($property, $user);
+            foreach ($this->properties as $property) {
+                $converted[$property] = $this->getPropertyValue($property, $user);
             }
 
             $converted['type'] = $type;

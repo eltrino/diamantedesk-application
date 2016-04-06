@@ -53,12 +53,12 @@ class RenderTagExtension extends \Twig_Extension
     }
 
     /**
-     * @return array
+     * @return \Twig_SimpleFunction[]
      */
     public function getFunctions()
     {
         return [
-             new \Twig_SimpleFunction(
+                new \Twig_SimpleFunction(
                 'render_tag',
                 [$this, 'renderTag'],
                 array(
@@ -82,7 +82,7 @@ class RenderTagExtension extends \Twig_Extension
         switch ($context) {
             case 'branch':
                 /** @var \Diamante\DeskBundle\Entity\Branch $entity */
-                $entity =  $this->registry->getRepository('DiamanteDeskBundle:Branch')->get($entityId);
+                $entity = $this->registry->getRepository('DiamanteDeskBundle:Branch')->get($entityId);
                 break;
 
             case 'ticket':

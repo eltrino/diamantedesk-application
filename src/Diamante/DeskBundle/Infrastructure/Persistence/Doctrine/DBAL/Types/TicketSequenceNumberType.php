@@ -39,7 +39,7 @@ class TicketSequenceNumberType extends IntegerType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return new TicketSequenceNumber((int) $value);
+        return new TicketSequenceNumber((int)$value);
     }
 
     /**

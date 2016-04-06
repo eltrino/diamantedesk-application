@@ -26,7 +26,7 @@ class LoadDiamanteUsersData extends AbstractFixture
     public function load(ObjectManager $manager)
     {
 
-        for ($i = 1; $i <= 10; $i ++) {
+        for ($i = 1; $i <= 10; $i++) {
             $email = sprintf("test%d@example.com", $i);
             $user = new DiamanteUser($email, 'Test', 'User');
             $apiUser = new ApiUser($email, UserServiceImpl::generateRandomSequence(20), UserServiceImpl::generateRandomSequence(20));

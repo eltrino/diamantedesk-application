@@ -237,7 +237,7 @@ class BranchServiceImpl implements BranchService
      * Verify permissions through Oro Platform security bundle
      *
      * @param string $operation
-     * @param $entity
+     * @param string $entity
      * @throws \Oro\Bundle\SecurityBundle\Exception\ForbiddenException
      */
     private function isGranted($operation, $entity)
@@ -248,7 +248,7 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * @return FilterableRepository
+     * @return Repository
      */
     protected function getBranchRepository()
     {
@@ -295,7 +295,7 @@ class BranchServiceImpl implements BranchService
     }
 
     /**
-     * @param $id
+     * @param integer $id
      * @return bool
      */
     public function isBranchHasTickets($id)

@@ -51,7 +51,7 @@ class Source implements Property
             throw new \InvalidArgumentException('Given source is wrong');
         }
 
-        $this->source = (string) $source;
+        $this->source = (string)$source;
     }
 
     /**

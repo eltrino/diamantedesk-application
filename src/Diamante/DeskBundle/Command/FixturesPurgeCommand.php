@@ -21,8 +21,8 @@ use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 
 class FixturesPurgeCommand extends ContainerAwareCommand
 {
-    const CODE_FAILURE     = 255;
-    const CODE_SUCCESS  = 0;
+    const CODE_FAILURE = 255;
+    const CODE_SUCCESS = 0;
     /**
      * @var string
      */
@@ -125,8 +125,8 @@ class FixturesPurgeCommand extends ContainerAwareCommand
             $tableName = $entity->getTableName();
             $toPurge[] = $tableName;
 
-            foreach($entity->getAssociationMappings() as $assoc) {
-                if(isset($assoc['joinTable'])) {
+            foreach ($entity->getAssociationMappings() as $assoc) {
+                if (isset($assoc['joinTable'])) {
                     $toPurge[] = $quoteStrategy->getJoinTableName($assoc, $entity, $this->dbPlatform);
                 }
             }

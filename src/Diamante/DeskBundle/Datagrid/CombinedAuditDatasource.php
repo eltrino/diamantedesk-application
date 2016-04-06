@@ -160,7 +160,7 @@ class CombinedAuditDatasource extends AbstractDatasource
     {
         $this->applySorting(
             $audit,
-            function ($a, $b, $sortProperty) {
+            function($a, $b, $sortProperty) {
                 $a = is_array($a) ? $a[0] : $a;
                 $b = is_array($b) ? $b[0] : $b;
 
@@ -197,7 +197,7 @@ class CombinedAuditDatasource extends AbstractDatasource
     }
 
     /**
-     * @return array
+     * @return QueryBuilder[]
      */
     public function getQueryBuilders()
     {

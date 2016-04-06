@@ -377,7 +377,7 @@ class CommentServiceImpl implements CommentService
             if ($this->authorizationService->getLoggedUser()) {
                 $loggedUser = $this->authorizationService->getLoggedUser();
 
-                if($loggedUser instanceof ApiUser) {
+                if ($loggedUser instanceof ApiUser) {
                     $loggedUser = $this->userService->getUserFromApiUser($loggedUser);
                 }
 

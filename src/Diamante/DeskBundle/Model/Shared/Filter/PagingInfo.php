@@ -64,7 +64,7 @@ class PagingInfo
      */
     protected function calculatePaging()
     {
-        $this->lastPage = (int)ceil($this->totalRecords/$this->pagingConfig->getLimit());
+        $this->lastPage = (int)ceil($this->totalRecords / $this->pagingConfig->getLimit());
         $currentPage = $this->pagingConfig->getPage();
 
         if ($this->lastPage <= 1) {

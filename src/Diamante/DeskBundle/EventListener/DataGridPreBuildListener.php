@@ -45,6 +45,6 @@ class DataGridPreBuildListener
                 array('userId' => $currentUserId, 'reporterId' => sprintf("oro_%s", $currentUserId))
             );
         }
-        return ;
+        return;
     }
 }
