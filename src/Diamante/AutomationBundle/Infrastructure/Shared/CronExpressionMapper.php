@@ -18,7 +18,7 @@ namespace Diamante\AutomationBundle\Infrastructure\Shared;
 
 class CronExpressionMapper
 {
-     protected static $expressionMap = [
+    protected static $expressionMap = [
         '5m'    => '*/5 * * * *',
         '10m'   => '*/10 * * * *',
         '15m'   => '*/15 * * * *',

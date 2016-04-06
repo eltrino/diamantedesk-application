@@ -106,11 +106,11 @@ class BranchWidgetController extends WidgetController
                     $tickets = $this->getAllTickets($branchId);
 
                     foreach ($tickets as $ticket) {
-                         $this->moveTicket($ticket, $newBranchId);
+                        $this->moveTicket($ticket, $newBranchId);
                     }
                 }
 
-                 $branchService->deleteBranch($branchId);
+                $branchService->deleteBranch($branchId);
                 $iteration++;
             }
 

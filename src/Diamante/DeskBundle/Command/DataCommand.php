@@ -42,7 +42,7 @@ class DataCommand extends AbstractCommand
     {
         try {
             $this->loadDataFixtures($output);
-         } catch (\Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return 255;
         }
