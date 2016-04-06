@@ -32,7 +32,7 @@ class ExecutionContext
 
     public function __construct(array $parameters)
     {
-        $this->parameters   = new ParameterBag($parameters);
+        $this->parameters = new ParameterBag($parameters);
     }
 
     /**

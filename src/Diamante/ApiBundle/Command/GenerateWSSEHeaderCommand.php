@@ -30,7 +30,7 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
         $this->setDescription('Generate X-WSSE HTTP header for a given Api User');
         $this->setDefinition(
             array(
-                 new InputArgument('email', InputArgument::REQUIRED, 'User email'),
+                    new InputArgument('email', InputArgument::REQUIRED, 'User email'),
             )
         );
     }
@@ -45,7 +45,7 @@ class GenerateWSSEHeaderCommand extends ContainerAwareCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $email = $input->getArgument('email');
-        $user     = $this
+        $user = $this
             ->getContainer()
             ->get('diamante.api.user.repository')
             ->findUserByEmail($email);

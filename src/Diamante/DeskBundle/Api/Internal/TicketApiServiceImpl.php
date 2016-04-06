@@ -591,7 +591,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      * )
      *
      * @param $id
-     * @return array
+     * @return \Diamante\UserBundle\Model\UserDetails
      */
     public function getReporterForTicket($id)
     {

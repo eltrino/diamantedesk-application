@@ -88,6 +88,6 @@ class TicketKey
         if ($dividerPosition < 1) {
             throw new \LogicException('Ticket key string has wrong format.');
         }
-        return new TicketKey(substr($ticketKey, 0, $dividerPosition), (int) substr($ticketKey, $dividerPosition + 1));
+        return new TicketKey(substr($ticketKey, 0, $dividerPosition), (int)substr($ticketKey, $dividerPosition + 1));
     }
 } 

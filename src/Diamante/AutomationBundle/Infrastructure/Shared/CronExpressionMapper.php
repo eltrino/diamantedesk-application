@@ -48,9 +48,9 @@ class CronExpressionMapper
     public static function getFrontendOptionsConfig()
     {
         return [
-            'm' => [5,10,15,20,30],
-            'h' => [1,2,4,8,12,24],
-            'd' => [3,7,25,30]
+            'm' => [5, 10, 15, 20, 30],
+            'h' => [1, 2, 4, 8, 12, 24],
+            'd' => [3, 7, 25, 30]
         ];
     }
 

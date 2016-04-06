@@ -56,7 +56,7 @@ class ZendMimeMessage extends Message
                         $properties['encoding'] = $fieldValue;
                         break;
                     case 'content-id':
-                        $properties['id'] = trim($fieldValue,'<>');
+                        $properties['id'] = trim($fieldValue, '<>');
                         break;
                     case 'content-disposition':
                         $properties['disposition'] = $fieldValue;

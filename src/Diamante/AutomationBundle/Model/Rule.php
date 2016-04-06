@@ -101,6 +101,9 @@ abstract class Rule implements AutomationRule, Entity
         return $this->grouping;
     }
 
+    /**
+     * @param \Diamante\AutomationBundle\Entity\Group $group
+     */
     public function setGrouping($group)
     {
         $this->grouping = $group;

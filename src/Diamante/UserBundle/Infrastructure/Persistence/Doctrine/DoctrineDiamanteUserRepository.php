@@ -90,7 +90,7 @@ class DoctrineDiamanteUserRepository extends DoctrineGenericRepository implement
             }
         }
 
-        if (count($params['values']) === 0){
+        if (count($params['values']) === 0) {
             $params['values'][] = 0;
         }
 

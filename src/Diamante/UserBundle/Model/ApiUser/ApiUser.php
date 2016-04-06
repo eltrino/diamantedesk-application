@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ApiUser implements Entity, UserInterface
 {
-    const EXPIRATION_TIME = 900;//Hash expiration time in seconds (15 minutes);
+    const EXPIRATION_TIME = 900; //Hash expiration time in seconds (15 minutes);
 
     /**
      * @var integer
@@ -228,7 +228,7 @@ class ApiUser implements Entity, UserInterface
      */
     public function changePassword($newPassword)
     {
-        if (time() > $this->hashExpirationTime ) {
+        if (time() > $this->hashExpirationTime) {
             throw new \RuntimeException('Given hash is invalid and password can not be reset.');
         }
 

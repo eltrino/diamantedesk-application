@@ -78,7 +78,7 @@ class PortalStrategy extends AbstractStrategy implements Strategy
 
         try {
             $result = $query->getResult(Query::HYDRATE_SCALAR);
-            $result = array_map(function ($item) {
+            $result = array_map(function($item) {
                 return (int)current($item);
             }, $result);
         } catch (\Exception $e) {

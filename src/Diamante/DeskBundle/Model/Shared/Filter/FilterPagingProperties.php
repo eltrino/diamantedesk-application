@@ -34,9 +34,9 @@ class FilterPagingProperties implements PagingProperties
 
     public function __construct($page = null, $limit = null, $sort = null, $order = null)
     {
-        $this->config[self::PAGE_PROP_NAME]     = $page  ? $page  : self::DEFAULT_PAGE;
+        $this->config[self::PAGE_PROP_NAME]     = $page ? $page : self::DEFAULT_PAGE;
         $this->config[self::LIMIT_PROP_NAME]    = $limit ? $limit : self::DEFAULT_LIMIT;
-        $this->config[self::SORT_PROP_NAME]     = $sort  ? $sort  : self::DEFAULT_SORT;
+        $this->config[self::SORT_PROP_NAME]     = $sort ? $sort : self::DEFAULT_SORT;
         $this->config[self::ORDER_PROP_NAME]    = $order ? $order : self::DEFAULT_ORDER;
     }
 

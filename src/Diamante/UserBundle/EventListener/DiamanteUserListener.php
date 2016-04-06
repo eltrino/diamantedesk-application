@@ -31,7 +31,7 @@ class DiamanteUserListener implements EventSubscriber
 
     public function onFlush(OnFlushEventArgs $args)
     {
-        if(!$this->container->has('orocrm_contact.contact.manager')) {
+        if (!$this->container->has('orocrm_contact.contact.manager')) {
             return;
         }
 

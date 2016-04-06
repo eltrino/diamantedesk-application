@@ -63,7 +63,7 @@ class CommandFactory
     {
         $command = new UpdateTicketCommand();
         $command->id = $ticket->getId();
-        $command->key = (string) $ticket->getKey();
+        $command->key = (string)$ticket->getKey();
         $command->subject = $ticket->getSubject();
         $command->description = $ticket->getDescription();
         $command->reporter = $ticket->getReporter();

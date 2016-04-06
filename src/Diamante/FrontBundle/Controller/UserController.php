@@ -106,7 +106,7 @@ class UserController extends FOSRestController
             $resetService = $this->container->get('diamante.front.reset_password.service');
             $resetService->resetPassword($command);
             $view = $this->view(null, Codes::HTTP_OK);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(sprintf('Password reset failed for user %s', $command->email));
             $view = $this->view(['message' => $e->getMessage()], Codes::HTTP_NOT_FOUND);
         }

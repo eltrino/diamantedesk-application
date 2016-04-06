@@ -119,7 +119,7 @@ abstract class AbstractFilterCriteriaProcessor implements FilterCriteriaProcesso
             self::UPDATED_AFTER_PROP,
             self::UPDATED_BEFORE_PROP
         );
-        $this->pagingProperties    = array(
+        $this->pagingProperties = array(
             FilterPagingProperties::PAGE_PROP_NAME,
             FilterPagingProperties::LIMIT_PROP_NAME,
             FilterPagingProperties::SORT_PROP_NAME,

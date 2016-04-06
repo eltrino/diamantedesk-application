@@ -47,7 +47,7 @@ class ReporterService {
     ) {
         $this->ticketRepository = $ticketRepository;
         $this->commentRepository = $commentRepository;
-        $this->watcherListRepository  = $watcherListRepository;
+        $this->watcherListRepository = $watcherListRepository;
     }
 
     /**

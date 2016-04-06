@@ -34,11 +34,11 @@ class LoadFormData extends AbstractFixture
         $branch = current($branches);
 
         $ASCIIKey = ord('A');
-        for ($i = 1; $i <= 10; $i ++) {
+        for ($i = 1; $i <= 10; $i++) {
 
             $keySuffix = chr($ASCIIKey + $i);
             $form = new EmbeddedForm();
-            $form->setTitle('Form'.$keySuffix);
+            $form->setTitle('Form' . $keySuffix);
             $form->setFormType('diamante_embedded_form.form_type.available_embedded_form');
             $form->setSuccessMessage('Ticket has been placed successfully');
             $form->setCss('');

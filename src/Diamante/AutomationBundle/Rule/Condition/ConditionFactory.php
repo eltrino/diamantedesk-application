@@ -52,7 +52,7 @@ class ConditionFactory
     /**
      * @param $type
      * @param array $parameters
-     * @param $entityType
+     * @param string $entityType
      * @return ConditionInterface
      */
     public function getCondition($type, array $parameters, $entityType)
@@ -92,11 +92,11 @@ class ConditionFactory
     {
         $entity = $this->configProvider->getEntityConfiguration($entityType);
 
-        if (!$entity->has('properties.'.$property) || !$entity->has('properties.'.$property.'.accessor')) {
+        if (!$entity->has('properties.' . $property) || !$entity->has('properties.' . $property . '.accessor')) {
             throw new \RuntimeException("Invalid configuration for property accessor");
         }
 
-        $accessorConfig = $entity->get('properties.'.$property.'.accessor');
+        $accessorConfig = $entity->get('properties.' . $property . '.accessor');
 
         list($accessorServiceName, $accessorMethod) = explode(self::METHOD_CALL_SEPARATOR, $accessorConfig);
 

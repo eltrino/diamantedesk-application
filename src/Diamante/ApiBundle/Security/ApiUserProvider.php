@@ -39,7 +39,7 @@ class ApiUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-       return $this->loadUserByEmail($username);
+        return $this->loadUserByEmail($username);
     }
 
     /**

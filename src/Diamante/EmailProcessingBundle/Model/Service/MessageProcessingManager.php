@@ -47,7 +47,7 @@ class MessageProcessingManager implements ManagerInterface
         $messagesToMove = array();
         $strategies = $this->strategyHolder->getStrategies();
         foreach ($provider->fetchMessagesToProcess() as $message) {
-            foreach($strategies as $strategy) {
+            foreach ($strategies as $strategy) {
                 $this->processingContext->setStrategy($strategy);
                 try {
                     if (!$message->isFailed()) {

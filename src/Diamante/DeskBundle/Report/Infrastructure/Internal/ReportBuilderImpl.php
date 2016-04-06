@@ -81,7 +81,7 @@ class ReportBuilderImpl implements ReportBuilder
      *
      * @param $config
      * @param $reportId
-     * @return array
+     * @return string
      */
     private function resolveSourceResultMethod($config, $reportId)
     {
@@ -137,7 +137,7 @@ class ReportBuilderImpl implements ReportBuilder
      */
     protected function buildFromRepository($config)
     {
-        if (!strpos($config['repository'],'::')) {
+        if (!strpos($config['repository'], '::')) {
             throw new \RuntimeException('Action in repository is not defined');
         }
 

@@ -35,7 +35,7 @@ class TicketUserType extends StringType
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if(empty($value)) {
+        if (empty($value)) {
             return null;
         }
         list($type, $id) = explode(User::DELIMITER, $value);

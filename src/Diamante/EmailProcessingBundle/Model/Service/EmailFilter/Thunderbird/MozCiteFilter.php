@@ -14,7 +14,7 @@ class MozCiteFilter extends FilterAbstract
         }
 
         /* @var $el DOMElement */
-        $signature->each(function (DOMElement $el) {
+        $signature->each(function(DOMElement $el) {
             $nexts = [];
             $next = $el;
             while ($next = $next->nextSibling) {

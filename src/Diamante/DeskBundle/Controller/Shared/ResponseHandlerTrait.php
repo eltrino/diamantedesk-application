@@ -26,8 +26,8 @@ trait ResponseHandlerTrait
 {
     protected $massActionResultFormat = "diamante.%s.actions.mass.%s.messages.%s";
     /**
-     * @param $saveAndStay
-     * @param $saveAndClose
+     * @param string $saveAndStay
+     * @param string $saveAndClose
      * @param array $params
      * @return RedirectResponse
      */
@@ -74,9 +74,9 @@ trait ResponseHandlerTrait
     }
 
     /**
-     * @param $action
-     * @param $section
-     * @param bool|true $result
+     * @param string $action
+     * @param string $section
+     * @param boolean $result
      * @return JsonResponse
      */
     protected function getMassActionResponse($action, $section, $result = true)
@@ -84,7 +84,7 @@ trait ResponseHandlerTrait
         $data = [
             'successful' => $result ? 1 : 0,
             'message'    => $this->get('translator')
-                ->trans(sprintf($this->massActionResultFormat, $section, $action, $result ? 'success' : 'fail' )),
+                ->trans(sprintf($this->massActionResultFormat, $section, $action, $result ? 'success' : 'fail')),
         ];
 
         return new JsonResponse($data, $result ? 200 : 500);

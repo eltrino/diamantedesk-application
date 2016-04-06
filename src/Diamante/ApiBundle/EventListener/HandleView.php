@@ -166,14 +166,14 @@ class HandleView
      * Generate uri for Location header.
      * Uses request uri as template and adds entity identifier to it.
      *
-     * @param $requestUri
+     * @param string $requestUri
      * @return string
      */
     private function entityLocation($requestUri)
     {
         $position = strpos($requestUri, '.');
         if ($position !== FALSE) {
-            return substr($requestUri, 0 , $position) . '/%d' . substr($requestUri, $position);
+            return substr($requestUri, 0, $position) . '/%d' . substr($requestUri, $position);
         } else {
             return $requestUri . '/%d';
         }

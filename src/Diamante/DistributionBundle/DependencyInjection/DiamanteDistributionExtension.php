@@ -25,7 +25,7 @@ class DiamanteDistributionExtension extends Extension implements PrependExtensio
             new YamlCumulativeFileLoader('Resources/config/whitelist.yml')
         );
 
-        $resources  = $loader->load();
+        $resources = $loader->load();
 
         $this->populateWhitelist($container, $resources);
     }
@@ -38,7 +38,7 @@ class DiamanteDistributionExtension extends Extension implements PrependExtensio
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $container->prependExtensionConfig($this->getAlias(), array_intersect_key($config, array_flip(['settings'])));

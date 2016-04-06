@@ -37,7 +37,7 @@ class EmbeddedFormTypeExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $modifier = function (FormEvent $event) {
+        $modifier = function(FormEvent $event) {
             $form = $event->getForm();
 
             if ($form->has('additional') && $form->get('additional')->has('branch')) {

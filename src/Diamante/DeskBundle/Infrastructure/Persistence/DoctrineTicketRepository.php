@@ -152,7 +152,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      */
     public function filter(array &$conditions, PagingProperties $pagingProperties, $callback = null)
     {
-        if('key' == $pagingProperties->getSort()) {
+        if ('key' == $pagingProperties->getSort()) {
             $qb = $this->orderByTicketKey($conditions, $pagingProperties);
         } else {
             $qb = $this->createFilterQuery($conditions, $pagingProperties);
@@ -280,7 +280,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         try {
             $result = $query->getResult(Query::HYDRATE_SCALAR);
-            $result = array_map(function($item){return (int)current($item);}, $result);
+            $result = array_map(function($item) {return (int)current($item); }, $result);
         } catch (\Exception $e) {
             $result = null;
         }

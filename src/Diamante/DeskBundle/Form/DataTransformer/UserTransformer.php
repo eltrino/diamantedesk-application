@@ -42,9 +42,9 @@ class UserTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        if(filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
             return $value;
-        } elseif(preg_match('/^(diamante|oro)_\d+$/i', $value)) {
+        } elseif (preg_match('/^(diamante|oro)_\d+$/i', $value)) {
             return User::fromString($value);
         } else {
             return null;

@@ -55,7 +55,7 @@ class TagManager extends OroTagManager
             }
 
             $taggingCollection = $tag->getTagging()->filter(
-                function (Tagging $tagging) use ($entity) {
+                function(Tagging $tagging) use ($entity) {
                     // only use tagging entities that related to current entity
                     if ($entity instanceof Command) {
                         $entityClass = $entity::PERSISTENT_ENTITY;

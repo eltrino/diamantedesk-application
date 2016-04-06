@@ -34,7 +34,7 @@ class TicketUniqueIdType extends StringType
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return new UniqueId((string) $value);
+        return new UniqueId((string)$value);
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)

@@ -61,6 +61,7 @@ abstract class RuleStateMassActionHandler implements MassActionHandlerInterface
 
     /**
      * {@inheritDoc}
+     * @param \Closure $callback
      */
     public function handleState(MassActionHandlerArgs $args, $callback)
     {

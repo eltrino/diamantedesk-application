@@ -136,7 +136,7 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
      *  }
      * )
      *
-     * @return array
+     * @return \Diamante\DeskBundle\Model\Shared\Entity[]
      */
     public function getUsers()
     {

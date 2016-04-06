@@ -36,7 +36,7 @@ abstract class AbstractMessageProvider
     }
 
     /**
-     * @param $headers
+     * @param \Zend\Mail\Headers $headers
      * @return MessageSender
      */
     public function processFrom($headers)
@@ -47,7 +47,7 @@ abstract class AbstractMessageProvider
     }
 
     /**
-     * @param $headers
+     * @param \Zend\Mail\Headers $headers
      * @return string
      */
     public function processTo($headers)
@@ -57,7 +57,7 @@ abstract class AbstractMessageProvider
     }
 
     /**
-     * @param $headers
+     * @param \Zend\Mail\Headers $headers
      * @return string
      */
     public function processRecipients($headers)

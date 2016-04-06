@@ -29,7 +29,7 @@ class SortHelper
     /**
      * Retrieve callback function for sorting
      *
-     * @return array
+     * @return string[]
      */
     public static function getKeySortingFunction()
     {
