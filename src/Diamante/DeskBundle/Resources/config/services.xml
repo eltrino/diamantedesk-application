@@ -44,6 +44,7 @@
         <parameter key="diamante.loggable.loggable_manager.class">Diamante\DeskBundle\Loggable\LoggableManager</parameter>
         <parameter key="diamante.loggable.loggable_mapper.class">Diamante\DeskBundle\Loggable\AuditEntityMapper</parameter>
         <parameter key="diamante.listener.entity_listener.class">Diamante\DeskBundle\EventListener\EntityListener</parameter>
+        <parameter key="diamante.listener.settings_listener.class">Diamante\DeskBundle\EventListener\SettingsListener</parameter>
         <parameter key="diamante.loggable.entity.class">Diamante\DeskBundle\Entity\Audit</parameter>
         <parameter key="diamante.loggable.entity_field.class">Diamante\DeskBundle\Entity\AuditField</parameter>
         <parameter key="diamante.datagrid.combined_audit_datasource.class">Diamante\DeskBundle\Datagrid\CombinedAuditDatasource</parameter>
@@ -188,6 +189,9 @@
             <tag name="doctrine.event_listener" event="postRemove"/>
         </service>
 
+        <service id="diamante.listener.settings_listener" class="%diamante.listener.settings_listener.class%">
+            <tag name="kernel.event_listener" event="oro_config.settings_before_save" method="beforeSave"/>
+        </service>
 
         <service id="diamante.loggable.loggable_manager" class="%diamante.loggable.loggable_manager.class%">
             <argument>%diamante.loggable.entity.class%</argument>
