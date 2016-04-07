@@ -1,9 +1,11 @@
 <% 'TEMPLATE: automation-actions-edit-template' %>
 <% var entities = config.entities; %>
+<% var actions = config.actions; %>
 <% var entity = typeof entity !== 'undefined' && entity; %>
 <% var properties = !!entity && entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
+
 <div class="controls">
     <select name="actions[type]" data-attr="type" data-rel-attr="property,value">
         <% for(var key in config.actions) { %>
@@ -43,11 +45,14 @@
     <% } %>
     <% if(type == 'notify_by_email'){ %>
         <span class="label">To: </span>
-        <div class="control-item">
-            <input type="email" name="actions[value]"
-                   data-attr="value" value="<%= value %>"  required="required"
-                   data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null},&quot;Email&quot;:{&quot;message&quot;:&quot;This value should be a valid email&quot;,&quot;checkMX&quot;:false,&quot;checkHost&quot;:false,&quot;strict&quot;:null,&quot;payload&quot;:null}}"/>
-        </div>
+        <input type="hidden" name="actions[property][<%= index %>]" data-attr="property" value="<%= type %>" />
+        <select name="actions[value][<%= index %>]" data-attr="value">
+            <% for(var key in actions[type].frontend_options) { %>
+            <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
+                <%= actions[type].frontend_options[key] %>
+            </option>
+            <% } %>
+        </select>
     <% } %>
     <div class="pull-right">
         <div class="btn-group">

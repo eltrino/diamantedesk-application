@@ -24,7 +24,7 @@ define([
 
         render: function (model) {
             AbstractView.prototype.render.apply(this, arguments);
-            this.$(':input:not(button)').last().trigger('change');
+            this.$(':input:not(button)').trigger('change');
             if(this.model.collection.length == 1){
                 this.$('button[data-action="delete"]').hide();
             }
