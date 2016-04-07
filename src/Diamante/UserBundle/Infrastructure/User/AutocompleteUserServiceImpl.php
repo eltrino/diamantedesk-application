@@ -84,14 +84,13 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
      */
     public function getNotifyActionList()
     {
-        $groups = [
-            ['group' => static::WATCHERS],
-            ['group' => static::ASSIGNEE],
-            ['group' => static::REPORTER],
-            ['group' => static::COMMENT_AUTHOR]
-        ];
+        $list = [static::WATCHERS, static::ASSIGNEE, static::REPORTER, static::COMMENT_AUTHOR];
 
-        return array_merge($groups, $this->getUsers());
+        foreach ($this->getUsers() as $user) {
+            $list[] = $user['email'];
+        }
+
+        return $list;
     }
 
     /**
