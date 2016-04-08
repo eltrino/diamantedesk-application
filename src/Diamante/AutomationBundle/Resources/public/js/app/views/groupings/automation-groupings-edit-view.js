@@ -38,9 +38,9 @@ define([
         },
 
         moreThanOne: function(){
-            return this.model.get('children') ?
-                        this.model.get('children').length > 1 :
-                        this.model.get('conditions') && this.model.get('conditions').length > 1;
+            var children = this.model.get('children'),
+                conditions = this.model.get('conditions');
+            return (children && children.length > 1) || (conditions && conditions.length > 1)
         },
 
         render: function () {
