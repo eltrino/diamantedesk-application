@@ -76,7 +76,6 @@ trait AutomationTrait
         try {
             $this->handle($form);
 
-            $command->rule = '{"actions":[{"type":"update_property","entity":"ticket","parameters":{"status":"new"}}],"grouping":{"children":[{"children":[{"conditions":[{"entity":"ticket","parameters":{"status":"new"},"type":"eq"},{"entity":"ticket","parameters":{"status":"new"},"type":"eq"},{"entity":"ticket","parameters":{"status":"new"},"type":"eq"}],"connector":"or"}],"connector":"or"},{"conditions":[{"entity":"ticket","parameters":{"status":"new"},"type":"eq"},{"entity":"ticket","parameters":{"status":"new"},"type":"eq"}],"connector":"or"},{"conditions":[{"entity":"ticket","parameters":{"status":"new"},"type":"eq"}],"connector":"or"}],"connector":"or"},"active":"true","type":"workflow","name":"пропро","timeInterval":"","target":"ticket"}';
             $rule = $this->get('diamante.rule.service')->createRule($command->rule);
             $this->addSuccessMessage('diamante.automation.rule.messages.create.success');
             $response = $this->getSuccessSaveResponse(
