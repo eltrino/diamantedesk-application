@@ -17,12 +17,16 @@ namespace Diamante\AutomationBundle\Controller;
 
 use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
 use Diamante\DeskBundle\Controller\Shared;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 trait AutomationTrait
 {
     /**
      * @param string $type
+     *
+     * @return array
      */
     protected function getList($type)
     {
@@ -32,6 +36,8 @@ trait AutomationTrait
     /**
      * @param string $type
      * @param integer $id
+     *
+     * @return array|Response
      */
     protected function view($type, $id)
     {
@@ -56,6 +62,8 @@ trait AutomationTrait
 
     /**
      * @param string $type
+     *
+     * @return array
      */
     protected function create($type)
     {
@@ -68,6 +76,7 @@ trait AutomationTrait
         try {
             $this->handle($form);
 
+            $command->rule = '{"actions":[{"type":"update_property","entity":"ticket","parameters":{"status":"new"}}],"grouping":{"children":[{"children":[{"conditions":[{"entity":"ticket","parameters":{"status":"new"},"type":"eq"},{"entity":"ticket","parameters":{"status":"new"},"type":"eq"},{"entity":"ticket","parameters":{"status":"new"},"type":"eq"}],"connector":"or"}],"connector":"or"},{"conditions":[{"entity":"ticket","parameters":{"status":"new"},"type":"eq"},{"entity":"ticket","parameters":{"status":"new"},"type":"eq"}],"connector":"or"},{"conditions":[{"entity":"ticket","parameters":{"status":"new"},"type":"eq"}],"connector":"or"}],"connector":"or"},"active":"true","type":"workflow","name":"пропро","timeInterval":"","target":"ticket"}';
             $rule = $this->get('diamante.rule.service')->createRule($command->rule);
             $this->addSuccessMessage('diamante.automation.rule.messages.create.success');
             $response = $this->getSuccessSaveResponse(
@@ -87,6 +96,8 @@ trait AutomationTrait
     /**
      * @param string $type
      * @param integer $id
+     *
+     * @return array
      */
     protected function update($type, $id)
     {
@@ -127,6 +138,8 @@ trait AutomationTrait
     /**
      * @param string $type
      * @param integer $id
+     *
+     * @return Response
      */
     protected function delete($type, $id)
     {
@@ -144,6 +157,8 @@ trait AutomationTrait
     /**
      * @param string $type
      * @param integer $id
+     *
+     * @return Response
      */
     protected function activate($type, $id)
     {
@@ -161,6 +176,8 @@ trait AutomationTrait
     /**
      * @param string $type
      * @param integer $id
+     *
+     * @return Response
      */
     protected function deactivate($type, $id)
     {

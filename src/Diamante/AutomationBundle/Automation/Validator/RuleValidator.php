@@ -91,7 +91,8 @@ class RuleValidator implements ValidatorInterface
 
         if (!empty($grouping['children'])) {
             foreach ($grouping['children'] as $group) {
-                if (!$this->validateGrouping($group)) {
+                $grouping = ['grouping' => $group];
+                if (!$this->validateGrouping($grouping)) {
                     return false;
                 }
             }

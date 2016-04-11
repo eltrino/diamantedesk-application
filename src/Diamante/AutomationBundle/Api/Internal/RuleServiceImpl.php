@@ -322,7 +322,7 @@ class RuleServiceImpl implements RuleService
 
         if (!empty($grouping['children'])) {
             foreach ($grouping['children'] as $child) {
-                $this->addGrouping($rule, $child['grouping'], $group);
+                $this->addGrouping($rule, $child, $group);
             }
         }
 
