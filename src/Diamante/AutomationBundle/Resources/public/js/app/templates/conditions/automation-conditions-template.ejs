@@ -4,21 +4,26 @@
 <% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
 <% var property_type = typeof property !== 'undefined' && properties[property] && properties[property].type; %>
+<% var entity_type = typeof entity_type !== 'undefined' && entity_type; %>
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
 <div class="controls">
     <span class="label">If</span>
     <label class="value"><%= entities[entity].label %></label>
-    <% if(properties){ %>
-        <strong class="value"><%= properties[property].label %></strong>
-        <strong class="value"><%= conditions[type] %></strong>
-        <% if(property && properties[property]){ %>
-            <% if(property_type == 'string' || property_type == 'datetime' || property_type == 'virtual'){ %>
-                <strong class="value"><%= value %></strong>
-                <% if(property_type == 'datetime') { %> <span class="label">Hours</span> <% } %>
-            <% } else if (properties[property].frontend_options){ %>
-                <strong class="value"><%= properties[property].frontend_options[value] %></strong>
+    <% if(!entity_type){ %>
+        <% if(properties){ %>
+            <strong class="value"><%= properties[property].label %></strong>
+            <strong class="value"><%= conditions[type] %></strong>
+            <% if(property && properties[property]){ %>
+                <% if(property_type == 'string' || property_type == 'datetime' || property_type == 'virtual'){ %>
+                    <strong class="value"><%= value %></strong>
+                    <% if(property_type == 'datetime') { %> <span class="label">Hours</span> <% } %>
+                <% } else if (properties[property].frontend_options){ %>
+                    <strong class="value"><%= properties[property].frontend_options[value] %></strong>
+                <% } %>
             <% } %>
         <% } %>
+    <% } else { %>
+        <strong class="value"><%= conditions[entity_type] %></strong>
     <% } %>
 </div>

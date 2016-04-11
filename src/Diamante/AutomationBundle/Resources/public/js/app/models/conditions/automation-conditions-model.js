@@ -12,10 +12,16 @@ define(['oroui/js/app/models/base/model'
             var parameters = attr.parameters;
             if(parameters){
                 for(var key in parameters){
-                    this.set({
-                        property: key,
-                        value: parameters[key]
-                    })
+                    if(key == attr.type){
+                        this.set({
+                            entity_type : attr.type
+                        })
+                    } else {
+                        this.set({
+                            property: key,
+                            value: parameters[key]
+                        })
+                    }
                 }
                 this.unset('parameters');
             }
