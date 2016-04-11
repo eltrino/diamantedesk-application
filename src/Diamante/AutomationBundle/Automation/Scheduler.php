@@ -79,7 +79,7 @@ class Scheduler
 
     public function addAction(ActionInterface $action)
     {
-        $this->queue[] = $action;
+        $this->queue[spl_object_hash($action)] = $action;
     }
 
     /**

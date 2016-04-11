@@ -62,3 +62,10 @@ diamante:
 
       exception:
         customer_exists:    Customer with such email already exists.
+
+      autocomplete:
+        group:
+          assignee:       '[Assignee]'
+          watchers:       '[Watchers]'
+          reporter:       '[Reporter]'
+          comment_author: '[Comment author]'

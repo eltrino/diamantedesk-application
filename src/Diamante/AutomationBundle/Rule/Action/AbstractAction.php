@@ -16,8 +16,12 @@
 namespace Diamante\AutomationBundle\Rule\Action;
 
 use Diamante\AutomationBundle\Exception\InvalidConfigurationException;
-use Oro\Bundle\EntityBundle\Event\OroEventManager;
 
+/**
+ * Class AbstractAction
+ *
+ * @package Diamante\AutomationBundle\Rule\Action
+ */
 abstract class AbstractAction implements ActionInterface
 {
     /**
@@ -49,14 +53,6 @@ abstract class AbstractAction implements ActionInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param ExecutionContext $context
-     */
-    public function updateContext(ExecutionContext $context)
-    {
-        $this->context = $context;
     }
 
     protected function resetState()
@@ -97,11 +93,15 @@ abstract class AbstractAction implements ActionInterface
     }
 
     /**
-     * to avoid update action entry in PersistentProcessingContext entity
+     * @param array $parameters
      */
-    protected function disableListeners() {
-        /** @var OroEventManager $event */
-        $event = $this->em->getEventManager();
-        $event->disableListeners();
+    abstract public function addParameters(array $parameters);
+
+    /**
+     * @param string $executionContext
+     */
+    public function setExecutionContext($executionContext)
+    {
+        $this->context = new $executionContext();
     }
 }

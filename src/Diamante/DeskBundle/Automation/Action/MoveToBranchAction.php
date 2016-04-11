@@ -15,28 +15,17 @@
 
 namespace Diamante\DeskBundle\Automation\Action;
 
-use Diamante\AutomationBundle\Rule\Action\AbstractAction;
+use Diamante\AutomationBundle\Rule\Action\AbstractModifyAction;
 use Diamante\DeskBundle\Entity\Ticket;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Proxies\__CG__\Diamante\DeskBundle\Entity\Branch;
 
-class MoveToBranchAction extends AbstractAction
+/**
+ * Class MoveToBranchAction
+ *
+ * @package Diamante\DeskBundle\Automation\Action
+ */
+class MoveToBranchAction extends AbstractModifyAction
 {
-    /**
-     * @var \Doctrine\Common\Persistence\ObjectManager|object
-     */
-    protected $em;
-
-    /**
-     * MoveToBranchAction constructor.
-     *
-     * @param Registry $doctrine
-     */
-    public function __construct(Registry $doctrine)
-    {
-        $this->em = $doctrine->getManager();
-    }
-
     public function execute()
     {
         $target = $this->context->getFact()->getTarget();

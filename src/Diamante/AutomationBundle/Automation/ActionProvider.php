@@ -19,8 +19,8 @@ namespace Diamante\AutomationBundle\Automation;
 use Diamante\AutomationBundle\Exception\InvalidConfigurationException;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 use Diamante\AutomationBundle\Model\Rule;
+use Diamante\AutomationBundle\Rule\Action\AbstractAction;
 use Diamante\AutomationBundle\Rule\Action\ActionInterface;
-use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Diamante\AutomationBundle\Entity\Action as ActionEntity;
 
@@ -63,9 +63,9 @@ class ActionProvider
         /** @var ActionInterface $action */
         $action = $this->container->get($service);
 
-        $context = $this->prepareExecutionContext($actionDefinition);
-
-        $action->updateContext($context);
+        $parameters = $actionDefinition->getParameters();
+        /** @var AbstractAction $action */
+        $action->addParameters($parameters);
 
         return $action;
     }
@@ -101,14 +101,5 @@ class ActionProvider
         }
 
         return $service;
-    }
-
-    /**
-     * @param ActionEntity $actionEntity
-     * @return ExecutionContext
-     */
-    protected function prepareExecutionContext(ActionEntity $actionEntity)
-    {
-        return new ExecutionContext($actionEntity->getParameters());
     }
 }

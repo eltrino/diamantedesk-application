@@ -54,6 +54,26 @@ class ParameterBag implements \IteratorAggregate, \Countable
         return $this->searchRecursive($pathParts, $this->configParameters);
     }
 
+    /**
+     * Adds parameters.
+     *
+     * @param array $parameters An array of parameters
+     */
+    public function addParameters(array $parameters = array())
+    {
+        $this->configParameters = array_replace($this->configParameters, $parameters);
+    }
+
+    /**
+     * Adds parameters.
+     *
+     * @param mixed $parameter An array of parameters
+     */
+    public function addParameter($parameter)
+    {
+        $this->configParameters[] = $parameter;
+    }
+
     public function has($path)
     {
         $needles = explode(self::CONFIG_PATH_SEPARATOR, $path);

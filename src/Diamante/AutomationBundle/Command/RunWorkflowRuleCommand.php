@@ -18,8 +18,6 @@ namespace Diamante\AutomationBundle\Command;
 
 use Diamante\AutomationBundle\Automation\Engine;
 use Diamante\AutomationBundle\Entity\PersistentProcessingContext;
-use Diamante\AutomationBundle\Infrastructure\Shared\TargetMapper;
-use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

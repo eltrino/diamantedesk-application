@@ -30,9 +30,9 @@ class ExecutionContext
     protected $executionResult = self::EXECUTION_PENDING;
     protected $errors = [];
 
-    public function __construct(array $parameters)
+    public function __construct()
     {
-        $this->parameters = new ParameterBag($parameters);
+        $this->parameters = new ParameterBag();
     }
 
     /**
@@ -59,6 +59,22 @@ class ExecutionContext
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * @param array $parameters
+     */
+    public function addParameters($parameters)
+    {
+        $this->parameters->addParameters($parameters);
+    }
+
+    /**
+     * @param mixed $parameter
+     */
+    public function addParameter($parameter)
+    {
+        $this->parameters->addParameter($parameter);
     }
 
     /**

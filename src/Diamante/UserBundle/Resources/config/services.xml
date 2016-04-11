@@ -61,6 +61,7 @@
             <argument type="service" id="oro_user.manager"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="diamante.user.service"/>
+            <argument type="service" id="translator"/>
             <argument type="collection">
                 <argument type="string">email</argument>
                 <argument type="string">firstName</argument>

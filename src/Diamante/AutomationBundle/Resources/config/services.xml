@@ -34,6 +34,7 @@
         <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder</parameter>
         <parameter key="diamante_automation.email.ticket_provider.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider\Ticket</parameter>
         <parameter key="diamante_automation.email.comment_provider.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider\Comment</parameter>
+        <parameter key="diamante_automation.action.execution_context.class">Diamante\AutomationBundle\Rule\Action\ExecutionContext</parameter>
     </parameters>
 
     <services>
@@ -92,14 +93,31 @@
             <argument type="service" id="diamante.user.service"/>
         </service>
 
-        <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%" scope="prototype">
-            <argument type="service" id="doctrine"/>
-            <argument type="service" id="diamante_automation.config.provider"/>
+        <service id="diamante_automation.action.abstract_action" abstract="true">
+            <call method="setExecutionContext">
+                <argument>%diamante_automation.action.execution_context.class%</argument>
+            </call>
         </service>
 
-        <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%" scope="prototype">
-            <argument type="service" id="diamante.notification_manager"/>
-            <argument type="service" id="service_container"/>
+        <service id="diamante_automation.action.abstract_modify_action" parent="diamante_automation.action.abstract_action" abstract="true">
+            <call method="setRegistry">
+                <argument type="service" id="doctrine"/>
+            </call>
+        </service>
+
+        <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%" parent="diamante_automation.action.abstract_modify_action" scope="prototype">
+            <call method="setConfigurationProvider">
+                <argument type="service" id="diamante_automation.config.provider"/>
+            </call>
+        </service>
+
+        <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%" parent="diamante_automation.action.abstract_action">
+            <call method="setNotificationManager">
+                <argument type="service" id="diamante.notification_manager"/>
+            </call>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
 
         <service id="diamante_automation.datagrid.helper" class="%diamante_automation.datagrid.helper.class%">

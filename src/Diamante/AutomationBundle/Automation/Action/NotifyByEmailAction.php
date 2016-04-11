@@ -24,6 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class NotifyByEmailAction extends AbstractAction
 {
+    const ACTION_NAME = 'notify_by_email';
+
     /**
      * @var NotificationManager
      */
@@ -33,16 +35,6 @@ class NotifyByEmailAction extends AbstractAction
      * @var ContainerInterface
      */
     private $container;
-
-    /**
-     * @param NotificationManager $notificationManager
-     * @param ContainerInterface  $container
-     */
-    public function __construct(NotificationManager $notificationManager, ContainerInterface $container)
-    {
-        $this->notificationManager = $notificationManager;
-        $this->container = $container;
-    }
 
     public function execute()
     {
@@ -96,7 +88,7 @@ class NotifyByEmailAction extends AbstractAction
     }
 
     /**
-     * @param \Diamante\DeskBundle\Model\Shared\Entity  $target
+     * @param array  $target
      * @param string $targetType
      *
      * @return mixed
@@ -117,4 +109,30 @@ class NotifyByEmailAction extends AbstractAction
 
         throw new \RuntimeException('Could not get the key');
     }
+
+    /**
+     * @param array $parameters
+     */
+    public function addParameters(array $parameters)
+    {
+        $this->getContext()->addParameter($parameters[static::ACTION_NAME]);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     *
+     */
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @param NotificationManager $notificationManager
+     */
+    public function setNotificationManager(NotificationManager $notificationManager)
+    {
+        $this->notificationManager = $notificationManager;
+    }
+
 }

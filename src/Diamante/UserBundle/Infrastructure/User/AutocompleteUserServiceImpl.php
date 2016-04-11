@@ -18,15 +18,16 @@ use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
 use Oro\Bundle\UserBundle\Entity\UserManager;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AutocompleteUserServiceImpl implements AutocompleteUserService
 {
     const ID_FIELD_NAME = 'id';
     const AVATAR_SIZE   = 16;
-    const WATCHERS = '[Watchers]';
-    const REPORTER = '[Reporter]';
-    const ASSIGNEE = '[Assignee]';
-    const COMMENT_AUTHOR = '[Comment author]';
+    const WATCHERS = 'diamante.user.autocomplete.group.watchers';
+    const REPORTER = 'diamante.user.autocomplete.group.reporter';
+    const ASSIGNEE = 'diamante.user.autocomplete.group.assignee';
+    const COMMENT_AUTHOR = 'diamante.user.autocomplete.group.comment_author';
 
     /**
      * @var UserService
@@ -44,6 +45,11 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
     protected $diamanteUserRepository;
 
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * @var array
      */
     protected $properties;
@@ -54,17 +60,20 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
      * @param UserManager            $userManager
      * @param DiamanteUserRepository $diamanteUserRepository
      * @param UserService            $userService
+     * @param TranslatorInterface    $translator
      * @param array                  $properties
      */
     public function __construct(
         UserManager $userManager,
         DiamanteUserRepository $diamanteUserRepository,
         UserService $userService,
+        TranslatorInterface $translator,
         array $properties
     ) {
         $this->oroUserManager = $userManager;
         $this->diamanteUserRepository = $diamanteUserRepository;
         $this->userService = $userService;
+        $this->translator = $translator;
         $this->properties = $properties;
     }
 
@@ -84,10 +93,15 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
      */
     public function getNotifyActionList()
     {
-        $list = [static::WATCHERS, static::ASSIGNEE, static::REPORTER, static::COMMENT_AUTHOR];
+        $list = [
+            'watchers' => $this->translator->trans(static::WATCHERS),
+            'assignee' => $this->translator->trans(static::ASSIGNEE),
+            'reporter' => $this->translator->trans(static::REPORTER),
+            'author' => $this->translator->trans(static::COMMENT_AUTHOR)
+        ];
 
         foreach ($this->getUsers() as $user) {
-            $list[] = $user['email'];
+            $list[$user['email']] = $user['email'];
         }
 
         return $list;

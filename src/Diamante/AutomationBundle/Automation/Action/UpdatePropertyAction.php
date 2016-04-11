@@ -15,39 +15,22 @@
 
 namespace Diamante\AutomationBundle\Automation\Action;
 
-use Diamante\AutomationBundle\Rule\Action\AbstractAction;
+use Diamante\AutomationBundle\Rule\Action\AbstractModifyAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Shared\Updatable;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 
-
-class UpdatePropertyAction extends AbstractAction
+/**
+ * Class UpdatePropertyAction
+ *
+ * @package Diamante\AutomationBundle\Automation\Action
+ */
+class UpdatePropertyAction extends AbstractModifyAction
 {
-    /**
-     * @var \Doctrine\Common\Persistence\ObjectManager|object
-     */
-    protected $em;
-
-    /**
-     * @var Registry
-     */
-    private $registry;
-
     /**
      * @var AutomationConfigurationProvider
      */
     private $configurationProvider;
-
-    /**
-     * @param Registry $registry
-     */
-    public function __construct(Registry $registry, AutomationConfigurationProvider $configurationProvider)
-    {
-        $this->registry = $registry;
-        $this->configurationProvider = $configurationProvider;
-        $this->em = $registry->getManager();
-    }
 
     public function execute()
     {
@@ -60,6 +43,14 @@ class UpdatePropertyAction extends AbstractAction
         $entity = $this->update($target, $targetClass, $properties);
         $this->disableListeners();
         $this->registry->getManager()->persist($entity);
+    }
+
+    /**
+     * @param AutomationConfigurationProvider $configurationProvider
+     */
+    public function setConfigurationProvider(AutomationConfigurationProvider $configurationProvider)
+    {
+        $this->configurationProvider = $configurationProvider;
     }
 
     /**
