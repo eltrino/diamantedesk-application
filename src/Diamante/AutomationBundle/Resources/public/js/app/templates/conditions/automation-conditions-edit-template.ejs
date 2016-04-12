@@ -28,6 +28,17 @@
                 <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
                 <% } %>
             </select>
+            <select name="conditions[type]" data-attr="type">
+                <% if(custom_conditions){ %>
+                    <% _.each(custom_conditions, function(key){ %>
+                        <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                    <% }); %>
+                <% } else { %>
+                    <% for(var key in conditions) { %>
+                    <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                    <% } %>
+                <% } %>
+            </select>
             <% if(property && properties[property]){ %>
                 <% if(property_type == 'string' || property_type == 'datetime' || property_type == 'virtual'){ %>
                 <div class="control-item">

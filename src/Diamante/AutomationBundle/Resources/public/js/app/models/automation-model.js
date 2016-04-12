@@ -19,7 +19,9 @@ define([
                 delete data['property'];
                 delete data['value'];
             } else if(key === 'entity_type') {
-                data.type = data.entity_type;
+                if(data.entity_type) {
+                    data.type = data.entity_type;
+                }
                 delete data['entity_type'];
             } else {
                 data[key] = data[key];
