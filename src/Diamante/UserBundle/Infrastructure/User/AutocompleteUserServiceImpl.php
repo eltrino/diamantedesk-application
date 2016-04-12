@@ -129,7 +129,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
     public function getDiamanteUsers()
     {
         $convertedUsers = [];
-        $diamanteUsers = $this->diamanteUserRepository->getAll();
+        $diamanteUsers = $this->diamanteUserRepository->getAllActiveUsers();
 
         if (!empty($diamanteUsers)) {
             $convertedUsers = $this->convertUsers($diamanteUsers, User::TYPE_DIAMANTE);

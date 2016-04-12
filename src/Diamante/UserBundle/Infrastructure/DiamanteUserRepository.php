@@ -16,6 +16,7 @@ namespace Diamante\UserBundle\Infrastructure;
 
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\DeskBundle\Model\Shared\Entity;
 
 interface DiamanteUserRepository extends Repository
 {
@@ -39,4 +40,9 @@ interface DiamanteUserRepository extends Repository
      * @return DiamanteUser[]
      */
     public function findByDataGridParams(array $params);
+
+    /**
+     * @return Entity[]
+     */
+    public function getAllActiveUsers();
 }

@@ -21,7 +21,6 @@ use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Diamante\UserBundle\Model\ApiUser\ApiUser;
 
 /**
  * Class DoctrineGenericRepository

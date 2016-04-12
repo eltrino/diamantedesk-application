@@ -15,10 +15,10 @@
 namespace Diamante\UserBundle\Infrastructure\Persistence\Doctrine;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
-use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Doctrine\ORM\Query;
+use Diamante\DeskBundle\Model\Shared\Entity;
 
 class DoctrineDiamanteUserRepository extends DoctrineGenericRepository implements DiamanteUserRepository
 {
@@ -103,5 +103,13 @@ class DoctrineDiamanteUserRepository extends DoctrineGenericRepository implement
         $qb->andWhere('u.isDeleted = 0');
 
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
+
+    /**
+     * @return Entity[]
+     */
+    public function getAllActiveUsers()
+    {
+        return $this->findBy(['isDeleted' => false]);
     }
 }
