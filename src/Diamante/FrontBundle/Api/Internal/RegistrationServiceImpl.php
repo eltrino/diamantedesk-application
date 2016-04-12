@@ -65,7 +65,7 @@ class RegistrationServiceImpl implements RegistrationService
      * Register new Diamante User and grant API access for it.
      * Sends confirmation email. While registration is not confirmed API access is not active
      * @param Command\RegisterCommand $command
-     * @return void
+     * @return int DiamanteUser id
      */
     public function register(Command\RegisterCommand $command)
     {
@@ -91,6 +91,10 @@ class RegistrationServiceImpl implements RegistrationService
         $this->diamanteUserRepository->store($diamanteUser);
 
         $this->registrationMailer->sendConfirmationEmail($diamanteUser->getEmail(), $apiUser->getHash());
+
+	$diamanteUser = $this->diamanteUserRepository->findUserByEmail($command->email);
+        
+        return $diamanteUser->getId();
     }
 
     /**

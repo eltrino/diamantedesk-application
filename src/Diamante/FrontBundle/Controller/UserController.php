@@ -50,8 +50,8 @@ class UserController extends FOSRestController
         }
 
         try {
-            $this->get('diamante.front.registration.service')->register($command);
-            $view = $this->view(['success' => true], Codes::HTTP_CREATED);
+            $diamanteUSerId = $this->get('diamante.front.registration.service')->register($command);
+            $view = $this->view(['success' => true, 'diamanteUserId' => $diamanteUSerId], Codes::HTTP_CREATED);
         } catch (\Exception $e) {
             $this->container->get('monolog.logger.diamante')->error(sprintf('Registration failed for user %s', $command->email));
             $view = $this->view(['message' => $e->getMessage()], Codes::HTTP_BAD_REQUEST);
