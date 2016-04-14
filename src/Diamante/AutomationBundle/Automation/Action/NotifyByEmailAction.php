@@ -91,20 +91,14 @@ class NotifyByEmailAction extends AbstractAction
      * @param array  $target
      * @param string $targetType
      *
-     * @return mixed
+     * @return TicketKey
      */
     private function getTicketKey(array $target, $targetType)
     {
-        $keyGetter = function($ticket) {
-            $key = new TicketKey($ticket['branch']->getKey(), $ticket['sequenceNumber']->getValue());
-
-            return $key;
-        };
-
         if ('ticket' == $targetType) {
-            return $keyGetter($target);
+            return new TicketKey($target['branch']->getKey(), $target['sequenceNumber']->getValue());
         } elseif ('comment' == $targetType) {
-            return $keyGetter($target['ticket']);
+            return $target['ticket']->getKey();
         }
 
         throw new \RuntimeException('Could not get the key');
