@@ -29,7 +29,7 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
     use ApiServiceImplTrait;
 
     /**
-     * Create Diamante User
+     * Create DiamanteUser
      *
      * @ApiDoc(
      *  description="Create DiamanteUser",
@@ -123,10 +123,10 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
     }
 
     /**
-     * Retrieves all Diamante Users
+     * Retrieves all DiamanteUsers
      *
      * @ApiDoc(
-     *  description="Returns diamante users",
+     *  description="Returns DiamanteUsers",
      *  uri="/users.{_format}",
      *  method="GET",
      *  resource=true,
@@ -144,10 +144,10 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
     }
 
     /**
-     * Updates Diamante User
+     * Updates DiamanteUser
      *
      * @ApiDoc(
-     *  description="Updates Diamante User",
+     *  description="Updates DiamanteUser",
      *  uri="/users/{id}.{_format}",
      *  method={
      *    "PUT",
@@ -177,4 +177,37 @@ class UserApiServiceImpl extends UserServiceImpl implements RestServiceInterface
         $id = parent::updateDiamanteUser($command);
         return $this->diamanteUserRepository->get($id);
     }
+
+    /**
+     * Delete DiamanteUser by email
+     *
+     * @ApiDoc(
+     *  description="Delete DiamanteUser",
+     *  uri="/users/{id}.{_format}",
+     *  method="DELETE",
+     *  resource=true,
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Diamante User Id"
+     *      }
+     *  },
+     *  statusCodes={
+     *      204="Returned when successful",
+     *      403="Returned when the user is not authorized to delete diamante user",
+     *      404="Returned when the diamante user is not found"
+     *  }
+     * )
+     *
+     * @param $id
+     * @return null
+     * @throws \RuntimeException if unable to load required diamante user
+     */
+    public function removeDiamanteUser($id)
+    {
+        parent::removeDiamanteUser($id);
+    }
+
 }

@@ -79,4 +79,30 @@ class DiamanteUserApiServiceImplTest extends ApiTestCase
         $response =  $this->get('diamante_user_api_service_get_users', $this->command);
         return $this->getArray($response);
     }
+
+    /**
+     * @depends testCreateDiamanteUser
+     *
+     * @param array $userData
+     * @return array
+     */
+    public function testDeleteExistingUser($userData)
+    {
+        $this->command->urlParameters = ['id'  => $userData['id']];
+        $response =  $this->get('diamante_user_api_service_delete_user', $this->command);
+        return $this->getArray($response);
+    }
+
+    /**
+     * @depends testCreateDiamanteUser
+     *
+     * @param array $userData
+     * @return array
+     */
+    public function testDeleteNonExistingUser($userData)
+    {
+        $this->command->urlParameters = ['id'  => 'non-existing-id'];
+        $response =  $this->get('diamante_user_api_service_delete_user', $this->command);
+        return $this->getArray($response);
+    }
 }
