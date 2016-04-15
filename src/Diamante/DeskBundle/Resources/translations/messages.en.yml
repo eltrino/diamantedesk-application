@@ -322,7 +322,7 @@ diamante:
 
         automation:
           action:
-            move_to_branch:    move to branch
+            move_to_branch:    Move to branch
 oro:
     entity_extend:
         form:

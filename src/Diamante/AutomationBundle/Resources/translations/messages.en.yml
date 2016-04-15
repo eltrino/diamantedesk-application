@@ -97,12 +97,12 @@ diamante:
       admin:        is admin
 
     action:
-      update_property: update property
-      notify_by_email: notify by email
+      update_property: Update property
+      notify_by_email: Notify by email
 
     connector:
-      inclusive: all of these are true
-      exclusive: any of these are true
+      inclusive: All of these are true
+      exclusive: Any of these are true
 
     notification:
       ticket:
@@ -115,6 +115,6 @@ diamante:
         removed: Comment was removed
 
     cron:
-      d: "{1} every day|]1,Inf[ every %time% days"
-      h: "{1} every hour|]1,Inf[ every %time% hours"
-      m: every %time% minutes
+      d: "{1} Every day|]1,Inf[ Every %time% days"
+      h: "{1} Every hour|]1,Inf[ Every %time% hours"
+      m: Every %time% minutes
