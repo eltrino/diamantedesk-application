@@ -16,7 +16,9 @@
         <option value="">Property Updated</option>
         <% if(entity_conditions){ %>
             <% _.each(entity_conditions, function(key){ %>
-            <option value="<%= key %>"<%= key == entity_type ? ' selected' : ''%>><%= conditions[key] %></option>
+            <option value="<%= key %>"<%= key == entity_type ? ' selected' : ''%>>
+                <%= conditions[key].charAt(0).toUpperCase()+conditions[key].slice(1) %>
+            </option>
             <% }); %>
         <% } %>
     </select>
