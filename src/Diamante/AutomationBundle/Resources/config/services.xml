@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="diamante_automation.config.provider.class">Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider</parameter>
+        <parameter key="diamante_automation.schedule.entity.class">Diamante\AutomationBundle\Entity\Schedule</parameter>
         <parameter key="diamante_automation.workflow_rule.entity.class">Diamante\AutomationBundle\Entity\WorkflowRule</parameter>
         <parameter key="diamante_automation.business_rule.entity.class">Diamante\AutomationBundle\Entity\BusinessRule</parameter>
         <parameter key="diamante.rule.service.class">Diamante\AutomationBundle\Api\Internal\RuleServiceImpl</parameter>
@@ -48,6 +49,13 @@
             <tag name="diamante_automation.email.provider"/>
         </service>
 
+        <service id="diamante_automation.schedule.repository" class="%diamante.generic.repository.class%"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository"
+                >
+            <argument type="string">%diamante_automation.schedule.entity.class%</argument>
+        </service>
+
         <service id="diamante_automation.workflow_rule.repository" class="%diamante.generic.repository.class%"
                  factory-service="doctrine.orm.entity_manager"
                  factory-method="getRepository"
@@ -70,6 +78,7 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="diamante_automation.workflow_rule.repository"/>
             <argument type="service" id="diamante_automation.business_rule.repository"/>
+            <argument type="service" id="diamante_automation.schedule.repository"/>
             <argument type="service" id="diamante.automation.rule.validator"/>
         </service>
 

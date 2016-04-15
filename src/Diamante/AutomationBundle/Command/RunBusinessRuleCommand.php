@@ -15,7 +15,6 @@
 
 namespace Diamante\AutomationBundle\Command;
 
-
 use Diamante\AutomationBundle\Entity\BusinessRule;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,8 +33,7 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName("diamante:automation:business:run")
-            ->setAliases(['dbr'])
+        $this->setName("diamante:cron:automation:business:run")
             ->addOption("rule-id", "id", InputOption::VALUE_REQUIRED, "Business rule id")
             ->addOption("dry-run", "d", InputOption::VALUE_OPTIONAL, "Do not execute actions configured in rule");
     }

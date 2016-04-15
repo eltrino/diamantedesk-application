@@ -42,7 +42,8 @@ class UpdatePropertyAction extends AbstractModifyAction
 
         $entity = $this->update($target, $targetClass, $properties);
         $this->disableListeners();
-        $this->registry->getManager()->persist($entity);
+        $this->em->persist($entity);
+        $this->em->flush();
     }
 
     /**

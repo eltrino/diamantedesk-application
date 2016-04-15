@@ -23,7 +23,7 @@ use JMS\JobQueueBundle\Entity\Job;
 class QueueManager
 {
     const SELF_WORKFLOW_COMMAND_NAME = 'diamante:automation:workflow:run';
-    const QUEUE_NAME                 = 'diamante_automation_business_rule';
+    const QUEUE_NAME                 = 'diamante_automation_workflow_rule';
 
     /**
      * @var \Doctrine\Common\Persistence\ObjectManager|object

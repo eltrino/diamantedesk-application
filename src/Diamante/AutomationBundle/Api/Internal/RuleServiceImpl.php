@@ -25,13 +25,13 @@ use Diamante\AutomationBundle\Model\Rule;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\DeskBundle\Model\Entity\Exception\ValidationException;
-use Oro\Bundle\CronBundle\Entity\Schedule;
+use Diamante\AutomationBundle\Entity\Schedule;
 use Rhumsaa\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RuleServiceImpl implements RuleService
 {
-    const BUSINESSRULE_COMMAND_NAME = 'dbr';
+    const BUSINESS_RULE_COMMAND_NAME = 'diamante:cron:automation:business:run';
 
     /**
      * @var RegistryInterface
@@ -49,6 +49,11 @@ class RuleServiceImpl implements RuleService
     private $businessRuleRepository;
 
     /**
+     * @var DoctrineGenericRepository
+     */
+    private $scheduleRepository;
+
+    /**
      * @var RuleValidator
      */
     private $validator;
@@ -57,17 +62,20 @@ class RuleServiceImpl implements RuleService
      * @param RegistryInterface         $registry
      * @param DoctrineGenericRepository $workflowRuleRepository
      * @param DoctrineGenericRepository $businessRuleRepository
+     * @param DoctrineGenericRepository $scheduleRepository
      * @param RuleValidator             $validator
      */
     public function __construct(
         RegistryInterface $registry,
         DoctrineGenericRepository $workflowRuleRepository,
         DoctrineGenericRepository $businessRuleRepository,
+        DoctrineGenericRepository $scheduleRepository,
         RuleValidator $validator
     ) {
         $this->registry = $registry;
         $this->workflowRuleRepository = $workflowRuleRepository;
         $this->businessRuleRepository = $businessRuleRepository;
+        $this->scheduleRepository = $scheduleRepository;
         $this->validator = $validator;
     }
 
@@ -176,6 +184,14 @@ class RuleServiceImpl implements RuleService
     private function deleteBusinessRule($id)
     {
         $rule = $this->getBusinessRuleById($id);
+
+        /** @var Schedule $schedule */
+        foreach ($this->scheduleRepository->findByCommand(static::BUSINESS_RULE_COMMAND_NAME) as $schedule) {
+            if ($rule->getId() == $schedule->getParameters()['rule-id']) {
+                $this->scheduleRepository->remove($schedule);
+            }
+        }
+
         $this->businessRuleRepository->remove($rule);
     }
 
@@ -337,9 +353,9 @@ class RuleServiceImpl implements RuleService
      */
     private function createBusinessRuleProcessingCronJob($ruleId, $timeInterval)
     {
-        $command = sprintf('%s --rule-id=%s', self::BUSINESSRULE_COMMAND_NAME, $ruleId);
         $schedule = new Schedule();
-        $schedule->setCommand($command)
+        $schedule->setCommand(self::BUSINESS_RULE_COMMAND_NAME)
+            ->setParameters(['rule-id' => $ruleId])
             ->setDefinition(CronExpressionMapper::getMappedCronExpression($timeInterval));
 
         $em = $this->registry->getEntityManager();
