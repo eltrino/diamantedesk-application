@@ -34,7 +34,7 @@ define([
 
         defaults: {
             name: '',
-            timeInterval: '',
+            time_interval: '',
             target: ''
         },
 
@@ -46,8 +46,8 @@ define([
             } else {
                 options.target = attr.target
             }
-            if(!attr.timeInterval && attr.type === 'business') {
-                this.set('timeInterval', _.keys(config.time_intervals)[0])
+            if(!attr.time_interval && attr.type === 'business') {
+                this.set('time_interval', _.keys(config.time_intervals)[0])
             }
             delete options.model;
             this.set('actions', attr.actions ?
