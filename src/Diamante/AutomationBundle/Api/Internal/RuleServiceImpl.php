@@ -243,7 +243,7 @@ class RuleServiceImpl implements RuleService
      */
     private function createBusinessRule(array $input)
     {
-        $rule = new BusinessRule($input['name'], $input['target'], $input['timeInterval']);
+        $rule = new BusinessRule($input['name'], $input['target'], $input['time_interval']);
         $this->addGrouping($rule, $input['grouping']);
         $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
 
@@ -263,7 +263,7 @@ class RuleServiceImpl implements RuleService
     private function updateBusinessRule(array $input, $id)
     {
         $rule = $this->getBusinessRuleById($id);
-        $rule->update($input['name'], $input['timeInterval']);
+        $rule->update($input['name'], $input['time_interval']);
 
         $rule->removeActions();
         $rule->removeGrouping();

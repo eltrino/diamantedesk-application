@@ -62,7 +62,7 @@ class RuleValidator implements ValidatorInterface
             return false;
         }
 
-        if ($type == Rule::TYPE_BUSINESS && (!array_key_exists('timeInterval', $subject) || !$this->validateTimeInterval($subject))) {
+        if ($type == Rule::TYPE_BUSINESS && (!array_key_exists('time_interval', $subject) || !$this->validateTimeInterval($subject))) {
             return false;
         }
 
@@ -139,7 +139,7 @@ class RuleValidator implements ValidatorInterface
 
     protected function validateTimeInterval($subject)
     {
-        $time = isset($subject['timeInterval']) ? strtolower($subject['timeInterval']) : null;
+        $time = isset($subject['time_interval']) ? strtolower($subject['time_interval']) : null;
 
         if (empty($time) || !in_array($time, CronExpressionMapper::getConfiguredTimeIntervals())) {
             return false;
