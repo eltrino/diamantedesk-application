@@ -15,7 +15,7 @@ define([
         subject : '',
         description: '',
         priority : 'medium',
-        status: 'open',
+        status: 'new',
         source: 'web'
       },
       idAttribute: 'key',
