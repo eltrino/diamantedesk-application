@@ -26,14 +26,18 @@ use Proxies\__CG__\Diamante\DeskBundle\Entity\Branch;
  */
 class MoveToBranchAction extends AbstractModifyAction
 {
+    const ACTION_NAME = 'move_to_branch';
+
     public function execute()
     {
+        $branchId = null;
         $target = $this->context->getFact()->getTarget();
         /** @var Ticket $ticket */
         $ticket = $this->em->getRepository('DiamanteDeskBundle:Ticket')->get($target['id']);
 
-
-        $branchId = $this->context->getParameters()->has('branch') ? $this->context->getParameters()->get('branch') : null;
+        if ($this->context->getParameters()->has(static::ACTION_NAME)) {
+            $branchId = $this->context->getParameters()->all()[static::ACTION_NAME];
+        }
 
         if (is_null($branchId)) {
             throw new \RuntimeException("Invalid rule configuration");
