@@ -43,14 +43,6 @@ define([
     });
 
     Edit.ModalView = Modal.LayoutView.extend({
-      beforeShowModal : function(){
-        window.history.pushState("","",window.location.href + '/modal');
-        Modal.LayoutView.prototype.beforeShowModal.call(this);
-      },
-      beforeHideModal : function(){
-        window.history.pushState("","",window.location.href.replace('/modal',''));
-        Modal.LayoutView.prototype.beforeHideModal.call(this);
-      },
       submitModal: function(){
         this.modalBody.currentView.submitForm();
         this.trigger('modal:submit');
