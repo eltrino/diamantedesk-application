@@ -41,7 +41,7 @@
             <% } %>
         <% } %>
     <% } %>
-    <% if(type == 'notify_by_email'){ %>
+    <% if(type == 'notify_by_email' || type == 'move_to_branch'){ %>
         <span class="label">To: </span>
         <input type="hidden" name="actions[property][<%= index %>]" data-attr="property" value="<%= type %>" />
         <select name="actions[value][<%= index %>]" data-attr="value">
