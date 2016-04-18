@@ -104,4 +104,6 @@ diamante_automation:
       move_to_branch:
         id: @diamante.desk.automation.action.move_to_branch
         frontend_label: diamante.desk.automation.action.move_to_branch
+        frontend_options:
+          source: "@diamante.autocomplete.branch.service->getBranches"
         data_types: ['virtual']
