@@ -17,7 +17,9 @@
         <span class="label">Set: </span>
         <select name="actions[property]" data-attr="property" data-rel-attr="value">
             <% for(var key in properties) { %>
-            <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
+                <% if( properties[key].updatable ) {%>
+                    <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
+                <% } %>
             <% } %>
         </select>
         <% } %>
