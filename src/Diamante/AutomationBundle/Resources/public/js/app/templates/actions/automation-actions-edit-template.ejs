@@ -13,8 +13,6 @@
         <% } %>
     </select>
     <% if(type == 'update_property'){ %>
-        <span class="label">Of:</span>
-        <label for="automation-target" class="value"><%= entities[entity].label %></label>
         <% if(properties){ %>
         <span class="label">Set: </span>
         <select name="actions[property]" data-attr="property" data-rel-attr="value">
