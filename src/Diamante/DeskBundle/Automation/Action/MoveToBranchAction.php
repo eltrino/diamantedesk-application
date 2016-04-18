@@ -43,13 +43,13 @@ class MoveToBranchAction extends AbstractModifyAction
             throw new \RuntimeException("Invalid rule configuration");
         }
 
-        /** @var Branch $branch */
-        $branch = $this->em->getRepository('DiamanteDeskBundle:Branch')->get($branchId);
         $this->em->getConnection()->beginTransaction();
 
         try {
             /** @var Ticket $ticket */
             $ticket = $this->em->getRepository('DiamanteDeskBundle:Ticket')->get($target['id']);
+            /** @var Branch $branch */
+            $branch = $this->em->getRepository('DiamanteDeskBundle:Branch')->get($branchId);
             $this->em->lock($branch, LockMode::PESSIMISTIC_READ);
             $this->em->getRepository('DiamanteDeskBundle:TicketHistory')->store(new TicketHistory($ticket));
             $ticket->move($branch);
