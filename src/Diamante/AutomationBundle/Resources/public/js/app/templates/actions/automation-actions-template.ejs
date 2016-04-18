@@ -8,8 +8,6 @@
         <%= config.actions[type].label %>
     </strong>
     <% if(type == 'update_property'){ %>
-        <span class="label">Of:</span>
-        <label class="value"><%= entities[entity].label %></label>
         <% if(properties){ %>
         <span class="label">Set: </span>
         <strong class="value"><%= properties[property].label %></strong>
