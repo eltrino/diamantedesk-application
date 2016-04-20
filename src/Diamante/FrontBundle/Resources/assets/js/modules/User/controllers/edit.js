@@ -18,6 +18,10 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
           this.$el.modal();
         });
 
+        modalEditView.on('modal:closed', function(){
+            App.back();
+        });
+
         request.done(function(userModel){
           var userEditView = new Edit.ItemView({
             model: userModel
