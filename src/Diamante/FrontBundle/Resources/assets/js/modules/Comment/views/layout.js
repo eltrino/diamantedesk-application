@@ -1,8 +1,8 @@
 define([
   'app',
   './list',
-  './form',
-  'tpl!../templates/layout.ejs'], function(App, List, Form, layoutTemplate){
+  './create',
+  'tpl!../templates/layout.ejs'], function(App, List, Create, layoutTemplate){
 
   return App.module('Ticket.View.Comment', function(Comment, App, Backbone, Marionette, $, _){
 
@@ -15,7 +15,7 @@ define([
       },
 
       List: List.CollectionView,
-      Form: Form.ItemView
+      Form: Create.ItemView
 
     });
 

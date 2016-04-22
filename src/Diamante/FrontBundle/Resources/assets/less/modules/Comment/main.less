@@ -4,7 +4,7 @@
   margin-bottom: 25px;
 }
 .comments-item {
-  padding: 5px 0 5px 69px;
+  padding: 5px 5px 5px 69px;
   margin-bottom: 5px;
   &:nth-child(odd){
     background: #fafafa;
@@ -31,7 +31,7 @@
 
 .comment-tools {
   &:extend(.list-unstyled);
-  margin: -4px 0;
+  margin: -4px;
   li {
     display: inline;
     cursor: pointer;
@@ -47,6 +47,14 @@
     &:hover {
       color: @link-color;
     }
+  }
+}
+
+.is-editing {
+  .comment-content,
+  .comment-tools,
+  .comment-attachments-block {
+    display: none;
   }
 }
 @import "form";

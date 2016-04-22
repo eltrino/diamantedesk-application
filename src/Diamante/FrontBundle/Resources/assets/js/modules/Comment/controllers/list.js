@@ -30,7 +30,7 @@ define(['app'], function(App){
 
       commentCollectionView.on('childview:comment:edit', function(childView, commentModel){
         require(['Comment/controllers/edit'], function(Edit){
-          Edit.Controller(commentModel, options);
+          Edit.Controller(commentModel, childView, options);
         });
       });
 

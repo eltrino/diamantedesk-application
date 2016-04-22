@@ -6,12 +6,12 @@ define(['app'], function(App){
       require([
         'Comment/models/comment',
         'Comment/models/attachment',
-        'Comment/views/form'], function(CommentModels, AttachmentModels, Form){
+        'Comment/views/create'], function(CommentModels, AttachmentModels){
 
         var commentModel = new CommentModels.Model({},{ ticket : options.ticket }),
             commentCollection = options.collection,
             attachmentCollection = new AttachmentModels.Collection(),
-            formView = new Form.LayoutView({ model: commentModel, attachmentCollection: attachmentCollection }),
+            formView = new Create.LayoutView({ model: commentModel, attachmentCollection: attachmentCollection }),
             onSuccess = function(model){
               formView.hideLoader();
               commentCollection.add(model);
@@ -41,7 +41,6 @@ define(['app'], function(App){
                 } else {
                   onSuccess(model);
                 }
-                model.fetchAuthor();
               },
               error : function(model, xhr){
                 formView.hideLoader();

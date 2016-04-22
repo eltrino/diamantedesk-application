@@ -1,13 +1,19 @@
+<% var isEdit = !!content; %>
+<% if(!isEdit){ %>
 <h2>Add Comment</h2>
+<% } %>
 <form action="/" role="form">
     <div class="form-group">
-        <textarea class="form-control" name="content" id="comment-content" rows="4"><%= content %></textarea>
+        <textarea class="form-control" name="content" id="comment<%= isEdit? '-edit':''%>-content" rows="4"><%= content %></textarea>
     </div>
-    <div id="comment-attachment"></div>
-    <div id="comment-attachment-drop"></div>
-    <% if(!content){ %>
-    <button type="submit" class="btn btn-primary js-add-comment js-submit">Add Comment</button>
-    <% } else { %>
-    <button type="submit" class="btn btn-primary js-edit-comment js-submit">Edit Comment</button>
-    <% } %>
+    <div id="comment<%= isEdit? '-edit':''%>-attachment"></div>
+    <div id="comment<%= isEdit? '-edit':''%>-attachment-drop"></div>
+    <div class="comment-form-actions">
+        <% if(isEdit){ %>
+        <button type="reset" class="btn btn-defautl js-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary js-submit">Edit Comment</button>
+        <% } else { %>
+        <button type="submit" class="btn btn-primary js-submit">Add Comment</button>
+        <% } %>
+    </div>
 </form>

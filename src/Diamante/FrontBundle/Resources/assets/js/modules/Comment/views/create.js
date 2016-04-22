@@ -3,9 +3,9 @@ define([
   'Common/views/form',
   'tpl!../templates/form.ejs'], function(App, CommonForm, formTemplate){
 
-  return App.module('Ticket.View.Comment.Form', function(Form, App, Backbone, Marionette, $, _){
+  return App.module('Ticket.View.Comment.Create', function(Create, App, Backbone, Marionette, $, _){
 
-    Form.LayoutView = CommonForm.LayoutView.extend({
+    Create.LayoutView = CommonForm.LayoutView.extend({
       template : formTemplate,
       className : 'comments-form',
       regions : {
@@ -13,7 +13,6 @@ define([
         dropRegion : '#comment-attachment-drop'
       },
       initialize : function(options){
-        this.isNew = options.model.isNew();
         this.attachmentCollection = options.attachmentCollection;
       },
       onShow : function(){
@@ -39,10 +38,6 @@ define([
         });
 
         CommonForm.LayoutView.prototype.onShow.call(this);
-
-        if(!this.isNew) {
-          jQuery(window).add('body').animate({'scrollTop': this.$el.offset().top});
-        }
 
       }
     });

@@ -2,16 +2,22 @@ define(['app'], function(App){
 
   return App.module('Ticket.View.Comment.Edit', function(Edit, App, Backbone, Marionette, $, _){
 
-    Edit.Controller = function(commentModel, options){
+    Edit.Controller = function(commentModel, commentView, options){
 
       require([
         'Comment/models/attachment',
-        'Comment/views/form'], function(AttachmentModels, Form){
+        'Comment/views/edit'], function(AttachmentModels){
 
         var parentView = options.parentView,
             attachmentCollection = new AttachmentModels.Collection(commentModel.get('attachments'), { comment : commentModel }),
-            formView = new Form.LayoutView({ model: commentModel, attachmentCollection : attachmentCollection }),
+            formView = new Edit.LayoutView({ model: commentModel, attachmentCollection : attachmentCollection }),
             destroyAttachments = [];
+
+        if(parentView.isEditing){
+          parentView.isEditing.trigger('edit:cancel', {
+            view : parentView.isEditing
+          });
+        }
 
         formView.on('form:submit', function(data){
           formView.showLoader();
@@ -30,13 +36,10 @@ define(['app'], function(App){
             commentModel.save(data,{
               wait: true,
               success : function(model){
-                require(['Comment/controllers/create'],function(Create){
-                  formView.hideLoader();
-                  Create.Controller(options);
-                  App.trigger('message:show', {
-                    status:'success',
-                    text: 'Your comment has been edited'
-                  });
+                commentView.$el.removeClass('is-editing');
+                App.trigger('message:show', {
+                  status:'success',
+                  text: 'Your comment has been edited'
                 });
               },
               error : function(model, xhr){
@@ -48,7 +51,7 @@ define(['app'], function(App){
               }
             });
             if(!commentModel.isValid()){
-              hideLoader.hideLoader();
+              formView.hideLoader();
             }
           }).fail(function(xhr){
             console.warn(arguments);
@@ -70,7 +73,17 @@ define(['app'], function(App){
           attachmentCollection.remove(model);
         });
 
-        parentView.formRegion.show(formView);
+        formView.on('edit:cancel', function(arg){
+          parentView.isEditing = false;
+          commentView.$el.removeClass('is-editing');
+          arg.view.destroy();
+          commentView.render();
+        });
+
+        commentView.$el.append(formView.el).addClass('is-editing');
+        parentView.isEditing = formView;
+        formView.render();
+        formView.triggerMethod('show');
 
       });
     };

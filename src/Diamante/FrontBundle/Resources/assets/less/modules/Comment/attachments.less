@@ -15,7 +15,7 @@
     top: 4px;
   }
 }
-.comment-attachments {
+.comment-attachments{
   &:extend(.list-unstyled);
   &:extend(.clearfix all);
   padding: 10px 0 0;
@@ -30,7 +30,7 @@
     margin-bottom: 5px;
     vertical-align: top;
   }
-  li {
+  > li {
     float:left;
     font-size: 11px;
     width:18.4%;
@@ -75,5 +75,20 @@
         clear: left;
       }
     }
+  }
+}
+
+#comment-edit-attachment {
+  &:extend(.comment-attachments-block all);
+  display: block !important;
+  margin-bottom: 0;
+  padding-right: 0;
+}
+.comments-item {
+  .attachments-list {
+    &:extend(.comment-attachments all);
+  }
+  .comments-form {
+    margin-bottom: 10px;
   }
 }
