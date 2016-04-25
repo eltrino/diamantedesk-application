@@ -63,6 +63,10 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!$this->rule->isActive()) {
+            return 0;
+        }
+        
         $engine = $this->getContainer()->get('diamante_automation.engine');
         $dryRun = $input->hasParameterOption("--dry-run");
 
