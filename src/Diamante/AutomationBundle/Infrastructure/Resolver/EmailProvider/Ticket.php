@@ -61,7 +61,7 @@ class Ticket implements EntityProvider
         $list = [];
         $watchers = $target['watcherList'];
 
-        foreach ($watchers->getValues() as $watcher) {
+        foreach ($watchers as $watcher) {
             $user = $this->userService->getByUser($watcher->getUserType());
             $list[] = $user->getEmail();
         }
