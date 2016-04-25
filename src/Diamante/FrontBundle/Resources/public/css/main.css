@@ -8311,9 +8311,11 @@ h1,
 .is-editing #comment-edit-attachment {
   display: none;
 }
+.comments-item,
 #comments-form {
   position: relative;
 }
+.comments-item .loader,
 #comments-form .loader {
   position: absolute;
 }
@@ -8445,7 +8447,7 @@ h1,
 #comment-edit-attachment {
   display: block !important;
   margin-bottom: 0;
-  padding-left: 0;
+  padding-right: 0;
 }
 .comments-item .comments-form {
   margin-bottom: 10px;

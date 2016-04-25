@@ -9,7 +9,8 @@
      alt="<%= author_name %>" />
 <strong class="commment-author-name">
     <%= author_name  %>
-</strong> answered <%= created_relative %> <small class="comment-date">(<%= created_at %>)</small>
+</strong>
+<span> answered <%= created_relative %> <small class="comment-date">(<%= created_at %>)</small> </span>
 <div class="comment-content"><%= content %></div>
 <% if(attachments && attachments.length) { %>
 <% attachments = _.sortBy(attachments, 'thumbnails'); %>
