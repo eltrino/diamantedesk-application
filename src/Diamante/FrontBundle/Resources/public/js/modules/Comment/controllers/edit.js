@@ -82,7 +82,7 @@ define(['app'], function(App){
 
         commentView.$el.append(formView.el).addClass('is-editing');
         parentView.isEditing = formView;
-        
+
         formView.render();
         formView.triggerMethod('show');
 

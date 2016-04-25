@@ -1,6 +1,8 @@
 <% if (typeof(file) !== 'undefined') { %>
   <% if (typeof(thumbnails) !== 'undefined') { %>
-      <img src="<%= thumbnails.url %>" alt="<%= file.filename %>">
+      <span class="media">
+        <img src="<%= thumbnails.url %>" alt="<%= file.filename %>">
+      </span>
   <% } %>
   <ul class="attachment-tools pull-right">
     <li><button class="btn btn-link js-delete-attachment" title="Remove Attachment"><i class="fa

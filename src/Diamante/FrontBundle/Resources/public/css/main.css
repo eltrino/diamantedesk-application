@@ -8374,11 +8374,18 @@ h1,
 .comments-item .attachments-list a {
   display: block;
 }
+.comment-attachments .media,
+.comments-item .attachments-list .media {
+  display: block;
+  text-align: center;
+  background: #D8D8D8;
+  margin-bottom: 5px;
+}
 .comment-attachments img,
 .comments-item .attachments-list img {
-  display: block;
+  display: inline-block;
+  margin-bottom: 0;
   max-width: 100%;
-  margin-bottom: 5px;
   vertical-align: top;
 }
 .comment-attachments > li,
@@ -8448,6 +8455,9 @@ h1,
   display: block !important;
   margin-bottom: 0;
   padding-right: 0;
+}
+#comment-edit-attachment-drop {
+  padding-left: 26px;
 }
 .comments-item .comments-form {
   margin-bottom: 10px;
