@@ -16,6 +16,8 @@
 namespace Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider;
 
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Oro\Bundle\UserBundle\Entity\User;
 
 /**
  * Class Ticket
@@ -75,13 +77,15 @@ class Ticket implements EntityProvider
      */
     public function getAssignee(array $target)
     {
-        if (empty($target['assignee'])) {
-            return null;
+        /** @var array|DiamanteUser $assignee */
+        $assignee = $target['assignee'];
+        if (is_object($assignee)) {
+            return $assignee->getEmail();
+        } elseif (is_array($assignee)) {
+            return $assignee['email'];
         }
 
-        $user = $this->userService->getByUser($target['assignee']);
-
-        return $user->getEmail();
+        return null;
     }
 
     /**

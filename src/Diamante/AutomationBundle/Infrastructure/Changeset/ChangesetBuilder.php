@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Infrastructure\Changeset;
 
 use Doctrine\ORM\PersistentCollection;
+use Doctrine\ORM\Proxy\Proxy;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -60,6 +61,11 @@ class ChangesetBuilder
                 $value = $value->getValues();
             }
 
+            /** @var $new Proxy */
+            if ($value instanceof Proxy) {
+                $value = $this->getProxyProperties($value);
+            }
+
             $changeset[$name] = [null, $value];
         }
 
@@ -97,6 +103,15 @@ class ChangesetBuilder
                 $new = $new->getValues();
             }
 
+            if ($old instanceof Proxy) {
+                $old = $this->getProxyProperties($old);
+            }
+
+            /** @var $new Proxy */
+            if ($new instanceof Proxy) {
+                $new = $this->getProxyProperties($new);
+            }
+
             $changeset[$name] = [$old, $new];
         }
 
@@ -123,9 +138,34 @@ class ChangesetBuilder
                 $value = $value->getValues();
             }
 
+            /** @var $new Proxy */
+            if ($value instanceof Proxy) {
+                $value = $this->getProxyProperties($value);
+            }
+
             $changeset[$name] = [$value, $value];
         }
 
         return $changeset;
+    }
+
+    /**
+     * @param Proxy $entity
+     *
+     * @return array
+     */
+    private function getProxyProperties(Proxy $entity)
+    {
+        $entityProperties = [];
+        $reflect = new \ReflectionClass($entity);
+        $props   = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+        foreach ($props as $refProperty) {
+            $refProperty->setAccessible(true);
+            $name = $refProperty->getName();
+            $value = $refProperty->getValue($entity);
+            $entityProperties[$name] = $value;
+        }
+
+        return $entityProperties;
     }
 }
