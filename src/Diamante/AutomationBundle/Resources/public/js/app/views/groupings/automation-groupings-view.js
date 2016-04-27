@@ -16,17 +16,15 @@ define([
         className: 'control-group',
 
         initialize: function(options){
-            var children = this.model.get('children');
             this.collectionView = options.collectionView;
             this.options = _.omit(options, 'model', 'collection', 'collectionView');
             this.options.hasParent = !!options.parent;
-            this.options.hasChildren = children && children.length;
         },
 
         render: function () {
-            var moreThanOne = this.model.get('children') ?
-                this.model.get('children').length > 1 :
-                this.model.get('conditions') && this.model.get('conditions').length;
+            var moreThanOne =
+                (this.model.get('children') && this.model.get('children').length > 1) ||
+                (this.model.get('conditions') && this.model.get('conditions').length > 1);
             AbstractView.prototype.render.apply(this, arguments);
             this.renderSubViews();
             this.$('> .groupings-connector').toggle(moreThanOne);
