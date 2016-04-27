@@ -96,7 +96,7 @@ class NotifyByEmailAction extends AbstractAction
     private function getTicketKey(array $target, $targetType)
     {
         if ('ticket' == $targetType) {
-            return new TicketKey($target['branch']['key'], $target['sequenceNumber']->getValue());
+            return new TicketKey($target['branch']->getKey(), $target['sequenceNumber']->getValue());
         } elseif ('comment' == $targetType) {
             return $target['ticket']->getKey();
         }
