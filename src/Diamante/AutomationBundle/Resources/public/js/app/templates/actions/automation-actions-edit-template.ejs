@@ -24,8 +24,8 @@
         </select>
         <% } %>
         <% if(property){ %>
-            <span class="label">To: </span>
             <% if(properties[property].type == 'string' || properties[property].type == 'datetime'){ %>
+            <span class="label">To: </span>
             <div class="control-item">
                 <input type="text"
                        name="actions[value][<%= index %>]" data-attr="value" value="<%= value %>"
@@ -33,6 +33,7 @@
                        required="required"/>
             </div>
             <% } else if (properties[property].frontend_options){ %>
+            <span class="label">To: </span>
             <select name="actions[value][<%= index %>]" data-attr="value">
                 <% for(var key in properties[property].frontend_options) { %>
                 <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
