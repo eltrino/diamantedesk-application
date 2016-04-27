@@ -4,12 +4,12 @@ namespace Diamante\DistributionBundle\DependencyInjection;
 
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class DiamanteDistributionExtension extends Extension implements PrependExtensionInterface
 {
+    const ORO_NOTIFICATION = 'oro_notification';
+
     public function prepend(ContainerBuilder $container)
     {
         $loader = new CumulativeConfigLoader(
@@ -37,11 +39,17 @@ class DiamanteDistributionExtension extends Extension implements PrependExtensio
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+        $oroNotificationConfiguration = new OroNotificationConfiguration();
+        $oroNotificationConfig = $this->processConfiguration($oroNotificationConfiguration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $container->prependExtensionConfig($this->getAlias(), array_intersect_key($config, array_flip(['settings'])));
+        $container->prependExtensionConfig(
+            static::ORO_NOTIFICATION,
+            array_intersect_key($oroNotificationConfig, array_flip(['settings']))
+        );
     }
 
     private function populateWhitelist(ContainerBuilder $container, $resource)
