@@ -1,9 +1,11 @@
 define([
     'underscore',
+    'diamanteautomation/js/app/views/groupings/automation-groupings-view',
     'diamanteautomation/js/app/views/groupings/automation-groupings-edit-view',
     'tpl!diamanteautomation/js/app/templates/groupings/automation-groupings-collection-template.ejs',
     'diamanteautomation/js/app/views/abstract/collection-view'
 ],function (_,
+            AutomationGroupingsView,
             AutomationGroupingsEditView,
             AutomationGroupingsCollectionTemplate,
             AbstractCollectionView) {
@@ -21,11 +23,19 @@ define([
         },
 
         initItemView : function(model){
-            return new AutomationGroupingsEditView(_.extend({
-                model: model,
-                region: null,
-                collectionView : AutomationGroupingsCollectionView
-            }, this.options));
+            if(this.options.edit){
+                return new AutomationGroupingsEditView(_.extend({
+                    model: model,
+                    region: null,
+                    collectionView : AutomationGroupingsCollectionView
+                }, this.options));
+            } else {
+                return new AutomationGroupingsView(_.extend({
+                    model: model,
+                    region: null,
+                    collectionView : AutomationGroupingsCollectionView
+                }, this.options));
+            }
         },
 
         update : function(model, collection){

@@ -31,10 +31,11 @@ define([
         },
 
         initialize: function(options){
+            var children = this.model.get('children');
             this.collectionView = options.collectionView;
             this.options = _.omit(options, 'model', 'collection', 'collectionView');
             this.options.hasParent = !!options.parent;
-            this.options.hasChildren = !!options.children;
+            this.options.hasChildren = children && children.length;
         },
 
         moreThanOne: function(){
@@ -62,6 +63,7 @@ define([
                     container: container,
                     parent : this
                 }, this.options));
+                this.$('> .groupings-buttons button[data-action="add-item"]').hide();
             } else if(conditions) {
                 this.conditions = new AutomationConditionsCollectionView(_.extend({
                     collection: conditions,
@@ -112,6 +114,8 @@ define([
 
         removeGroup: function(){
             var success = this.model.destroy.bind(this.model);
+            this.model.unset('id');
+            delete this.model.id;
             this.$el.animate({ opacity: 0 }, 500, success);
         },
 

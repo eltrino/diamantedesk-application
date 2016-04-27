@@ -18,6 +18,7 @@ define([
             if (attr.children && attr.children.length) {
                 options.model = AutomationGroupingsModel;
                 this.set('children', new AutomationGroupingsCollection(attr.children, options));
+                this.unset('conditions');
             } else if(attr.conditions) {
                 this.set('conditions', new AutomationConditionCollection(attr.conditions, options));
             } else {

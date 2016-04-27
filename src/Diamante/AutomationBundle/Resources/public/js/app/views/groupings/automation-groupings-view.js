@@ -16,10 +16,11 @@ define([
         className: 'control-group',
 
         initialize: function(options){
+            var children = this.model.get('children');
             this.collectionView = options.collectionView;
             this.options = _.omit(options, 'model', 'collection', 'collectionView');
             this.options.hasParent = !!options.parent;
-            this.options.hasChildren = !!options.children;
+            this.options.hasChildren = children && children.length;
         },
 
         render: function () {
