@@ -51,6 +51,8 @@ define([
 
         removeItem: function(){
             var success = this.model.destroy.bind(this.model);
+            this.model.unset('id');
+            delete this.model.id;
             this.$el.animate({ opacity: 0 }, 500, success);
         },
 
