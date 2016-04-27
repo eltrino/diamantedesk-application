@@ -41,7 +41,7 @@ define([
                 conditions.dispose();
                 this.unset('conditions');
             }
-            if(children){
+            if(children && children.length){
                 children.add({}, options);
             } else {
                 this.set('children', child);
