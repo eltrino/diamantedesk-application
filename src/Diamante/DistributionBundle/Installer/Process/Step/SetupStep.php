@@ -22,8 +22,6 @@ use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
 
 class SetupStep extends AbstractStep
 {
-    const ORGANIZATION_NAME = 'DiamanteDesk';
-
     public function displayAction(ProcessContextInterface $context)
     {
         $form = $this->createForm('diamante_installer_setup');
