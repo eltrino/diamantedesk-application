@@ -101,24 +101,6 @@ function iterateRequirements(array $collection)
     <script type="text/javascript" src="bundles/oroinstaller/lib/jquery-2.0.3.min.js"></script>
     <script type="text/javascript">
         $(function() {
-            var splash = $('div.start-box'),
-                body = $('body'),
-                winHeight = $(window).height();
-
-            $('#begin-install').click(function() {
-                splash.hide();
-                body.css({ 'overflow': 'visible', 'height': 'auto' });
-            });
-
-            if ('localStorage' in window && window['localStorage'] !== null) {
-                if (!localStorage.getItem('oroInstallSplash')) {
-                    splash.show().height(winHeight);
-                    body.css({ 'overflow': 'hidden', 'height': winHeight });
-
-                    localStorage.setItem('oroInstallSplash', true);
-                }
-            }
-
             <?php if (!count($majorProblems)) : ?>
             // initiate application in background
             $.get('installer/flow/oro_installer/configure');
