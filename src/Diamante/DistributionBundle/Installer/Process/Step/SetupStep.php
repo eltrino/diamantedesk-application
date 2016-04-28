@@ -22,6 +22,8 @@ use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
 
 class SetupStep extends AbstractStep
 {
+    const ORGANIZATION_NAME = 'DiamanteDesk';
+
     public function displayAction(ProcessContextInterface $context)
     {
         $form = $this->createForm('diamante_installer_setup');
@@ -66,11 +68,7 @@ class SetupStep extends AbstractStep
             $defaultOrganizationName = $configManager->get('oro_ui.organization_name');
             $organizationName        = $form->get('organization_name')->getData();
             if (!empty($organizationName) && $organizationName !== $defaultOrganizationName) {
-                $organizationManager = $this->get('oro_organization.organization_manager');
-                $organization        = $organizationManager->getOrganizationByName('default');
-                $organization->setName($organizationName);
-
-                $organizationManager->updateOrganization($organization);
+                $configManager->set('oro_ui.application_name', $organizationName);
             }
 
             $defaultAppURL       = $configManager->get('oro_ui.application_url');
