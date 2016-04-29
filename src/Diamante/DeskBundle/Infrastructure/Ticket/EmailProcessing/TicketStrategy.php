@@ -31,7 +31,7 @@ use Oro\Bundle\UserBundle\Entity\UserManager as OroUserManager;
 class TicketStrategy implements Strategy
 {
 
-    const EMAIL_NOTIFIER_CONFIG_PATH = 'oro_notification.email_notification_sender_email';
+    const MAILBOX_USERNAME_CONFIG_PATH = 'diamante_email_processing.mailbox_username';
 
     /**
      * @var MessageReferenceService
@@ -145,7 +145,7 @@ class TicketStrategy implements Strategy
 
             $email = $recipient->getEmail();
 
-            if ($email == $this->configManager->get(self::EMAIL_NOTIFIER_CONFIG_PATH)) {
+            if ($email == $this->configManager->get(self::MAILBOX_USERNAME_CONFIG_PATH)) {
                 continue;
             }
 
