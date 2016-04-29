@@ -12,7 +12,7 @@
         <span class="label">Set: </span>
         <strong class="value"><%= properties[property].label %></strong>
         <% } %>
-        <% if(property){ %>
+        <% if(property && value && value !== type){ %>
             <span class="label">To: </span>
             <% if(properties[property].type == 'string'){ %>
                 <strong class="value"><%= value %></strong>
