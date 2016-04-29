@@ -7596,6 +7596,9 @@ h1,
   box-shadow: 0 0 8px #000000;
   outline: 0 none;
 }
+.btn-link {
+  transition: color .5s ease;
+}
 .modal-dialog {
   height: 100%;
   margin: 0 auto;
@@ -8266,12 +8269,13 @@ h1,
 .comments-item {
   padding: 5px 5px 5px 69px;
   margin-bottom: 5px;
+  transition: background .5s ease;
 }
 .comments-item:nth-child(odd) {
-  background: #fafafa;
+  background: #f9f9f9;
 }
 .comments-item:hover {
-  background: #eee;
+  background: #f5f5f5;
 }
 .comment-author-image {
   float: left;
@@ -8297,7 +8301,7 @@ h1,
 .comment-tools .btn {
   line-height: 1;
   padding: 0;
-  color: #D8D8D8;
+  color: #d0d0d0;
 }
 .comment-tools .btn:focus {
   box-shadow: none;
@@ -8378,7 +8382,7 @@ h1,
 .comments-item .attachments-list .media {
   display: block;
   text-align: center;
-  background: #D8D8D8;
+  background: #d0d0d0;
   margin-bottom: 5px;
 }
 .comment-attachments img,
@@ -8553,7 +8557,7 @@ h1,
 }
 .attachment-tools .btn {
   line-height: 1;
-  color: #D8D8D8;
+  color: #d0d0d0;
   padding: 0;
 }
 .attachment-tools .btn:focus {
@@ -8619,7 +8623,7 @@ h1,
 .watchers-item .btn {
   float: right;
   line-height: 1;
-  color: #D8D8D8;
+  color: #d0d0d0;
   padding: 0;
 }
 .watchers-item .btn:focus {

@@ -6,11 +6,12 @@
 .comments-item {
   padding: 5px 5px 5px 69px;
   margin-bottom: 5px;
+  transition: background .5s ease;
   &:nth-child(odd){
-    background: #fafafa;
+    background: @table-bg-accent;
   }
   &:hover {
-    background: #eee;
+    background: @table-bg-hover;
   }
 }
 
@@ -40,7 +41,7 @@
   .btn {
     line-height: 1;
     padding: 0;
-    color: #D8D8D8;
+    color: @btn-icon-color;
     &:focus {
       box-shadow: none;
     }
