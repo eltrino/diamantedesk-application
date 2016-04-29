@@ -23,14 +23,32 @@ class DiamanteDeskBundle implements Migration
 {
     public function up(Schema $schema, QueryBag $queries)
     {
-        $table = $schema->getTable('diamante_branch');
+        $branchTable = $schema->getTable('diamante_branch');
 
-        $table->addColumn(
+        $branchTable->addColumn(
             'number',
             'integer',
             [
                 'notnull' => true,
                 'default' => 1
+            ]
+        );
+
+        $ticketTable = $schema->getTable('diamante_ticket');
+
+        $ticketTable->addColumn(
+            'status_updated_since',
+            'datetime',
+            [
+                'notnull' => false
+            ]
+        );
+
+        $ticketTable->addColumn(
+            'assigned_since',
+            'datetime',
+            [
+                'notnull' => false
             ]
         );
     }
