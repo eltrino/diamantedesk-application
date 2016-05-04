@@ -33,6 +33,7 @@ diamante_automation:
           reporter_email:
             frontend_label: diamante.desk.ticket.reporter_email.label
             type: virtual
+            updatable: false
             conditions: ['eq', 'neq', 'contains', 'not_contains']
             accessor: diamante_automation.ticket.property.processor::getReporterEmail
           source:
@@ -44,35 +45,42 @@ diamante_automation:
           subject:
             frontend_label: diamante.desk.ticket.subject.label
             type: string
+            updatable: false
             conditions: ['eq', 'neq', 'contains', 'not_contains']
           description:
             frontend_label: diamante.desk.ticket.description.label
             type: string
+            updatable: false
             conditions: ['contains', 'not_contains']
           sent_to:
             frontend_label: diamante.desk.ticket.created_via_email.label
             type: virtual
+            updatable: false
             conditions: ['eq', 'neq', 'contains', 'not_contains']
             accessor: diamante.ticket.email_processing_message_reference.repository::getEndpointByTicket
             rules: ['workflow']
           created_at:
             frontend_label: diamante.desk.ticket.since_created.label
             type: datetime
+            updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
             rules: ['business']
           updated_at:
             frontend_label: diamante.desk.ticket.since_updated.label
             type: datetime
+            updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
             rules: ['business']
           status_updated_since:
             frontend_label: diamante.desk.ticket.since_status_updated.label
             type: datetime
+            updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
             rules: ['business']
           assigned_since:
             frontend_label: diamante.desk.ticket.since_assignee_updated.label
             type: datetime
+            updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
             rules: ['business']
       comment:
@@ -83,6 +91,7 @@ diamante_automation:
           content:
             frontend_label: diamante.desk.comment.content.label
             type: string
+            updatable: false
             conditions: ['contains', 'not_contains']
           private:
             frontend_label: diamante.desk.comment.private.label
@@ -93,10 +102,12 @@ diamante_automation:
             frontend_options:
               source: "@diamante.autocomplete.user.service->getUsers"
             type: user
+            updatable: false
             conditions: ['is_admin', 'is_customer']
           author_email:
             frontend_label: diamante.desk.comment.author_email.label
             type: virtual
+            updatable: false
             conditions: ['contains', 'not_contains']
             accessor: diamante_automation.comment.property.processor::getAuthorEmail
 
