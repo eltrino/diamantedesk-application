@@ -108,7 +108,7 @@ diamante_automation:
             frontend_label: diamante.desk.comment.author_email.label
             type: virtual
             updatable: false
-            conditions: ['contains', 'not_contains']
+            conditions: ['eq', 'neq', 'contains', 'not_contains']
             accessor: diamante_automation.comment.property.processor::getAuthorEmail
 
     actions:
