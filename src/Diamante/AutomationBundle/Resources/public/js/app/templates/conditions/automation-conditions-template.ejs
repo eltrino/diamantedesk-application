@@ -1,6 +1,7 @@
 <% 'TEMPLATE: automation-conditions-template' %>
 <% var entities = config.entities; %>
 <% var conditions = config.conditions; %>
+<% var condition_type = config.condition_type; %>
 <% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
 <% var property_type = typeof property !== 'undefined' && properties[property] && properties[property].type; %>
@@ -14,7 +15,11 @@
         <% if(properties){ %>
             <strong class="value"><%= properties[property].label %></strong>
             <strong class="value"><%= conditions[type] %></strong>
-            <% if(property && properties[property]){ %>
+            <% if(type in condition_type){ %>
+                <% if(condition_type[type] === 'string') { %>
+                <strong class="value"><%= value %></strong>
+                <% } %>
+            <% } else if(property && properties[property]){ %>
                 <% if(property_type == 'string' || property_type == 'datetime' || property_type == 'virtual'){ %>
                     <strong class="value"><%= value %></strong>
                     <% if(property_type == 'datetime') { %> <span class="label">Hours</span> <% } %>

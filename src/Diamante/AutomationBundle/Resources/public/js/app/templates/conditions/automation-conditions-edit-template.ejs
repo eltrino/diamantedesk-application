@@ -1,6 +1,7 @@
 <% 'TEMPLATE: automation-conditions-edit-template' %>
 <% var entities = config.entities; %>
 <% var conditions = config.conditions; %>
+<% var condition_type = config.condition_type; %>
 <% var entity_conditions = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].conditions; %>
 <% var properties = typeof entity !== 'undefined' && config.entities[entity] && config.entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
@@ -30,7 +31,7 @@
                 <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
                 <% } %>
             </select>
-            <select name="conditions[type]" data-attr="type">
+            <select name="conditions[type]" data-attr="type" data-rel-attr="value">
                 <% if(custom_conditions){ %>
                     <% _.each(custom_conditions, function(key){ %>
                         <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
@@ -41,7 +42,19 @@
                     <% } %>
                 <% } %>
             </select>
-            <% if(property && properties[property]){ %>
+            <% if(type in condition_type){ %>
+                <% if(condition_type[type] === 'bool') { %>
+                <input type="hidden"
+                       name="conditions[value][<%= index %>]" data-attr="value" value="<%= type %>" />
+                <% } else if(condition_type[type] === 'string') { %>
+                <div class="control-item">
+                    <input type="text"
+                           name="conditions[value][<%= index %>]" data-attr="value" value="<%= value %>"
+                           data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}"
+                           required="required"/>
+                </div>
+                <% } %>
+            <% } else if(property && properties[property]){ %>
                 <% if(property_type == 'string' || property_type == 'datetime' || property_type == 'virtual'){ %>
                 <div class="control-item">
                     <input type="text"

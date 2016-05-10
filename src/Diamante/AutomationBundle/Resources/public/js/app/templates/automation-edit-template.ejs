@@ -26,6 +26,7 @@
     </div>
 </div>
 <% } %>
+<% if(isNew){ %>
 <div class="control-group">
     <div class="control-label wrap">
         <label for="automation-target" class="required">Target<em>*</em></label>
@@ -38,5 +39,6 @@
         </select>
     </div>
 </div>
+<% } %>
 <div id="automation-conditions"></div>
 <div id="automation-actions"></div>

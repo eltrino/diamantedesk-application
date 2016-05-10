@@ -6,7 +6,7 @@
 <div class="select">
     <select name="groupings[connector]" class="groupings-connector" data-attr="connector">
         <% for(var key in config.connectors) { %>
-        <option value="<%= key %>"><%= config.connectors[key] %></option>
+        <option value="<%= key %>"<%= key == connector ? ' selected' : ''%>><%= config.connectors[key] %></option>
         <% } %>
     </select>
 </div>

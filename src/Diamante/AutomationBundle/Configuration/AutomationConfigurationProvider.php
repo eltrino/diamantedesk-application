@@ -40,6 +40,10 @@ class AutomationConfigurationProvider
     /**
      * @var array
      */
+    protected $condition_type = [];
+    /**
+     * @var array
+     */
     protected $actions = [];
 
     /**
@@ -50,7 +54,7 @@ class AutomationConfigurationProvider
     /**
      * @var array
      */
-    protected static $configStructure = ['entities', 'conditions', 'actions'];
+    protected static $configStructure = ['entities', 'conditions', 'condition_type', 'actions'];
 
     /**
      * @var FrontendOptionsResolver
@@ -295,6 +299,7 @@ class AutomationConfigurationProvider
 
         $config['entities']         = $this->dumpEntitiesConfig($translator);
         $config['conditions']       = $this->dumpConditionsConfig($translator);
+        $config['condition_type']   = $this->dumpConditionTypeConfig();
         $config['actions']          = $this->dumpActionsConfig($translator);
         $config['connectors']       = $this->dumpConnectorsConfig($translator);
         $config['time_intervals']   = $this->dumpTimeIntervalsConfig($translator);
@@ -395,6 +400,22 @@ class AutomationConfigurationProvider
         }
 
         return $conditions;
+    }
+
+    /**
+     * @return array|null
+     */
+    protected function dumpConditionTypeConfig()
+    {
+        $condition_type = [];
+
+        foreach ($this->conditions as $name => $config) {
+            if(isset($config['type'])){
+                $condition_type[$name] = $config['type'];
+            }
+        }
+
+        return $condition_type;
     }
 
     /**

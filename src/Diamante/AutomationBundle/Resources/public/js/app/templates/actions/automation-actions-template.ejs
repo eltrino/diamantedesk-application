@@ -1,5 +1,6 @@
 <% 'TEMPLATE: automation-actions-template' %>
 <% var entities = config.entities; %>
+<% var actions = config.actions; %>
 <% var properties = entities[entity].properties; %>
 <% var property = typeof property !== 'undefined' && property; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
@@ -21,8 +22,12 @@
             <% } %>
         <% } %>
     <% } %>
-    <% if(type == 'notify_by_email' || type == 'move_to_branch'){ %>
+    <% if(type == 'notify_by_email'){ %>
         <span class="label">To: </span>
         <strong class="value"><%= value %></strong>
+    <% } %>
+    <% if(type == 'move_to_branch'){ %>
+        <span class="label">To: </span>
+        <strong class="value"><%= actions[type].frontend_options[value] %></strong>
     <% } %>
 </div>

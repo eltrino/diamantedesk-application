@@ -23,21 +23,27 @@ diamante_automation:
     contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Contains'
       frontend_label: diamante.automation.condition.contains
+      type: 'string'
     not_contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\NotContains'
       frontend_label: diamante.automation.condition.not_contains
+      type: 'string'
     created:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Created'
       frontend_label: diamante.automation.condition.created
+      type: 'bool'
     updated:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Updated'
       frontend_label: diamante.automation.condition.updated
+      type: 'bool'
     removed:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Removed'
       frontend_label: diamante.automation.condition.removed
+      type: 'bool'
     changed:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Changed'
       frontend_label: diamante.automation.condition.changed
+      type: 'bool'
     changed_from:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\ChangedFrom'
       frontend_label: diamante.automation.condition.changed_from
@@ -53,9 +59,11 @@ diamante_automation:
     is_customer:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\IsCustomer'
       frontend_label: diamante.automation.condition.customer
+      type: 'bool'
     is_admin:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\IsAdmin'
       frontend_label: diamante.automation.condition.admin
+      type: 'bool'
 
 
   actions:
