@@ -340,7 +340,9 @@ class TicketController extends Controller
             }
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = array('form' => $formView);
+            $response = new Response(
+                $this->get('translator')->trans('Error occurred while adding attachment to the ticket.'), 500
+            );
         }
 
         return $response;
