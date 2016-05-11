@@ -169,7 +169,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
                 $converted['type_label'] = 'admin';
             }
 
-            $result[] = $converted;
+            $result[$converted['id']] = $converted;
         }
 
         return $result;
