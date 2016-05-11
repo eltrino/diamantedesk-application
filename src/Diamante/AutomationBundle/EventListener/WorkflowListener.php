@@ -106,6 +106,7 @@ class WorkflowListener
             $getChangeset($entity)
         );
 
+        $em->getEventManager()->disableListeners();
         $this->queueManager->setEntityManager($em);
         $this->queueManager->push($processingContext);
     }
