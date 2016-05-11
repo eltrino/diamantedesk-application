@@ -47,6 +47,7 @@
 
         <service id="diamante_automation.email.comment_provider" class="%diamante_automation.email.comment_provider.class%">
             <argument type="service" id="diamante.user.service"/>
+            <argument type="service" id="oro_user.manager"/>
             <tag name="diamante_automation.email.provider"/>
         </service>
 

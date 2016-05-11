@@ -16,6 +16,9 @@
 namespace Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider;
 
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Oro\Bundle\UserBundle\Entity\UserManager;
 
 /**
  * Class Comment
@@ -30,13 +33,20 @@ class Comment implements EntityProvider
     protected $userService;
 
     /**
+     * @var UserManager
+     */
+    protected $oroUserManager;
+
+    /**
      * Comment constructor.
      *
      * @param UserService $userService
+     * @param UserManager $userManager
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, UserManager $userManager)
     {
         $this->userService = $userService;
+        $this->oroUserManager = $userManager;
     }
 
     /**
@@ -46,9 +56,66 @@ class Comment implements EntityProvider
      */
     public function getAuthor(array $target)
     {
+
         $user = $this->userService->getByUser($target['author']);
 
         return $user->getEmail();
+    }
+
+    /**
+     * @param array $target
+     *
+     * @return string
+     */
+    public function getReporter(array $target)
+    {
+        /** @var \Diamante\DeskBundle\Entity\Ticket $ticket */
+        $ticket = $target['ticket'];
+        $user = $this->userService->getByUser($ticket->getReporter());
+
+        return $user->getEmail();
+    }
+
+    /**
+     * @param array $target
+     *
+     * @return array
+     */
+    public function getWatchers(array $target)
+    {
+        $list = [];
+        /** @var \Diamante\DeskBundle\Entity\Ticket $ticket */
+        $ticket = $target['ticket'];
+        $watchers = $ticket->getWatcherList();
+
+        foreach ($watchers as $watcher) {
+            $user = $this->userService->getByUser($watcher->getUserType());
+            $list[] = $user->getEmail();
+        }
+        return $list;
+    }
+
+    /**
+     * @param array $target
+     *
+     * @return string
+     */
+    public function getAssignee(array $target)
+    {
+        /** @var \Diamante\DeskBundle\Entity\Ticket $ticket */
+        $ticket = $target['ticket'];
+        /** @var array|DiamanteUser $assignee */
+        $assignee = $ticket->getAssignee();
+
+        if (!empty($assignee)) {
+            if ($assignee instanceof OroUser) {
+                $user = $this->oroUserManager->findUserBy(array('id' => $assignee->getId()));
+                return $user->getEmail();
+            }
+            return $assignee->getEmail();
+        }
+
+        return null;
     }
 
     public function getName()
