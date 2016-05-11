@@ -61,7 +61,7 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     /**
      * @var Ticket
      *
-     * @ORM\ManyToOne(targetEntity="Ticket", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="Ticket", inversedBy="comments", fetch="EAGER")
      * @ORM\JoinColumn(name="ticket_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $ticket;
