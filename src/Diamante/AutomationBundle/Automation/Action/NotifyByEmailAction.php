@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NotifyByEmailAction extends AbstractAction
 {
     const ACTION_NAME = 'notify_by_email';
+    const COMMENT_TARGET = 'comment';
 
     /**
      * @var NotificationManager
@@ -67,6 +68,10 @@ class NotifyByEmailAction extends AbstractAction
                 unset($changesetDiff['attachments']);
             }
 
+            if (array_key_exists('private', $changesetDiff)) {
+                unset($changesetDiff['private']);
+            }
+
             $additionalOptions['changes'] = $changesetDiff;
 
             $options = array_merge($options, $additionalOptions);
@@ -81,6 +86,10 @@ class NotifyByEmailAction extends AbstractAction
              */
             if ($recipient instanceof OroUser) {
                 $options['isOroUser'] = true;
+            }
+
+            if (static::COMMENT_TARGET == $targetType && !$options['isOroUser'] && $target['private']) {
+                continue;
             }
 
             $this->notificationManager->notifyByScenario($provider, $recipient, $options);
