@@ -50,8 +50,8 @@ datagrid:
         label: diamante.automation.attributes.active
         frontend_type: select
         choices:
-          0: No
-          1: Yes
+          0: Unactive
+          1: Active
 
     actions:
       view:
@@ -155,8 +155,8 @@ datagrid:
         label: diamante.automation.attributes.active
         frontend_type: select
         choices:
-          0: No
-          1: Yes
+          0: Unactive
+          1: Active
 
     actions:
       view:
