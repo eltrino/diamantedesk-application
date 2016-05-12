@@ -76,7 +76,7 @@ class Comment extends \Diamante\DeskBundle\Model\Ticket\Comment
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Attachment")
+     * @ORM\ManyToMany(targetEntity="Attachment", fetch="EAGER")
      * @ORM\JoinTable(name="diamante_comment_attachments",
      *      joinColumns={@ORM\JoinColumn(name="comment_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="attachment_id", referencedColumnName="id", onDelete="CASCADE")}

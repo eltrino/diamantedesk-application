@@ -56,10 +56,6 @@ class ChangesetBuilder
             $name = $refProperty->getName();
             $value = $refProperty->getValue($entity);
 
-            if ($value instanceof PersistentCollection) {
-                $value = $value->getValues();
-            }
-
             $changeset[$name] = [null, $value];
         }
 
@@ -89,14 +85,6 @@ class ChangesetBuilder
                 $old = $uowChangeset[$name][0];
             }
 
-            if ($old instanceof PersistentCollection) {
-                $old = $old->getValues();
-            }
-
-            if ($new instanceof PersistentCollection) {
-                $new = $new->getValues();
-            }
-
             $changeset[$name] = [$old, $new];
         }
 
@@ -118,10 +106,6 @@ class ChangesetBuilder
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
             $value = $refProperty->getValue($entity);
-
-            if ($value instanceof PersistentCollection) {
-                $value = $value->getValues();
-            }
 
             $changeset[$name] = [$value, $value];
         }
