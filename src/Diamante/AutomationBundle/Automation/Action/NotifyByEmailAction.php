@@ -72,6 +72,17 @@ class NotifyByEmailAction extends AbstractAction
                 unset($changesetDiff['private']);
             }
 
+            if (array_key_exists('reporter', $changesetDiff)) {
+                $oldReporter = $changesetDiff['reporter']['old'];
+                $newReporter = $changesetDiff['reporter']['new'];
+
+                if (!is_null($oldReporter)) {
+                    $changesetDiff['reporter']['old'] = $this->container->get('diamante.user.service')->getByUser($oldReporter);
+                }
+
+                $changesetDiff['reporter']['new'] = $this->container->get('diamante.user.service')->getByUser($newReporter);
+            }
+
             $additionalOptions['changes'] = $changesetDiff;
 
             $options = array_merge($options, $additionalOptions);
