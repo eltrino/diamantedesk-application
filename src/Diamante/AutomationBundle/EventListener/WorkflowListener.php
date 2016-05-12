@@ -28,6 +28,9 @@ class WorkflowListener
     const UPDATED = 'updated';
     const REMOVED = 'removed';
 
+    const TICKET_TARGET = 'ticket';
+    const COMMENT_TARGET = 'comment';
+
     /**
      * @var AutomationConfigurationProvider
      */
@@ -106,7 +109,26 @@ class WorkflowListener
             $getChangeset($entity)
         );
 
-        $em->getEventManager()->disableListeners();
+        $disableListeners = true;
+
+        // disable listeners if you edit both comment and ticket status on create action
+        if (static::COMMENT_TARGET == $target) {
+            $changeset = $em->getUnitOfWork()->getEntityChangeSet($entity->getTicket());
+
+            if (isset($changeset['status'])) {
+                $disableListeners = false;
+            }
+        }
+
+        // save comment after ticket status and comment content update on update action
+        if (static::TICKET_TARGET == $target && static::UPDATED == $action) {
+            $disableListeners = false;
+        }
+
+        if ($disableListeners) {
+            $em->getEventManager()->disableListeners();
+        }
+
         $this->queueManager->setEntityManager($em);
         $this->queueManager->push($processingContext);
     }
