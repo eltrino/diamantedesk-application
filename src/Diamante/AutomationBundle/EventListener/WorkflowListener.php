@@ -104,14 +104,14 @@ class WorkflowListener
         $em = $args->getEntityManager();
         $processingContext = new PersistentProcessingContext(
             $entity->getId(),
-            get_class($entity),
+            $this->provider->getClassByTarget($target),
             $action,
             $getChangeset($entity)
         );
 
         $disableListeners = true;
 
-        // disable listeners if you edit both comment and ticket status on create action
+        // don't disable listeners if you edit both comment and ticket status on create action
         if (static::COMMENT_TARGET == $target) {
             $changeset = $em->getUnitOfWork()->getEntityChangeSet($entity->getTicket());
 
@@ -120,8 +120,9 @@ class WorkflowListener
             }
         }
 
-        // save comment after ticket status and comment content update on update action
-        if (static::TICKET_TARGET == $target && static::UPDATED == $action) {
+        // don't disable listeners when you save comment after ticket status and comment content update on update action
+        // don't disable listeners when tickets remove from mass action
+        if (static::TICKET_TARGET == $target && in_array($action, [static::UPDATED, static::REMOVED])) {
             $disableListeners = false;
         }
 

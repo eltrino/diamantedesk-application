@@ -107,9 +107,9 @@ class AutomationConfigurationProvider
     public function getTargetByEntity($object)
     {
         $className = get_class($object);
-
         foreach ($this->targetMap as $target => $class) {
-            if ($class === $className) {
+            $expression = sprintf('/%s$/i', str_replace('\\', '\\\\', $class));
+            if (preg_match($expression, $className)) {
                 return $target;
             }
         }
@@ -128,6 +128,20 @@ class AutomationConfigurationProvider
             if ($class === $className) {
                 return $target;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $target
+     *
+     * @return null|string
+     */
+    public function getClassByTarget($target)
+    {
+        if (array_key_exists($target, $this->targetMap)) {
+            return $this->targetMap[$target];
         }
 
         return null;
