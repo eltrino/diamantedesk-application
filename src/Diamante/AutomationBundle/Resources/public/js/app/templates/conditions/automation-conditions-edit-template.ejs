@@ -67,7 +67,11 @@
                 <select name="conditions[value][<%= index %>]" data-attr="value">
                     <% for(var key in properties[property].frontend_options) { %>
                     <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
+                        <% if (properties[property].type == 'user'){ %>
+                        <%= properties[property].frontend_options[key].email %>
+                        <% } else { %>
                         <%= properties[property].frontend_options[key] %>
+                        <% } %>
                     </option>
                     <% } %>
                 </select>

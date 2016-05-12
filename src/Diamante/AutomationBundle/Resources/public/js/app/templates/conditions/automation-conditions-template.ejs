@@ -24,7 +24,13 @@
                     <strong class="value"><%= value %></strong>
                     <% if(property_type == 'datetime') { %> <span class="label">Hours</span> <% } %>
                 <% } else if (properties[property].frontend_options){ %>
-                    <strong class="value"><%= properties[property].frontend_options[value] %></strong>
+                    <strong class="value">
+                        <% if (property_type == 'user'){ %>
+                        <%= properties[property].frontend_options[value].email %>
+                        <% } else { %>
+                        <%= properties[property].frontend_options[value] %>
+                        <% } %>
+                    </strong>
                 <% } %>
             <% } %>
         <% } %>
