@@ -17,6 +17,10 @@ diamante:
           query:        Are you sure you want to delete this rule?
           success:      Rule successfully deleted.
 
+      status:
+        active: Active
+        inactive: Inactive
+
       actions:
         add: Add Rule
         view: View Rule

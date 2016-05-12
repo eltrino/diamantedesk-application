@@ -40,11 +40,16 @@
 {% endblock navButtons %}
 
 {% block pageHeader %}
+    {% if entity.active %}
+        {% set status = 'diamante.automation.rule.status.active'|trans %}
+    {% else %}
+        {% set status = 'diamante.automation.rule.status.inactive'|trans %}
+    {% endif %}
     {% set breadcrumbs = {
             'entity': entity,
             'indexPath': path('diamante_' ~ type ~ '_list', {'type': type}),
             'indexLabel': 'diamante.automation.rule.entity_plural_label'|trans,
-            'entityTitle': entity.name|default('N/A'),
+            'entityTitle': entity.name ~ ' [' ~  status ~ ']'|default('N/A'),
             'hasAvatar':   true,
             'imagePath':   null
         }

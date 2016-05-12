@@ -15,7 +15,7 @@
         <% } %>
         <% if(property && value && value !== type){ %>
             <span class="label">To: </span>
-            <% if(properties[property].type == 'string'){ %>
+            <% if(properties[property].type == 'string' || properties[property].type == 'bool'){ %>
                 <strong class="value"><%= value %></strong>
             <% } else if (properties[property].frontend_options){ %>
                 <strong class="value"><%= properties[property].frontend_options[value] %></strong>

@@ -32,6 +32,12 @@
                        data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}"
                        required="required"/>
             </div>
+            <% } else if (properties[property].type == 'bool'){ %>
+            <span class="label">To: </span>
+            <select name="actions[value][<%= index %>]" data-attr="value">
+                <option value="true"<%= value == "true" ? ' selected' : ''%>>true</option>
+                <option value="false"<%= value == "false" ? ' selected' : ''%>>false</option>
+            </select>
             <% } else if (properties[property].frontend_options){ %>
             <span class="label">To: </span>
             <select name="actions[value][<%= index %>]" data-attr="value">
