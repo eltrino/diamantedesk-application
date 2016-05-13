@@ -86,6 +86,9 @@ class NotifyByEmailAction extends AbstractAction
             $additionalOptions['changes'] = $changesetDiff;
 
             $options = array_merge($options, $additionalOptions);
+        } else {
+            // if only tag was changed
+            return $this;
         }
 
         foreach ($emails as $email) {
