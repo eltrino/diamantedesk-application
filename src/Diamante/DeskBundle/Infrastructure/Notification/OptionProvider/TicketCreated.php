@@ -19,15 +19,4 @@ class TicketCreated extends AbstractProvider
 {
     const SUBJECT_IDENTIFIER = 'diamante.automation.notification.ticket.created';
     const NAME = 'ticket_created';
-
-    /**
-     * @return array
-     */
-    public function getDefaultOptions()
-    {
-        $defaultOptions = parent::getDefaultOptions();
-        $defaultOptions['header'] = 'diamante.automation.notification.ticket.created';
-
-        return $defaultOptions;
-    }
 }

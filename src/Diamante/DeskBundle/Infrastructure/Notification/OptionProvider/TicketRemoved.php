@@ -19,15 +19,4 @@ class TicketRemoved extends AbstractProvider
 {
     const SUBJECT_IDENTIFIER = 'diamante.automation.notification.ticket.removed';
     const NAME = 'ticket_removed';
-
-    /**
-     * @return array
-     */
-    public function getDefaultOptions()
-    {
-        $defaultOptions = parent::getDefaultOptions();
-        $defaultOptions['header'] = 'diamante.automation.notification.ticket.removed';
-
-        return $defaultOptions;
-    }
 }

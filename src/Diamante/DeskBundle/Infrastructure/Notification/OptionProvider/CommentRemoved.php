@@ -19,15 +19,4 @@ class CommentRemoved extends AbstractProvider
 {
     const SUBJECT_IDENTIFIER = 'diamante.automation.notification.comment.removed';
     const NAME = 'comment_removed';
-
-    /**
-     * @return array
-     */
-    public function getDefaultOptions()
-    {
-        $defaultOptions = parent::getDefaultOptions();
-        $defaultOptions['header'] = 'diamante.automation.notification.comment.removed';
-
-        return $defaultOptions;
-    }
 }

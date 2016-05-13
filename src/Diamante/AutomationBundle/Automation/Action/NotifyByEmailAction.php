@@ -52,7 +52,14 @@ class NotifyByEmailAction extends AbstractAction
         );
         $targetType = $fact->getTargetType();
         $action = $fact->getAction();
-        $provider = sprintf('%s_%s', $targetType, $action);
+
+        $pattern = '%s_%s';
+
+        if (array_key_exists('private', $target) && $target['private']) {
+            $pattern = 'private_%s_%s';
+        }
+
+        $provider = sprintf($pattern, $targetType, $action);
 
         /**
          * TODO get changes and attachments form fact
@@ -151,6 +158,7 @@ class NotifyByEmailAction extends AbstractAction
 
             $diff['reporter']['new'] = $this->container->get('diamante.user.service')->getByUser($newReporter);
         }
+        
         if (array_key_exists('author', $diff)) {
             $oldAuthor = $diff['author']['old'];
             $newAuthor = $diff['author']['new'];

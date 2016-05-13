@@ -114,7 +114,8 @@ abstract class AbstractProvider implements NotificationOptionsProvider
     {
         return [
             'delimiter' => MessageReferenceServiceImpl::DELIMITER_LINE,
-            'user'      => $this->getRecipientName()
+            'user'      => $this->getRecipientName(),
+            'header'    => static::SUBJECT_IDENTIFIER
         ];
     }
 }

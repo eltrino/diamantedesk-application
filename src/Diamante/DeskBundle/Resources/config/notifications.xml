@@ -11,6 +11,9 @@
         <parameter key="diamante_desk.notification.option_provider.comment_created.class">Diamante\DeskBundle\Infrastructure\Notification\OptionProvider\CommentCreated</parameter>
         <parameter key="diamante_desk.notification.option_provider.comment_updated.class">Diamante\DeskBundle\Infrastructure\Notification\OptionProvider\CommentUpdated</parameter>
         <parameter key="diamante_desk.notification.option_provider.comment_removed.class">Diamante\DeskBundle\Infrastructure\Notification\OptionProvider\CommentRemoved</parameter>
+        <parameter key="diamante_desk.notification.option_provider.private_comment_created.class">Diamante\DeskBundle\Infrastructure\Notification\OptionProvider\PrivateCommentCreated</parameter>
+        <parameter key="diamante_desk.notification.option_provider.private_comment_updated.class">Diamante\DeskBundle\Infrastructure\Notification\OptionProvider\PrivateCommentUpdated</parameter>
+        <parameter key="diamante_desk.notification.option_provider.private_comment_removed.class">Diamante\DeskBundle\Infrastructure\Notification\OptionProvider\PrivateCommentRemoved</parameter>
     </parameters>
 
     <services>
@@ -35,6 +38,18 @@
         </service>
 
         <service id="diamante_desk.notification.option_provider.comment_removed" class="%diamante_desk.notification.option_provider.comment_removed.class%">
+            <tag name="diamante.notification.options.provider"/>
+        </service>
+
+        <service id="diamante_desk.notification.option_provider.private_comment_created" class="%diamante_desk.notification.option_provider.private_comment_created.class%">
+            <tag name="diamante.notification.options.provider"/>
+        </service>
+
+        <service id="diamante_desk.notification.option_provider.private_comment_updated" class="%diamante_desk.notification.option_provider.private_comment_updated.class%">
+            <tag name="diamante.notification.options.provider"/>
+        </service>
+
+        <service id="diamante_desk.notification.option_provider.private_comment_removed" class="%diamante_desk.notification.option_provider.private_comment_removed.class%">
             <tag name="diamante.notification.options.provider"/>
         </service>
     </services>

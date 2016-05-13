@@ -19,15 +19,4 @@ class TicketUpdated extends AbstractProvider
 {
     const SUBJECT_IDENTIFIER = 'diamante.automation.notification.ticket.updated';
     const NAME = 'ticket_updated';
-
-    /**
-     * @return array
-     */
-    public function getDefaultOptions()
-    {
-        $defaultOptions = parent::getDefaultOptions();
-        $defaultOptions['header'] = 'diamante.automation.notification.ticket.updated';
-
-        return $defaultOptions;
-    }
 }
