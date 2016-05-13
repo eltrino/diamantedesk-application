@@ -15,21 +15,32 @@
 
 namespace Diamante\DeskBundle\Twig\Extensions;
 
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Diamante\UserBundle\Entity\DiamanteUser;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
+/**
+ * Class RenderUrlExtension
+ *
+ * @package Diamante\DeskBundle\Twig\Extensions
+ */
 class RenderUrlExtension extends \Twig_Extension
 {
-    /**
-     * @var Router
-     */
-    private $router;
+    const ADMIN_URI = 'desk/tickets/view';
+    const PORTAL_URI = 'portal/#tickets';
 
     /**
-     * @param Router $router
+     * @var ConfigManager
      */
-    public function __construct(Router $router)
+    protected $config;
+
+    /**
+     * RenderUrlExtension constructor.
+     *
+     * @param ConfigManager $configManager
+     */
+    public function __construct(ConfigManager $configManager)
     {
-        $this->router = $router;
+        $this->config = $configManager;
     }
 
     /**
@@ -58,18 +69,19 @@ class RenderUrlExtension extends \Twig_Extension
 
     /**
      * @param string $key
-     * @param bool   $isOroUser
+     * @param object $user
      *
      * @return string
      */
-    public function renderUrl($key, $isOroUser)
+    public function renderUrl($key, $user)
     {
-        $route = 'diamante_ticket_view';
-        $url = $this->router->generate($route, ['key' => $key], Router::ABSOLUTE_URL);
-        if (!$isOroUser) {
-            $url = str_replace('desk/tickets/view', 'diamantefront/#tickets', $url);
+        $applicationUrl = rtrim($this->config->get('oro_ui.application_url'), '/');
+        $uri = static::ADMIN_URI;
+
+        if ($user instanceof DiamanteUser) {
+            $uri = static::PORTAL_URI;
         }
 
-        return $url;
+        return sprintf('%s/%s/%s', $applicationUrl, $uri, $key);
     }
 }

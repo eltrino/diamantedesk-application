@@ -89,14 +89,7 @@ class NotifyByEmailAction extends AbstractAction
 
         foreach ($emails as $email) {
             $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
-            $options['isOroUser'] = false;
-
-            /**
-             * TODO determine user in render_ticket_url twig extension
-             */
-            if ($recipient instanceof OroUser) {
-                $options['isOroUser'] = true;
-            }
+            $options['recipient'] = $recipient;
 
             if (static::COMMENT_TARGET == $targetType && !$options['isOroUser'] && $target['private']) {
                 continue;
@@ -158,7 +151,7 @@ class NotifyByEmailAction extends AbstractAction
 
             $diff['reporter']['new'] = $this->container->get('diamante.user.service')->getByUser($newReporter);
         }
-        
+
         if (array_key_exists('author', $diff)) {
             $oldAuthor = $diff['author']['old'];
             $newAuthor = $diff['author']['new'];

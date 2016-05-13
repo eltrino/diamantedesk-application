@@ -130,7 +130,7 @@
         </service>
 
         <service id="diamante.render.url.twig.extension" class="%diamante.render.url.twig.extension.class%">
-            <argument type="service" id="router"/>
+            <argument type="service" id="oro_config.global"/>
             <tag name="twig.extension"/>
         </service>
 
