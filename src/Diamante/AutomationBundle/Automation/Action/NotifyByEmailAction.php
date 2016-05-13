@@ -18,6 +18,8 @@ namespace Diamante\AutomationBundle\Automation\Action;
 use Diamante\AutomationBundle\Infrastructure\Changeset\Changeset;
 use Diamante\AutomationBundle\Rule\Action\AbstractAction;
 use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,23 +67,10 @@ class NotifyByEmailAction extends AbstractAction
             if (array_key_exists('attachments', $changesetDiff)) {
                 $attachments = $changesetDiff['attachments']['new'];
                 $additionalOptions['attachments'] = $attachments;
-                unset($changesetDiff['attachments']);
             }
 
-            if (array_key_exists('private', $changesetDiff)) {
-                unset($changesetDiff['private']);
-            }
-
-            if (array_key_exists('reporter', $changesetDiff)) {
-                $oldReporter = $changesetDiff['reporter']['old'];
-                $newReporter = $changesetDiff['reporter']['new'];
-
-                if (!is_null($oldReporter)) {
-                    $changesetDiff['reporter']['old'] = $this->container->get('diamante.user.service')->getByUser($oldReporter);
-                }
-
-                $changesetDiff['reporter']['new'] = $this->container->get('diamante.user.service')->getByUser($newReporter);
-            }
+            $changesetDiff = $this->unsetProperties($changesetDiff);
+            $changesetDiff = $this->convertProperties($changesetDiff);
 
             $additionalOptions['changes'] = $changesetDiff;
 
@@ -125,6 +114,61 @@ class NotifyByEmailAction extends AbstractAction
         }
 
         throw new \RuntimeException('Could not get the key');
+    }
+
+    /**
+     * @param array $diff
+     *
+     * @return array
+     */
+    private function unsetProperties(array $diff)
+    {
+        if (array_key_exists('private', $diff)) {
+            unset($diff['private']);
+        }
+
+        if (array_key_exists('attachments', $diff)) {
+            unset($diff['attachments']);
+        }
+
+        return $diff;
+    }
+
+    /**
+     * @param array $diff
+     *
+     * @return array
+     */
+    private function convertProperties(array $diff)
+    {
+        if (array_key_exists('reporter', $diff)) {
+            $oldReporter = $diff['reporter']['old'];
+            $newReporter = $diff['reporter']['new'];
+
+            if (!is_null($oldReporter)) {
+                $diff['reporter']['old'] = $this->container->get('diamante.user.service')->getByUser($oldReporter);
+            }
+
+            $diff['reporter']['new'] = $this->container->get('diamante.user.service')->getByUser($newReporter);
+        }
+
+        if (array_key_exists('status', $diff)) {
+            if (!is_null($diff['status']['old'])) {
+                $diff['status']['old'] = Status::getValueToLabelMap()[$diff['status']['old']];
+            }
+
+            $diff['status']['new'] = Status::getValueToLabelMap()[$diff['status']['new']];
+        }
+
+        if (array_key_exists('priority', $diff)) {
+            if (!is_null($diff['priority']['old'])) {
+                $diff['priority']['old'] = Priority::getValueToLabelMap()[$diff['priority']['old']];
+            }
+
+            $diff['priority']['new'] = Priority::getValueToLabelMap()[$diff['priority']['new']];
+        }
+
+        return $diff;
     }
 
     /**
