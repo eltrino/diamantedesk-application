@@ -151,6 +151,16 @@ class NotifyByEmailAction extends AbstractAction
 
             $diff['reporter']['new'] = $this->container->get('diamante.user.service')->getByUser($newReporter);
         }
+        if (array_key_exists('author', $diff)) {
+            $oldAuthor = $diff['author']['old'];
+            $newAuthor = $diff['author']['new'];
+
+            if (!is_null($oldAuthor)) {
+                $diff['author']['old'] = $this->container->get('diamante.user.service')->getByUser($oldAuthor);
+            }
+
+            $diff['author']['new'] = $this->container->get('diamante.user.service')->getByUser($newAuthor);
+        }
 
         if (array_key_exists('status', $diff)) {
             if (!is_null($diff['status']['old'])) {
