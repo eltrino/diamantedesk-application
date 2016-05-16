@@ -4,7 +4,7 @@
 
 {% if changes is defined %}
     {% for key, value in changes %}
-        - {{ key }}: {{ attribute(value, 'new') }}
+        - {{ key|capitalize }}: {{ attribute(value, 'new')|capitalize }}
     {% endfor %}
 {% endif %}
 
