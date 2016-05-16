@@ -14,6 +14,7 @@
  */
 namespace Diamante\UserBundle\Infrastructure\User;
 
+use Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
@@ -23,7 +24,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class AutocompleteUserServiceImpl implements AutocompleteUserService
 {
     const ID_FIELD_NAME = 'id';
-    const AVATAR_SIZE   = 16;
+    const AVATAR_SIZE = 16;
     const WATCHERS = 'diamante.user.autocomplete.group.watchers';
     const REPORTER = 'diamante.user.autocomplete.group.reporter';
     const ASSIGNEE = 'diamante.user.autocomplete.group.assignee';
@@ -93,16 +94,34 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
      */
     public function getNotifyActionList()
     {
-        $list = [
+        $list[NotifyByEmailAction::COMMENT_TARGET] = [
             'watchers' => $this->translator->trans(static::WATCHERS),
             'assignee' => $this->translator->trans(static::ASSIGNEE),
             'reporter' => $this->translator->trans(static::REPORTER),
-            'author' => $this->translator->trans(static::COMMENT_AUTHOR)
+            'author'   => $this->translator->trans(static::COMMENT_AUTHOR)
         ];
 
+        $list[NotifyByEmailAction::TICKET_TARGET] = [
+            'watchers' => $this->translator->trans(static::WATCHERS),
+            'assignee' => $this->translator->trans(static::ASSIGNEE),
+            'reporter' => $this->translator->trans(static::REPORTER),
+        ];
+
+        $recipientList = [];
+
         foreach ($this->getUsers() as $user) {
-            $list[$user['email']] = $user['email'];
+            $recipientList[$user['email']] = $user['email'];
         }
+
+        $list[NotifyByEmailAction::COMMENT_TARGET] = array_merge(
+            $list[NotifyByEmailAction::COMMENT_TARGET],
+            $recipientList
+        );
+
+        $list[NotifyByEmailAction::TICKET_TARGET] = array_merge(
+            $list[NotifyByEmailAction::TICKET_TARGET],
+            $recipientList
+        );
 
         return $list;
     }
@@ -140,15 +159,16 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
 
     /**
      * @param array $users
-     * @param $type
+     * @param       $type
+     *
      * @return array
      */
     protected function convertUsers(array $users, $type)
     {
-        $result = array();
+        $result = [];
 
         foreach ($users as $user) {
-            $converted = array();
+            $converted = [];
 
             foreach ($this->properties as $property) {
                 $converted[$property] = $this->getPropertyValue($property, $user);
@@ -178,6 +198,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
     /**
      * @param string       $name
      * @param object|array $item
+     *
      * @return mixed
      */
     protected function getPropertyValue($name, $item)
