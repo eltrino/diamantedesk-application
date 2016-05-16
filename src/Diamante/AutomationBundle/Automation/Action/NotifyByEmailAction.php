@@ -21,18 +21,30 @@ use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class NotifyByEmailAction extends AbstractAction
 {
     const ACTION_NAME = 'notify_by_email';
     const COMMENT_TARGET = 'comment';
+    const TICKET_TARGET = 'ticket';
 
     /**
      * @var NotificationManager
      */
     private $notificationManager;
+
+    private $ticketPropertiesOrder
+        = [
+            'subject',
+            'branch',
+            'status',
+            'priority',
+            'source',
+            'reporter',
+            'assignee',
+            'description'
+        ];
 
     /**
      * @var ContainerInterface
@@ -79,6 +91,10 @@ class NotifyByEmailAction extends AbstractAction
             $changesetDiff = $this->unsetProperties($changesetDiff);
             $changesetDiff = $this->convertProperties($changesetDiff);
 
+            if (static::TICKET_TARGET == $targetType) {
+                $changesetDiff = $this->sortTicketProperties($changesetDiff);
+            }
+
             $additionalOptions['changes'] = $changesetDiff;
 
             $options = array_merge($options, $additionalOptions);
@@ -114,6 +130,24 @@ class NotifyByEmailAction extends AbstractAction
         }
 
         throw new \RuntimeException('Could not get the key');
+    }
+
+    /**
+     * @param array $changeset
+     *
+     * @return array
+     */
+    private function sortTicketProperties(array $changeset)
+    {
+        $sortedChangeset = [];
+
+        foreach ($this->ticketPropertiesOrder as $value) {
+            if (array_key_exists($value, $changeset)) {
+                $sortedChangeset[$value] = $changeset[$value];
+            }
+        }
+
+        return $sortedChangeset;
     }
 
     /**
