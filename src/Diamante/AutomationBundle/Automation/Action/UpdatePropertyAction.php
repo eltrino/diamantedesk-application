@@ -59,7 +59,7 @@ class UpdatePropertyAction extends AbstractModifyAction
      * @param       $targetClass
      * @param       $properties
      *
-     * @return $this|Updatable
+     * @return Updatable
      */
     protected function update(array $target, $targetClass, $properties)
     {
@@ -67,7 +67,7 @@ class UpdatePropertyAction extends AbstractModifyAction
 
         if ($targetEntity->hasMethod('updateProperties')) {
             /** @var DoctrineGenericRepository $repository */
-            $repository = $this->registry->getManager()->getRepository($targetClass);
+            $repository = $this->em->getRepository($targetClass);
             /** @var Updatable $entity */
             $entity = $repository->get($target['id']);
             $entity->updateProperties($properties);
@@ -75,6 +75,6 @@ class UpdatePropertyAction extends AbstractModifyAction
             return $entity;
         }
 
-        return $this;
+        throw new \RuntimeException('Can\'t load entity.');
     }
 }

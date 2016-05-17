@@ -35,8 +35,8 @@
             <% } else if (properties[property].type == 'bool'){ %>
             <span class="label">To: </span>
             <select name="actions[value][<%= index %>]" data-attr="value">
-                <option value="true"<%= value == "true" ? ' selected' : ''%>>true</option>
-                <option value="false"<%= value == "false" ? ' selected' : ''%>>false</option>
+                <option value="1"<%= value == "1" ? ' selected' : ''%>>true</option>
+                <option value="0"<%= value == "0" ? ' selected' : ''%>>false</option>
             </select>
             <% } else if (properties[property].frontend_options){ %>
             <span class="label">To: </span>
