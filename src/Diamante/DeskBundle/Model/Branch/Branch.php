@@ -15,11 +15,12 @@
 namespace Diamante\DeskBundle\Model\Branch;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
+use Diamante\DeskBundle\Model\Shared\Property;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Branch implements Taggable, Entity
+class Branch implements Taggable, Entity, Property
 {
     /**
      * @var integer
@@ -109,6 +110,14 @@ class Branch implements Taggable, Entity
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->getId();
     }
 
     /**
