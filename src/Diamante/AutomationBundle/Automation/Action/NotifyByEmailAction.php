@@ -15,12 +15,14 @@
 
 namespace Diamante\AutomationBundle\Automation\Action;
 
+use Diamante\AutomationBundle\EventListener\WorkflowListener;
 use Diamante\AutomationBundle\Infrastructure\Changeset\Changeset;
 use Diamante\AutomationBundle\Rule\Action\AbstractAction;
 use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class NotifyByEmailAction extends AbstractAction
@@ -98,8 +100,10 @@ class NotifyByEmailAction extends AbstractAction
             $additionalOptions['changes'] = $changesetDiff;
 
             $options = array_merge($options, $additionalOptions);
-        } else {
-            // if only tag was changed
+        }
+
+        // if only tag was changed
+        if (empty($changesetDiff) && $action != WorkflowListener::REMOVED) {
             return $this;
         }
 
@@ -107,7 +111,7 @@ class NotifyByEmailAction extends AbstractAction
             $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
             $options['recipient'] = $recipient;
 
-            if (static::COMMENT_TARGET == $targetType && !$options['isOroUser'] && $target['private']) {
+            if (static::COMMENT_TARGET == $targetType && $recipient instanceof DiamanteUser && $target['private']) {
                 continue;
             }
 
