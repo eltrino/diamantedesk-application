@@ -27,6 +27,7 @@ whitelist:
     - 'oro_filtered_attachment'
     - 'oro_importexport_export_instant'
     - 'oro_importexport_export_download'
+    - 'oro_attachment_file'
 
     #OroUserBundle
     - 'oro_activity_list_api_get_list'
