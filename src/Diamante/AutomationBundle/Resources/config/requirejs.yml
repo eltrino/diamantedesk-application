@@ -1,3 +1,5 @@
 config:
-    paths:
-        'diamanteautomation/js/app/views/automation-view': 'bundles/diamanteautomation/js/app/views/automation-view.js'
+  paths:
+    'diamanteautomation/js/app/views/automation-view': 'bundles/diamanteautomation/js/app/views/automation-view.js'
+    'oro/datagrid/action/activate_rule-action': 'bundles/diamanteautomation/js/datagrid/action/activate_rule-action.js'
+    'oro/datagrid/action/deactivate_rule-action': 'bundles/diamanteautomation/js/datagrid/action/deactivate_rule-action.js'

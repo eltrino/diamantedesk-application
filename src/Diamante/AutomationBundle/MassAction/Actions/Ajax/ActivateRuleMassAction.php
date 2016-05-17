@@ -32,6 +32,10 @@ class ActivateRuleMassAction extends AjaxMassAction
             $options['handler'] = 'diamante_automation.mass_action.handler.activate_rule';
         }
 
+        if (empty($options['frontend_type'])) {
+            $options['frontend_type'] = 'activate_rule';
+        }
+
         return parent::setOptions($options);
     }
 }

@@ -32,6 +32,10 @@ class DeactivateRuleMassAction extends AjaxMassAction
             $options['handler'] = 'diamante_automation.mass_action.handler.deactivate_rule';
         }
 
+        if (empty($options['frontend_type'])) {
+            $options['frontend_type'] = 'deactivate_rule';
+        }
+
         return parent::setOptions($options);
     }
 }
