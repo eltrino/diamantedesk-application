@@ -54,16 +54,27 @@
             <% } %>
         <% } %>
     <% } %>
-    <% if(type == 'notify_by_email' || type == 'move_to_branch'){ %>
-        <span class="label">To: </span>
-        <input type="hidden" name="actions[property][<%= index %>]" data-attr="property" value="<%= type %>" />
-        <select name="actions[value][<%= index %>]" data-attr="value">
-            <% for(var key in actions[type].frontend_options) { %>
-            <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
-                <%= actions[type].frontend_options[key] %>
-            </option>
-            <% } %>
-        </select>
+    <% if(type == 'move_to_branch'){ %>
+    <span class="label">To: </span>
+    <input type="hidden" name="actions[property][<%= index %>]" data-attr="property" value="<%= type %>" />
+    <select name="actions[value][<%= index %>]" data-attr="value">
+        <% for(var key in actions[type].frontend_options) { %>
+        <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
+            <%= actions[type].frontend_options[key] %>
+        </option>
+        <% } %>
+    </select>
+    <% } %>
+    <% if(type == 'notify_by_email'){ %>
+    <span class="label">To: </span>
+    <input type="hidden" name="actions[property][<%= index %>]" data-attr="property" value="<%= type %>" />
+    <select name="actions[value][<%= index %>]" data-attr="value">
+        <% for(var key in actions[type].frontend_options[entity]) { %>
+        <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
+            <%= actions[type].frontend_options[entity][key] %>
+        </option>
+        <% } %>
+    </select>
     <% } %>
     <div class="pull-right">
         <div class="btn-group">
