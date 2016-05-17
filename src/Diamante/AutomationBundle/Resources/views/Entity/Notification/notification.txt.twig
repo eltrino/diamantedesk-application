@@ -8,7 +8,7 @@
     {% endfor %}
 {% endif %}
 
-{% if attachments is defined %}
+{% if attachments is defined and attachments is not empty %}
     Attachments:
     {% for key, value in attachments %}
         - {{ value }}
