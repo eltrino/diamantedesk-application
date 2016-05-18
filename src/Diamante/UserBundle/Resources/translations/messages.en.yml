@@ -67,5 +67,5 @@ diamante:
         group:
           assignee:       '[Assignee]'
           watchers:       '[Watchers]'
-          reporter:       '[Reporter]'
+          reporter:       '[Ticket Reporter]'
           comment_author: '[Comment author]'
