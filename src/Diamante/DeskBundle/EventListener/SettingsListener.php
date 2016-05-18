@@ -31,7 +31,10 @@ class SettingsListener
     public function beforeSave(ConfigSettingsUpdateEvent $event)
     {
         $setting = $event->getSettings();
-        $setting[static::DIAMANTE_DEFAULT_BRANCH]['use_parent_scope_value'] = false;
-        $event->setSettings($setting);
+
+        if (array_key_exists(static::DIAMANTE_DEFAULT_BRANCH, $setting)) {
+            $setting[static::DIAMANTE_DEFAULT_BRANCH]['use_parent_scope_value'] = false;
+            $event->setSettings($setting);
+        }
     }
 }
