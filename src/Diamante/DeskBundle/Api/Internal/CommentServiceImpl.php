@@ -180,7 +180,7 @@ class CommentServiceImpl implements CommentService
         $comment = $this->commentFactory->create($command->content, $ticket, $author, $command->private);
 
         $this->createAttachments($command, $comment);
-        $ticket->updateStatus(new Status($command->ticketStatus));
+        $ticket->updateStatus($command->ticketStatus);
         $ticket->updateTimestamps();
         $ticket->postNewComment($comment);
         $this->ticketRepository->store($ticket);
@@ -279,7 +279,7 @@ class CommentServiceImpl implements CommentService
 
         $this->registry->getManager()->persist($comment);
         $ticket = $comment->getTicket();
-        $this->updateTicketStatus($ticket, $command);
+        $this->updateTicketStatus($ticket, $command->ticketStatus);
 
         $this->registry->getManager()->flush();
     }
@@ -302,7 +302,7 @@ class CommentServiceImpl implements CommentService
         $comment->updateContent($command->content);
 
         $ticket = $comment->getTicket();
-        $this->updateTicketStatus($ticket, $command);
+        $this->updateTicketStatus($ticket, $command->ticketStatus);
 
         if (true === $flush) {
             $this->registry->getManager()->flush();
@@ -404,11 +404,10 @@ class CommentServiceImpl implements CommentService
 
     /**
      * @param Ticket $ticket
-     * @param $command
+     * @param Status $status
      */
-    protected function updateTicketStatus(Ticket $ticket, $command)
+    protected function updateTicketStatus(Ticket $ticket, Status $status)
     {
-        $status = new Status($command->ticketStatus);
         if (false === $ticket->getStatus()->equals($status)) {
             $ticket->updateStatus($status);
             $this->registry->getManager()->persist($ticket);

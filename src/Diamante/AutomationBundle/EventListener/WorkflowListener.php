@@ -21,6 +21,7 @@ use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\PersistentProcessingContext;
 use Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class WorkflowListener
 {
@@ -46,15 +47,30 @@ class WorkflowListener
      */
     protected $changesetBuilder;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * WorkflowListener constructor.
+     *
+     * @param AutomationConfigurationProvider $provider
+     * @param QueueManager                    $manager
+     * @param ChangesetBuilder                $changesetBuilder
+     * @param ContainerInterface              $container
+     */
     public function __construct(
         AutomationConfigurationProvider $provider,
         QueueManager $manager,
-        ChangesetBuilder $changesetBuilder
+        ChangesetBuilder $changesetBuilder,
+        ContainerInterface $container
     )
     {
         $this->provider = $provider;
         $this->queueManager = $manager;
         $this->changesetBuilder = $changesetBuilder;
+        $this->container = $container;
     }
 
     /**
@@ -102,6 +118,7 @@ class WorkflowListener
         }
 
         $em = $args->getEntityManager();
+
         $processingContext = new PersistentProcessingContext(
             $entity->getId(),
             $this->provider->getClassByTarget($target),
@@ -121,8 +138,7 @@ class WorkflowListener
         }
 
         // don't disable listeners when you save comment after ticket status and comment content update on update action
-        // don't disable listeners when tickets remove from mass action
-        if (static::TICKET_TARGET == $target && in_array($action, [static::UPDATED, static::REMOVED])) {
+        if (static::TICKET_TARGET == $target && static::UPDATED == $action) {
             $disableListeners = false;
         }
 

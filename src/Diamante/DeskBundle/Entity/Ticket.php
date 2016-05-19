@@ -158,7 +158,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="ticket", cascade={"remove" ,"persist"})
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="ticket", cascade={"persist"})
      */
     protected $comments;
 
