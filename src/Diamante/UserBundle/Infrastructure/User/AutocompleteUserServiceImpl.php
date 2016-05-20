@@ -110,16 +110,18 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
         $recipientList = [];
 
         foreach ($this->getUsers() as $user) {
-            $recipientList[$user['email']] = $user['email'];
+            $recipientList[$user['email']] = $user['firstName'] . ' ' . $user['lastName'] . ' – ' . $user['email'];
         }
 
         $list[NotifyByEmailAction::COMMENT_TARGET] = array_merge(
             $list[NotifyByEmailAction::COMMENT_TARGET],
+            array('null' => '------------------'),
             $recipientList
         );
 
         $list[NotifyByEmailAction::TICKET_TARGET] = array_merge(
             $list[NotifyByEmailAction::TICKET_TARGET],
+            array('null' => '------------------'),
             $recipientList
         );
 
