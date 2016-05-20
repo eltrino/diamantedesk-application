@@ -30,7 +30,7 @@
     <% } %>
     <% if(type == 'notify_by_email'){ %>
         <span class="label">To: </span>
-        <strong class="value"><%= value %></strong>
+        <strong class="value"><%= actions[type].frontend_options[entity][value] %></strong>
     <% } %>
     <% if(type == 'move_to_branch'){ %>
         <span class="label">To: </span>
