@@ -15,8 +15,10 @@
         <% } %>
         <% if(property && value && value !== type){ %>
             <span class="label">To: </span>
-            <% if(properties[property].type == 'string' || properties[property].type == 'bool'){ %>
+            <% if(properties[property].type == 'string'){ %>
                 <strong class="value"><%= value %></strong>
+            <% } else if (properties[property].type == 'bool'){ %>
+                <strong class="value"><%= !!(+value) %></strong>
             <% } else if (properties[property].frontend_options){ %>
                 <strong class="value">
                     <% if (properties[property].type == 'user'){ %>
