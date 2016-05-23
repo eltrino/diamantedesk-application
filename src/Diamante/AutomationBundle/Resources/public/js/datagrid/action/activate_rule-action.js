@@ -1,12 +1,12 @@
 /*global define*/
 define([
-    './mass-action'
-], function (MassAction) {
+    'diamanteautomation/js/datagrid/action/abstract_rule-action'
+], function (AbstractRuleAction) {
     'use strict';
 
     var ActivateRuleAction;
 
-    ActivateRuleAction = MassAction.extend({
+    ActivateRuleAction = AbstractRuleAction.extend({
         defaultMessages: {
             confirm_title: 'Activate Confirmation',
             confirm_content: 'Are you sure you want to activate selected rules?',
