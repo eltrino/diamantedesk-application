@@ -202,6 +202,21 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
     }
 
     /**
+     * Delete processed messages
+     * @param array $messages
+     * @return void
+     */
+    public function deleteProcessedMessages(array $messages)
+    {
+        \Assert\that($messages)->all()->isInstanceOf('Diamante\EmailProcessingBundle\Model\Message');
+        foreach ($messages as $message) {
+            $this->zendImapStorage->removeMessage(
+                $this->zendImapStorage->getNumberByUniqueId($message->getUniqueId())
+            );
+        }
+    }
+
+    /**
      * Initialize mailbox folder with name 'Processing'. If folder is not exists - it will be created
      * @return void
      */

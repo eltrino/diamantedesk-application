@@ -43,6 +43,7 @@
             <argument type="service" id="diamante.email_processing.context"/>
             <argument type="service" id="diamante.email_processing.strategy_holder"/>
             <argument type="service" id="monolog.logger.diamante"/>
+            <argument type="service" id="diamante.email_processing.mail_system_settings"/>
             <tag name="monolog.logger" channel="diamante"/>
         </service>
 

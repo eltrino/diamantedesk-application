@@ -142,4 +142,14 @@ class RawMessageProvider extends AbstractMessageProvider implements MessageProvi
     {
         // not implemented
     }
+
+    /**
+     * Delete processed messages
+     * @param array $messages
+     * @return void
+     */
+    public function deleteProcessedMessages(array $messages)
+    {
+        // not implemented
+    }
 }

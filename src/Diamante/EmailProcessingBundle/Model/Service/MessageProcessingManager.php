@@ -14,6 +14,7 @@
  */
 namespace Diamante\EmailProcessingBundle\Model\Service;
 
+use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Diamante\EmailProcessingBundle\Model\Processing\Context;
 use Diamante\EmailProcessingBundle\Model\Processing\StrategyHolder;
@@ -30,11 +31,17 @@ class MessageProcessingManager implements ManagerInterface
 
     private $logger;
 
-    public function __construct(Context $processingContext, StrategyHolder $strategyHolder, Logger $logger)
+    /**
+     * @var SystemSettings
+     */
+    private $settings;
+
+    public function __construct(Context $processingContext, StrategyHolder $strategyHolder, Logger $logger, SystemSettings $settings)
     {
         $this->processingContext = $processingContext;
         $this->strategyHolder    = $strategyHolder;
         $this->logger            = $logger;
+        $this->settings          = $settings;
     }
 
     /**
@@ -44,7 +51,7 @@ class MessageProcessingManager implements ManagerInterface
      */
     public function handle(MessageProvider $provider)
     {
-        $messagesToMove = array();
+        $processedMessages = [];
         $strategies = $this->strategyHolder->getStrategies();
         foreach ($provider->fetchMessagesToProcess() as $message) {
             foreach ($strategies as $strategy) {
@@ -54,14 +61,20 @@ class MessageProcessingManager implements ManagerInterface
                         $this->processingContext->execute($message);
                     }
 
-                    if (false === isset($messagesToMove[$message->getUniqueId()])) {
-                        $messagesToMove[$message->getUniqueId()] = $message;
+                    if (false === isset($processedMessages[$message->getUniqueId()])) {
+                        $processedMessages[$message->getUniqueId()] = $message;
                     }
                 } catch (\Exception $e) {
+                    // TODO 
                     $this->logger->error(sprintf('Error processing message: %s', $e->getMessage()));
                 }
             }
         }
-        $provider->markMessagesAsProcessed($messagesToMove);
+
+        if ($this->settings->getDeleteProcessedMessages()) {
+            $provider->deleteProcessedMessages($processedMessages);
+        } else {
+            $provider->markMessagesAsProcessed($processedMessages);
+        }
     }
 }

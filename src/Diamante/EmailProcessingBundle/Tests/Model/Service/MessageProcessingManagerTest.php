@@ -63,29 +63,27 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
+    /**
+     * @var \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
+     * @Mock \Diamante\EmailProcessingBundle\Model\Mail\SystemSettings
+     */
+    private $settings;
 
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->manager = new MessageProcessingManager($this->context, $this->strategyHolder, $this->logger);
+        $this->manager = new MessageProcessingManager($this->context, $this->strategyHolder, $this->logger, $this->settings);
     }
 
     /**
      * @test
      */
-    public function thatHandles()
+    public function thatHandlesAndMarksMessages()
     {
-        $messages = array(new Message(
-            self::DUMMY_MESSAGE_UNIQUE_ID,
-            self::DUMMY_MESSAGE_ID,
-            self::DUMMY_MESSAGE_SUBJECT,
-            self::DUMMY_MESSAGE_CONTENT,
-            $this->getDummyFrom(),
-            self::DUMMY_MESSAGE_TO,
-            self::DUMMY_MESSAGE_REFERENCE)
-        );
+        $messages = $this->getMessages();
         $strategies = array($this->strategy);
 
+        $this->settings->expects($this->any())->method('getDeleteProcessedMessages')->will($this->returnValue(false));
         $this->provider->expects($this->once())->method('fetchMessagesToProcess')->will($this->returnValue($messages));
         $this->strategyHolder->expects($this->once())->method('getStrategies')->will($this->returnValue($strategies));
         $this->context->expects($this->exactly(count($strategies)))->method('setStrategy')
@@ -114,6 +112,39 @@ class MessageProcessingManagerTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->manager->handle($this->provider);
+    }
+
+    /**
+     * @test
+     */
+    public function thatHandlesAndDeletesMessages()
+    {
+        $messages = $this->getMessages();
+        $strategies = array($this->strategy);
+
+        $this->settings->expects($this->any())->method('getDeleteProcessedMessages')->will($this->returnValue(true));
+        $this->provider->expects($this->once())->method('fetchMessagesToProcess')->will($this->returnValue($messages));
+        $this->strategyHolder->expects($this->once())->method('getStrategies')->will($this->returnValue($strategies));
+        $this->context->expects($this->exactly(count($strategies)))->method('setStrategy')
+            ->with($this->isInstanceOf('\Diamante\EmailProcessingBundle\Model\Processing\Strategy'));
+        $this->context->expects($this->exactly(count($messages) * count($strategies)))->method('execute')
+            ->with($this->isInstanceOf('Diamante\EmailProcessingBundle\Model\Message'));
+        $this->provider->expects($this->once())->method('deleteProcessedMessages');
+
+        $this->manager->handle($this->provider);
+    }
+
+    protected  function getMessages()
+    {
+        return [new Message(
+            self::DUMMY_MESSAGE_UNIQUE_ID,
+            self::DUMMY_MESSAGE_ID,
+            self::DUMMY_MESSAGE_SUBJECT,
+            self::DUMMY_MESSAGE_CONTENT,
+            $this->getDummyFrom(),
+            self::DUMMY_MESSAGE_TO,
+            self::DUMMY_MESSAGE_REFERENCE)
+        ];
     }
 
     protected function getDummyFrom()

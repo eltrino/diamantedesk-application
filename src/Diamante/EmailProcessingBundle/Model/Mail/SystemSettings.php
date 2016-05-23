@@ -49,6 +49,11 @@ class SystemSettings
     private $password;
 
     /**
+     * @var boolean
+     */
+    private $deleteProcessedMessages;
+
+    /**
      * @param ConfigManager $configManager
      */
     public function __construct(ConfigManager $configManager)
@@ -59,6 +64,7 @@ class SystemSettings
         $this->sslEnabled      = (bool)$configManager->get('diamante_email_processing.mailbox_ssl');
         $this->username        = $configManager->get('diamante_email_processing.mailbox_username');
         $this->password        = $configManager->get('diamante_email_processing.mailbox_password');
+        $this->deleteProcessedMessages = $configManager->get('diamante_email_processing.mailbox_delete_processed_messages');
     }
 
     /**
@@ -107,5 +113,13 @@ class SystemSettings
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDeleteProcessedMessages()
+    {
+        return $this->deleteProcessedMessages;
     }
 }

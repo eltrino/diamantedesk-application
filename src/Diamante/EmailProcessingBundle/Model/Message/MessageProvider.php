@@ -32,4 +32,11 @@ interface MessageProvider
      * @return void
      */
     public function markMessagesAsProcessed(array $messages);
+
+    /**
+     * Delete processed messages
+     * @param array $messages
+     * @return void
+     */
+    public function deleteProcessedMessages(array $messages);
 }

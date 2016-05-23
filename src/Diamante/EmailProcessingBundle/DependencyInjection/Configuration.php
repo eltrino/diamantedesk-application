@@ -52,7 +52,11 @@ class Configuration implements ConfigurationInterface
                 'mailbox_password' => array(
                     'value' => '',
                     'type' => 'password'
-                )
+                ),
+                'mailbox_delete_processed_messages' => [
+                    'value' => false,
+                    'type' => 'bool'
+                ]
             )
         );
 

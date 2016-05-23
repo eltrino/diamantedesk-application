@@ -43,6 +43,17 @@ oro_system_configuration:
             options:
                 label: 'Password'
 
+        diamante_email_processing.mailbox_delete_processed_messages:
+            data_type: string
+            type: choice
+            priority: 70
+            options:
+                label: 'Delete Processed Messages'
+                tooltip: "Some IMAP servers do not allow copy/move operations on the messages. In this case they could be removed after processing."
+                choices:
+                    - No
+                    - Yes
+
     tree:
         system_configuration:
             platform:
@@ -59,3 +70,4 @@ oro_system_configuration:
                                             - diamante_email_processing.mailbox_ssl
                                             - diamante_email_processing.mailbox_username
                                             - diamante_email_processing.mailbox_password
+                                            - diamante_email_processing.mailbox_delete_processed_messages
