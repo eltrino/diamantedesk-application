@@ -29,7 +29,7 @@ class MethodParameters
     /**
      * @var string
      */
-    private static $allowedTags = '<br><br/><a><b><u><i><p><img><img/><h1><h2><h3><h4><h5><h6><strong><em><span>';
+    private static $allowedTags = '<br><br/><a><b><u><i><p><img><img/><h1><h2><h3><h4><h5><h6><strong><em><span><ul><ol><li>';
 
     /**
      * @var array
