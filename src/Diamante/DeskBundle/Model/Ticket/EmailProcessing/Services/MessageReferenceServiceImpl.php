@@ -140,7 +140,7 @@ class MessageReferenceServiceImpl implements MessageReferenceService
         $command->ticket            = $ticket->getId();
         $command->content           = $content;
         $command->author            = User::fromString($authorId);
-        $command->ticketStatus      = $ticket->getStatus();
+        $command->ticketStatus      = $ticket->getStatus()->getValue();
         $command->attachmentsInput  = $this->convertAttachments($attachments);
 
         $this->commentService->postNewCommentForTicket($command);

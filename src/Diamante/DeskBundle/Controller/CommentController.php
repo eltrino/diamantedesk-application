@@ -19,7 +19,6 @@ use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Entity\Ticket;
-use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -114,7 +113,6 @@ class CommentController extends Controller
         );
         try {
             $this->handle($form);
-            $command->ticketStatus = new Status($command->ticketStatus);
             $callback($command);
 
             if ($command->id) {
