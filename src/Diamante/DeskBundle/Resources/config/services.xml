@@ -154,6 +154,7 @@
             <argument id="swiftmailer.mailer" type="service"/>
             <argument id="translator" type="service"/>
             <argument id="oro_config.global" type="service"/>
+            <argument id="diamante.ticket.email_processing_message_reference.repository" type="service"/>
         </service>
 
         <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>

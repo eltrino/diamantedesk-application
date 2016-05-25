@@ -13,17 +13,29 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider;
+namespace Diamante\AutomationBundle\Automation\Action\Email;
+
+use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
 
 /**
- * Interface EntityProvider
+ * Interface EntityNotifier
  *
- * @package Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider
+ * @package Diamante\AutomationBundle\Automation\Action\Email
  */
-interface EntityProvider
+interface EntityNotifier
 {
     /**
      * @return string
      */
     public function getName();
+
+    /**
+     * @param ExecutionContext $context
+     */
+    public function setContext(ExecutionContext $context);
+
+    /**
+     * @return void
+     */
+    public function notify();
 }

@@ -15,8 +15,11 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification;
 
+use Diamante\DeskBundle\Entity\MessageReference;
+use Diamante\DeskBundle\Entity\Ticket;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Symfony\Component\Translation\TranslatorInterface;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 
 class NotificationManager
 {
@@ -25,6 +28,9 @@ class NotificationManager
 
     const SENDER_EMAIL_CONFIG_PATH      = 'oro_notification.email_notification_sender_email';
     const SENDER_NAME_CONFIG_PATH       = 'oro_notification.email_notification_sender_name';
+
+    const SYSTEM_MESSAGE_HEADER         = 'diamante-system-message';
+    const CREATE_TICKET_HEADER          = 'diamante-create-ticket';
 
     /**
      * @var array
@@ -35,6 +41,11 @@ class NotificationManager
      * @var string
      */
     protected $subject = '';
+
+    /**
+     * @var Ticket
+     */
+    protected $ticket;
 
     /**
      * @var string
@@ -86,21 +97,31 @@ class NotificationManager
     protected $config;
 
     /**
-     * @param \Twig_Environment $twig
-     * @param \Swift_Mailer $mailer
-     * @param TranslatorInterface $translator
-     * @param ConfigManager $configManager
+     * @var MessageReferenceRepository
+     */
+    protected $messageReferenceRepository;
+
+    /**
+     * NotificationManager constructor.
+     *
+     * @param \Twig_Environment          $twig
+     * @param \Swift_Mailer              $mailer
+     * @param TranslatorInterface        $translator
+     * @param ConfigManager              $configManager
+     * @param MessageReferenceRepository $messageReferenceRepository
      */
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
         TranslatorInterface $translator,
-        ConfigManager $configManager
+        ConfigManager $configManager,
+        MessageReferenceRepository $messageReferenceRepository
     ) {
-        $this->twig         = $twig;
-        $this->mailer       = $mailer;
-        $this->translator   = $translator;
-        $this->config       = $configManager;
+        $this->twig                       = $twig;
+        $this->mailer                     = $mailer;
+        $this->translator                 = $translator;
+        $this->config                     = $configManager;
+        $this->messageReferenceRepository = $messageReferenceRepository;
     }
 
     /**
@@ -165,16 +186,18 @@ class NotificationManager
 
     public function notify()
     {
-
         $message = \Swift_Message::newInstance();
         $message->setSubject($this->subject);
         $message->setFrom($this->fromEmail, $this->fromName);
         $message->setTo($this->toEmail, $this->toName);
-
         $message->setBody($this->twig->render(
             $this->templates[self::TEMPLATE_TYPE_HTML],
             $this->templateOptions
         ), 'text/html');
+
+        $headers = $message->getHeaders();
+        $headers->addTextHeader(static::SYSTEM_MESSAGE_HEADER, true);
+        $headers->addIdHeader('References', $this->referencesHeader());
 
         if (isset($this->templates[self::TEMPLATE_TYPE_TXT])) {
             $message->addPart($this->twig->render(
@@ -186,6 +209,35 @@ class NotificationManager
 
         $this->mailer->send($message);
 
+        if (!is_null($this->ticket)) {
+            $reference = new MessageReference($message->getId(), $this->ticket, 'dfgdfg');
+            $this->messageReferenceRepository->store($reference);
+        }
+    }
+
+    /**
+     * @param Ticket $ticket
+     */
+    public function setTicket(Ticket $ticket)
+    {
+        $this->ticket = $ticket;
+    }
+
+    /**
+     * @return array
+     */
+    private function referencesHeader()
+    {
+        $ids = [];
+
+        if (is_null($this->ticket)) {
+            return $ids;
+        }
+
+        foreach ($this->messageReferenceRepository->findAllByTicket($this->ticket) as $reference) {
+            $ids[] = $reference->getMessageId();
+        }
+        return $ids;
     }
 
     /**

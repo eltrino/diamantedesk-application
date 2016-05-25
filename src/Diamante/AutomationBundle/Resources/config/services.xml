@@ -18,7 +18,7 @@
         <parameter key="diamante_automation.comment.property.processor.class">Diamante\AutomationBundle\Rule\Property\CommentPropertyProcessor</parameter>
         <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
         <parameter key="diamante_automation.generic.target.provider.class">Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider</parameter>
-        <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction</parameter>
+        <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\Email\NotifyByEmailAction</parameter>
         <parameter key="diamante_automation.queue_manager.class">Diamante\AutomationBundle\Automation\JobQueue\QueueManager</parameter>
         <parameter key="diamante_automation.listener.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
         <parameter key="diamante_automation.datagrid.helper.class">Diamante\AutomationBundle\Infrastructure\Shared\DatagridHelper</parameter>
@@ -31,24 +31,34 @@
         <parameter key="diamante_automation_form.type.class">Diamante\AutomationBundle\Form\Type\AutomationType</parameter>
         <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
         <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
-        <parameter key="diamante.automation.email.resolver.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailResolver</parameter>
         <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder</parameter>
-        <parameter key="diamante_automation.email.ticket_provider.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider\Ticket</parameter>
-        <parameter key="diamante_automation.email.comment_provider.class">Diamante\AutomationBundle\Infrastructure\Resolver\EmailProvider\Comment</parameter>
         <parameter key="diamante_automation.action.execution_context.class">Diamante\AutomationBundle\Rule\Action\ExecutionContext</parameter>
+        <parameter key="diamante_automation.action.comment_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier</parameter>
+        <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier</parameter>
     </parameters>
 
     <services>
-        <service id="diamante_automation.email.ticket_provider" class="%diamante_automation.email.ticket_provider.class%">
-            <argument type="service" id="diamante.user.service"/>
-            <argument type="service" id="oro_user.manager"/>
-            <tag name="diamante_automation.email.provider"/>
+        <service id="diamante_automation.action.abstract_notifier" abstract="true">
+            <call method="setUserService">
+                <argument type="service" id="diamante.user.service" />
+            </call>
+            <call method="setUserManager">
+                <argument type="service" id="oro_user.manager" />
+            </call>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+            <call method="setNotificationManager">
+                <argument type="service" id="diamante.notification_manager" />
+            </call>
         </service>
 
-        <service id="diamante_automation.email.comment_provider" class="%diamante_automation.email.comment_provider.class%">
-            <argument type="service" id="diamante.user.service"/>
-            <argument type="service" id="oro_user.manager"/>
-            <tag name="diamante_automation.email.provider"/>
+        <service id="diamante_automation.action.comment_notifier" class="%diamante_automation.action.comment_notifier.class%" parent="diamante_automation.action.abstract_notifier">
+            <tag name="diamante_automation.action.notifier"/>
+        </service>
+
+        <service id="diamante_automation.action.ticket_notifier" class="%diamante_automation.action.ticket_notifier.class%" parent="diamante_automation.action.abstract_notifier">
+            <tag name="diamante_automation.action.notifier"/>
         </service>
 
         <service id="diamante_automation.schedule.repository" class="%diamante.generic.repository.class%"
@@ -123,12 +133,6 @@
         </service>
 
         <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%" parent="diamante_automation.action.abstract_action">
-            <call method="setNotificationManager">
-                <argument type="service" id="diamante.notification_manager"/>
-            </call>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
         </service>
 
         <service id="diamante_automation.datagrid.helper" class="%diamante_automation.datagrid.helper.class%">
@@ -196,9 +200,6 @@
 
         <service id="diamante.automation.frontend.options.resolver" class="%diamante_automation.frontend.options.resolver.class%">
             <argument type="service" id="service_container"/>
-        </service>
-
-        <service id="diamante.automation.email.resolver" class="%diamante.automation.email.resolver.class%">
         </service>
     </services>
 </container>

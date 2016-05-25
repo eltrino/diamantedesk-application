@@ -14,7 +14,8 @@
  */
 namespace Diamante\UserBundle\Infrastructure\User;
 
-use Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction;
+use Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier;
+use Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
@@ -94,14 +95,14 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
      */
     public function getNotifyActionList()
     {
-        $list[NotifyByEmailAction::COMMENT_TARGET] = [
+        $list[CommentNotifier::COMMENT_TYPE] = [
             'watchers' => $this->translator->trans(static::WATCHERS),
             'assignee' => $this->translator->trans(static::ASSIGNEE),
             'reporter' => $this->translator->trans(static::REPORTER),
             'author'   => $this->translator->trans(static::COMMENT_AUTHOR)
         ];
 
-        $list[NotifyByEmailAction::TICKET_TARGET] = [
+        $list[TicketNotifier::TICKET_TYPE] = [
             'watchers' => $this->translator->trans(static::WATCHERS),
             'assignee' => $this->translator->trans(static::ASSIGNEE),
             'reporter' => $this->translator->trans(static::REPORTER),
@@ -113,15 +114,15 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
             $recipientList[$user['email']] = $user['firstName'] . ' ' . $user['lastName'] . ' – ' . $user['email'];
         }
 
-        $list[NotifyByEmailAction::COMMENT_TARGET] = array_merge(
-            $list[NotifyByEmailAction::COMMENT_TARGET],
-            array('null' => '------------------'),
+        $list[CommentNotifier::COMMENT_TYPE] = array_merge(
+            $list[CommentNotifier::COMMENT_TYPE],
+            ['null' => '------------------'],
             $recipientList
         );
 
-        $list[NotifyByEmailAction::TICKET_TARGET] = array_merge(
-            $list[NotifyByEmailAction::TICKET_TARGET],
-            array('null' => '------------------'),
+        $list[TicketNotifier::TICKET_TYPE] = array_merge(
+            $list[TicketNotifier::TICKET_TYPE],
+            ['null' => '------------------'],
             $recipientList
         );
 

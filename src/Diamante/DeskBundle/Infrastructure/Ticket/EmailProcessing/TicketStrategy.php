@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing;
 use Diamante\DeskBundle\Api\Internal\WatchersServiceImpl;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
+use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceService;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Mail\SystemSettings;
@@ -69,13 +70,21 @@ class TicketStrategy implements Strategy
     private $branchRepository;
 
     /**
-     * @param MessageReferenceService $messageReferenceService
-     * @param SystemSettings $settings
-     * @param WatchersServiceImpl $watchersService
-     * @param OroUserManager $oroUserManager
-     * @param ConfigManager $configManager
-     * @param UserService $diamanteUserService
-     * @param DoctrineGenericRepository $branchRepository
+     * @var MessageReferenceRepository
+     */
+    private $messageReferenceRepository;
+
+    /**
+     * TicketStrategy constructor.
+     *
+     * @param MessageReferenceService    $messageReferenceService
+     * @param SystemSettings             $settings
+     * @param WatchersServiceImpl        $watchersService
+     * @param OroUserManager             $oroUserManager
+     * @param ConfigManager              $configManager
+     * @param UserService                $diamanteUserService
+     * @param DoctrineGenericRepository  $branchRepository
+     * @param MessageReferenceRepository $messageReferenceRepository
      */
     public function __construct(MessageReferenceService $messageReferenceService,
                                 SystemSettings $settings,
@@ -83,7 +92,8 @@ class TicketStrategy implements Strategy
                                 OroUserManager $oroUserManager,
                                 ConfigManager $configManager,
                                 UserService $diamanteUserService,
-                                DoctrineGenericRepository $branchRepository
+                                DoctrineGenericRepository $branchRepository,
+                                MessageReferenceRepository $messageReferenceRepository
     )
     {
         $this->messageReferenceService         = $messageReferenceService;
@@ -93,6 +103,7 @@ class TicketStrategy implements Strategy
         $this->configManager                   = $configManager;
         $this->diamanteUserService             = $diamanteUserService;
         $this->branchRepository                = $branchRepository;
+        $this->messageReferenceRepository      = $messageReferenceRepository;
     }
 
     /**
@@ -108,8 +119,10 @@ class TicketStrategy implements Strategy
         }
 
         $attachments = $message->getAttachments();
+        $messageId = $message->getReference();
+        $reference = $this->messageReferenceRepository->getReferenceByMessageId($messageId);
 
-        if (!$message->getReference()) {
+        if (!$reference) {
                 $defaultBranch = (int)$this->configManager->get('diamante_desk.default_branch');
 
                 if (is_null($defaultBranch)) {

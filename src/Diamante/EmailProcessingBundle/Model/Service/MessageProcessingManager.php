@@ -57,7 +57,7 @@ class MessageProcessingManager implements ManagerInterface
             foreach ($strategies as $strategy) {
                 $this->processingContext->setStrategy($strategy);
                 try {
-                    if (!$message->isFailed()) {
+                    if (!$message->isFailed() && !$message->isSystem()) {
                         $this->processingContext->execute($message);
                     }
 

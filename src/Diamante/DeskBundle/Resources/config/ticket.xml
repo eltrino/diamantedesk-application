@@ -61,6 +61,7 @@
             <argument type="service" id="oro_config.global"/>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.branch.repository"/>
+            <argument type="service" id="diamante.ticket.email_processing_message_reference.repository"/>
             <tag name="email_processing.strategy" />
         </service>
 

@@ -15,7 +15,7 @@
 
 namespace Diamante\AutomationBundle\Tests\Automation\Action;
 
-use Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction;
+use Diamante\AutomationBundle\Automation\Action\Email\NotifyByEmailAction;
 use Diamante\AutomationBundle\EventListener\WorkflowListener;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
 use Diamante\AutomationBundle\Rule\Fact\Fact;

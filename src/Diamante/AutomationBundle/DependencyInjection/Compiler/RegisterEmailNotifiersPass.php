@@ -20,19 +20,19 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class RegisterEmailProvidersPass implements CompilerPassInterface
+class RegisterEmailNotifiersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('diamante.automation.email.resolver')) {
+        if (!$container->hasDefinition('diamante_automation.action.notify_by_email')) {
             return;
         }
 
-        $resolver = $container->getDefinition('diamante.automation.email.resolver');
-        $strategies = $container->findTaggedServiceIds('diamante_automation.email.provider');
+        $resolver = $container->getDefinition('diamante_automation.action.notify_by_email');
+        $strategies = $container->findTaggedServiceIds('diamante_automation.action.notifier');
 
         foreach ($strategies as $id => $definition) {
-            $resolver->addMethodCall('addEmailProvider', [new Reference($id)]);
+            $resolver->addMethodCall('addEmailNotifier', [new Reference($id)]);
         }
     }
 }

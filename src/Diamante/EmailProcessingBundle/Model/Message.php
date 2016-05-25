@@ -70,6 +70,11 @@ class Message
     private $isFailed;
 
     /**
+     * @var bool
+     */
+    private $isSystem;
+
+    /**
      * @param               $uniqueId
      * @param               string|null $messageId
      * @param               string|null $subject
@@ -79,6 +84,7 @@ class Message
      * @param string|null          $reference
      * @param array         $attachments
      * @param bool          $isFailed
+     * @param bool          $isSystem
      * @param array         $recipients
      */
     public function __construct(
@@ -91,6 +97,7 @@ class Message
         $reference = null,
         array $attachments = null,
         $isFailed = false,
+        $isSystem = true,
         $recipients = null
     ) {
         $this->uniqueId    = $uniqueId;
@@ -102,6 +109,7 @@ class Message
         $this->reference   = $reference;
         $this->attachments = $attachments;
         $this->isFailed    = $isFailed;
+        $this->isSystem    = $isSystem;
         $this->recipients  = $recipients;
     }
 
@@ -183,6 +191,14 @@ class Message
     public function isFailed()
     {
         return $this->isFailed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSystem()
+    {
+        return $this->isSystem;
     }
 
     /**

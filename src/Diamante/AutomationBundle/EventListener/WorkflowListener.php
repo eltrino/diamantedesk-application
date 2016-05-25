@@ -138,7 +138,8 @@ class WorkflowListener
         }
 
         // don't disable listeners when you save comment after ticket status and comment content update on update action
-        if (static::TICKET_TARGET == $target && static::UPDATED == $action) {
+        // don't disable tickets remove for mass action
+        if (static::TICKET_TARGET == $target && in_array($action, [static::UPDATED, static::REMOVED])) {
             $disableListeners = false;
         }
 

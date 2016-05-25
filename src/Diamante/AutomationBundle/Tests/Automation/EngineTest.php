@@ -93,8 +93,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     private $updatePropertyAction;
 
     /**
-     * @var \Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction
-     * @Mock Diamante\AutomationBundle\Automation\Action\NotifyByEmailAction
+     * @var \Diamante\AutomationBundle\Automation\Action\Email\NotifyByEmailAction
+     * @Mock Diamante\AutomationBundle\Automation\Action\Email\NotifyByEmailAction
      */
     private $notifyByEmailAction;
 

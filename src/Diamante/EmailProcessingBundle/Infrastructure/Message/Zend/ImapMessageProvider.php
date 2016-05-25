@@ -14,6 +14,7 @@
  */
 namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
 
+use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\EmailProcessingBundle\Model\Message\MessageProvider;
 use Diamante\EmailProcessingBundle\Model\MessageProcessingException;
@@ -70,10 +71,11 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
                 $messageReference   = $this->processMessageReference($headers);
                 $messageAttachments = $this->processAttachments($imapMessage);
                 $isFailed           = $this->isFailed($headers);
+                $isSystem           = $this->isSystem($headers);
                 $recipients         = $this->processRecipients($headers);
 
-                $messages[] = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent,
-                    $messageFrom, $messageTo, $messageReference, $messageAttachments, $isFailed, $recipients);
+                $messages[] = new Message($uniqueMessageId, $messageId, $messageSubject, $messageContent, $messageFrom,
+                    $messageTo, $messageReference, $messageAttachments, $isFailed, $isSystem, $recipients);
             }
         } catch (\Exception $e) {
             throw new MessageProcessingException($e->getMessage());
@@ -89,6 +91,16 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
     private function isFailed($headers)
     {
         return $headers->get('xfailedrecipients') ? true : false;
+    }
+
+    /**
+     * @param \Zend\Mail\Headers $headers
+     *
+     * @return bool
+     */
+    private function isSystem($headers)
+    {
+        return $headers->get(NotificationManager::SYSTEM_MESSAGE_HEADER) ? true : false;
     }
 
     /**
