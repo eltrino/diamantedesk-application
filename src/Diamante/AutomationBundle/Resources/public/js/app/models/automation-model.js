@@ -50,6 +50,7 @@ define([
                 this.set('time_interval', _.keys(config.time_intervals)[0])
             }
             delete options.model;
+            options.isBusiness = attr.type === 'business';
             this.set('actions', attr.actions ?
                 new AutomationActionsCollection(attr.actions, options) :
                 new AutomationActionsCollection([{}], options));

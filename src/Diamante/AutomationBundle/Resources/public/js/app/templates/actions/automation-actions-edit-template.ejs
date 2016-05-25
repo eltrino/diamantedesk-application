@@ -9,6 +9,7 @@
 <div class="controls">
     <select name="actions[type]" data-attr="type" data-rel-attr="property,value">
         <% for(var key in config.actions) { %>
+        <% if(isBusiness && key == 'notify_by_email') { continue } %>
         <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= config.actions[key].label %></option>
         <% } %>
     </select>
