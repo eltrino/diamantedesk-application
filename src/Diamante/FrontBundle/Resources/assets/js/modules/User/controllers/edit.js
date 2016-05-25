@@ -28,7 +28,8 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
           });
 
           userEditView.on('form:submit', function(data){
-            var ignore = [];
+            var ignore = [],
+                isChanged = false;
             if(!data.password){
               delete data.password;
               ignore = ['password'];
@@ -37,6 +38,7 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
               if(data.password) {
                 data.password = Wsse.encodePassword(data.password);
               }
+              isChanged = this.model.hasChanged();
               this.model.save(data,{
                 ignore: ignore,
                 patch: true,
@@ -44,12 +46,14 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
                   if(data.password){
                     App.session.update({ password : data.password });
                   }
-                  App.trigger('message:show', {
-                    status: 'success',
-                    text: 'You have successfully updated your profile'
-                  });
+                  if(isChanged || data.password){
+                    App.trigger('message:show', {
+                      status: 'success',
+                      text: 'You have successfully updated your profile'
+                    });
+                  }
                   modalEditView.$el.modal('hide');
-                },
+                }.bind(this),
                 error : function(model, xhr){
                   App.alert({
                     title: "Edit User Error",
