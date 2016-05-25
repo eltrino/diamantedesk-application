@@ -26,7 +26,7 @@
     <% if(!entity_type){ %>
         <% if(properties) {%>
             <span class="label">Property</span>
-            <select name="conditions[property]" data-attr="property" data-rel-attr="value">
+            <select name="conditions[property]" data-attr="property" data-rel-attr="value,type">
                 <% for(var key in properties) { %>
                 <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
                 <% } %>
