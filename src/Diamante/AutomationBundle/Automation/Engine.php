@@ -22,7 +22,9 @@ use Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider;
 use Diamante\AutomationBundle\Infrastructure\Shared\TargetMapper;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
+use Diamante\AutomationBundle\Rule\Fact\BusinessFact;
+use Diamante\AutomationBundle\Rule\Fact\WorkflowFact;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Monolog\Logger;
@@ -97,36 +99,37 @@ class Engine
     /**
      * @param $entity
      *
-     * @return Fact
+     * @return BusinessFact
      */
-    public function createFactByEntity($entity)
+    public function createBusinessFact($entity)
     {
         $entityType = $this->configurationProvider->getTargetByEntity($entity);
         $entity = TargetMapper::fromEntity($entity);
 
-        return new Fact($entity, $entityType);
+        return new BusinessFact($entity, $entityType);
     }
 
     /**
      * @param $entityType
      * @param $action
+     * @param $editor
      * @param $entityChangeset
      *
      * @return Fact
      */
-    public function createFact($entityType, $action, $entityChangeset)
+    public function createFact($entityType, $action, $editor, $entityChangeset)
     {
         $entity = TargetMapper::fromChangeset($entityChangeset);
 
-        return new Fact($entity, $entityType, $action, $entityChangeset);
+        return new WorkflowFact($entity, $entityType, $action, $editor, $entityChangeset);
     }
 
     /**
-     * @param Fact $fact
-     * @param Group $group
+     * @param AbstractFact $fact
+     * @param Group        $group
      * @return bool
      */
-    protected function doCheck(Fact $fact, Group $group)
+    protected function doCheck(AbstractFact $fact, Group $group)
     {
         $results = [];
 
@@ -154,12 +157,12 @@ class Engine
     }
 
     /**
-     * @param Fact $fact
-     * @param Group $group
+     * @param AbstractFact $fact
+     * @param Group        $group
      *
      * @return bool
      */
-    protected function checkGroup(Fact $fact, Group $group)
+    protected function checkGroup(AbstractFact $fact, Group $group)
     {
         if ($group->hasChildren()) {
             $result = $this->doCheck($fact, $group);
@@ -182,11 +185,11 @@ class Engine
     }
 
     /**
-     * @param Fact $fact
-     * @param Group $group
+     * @param AbstractFact $fact
+     * @param Group        $group
      * @return bool
      */
-    protected function processInclusive(Fact $fact, Group $group)
+    protected function processInclusive(AbstractFact $fact, Group $group)
     {
         foreach ($group->getConditions() as $conditionEntity) {
             $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters(), $fact->getTargetType());
@@ -200,11 +203,11 @@ class Engine
     }
 
     /**
-     * @param Fact $fact
-     * @param Group $group
+     * @param AbstractFact $fact
+     * @param Group        $group
      * @return bool
      */
-    protected function processExclusive(Fact $fact, Group $group)
+    protected function processExclusive(AbstractFact $fact, Group $group)
     {
         foreach ($group->getConditions() as $conditionEntity) {
             $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters(), $fact->getTargetType());
@@ -218,10 +221,10 @@ class Engine
     }
 
     /**
-     * @param Fact $fact
+     * @param AbstractFact $fact
      * @return Rule[]
      */
-    protected function getRules(Fact $fact)
+    protected function getRules(AbstractFact $fact)
     {
         if (empty($this->rules[$fact->getTargetType()])) {
             $repository = $this->em->getRepository(static::WORKFLOW_ENTITY);
@@ -234,10 +237,10 @@ class Engine
 
     /**
      * Check single entity against the set of rules
-     * @param Fact $fact
-     * @param bool $dryRun
+     * @param AbstractFact $fact
+     * @param bool         $dryRun
      */
-    public function process(Fact $fact, $dryRun = false)
+    public function process(AbstractFact $fact, $dryRun = false)
     {
         foreach ($this->getRules($fact) as $rule) {
             $result = $this->doCheck($fact, $rule->getGrouping());
@@ -274,7 +277,7 @@ class Engine
 
         if (!$dryRun && !$this->scheduler->isEmpty()) {
             foreach ($targetEntities as $entity) {
-                $fact = $this->createFactByEntity($entity);
+                $fact = $this->createBusinessFact($entity);
                 $this->scheduler->run($fact);
             }
         }

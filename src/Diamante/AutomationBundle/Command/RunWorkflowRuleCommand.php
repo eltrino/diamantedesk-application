@@ -35,6 +35,10 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
      * @var string
      */
     protected $action;
+    /**
+     * @var string
+     */
+    protected $editor;
 
     /**
      * @var array
@@ -84,6 +88,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
             $processingContext->getTargetEntityClass()
         );
         $this->action = $processingContext->getAction();
+        $this->editor = $processingContext->getEditor();
         $this->changeset = $processingContext->getTargetEntityChangeset();
 
         $processingContext->lock();
@@ -103,7 +108,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
         $dryRun = $input->hasParameterOption('--dry-run');
 
         $engine = $this->getContainer()->get('diamante_automation.engine');
-        $fact = $engine->createFact($this->targetType, $this->action, $this->changeset);
+        $fact = $engine->createFact($this->targetType, $this->action, $this->editor, $this->changeset);
 
         try {
             $output->writeln("<info>Started rules processing</info>");

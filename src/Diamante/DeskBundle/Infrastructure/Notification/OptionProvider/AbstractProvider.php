@@ -80,7 +80,6 @@ abstract class AbstractProvider implements NotificationOptionsProvider
         }
 
         return $this->recipient->getFirstName() . ' ' . $this->recipient->getLastName();
-        
     }
 
     /**

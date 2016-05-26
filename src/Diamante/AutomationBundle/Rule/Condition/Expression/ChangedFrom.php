@@ -17,12 +17,17 @@ namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 
 use Diamante\AutomationBundle\EventListener\WorkflowListener;
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 use Diamante\DeskBundle\Model\Ticket\Status;
 
 class ChangedFrom extends AbstractCondition
 {
-    public function isSatisfiedBy(Fact $fact)
+    /**
+     * @param AbstractFact $fact
+     *
+     * @return bool
+     */
+    public function isSatisfiedBy(AbstractFact $fact)
     {
         if (WorkflowListener::UPDATED != $fact->getAction()) {
             return false;

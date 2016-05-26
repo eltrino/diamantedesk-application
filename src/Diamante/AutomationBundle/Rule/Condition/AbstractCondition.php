@@ -16,7 +16,7 @@
 namespace Diamante\AutomationBundle\Rule\Condition;
 
 
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 use Diamante\DeskBundle\Model\Shared\Property;
 use Diamante\DeskBundle\Model\Shared\Weightable;
 
@@ -54,11 +54,11 @@ abstract class AbstractCondition implements ConditionInterface
     }
 
     /**
-     * @param Fact $fact
+     * @param AbstractFact $fact
      *
      * @return null|string
      */
-    protected function extractPropertyValue(Fact $fact)
+    protected function extractPropertyValue(AbstractFact $fact)
     {
         $target = $fact->getTarget();
 
@@ -70,7 +70,7 @@ abstract class AbstractCondition implements ConditionInterface
     }
 
     /**
-     * @param \Diamante\DeskBundle\Model\Shared\Entity $target
+     * @param array $target
      *
      * @return mixed
      */
@@ -82,7 +82,7 @@ abstract class AbstractCondition implements ConditionInterface
     }
 
     /**
-     * @param \Diamante\DeskBundle\Model\Shared\Entity $target
+     * @param array $target
      *
      * @return null|string
      */

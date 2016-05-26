@@ -20,6 +20,9 @@ use Diamante\AutomationBundle\Automation\JobQueue\QueueManager;
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\PersistentProcessingContext;
 use Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -123,6 +126,7 @@ class WorkflowListener
             $entity->getId(),
             $this->provider->getClassByTarget($target),
             $action,
+            $this->getEditor($entity, $target),
             $getChangeset($entity)
         );
 
@@ -149,5 +153,30 @@ class WorkflowListener
 
         $this->queueManager->setEntityManager($em);
         $this->queueManager->push($processingContext);
+    }
+
+    /**
+     * @param $entity
+     * @param $type
+     *
+     * @return User
+     */
+    private function getEditor($entity, $type)
+    {
+        $user = $this->container->get('oro_security.security_facade')->getLoggedUser();
+
+        if (is_null($user)) {
+            if (static::TICKET_TARGET == $type) {
+                /** @var Ticket $entity */
+                $editor = $entity->getReporter();
+            } else {
+                /** @var Comment $entity */
+                $editor = $entity->getAuthor();
+            }
+        } else {
+            $editor = User::fromEntity($user);
+        }
+
+        return $editor;
     }
 }

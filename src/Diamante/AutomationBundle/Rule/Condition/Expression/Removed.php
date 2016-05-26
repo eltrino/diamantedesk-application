@@ -17,11 +17,16 @@ namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 
 use Diamante\AutomationBundle\EventListener\WorkflowListener;
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Removed extends AbstractCondition
 {
-    public function isSatisfiedBy(Fact $fact)
+    /**
+     * @param AbstractFact $fact
+     *
+     * @return bool
+     */
+    public function isSatisfiedBy(AbstractFact $fact)
     {
         return WorkflowListener::REMOVED == $fact->getAction();
     }

@@ -14,6 +14,9 @@
  */
 namespace Diamante\UserBundle\Model;
 
+use Diamante\UserBundle\Entity\ApiUser;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+
 class User
 {
     const DELIMITER     = '_';
@@ -50,6 +53,24 @@ class User
         list($type, $id) = explode(self::DELIMITER, $stringId);
 
         return new self($id, $type);
+    }
+
+    /**
+     * @param $user
+     *
+     * @return User
+     */
+    public static function fromEntity($user)
+    {
+        if ($user instanceof ApiUser) {
+            $type = static::TYPE_DIAMANTE;
+        } elseif ($user instanceof OroUser) {
+            $type = static::TYPE_ORO;
+        } else {
+            throw new \RuntimeException('Incorrect user type.');
+        }
+
+        return new self($user->getId(), $type);
     }
 
     public function __toString()

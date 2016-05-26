@@ -18,7 +18,7 @@ namespace Diamante\AutomationBundle\Automation;
 
 use Diamante\AutomationBundle\Rule\Action\ActionInterface;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 use Symfony\Bridge\Monolog\Logger;
 
 class Scheduler
@@ -38,9 +38,9 @@ class Scheduler
     }
 
     /**
-     * @param Fact $fact
+     * @param AbstractFact $fact
      */
-    public function run(Fact $fact)
+    public function run(AbstractFact $fact)
     {
         foreach ($this->queue as $action) {
             try {

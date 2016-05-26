@@ -13,23 +13,9 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Rule\Condition\Expression;
+namespace Diamante\AutomationBundle\Rule\Fact;
 
-
-use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
-use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
-
-class Lt extends AbstractCondition
+class BusinessFact extends AbstractFact
 {
-    /**
-     * @param AbstractFact $fact
-     *
-     * @return bool
-     */
-    public function isSatisfiedBy(AbstractFact $fact)
-    {
-        $actualValue = $this->extractPropertyValue($fact);
 
-        return $actualValue < $this->expectedValue;
-    }
 }

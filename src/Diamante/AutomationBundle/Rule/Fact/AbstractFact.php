@@ -15,10 +15,9 @@
 
 namespace Diamante\AutomationBundle\Rule\Fact;
 
-
 use Diamante\DeskBundle\Model\Shared\Entity;
 
-class Fact
+abstract class AbstractFact
 {
     /**
      * @var Entity
@@ -31,35 +30,15 @@ class Fact
     protected $targetType;
 
     /**
-     * @var string
+     * AbstractFact constructor.
+     *
+     * @param $entity
+     * @param $targetType
      */
-    protected $action;
-
-    /**
-     * @var array|null
-     */
-    protected $targetChangeset;
-
-    /**
-     * @param      $entity
-     * @param      $targetType
-     * @param      $action
-     * @param null $targetChangeset
-     */
-    public function __construct($entity, $targetType, $action = null, $targetChangeset = null)
+    public function __construct($entity, $targetType)
     {
         $this->target = $entity;
         $this->targetType = $targetType;
-        $this->action = $action;
-        $this->targetChangeset = $targetChangeset;
-    }
-
-    /**
-     * @return null
-     */
-    public function getTargetChangeset()
-    {
-        return $this->targetChangeset;
     }
 
     /**
@@ -76,10 +55,5 @@ class Fact
     public function getTarget()
     {
         return $this->target;
-    }
-
-    public function getAction()
-    {
-        return $this->action;
     }
 }

@@ -15,15 +15,15 @@
 
 namespace Diamante\AutomationBundle\Rule\Condition;
 
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 interface ConditionInterface
 {
     /**
-     * @param Fact $fact
+     * @param AbstractFact $fact
      * @return bool
      */
-    public function isSatisfiedBy(Fact $fact);
+    public function isSatisfiedBy(AbstractFact $fact);
 
     /**
      * @return array

@@ -17,15 +17,15 @@ namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 
 
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Contains extends AbstractCondition
 {
     /**
-     * @param Fact $fact
+     * @param AbstractFact $fact
      * @return mixed
      */
-    public function isSatisfiedBy(Fact $fact)
+    public function isSatisfiedBy(AbstractFact $fact)
     {
         $actualValue = $this->extractPropertyValue($fact);
 

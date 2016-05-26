@@ -17,7 +17,7 @@ namespace Diamante\AutomationBundle\Rule\Action;
 
 
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class ExecutionContext
 {
@@ -36,9 +36,9 @@ class ExecutionContext
     }
 
     /**
-     * @param Fact $fact
+     * @param AbstractFact $fact
      */
-    public function setFact(Fact $fact)
+    public function setFact(AbstractFact $fact)
     {
         $this->fact             = $fact;
         $this->executionResult  = self::EXECUTION_PENDING;
@@ -46,7 +46,7 @@ class ExecutionContext
     }
 
     /**
-     * @return Fact
+     * @return AbstractFact
      */
     public function getFact()
     {

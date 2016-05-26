@@ -17,11 +17,13 @@ namespace Diamante\AutomationBundle\Automation\Action\Email;
 
 use Diamante\AutomationBundle\Infrastructure\Changeset\Changeset;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
-use Diamante\AutomationBundle\Rule\Fact\Fact;
+use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 /**
  * Class AbstractEntityNotifier
@@ -56,7 +58,7 @@ abstract class AbstractEntityNotifier
     protected $context;
 
     /**
-     * @var Fact
+     * @var AbstractFact
      */
     protected $fact;
 
@@ -107,6 +109,21 @@ abstract class AbstractEntityNotifier
         }
 
         return array_unique($list);
+    }
+
+    /**
+     * @param $editor
+     *
+     * @return string
+     */
+    protected function getEditorName($editor)
+    {
+        if ($editor instanceof DiamanteUser) {
+            return $editor->getFullName();
+        }
+
+        /** @var OroUser $editor */
+        return sprintf('%s %s', $editor->getFirstName(), $editor->getLastName());
     }
 
     /**

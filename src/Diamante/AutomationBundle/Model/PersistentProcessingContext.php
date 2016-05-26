@@ -27,6 +27,7 @@ class PersistentProcessingContext
     protected $targetEntityId;
     protected $targetEntityClass;
     protected $action;
+    protected $editor;
     protected $targetEntityChangeset;
     protected $state = self::STATE_NEW;
 
@@ -34,13 +35,15 @@ class PersistentProcessingContext
      * @param       $id
      * @param       $class
      * @param       $action
+     * @param       $editor
      * @param array $changeSet
      */
-    public function __construct($id, $class, $action, array $changeSet = [])
+    public function __construct($id, $class, $action, $editor, array $changeSet = [])
     {
         $this->targetEntityId        = $id;
         $this->targetEntityClass     = $class;
         $this->action                = $action;
+        $this->editor                = $editor;
         $this->targetEntityChangeset = $changeSet;
         $this->state                 = self::STATE_NEW;
     }
@@ -75,6 +78,14 @@ class PersistentProcessingContext
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEditor()
+    {
+        return $this->editor;
     }
 
     /**

@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Diamante\UserBundle\Model\User as UserModel;
 
 /**
  * @ORM\Entity
@@ -44,6 +45,13 @@ class PersistentProcessingContext extends \Diamante\AutomationBundle\Model\Persi
      * @ORM\Column(type="string")
      */
     protected $action;
+
+    /**
+     * @var UserModel
+     * @ORM\Column(type="user_type", name="editor_id")
+     *
+     */
+    protected $editor;
 
     /**
      * @ORM\Column(type="array")
