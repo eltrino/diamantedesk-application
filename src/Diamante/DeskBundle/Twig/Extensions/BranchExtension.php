@@ -51,7 +51,7 @@ class BranchExtension extends \Twig_Extension
 
     public function isDefaultBranch(Branch $branch)
     {
-        $defaultBranchId = $this->manager->get('diamante_email_processing.default_branch');
+        $defaultBranchId = $this->manager->get('diamante_desk.default_branch');
 
         if (empty($defaultBranchId)) {
             return false;
