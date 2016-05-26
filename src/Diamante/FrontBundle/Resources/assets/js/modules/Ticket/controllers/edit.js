@@ -57,10 +57,22 @@ define(['app'], function(App){
           App.dialogRegion.show(modalEditView);
           modalEditView.modalBody.show(editTicketView);
 
-        }).fail(function(){
+        }).fail(function(model, xhr){
 
-          var ticketMissingView = new Edit.MissingView();
-          App.mainRegion.show(ticketMissingView);
+          var link, key;
+
+          if (xhr.status === 301) {
+            link = document.createElement('a');
+            link.href = xhr.getResponseHeader('X-Location');
+            key = decodeURIComponent(link.href.replace(model.urlRoot,'').replace('/',''));
+            App.trigger('message:show', {
+              status:'info',
+              text: 'While we were actively working on your ticket, its key was changed to ' + key
+            });
+            App.trigger('ticket:edit', key);
+          } else {
+            App.mainRegion.show(new Edit.MissingView());
+          }
 
         });
 
