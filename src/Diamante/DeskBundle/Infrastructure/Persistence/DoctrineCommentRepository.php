@@ -37,7 +37,7 @@ class DoctrineCommentRepository extends DoctrineGenericRepository implements Com
     {
         $comment = $this->find($id);
 
-        if (is_null($comment) || $comment->isPrivate()) {
+        if (is_null($comment)) {
             throw new \RuntimeException('Comment loading failed, comment not found.');
         }
 

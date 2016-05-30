@@ -115,7 +115,7 @@ class Engine
      * @param $editor
      * @param $entityChangeset
      *
-     * @return Fact
+     * @return AbstractFact
      */
     public function createFact($entityType, $action, $editor, $entityChangeset)
     {
