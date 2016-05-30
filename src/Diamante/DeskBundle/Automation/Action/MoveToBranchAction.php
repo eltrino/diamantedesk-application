@@ -53,6 +53,11 @@ class MoveToBranchAction extends AbstractModifyAction
             $ticket = $this->em->getRepository('DiamanteDeskBundle:Ticket')->get(
                 $this->getTicketId($target, $targetType)
             );
+
+            if ($branchId == $ticket->getBranchId()) {
+                return;
+            }
+
             /** @var Branch $branch */
             $branch = $this->em->getRepository('DiamanteDeskBundle:Branch')->get($branchId);
             $this->em->lock($branch, LockMode::PESSIMISTIC_READ);
