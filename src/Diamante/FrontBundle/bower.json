@@ -20,7 +20,7 @@
     "fontawesome": "~4.2.0",
     "dfm-crypto-js": "~3.1.2",
     "backbone.paginator": "~2.0.2",
-    "moment": "~2.9.0",
+    "moment": "~2.13.0",
     "pwstrength-bootstrap": "~1.2.5",
     "tinymce": "~4.1.10"
   },

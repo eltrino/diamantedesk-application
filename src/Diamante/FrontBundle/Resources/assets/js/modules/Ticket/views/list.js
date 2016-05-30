@@ -1,10 +1,11 @@
 define([
   'app',
   'Common/views/pagination',
+  'moment',
   'tpl!../templates/list-item.ejs',
   'tpl!../templates/list.ejs',
   'tpl!../templates/empty-search.ejs',
-  'tpl!../templates/empty-list.ejs'], function(App,Pagination, listItemTemplate, listTemplate, emptySearchTemplate, emptyListTemplate){
+  'tpl!../templates/empty-list.ejs'], function(App,Pagination, moment, listItemTemplate, listTemplate, emptySearchTemplate, emptyListTemplate){
 
   return App.module('Ticket.List', function(List, App, Backbone, Marionette, $, _){
 
@@ -13,8 +14,9 @@ define([
       template: listItemTemplate,
 
       templateHelpers: function(){
+        var date = moment(this.model.get('created_at'));
         return {
-          created: new Date(this.model.get('created_at')).toLocaleDateString(),
+          created: new Date(date.toDate()).toLocaleDateString(),
           status: this.model.get('status').replace(/_/g,' ')
         };
       },

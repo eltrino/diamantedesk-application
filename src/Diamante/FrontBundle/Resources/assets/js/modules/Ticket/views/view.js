@@ -1,7 +1,8 @@
 define([
   'app',
+  'moment',
   'tpl!../templates/view.ejs',
-  'tpl!../templates/empty-view.ejs'], function(App, TicketViewTemplate, missingTicketViewTemplate){
+  'tpl!../templates/empty-view.ejs'], function(App, moment, TicketViewTemplate, missingTicketViewTemplate){
 
   return App.module('Ticket.View', function(View, App, Backbone, Marionette, $, _){
 
@@ -25,8 +26,9 @@ define([
       },
 
       templateHelpers : function(){
+        var date = moment(this.model.get('created_at'));
         return {
-          created : new Date(this.model.get('created_at')).toLocaleDateString(),
+          created: new Date(date.toDate()).toLocaleDateString(),
           status: this.model.get('status').replace(/_/g,' '),
           back_url: this.backUrl ? '#tickets' + this.backUrl : '#tickets'
         };
