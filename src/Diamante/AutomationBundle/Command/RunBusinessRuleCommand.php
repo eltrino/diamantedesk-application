@@ -16,6 +16,7 @@
 namespace Diamante\AutomationBundle\Command;
 
 use Diamante\AutomationBundle\Entity\BusinessRule;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,6 +28,11 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
      * @var BusinessRule
      */
     protected $rule;
+
+    /**
+     * @var EntityManager
+     */
+    protected $em;
 
     /**
      *
@@ -44,6 +50,7 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
+        $this->em = $this->getContainer()->get('doctrine')->getManager();
         $id = $input->getOption('rule-id');
         $this->rule = $this->getContainer()
             ->get('doctrine')
@@ -79,6 +86,8 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
         $result = $engine->processRule($this->rule, $dryRun);
 
         $output->writeln(sprintf("<info>Processing finished. %d entities processed.</info>", $result));
+
+        $this->em->flush();
 
         return 0;
     }
