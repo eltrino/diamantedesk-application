@@ -29,11 +29,14 @@ use Proxies\__CG__\Diamante\DeskBundle\Entity\Branch;
 class MoveToBranchAction extends AbstractModifyAction
 {
     const ACTION_NAME = 'move_to_branch';
+    const TICKET_TYPE = 'ticket';
+    const COMMENT_TYPE = 'comment';
 
     public function execute()
     {
         $branchId = null;
         $target = $this->context->getFact()->getTarget();
+        $targetType = $this->context->getFact()->getTargetType();
 
         if ($this->context->getParameters()->has(static::ACTION_NAME)) {
             $branchId = $this->context->getParameters()->all()[static::ACTION_NAME];
@@ -47,7 +50,9 @@ class MoveToBranchAction extends AbstractModifyAction
 
         try {
             /** @var Ticket $ticket */
-            $ticket = $this->em->getRepository('DiamanteDeskBundle:Ticket')->get($target['id']);
+            $ticket = $this->em->getRepository('DiamanteDeskBundle:Ticket')->get(
+                $this->getTicketId($target, $targetType)
+            );
             /** @var Branch $branch */
             $branch = $this->em->getRepository('DiamanteDeskBundle:Branch')->get($branchId);
             $this->em->lock($branch, LockMode::PESSIMISTIC_READ);
@@ -61,5 +66,20 @@ class MoveToBranchAction extends AbstractModifyAction
         } catch (\Exception $e) {
             $this->em->getConnection()->rollback();
         }
+    }
+
+    /**
+     * @param array  $target
+     * @param string $type
+     */
+    private function getTicketId(array $target, $type)
+    {
+        if (static::TICKET_TYPE == $type) {
+            return $target['id'];
+        } elseif (static::COMMENT_TYPE == $type) {
+            return $target['ticket']->getId();
+        }
+
+        throw new \RuntimeException('Incorrect target type.');
     }
 }
