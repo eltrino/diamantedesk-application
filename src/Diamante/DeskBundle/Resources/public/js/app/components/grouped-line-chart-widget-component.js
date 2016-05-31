@@ -33,7 +33,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
           return { item : getRandomInt(0,5), item2 : getRandomInt(0,5), item3 : getRandomInt(0,5)};
         };
         while(index++, index < last){
-          obj[now.getFullYear() + '-' + now.getMonth() + '-' + (now.getDate()-index)] = data();
+          obj[now.getFullYear() + '-' + now.getMonth() + '-' + (now.getDate()+index)] = data();
         }
         return obj
       },
