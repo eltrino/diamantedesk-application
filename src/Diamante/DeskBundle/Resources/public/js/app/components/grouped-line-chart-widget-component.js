@@ -64,7 +64,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
             backgroundColor: '#f2f2f7'
         });
 
-        $(parent).prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
+        parent.prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
 
         data = {};
         data[new Date().getFullYear()+'-'+new Date().getMonth() + '-' + (new Date().getDate()-1)] = { item : getRandomInt(0,5)};
@@ -89,8 +89,8 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom - (h2 + margin.top);
 
-    if(parent.id == 'container' && h > parent.clientHeight - 100){
-      h = parent.clientHeight - 100;
+    if(parent[0].id == 'container' && h > parent[0].clientHeight - h2){
+      h = parent[0].clientHeight - h2;
       height = h - margin.top - margin.bottom - (h2 + margin.top);
     }
 
@@ -319,19 +319,17 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
     legendBox
         .attr("transform", function(){ return "translate("+ (width - legendBlock.attr('width')) +", 30)"});
 
-    resizeGroupedLine[parent.id] = function () {
+    resizeGroupedLine[parent[0].id] = function () {
       var w = elem.clientWidth,
           h = w / RATIO,
           width = w - margin.left - margin.right,
           height = h - margin.top - margin.bottom - (h2 + margin.top);
-
       if(w <= 0) {
-        delete resizeGroupedLine[parent.id];
+        delete resizeGroupedLine[parent[0].id];
         return;
       }
-
-      if(parent.id == 'container' && h > parent.clientHeight - 100){
-        h = parent.clientHeight - 100;
+      if(parent[0].id == 'container' && h > parent[0].clientHeight - h2){
+        h = parent[0].clientHeight - h2;
         height = h - margin.top - margin.bottom - (h2 + margin.top);
       }
 
@@ -343,7 +341,10 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
       xAxis2.scale(x2);
       yAxis.scale(y);
 
-      svg.attr("viewBox", "0 0 " + w + " " + h);
+      svg
+          .attr("width", w)
+          .attr("height", h)
+          .attr("viewBox", "0 0 " + w + " " + h);
 
       svg.select("#clip").select("rect")
           .attr("width", width)

@@ -148,7 +148,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
     polyline.exit()
         .remove();
 
-    resizePie[parent.id] = function () {
+    resizePie[parent[0].id] = function () {
       var w = elem.clientWidth,
           h = w / RATIO,
           width = w - margin.left - margin.right,
@@ -156,7 +156,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
           radius = Math.min(width, height) / 2;
 
       if(w <= 0) {
-        delete resizePie[parent.id];
+        delete resizePie[parent[0].id];
         return;
       }
 

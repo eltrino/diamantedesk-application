@@ -31,7 +31,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         backgroundColor: '#f2f2f7'
       });
           
-      $(parent).prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
+      parent.prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
      
       data  = _.map(data, function(elem){
           elem.y = getRandomInt(0,10);
@@ -49,8 +49,8 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom;
 
-    if(parent.id == 'container' && h > parent.clientHeight - 100){
-      h = parent.clientHeight - 100;
+    if(parent[0].id == 'container' && h > parent[0].clientHeight - 100){
+      h = parent[0].clientHeight - 100;
       height = h - margin.top - margin.bottom;
     }
 
@@ -124,19 +124,19 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
           $('rect.bar', elem).css('fill', 'rgba(100,100,100,.7)');
         }
 
-    resizeBars[parent.id] = function () {
+    resizeBars[parent[0].id] = function () {
       var w = elem.clientWidth,
           h = w / RATIO,
           width = w - margin.left - margin.right,
           height = h - margin.top - margin.bottom;
 
       if(w <= 0) {
-        delete resizeBars[parent.id];
+        delete resizeBars[parent[0].id];
         return;
       }
 
-      if(parent.id == 'container' && h > parent.clientHeight - 100){
-        h = parent.clientHeight - 100;
+      if(parent[0].id == 'container' && h > parent[0].clientHeight - 100){
+        h = parent[0].clientHeight - 100;
         height = h - margin.top - margin.bottom;
       }
 
