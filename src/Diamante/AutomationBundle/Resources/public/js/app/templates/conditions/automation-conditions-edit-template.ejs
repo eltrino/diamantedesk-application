@@ -13,7 +13,7 @@
 <div class="controls">
     <span class="label">If</span>
     <label for="automation-target" class="value"><%= entities[entity].label %></label>
-    <select name="conditions[entity_type]" data-attr="entity_type">
+    <select name="conditions[entity_type]" data-attr="entity_type"  data-rel-attr="value,type">
         <option value="">Property Updated</option>
         <% if(entity_conditions){ %>
             <% _.each(entity_conditions, function(key){ %>
