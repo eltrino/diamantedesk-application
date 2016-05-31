@@ -6,7 +6,6 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
       resizeGroupedLine = {},
       dateFormat = d3.time.format("%Y-%m-%d"),
       parseDate = dateFormat.parse,
-      sortByDateAscending = function(a, b) { return a.date - b.date;},
       template = _.template(
           '<div class="tooltip-arrow"></div>' +
           '<div class="tooltip-inner">' +
@@ -21,6 +20,23 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
             '</ul>' +
           '</div>'
       ),
+      sortByDateAscending = function(a, b) { return a.date - b.date;},
+      getRandomInt = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min).toString();
+      },
+      randomData = function () {
+        var obj = {};
+        var index = -2;
+        var last = getRandomInt(3,8);
+        var now = new Date();
+        var data = function(){
+          return { item : getRandomInt(0,5), item2 : getRandomInt(0,5), item3 : getRandomInt(0,5)};
+        };
+        while(index++, index < last){
+          obj[now.getFullYear() + '-' + now.getMonth() + '-' + (now.getDate()-index)] = data();
+        }
+        return obj
+      },
       populateData = function(data){
         var index = 0,
             current = new Date(data[0].date),
@@ -52,9 +68,6 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         elem = options._sourceElement.get(0),
         parent = options._sourceElement.parent(),
         plot = d3.select(elem);
-        function getRandomInt(min, max) {
-          return Math.floor(Math.random() * (max - min + 1) + min).toString();
-        }
 
       if (data.length == 0) {
 
@@ -66,11 +79,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
 
         parent.prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
 
-        data = {};
-        data[new Date().getFullYear()+'-'+new Date().getMonth() + '-' + (new Date().getDate()-1)] = { item : getRandomInt(0,5)};
-        data[new Date().getFullYear()+'-'+new Date().getMonth() + '-' + new Date().getDate()] = { item : getRandomInt(0,5)};
-        data[new Date().getFullYear()+'-'+new Date().getMonth() + '-' + (1+new Date().getDate())] = { item : getRandomInt(0,5)};
-
+        data = randomData();
         $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
 
       }
@@ -380,9 +389,8 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
 
     if ( data.some(function (elem) { return elem.item; }) ) {
       $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
-      $('g.context', elem).css('display', 'none');
+      //$('g.context', elem).css('display', 'none');
       $('g.legend', elem).css('display', 'none');
-
     }
 
   };
