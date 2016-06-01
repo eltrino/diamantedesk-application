@@ -190,13 +190,15 @@ class TicketServiceImpl implements TicketService
      */
     private function loadTicketByTicketKey(TicketKey $ticketKey)
     {
-        $ticket = $this->ticketRepository
-            ->getByTicketKey($ticketKey);
+        if ($this->loggedUser instanceof ApiUser) {
+            $ticket = $this->ticketRepository->getByTicketKeyWithoutPrivateComments($ticketKey);
+        } else {
+            $ticket = $this->ticketRepository->getByTicketKey($ticketKey);
+        }
+
         if (is_null($ticket)) {
             throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
-
-        $this->removePrivateComments($ticket);
 
         return $ticket;
     }
@@ -210,12 +212,15 @@ class TicketServiceImpl implements TicketService
     private function loadTicketById($id)
     {
         /** @var Ticket $ticket */
-        $ticket = $this->ticketRepository->get($id);
+        if ($this->loggedUser instanceof ApiUser) {
+            $ticket = $this->ticketRepository->getByTicketIdWithoutPrivateComments($id);
+        } else {
+            $ticket = $this->ticketRepository->get($id);
+        }
+
         if (is_null($ticket)) {
             throw new TicketNotFoundException('Ticket loading failed, ticket not found.');
         }
-
-        $this->removePrivateComments($ticket);
 
         return $ticket;
     }
@@ -637,25 +642,6 @@ class TicketServiceImpl implements TicketService
     protected function getAuthorizationService()
     {
         return $this->authorizationService;
-    }
-
-    /**
-     * @param Ticket $ticket
-     */
-    private function removePrivateComments(Ticket $ticket)
-    {
-        $user = $this->authorizationService->getLoggedUser();
-
-        if (!$user instanceof ApiUser) {
-            return;
-        }
-
-        $comments = $ticket->getComments();
-        foreach ($comments as $comment) {
-            if ($comment->isPrivate()) {
-                $comments->removeElement($comment);
-            }
-        }
     }
 
     /**

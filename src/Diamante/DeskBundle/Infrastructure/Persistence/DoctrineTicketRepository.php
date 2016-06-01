@@ -35,6 +35,33 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 {
 
     /**
+     * Find Ticket by given id without private comments
+     *
+     * @param int $id
+     *
+     * @return \Diamante\DeskBundle\Entity\Ticket
+     */
+    public function getByTicketIdWithoutPrivateComments($id)
+    {
+        $queryBuilder = $this->_em
+            ->createQueryBuilder()->select(['t', 'c'])
+            ->from('DiamanteDeskBundle:Ticket', 't')
+            ->leftJoin('t.comments', 'c')
+            ->where('t.id = :ticketId')
+            ->andWhere('c.private = :private')
+            ->setParameters(
+                array(
+                    'ticketId'            => $id,
+                    'private'             => false,
+                )
+            );
+
+        $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $ticket;
+    }
+
+    /**
      * Find Ticket by given TicketKey
      *
      * @param TicketKey $key
@@ -52,6 +79,37 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
             ->setParameters(
                 array(
+                    'branchKey'            => $key->getBranchKey(),
+                    'ticketSequenceNumber' => $key->getTicketSequenceNumber()
+                )
+            );
+
+        $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $ticket;
+    }
+
+    /**
+     * Find Ticket by given TicketKey without private comments
+     *
+     * @param TicketKey $key
+     *
+     * @return \Diamante\DeskBundle\Entity\Ticket
+     */
+    public function getByTicketKeyWithoutPrivateComments(TicketKey $key)
+    {
+        $queryBuilder = $this->_em
+            ->createQueryBuilder()->select(['t', 'c'])
+            ->from('DiamanteDeskBundle:Ticket', 't')
+            ->from('DiamanteDeskBundle:Branch', 'b')
+            ->leftJoin('t.comments', 'c')
+            ->where('b.id = t.branch')
+            ->andWhere('b.key = :branchKey')
+            ->andWhere('c.private = :private')
+            ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
+            ->setParameters(
+                array(
+                    'private'              => false,
                     'branchKey'            => $key->getBranchKey(),
                     'ticketSequenceNumber' => $key->getTicketSequenceNumber()
                 )
