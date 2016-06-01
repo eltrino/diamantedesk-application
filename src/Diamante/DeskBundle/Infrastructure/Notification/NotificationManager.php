@@ -210,7 +210,7 @@ class NotificationManager
         $this->mailer->send($message);
 
         if (!is_null($this->ticket)) {
-            $reference = new MessageReference($message->getId(), $this->ticket, '');
+            $reference = new MessageReference($message->getId(), $this->ticket);
             $this->messageReferenceRepository->store($reference);
         }
     }

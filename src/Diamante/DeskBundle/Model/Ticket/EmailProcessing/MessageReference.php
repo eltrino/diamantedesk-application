@@ -40,11 +40,13 @@ class MessageReference implements Entity
     protected $endpoint;
 
     /**
-     * @param $messageId
-     * @param $ticket
-     * @param $endpoint
+     * MessageReference constructor.
+     *
+     * @param               $messageId
+     * @param Ticket        $ticket
+     * @param string|null   $endpoint
      */
-    public function __construct($messageId, Ticket $ticket, $endpoint)
+    public function __construct($messageId, Ticket $ticket, $endpoint = null)
     {
         $this->messageId = $messageId;
         $this->ticket    = $ticket;

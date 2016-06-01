@@ -55,6 +55,7 @@ class DoctrineMessageReferenceRepository extends DoctrineGenericRepository imple
             ->select("r.endpoint")
             ->from($this->_entityName, 'r')
             ->where($qb->expr()->eq('r.ticket', $ticket['id']))
+            ->andWhere($qb->expr()->isNotNull('r.endpoint'))
             ->setMaxResults(1);
 
         try {

@@ -48,7 +48,7 @@ class MessageReference extends \Diamante\DeskBundle\Model\Ticket\EmailProcessing
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $endpoint;
 
