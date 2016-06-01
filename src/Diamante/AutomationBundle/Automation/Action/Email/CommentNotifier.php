@@ -97,6 +97,7 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
         $provider = $this->getProvider();
         $options = $this->getOptions();
         $editor = $this->fact->getEditor();
+        $editor = $this->container->get('diamante.user.service')->getByUser($editor);
         $ticketId = $target['ticket']->getId();
 
         if (!is_null($ticketId)) {
@@ -111,7 +112,6 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
                 continue;
             }
 
-            $editor = $this->container->get('diamante.user.service')->getByUser($editor);
             $options = array_merge(
                 $options,
                 ['recipient' => $recipient, 'editor' => $this->getEditorName($editor)]
