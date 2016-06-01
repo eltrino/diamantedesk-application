@@ -28,6 +28,7 @@ whitelist:
     - 'oro_importexport_export_instant'
     - 'oro_importexport_export_download'
     - 'oro_attachment_file'
+    - 'oro_user_reset_reset'
 
     #OroUserBundle
     - 'oro_activity_list_api_get_list'
