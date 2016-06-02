@@ -116,9 +116,9 @@
         <service id="diamante.ticket.api.service_oro" alias="diamante.ticket.api.service" />
 
         <service id="diamante.ticket.search.prepare_result_item.listener" class="%diamante.ticket.search.prepare_result_item.listener.class%">
-            <tag name="kernel.event_listener" event="oro_search.prepare_result_item" method="process"/>
             <argument type="service" id="service_container"/>
             <argument type="service" id="oro_search.mapper"/>
+            <tag name="kernel.event_listener" event="oro_search.prepare_result_item" method="process" priority="100"/>
         </service>
 
         <service id="diamante.comment.entity.factory" class="%diamante.comment.entity.factory.class%">

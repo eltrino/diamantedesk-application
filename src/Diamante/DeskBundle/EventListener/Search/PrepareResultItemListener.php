@@ -33,9 +33,11 @@ class PrepareResultItemListener
         $this->mapper = $mapper;
     }
 
+    /**
+     * @param PrepareResultItemEvent $event
+     */
     public function process(PrepareResultItemEvent $event)
     {
-
         $entity = $event->getEntity();
 
         if (!$entity instanceof Ticket) {
