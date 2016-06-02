@@ -102,4 +102,4 @@ reports:
                     - reopen
         source:
             type: dql
-            dql: "select date(ttl.date) as day, ttl.new, ttl.closed, ttl.reopen from Diamante\\DeskBundle\\Entity\\TicketTimeline ttl GROUP BY day"
+            dql: "select date(ttl.date) as day, sum(ttl.new), sum(ttl.closed), sum(ttl.reopen) from Diamante\\DeskBundle\\Entity\\TicketTimeline ttl GROUP BY day"
