@@ -43,12 +43,16 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      */
     public function getByTicketIdWithoutPrivateComments($id)
     {
-        $queryBuilder = $this->_em
-            ->createQueryBuilder()->select(['t', 'c'])
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add('c.private = :private');
+        $orX->add('c.private is null');
+
+        $queryBuilder->select(['t', 'c'])
             ->from('DiamanteDeskBundle:Ticket', 't')
             ->leftJoin('t.comments', 'c')
             ->where('t.id = :ticketId')
-            ->andWhere('c.private = :private')
+            ->andWhere($orX)
             ->setParameters(
                 array(
                     'ticketId'            => $id,
@@ -98,14 +102,18 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      */
     public function getByTicketKeyWithoutPrivateComments(TicketKey $key)
     {
-        $queryBuilder = $this->_em
-            ->createQueryBuilder()->select(['t', 'c'])
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add('c.private = :private');
+        $orX->add('c.private is null');
+
+        $queryBuilder->select(['t', 'c'])
             ->from('DiamanteDeskBundle:Ticket', 't')
             ->from('DiamanteDeskBundle:Branch', 'b')
             ->leftJoin('t.comments', 'c')
             ->where('b.id = t.branch')
             ->andWhere('b.key = :branchKey')
-            ->andWhere('c.private = :private')
+            ->andWhere($orX)
             ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
             ->setParameters(
                 array(
