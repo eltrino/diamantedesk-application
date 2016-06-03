@@ -19,6 +19,8 @@ namespace Diamante\AutomationBundle\Rule\Condition;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 use Diamante\DeskBundle\Model\Shared\Property;
 use Diamante\DeskBundle\Model\Shared\Weightable;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
+use Diamante\UserBundle\Model\User;
 
 abstract class AbstractCondition implements ConditionInterface
 {
@@ -92,6 +94,10 @@ abstract class AbstractCondition implements ConditionInterface
 
         if (array_key_exists($this->property, $target)) {
             $result = $target[$this->property];
+
+            if ($result instanceof OroUser) {
+                $result = User::fromEntity($result);
+            }
         }
 
         $result = $this->typeJuggling($result);

@@ -130,6 +130,9 @@
             <call method="setConfigurationProvider">
                 <argument type="service" id="diamante_automation.config.provider"/>
             </call>
+            <call method="setUserService">
+                <argument type="service" id="diamante.user.service"/>
+            </call>
         </service>
 
         <service id="diamante_automation.action.notify_by_email" class="%diamante_automation.notify_by_email.class%" parent="diamante_automation.action.abstract_action">
