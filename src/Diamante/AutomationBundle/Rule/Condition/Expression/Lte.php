@@ -21,6 +21,8 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Lte extends AbstractCondition
 {
+    const MODE = 'strict';
+
     /**
      * @param AbstractFact $fact
      *

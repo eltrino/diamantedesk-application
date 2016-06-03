@@ -21,6 +21,8 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class NotContains extends AbstractCondition
 {
+    const MODE = 'soft';
+
     /**
      * @param AbstractFact $fact
      *

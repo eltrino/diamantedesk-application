@@ -21,6 +21,8 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Gte extends AbstractCondition
 {
+    const MODE = 'strict';
+
     /**
      * @param AbstractFact $fact
      *

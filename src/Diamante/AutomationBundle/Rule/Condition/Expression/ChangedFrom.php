@@ -22,6 +22,8 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 
 class ChangedFrom extends AbstractCondition
 {
+    const MODE = 'strict';
+
     /**
      * @param AbstractFact $fact
      *

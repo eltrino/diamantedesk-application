@@ -20,6 +20,8 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Neq extends AbstractCondition
 {
+    const MODE = 'strict';
+
     /**
      * @param AbstractFact $fact
      *

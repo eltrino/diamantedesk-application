@@ -24,6 +24,9 @@ use Diamante\UserBundle\Model\User;
 
 abstract class AbstractCondition implements ConditionInterface
 {
+    const STRICT = 'strict';
+    const SOFT = 'soft';
+
     /**
      * @var string
      */
@@ -119,8 +122,7 @@ abstract class AbstractCondition implements ConditionInterface
             if ($property instanceof Weightable) {
                 $this->expectedValue = $property->getWeight($this->expectedValue);
                 $property = $property->getWeight($property->getValue());
-
-            } elseif ($property instanceof Property) {
+            } elseif (static::MODE == self::STRICT && $property instanceof Property) {
                 $property = $property->getValue();
             } elseif (method_exists($property, '__toString')) {
                 $property = (string)$property;

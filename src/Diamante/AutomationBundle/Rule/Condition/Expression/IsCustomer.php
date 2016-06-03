@@ -21,6 +21,8 @@ use Diamante\UserBundle\Model\User;
 
 class IsCustomer extends AbstractCondition
 {
+    const MODE = 'strict';
+
     /**
      * @param AbstractFact $fact
      *
