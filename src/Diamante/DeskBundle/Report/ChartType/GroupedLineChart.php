@@ -39,7 +39,7 @@ class GroupedLineChart extends AbstractChart
             if (is_array($config['chart'][self::Y_AXIS_ALIAS])) {
                 if (isset($config['chart'][self::Y_AXIS_ALIAS][self::Y_ITEMS_ALIAS])) {
                     foreach ($config['chart'][self::Y_AXIS_ALIAS][self::Y_ITEMS_ALIAS] as $yItem) {
-                        $extractedData[$xData][$yItem] = $record[$yItem];
+                        $extractedData[$xData][$yItem] = isset($record[$yItem]) ? $record[$yItem] : false;
                     }
                 }
             } else {
