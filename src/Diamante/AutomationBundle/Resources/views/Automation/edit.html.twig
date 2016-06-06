@@ -11,12 +11,12 @@
 {% endblock %}
 
 {% block pageHeader %}
-    {% if form.vars.value.rule %}
+    {% if rule is defined %}
         {% set breadcrumbs = {
         'entity':      form.vars.value,
         'indexPath':   path(listAction, {'type': type}),
         'indexLabel':  'diamante.automation.rule.entity_plural_label'|trans,
-        'entityTitle': form.vars.value.name|default('N/A'),
+        'entityTitle': rule.name|default('N/A'),
         'hasAvatar':   true,
         'imagePath':   null
         } %}
