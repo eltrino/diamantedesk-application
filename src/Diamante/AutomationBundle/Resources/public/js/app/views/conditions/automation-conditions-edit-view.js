@@ -9,6 +9,7 @@ define([
 
     var AutomationConditionsEditView = AbstractView.extend({
         autoRender: true,
+        firstRun : true,
         template : AutomationConditionsEditTemplate,
 
         listen: {
@@ -24,7 +25,7 @@ define([
 
         render: function () {
             AbstractView.prototype.render.apply(this, arguments);
-            if(this.model.isNew()){
+            if(this.model.isNew() || !this.firstRun){
                 this.$(':input:not(button)').trigger('change');
             }
             if(this.model.collection.length == 1){
@@ -44,6 +45,7 @@ define([
                 });
             }
             model.set( input.data('attr'), input.val() );
+            this.firstRun = false;
         },
 
         entityChanged: function(model, attr){
