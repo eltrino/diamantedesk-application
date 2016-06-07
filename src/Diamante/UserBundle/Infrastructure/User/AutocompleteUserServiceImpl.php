@@ -30,6 +30,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
     const REPORTER = 'diamante.user.autocomplete.group.reporter';
     const ASSIGNEE = 'diamante.user.autocomplete.group.assignee';
     const COMMENT_AUTHOR = 'diamante.user.autocomplete.group.comment_author';
+    const DASHED = '------------------';
 
     /**
      * @var UserService
@@ -116,13 +117,13 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
 
         $list[CommentNotifier::COMMENT_TYPE] = array_merge(
             $list[CommentNotifier::COMMENT_TYPE],
-            ['null' => '------------------'],
+            ['null' => static::DASHED],
             $recipientList
         );
 
         $list[TicketNotifier::TICKET_TYPE] = array_merge(
             $list[TicketNotifier::TICKET_TYPE],
-            ['null' => '------------------'],
+            ['null' => static::DASHED],
             $recipientList
         );
 
@@ -132,7 +133,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
     /**
      * @return array
      */
-    public function getOroUsers()
+    protected function getOroUsers()
     {
         $convertedUsers = [];
 
@@ -145,6 +146,19 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
         return $convertedUsers;
     }
 
+    /**
+     * @return array
+     */
+    public function getAssigners()
+    {
+        $assigners = array_merge(
+            ['unassigned' => ['email' => 'Unassigned']],
+            $this->getOroUsers()
+        );
+
+        return $assigners;
+    }
+    
     /**
      * @return array
      */

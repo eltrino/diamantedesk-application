@@ -58,6 +58,10 @@
         <parameter key="diamante.pre_build.listener.class">Diamante\DeskBundle\EventListener\DataGridPreBuildListener</parameter>
         <parameter key="diamante.branch.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\BranchExtension</parameter>
         <parameter key="diamante.automation.action.move_to_branch.class">Diamante\DeskBundle\Automation\Action\MoveToBranchAction</parameter>
+        <parameter key="diamante_desk.property.ticket_handler.class">Diamante\DeskBundle\Infrastructure\Ticket\TicketPropertyHandler</parameter>
+        <parameter key="diamante_desk.entity.abstract_property_handler.class">Diamante\DeskBundle\Infrastructure\Shared\Entity\AbstractPropertyHandler</parameter>
+        <parameter key="diamante_desk.property.comment_handler.class">Diamante\DeskBundle\Infrastructure\Comment\CommentPropertyHandler</parameter>
+        <parameter key="diamante_desk.entity.property_processing_manager.class">Diamante\DeskBundle\Infrastructure\Shared\Entity\PropertyProcessingManager</parameter>
     </parameters>
 
     <services>
@@ -89,6 +93,23 @@
         <service id="diamante.datagrid.filter.combined_datasource" class="%diamante.datagrid.filter.combined_datasource_extension.class%">
             <argument id="translator" type="service"/>
             <tag name="oro_datagrid.extension"/>
+        </service>
+
+        <service id="diamante_desk.entity.property_processing_manager" class="%diamante_desk.entity.property_processing_manager.class%">
+        </service>
+
+        <service id="diamante_desk.entity.abstract_property_handler" class="%diamante_desk.entity.abstract_property_handler.class%">
+            <call method="setConfigProvider">
+                <argument type="service" id="diamante_automation.config.provider"/>
+            </call>
+        </service>
+
+        <service id="diamante_desk.property.ticket_handler" class="%diamante_desk.property.ticket_handler.class%" parent="diamante_desk.entity.abstract_property_handler">
+            <tag name="diamante_desk.property.handler"/>
+        </service>
+
+        <service id="diamante_desk.property.comment_handler" class="%diamante_desk.property.comment_handler.class%" parent="diamante_desk.entity.abstract_property_handler">
+            <tag name="diamante_desk.property.handler"/>
         </service>
 
         <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">

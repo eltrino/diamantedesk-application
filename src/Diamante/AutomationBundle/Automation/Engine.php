@@ -210,7 +210,11 @@ class Engine
     protected function processExclusive(AbstractFact $fact, Group $group)
     {
         foreach ($group->getConditions() as $conditionEntity) {
-            $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters(), $fact->getTargetType());
+            $condition = $this->conditionFactory->getCondition(
+                $conditionEntity->getType(),
+                $conditionEntity->getParameters(),
+                $fact->getTargetType()
+            );
 
             if (true === $condition->isSatisfiedBy($fact)) {
                 return true;

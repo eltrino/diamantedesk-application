@@ -363,6 +363,20 @@ class AutomationConfigurationProvider
     }
 
     /**
+     * @param string $entityType
+     * @param string $property
+     *
+     * @return string
+     */
+    public function getType($entityType, $property)
+    {
+        $path = sprintf('%s.properties.%s.type', $entityType, $property);
+        $propertyType = $this->getConfiguredEntities()->get($path);
+
+        return $propertyType;
+    }
+
+    /**
      * @param Translator $translator
      * @return array
      */

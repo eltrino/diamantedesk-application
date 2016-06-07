@@ -27,7 +27,7 @@ diamante_automation:
           assignee:
             frontend_label: diamante.desk.ticket.assignee.label
             frontend_options:
-              source: "@diamante.autocomplete.user.service->getOroUsers"
+              source: "@diamante.autocomplete.user.service->getAssigners"
             type: user
             conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to']
           reporter_email:

@@ -20,8 +20,6 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class False extends AbstractCondition
 {
-    const MODE = 'strict';
-
     /**
      * @param AbstractFact $fact
      *
@@ -29,7 +27,7 @@ class False extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact);
+        $actualValue = $this->getActualValue($fact);
 
         return false === $actualValue;
     }

@@ -21,8 +21,6 @@ use Diamante\UserBundle\Model\User;
 
 class IsCustomer extends AbstractCondition
 {
-    const MODE = 'strict';
-
     /**
      * @param AbstractFact $fact
      *
@@ -30,7 +28,7 @@ class IsCustomer extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact);
+        $actualValue = $this->getActualValue($fact);
         $user = User::fromString($actualValue);
 
         return $user->isDiamanteUser();

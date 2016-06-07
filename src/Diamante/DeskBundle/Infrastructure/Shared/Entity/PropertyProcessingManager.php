@@ -13,22 +13,28 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Rule\Condition\Expression;
+namespace Diamante\DeskBundle\Infrastructure\Shared\Entity;
 
-use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
-use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
-
-class Eq extends AbstractCondition
+/**
+ * Class PropertyProcessingManager
+ *
+ * @package Diamante\DeskBundle\Infrastructure\Shared\Entity
+ */
+class PropertyProcessingManager
 {
-    /**
-     * @param AbstractFact $fact
-     *
-     * @return bool
-     */
-    public function isSatisfiedBy(AbstractFact $fact)
-    {
-        $actualValue = $this->getActualValue($fact);
 
-        return $actualValue == $this->context->getExpectedValue();
+    private $propertyHandlers = [];
+
+    public function addPropertyHandler($propertyHandler)
+    {
+        $this->propertyHandlers[$propertyHandler->getName()] = $propertyHandler;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function getPropertyHandler($type)
+    {
+        return $this->propertyHandlers[$type];
     }
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="diamante_automation.condition.changed.class">Diamante\AutomationBundle\Rule\Condition\Expression\Changed</parameter>
+        <parameter key="diamante_automation.condition.changed_from.class">Diamante\AutomationBundle\Rule\Condition\Expression\ChangedFrom</parameter>
+        <parameter key="diamante_automation.condition.changed_to.class">Diamante\AutomationBundle\Rule\Condition\Expression\ChangedTo</parameter>
+        <parameter key="diamante_automation.condition.contains.class">Diamante\AutomationBundle\Rule\Condition\Expression\Contains</parameter>
+        <parameter key="diamante_automation.condition.created.class">Diamante\AutomationBundle\Rule\Condition\Expression\Created</parameter>
+        <parameter key="diamante_automation.condition.eq.class">Diamante\AutomationBundle\Rule\Condition\Expression\Eq</parameter>
+        <parameter key="diamante_automation.condition.false.class">Diamante\AutomationBundle\Rule\Condition\Expression\False</parameter>
+        <parameter key="diamante_automation.condition.gt.class">Diamante\AutomationBundle\Rule\Condition\Expression\Gt</parameter>
+        <parameter key="diamante_automation.condition.gte.class">Diamante\AutomationBundle\Rule\Condition\Expression\Gte</parameter>
+        <parameter key="diamante_automation.condition.is_admin.class">Diamante\AutomationBundle\Rule\Condition\Expression\IsAdmin</parameter>
+        <parameter key="diamante_automation.condition.is_customer.class">Diamante\AutomationBundle\Rule\Condition\Expression\IsCustomer</parameter>
+        <parameter key="diamante_automation.condition.lt.class">Diamante\AutomationBundle\Rule\Condition\Expression\Lt</parameter>
+        <parameter key="diamante_automation.condition.lte.class">Diamante\AutomationBundle\Rule\Condition\Expression\Lte</parameter>
+        <parameter key="diamante_automation.condition.neq.class">Diamante\AutomationBundle\Rule\Condition\Expression\Neq</parameter>
+        <parameter key="diamante_automation.condition.not_contains.class">Diamante\AutomationBundle\Rule\Condition\Expression\NotContains</parameter>
+        <parameter key="diamante_automation.condition.removed.class">Diamante\AutomationBundle\Rule\Condition\Expression\Removed</parameter>
+        <parameter key="diamante_automation.condition.true.class">Diamante\AutomationBundle\Rule\Condition\Expression\True</parameter>
+        <parameter key="diamante_automation.condition.updated.class">Diamante\AutomationBundle\Rule\Condition\Expression\Updated</parameter>
+    </parameters>
+
+    <services>
+        <service id="diamante_automation.condition.abstract_condition" abstract="true">
+            <call method="setPropertyManager">
+                <argument type="service" id="diamante_desk.entity.property_processing_manager" />
+            </call>
+        </service>
+
+        <service id="diamante_automation.condition.changed" class="%diamante_automation.condition.changed.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.changed_from" class="%diamante_automation.condition.changed_from.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.changed_to" class="%diamante_automation.condition.changed_to.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.contains" class="%diamante_automation.condition.contains.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.created" class="%diamante_automation.condition.created.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.eq" class="%diamante_automation.condition.eq.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.false" class="%diamante_automation.condition.false.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.gt" class="%diamante_automation.condition.gt.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.gte" class="%diamante_automation.condition.gte.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.is_admin" class="%diamante_automation.condition.is_admin.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.is_customer" class="%diamante_automation.condition.is_customer.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.lt" class="%diamante_automation.condition.lt.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.lte" class="%diamante_automation.condition.lte.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.neq" class="%diamante_automation.condition.neq.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.not_contains" class="%diamante_automation.condition.not_contains.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.removed" class="%diamante_automation.condition.removed.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.true" class="%diamante_automation.condition.true.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+        <service id="diamante_automation.condition.updated" class="%diamante_automation.condition.updated.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        </service>
+
+    </services>
+</container>

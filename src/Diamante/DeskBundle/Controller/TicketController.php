@@ -165,11 +165,8 @@ class TicketController extends Controller
                 $command->branch = $this->get('diamante.branch.service')->getBranch($defaultBranchId);
             }
 
-            $branchAssignee = $command->branch->getDefaultAssignee();
             if ($command->assignee) {
                 $command->assignee = $command->assignee->getId();
-            } elseif ($branchAssignee) {
-                $command->assignee = $branchAssignee->getId();
             }
 
             $command->branch = $command->branch->getId();

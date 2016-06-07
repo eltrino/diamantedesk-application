@@ -21,8 +21,6 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class NotContains extends AbstractCondition
 {
-    const MODE = 'soft';
-
     /**
      * @param AbstractFact $fact
      *
@@ -30,8 +28,8 @@ class NotContains extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact);
+        $actualValue = $this->getActualValue($fact);
 
-        return false === strpos($actualValue, $this->expectedValue);
+        return false === strpos($actualValue, $this->context->getExpectedValue());
     }
 }

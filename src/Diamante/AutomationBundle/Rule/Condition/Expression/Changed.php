@@ -21,8 +21,6 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Changed extends AbstractCondition
 {
-    const MODE = 'strict';
-
     /**
      * @param AbstractFact $fact
      *
@@ -35,7 +33,12 @@ class Changed extends AbstractCondition
         }
 
         $changeset = $fact->getTargetChangeset();
-        list($old, $new) = $changeset[$this->property];
-        return $this->typeJuggling($old) != $this->typeJuggling($new);
+        list($old, $new) = $changeset[$this->context->getProperty()];
+        $propertyHandler = $this->propertyManager->getPropertyHandler($fact->getTargetType());
+        $propertyHandler->setContext($this->context);
+        $old = $propertyHandler->processPropertyValue($fact->getTargetType(), $old);
+        $new = $propertyHandler->processPropertyValue($fact->getTargetType(), $new);
+
+        return $old != $new;
     }
 }

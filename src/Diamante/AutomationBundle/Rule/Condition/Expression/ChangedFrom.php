@@ -22,8 +22,6 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 
 class ChangedFrom extends AbstractCondition
 {
-    const MODE = 'strict';
-
     /**
      * @param AbstractFact $fact
      *
@@ -37,8 +35,11 @@ class ChangedFrom extends AbstractCondition
 
         $changeset = $fact->getTargetChangeset();
         /** @var Status $old */
-        list($old, $new) = $changeset[$this->property];
+        list($old, $new) = $changeset[$this->context->getProperty()];
+        $propertyHandler = $this->propertyManager->getPropertyHandler($fact->getTargetType());
+        $propertyHandler->setContext($this->context);
+        $old = $propertyHandler->processPropertyValue($fact->getTargetType(), $old);
 
-        return $this->typeJuggling($old) == $this->expectedValue;
+        return $old == $this->context->getExpectedValue();
     }
 }

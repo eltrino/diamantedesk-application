@@ -21,16 +21,14 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Contains extends AbstractCondition
 {
-    const MODE = 'soft';
-
     /**
      * @param AbstractFact $fact
      * @return mixed
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact);
+        $actualValue = $this->getActualValue($fact);
 
-        return false !== strpos($actualValue, $this->expectedValue);
+        return false !== strpos($actualValue, $this->context->getExpectedValue());
     }
 }
