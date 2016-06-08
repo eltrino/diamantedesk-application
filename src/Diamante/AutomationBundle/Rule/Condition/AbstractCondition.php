@@ -21,6 +21,9 @@ use Diamante\DeskBundle\Infrastructure\Shared\Entity\PropertyProcessingManager;
 
 abstract class AbstractCondition implements ConditionInterface
 {
+    const STRICT = 'strict';
+    const SOFT = 'soft';
+
     /**
      * @var string
      */
@@ -38,12 +41,14 @@ abstract class AbstractCondition implements ConditionInterface
 
     /**
      * @param AbstractFact $fact
+     *
+     * @return mixed
      */
     public function getActualValue(AbstractFact $fact)
     {
         $type = $fact->getTargetType();
         $propertyHandler = $this->propertyManager->getPropertyHandler($type);
-        $this->context->setMode($this->getConditionMode());
+        $this->context->setMode(static::MODE);
         $propertyHandler->setContext($this->context);
         $value = $propertyHandler->extractPropertyValue($fact);
 
@@ -56,11 +61,6 @@ abstract class AbstractCondition implements ConditionInterface
     public function getName()
     {
         return $this->name;
-    }
-
-    protected function getConditionMode()
-    {
-        $className = get_called_class();
     }
 
     /**

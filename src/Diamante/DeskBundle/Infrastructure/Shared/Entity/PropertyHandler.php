@@ -13,24 +13,26 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Rule\Condition\Expression;
+namespace Diamante\DeskBundle\Infrastructure\Shared\Entity;
 
-use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
-class Neq extends AbstractCondition
+interface PropertyHandler
 {
-    const MODE = 'strict';
+    /**
+     * @return string
+     */
+    public function getName();
 
     /**
      * @param AbstractFact $fact
      *
-     * @return bool
+     * @return mixed
      */
-    public function isSatisfiedBy(AbstractFact $fact)
-    {
-        $actualValue = $this->getActualValue($fact);
+    public function extractPropertyValue(AbstractFact $fact);
 
-        return $actualValue != $this->context->getExpectedValue();
-    }
+    /**
+     * @param Context $context
+     */
+    public function setContext(Context $context);
 }

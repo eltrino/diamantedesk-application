@@ -25,13 +25,18 @@ class PropertyProcessingManager
 
     private $propertyHandlers = [];
 
-    public function addPropertyHandler($propertyHandler)
+    /**
+     * @param PropertyHandler $propertyHandler
+     */
+    public function addPropertyHandler(PropertyHandler $propertyHandler)
     {
         $this->propertyHandlers[$propertyHandler->getName()] = $propertyHandler;
     }
 
     /**
      * @param string $type
+     *
+     * @return PropertyHandler
      */
     public function getPropertyHandler($type)
     {

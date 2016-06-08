@@ -21,6 +21,9 @@ class CommentPropertyHandler extends AbstractPropertyHandler
 {
     const COMMENT_TYPE = 'comment';
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return static::COMMENT_TYPE;

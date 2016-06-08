@@ -4,82 +4,64 @@ diamante_automation:
   conditions:
     eq:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Eq'
-      mode: strict
       frontend_label: diamante.automation.condition.eq
     neq:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Neq'
-      mode: strict
       frontend_label: diamante.automation.condition.neq
     gt:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Gt'
-      mode: strict
       frontend_label: diamante.automation.condition.gt
     gte:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Gte'
-      mode: strict
       frontend_label: diamante.automation.condition.gte
     lt:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Lt'
-      mode: strict
       frontend_label: diamante.automation.condition.lt
     lte:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Lte'
-      mode: strict
       frontend_label: diamante.automation.condition.lte
     contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Contains'
-      mode: soft
       frontend_label: diamante.automation.condition.contains
       type: 'string'
     not_contains:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\NotContains'
-      mode: soft
       frontend_label: diamante.automation.condition.not_contains
       type: 'string'
     created:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Created'
-      mode: strict
       frontend_label: diamante.automation.condition.created
       type: 'bool'
     updated:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Updated'
-      mode: strict
       frontend_label: diamante.automation.condition.updated
       type: 'bool'
     removed:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Removed'
-      mode: strict
       frontend_label: diamante.automation.condition.removed
       type: 'bool'
     changed:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Changed'
-      mode: strict
       frontend_label: diamante.automation.condition.changed
       type: 'bool'
     changed_from:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\ChangedFrom'
-      mode: strict
       frontend_label: diamante.automation.condition.changed_from
     changed_to:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\ChangedTo'
-      mode: strict
       frontend_label: diamante.automation.condition.changed_to
     'true':
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\True'
-      mode: strict
       frontend_label: diamante.automation.condition.true
     'false':
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\False'
-      mode: strict
       frontend_label: diamante.automation.condition.false
     is_customer:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\IsCustomer'
-      mode: strict
       frontend_label: diamante.automation.condition.customer
       type: 'bool'
     is_admin:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\IsAdmin'
-      mode: strict
       frontend_label: diamante.automation.condition.admin
       type: 'bool'
 

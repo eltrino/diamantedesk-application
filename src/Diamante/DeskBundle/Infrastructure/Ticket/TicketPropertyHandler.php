@@ -15,37 +15,88 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Ticket;
 
+use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
+use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Infrastructure\Shared\Entity\AbstractPropertyHandler;
+use Diamante\DeskBundle\Model\Shared\Property;
 
 class TicketPropertyHandler extends AbstractPropertyHandler
 {
     const TICKET_TYPE = 'ticket';
+    const UNASSIGNED = 'unassigned';
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return static::TICKET_TYPE;
     }
 
+    /**
+     * @param array $target
+     *
+     * @return string
+     */
     protected function getByStatusType(array $target)
     {
         return $this->getPropertyInstanceValue($target);
     }
 
+    /**
+     * @param array $target
+     *
+     * @return mixed
+     */
     protected function getByBranchType(array $target)
     {
         $property = $target[$this->property];
+        $mode = $this->context->getMode();
 
+        if (AbstractCondition::SOFT == $mode) {
+            /** @var Branch $property */
+            $value = $property->getName();
+        } else {
+            /** @var Property $property */
+            $value = $property->getValue();
+        }
 
-        return $property->getValue();
+        return $value;
     }
 
+    /**
+     * @param array $target
+     *
+     * @return int
+     */
     protected function getByPriorityType(array $target)
     {
         return $this->getWeightable($target);
     }
 
+    /**
+     * @param array $target
+     *
+     * @return string
+     */
     protected function getBySourceType(array $target)
     {
         return $this->getPropertyInstanceValue($target);
+    }
+
+    /**
+     * @param array $target
+     *
+     * @return string
+     */
+    protected function getAssignee(array $target)
+    {
+        $value = $this->getByUserType($target);
+
+        if (is_null($value)) {
+            $value = self::UNASSIGNED;
+        }
+
+        return $value;
     }
 }

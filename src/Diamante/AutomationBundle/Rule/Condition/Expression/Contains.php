@@ -21,6 +21,8 @@ use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
 class Contains extends AbstractCondition
 {
+    const MODE = 'soft';
+
     /**
      * @param AbstractFact $fact
      * @return mixed
