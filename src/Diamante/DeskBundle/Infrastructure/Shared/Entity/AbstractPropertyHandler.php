@@ -78,7 +78,7 @@ abstract class AbstractPropertyHandler implements PropertyHandler
 
     /**
      * @param string $targetType
-     * @param $propertyValue
+     * @param        $propertyValue
      *
      * @return mixed
      */
@@ -100,10 +100,10 @@ abstract class AbstractPropertyHandler implements PropertyHandler
     {
         $result = null;
         $propertyType = $this->configProvider->getType($targetType, $this->property);
-        $propertyGetter = sprintf('get%s', ucfirst($this->property));
-        $typeGetter = sprintf('getBy%sType', ucfirst($propertyType));
+        $propertyGetter = sprintf('get%s', $this->camelize($this->property));
+        $typeGetter = sprintf('getBy%sType', $this->camelize($propertyType));
 
-        if (array_key_exists($this->property, $target)) {
+        if (array_key_exists($this->property, $target) || AutomationConfigurationProvider::VIRTUAL == $propertyType) {
             if (method_exists($this, $propertyGetter)) {
                 $result = $this->$propertyGetter($target);
             } elseif (method_exists($this, $typeGetter)) {
@@ -219,6 +219,24 @@ abstract class AbstractPropertyHandler implements PropertyHandler
         }
 
         return $property;
+    }
+
+    /**
+     * @param string $input
+     *
+     * @return mixed
+     */
+    private function camelize($input)
+    {
+        $value = preg_replace_callback(
+            '/_(.?)/',
+            function ($matches) {
+                return ucfirst($matches[1]);
+            },
+            $input
+        );
+
+        return ucfirst($value);
     }
 
     /**
