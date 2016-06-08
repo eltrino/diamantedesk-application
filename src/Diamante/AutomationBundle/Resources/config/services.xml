@@ -35,6 +35,7 @@
         <parameter key="diamante_automation.action.execution_context.class">Diamante\AutomationBundle\Rule\Action\ExecutionContext</parameter>
         <parameter key="diamante_automation.action.comment_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier</parameter>
         <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier</parameter>
+        <parameter key="diamante.upper_case.twig.extension.class">Diamante\AutomationBundle\Twig\Filters\UpperCaseFilter</parameter>
     </parameters>
 
     <services>
@@ -203,6 +204,10 @@
 
         <service id="diamante.automation.frontend.options.resolver" class="%diamante_automation.frontend.options.resolver.class%">
             <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante.upper_case.twig.extension" class="%diamante.upper_case.twig.extension.class%">
+            <tag name="twig.extension"/>
         </service>
     </services>
 </container>

@@ -237,6 +237,6 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      */
     public function __toString()
     {
-        return sprintf('[%s] %s', $this->getKey() ? $this->getKey() : 'moved', $this->getSubject());
+        return sprintf('[%s] %s', $this->getKey() ? strtoupper($this->getKey()) : 'moved', $this->getSubject());
     }
 }
