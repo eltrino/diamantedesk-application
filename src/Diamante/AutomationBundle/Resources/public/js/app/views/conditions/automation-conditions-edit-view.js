@@ -39,13 +39,13 @@ define([
             var input = $(e.target),
                 model = this.model,
                 relAttr = input.data('rel-attr');
+            this.firstRun = false;
             if(model.get(input.data('attr')) != input.val() && relAttr ){
                 _.each(relAttr.split(','), function(attr){
                     model.unset(attr, {silent: true});
                 });
             }
             model.set( input.data('attr'), input.val() );
-            this.firstRun = false;
         },
 
         entityChanged: function(model, attr){
