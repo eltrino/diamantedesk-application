@@ -63,13 +63,13 @@ abstract class Rule implements AutomationRule, Entity
      */
     protected $updatedAt;
 
-    public function __construct($name, $target)
+    public function __construct($name, $target, $active)
     {
         $this->id = Uuid::uuid4();
         $this->name = $name;
         $this->target = $target;
         $this->actions = new ArrayCollection();
-        $this->active = true;
+        $this->active = $active;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
     }
@@ -101,9 +101,6 @@ abstract class Rule implements AutomationRule, Entity
         return $this->grouping;
     }
 
-    /**
-     * @param \Diamante\AutomationBundle\Entity\Group $group
-     */
     public function setGrouping($group)
     {
         $this->grouping = $group;

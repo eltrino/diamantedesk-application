@@ -15,22 +15,47 @@
 
 namespace Diamante\AutomationBundle\Model;
 
+/**
+ * Class BusinessRule
+ *
+ * @package Diamante\AutomationBundle\Model
+ */
 class BusinessRule extends Rule
 {
+    /**
+     * @var string
+     */
     protected $timeInterval;
 
-    public function __construct($name, $target, $timeInterval)
+    /**
+     * BusinessRule constructor.
+     *
+     * @param string $name
+     * @param string $target
+     * @param string $timeInterval
+     * @param bool   $active
+     */
+    public function __construct($name, $target, $timeInterval, $active = true)
     {
-        parent::__construct($name, $target);
+        parent::__construct($name, $target, $active);
         $this->timeInterval = $timeInterval;
     }
 
-    public function update($name, $timeInterval)
+    /**
+     * @param string $name
+     * @param string $timeInterval
+     * @param bool   $active
+     */
+    public function update($name, $timeInterval, $active)
     {
         $this->name = $name;
         $this->timeInterval = $timeInterval;
+        $this->active = $active;
     }
 
+    /**
+     * @return string
+     */
     public function getTimeInterval()
     {
         return $this->timeInterval;
