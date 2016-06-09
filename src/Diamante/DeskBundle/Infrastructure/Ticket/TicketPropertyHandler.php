@@ -93,7 +93,7 @@ class TicketPropertyHandler extends AbstractPropertyHandler
     {
         $value = $this->getByUserType($target);
 
-        if (is_null($value)) {
+        if (empty($value)) {
             $value = self::UNASSIGNED;
         }
 

@@ -30,6 +30,7 @@ use Diamante\UserBundle\Model\User;
 class UpdatePropertyAction extends AbstractModifyAction
 {
     const ASSIGNEE = 'assignee';
+    const UNASSIGNED = 'unassigned';
 
     /**
      * @var AutomationConfigurationProvider
@@ -105,7 +106,12 @@ class UpdatePropertyAction extends AbstractModifyAction
     {
         foreach ($properties as $name => $value) {
             if (static::ASSIGNEE == $name) {
-                $user = $this->userService->getByUser(User::fromString($value));
+                if (self::UNASSIGNED == $value) {
+                    $user = null;
+                } else {
+                    $user = $this->userService->getByUser(User::fromString($value));
+                }
+
                 $properties[$name] = $user;
             }
         }
