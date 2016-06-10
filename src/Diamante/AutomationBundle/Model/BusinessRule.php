@@ -33,24 +33,24 @@ class BusinessRule extends Rule
      * @param string $name
      * @param string $target
      * @param string $timeInterval
-     * @param bool   $active
+     * @param bool   $status
      */
-    public function __construct($name, $target, $timeInterval, $active = true)
+    public function __construct($name, $target, $timeInterval, $status = true)
     {
-        parent::__construct($name, $target, $active);
+        parent::__construct($name, $target, $status);
         $this->timeInterval = $timeInterval;
     }
 
     /**
      * @param string $name
      * @param string $timeInterval
-     * @param bool   $active
+     * @param bool   $status
      */
-    public function update($name, $timeInterval, $active)
+    public function update($name, $timeInterval, $status)
     {
         $this->name = $name;
         $this->timeInterval = $timeInterval;
-        $this->active = $active;
+        $this->status = $status;
     }
 
     /**

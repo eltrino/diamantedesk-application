@@ -71,9 +71,9 @@ class RuleValidator implements ValidatorInterface
 
     protected function validateStatus($subject)
     {
-        $type = isset($subject['status']) ? $subject['status'] : null;
+        $status = isset($subject['status']) ? $subject['status'] : null;
 
-        if (is_bool($type)) {
+        if (in_array($status, [0, 1], true)) {
             return true;
         }
 

@@ -99,11 +99,6 @@ class RuleServiceImpl implements RuleService
      */
     public function createRule($input)
     {
-        // TODO remove after support on frontend status dropdown
-        $arr = json_decode($input, true);
-        $arr['status'] = true;
-        $input = json_encode($arr);
-
         $input = $this->getValidatedInput($input);
 
         $rule = call_user_func([$this, sprintf("create%sRule", ucfirst($input['type']))], $input);
@@ -119,11 +114,6 @@ class RuleServiceImpl implements RuleService
      */
     public function updateRule($input, $id)
     {
-        // TODO remove after support on frontend status dropdown
-        $arr = json_decode($input, true);
-        $arr['status'] = true;
-        $input = json_encode($arr);
-
         $input = $this->getValidatedInput($input);
 
         $rule = call_user_func_array([$this, sprintf("update%sRule", ucfirst($input['type']))], [$input, $id]);

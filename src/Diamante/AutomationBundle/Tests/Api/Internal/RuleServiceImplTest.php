@@ -452,7 +452,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
                     'conditions' => $rootConditions,
                 ],
             'actions'  => $actions,
-            'active'   => true,
+            'status'   => true,
             'target'   => 'ticket'
         ];
 

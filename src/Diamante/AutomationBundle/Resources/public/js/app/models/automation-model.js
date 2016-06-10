@@ -67,7 +67,7 @@ define([
 
         serializePlain: function(){
             var result = BaseModel.prototype.serialize.apply(this);
-            result['active'] = 'true';
+            result['status'] = 1;
             result = flatten(result);
             return result;
         }

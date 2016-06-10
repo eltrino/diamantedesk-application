@@ -49,7 +49,7 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $active;
+    protected $status;
 
     /**
      * @ORM\OneToOne(targetEntity="Group", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})

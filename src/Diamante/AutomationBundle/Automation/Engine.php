@@ -233,7 +233,7 @@ class Engine
         if (empty($this->rules[$fact->getTargetType()])) {
             $repository = $this->em->getRepository(static::WORKFLOW_ENTITY);
 
-            $this->rules[$fact->getTargetType()] = $repository->findBy(['active' => true, 'target' => $fact->getTargetType()]);
+            $this->rules[$fact->getTargetType()] = $repository->findBy(['status' => true, 'target' => $fact->getTargetType()]);
         }
 
         return $this->rules[$fact->getTargetType()];
