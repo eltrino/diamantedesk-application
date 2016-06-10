@@ -13,6 +13,17 @@
                data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}" />
     </div>
 </div>
+<div class="control-group">
+    <div class="control-label wrap">
+        <label for="automation-status" class="required">Status</label>
+    </div>
+    <div class="controls">
+        <select name="status" data-attr="status" id="automation-status">
+            <option value="1"<%= status == "1" ? ' selected' : ''%>>Active</option>
+            <option value="0"<%= status == "0" ? ' selected' : ''%>>Inactive</option>
+        </select>
+    </div>
+</div>
 <% if(type == 'business') { %>
 <div class="control-group">
     <div class="control-label wrap">
