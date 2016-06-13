@@ -60,7 +60,7 @@ abstract class AbstractCondition implements ConditionInterface
      */
     public function getName()
     {
-        return $this->name;
+        return $this->getClassName();
     }
 
     /**
@@ -68,7 +68,7 @@ abstract class AbstractCondition implements ConditionInterface
      */
     public function export()
     {
-        return [$this->context->getProperty(), $this->name, $this->context->getExpectedValue()];
+        return [$this->context->getProperty(), $this->getName(), $this->context->getExpectedValue()];
     }
 
     /**
@@ -78,7 +78,7 @@ abstract class AbstractCondition implements ConditionInterface
     {
         return sprintf(
             '%s[%s,%s]',
-            strtolower($this->name),
+            strtolower($this->getName()),
             $this->context->getProperty(),
             $this->context->getExpectedValue()
         );
