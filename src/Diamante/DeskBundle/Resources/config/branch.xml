@@ -27,9 +27,13 @@
         <parameter key="diamante.branch.service.api.class">Diamante\DeskBundle\Api\Internal\BranchApiServiceImpl</parameter>
         <parameter key="diamante.branch.placeholder.class">Diamante\DeskBundle\Placeholder\DefaultBranchPlaceholder</parameter>
         <parameter key="diamante.autocomplete.branch.service.class">Diamante\DeskBundle\Infrastructure\Branch\AutocompleteBranchServiceImpl</parameter>
+        <parameter key="diamante.branch.mass_branch_subscriber.class">Diamante\DeskBundle\Form\EventListener\AddMassBranchSubscriber</parameter>
     </parameters>
 
     <services>
+        <service id="diamante.branch.mass_branch_subscriber" class="%diamante.branch.mass_branch_subscriber.class%">
+            <argument type="service" id="diamante.branch.service"/>
+        </service>
 
         <service id="diamante.branch.default_key_generator" class="%diamante.branch.default_key_generator.class%"/>
 

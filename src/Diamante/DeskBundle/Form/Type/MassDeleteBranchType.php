@@ -14,22 +14,26 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Diamante\DeskBundle\Api\BranchService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
-use Diamante\DeskBundle\Api\BranchService;
+use Diamante\DeskBundle\Form\EventListener\AddMassBranchSubscriber;
 
 class MassDeleteBranchType extends AbstractType
 {
     /**
-     * @var BranchService
+     * @var AddMassBranchSubscriber
      */
-    private $branchService;
+    private $massBranchSubscriber;
 
-    public function __construct(BranchService $branchService)
+    /**
+     * MassDeleteBranchType constructor.
+     *
+     * @param AddMassBranchSubscriber $massBranchSubscriber
+     */
+    public function __construct(AddMassBranchSubscriber $massBranchSubscriber)
     {
-        $this->branchService = $branchService;
+        $this->massBranchSubscriber = $massBranchSubscriber;
     }
 
     /**
@@ -38,29 +42,7 @@ class MassDeleteBranchType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $choices = [];
-        foreach ($this->branchService->getAllbranches() as $branch) {
-            $choices[$branch->getId()] = $branch->getName();
-        }
-
-        if (isset($options['data']['values'])) {
-            $removeBranches = explode(',', $options['data']['values']);
-            $flipedBranches = array_flip($removeBranches);
-            $choices = array_diff_key($choices, $flipedBranches);
-        }
-
         $builder->add(
-            $builder->create(
-                'newBranch',
-                'choice',
-                [
-                    'label'    => 'diamante.desk.branch.messages.delete.select',
-                    'required' => true,
-                    'attr'     => ['style' => "width:110px"],
-                    'choices'  => $choices
-                ]
-            )
-        )->add(
             $builder->create(
                 'moveMassTickets',
                 'checkbox',
@@ -69,16 +51,7 @@ class MassDeleteBranchType extends AbstractType
                     'required' => false,
                 ]
             )
-        )->add(
-            $builder->create(
-                'removeBranches',
-                'hidden',
-                [
-                    'required' => false,
-                    'data' => $options['data']['values']
-                ]
-            )
-        );
+        )->addEventSubscriber($this->massBranchSubscriber);
     }
 
     /**
