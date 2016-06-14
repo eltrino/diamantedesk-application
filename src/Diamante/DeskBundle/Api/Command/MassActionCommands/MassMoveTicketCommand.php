@@ -26,6 +26,13 @@ class MassMoveTicketCommand
     public $ids;
 
     /**
+     * @var integer
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
+     */
+    public $inset;
+
+    /**
      * @var \Diamante\DeskBundle\Model\Branch\Branch
      * @Assert\Type(type="object")
      */
