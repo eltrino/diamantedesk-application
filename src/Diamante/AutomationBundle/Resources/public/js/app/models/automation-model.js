@@ -24,7 +24,7 @@ define([
                 }
                 delete data['entity_type'];
             } else {
-                data[key] = data[key];
+                data[key] = isNaN(data[key])? data[key] : +data[key];
             }
         }
         return data;
