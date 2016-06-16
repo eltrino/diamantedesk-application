@@ -49,7 +49,7 @@ define([
             if(!attr.time_interval && attr.type === 'business') {
                 this.set('time_interval', _.keys(config.time_intervals)[0])
             }
-            if(!attr.status) {
+            if(typeof attr.status == 'undefined') {
                 this.set('status', 1);
             }
             delete options.model;
