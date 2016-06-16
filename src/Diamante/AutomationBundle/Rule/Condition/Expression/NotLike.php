@@ -19,18 +19,19 @@ namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
-class Contains extends AbstractCondition
+class NotLike extends AbstractCondition
 {
     const MODE = 'soft';
 
     /**
      * @param AbstractFact $fact
-     * @return mixed
+     *
+     * @return bool
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
         $actualValue = $this->getActualValue($fact);
 
-        return false !== strpos($actualValue, $this->context->getExpectedValue());
+        return false === strpos($actualValue, $this->context->getExpectedValue());
     }
 }

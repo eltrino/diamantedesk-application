@@ -21,6 +21,8 @@ use Diamante\AutomationBundle\Entity\Group;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Condition\ConditionInterface;
+use Diamante\DeskBundle\Model\Ticket\Priority;
+use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
@@ -30,12 +32,13 @@ class GenericTargetEntityProvider
 {
     const TARGET_ALIAS = 't';
 
-    protected static $conditionTimeMap = [
-        'gt' => 'lt',
-        'gte' => 'lte',
-        'lt' => 'gt',
-        'lte' => 'gte',
-    ];
+    protected static $conditionTimeMap
+        = [
+            'gt'  => 'lt',
+            'gte' => 'lte',
+            'lt'  => 'gt',
+            'lte' => 'gte',
+        ];
 
     /**
      * @var EntityManager
@@ -63,16 +66,16 @@ class GenericTargetEntityProvider
         Registry $registry,
         ConditionFactory $conditionFactory,
         AutomationConfigurationProvider $configurationProvider
-    )
-    {
-        $this->em                    = $registry->getManager();
-        $this->conditionFactory      = $conditionFactory;
+    ) {
+        $this->em = $registry->getManager();
+        $this->conditionFactory = $conditionFactory;
         $this->configurationProvider = $configurationProvider;
     }
 
     /**
      * @param Rule $rule
-     * @param $targetClass
+     * @param      $targetClass
+     *
      * @return array|null
      */
     public function getTargets(Rule $rule, $targetClass)
@@ -89,7 +92,8 @@ class GenericTargetEntityProvider
 
     /**
      * @param Group $group
-     * @param $targetClass
+     * @param       $targetClass
+     *
      * @return \Doctrine\ORM\Query
      */
     protected function buildQuery(Group $group, $targetClass)
@@ -111,6 +115,7 @@ class GenericTargetEntityProvider
      * @param QueryBuilder $qb
      * @param Group        $group
      * @param string       $targetType
+     *
      * @return Expr\Andx|Expr\Orx
      */
     protected function buildGroupCondition(QueryBuilder $qb, Group $group, $targetType)
@@ -155,10 +160,11 @@ class GenericTargetEntityProvider
 
     /**
      * @param QueryBuilder $qb
-     * @param $property
-     * @param $expr
-     * @param $value
-     * @param string $targetType
+     * @param              $property
+     * @param              $expr
+     * @param              $value
+     * @param string       $targetType
+     *
      * @return mixed
      */
     protected function buildCondition(QueryBuilder $qb, $property, $expr, $value, $targetType)
@@ -174,11 +180,178 @@ class GenericTargetEntityProvider
 
         $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
         $fieldName = $this->em->getClassMetadata($targetClass)->getFieldName($property);
+
+        $propertyMethod = sprintf("get%sCondition", ucwords($fieldName));
+        $propertyAndConditionMethod = sprintf("get%s%sCondition", ucwords($fieldName), ucwords($expr));
+
+        if (method_exists($this, $propertyMethod)) {
+            $condition = $this->$propertyMethod($qb, $expr, $fieldName, $value);
+        } elseif (method_exists($this, $propertyAndConditionMethod)) {
+            $condition = $this->$propertyAndConditionMethod($qb, $expr, $fieldName, $value);
+        } else {
+            $condition = call_user_func_array(
+                [$qb->expr(), $expr],
+                [sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
+            );
+            $qb->setParameter($fieldName, $value);
+        }
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $expr
+     * @param string       $fieldName
+     * @param string       $value
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    protected function getBranchLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    {
+        $qb->innerJoin(sprintf('t.%s', $fieldName), 'b');
+        $condition = call_user_func_array(
+            [$qb->expr(), $expr],
+            ['b.name', sprintf(":%s", $fieldName)]
+        );
+        $qb->setParameter($fieldName, sprintf("%%%s%%", $value));
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $expr
+     * @param string       $fieldName
+     * @param string       $value
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    protected function getAssigneeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    {
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
             [sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
         );
-        $qb->setParameter($fieldName, $value);
+        $qb->setParameter($fieldName, User::fromString($value)->getId());
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $expr
+     * @param string       $fieldName
+     * @param string       $value
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    protected function getPriorityGteCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    {
+        $callback = function ($weight, $rulePropertyWeight) {
+            if ($weight >= $rulePropertyWeight) {
+                return true;
+            }
+
+            return false;
+        };
+
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $expr
+     * @param string       $fieldName
+     * @param string       $value
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    protected function getPriorityGtCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    {
+        $callback = function ($weight, $rulePropertyWeight) {
+            if ($weight > $rulePropertyWeight) {
+                return true;
+            }
+
+            return false;
+        };
+
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $expr
+     * @param string       $fieldName
+     * @param string       $value
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    protected function getPriorityLteCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    {
+        $callback = function ($weight, $rulePropertyWeight) {
+            if ($weight <= $rulePropertyWeight) {
+                return true;
+            }
+
+            return false;
+        };
+
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $expr
+     * @param string       $fieldName
+     * @param string       $value
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    protected function getPriorityLtCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    {
+        $callback = function ($weight, $rulePropertyWeight) {
+            if ($weight < $rulePropertyWeight) {
+                return true;
+            }
+
+            return false;
+        };
+
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $fieldName
+     * @param string       $value
+     * @param callable     $comparisonCallback
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    private function getPriorityExpr(QueryBuilder $qb, $fieldName, $value, $comparisonCallback)
+    {
+        $properties = [];
+        $weightList = Priority::getWeightList();
+        $rulePropertyWeight = Priority::getWeight($value);
+
+        foreach ($weightList as $weight => $property) {
+            if ($comparisonCallback($weight, $rulePropertyWeight)) {
+                $properties[] = $property;
+            }
+        }
+
+        $condition = $qb->expr()->in(sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), ':priority');
+        $qb->setParameter('priority', $properties);
 
         return $condition;
     }

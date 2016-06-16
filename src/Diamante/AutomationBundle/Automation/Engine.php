@@ -279,7 +279,7 @@ class Engine
             $this->scheduler->addAction($action);
         }
 
-        if (!$dryRun && !$this->scheduler->isEmpty()) {
+        if (!$dryRun && !$this->scheduler->isEmpty() && !empty($targetEntities)) {
             foreach ($targetEntities as $entity) {
                 $fact = $this->createBusinessFact($entity);
                 $this->scheduler->run($fact);

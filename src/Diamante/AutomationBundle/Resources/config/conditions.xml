@@ -8,7 +8,7 @@
         <parameter key="diamante_automation.condition.changed.class">Diamante\AutomationBundle\Rule\Condition\Expression\Changed</parameter>
         <parameter key="diamante_automation.condition.changed_from.class">Diamante\AutomationBundle\Rule\Condition\Expression\ChangedFrom</parameter>
         <parameter key="diamante_automation.condition.changed_to.class">Diamante\AutomationBundle\Rule\Condition\Expression\ChangedTo</parameter>
-        <parameter key="diamante_automation.condition.contains.class">Diamante\AutomationBundle\Rule\Condition\Expression\Contains</parameter>
+        <parameter key="diamante_automation.condition.like.class">Diamante\AutomationBundle\Rule\Condition\Expression\Like</parameter>
         <parameter key="diamante_automation.condition.created.class">Diamante\AutomationBundle\Rule\Condition\Expression\Created</parameter>
         <parameter key="diamante_automation.condition.eq.class">Diamante\AutomationBundle\Rule\Condition\Expression\Eq</parameter>
         <parameter key="diamante_automation.condition.false.class">Diamante\AutomationBundle\Rule\Condition\Expression\False</parameter>
@@ -19,7 +19,7 @@
         <parameter key="diamante_automation.condition.lt.class">Diamante\AutomationBundle\Rule\Condition\Expression\Lt</parameter>
         <parameter key="diamante_automation.condition.lte.class">Diamante\AutomationBundle\Rule\Condition\Expression\Lte</parameter>
         <parameter key="diamante_automation.condition.neq.class">Diamante\AutomationBundle\Rule\Condition\Expression\Neq</parameter>
-        <parameter key="diamante_automation.condition.not_contains.class">Diamante\AutomationBundle\Rule\Condition\Expression\NotContains</parameter>
+        <parameter key="diamante_automation.condition.not_like.class">Diamante\AutomationBundle\Rule\Condition\Expression\NotLike</parameter>
         <parameter key="diamante_automation.condition.removed.class">Diamante\AutomationBundle\Rule\Condition\Expression\Removed</parameter>
         <parameter key="diamante_automation.condition.true.class">Diamante\AutomationBundle\Rule\Condition\Expression\True</parameter>
         <parameter key="diamante_automation.condition.updated.class">Diamante\AutomationBundle\Rule\Condition\Expression\Updated</parameter>
@@ -41,7 +41,7 @@
         <service id="diamante_automation.condition.changed_to" class="%diamante_automation.condition.changed_to.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
         </service>
 
-        <service id="diamante_automation.condition.contains" class="%diamante_automation.condition.contains.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.like" class="%diamante_automation.condition.like.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
         </service>
 
         <service id="diamante_automation.condition.created" class="%diamante_automation.condition.created.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
@@ -74,7 +74,7 @@
         <service id="diamante_automation.condition.neq" class="%diamante_automation.condition.neq.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
         </service>
 
-        <service id="diamante_automation.condition.not_contains" class="%diamante_automation.condition.not_contains.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.not_like" class="%diamante_automation.condition.not_like.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
         </service>
 
         <service id="diamante_automation.condition.removed" class="%diamante_automation.condition.removed.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">

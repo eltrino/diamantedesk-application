@@ -91,7 +91,18 @@ class Priority implements Property, Weightable
         return static::$valueToLabelMap;
     }
 
-    public function getWeight($priority)
+    public static function getWeightList()
+    {
+        $priorities = [
+            static::PRIORITY_LOW,
+            static::PRIORITY_MEDIUM,
+            static::PRIORITY_HIGH
+        ];
+
+        return $priorities;
+    }
+
+    public static function getWeight($priority)
     {
         $priorities = [
             static::PRIORITY_LOW,
