@@ -49,6 +49,9 @@ define([
             if(!attr.time_interval && attr.type === 'business') {
                 this.set('time_interval', _.keys(config.time_intervals)[0])
             }
+            if(!attr.status) {
+                this.set('status', 1);
+            }
             delete options.model;
             options.isBusiness = attr.type === 'business';
             this.set('actions', attr.actions ?
