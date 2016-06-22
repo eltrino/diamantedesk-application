@@ -86,6 +86,9 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
      */
     protected $reporter;
 
+    /** @var  string */
+    protected $reporterEmail;
+
     /**
      * @var \Oro\Bundle\UserBundle\Entity\User
      */
@@ -170,9 +173,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         $this->attachments = new ArrayCollection();
         $this->watcherList = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
-        $this->updatedAt = clone $this->createdAt;
-        $this->statusUpdatedSince = clone $this->createdAt;
-        $this->assignedSince = clone $this->createdAt;
         $this->source = $source;
         $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
     }
@@ -659,6 +659,14 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     public function getOwnerId()
     {
         return $this->getOwner() ? $this->getOwner()->getId() : null;
+    }
+
+    /**
+     * @param string $reporterEmail
+     */
+    public function setReporterEmail($reporterEmail)
+    {
+        $this->reporterEmail = $reporterEmail;
     }
 
     /**

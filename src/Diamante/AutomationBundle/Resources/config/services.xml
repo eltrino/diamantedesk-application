@@ -18,6 +18,7 @@
         <parameter key="diamante_automation.comment.property.processor.class">Diamante\AutomationBundle\Rule\Property\CommentPropertyProcessor</parameter>
         <parameter key="diamante_automation.update_property.class">Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction</parameter>
         <parameter key="diamante_automation.generic.target.provider.class">Diamante\AutomationBundle\Infrastructure\GenericTargetEntityProvider</parameter>
+        <parameter key="diamante_automation.generic.condition_builder.class">Diamante\AutomationBundle\Infrastructure\Condition\ConditionBuilder</parameter>
         <parameter key="diamante_automation.notify_by_email.class">Diamante\AutomationBundle\Automation\Action\Email\NotifyByEmailAction</parameter>
         <parameter key="diamante_automation.queue_manager.class">Diamante\AutomationBundle\Automation\JobQueue\QueueManager</parameter>
         <parameter key="diamante_automation.listener.class">Diamante\AutomationBundle\EventListener\WorkflowListener</parameter>
@@ -161,6 +162,14 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="diamante_automation.condition.factory"/>
             <argument type="service" id="diamante_automation.config.provider"/>
+            <argument type="service" id="diamante_automation.generic.condition_builder"/>
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="diamante_automation.generic.condition_builder" class="%diamante_automation.generic.condition_builder.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="diamante_automation.config.provider"/>
+            <argument type="service" id="service_container"/>
         </service>
 
         <service id="diamante.automation.queue.manager" class="%diamante_automation.queue_manager.class%">

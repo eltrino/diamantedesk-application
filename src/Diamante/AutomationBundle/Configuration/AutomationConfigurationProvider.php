@@ -33,18 +33,26 @@ class AutomationConfigurationProvider
      * @var array
      */
     protected $entities = [];
+
     /**
      * @var array
      */
     protected $conditions = [];
+
     /**
      * @var array
      */
     protected $condition_type = [];
+
     /**
      * @var array
      */
     protected $actions = [];
+
+    /**
+     * @var array
+     */
+    protected $conditions_mapper = [];
 
     /**
      * @var array
@@ -54,7 +62,7 @@ class AutomationConfigurationProvider
     /**
      * @var array
      */
-    protected static $configStructure = ['entities', 'conditions', 'condition_type', 'actions'];
+    protected static $configStructure = ['entities', 'conditions', 'condition_type', 'actions', 'conditions_mapper'];
 
     /**
      * @var FrontendOptionsResolver

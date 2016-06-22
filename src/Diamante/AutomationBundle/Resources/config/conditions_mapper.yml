@@ -1,0 +1,114 @@
+diamante_automation:
+  conditions_mapper:
+    business:
+      ticket:
+        priority:
+          gt:
+            service: diamante_automation.generic.condition_builder
+            method: getPriorityGtCondition
+          gte:
+            service: diamante_automation.generic.condition_builder
+            method: getPriorityGteCondition
+          lt:
+            service: diamante_automation.generic.condition_builder
+            method: getPriorityLtCondition
+          lte:
+            service: diamante_automation.generic.condition_builder
+            method: getPriorityLteCondition
+        branch:
+          like:
+            service: diamante_automation.generic.condition_builder
+            method: getBranchLikeCondition
+        assignee:
+          eq:
+            service: diamante_automation.generic.condition_builder
+            method: getAssigneeCondition
+          neq:
+            service: diamante_automation.generic.condition_builder
+            method: getAssigneeCondition
+        reporter_email:
+          like:
+            service: diamante_automation.generic.condition_builder
+            method: getLikeCondition
+          notLike:
+            service: diamante_automation.generic.condition_builder
+            method: getLikeCondition
+        subject:
+          like:
+            service: diamante_automation.generic.condition_builder
+            method: getLikeCondition
+          notLike:
+            service: diamante_automation.generic.condition_builder
+            method: getLikeCondition
+        description:
+          like:
+            service: diamante_automation.generic.condition_builder
+            method: getLikeCondition
+          notLike:
+            service: diamante_automation.generic.condition_builder
+            method: getLikeCondition
+        endpoint:
+          eq:
+            service: diamante_automation.generic.condition_builder
+            method: getEndpointCondition
+          neq:
+            service: diamante_automation.generic.condition_builder
+            method: getEndpointCondition
+          like:
+            service: diamante_automation.generic.condition_builder
+            method: getEndpointLikeCondition
+          notLike:
+            service: diamante_automation.generic.condition_builder
+            method: getEndpointLikeCondition
+        created_at:
+          gt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          gte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+        updated_at:
+          gt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          gte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+        status_updated_since:
+          gt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          gte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+        assigned_since:
+          gt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          gte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lt:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition
+          lte:
+            service: diamante_automation.generic.condition_builder
+            method: getDatetimeCondition

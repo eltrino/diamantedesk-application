@@ -7,10 +7,10 @@ use Diamante\AutomationBundle\Configuration\ConfigCacheDumper;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
 use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -27,7 +27,7 @@ class DiamanteAutomationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('forms.xml');
         $loader->load('conditions.xml');
@@ -52,6 +52,7 @@ class DiamanteAutomationExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
+     *
      * @return array|mixed
      */
     protected function getConfig(ContainerBuilder $container)
@@ -81,11 +82,14 @@ class DiamanteAutomationExtension extends Extension
     {
         $loader = new CumulativeConfigLoader(
             'diamante_automation',
-            new YamlCumulativeFileLoader('Resources/config/automation.yml')
+            [
+                new YamlCumulativeFileLoader('Resources/config/automation.yml'),
+                new YamlCumulativeFileLoader('Resources/config/conditions_mapper.yml')
+            ]
         );
 
+        $config = [];
         $resources = $loader->load();
-
         $schema = AutomationConfigurationProvider::getConfigStructure();
 
         foreach ($schema as $section) {

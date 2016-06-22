@@ -142,6 +142,13 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     protected $reporter;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="reporter_email", type="text")
+     */
+    protected $reporterEmail;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="\Oro\Bundle\UserBundle\Entity\User")
@@ -191,21 +198,21 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     protected $updatedAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="status_updated_since", type="datetime")
+     * @ORM\Column(name="status_updated_since", type="datetime", nullable=true)
      */
     protected $statusUpdatedSince;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="assigned_since", type="datetime")
+     * @ORM\Column(name="assigned_since", type="datetime", nullable=true)
      */
     protected $assignedSince;
 

@@ -18,27 +18,25 @@ namespace Diamante\AutomationBundle\Infrastructure;
 
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\Group;
+use Diamante\AutomationBundle\Infrastructure\Condition\ConditionBuilder;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Condition\ConditionInterface;
-use Diamante\DeskBundle\Model\Ticket\Priority;
-use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class GenericTargetEntityProvider
+ *
+ * @package Diamante\AutomationBundle\Infrastructure
+ */
 class GenericTargetEntityProvider
 {
     const TARGET_ALIAS = 't';
-
-    protected static $conditionTimeMap
-        = [
-            'gt'  => 'lt',
-            'gte' => 'lte',
-            'lt'  => 'gt',
-            'lte' => 'gte',
-        ];
+    const BUSINESS = 'business';
 
     /**
      * @var EntityManager
@@ -55,21 +53,33 @@ class GenericTargetEntityProvider
      */
     protected $configurationProvider;
 
+    /** @var  ConditionBuilder */
+    protected $conditionBuilder;
+
+    /** @var  ContainerInterface */
+    protected $container;
+
     /**
      * GenericTargetEntityProvider constructor.
      *
      * @param Registry                        $registry
      * @param ConditionFactory                $conditionFactory
      * @param AutomationConfigurationProvider $configurationProvider
+     * @param ConditionBuilder                $conditionBuilder
+     * @param ContainerInterface              $container
      */
     public function __construct(
         Registry $registry,
         ConditionFactory $conditionFactory,
-        AutomationConfigurationProvider $configurationProvider
+        AutomationConfigurationProvider $configurationProvider,
+        ConditionBuilder $conditionBuilder,
+        ContainerInterface $container
     ) {
         $this->em = $registry->getManager();
         $this->conditionFactory = $conditionFactory;
         $this->configurationProvider = $configurationProvider;
+        $this->conditionBuilder = $conditionBuilder;
+        $this->container = $container;
     }
 
     /**
@@ -101,8 +111,10 @@ class GenericTargetEntityProvider
         $targetType = $this->configurationProvider->getTargetByClass($targetClass);
         $qb = $this->em->createQueryBuilder();
 
-        $qb->select(self::TARGET_ALIAS)
-            ->from($targetClass, self::TARGET_ALIAS);
+        $qb->select(self::TARGET_ALIAS, 'b')
+            ->from($targetClass, self::TARGET_ALIAS)
+            ->leftJoin('DiamanteDeskBundle:MessageReference', 'mr', Expr\Join::WITH, 'mr.ticket = t.id')
+            ->innerJoin('t.branch', 'b');
 
         $where = $this->buildGroupCondition($qb, $group, $targetType);
 
@@ -167,192 +179,31 @@ class GenericTargetEntityProvider
      *
      * @return mixed
      */
-    protected function buildCondition(QueryBuilder $qb, $property, $expr, $value, $targetType)
+    public function buildCondition(QueryBuilder $qb, $property, $expr, $value, $targetType)
     {
         if (!method_exists($qb->expr(), $expr)) {
             throw new \RuntimeException(sprintf("Operator '%s' does not exist. Please verify export format", $expr));
         }
 
-        if ($this->configurationProvider->isDatetimeProperty($targetType, $property)) {
-            $value = new \DateTime(sprintf("-%s hours", $value), new \DateTimeZone("UTC"));
-            $expr = static::$conditionTimeMap[$expr];
-        }
-
         $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
         $fieldName = $this->em->getClassMetadata($targetClass)->getFieldName($property);
+        $conditionsMapper = $this->container->getParameter('diamante.automation.config.conditions_mapper');
 
-        $propertyMethod = sprintf("get%sCondition", ucwords($fieldName));
-        $propertyAndConditionMethod = sprintf("get%s%sCondition", ucwords($fieldName), ucwords($expr));
+        if (isset($conditionsMapper[self::BUSINESS][$targetType][$property][$expr])) {
+            $getter = $conditionsMapper[self::BUSINESS][$targetType][$property][$expr];
 
-        if (method_exists($this, $propertyMethod)) {
-            $condition = $this->$propertyMethod($qb, $expr, $fieldName, $value);
-        } elseif (method_exists($this, $propertyAndConditionMethod)) {
-            $condition = $this->$propertyAndConditionMethod($qb, $expr, $fieldName, $value);
+            if (isset($getter['service']) && isset($getter['method']) && $this->container->has($getter['service'])) {
+                $conditionServiceBuilder = $this->container->get($getter['service']);
+                $method = $getter['method'];
+
+                if (method_exists($conditionServiceBuilder, $method)) {
+                    return $conditionServiceBuilder->$method($qb, $expr, $fieldName, $value);
+                }
+            }
+
+            throw new \RuntimeException('Invalid source data.');
         } else {
-            $condition = call_user_func_array(
-                [$qb->expr(), $expr],
-                [sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
-            );
-            $qb->setParameter($fieldName, $value);
+            return $this->conditionBuilder->getCondition($qb, $expr, $fieldName, $value);
         }
-
-        return $condition;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param string       $expr
-     * @param string       $fieldName
-     * @param string       $value
-     *
-     * @return \Doctrine\ORM\Query\Expr\Comparison
-     */
-    protected function getBranchLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
-    {
-        $qb->innerJoin(sprintf('t.%s', $fieldName), 'b');
-        $condition = call_user_func_array(
-            [$qb->expr(), $expr],
-            ['b.name', sprintf(":%s", $fieldName)]
-        );
-        $qb->setParameter($fieldName, sprintf("%%%s%%", $value));
-
-        return $condition;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param string       $expr
-     * @param string       $fieldName
-     * @param string       $value
-     *
-     * @return \Doctrine\ORM\Query\Expr\Comparison
-     */
-    protected function getAssigneeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
-    {
-        $condition = call_user_func_array(
-            [$qb->expr(), $expr],
-            [sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
-        );
-        $qb->setParameter($fieldName, User::fromString($value)->getId());
-
-        return $condition;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param string       $expr
-     * @param string       $fieldName
-     * @param string       $value
-     *
-     * @return \Doctrine\ORM\Query\Expr\Comparison
-     */
-    protected function getPriorityGteCondition(QueryBuilder $qb, $expr, $fieldName, $value)
-    {
-        $callback = function ($weight, $rulePropertyWeight) {
-            if ($weight >= $rulePropertyWeight) {
-                return true;
-            }
-
-            return false;
-        };
-
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
-
-        return $condition;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param string       $expr
-     * @param string       $fieldName
-     * @param string       $value
-     *
-     * @return \Doctrine\ORM\Query\Expr\Comparison
-     */
-    protected function getPriorityGtCondition(QueryBuilder $qb, $expr, $fieldName, $value)
-    {
-        $callback = function ($weight, $rulePropertyWeight) {
-            if ($weight > $rulePropertyWeight) {
-                return true;
-            }
-
-            return false;
-        };
-
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
-
-        return $condition;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param string       $expr
-     * @param string       $fieldName
-     * @param string       $value
-     *
-     * @return \Doctrine\ORM\Query\Expr\Comparison
-     */
-    protected function getPriorityLteCondition(QueryBuilder $qb, $expr, $fieldName, $value)
-    {
-        $callback = function ($weight, $rulePropertyWeight) {
-            if ($weight <= $rulePropertyWeight) {
-                return true;
-            }
-
-            return false;
-        };
-
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
-
-        return $condition;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param string       $expr
-     * @param string       $fieldName
-     * @param string       $value
-     *
-     * @return \Doctrine\ORM\Query\Expr\Comparison
-     */
-    protected function getPriorityLtCondition(QueryBuilder $qb, $expr, $fieldName, $value)
-    {
-        $callback = function ($weight, $rulePropertyWeight) {
-            if ($weight < $rulePropertyWeight) {
-                return true;
-            }
-
-            return false;
-        };
-
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
-
-        return $condition;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param string       $fieldName
-     * @param string       $value
-     * @param callable     $comparisonCallback
-     *
-     * @return \Doctrine\ORM\Query\Expr\Comparison
-     */
-    private function getPriorityExpr(QueryBuilder $qb, $fieldName, $value, $comparisonCallback)
-    {
-        $properties = [];
-        $weightList = Priority::getWeightList();
-        $rulePropertyWeight = Priority::getWeight($value);
-
-        foreach ($weightList as $weight => $property) {
-            if ($comparisonCallback($weight, $rulePropertyWeight)) {
-                $properties[] = $property;
-            }
-        }
-
-        $condition = $qb->expr()->in(sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), ':priority');
-        $qb->setParameter('priority', $properties);
-
-        return $condition;
     }
 }
