@@ -191,6 +191,11 @@
             <tag name="jms_serializer.subscribing_handler" connection="default"/>
         </service>
 
+        <service id="diamante.ticket_listener" class="Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\TicketListener">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.orm.entity_listener" />
+        </service>
+
 <!-- repositories start -->
         <service id="diamante.ticket.repository" class="%diamante.ticket.repository.class%"
                  factory-service = "doctrine.orm.entity_manager"

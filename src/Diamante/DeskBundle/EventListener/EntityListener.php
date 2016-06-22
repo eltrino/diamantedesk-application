@@ -110,35 +110,4 @@ class EntityListener implements OptionalListenerInterface
             }
         }
     }
-
-    /**
-     * @param LifecycleEventArgs $eventArgs
-     */
-    public function preUpdate(LifecycleEventArgs $eventArgs)
-    {
-        $this->reporterEmailSetter($eventArgs);
-    }
-
-    /**
-     * @param LifecycleEventArgs $eventArgs
-     */
-    public function prePersist(LifecycleEventArgs $eventArgs)
-    {
-        $this->reporterEmailSetter($eventArgs);
-    }
-
-    /**
-     * @param LifecycleEventArgs $eventArgs
-     */
-    protected function reporterEmailSetter(LifecycleEventArgs $eventArgs) {
-        $entity = $eventArgs->getEntity();
-
-        if (!$entity instanceof Ticket) {
-            return;
-        }
-
-        $reporter = $entity->getReporter();
-        $user = $this->container->get('diamante.user.service')->getByUser($reporter);
-        $entity->setReporterEmail($user->getEmail());
-    }
 }

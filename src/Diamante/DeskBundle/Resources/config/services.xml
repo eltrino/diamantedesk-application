@@ -208,8 +208,6 @@
             <argument type="service" id="service_container"/>
             <tag name="doctrine.event_listener" event="onFlush"/>
             <tag name="doctrine.event_listener" event="postPersist"/>
-            <tag name="doctrine.event_listener" event="prePersist"/>
-            <tag name="doctrine.event_listener" event="preUpdate"/>
             <tag name="doctrine.event_listener" event="postRemove"/>
         </service>
 

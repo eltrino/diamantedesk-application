@@ -17,10 +17,26 @@ namespace Diamante\DeskBundle\Infrastructure\Persistence\Doctrine;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TicketListener
 {
     const TICKET_SEQUENCE_NUMBER_FIELD_TO_UPDATE = 'number';
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * TicketListener constructor.
+     *
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * @ORM\PrePersist
@@ -34,6 +50,8 @@ class TicketListener
      */
     public function prePersistHandler(Ticket $ticket, LifecycleEventArgs $event)
     {
+        $this->reporterEmailSetter($event);
+
         if ($ticket->getSequenceNumber()->getValue()) {
             return;
         }
@@ -47,5 +65,20 @@ class TicketListener
         $property->setAccessible(true);
         $property->setValue($ticketSequenceNumber, $ticketSequenceNumberValue);
         $property->setAccessible(false);
+    }
+
+    /**
+     * @param LifecycleEventArgs $eventArgs
+     */
+    protected function reporterEmailSetter(LifecycleEventArgs $eventArgs) {
+        $entity = $eventArgs->getEntity();
+
+        if (!$entity instanceof Ticket) {
+            return;
+        }
+
+        $reporter = $entity->getReporter();
+        $user = $this->container->get('diamante.user.service')->getByUser($reporter);
+        $entity->setReporterEmail($user->getEmail());
     }
 }
