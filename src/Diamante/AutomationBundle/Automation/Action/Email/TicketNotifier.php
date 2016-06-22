@@ -117,9 +117,25 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
                     ['recipient' => $recipient, 'editor' => $this->getEditorName($editor)]
                 );
 
+                if ($recipient instanceof DiamanteUser) {
+                    $options = $this->filterDiamanteUserOptions($options);
+                }
+
                 $this->notificationManager->notifyByScenario($provider, $recipient, $options);
             }
         }
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return array
+     */
+    protected function filterDiamanteUserOptions(array $options) {
+        unset($options['changes']['branch']);
+        unset($options['changes']['tags']);
+
+        return $options;
     }
 
     /**
