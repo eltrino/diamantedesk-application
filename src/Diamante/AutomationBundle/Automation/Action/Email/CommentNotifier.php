@@ -15,7 +15,6 @@
 
 namespace Diamante\AutomationBundle\Automation\Action\Email;
 
-use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -81,10 +80,12 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
             $newAuthor = $diff['author']['new'];
 
             if (!is_null($oldAuthor)) {
-                $diff['author']['old'] = $this->container->get('diamante.user.service')->getByUser($oldAuthor);
+                $user = $this->container->get('diamante.user.service')->getByUser($oldAuthor);
+                $diff['author']['old'] = $this->getUserName($user);
             }
 
-            $diff['author']['new'] = $this->container->get('diamante.user.service')->getByUser($newAuthor);
+            $user = $this->container->get('diamante.user.service')->getByUser($newAuthor);
+            $diff['author']['new'] = $this->getUserName($user);
         }
 
         return $diff;
@@ -191,6 +192,7 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
             $user = $this->userService->getByUser($watcher->getUserType());
             $list[] = $user->getEmail();
         }
+
         return $list;
     }
 
@@ -210,9 +212,10 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
             if ($assignee instanceof OroUser) {
                 /**
                  * Reloading oro user because it loses email after execute unserialize method
+                 *
                  * @var OroUser $user
                  */
-                $user = $this->oroUserManager->findUserBy(array('id' => $assignee->getId()));
+                $user = $this->oroUserManager->findUserBy(['id' => $assignee->getId()]);
                 if (!is_null($user)) {
                     return $user->getEmail();
                 }
@@ -224,5 +227,19 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
         }
 
         return null;
+    }
+
+    /**
+     * @param DiamanteUser|OroUser $user
+     *
+     * @return string
+     */
+    private function getUserName($user)
+    {
+        if ($user instanceof DiamanteUser) {
+            return $user->getFullName();
+        }
+
+        return sprintf('%s %s', $user->getFirstName(), $user->getLastName());
     }
 }
