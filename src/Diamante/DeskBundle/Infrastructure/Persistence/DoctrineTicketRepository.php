@@ -15,8 +15,8 @@
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Entity\Ticket;
-use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\DeskBundle\Model\Shared\Filter\FilterPagingProperties;
+use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
 use Diamante\DeskBundle\Model\Ticket\TicketRepository;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
@@ -25,6 +25,7 @@ use Doctrine\ORM\Query;
 
 /**
  * Class DoctrineTicketRepository
+ *
  * @package Diamante\DeskBundle\Infrastructure\Persistence
  *
  * @method Ticket findOneByTicketKey(TicketKey $key)
@@ -44,23 +45,18 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     public function getByTicketIdWithoutPrivateComments($id)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $orX = $queryBuilder->expr()->orX();
-        $orX->add('c.private = :private');
-        $orX->add('c.private is null');
 
         $queryBuilder->select(['t', 'c'])
             ->from('DiamanteDeskBundle:Ticket', 't')
-            ->leftJoin('t.comments', 'c')
+            ->leftJoin('t.comments', 'c', 'WITH', 'c.private = :private')
             ->where('t.id = :ticketId')
-            ->andWhere($orX)
-            ->setParameters(
-                array(
-                    'ticketId'            => $id,
-                    'private'             => false,
-                )
-            );
+            ->setParameters(['ticketId' => $id]);
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        if (is_null($ticket)) {
+            $ticket = $this->get($id);
+        }
 
         return $ticket;
     }
@@ -82,10 +78,10 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->andWhere('b.key = :branchKey')
             ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
             ->setParameters(
-                array(
+                [
                     'branchKey'            => $key->getBranchKey(),
                     'ticketSequenceNumber' => $key->getTicketSequenceNumber()
-                )
+                ]
             );
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -103,24 +99,20 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     public function getByTicketKeyWithoutPrivateComments(TicketKey $key)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $orX = $queryBuilder->expr()->orX();
-        $orX->add('c.private = :private');
-        $orX->add('c.private is null');
 
         $queryBuilder->select(['t', 'c'])
             ->from('DiamanteDeskBundle:Ticket', 't')
             ->from('DiamanteDeskBundle:Branch', 'b')
-            ->leftJoin('t.comments', 'c')
+            ->leftJoin('t.comments', 'c', 'WITH', 'c.private = :private')
             ->where('b.id = t.branch')
             ->andWhere('b.key = :branchKey')
-            ->andWhere($orX)
             ->andWhere('t.sequenceNumber = :ticketSequenceNumber')
             ->setParameters(
-                array(
+                [
                     'private'              => false,
                     'branchKey'            => $key->getBranchKey(),
                     'ticketSequenceNumber' => $key->getTicketSequenceNumber()
-                )
+                ]
             );
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -156,19 +148,21 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
         $query = $this->_em
             ->createQuery("UPDATE DiamanteDeskBundle:Ticket t SET t.reporter = null WHERE t.reporter = :reporter_id");
         $query->setParameters(
-            array(
+            [
                 'reporter_id' => (string)$user,
-            )
+            ]
         );
         $query->execute();
     }
 
     /**
      * Search reporter id from ticket table
-     * @param string $searchQuery
-     * @param array $conditions
+     *
+     * @param string           $searchQuery
+     * @param array            $conditions
      * @param PagingProperties $pagingProperties
-     * @param null $callback
+     * @param null             $callback
+     *
      * @return \Diamante\DeskBundle\Entity\Ticket[]
      */
     public function search($searchQuery, array $conditions, PagingProperties $pagingProperties, $callback = null)
@@ -211,9 +205,10 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
     }
 
     /**
-     * @param array $conditions
+     * @param array            $conditions
      * @param PagingProperties $pagingProperties
-     * @param null $callback
+     * @param null             $callback
+     *
      * @return \Doctrine\Common\Collections\Collection|static
      */
     public function filter(array &$conditions, PagingProperties $pagingProperties, $callback = null)
@@ -242,8 +237,9 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
     /**
      * @param array $criteria
-     * @param null $searchQuery
-     * @param null $callback
+     * @param null  $searchQuery
+     * @param null  $callback
+     *
      * @return int
      */
     public function count(array $criteria = [], $searchQuery = null, $callback = null)
@@ -276,18 +272,21 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
     /**
      * @param string $searchQuery
-     * @param null $countCallback
+     * @param null   $countCallback
+     *
      * @return int
      */
     public function countBySearchQuery($searchQuery, $countCallback = null)
     {
-        $result = $this->search($searchQuery, array(), new FilterPagingProperties(null, PHP_INT_MAX), $countCallback);
+        $result = $this->search($searchQuery, [], new FilterPagingProperties(null, PHP_INT_MAX), $countCallback);
+
         return count($result);
     }
 
     /**
-     * @param array $conditions
+     * @param array            $conditions
      * @param PagingProperties $pagingProperties
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     protected function orderByTicketKey(array $conditions, PagingProperties $pagingProperties)
@@ -317,6 +316,7 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
      * Implemented because Doctrine ORM not support select from subQuery
      *
      * @param $result
+     *
      * @return array
      */
     public function sortByKey($result)
@@ -346,7 +346,12 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         try {
             $result = $query->getResult(Query::HYDRATE_SCALAR);
-            $result = array_map(function($item) {return (int)current($item); }, $result);
+            $result = array_map(
+                function ($item) {
+                    return (int)current($item);
+                },
+                $result
+            );
         } catch (\Exception $e) {
             $result = null;
         }
