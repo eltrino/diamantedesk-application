@@ -70,16 +70,17 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
+            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf("?%d", $parameterNumber)]
         );
-        $qb->setParameter($fieldName, $value);
+        $qb->setParameter($parameterNumber, $value);
 
         return $condition;
     }
@@ -89,19 +90,20 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getDatetimeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getDatetimeCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $value = new \DateTime(sprintf("-%s hours", $value), new \DateTimeZone("UTC"));
         $expr = $this->conditionTimeMap[$expr];
 
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
+            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf("?%d", $parameterNumber)]
         );
-        $qb->setParameter($fieldName, $value);
+        $qb->setParameter($parameterNumber, $value);
 
         return $condition;
     }
@@ -111,16 +113,17 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getEndpointCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getEndpointCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", 'mr', $fieldName), sprintf(":%s", $fieldName)]
+            [sprintf("%s.%s", 'mr', $fieldName), sprintf("?%d", $parameterNumber)]
         );
-        $qb->setParameter($fieldName, $value);
+        $qb->setParameter($parameterNumber, $value);
 
         return $condition;
     }
@@ -130,16 +133,17 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getEndpointLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getEndpointLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", 'mr', $fieldName), sprintf(":%s", $fieldName)]
+            [sprintf("%s.%s", 'mr', $fieldName), sprintf("?%d", $parameterNumber)]
         );
-        $qb->setParameter($fieldName, sprintf("%%%s%%", $value));
+        $qb->setParameter($parameterNumber, sprintf("%%%s%%", $value));
 
         return $condition;
     }
@@ -149,16 +153,17 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getBranchLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getBranchLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            ['b.name', sprintf(":%s", $fieldName)]
+            ['b.name', sprintf("?%d", $parameterNumber)]
         );
-        $qb->setParameter($fieldName, sprintf("%%%s%%", $value));
+        $qb->setParameter($parameterNumber, sprintf("%%%s%%", $value));
 
         return $condition;
     }
@@ -168,16 +173,17 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getLikeCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
+            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf("?%d", $parameterNumber)]
         );
-        $qb->setParameter($fieldName, sprintf("%%%s%%", $value));
+        $qb->setParameter($parameterNumber, sprintf("%%%s%%", $value));
 
         return $condition;
     }
@@ -187,16 +193,17 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getAssigneeCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getAssigneeCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $condition = call_user_func_array(
             [$qb->expr(), $expr],
-            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
+            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf("?%d", $parameterNumber)]
         );
-        $qb->setParameter($fieldName, User::fromString($value)->getId());
+        $qb->setParameter($parameterNumber, User::fromString($value)->getId());
 
         return $condition;
     }
@@ -206,10 +213,11 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getPriorityGteCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getPriorityGteCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $callback = function ($weight, $rulePropertyWeight) {
             if ($weight >= $rulePropertyWeight) {
@@ -219,7 +227,7 @@ class ConditionBuilder
             return false;
         };
 
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback, $parameterNumber);
 
         return $condition;
     }
@@ -229,10 +237,11 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getPriorityGtCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getPriorityGtCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $callback = function ($weight, $rulePropertyWeight) {
             if ($weight > $rulePropertyWeight) {
@@ -242,7 +251,7 @@ class ConditionBuilder
             return false;
         };
 
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback, $parameterNumber);
 
         return $condition;
     }
@@ -252,10 +261,11 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getPriorityLteCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getPriorityLteCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $callback = function ($weight, $rulePropertyWeight) {
             if ($weight <= $rulePropertyWeight) {
@@ -265,7 +275,7 @@ class ConditionBuilder
             return false;
         };
 
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback, $parameterNumber);
 
         return $condition;
     }
@@ -275,10 +285,11 @@ class ConditionBuilder
      * @param string       $expr
      * @param string       $fieldName
      * @param string       $value
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getPriorityLtCondition(QueryBuilder $qb, $expr, $fieldName, $value)
+    public function getPriorityLtCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         $callback = function ($weight, $rulePropertyWeight) {
             if ($weight < $rulePropertyWeight) {
@@ -288,7 +299,7 @@ class ConditionBuilder
             return false;
         };
 
-        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback);
+        $condition = $this->getPriorityExpr($qb, $fieldName, $value, $callback, $parameterNumber);
 
         return $condition;
     }
@@ -298,10 +309,11 @@ class ConditionBuilder
      * @param string       $fieldName
      * @param string       $value
      * @param callable     $comparisonCallback
+     * @param integer      $parameterNumber
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    private function getPriorityExpr(QueryBuilder $qb, $fieldName, $value, $comparisonCallback)
+    private function getPriorityExpr(QueryBuilder $qb, $fieldName, $value, $comparisonCallback, $parameterNumber)
     {
         $properties = [];
         $weightList = Priority::getWeightList();
@@ -313,8 +325,11 @@ class ConditionBuilder
             }
         }
 
-        $condition = $qb->expr()->in(sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), ':priority');
-        $qb->setParameter('priority', $properties);
+        $condition = $qb->expr()->in(
+            sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName),
+            sprintf("?%d", $parameterNumber)
+        );
+        $qb->setParameter($parameterNumber, $properties);
 
         return $condition;
     }

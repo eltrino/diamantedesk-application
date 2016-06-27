@@ -59,6 +59,9 @@ class GenericTargetEntityProvider
     /** @var  ContainerInterface */
     protected $container;
 
+    /** @var  integer */
+    protected $parameterNumber = 1;
+
     /**
      * GenericTargetEntityProvider constructor.
      *
@@ -188,6 +191,7 @@ class GenericTargetEntityProvider
         $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
         $fieldName = $this->em->getClassMetadata($targetClass)->getFieldName($property);
         $conditionsMapper = $this->container->getParameter('diamante.automation.config.conditions_mapper');
+        $parameterNumber = $this->getParameterNumber();
 
         if (isset($conditionsMapper[self::BUSINESS][$targetType][$property][$expr])) {
             $getter = $conditionsMapper[self::BUSINESS][$targetType][$property][$expr];
@@ -197,13 +201,21 @@ class GenericTargetEntityProvider
                 $method = $getter['method'];
 
                 if (method_exists($conditionServiceBuilder, $method)) {
-                    return $conditionServiceBuilder->$method($qb, $expr, $fieldName, $value);
+                    return $conditionServiceBuilder->$method($qb, $expr, $fieldName, $value, $parameterNumber);
                 }
             }
 
             throw new \RuntimeException('Invalid source data.');
         } else {
-            return $this->conditionBuilder->getCondition($qb, $expr, $fieldName, $value);
+            return $this->conditionBuilder->getCondition($qb, $expr, $fieldName, $value, $parameterNumber);
         }
+    }
+
+    /**
+     * @return int
+     */
+    protected function getParameterNumber()
+    {
+        return $this->parameterNumber++;
     }
 }
