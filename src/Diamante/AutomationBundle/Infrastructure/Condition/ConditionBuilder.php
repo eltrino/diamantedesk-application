@@ -27,6 +27,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ConditionBuilder
 {
+    const UNASSIGNED = 'unassigned';
+
     protected $conditionTimeMap
         = [
             'gt'  => 'lt',
@@ -199,11 +201,15 @@ class ConditionBuilder
      */
     public function getAssigneeCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
-        $condition = call_user_func_array(
-            [$qb->expr(), $expr],
-            [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf("?%d", $parameterNumber)]
-        );
-        $qb->setParameter($parameterNumber, User::fromString($value)->getId());
+        if (self::UNASSIGNED == $value) {
+            $condition = $qb->expr()->isNull(sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName));
+        } else {
+            $condition = call_user_func_array(
+                [$qb->expr(), $expr],
+                [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf("?%d", $parameterNumber)]
+            );
+            $qb->setParameter($parameterNumber, User::fromString($value)->getId());
+        }
 
         return $condition;
     }
