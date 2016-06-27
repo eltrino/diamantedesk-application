@@ -137,7 +137,7 @@ class Engine
             $results[] = $this->checkGroup($fact, $group);
         } else {
             foreach ($group->getChildren() as $child) {
-                $results[] = $child->checkGroup($fact, $group);
+                $results[] = $this->checkGroup($fact, $child);
             }
         }
 
