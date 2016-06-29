@@ -4,7 +4,7 @@
 
 {% if changes is defined %}
     {% for key, value in changes %}
-        - {{ key|ucfirst }}: {{ attribute(value, 'new')|ucfirst }}
+        - {{ key|ucfirst }}: {{ attribute(value, 'new')|striptags|ucfirst }}
     {% endfor %}
 {% endif %}
 
