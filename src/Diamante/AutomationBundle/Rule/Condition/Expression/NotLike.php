@@ -32,6 +32,6 @@ class NotLike extends AbstractCondition
     {
         $actualValue = $this->getActualValue($fact);
 
-        return false === strpos($actualValue, $this->context->getExpectedValue());
+        return false === stripos($actualValue, $this->context->getExpectedValue());
     }
 }

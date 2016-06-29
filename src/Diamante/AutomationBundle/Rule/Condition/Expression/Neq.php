@@ -31,6 +31,6 @@ class Neq extends AbstractCondition
     {
         $actualValue = $this->getActualValue($fact);
 
-        return $actualValue != $this->context->getExpectedValue();
+        return strcasecmp($actualValue, $this->context->getExpectedValue()) !== 0;
     }
 }
