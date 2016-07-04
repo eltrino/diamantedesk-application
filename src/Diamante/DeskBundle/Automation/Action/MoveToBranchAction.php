@@ -16,10 +16,11 @@
 namespace Diamante\DeskBundle\Automation\Action;
 
 use Diamante\AutomationBundle\Rule\Action\AbstractModifyAction;
+use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Entity\TicketHistory;
 use Doctrine\DBAL\LockMode;
-use Proxies\__CG__\Diamante\DeskBundle\Entity\Branch;
+
 
 /**
  * Class MoveToBranchAction
@@ -46,6 +47,17 @@ class MoveToBranchAction extends AbstractModifyAction
             throw new \RuntimeException("Invalid rule configuration");
         }
 
+        $this->move($target, $targetType, $branchId);
+    }
+
+    /**
+     * @param $target
+     * @param $targetType
+     * @param $branchId
+     */
+    protected function move($target, $targetType, $branchId)
+    {
+        $this->em = $this->getEntityManager();
         $this->em->getConnection()->beginTransaction();
 
         try {
@@ -54,23 +66,31 @@ class MoveToBranchAction extends AbstractModifyAction
                 $this->getTicketId($target, $targetType)
             );
 
-            if ($branchId == $ticket->getBranchId()) {
-                return;
-            }
-
             /** @var Branch $branch */
-            $branch = $this->em->getRepository('DiamanteDeskBundle:Branch')->get($branchId);
-            $this->em->lock($branch, LockMode::PESSIMISTIC_READ);
+            $branch = $this->em->find('DiamanteDeskBundle:Branch', $branchId, LockMode::PESSIMISTIC_READ);
             $this->em->getRepository('DiamanteDeskBundle:TicketHistory')->store(new TicketHistory($ticket));
             $ticket->move($branch);
 
             $this->disableListeners();
             $this->em->persist($ticket);
-            $this->em->flush();
+            $this->em->flush($ticket);
+            $this->em->flush($branch);
             $this->em->getConnection()->commit();
         } catch (\Exception $e) {
             $this->em->getConnection()->rollback();
+            $this->move($target, $targetType, $branchId);
         }
+    }
+
+    protected function getEntityManager()
+    {
+        $em = $this->registry->getManager();
+        if (!$em->isOpen()) {
+            $this->registry->resetManager();
+            $em = $this->registry->getManager();
+        }
+
+        return $em;
     }
 
     /**

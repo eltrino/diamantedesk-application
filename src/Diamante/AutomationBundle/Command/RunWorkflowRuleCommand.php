@@ -55,9 +55,6 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
      */
     protected $context;
 
-    /**
-     *
-     */
     protected function configure()
     {
         $this->setName('diamante:automation:workflow:run')
@@ -128,9 +125,23 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
             return 255;
         }
 
-        $this->em->persist($this->context);
-        $this->em->flush();
+        // if entity manager closed after dead lock in MoveToBranchAction, load it again
+        $em = $this->getEntityManager();
+        $em->persist($this->context);
+        $em->flush();
 
         return 0;
+    }
+
+    protected function getEntityManager()
+    {
+        $registry = $this->getContainer()->get('doctrine');
+        $em = $registry->getManager();
+        if (!$em->isOpen()) {
+            $registry->resetManager();
+            $em = $registry->getManager();
+        }
+
+        return $em;
     }
 }

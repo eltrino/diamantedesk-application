@@ -50,7 +50,7 @@ class TicketListener
      */
     public function prePersistHandler(Ticket $ticket, LifecycleEventArgs $event)
     {
-        $this->reporterEmailSetter($event);
+        $this->reporterEmailSetter($ticket);
 
         if ($ticket->getSequenceNumber()->getValue()) {
             return;
@@ -68,17 +68,12 @@ class TicketListener
     }
 
     /**
-     * @param LifecycleEventArgs $eventArgs
+     * @param Ticket $ticket
      */
-    protected function reporterEmailSetter(LifecycleEventArgs $eventArgs) {
-        $entity = $eventArgs->getEntity();
-
-        if (!$entity instanceof Ticket) {
-            return;
-        }
-
-        $reporter = $entity->getReporter();
+    protected function reporterEmailSetter(Ticket $ticket)
+    {
+        $reporter = $ticket->getReporter();
         $user = $this->container->get('diamante.user.service')->getByUser($reporter);
-        $entity->setReporterEmail($user->getEmail());
+        $ticket->setReporterEmail($user->getEmail());
     }
 }

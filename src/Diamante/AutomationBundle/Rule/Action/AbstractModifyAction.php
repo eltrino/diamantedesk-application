@@ -26,7 +26,7 @@ use Oro\Bundle\EntityBundle\Event\OroEventManager;
 abstract class AbstractModifyAction extends AbstractAction
 {
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Oro\Bundle\EntityBundle\ORM\OroEntityManager
      */
     protected $em;
 
@@ -55,7 +55,8 @@ abstract class AbstractModifyAction extends AbstractAction
     /**
      * to avoid update action entry in PersistentProcessingContext entity
      */
-    protected function disableListeners() {
+    protected function disableListeners()
+    {
         /** @var OroEventManager $event */
         $event = $this->em->getEventManager();
         $event->disableListeners();

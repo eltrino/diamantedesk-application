@@ -118,7 +118,7 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
     /**
      * @var Branch
      *
-     * @ORM\ManyToOne(targetEntity="Branch", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Branch", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="branch_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @ConfigField(
