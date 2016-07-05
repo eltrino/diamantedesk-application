@@ -46,7 +46,11 @@
     <div class="controls">
         <select name="target" data-attr="target" id="automation-target">
             <% for(var key in entities) { %>
-            <option value="<%= key %>"<%= key == target ? ' selected' : ''%>><%= entities[key].label %></option>
+                <% if (isBusiness && 'comment' == key) {%>
+                    <% continue; %>
+                <% } %>
+
+                <option value="<%= key %>"<%= key == target ? ' selected' : ''%>><%= entities[key].label %></option>
             <% } %>
         </select>
     </div>
