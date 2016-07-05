@@ -20,7 +20,7 @@
             <% _.each(entity_conditions, function(key){ %>
                 <% if (!isBusiness) { %>
                     <option value="<%= key %>"<%= key == entity_type ? ' selected' : ''%>>
-                        <%= conditions[key].charAt(0).toUpperCase()+conditions[key].slice(1) %>
+                        <%= conditions[key].label.charAt(0).toUpperCase()+conditions[key].label.slice(1) %>
                     </option>
                 <% } %>
             <% }); %>
@@ -39,11 +39,15 @@
             <select name="conditions[type]" data-attr="type" data-rel-attr="value">
                 <% if(custom_conditions){ %>
                     <% _.each(custom_conditions, function(key){ %>
-                        <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                        <% if(_.contains(conditions[key].rules, rule_type)) { %>
+                            <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key].label %></option>
+                        <% } %>
                     <% }); %>
                 <% } else { %>
                     <% for(var key in conditions) { %>
-                    <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                        <% if(_.contains(conditions[key].rules, rule_type)) { %>
+                            <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key].label %></option>
+                        <% } %>
                     <% } %>
                 <% } %>
             </select>

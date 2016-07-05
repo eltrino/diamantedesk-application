@@ -311,6 +311,20 @@ class AutomationConfigurationProvider
         return $defaultRules;
     }
 
+
+    protected function getSupportedRulesForCondition($conditionName)
+    {
+        $defaultRules = [Rule::TYPE_BUSINESS, Rule::TYPE_WORKFLOW];
+        $config = $this->getConfiguredConditions();
+        $rules = $config->get(sprintf("%s.rules", $conditionName));
+
+        if (is_array($rules)) {
+            return $rules;
+        }
+
+        return $defaultRules;
+    }
+
     /**
      * @param Translator $translator
      * @return array
@@ -432,7 +446,12 @@ class AutomationConfigurationProvider
         $conditions = [];
 
         foreach ($this->conditions as $name => $config) {
-            $conditions[$name] = $translator->trans($config['frontend_label']);
+            $condition = [
+                'label' => $translator->trans($config['frontend_label']),
+                'rules' => $this->getSupportedRulesForCondition($name)
+            ];
+
+            $conditions[$name] = $condition;
         }
 
         return $conditions;
