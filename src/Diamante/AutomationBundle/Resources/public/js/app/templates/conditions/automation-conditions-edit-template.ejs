@@ -77,7 +77,7 @@
                     <% for(var key in properties[property].frontend_options) { %>
                     <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
                         <% if (properties[property].type == 'user'){ %>
-                        <%= properties[property].frontend_options[key].email %>
+                        <%= properties[property].frontend_options[key] %>
                         <% } else { %>
                         <%= properties[property].frontend_options[key] %>
                         <% } %>

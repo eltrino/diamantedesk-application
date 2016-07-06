@@ -151,14 +151,20 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
      */
     public function getAssigners()
     {
+        $list = [];
+
+        foreach ($this->getOroUsers() as $key => $user) {
+            $list[$key] = $user['firstName'] . ' ' . $user['lastName'] . ' – ' . $user['email'];
+        }
+
         $assigners = array_merge(
-            ['unassigned' => ['email' => 'Unassigned']],
-            $this->getOroUsers()
+            ['unassigned' => 'Unassigned'],
+            $list
         );
 
         return $assigners;
     }
-    
+
     /**
      * @return array
      */
