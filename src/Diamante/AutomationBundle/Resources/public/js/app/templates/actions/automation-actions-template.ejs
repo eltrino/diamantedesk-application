@@ -22,7 +22,7 @@
             <% } else if (properties[property].frontend_options){ %>
                 <strong class="value">
                     <% if (properties[property].type == 'user'){ %>
-                    <%= properties[property].frontend_options[value].email %>
+                    <%= properties[property].frontend_options[value] %>
                     <% } else { %>
                     <%= properties[property].frontend_options[value] %>
                     <% } %>
