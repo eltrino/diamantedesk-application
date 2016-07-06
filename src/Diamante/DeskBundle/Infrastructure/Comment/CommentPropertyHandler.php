@@ -13,23 +13,19 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Rule\Condition\Expression;
+namespace Diamante\DeskBundle\Infrastructure\Comment;
 
+use Diamante\DeskBundle\Infrastructure\Shared\Entity\AbstractPropertyHandler;
 
-use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
-use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
-
-class NotContains extends AbstractCondition
+class CommentPropertyHandler extends AbstractPropertyHandler
 {
-    /**
-     * @param AbstractFact $fact
-     *
-     * @return bool
-     */
-    public function isSatisfiedBy(AbstractFact $fact)
-    {
-        $actualValue = $this->extractPropertyValue($fact);
+    const COMMENT_TYPE = 'comment';
 
-        return false === strpos($actualValue, $this->expectedValue);
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return static::COMMENT_TYPE;
     }
 }

@@ -33,18 +33,26 @@ class AutomationConfigurationProvider
      * @var array
      */
     protected $entities = [];
+
     /**
      * @var array
      */
     protected $conditions = [];
+
     /**
      * @var array
      */
     protected $condition_type = [];
+
     /**
      * @var array
      */
     protected $actions = [];
+
+    /**
+     * @var array
+     */
+    protected $conditions_mapper = [];
 
     /**
      * @var array
@@ -54,7 +62,7 @@ class AutomationConfigurationProvider
     /**
      * @var array
      */
-    protected static $configStructure = ['entities', 'conditions', 'condition_type', 'actions'];
+    protected static $configStructure = ['entities', 'conditions', 'condition_type', 'actions', 'conditions_mapper'];
 
     /**
      * @var FrontendOptionsResolver
@@ -303,6 +311,20 @@ class AutomationConfigurationProvider
         return $defaultRules;
     }
 
+
+    protected function getSupportedRulesForCondition($conditionName)
+    {
+        $defaultRules = [Rule::TYPE_BUSINESS, Rule::TYPE_WORKFLOW];
+        $config = $this->getConfiguredConditions();
+        $rules = $config->get(sprintf("%s.rules", $conditionName));
+
+        if (is_array($rules)) {
+            return $rules;
+        }
+
+        return $defaultRules;
+    }
+
     /**
      * @param Translator $translator
      * @return array
@@ -363,6 +385,20 @@ class AutomationConfigurationProvider
     }
 
     /**
+     * @param string $entityType
+     * @param string $property
+     *
+     * @return string
+     */
+    public function getType($entityType, $property)
+    {
+        $path = sprintf('%s.properties.%s.type', $entityType, $property);
+        $propertyType = $this->getConfiguredEntities()->get($path);
+
+        return $propertyType;
+    }
+
+    /**
      * @param Translator $translator
      * @return array
      */
@@ -410,7 +446,12 @@ class AutomationConfigurationProvider
         $conditions = [];
 
         foreach ($this->conditions as $name => $config) {
-            $conditions[$name] = $translator->trans($config['frontend_label']);
+            $condition = [
+                'label' => $translator->trans($config['frontend_label']),
+                'rules' => $this->getSupportedRulesForCondition($name)
+            ];
+
+            $conditions[$name] = $condition;
         }
 
         return $conditions;

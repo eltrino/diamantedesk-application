@@ -10,6 +10,7 @@
 <% var entity_type = typeof entity_type !== 'undefined' && entity_type; %>
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
+<% var rule_type = isBusiness ? 'business' : 'workflow'; %>
 <div class="controls">
     <span class="label">If</span>
     <label for="automation-target" class="value"><%= entities[entity].label %></label>
@@ -17,9 +18,11 @@
         <option value="">Property Updated</option>
         <% if(entity_conditions){ %>
             <% _.each(entity_conditions, function(key){ %>
-            <option value="<%= key %>"<%= key == entity_type ? ' selected' : ''%>>
-                <%= conditions[key].charAt(0).toUpperCase()+conditions[key].slice(1) %>
-            </option>
+                <% if (!isBusiness) { %>
+                    <option value="<%= key %>"<%= key == entity_type ? ' selected' : ''%>>
+                        <%= conditions[key].label.charAt(0).toUpperCase()+conditions[key].label.slice(1) %>
+                    </option>
+                <% } %>
             <% }); %>
         <% } %>
     </select>
@@ -28,17 +31,23 @@
             <span class="label">Property</span>
             <select name="conditions[property]" data-attr="property" data-rel-attr="value,type">
                 <% for(var key in properties) { %>
-                <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
+                    <% if(_.contains(properties[key].rules, rule_type)) { %>
+                        <option value="<%= key %>"<%= key == property ? ' selected' : ''%>><%= properties[key].label %></option>
+                    <% } %>
                 <% } %>
             </select>
             <select name="conditions[type]" data-attr="type" data-rel-attr="value">
                 <% if(custom_conditions){ %>
                     <% _.each(custom_conditions, function(key){ %>
-                        <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                        <% if(_.contains(conditions[key].rules, rule_type)) { %>
+                            <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key].label %></option>
+                        <% } %>
                     <% }); %>
                 <% } else { %>
                     <% for(var key in conditions) { %>
-                    <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key] %></option>
+                        <% if(_.contains(conditions[key].rules, rule_type)) { %>
+                            <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= conditions[key].label %></option>
+                        <% } %>
                     <% } %>
                 <% } %>
             </select>

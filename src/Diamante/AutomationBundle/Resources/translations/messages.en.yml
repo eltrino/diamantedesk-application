@@ -62,7 +62,7 @@ diamante:
       weight:              Weight
       target:              Target
       parent:              Parent
-      active:              Status
+      status:              Status
       expression:          Expression
       mode:                Mode
 

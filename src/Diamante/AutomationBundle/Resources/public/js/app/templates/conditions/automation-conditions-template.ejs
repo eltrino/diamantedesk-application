@@ -14,7 +14,7 @@
     <% if(!entity_type){ %>
         <% if(properties){ %>
             <strong class="value"><%= properties[property].label %></strong>
-            <strong class="value"><%= conditions[type] %></strong>
+            <strong class="value"><%= conditions[type].label %></strong>
             <% if(type in condition_type){ %>
                 <% if(condition_type[type] === 'string') { %>
                 <strong class="value"><%= value %></strong>

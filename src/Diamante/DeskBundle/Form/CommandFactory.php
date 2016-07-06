@@ -92,13 +92,15 @@ class CommandFactory
     }
 
     /**
-     * @param string $ticketIds
+     * @param string  $ticketIds
+     * @param integer $inset
      * @return MassAssigneeTicketCommand
      */
-    public function createMassAssigneeTicketCommand($ticketIds)
+    public function createMassAssigneeTicketCommand($ticketIds, $inset)
     {
         $command = new MassAssigneeTicketCommand();
         $command->ids = $ticketIds;
+        $command->inset = $inset;
 
         return $command;
     }
@@ -118,13 +120,15 @@ class CommandFactory
     }
 
     /**
-     * @param string $ticketIds
+     * @param string  $ticketIds
+     * @param integer $inset
      * @return MassMoveTicketCommand
      */
-    public function createMassMoveTicketCommand($ticketIds)
+    public function createMassMoveTicketCommand($ticketIds, $inset)
     {
         $command = new MassMoveTicketCommand();
         $command->ids = $ticketIds;
+        $command->inset = $inset;
 
         return $command;
     }
@@ -143,13 +147,15 @@ class CommandFactory
     }
 
     /**
-     * @param string $ticketIds
+     * @param string  $ticketIds
+     * @param integer $inset
      * @return MassAddWatcherCommand
      */
-    public function createMassAddWatcherCommand($ticketIds)
+    public function createMassAddWatcherCommand($ticketIds, $inset)
     {
         $command = new MassAddWatcherCommand();
         $command->ids = $ticketIds;
+        $command->inset = $inset;
 
         return $command;
     }
@@ -219,12 +225,14 @@ class CommandFactory
 
     /**
      * @param string $ticketIds
+     * @param integer $inset
      * @return MassChangeStatusCommand
      */
-    public function createChangeStatusMassCommand($ticketIds)
+    public function createChangeStatusMassCommand($ticketIds, $inset)
     {
         $command = new MassChangeStatusCommand();
         $command->ids = $ticketIds;
+        $command->inset = $inset;
 
         return $command;
     }

@@ -14,28 +14,33 @@
  */
 namespace Diamante\DeskBundle;
 
+use Diamante\DeskBundle\DependencyInjection\Compiler;
 use Doctrine\DBAL\Types\Type;
 use Oro\Bundle\DataAuditBundle\Model\AuditFieldTypeRegistry;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class DiamanteDeskBundle extends Bundle
 {
     /**
      * @var array
      */
-    private $dataAuditTypes = [
-        'status',
-        'priority',
-        'user_type',
-        'attachment_file',
-        'source'
-    ];
+    private $dataAuditTypes
+        = [
+            'status',
+            'priority',
+            'user_type',
+            'attachment_file',
+            'source'
+        ];
 
     public function boot()
     {
         if (!Type::hasType('branch_logo')) {
-            Type::addType('branch_logo', 'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\BranchLogoType');
+            Type::addType(
+                'branch_logo',
+                'Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types\BranchLogoType'
+            );
         }
         if (!Type::hasType('priority')) {
             Type::addType(
@@ -89,13 +94,15 @@ class DiamanteDeskBundle extends Bundle
 
     /**
      * @see Symfony\Component\HttpKernel\Bundle\Bundle::build()
+     *
      * @param ContainerBuilder $container
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\TagCompilerPass());
-        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterSubscribersPass());
-        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\RegisterNotificationOptionsProvidersPass());
-        $container->addCompilerPass(new \Diamante\DeskBundle\DependencyInjection\Compiler\FilterTypesPass());
+        $container->addCompilerPass(new Compiler\TagCompilerPass())
+            ->addCompilerPass(new Compiler\RegisterSubscribersPass())
+            ->addCompilerPass(new Compiler\RegisterNotificationOptionsProvidersPass())
+            ->addCompilerPass(new Compiler\FilterTypesPass())
+            ->addCompilerPass(new Compiler\RegisterPropertyHandlersPass());
     }
 }

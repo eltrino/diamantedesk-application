@@ -28,7 +28,7 @@ class IsCustomer extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact);
+        $actualValue = $this->getActualValue($fact);
         $user = User::fromString($actualValue);
 
         return $user->isDiamanteUser();

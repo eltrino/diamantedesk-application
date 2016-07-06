@@ -17,8 +17,9 @@ namespace Diamante\AutomationBundle\Model;
 
 class WorkflowRule extends Rule
 {
-    public function update($name)
+    public function update($name, $status)
     {
         $this->name = $name;
+        $this->status = $status;
     }
 }

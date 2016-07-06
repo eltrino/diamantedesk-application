@@ -24,11 +24,6 @@ interface AutocompleteUserService
     /**
      * @return array
      */
-    public function getOroUsers();
-
-    /**
-     * @return array
-     */
     public function getDiamanteUsers();
 
     /**

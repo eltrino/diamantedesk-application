@@ -137,7 +137,7 @@ class Engine
             $results[] = $this->checkGroup($fact, $group);
         } else {
             foreach ($group->getChildren() as $child) {
-                $results[] = $child->checkGroup($fact, $group);
+                $results[] = $this->checkGroup($fact, $child);
             }
         }
 
@@ -210,7 +210,11 @@ class Engine
     protected function processExclusive(AbstractFact $fact, Group $group)
     {
         foreach ($group->getConditions() as $conditionEntity) {
-            $condition = $this->conditionFactory->getCondition($conditionEntity->getType(), $conditionEntity->getParameters(), $fact->getTargetType());
+            $condition = $this->conditionFactory->getCondition(
+                $conditionEntity->getType(),
+                $conditionEntity->getParameters(),
+                $fact->getTargetType()
+            );
 
             if (true === $condition->isSatisfiedBy($fact)) {
                 return true;
@@ -229,7 +233,7 @@ class Engine
         if (empty($this->rules[$fact->getTargetType()])) {
             $repository = $this->em->getRepository(static::WORKFLOW_ENTITY);
 
-            $this->rules[$fact->getTargetType()] = $repository->findBy(['active' => true, 'target' => $fact->getTargetType()]);
+            $this->rules[$fact->getTargetType()] = $repository->findBy(['status' => true, 'target' => $fact->getTargetType()]);
         }
 
         return $this->rules[$fact->getTargetType()];
@@ -275,7 +279,7 @@ class Engine
             $this->scheduler->addAction($action);
         }
 
-        if (!$dryRun && !$this->scheduler->isEmpty()) {
+        if (!$dryRun && !$this->scheduler->isEmpty() && !empty($targetEntities)) {
             foreach ($targetEntities as $entity) {
                 $fact = $this->createBusinessFact($entity);
                 $this->scheduler->run($fact);

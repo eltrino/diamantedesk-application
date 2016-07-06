@@ -23,12 +23,12 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         parent = options._sourceElement.parent(),
         plot = d3.select(elem),
         sum = _.reduce(data, function(memo, elem){ return memo + toInt(elem.data); }, 0),
-        outputData = data.length,
+        isEmpty = !data.length,
         getRandomInt = function(min, max) {
           return Math.floor(Math.random() * (max - min + 1) + min).toString();
         };
 
-    if ( !outputData) {
+    if (isEmpty) {
       parent.prepend('<div class="empty-widget">No Data. There are no tickets available for analytics yet.</div>');
       $(elem).css({
         opacity: '.2',
@@ -104,11 +104,11 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .attr("class", "slice")
         .attr("d", arc);
 
-        if ( !outputData ) {
-          $('path.slice', elem).css('fill', '#646464');
-          $('path.slice:nth-child(2)', elem).css('opacity', '.7');
-          $('path.slice:nth-child(3)', elem).css('opacity', '.4');
-        }
+    if ( isEmpty ) {
+      $('path.slice', elem).css('fill', '#646464');
+      $('path.slice:nth-child(2)', elem).css('opacity', '.7');
+      $('path.slice:nth-child(3)', elem).css('opacity', '.4');
+    }
 
     slice.exit()
         .remove();
@@ -128,7 +128,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
           return "translate(" + pos + ")";
         })
         .text(function(d) {
-          return (outputData) ? (d.data.label + ' ' + toPercent(d.data.data, sum) + "%") : '';
+          return (!isEmpty) ? (d.data.label + ' ' + toPercent(d.data.data, sum) + "%") : '';
         });
 
     text.exit()
@@ -142,7 +142,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .attr("points", function(d){
           var pos = outerArc.centroid(d);
           pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
-          return (outputData) ? ([arc.centroid(d), outerArc.centroid(d), pos]) : '';
+          return (!isEmpty) ? ([arc.centroid(d), outerArc.centroid(d), pos]) : '';
         });
 
     polyline.exit()

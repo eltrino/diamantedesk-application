@@ -21,5 +21,7 @@ namespace Diamante\DeskBundle\Model\Shared;
  */
 interface Weightable
 {
-    public function getWeight($priority);
+    public static function getWeightList();
+
+    public static function getWeight($priority);
 }

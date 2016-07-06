@@ -113,12 +113,10 @@ datagrid:
                     - i.priority
                     - i.status
                     - assignee.id as assigneeId
-#                    - reporter.id as reporterId
                     - branch.name as branchName
-#                    - CONCAT(reporter.firstName, CONCAT(' ', reporter.lastName)) as reporterFullName
                     - CONCAT(assignee.firstName, CONCAT(' ', assignee.lastName)) as assigneeFullName
                     - i.createdAt
-                    - i.updatedAt
+                    - CASE WHEN i.updatedAt IS NOT NULL THEN i.updatedAt ELSE i.createdAt END as updatedAt
                 from:
                     - { table: DiamanteDeskBundle:Ticket, alias: i }
                 join:
@@ -187,7 +185,7 @@ datagrid:
                 createdAt:
                   data_name: i.createdAt
                 updatedAt:
-                  data_name: i.updatedAt
+                  data_name: updatedAt
             default:
                 updatedAt: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC
         filters:
@@ -230,7 +228,7 @@ datagrid:
                     data_name: i.createdAt
                 updatedAt:
                     type:      datetime
-                    data_name: i.updatedAt
+                    data_name: updatedAt
 
                 watcher:
                     type:      string
@@ -488,7 +486,7 @@ datagrid:
                     - CONCAT(branch.key, CONCAT('-', i.sequenceNumber)) as key
                     - i.subject
                     - i.status
-                    - i.updatedAt
+                    - CASE WHEN i.updatedAt IS NOT NULL THEN i.updatedAt ELSE i.createdAt END as updatedAt
                 from:
                     - { table: DiamanteDeskBundle:Ticket, alias: i }
                 join:
@@ -500,7 +498,7 @@ datagrid:
                         - i.assignee = :userId
                         - i.reporter = :reporterId
                 orderBy:
-                      - column: i.updatedAt
+                      - column: updatedAt
                         dir: desc
             bind_parameters:
                    - userId

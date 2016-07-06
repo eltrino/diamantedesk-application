@@ -23,18 +23,18 @@ diamante_automation:
               source: "@diamante.autocomplete.branch.service->getBranches"
             type: branch
             updatable: false
-            conditions: ['eq', 'neq', 'contains']
+            conditions: ['eq', 'neq', 'like']
           assignee:
             frontend_label: diamante.desk.ticket.assignee.label
             frontend_options:
-              source: "@diamante.autocomplete.user.service->getOroUsers"
+              source: "@diamante.autocomplete.user.service->getAssigners"
             type: user
             conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to']
           reporter_email:
             frontend_label: diamante.desk.ticket.reporter_email.label
-            type: virtual
+            type: string
             updatable: false
-            conditions: ['eq', 'neq', 'contains', 'not_contains']
+            conditions: ['eq', 'neq', 'like', 'not_like']
             accessor: diamante_automation.ticket.property.processor::getReporterEmail
           source:
             frontend_label: diamante.desk.ticket.source.label
@@ -46,17 +46,17 @@ diamante_automation:
             frontend_label: diamante.desk.ticket.subject.label
             type: string
             updatable: false
-            conditions: ['eq', 'neq', 'contains', 'not_contains']
+            conditions: ['eq', 'neq', 'like', 'not_like']
           description:
             frontend_label: diamante.desk.ticket.description.label
             type: string
             updatable: false
-            conditions: ['contains', 'not_contains']
-          sent_to:
+            conditions: ['like', 'not_like']
+          endpoint:
             frontend_label: diamante.desk.ticket.created_via_email.label
             type: virtual
             updatable: false
-            conditions: ['eq', 'neq', 'contains', 'not_contains']
+            conditions: ['eq', 'neq', 'like', 'not_like']
             accessor: diamante.ticket.email_processing_message_reference.repository::getEndpointByTicket
             rules: ['workflow']
           created_at:
@@ -92,7 +92,7 @@ diamante_automation:
             frontend_label: diamante.desk.comment.content.label
             type: string
             updatable: false
-            conditions: ['contains', 'not_contains']
+            conditions: ['like', 'not_like']
           private:
             frontend_label: diamante.desk.comment.private.label
             type: bool
@@ -108,7 +108,7 @@ diamante_automation:
             frontend_label: diamante.desk.comment.author_email.label
             type: virtual
             updatable: false
-            conditions: ['eq', 'neq', 'contains', 'not_contains']
+            conditions: ['eq', 'neq', 'like', 'not_like']
             accessor: diamante_automation.comment.property.processor::getAuthorEmail
 
     actions:

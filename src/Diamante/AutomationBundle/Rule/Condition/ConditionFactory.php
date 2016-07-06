@@ -19,6 +19,7 @@ namespace Diamante\AutomationBundle\Rule\Condition;
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Diamante\DeskBundle\Infrastructure\Shared\Entity\Context;
 
 class ConditionFactory
 {
@@ -63,6 +64,9 @@ class ConditionFactory
             throw new \RuntimeException(sprintf("Unknown condition type %s", $type));
         }
 
+        $conditionId = sprintf('diamante_automation.condition.%s', $type);
+        $condition = $this->container->get($conditionId);
+
         $class = $this->conditions->get(sprintf("%s.class", $type));
 
         if (!class_exists($class)) {
@@ -77,15 +81,16 @@ class ConditionFactory
 
         $property = key($parameters);
         $expectedValue = $parameters[$property];
-
+        $context = new Context($property, $expectedValue);
 
         if ($this->configProvider->isVirtualProperty($entityType, $property)) {
             $propertyAccessor = $this->resolveAccessor($entityType, $property);
-
-            return new $class($property, $expectedValue, $propertyAccessor);
+            $context = new Context($property, $expectedValue, $propertyAccessor);
         }
 
-        return new $class($property, $expectedValue);
+        $condition->setContext($context);
+
+        return $condition;
     }
 
     protected function resolveAccessor($entityType, $property)

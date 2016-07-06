@@ -33,8 +33,11 @@ class ChangedTo extends AbstractCondition
         }
 
         $changeset = $fact->getTargetChangeset();
-        list($old, $new) = $changeset[$this->property];
+        list($old, $new) = $changeset[$this->context->getProperty()];
+        $propertyHandler = $this->propertyManager->getPropertyHandler($fact->getTargetType());
+        $propertyHandler->setContext($this->context);
+        $new = $propertyHandler->processPropertyValue($fact->getTargetType(), $new);
 
-        return $this->typeJuggling($new) == $this->expectedValue;
+        return $new == $this->context->getExpectedValue();
     }
 }

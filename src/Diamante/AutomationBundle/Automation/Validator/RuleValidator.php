@@ -39,7 +39,7 @@ class RuleValidator implements ValidatorInterface
      */
     public function validate(array $input)
     {
-        $checks = ['type', 'actions', 'grouping', 'target'];
+        $checks = ['type', 'actions', 'grouping', 'target', 'status'];
 
         foreach ($checks as $check) {
             $validator = sprintf("validate%s", ucfirst($check));
@@ -67,6 +67,17 @@ class RuleValidator implements ValidatorInterface
         }
 
         return true;
+    }
+
+    protected function validateStatus($subject)
+    {
+        $status = isset($subject['status']) ? $subject['status'] : null;
+
+        if (in_array($status, [0, 1], true)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function validateGrouping($subject)

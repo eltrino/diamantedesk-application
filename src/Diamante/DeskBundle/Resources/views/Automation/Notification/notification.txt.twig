@@ -6,7 +6,7 @@ You can view this ticket using following link {{ render_ticket_url(ticketKey, re
 
 {% if changes is defined %}
     {% for key, value in changes %}
-        - {{ key|capitalize }}: {{ attribute(value, 'new')|capitalize }}
+        - {{ key|ucfirst }}: {{ attribute(value, 'new')|striptags|ucfirst }}
     {% endfor %}
 {% endif %}
 

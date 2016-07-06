@@ -6,7 +6,7 @@ datagrid:
         select:
           - w.id
           - w.name
-          - w.active
+          - w.status
           - ('workflow') as type
         from:
           - { table: %diamante_automation.workflow_rule.entity.class%, alias: w}
@@ -34,8 +34,8 @@ datagrid:
       columns:
         name:
           data_name: w.name
-        active:
-          data_name: w.active
+        status:
+          data_name: w.status
 
     filters:
       columns:
@@ -46,12 +46,12 @@ datagrid:
     columns:
       name:
         label: diamante.automation.common.name
-      active:
-        label: diamante.automation.attributes.active
+      status:
+        label: diamante.automation.attributes.status
         frontend_type: select
         choices:
-          0: Inactive
-          1: Active
+          0: diamante.automation.rule.status.inactive
+          1: diamante.automation.rule.status.active
 
     actions:
       view:
@@ -106,7 +106,7 @@ datagrid:
           - b.id
           - b.name
           - b.timeInterval as time
-          - b.active
+          - b.status
           - ('business') as type
         from:
           - { table: %diamante_automation.business_rule.entity.class%, alias: b}
@@ -134,8 +134,8 @@ datagrid:
       columns:
         name:
           data_name: b.name
-        active:
-          data_name: b.active
+        status:
+          data_name: b.status
 
     filters:
       columns:
@@ -151,8 +151,8 @@ datagrid:
         frontend_type: select
         choices: @diamante_automation.datagrid.helper->getTimeIntervalChoices
 
-      active:
-        label: diamante.automation.attributes.active
+      status:
+        label: diamante.automation.attributes.status
         frontend_type: select
         choices:
           0: diamante.automation.rule.status.inactive

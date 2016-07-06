@@ -18,6 +18,7 @@ namespace Diamante\AutomationBundle\Infrastructure;
 
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Entity\Group;
+use Diamante\AutomationBundle\Infrastructure\Condition\ConditionBuilder;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Condition\ConditionInterface;
@@ -25,17 +26,17 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class GenericTargetEntityProvider
+ *
+ * @package Diamante\AutomationBundle\Infrastructure
+ */
 class GenericTargetEntityProvider
 {
     const TARGET_ALIAS = 't';
-
-    protected static $conditionTimeMap = [
-        'gt' => 'lt',
-        'gte' => 'lte',
-        'lt' => 'gt',
-        'lte' => 'gte',
-    ];
+    const BUSINESS = 'business';
 
     /**
      * @var EntityManager
@@ -52,27 +53,42 @@ class GenericTargetEntityProvider
      */
     protected $configurationProvider;
 
+    /** @var  ConditionBuilder */
+    protected $conditionBuilder;
+
+    /** @var  ContainerInterface */
+    protected $container;
+
+    /** @var  integer */
+    protected $parameterNumber = 1;
+
     /**
      * GenericTargetEntityProvider constructor.
      *
      * @param Registry                        $registry
      * @param ConditionFactory                $conditionFactory
      * @param AutomationConfigurationProvider $configurationProvider
+     * @param ConditionBuilder                $conditionBuilder
+     * @param ContainerInterface              $container
      */
     public function __construct(
         Registry $registry,
         ConditionFactory $conditionFactory,
-        AutomationConfigurationProvider $configurationProvider
-    )
-    {
-        $this->em                    = $registry->getManager();
-        $this->conditionFactory      = $conditionFactory;
+        AutomationConfigurationProvider $configurationProvider,
+        ConditionBuilder $conditionBuilder,
+        ContainerInterface $container
+    ) {
+        $this->em = $registry->getManager();
+        $this->conditionFactory = $conditionFactory;
         $this->configurationProvider = $configurationProvider;
+        $this->conditionBuilder = $conditionBuilder;
+        $this->container = $container;
     }
 
     /**
      * @param Rule $rule
-     * @param $targetClass
+     * @param      $targetClass
+     *
      * @return array|null
      */
     public function getTargets(Rule $rule, $targetClass)
@@ -89,7 +105,8 @@ class GenericTargetEntityProvider
 
     /**
      * @param Group $group
-     * @param $targetClass
+     * @param       $targetClass
+     *
      * @return \Doctrine\ORM\Query
      */
     protected function buildQuery(Group $group, $targetClass)
@@ -97,8 +114,10 @@ class GenericTargetEntityProvider
         $targetType = $this->configurationProvider->getTargetByClass($targetClass);
         $qb = $this->em->createQueryBuilder();
 
-        $qb->select(self::TARGET_ALIAS)
-            ->from($targetClass, self::TARGET_ALIAS);
+        $qb->select(self::TARGET_ALIAS, 'b')
+            ->from($targetClass, self::TARGET_ALIAS)
+            ->leftJoin('DiamanteDeskBundle:MessageReference', 'mr', Expr\Join::WITH, 'mr.ticket = t.id')
+            ->innerJoin('t.branch', 'b');
 
         $where = $this->buildGroupCondition($qb, $group, $targetType);
 
@@ -111,6 +130,7 @@ class GenericTargetEntityProvider
      * @param QueryBuilder $qb
      * @param Group        $group
      * @param string       $targetType
+     *
      * @return Expr\Andx|Expr\Orx
      */
     protected function buildGroupCondition(QueryBuilder $qb, Group $group, $targetType)
@@ -155,31 +175,47 @@ class GenericTargetEntityProvider
 
     /**
      * @param QueryBuilder $qb
-     * @param $property
-     * @param $expr
-     * @param $value
-     * @param string $targetType
+     * @param              $property
+     * @param              $expr
+     * @param              $value
+     * @param string       $targetType
+     *
      * @return mixed
      */
-    protected function buildCondition(QueryBuilder $qb, $property, $expr, $value, $targetType)
+    public function buildCondition(QueryBuilder $qb, $property, $expr, $value, $targetType)
     {
         if (!method_exists($qb->expr(), $expr)) {
             throw new \RuntimeException(sprintf("Operator '%s' does not exist. Please verify export format", $expr));
         }
 
-        if ($this->configurationProvider->isDatetimeProperty($targetType, $property)) {
-            $value = new \DateTime(sprintf("-%s hours", $value), new \DateTimeZone("UTC"));
-            $expr = static::$conditionTimeMap[$expr];
-        }
-
         $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
         $fieldName = $this->em->getClassMetadata($targetClass)->getFieldName($property);
-        $condition = call_user_func_array(
-            [$qb->expr(), $expr],
-            [sprintf("%s.%s", self::TARGET_ALIAS, $fieldName), sprintf(":%s", $fieldName)]
-        );
-        $qb->setParameter($fieldName, $value);
+        $conditionsMapper = $this->container->getParameter('diamante.automation.config.conditions_mapper');
+        $parameterNumber = $this->getParameterNumber();
 
-        return $condition;
+        if (isset($conditionsMapper[self::BUSINESS][$targetType][$property][$expr])) {
+            $getter = $conditionsMapper[self::BUSINESS][$targetType][$property][$expr];
+
+            if (isset($getter['service']) && isset($getter['method']) && $this->container->has($getter['service'])) {
+                $conditionServiceBuilder = $this->container->get($getter['service']);
+                $method = $getter['method'];
+
+                if (method_exists($conditionServiceBuilder, $method)) {
+                    return $conditionServiceBuilder->$method($qb, $expr, $fieldName, $value, $parameterNumber);
+                }
+            }
+
+            throw new \RuntimeException('Invalid source data.');
+        } else {
+            return $this->conditionBuilder->getCondition($qb, $expr, $fieldName, $value, $parameterNumber);
+        }
+    }
+
+    /**
+     * @return int
+     */
+    protected function getParameterNumber()
+    {
+        return $this->parameterNumber++;
     }
 }

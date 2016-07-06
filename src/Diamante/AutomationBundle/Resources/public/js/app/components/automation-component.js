@@ -22,7 +22,6 @@ define([
 
     var AutomationComponent = BaseComponent.extend({
         initialize: function (options) {
-            console.log(options.config);
             this.processOptions(options);
             this.initView(options);
         },

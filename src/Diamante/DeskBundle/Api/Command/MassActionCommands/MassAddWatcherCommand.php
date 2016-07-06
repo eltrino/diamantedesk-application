@@ -28,6 +28,13 @@ class MassAddWatcherCommand
     public $ids;
 
     /**
+     * @var integer
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
+     */
+    public $inset;
+
+    /**
      * @Assert\NotNull(
      *              message="This is a required field"
      * )

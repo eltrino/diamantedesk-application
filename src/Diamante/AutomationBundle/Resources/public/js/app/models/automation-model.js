@@ -24,7 +24,7 @@ define([
                 }
                 delete data['entity_type'];
             } else {
-                data[key] = data[key];
+                data[key] = isNaN(data[key])? data[key] : +data[key];
             }
         }
         return data;
@@ -49,6 +49,9 @@ define([
             if(!attr.time_interval && attr.type === 'business') {
                 this.set('time_interval', _.keys(config.time_intervals)[0])
             }
+            if(typeof attr.status == 'undefined') {
+                this.set('status', 1);
+            }
             delete options.model;
             options.isBusiness = attr.type === 'business';
             this.set('actions', attr.actions ?
@@ -67,7 +70,6 @@ define([
 
         serializePlain: function(){
             var result = BaseModel.prototype.serialize.apply(this);
-            result['active'] = 'true';
             result = flatten(result);
             return result;
         }

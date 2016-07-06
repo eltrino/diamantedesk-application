@@ -20,6 +20,7 @@
                   method="post">
                 <fieldset class="form form-horizontal">
                     <input type="hidden" name="ids" value="{{ form.vars.value.ids }}" >
+                    <input type="hidden" name="inset" value="{{ form.vars.value.inset }}" >
                     {{ form_row(form.watcher) }}
                     <div class="widget-actions form-actions">
                         <button class="btn" type="reset">{{ 'diamante.desk.ui.cancel'|trans }}</button>

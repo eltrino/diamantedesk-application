@@ -130,6 +130,7 @@ class WorkflowListener
             $getChangeset($entity)
         );
 
+        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
         $disableListeners = true;
 
         // don't disable listeners if you edit both comment and ticket status on create action
@@ -144,6 +145,11 @@ class WorkflowListener
         // don't disable listeners when you save comment after ticket status and comment content update on update action
         // don't disable tickets remove for mass action
         if (static::TICKET_TARGET == $target && in_array($action, [static::UPDATED, static::REMOVED])) {
+            $disableListeners = false;
+        }
+
+        // don't disable listeners if ticket or comment created via email
+        if (is_null($loggedUser)) {
             $disableListeners = false;
         }
 
@@ -163,9 +169,9 @@ class WorkflowListener
      */
     private function getEditor($entity, $type)
     {
-        $user = $this->container->get('oro_security.security_facade')->getLoggedUser();
+        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
 
-        if (is_null($user)) {
+        if (is_null($loggedUser)) {
             if (static::TICKET_TARGET == $type) {
                 /** @var Ticket $entity */
                 $editor = $entity->getReporter();
@@ -174,7 +180,7 @@ class WorkflowListener
                 $editor = $entity->getAuthor();
             }
         } else {
-            $editor = User::fromEntity($user);
+            $editor = User::fromEntity($loggedUser);
         }
 
         return $editor;

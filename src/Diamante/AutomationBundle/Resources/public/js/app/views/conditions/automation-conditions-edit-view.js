@@ -9,6 +9,7 @@ define([
 
     var AutomationConditionsEditView = AbstractView.extend({
         autoRender: true,
+        firstRun : true,
         template : AutomationConditionsEditTemplate,
 
         listen: {
@@ -24,7 +25,9 @@ define([
 
         render: function () {
             AbstractView.prototype.render.apply(this, arguments);
-            this.$(':input:not(button)').trigger('change');
+            if(this.model.isNew() || !this.firstRun){
+                this.$(':input:not(button)').trigger('change');
+            }
             if(this.model.collection.length == 1){
                 this.$('button[data-action="delete"]').hide();
             }
@@ -36,6 +39,7 @@ define([
             var input = $(e.target),
                 model = this.model,
                 relAttr = input.data('rel-attr');
+            this.firstRun = false;
             if(model.get(input.data('attr')) != input.val() && relAttr ){
                 _.each(relAttr.split(','), function(attr){
                     model.unset(attr, {silent: true});

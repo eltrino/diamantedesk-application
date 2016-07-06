@@ -83,7 +83,7 @@ class DiamanteAutomationBundleInstaller implements Installation
         $table->addColumn('created_at', 'datetime', []);
         $table->addColumn('updated_at', 'datetime', []);
         $table->addColumn('time_interval', 'string', ['length' => 255]);
-        $table->addColumn('active', 'boolean', []);
+        $table->addColumn('status', 'boolean', []);
         $table->addColumn('target', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['root_group_id'], 'UNIQ_5182F28A8509B3A1');
@@ -151,7 +151,7 @@ class DiamanteAutomationBundleInstaller implements Installation
         $table->addColumn('name', 'string', ['length' => 255]);
         $table->addColumn('created_at', 'datetime', []);
         $table->addColumn('updated_at', 'datetime', []);
-        $table->addColumn('active', 'boolean', []);
+        $table->addColumn('status', 'boolean', []);
         $table->addColumn('target', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['root_group_id'], 'UNIQ_4486E0BC8509B3A1');

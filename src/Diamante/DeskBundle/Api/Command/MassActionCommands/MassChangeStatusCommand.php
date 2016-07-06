@@ -26,6 +26,13 @@ class MassChangeStatusCommand
     public $ids;
 
     /**
+     * @var integer
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
+     */
+    public $inset;
+
+    /**
      * @Assert\NotNull()
      * @Assert\Type(type="string")
      * @var string

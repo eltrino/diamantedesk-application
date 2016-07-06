@@ -19,6 +19,8 @@ use Diamante\AutomationBundle\Rule\Action\AbstractModifyAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Shared\Updatable;
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
+use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 
 /**
  * Class UpdatePropertyAction
@@ -27,10 +29,18 @@ use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
  */
 class UpdatePropertyAction extends AbstractModifyAction
 {
+    const ASSIGNEE = 'assignee';
+    const UNASSIGNED = 'unassigned';
+
     /**
      * @var AutomationConfigurationProvider
      */
     private $configurationProvider;
+
+    /**
+     * @var UserService
+     */
+    private $userService;
 
     public function execute()
     {
@@ -55,6 +65,14 @@ class UpdatePropertyAction extends AbstractModifyAction
     }
 
     /**
+     * @param UserService $userService
+     */
+    public function setUserService(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    /**
      * @param array $target
      * @param       $targetClass
      * @param       $properties
@@ -70,11 +88,34 @@ class UpdatePropertyAction extends AbstractModifyAction
             $repository = $this->em->getRepository($targetClass);
             /** @var Updatable $entity */
             $entity = $repository->get($target['id']);
+            $properties = $this->convertProperties($properties);
             $entity->updateProperties($properties);
 
             return $entity;
         }
 
         throw new \RuntimeException('Can\'t load entity.');
+    }
+
+    /**
+     * @param array $properties
+     *
+     * @return array
+     */
+    private function convertProperties(array $properties)
+    {
+        foreach ($properties as $name => $value) {
+            if (static::ASSIGNEE == $name) {
+                if (self::UNASSIGNED == $value) {
+                    $user = null;
+                } else {
+                    $user = $this->userService->getByUser(User::fromString($value));
+                }
+
+                $properties[$name] = $user;
+            }
+        }
+
+        return $properties;
     }
 }

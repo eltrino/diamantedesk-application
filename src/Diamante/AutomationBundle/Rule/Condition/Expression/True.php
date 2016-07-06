@@ -27,7 +27,7 @@ class True extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->extractPropertyValue($fact);
+        $actualValue = $this->getActualValue($fact);
 
         return true === $actualValue;
     }

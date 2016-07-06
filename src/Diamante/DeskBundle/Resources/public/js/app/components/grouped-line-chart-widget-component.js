@@ -67,29 +67,37 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
     var data = options.data,
         elem = options._sourceElement.get(0),
         parent = options._sourceElement.parent(),
-        plot = d3.select(elem);
+        plot = d3.select(elem),
+        isEmpty = (function(){
+          if(data.length == 0) {
+            return true;
+          } else {
+            return !_.some(data, function (elem) {
+              return _.some(elem, function (value) { return value; });
+            });
+          }
+        })();
+    if (isEmpty) {
 
-      if (data.length == 0) {
+      $(elem).css({
+          opacity: '.2',
+          pointerEvents: 'none',
+          backgroundColor: '#f2f2f7'
+      });
 
-        $(elem).css({
-            opacity: '.2',
-            pointerEvents: 'none',
-            backgroundColor: '#f2f2f7'
-        });
+      parent.prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
 
-        parent.prepend('<div class="empty-report">No Data. There are no tickets available for analytics yet.</div>');
+      data = randomData();
+      $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
 
-        data = randomData();
-        $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
+    }
 
-      }
+    data = _.map(data, function(value, key){ value.date = parseDate(key); return value;})
+        .sort(sortByDateAscending);
 
-      data = _.map(data, function(value, key){ value.date = parseDate(key); return value;})
-          .sort(sortByDateAscending);
-
-      if (!parent.is('[data-wid]')) {
-          parent = parent.parent();
-      }
+    if (!parent.is('[data-wid]')) {
+        parent = parent.parent();
+    }
 
     var w = elem.clientWidth,
         h = w / RATIO,
@@ -387,7 +395,7 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
       context.selectAll('.line').attr("d", function(d) { return line2(d.values); });
     };
 
-    if ( data.some(function (elem) { return elem.item; }) ) {
+    if ( isEmpty ) {
       $('path.line', elem).css('stroke', 'rgba(100,100,100,.7)');
       //$('g.context', elem).css('display', 'none');
       $('g.legend', elem).css('display', 'none');

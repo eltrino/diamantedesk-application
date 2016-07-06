@@ -9,7 +9,19 @@
     <div class="controls">
         <input type="text" id="automation-name" name="name"
                data-attr="name" required="required" value="<%= name %>"
+               autocomplete="off"
                data-validation="{&quot;NotNull&quot;:{&quot;message&quot;:&quot;This is a required field&quot;,&quot;payload&quot;:null}}" />
+    </div>
+</div>
+<div class="control-group">
+    <div class="control-label wrap">
+        <label for="automation-status" class="required">Status</label>
+    </div>
+    <div class="controls">
+        <select name="status" data-attr="status" id="automation-status">
+            <option value="1"<%= status ? ' selected' : ''%>>Active</option>
+            <option value="0"<%= !status  ? ' selected' : ''%>>Inactive</option>
+        </select>
     </div>
 </div>
 <% if(type == 'business') { %>
@@ -34,7 +46,11 @@
     <div class="controls">
         <select name="target" data-attr="target" id="automation-target">
             <% for(var key in entities) { %>
-            <option value="<%= key %>"<%= key == target ? ' selected' : ''%>><%= entities[key].label %></option>
+                <% if (isBusiness && 'comment' == key) {%>
+                    <% continue; %>
+                <% } %>
+
+                <option value="<%= key %>"<%= key == target ? ' selected' : ''%>><%= entities[key].label %></option>
             <% } %>
         </select>
     </div>

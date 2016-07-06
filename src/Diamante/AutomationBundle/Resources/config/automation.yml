@@ -20,12 +20,12 @@ diamante_automation:
     lte:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Lte'
       frontend_label: diamante.automation.condition.lte
-    contains:
-      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Contains'
+    like:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Like'
       frontend_label: diamante.automation.condition.contains
       type: 'string'
-    not_contains:
-      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\NotContains'
+    not_like:
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\NotLike'
       frontend_label: diamante.automation.condition.not_contains
       type: 'string'
     created:
@@ -44,12 +44,15 @@ diamante_automation:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\Changed'
       frontend_label: diamante.automation.condition.changed
       type: 'bool'
+      rules: ['workflow']
     changed_from:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\ChangedFrom'
       frontend_label: diamante.automation.condition.changed_from
+      rules: ['workflow']
     changed_to:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\ChangedTo'
       frontend_label: diamante.automation.condition.changed_to
+      rules: ['workflow']
     'true':
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\True'
       frontend_label: diamante.automation.condition.true
