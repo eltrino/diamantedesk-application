@@ -15,14 +15,10 @@
 
 namespace Diamante\DeskBundle\Automation\Action\Email;
 
-<<<<<<< HEAD:src/Diamante/DeskBundle/Automation/Action/Email/CommentNotifier.php
 use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
 use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
-=======
->>>>>>> 03546c08f16d2b21feed87f9eb1598dcb21aac77:src/Diamante/AutomationBundle/Automation/Action/Email/CommentNotifier.php
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class CommentNotifier
@@ -227,9 +223,6 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
 
         return null;
     }
-<<<<<<< HEAD:src/Diamante/DeskBundle/Automation/Action/Email/CommentNotifier.php
-}
-=======
 
     /**
      * @param DiamanteUser|OroUser $user
@@ -245,4 +238,3 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
         return sprintf('%s %s', $user->getFirstName(), $user->getLastName());
     }
 }
->>>>>>> 03546c08f16d2b21feed87f9eb1598dcb21aac77:src/Diamante/AutomationBundle/Automation/Action/Email/CommentNotifier.php

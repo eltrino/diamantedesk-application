@@ -14,8 +14,8 @@
  */
 namespace Diamante\UserBundle\Infrastructure\User;
 
-use Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier;
-use Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier;
+use Diamante\DeskBundle\Automation\Action\Email\CommentNotifier;
+use Diamante\DeskBundle\Automation\Action\Email\TicketNotifier;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Infrastructure\DiamanteUserRepository;
 use Diamante\UserBundle\Model\User;
