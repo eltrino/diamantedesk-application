@@ -17,6 +17,6 @@ namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
 class PrivateCommentRemoved extends AbstractProvider
 {
-    const SUBJECT_IDENTIFIER = 'diamante.automation.notification.comment.private.removed';
+    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.comment.private.removed';
     const NAME = 'private_comment_removed';
 }

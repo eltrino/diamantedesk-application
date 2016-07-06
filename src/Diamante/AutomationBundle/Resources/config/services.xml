@@ -33,8 +33,6 @@
         <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
         <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder</parameter>
         <parameter key="diamante_automation.action.execution_context.class">Diamante\AutomationBundle\Rule\Action\ExecutionContext</parameter>
-        <parameter key="diamante_automation.action.comment_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier</parameter>
-        <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier</parameter>
     </parameters>
 
     <services>
@@ -51,14 +49,6 @@
             <call method="setNotificationManager">
                 <argument type="service" id="diamante.notification_manager" />
             </call>
-        </service>
-
-        <service id="diamante_automation.action.comment_notifier" class="%diamante_automation.action.comment_notifier.class%" parent="diamante_automation.action.abstract_notifier">
-            <tag name="diamante_automation.action.notifier"/>
-        </service>
-
-        <service id="diamante_automation.action.ticket_notifier" class="%diamante_automation.action.ticket_notifier.class%" parent="diamante_automation.action.abstract_notifier">
-            <tag name="diamante_automation.action.notifier"/>
         </service>
 
         <service id="diamante_automation.schedule.repository" class="%diamante.generic.repository.class%"

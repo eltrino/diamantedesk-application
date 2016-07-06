@@ -17,6 +17,6 @@ namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
 class TicketUpdated extends AbstractProvider
 {
-    const SUBJECT_IDENTIFIER = 'diamante.automation.notification.ticket.updated';
+    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.ticket.updated';
     const NAME = 'ticket_updated';
 }

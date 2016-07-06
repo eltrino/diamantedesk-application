@@ -13,8 +13,10 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Automation\Action\Email;
+namespace Diamante\DeskBundle\Automation\Action\Email;
 
+use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
+use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
 use Diamante\AutomationBundle\EventListener\WorkflowListener;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Status;
@@ -99,8 +101,6 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
         $provider = $this->getProvider();
         $options = $this->getOptions();
         $target = $this->fact->getTarget();
-        $editor = $this->fact->getEditor();
-        $editor = $this->container->get('diamante.user.service')->getByUser($editor);
 
         if ($this->isChanged()) {
             $ticketId = $target['id'];
@@ -112,10 +112,7 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
 
             foreach ($emails as $email) {
                 $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
-                $options = array_merge(
-                    $options,
-                    ['recipient' => $recipient, 'editor' => $this->getEditorName($editor)]
-                );
+                $options['recipient'] = $recipient;
 
                 $this->notificationManager->notifyByScenario($provider, $recipient, $options);
             }

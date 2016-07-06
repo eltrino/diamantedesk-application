@@ -22,9 +22,6 @@ use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceSe
 
 abstract class AbstractProvider implements NotificationOptionsProvider
 {
-    const HTML_TEMPLATE = 'DiamanteAutomationBundle:Entity:Notification/notification.html.twig';
-    const TXT_TEMPLATE = 'DiamanteAutomationBundle:Entity:Notification/notification.txt.twig';
-
     /**
      * @var DiamanteUser
      */
@@ -43,7 +40,7 @@ abstract class AbstractProvider implements NotificationOptionsProvider
      */
     public function getHtmlTemplate()
     {
-        return self::HTML_TEMPLATE;
+        return 'DiamanteDeskBundle:Automation/Notification/notification.html.twig';
     }
 
     /**
@@ -51,7 +48,7 @@ abstract class AbstractProvider implements NotificationOptionsProvider
      */
     public function getTxtTemplate()
     {
-        return self::TXT_TEMPLATE;
+        return 'DiamanteDeskBundle:Automation/Notification/notification.txt.twig';
     }
 
     /**

@@ -17,6 +17,22 @@ namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
 class TicketRemoved extends AbstractProvider
 {
-    const SUBJECT_IDENTIFIER = 'diamante.automation.notification.ticket.removed';
+    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.ticket.removed';
     const NAME = 'ticket_removed';
+
+    /**
+     * @return string
+     */
+    public function getHtmlTemplate()
+    {
+        return 'DiamanteDeskBundle:Automation:Notification/notification.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTxtTemplate()
+    {
+        return 'DiamanteDeskBundle:Automation:Notification/notification.txt.twig';
+    }
 }

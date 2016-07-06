@@ -13,9 +13,10 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Automation\Action\Email;
+namespace Diamante\DeskBundle\Automation\Action\Email;
 
-use Diamante\DeskBundle\Model\Ticket\Status;
+use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
+use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class CommentNotifier
  *
- * @package Diamante\AutomationBundle\Automation\Action\Email
+ * @package Diamante\DeskBundle\Automation\Action\Email
  */
 class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
 {
@@ -96,8 +97,6 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
         $emails = $this->getEmailList();
         $provider = $this->getProvider();
         $options = $this->getOptions();
-        $editor = $this->fact->getEditor();
-        $editor = $this->container->get('diamante.user.service')->getByUser($editor);
         $ticketId = $target['ticket']->getId();
 
         if (!is_null($ticketId)) {
@@ -107,15 +106,11 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
 
         foreach ($emails as $email) {
             $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
+            $options['recipient'] = $recipient;
 
             if ($recipient instanceof DiamanteUser && $target['private']) {
                 continue;
             }
-
-            $options = array_merge(
-                $options,
-                ['recipient' => $recipient, 'editor' => $this->getEditorName($editor)]
-            );
 
             $this->notificationManager->notifyByScenario($provider, $recipient, $options);
         }

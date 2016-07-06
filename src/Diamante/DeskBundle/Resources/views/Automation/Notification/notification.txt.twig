@@ -1,6 +1,8 @@
 {{ delimiter }}
 
-{{ header|trans }} by {{ editor }}
+Ticket was created by {{ user }}
+
+You can view this ticket using following link {{ render_ticket_url(ticketKey, recipient) }}
 
 {% if changes is defined %}
     {% for key, value in changes %}
@@ -15,7 +17,8 @@
     {% endfor %}
 {% endif %}
 
-You can view this ticket {{ ticketKey }} in DiamanteDesk: {{ render_ticket_url(ticketKey, recipient) }}
+Thank you.
 
-- DiamanteDesk
+--
+{{ organization }}
 

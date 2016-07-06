@@ -17,6 +17,6 @@ namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
 class PrivateCommentCreated extends AbstractProvider
 {
-    const SUBJECT_IDENTIFIER = 'diamante.automation.notification.comment.private.created';
+    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.comment.private.created';
     const NAME = 'private_comment_created';
 }

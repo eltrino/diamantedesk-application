@@ -17,6 +17,6 @@ namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
 class CommentRemoved extends AbstractProvider
 {
-    const SUBJECT_IDENTIFIER = 'diamante.automation.notification.comment.removed';
+    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.comment.removed';
     const NAME = 'comment_removed';
 }
