@@ -73,6 +73,8 @@ diamante_automation:
     update_property:
       id: @diamante_automation.action.update_property
       frontend_label: diamante.automation.action.update_property
+      frontend_options:
+        source: "@diamante.autocomplete.user.service->getAssigners"
       data_types: ['*', '!user', '!users']
     notify_by_email:
       id: @diamante_automation.action.notify_by_email

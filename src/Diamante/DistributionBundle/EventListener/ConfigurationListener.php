@@ -63,6 +63,7 @@ class ConfigurationListener
         'integrations',
         'google_settings',
         'google_integration_settings',
+        'mailboxes',
     );
 
     /**
@@ -118,13 +119,12 @@ class ConfigurationListener
     {
         foreach ($form->children as $key => $child) {
             if (isset($child->vars['subblock']) && in_array($child->vars['subblock'], static::$disabledItems)) {
-
                 unset(
                     $form->vars['data'][$key],
+                    $form->vars['value'][$key],
                     $form->children[$key],
-                    $form->vars['block_config'][$form->vars['id']]['subblocks'][$child->vars['subblock']]
+                    $form->vars['block_config'][$form->vars['name']]['subblocks'][$child->vars['subblock']]
                 );
-
             }
         }
     }
