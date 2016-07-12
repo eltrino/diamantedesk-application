@@ -33,11 +33,13 @@ class StatusTransformer implements DataTransformerInterface
      */
     public function transform($status)
     {
-        if (null === $status || (false === ($status instanceof Status))) {
-            return '';
+        if ($status instanceof Status) {
+            return $status->getValue();
+        } elseif (array_key_exists($status, $this->statusOptions)) {
+            return $status;
         }
 
-        return $status->getValue();
+        return '';
     }
 
     /**
