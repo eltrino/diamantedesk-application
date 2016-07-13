@@ -143,7 +143,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
                 return "translate(" + pos + ")";
             })
             .text(function (d) {
-                return (!isEmpty) ? (d.data.label + ' ' + toPercent(d.data.data, sum) + "%") : '';
+                return (!isEmpty) ? (d.data.label + ' ' + toPercent(d.data.data, sum) + "% (" + d.data.data + ")") : '';
             }).each(function (d) {
                 textWrap.call(this, d);
         });
