@@ -54,6 +54,11 @@ class Action implements Entity
         return $this->parameters;
     }
 
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
     public function getRule()
     {
         return $this->rule;

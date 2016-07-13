@@ -37,6 +37,7 @@
         <parameter key="diamante_automation.action.comment_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier</parameter>
         <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier</parameter>
         <parameter key="diamante.upper_case.twig.extension.class">Diamante\AutomationBundle\Twig\Filters\UpperCaseFilter</parameter>
+        <parameter key="diamante_automation.listener.oro_user_listener.class">Diamante\AutomationBundle\EventListener\OroUserListener</parameter>
     </parameters>
 
     <services>
@@ -217,6 +218,10 @@
 
         <service id="diamante.upper_case.twig.extension" class="%diamante.upper_case.twig.extension.class%">
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="diamante.listener.oro_user_listener" class="%diamante_automation.listener.oro_user_listener.class%">
+            <tag name="doctrine.event_listener" event="preRemove"/>
         </service>
     </services>
 </container>
