@@ -56,10 +56,8 @@ reports:
             y-axis: data
             group: source
         source:
-            type: repository
-            repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTicketsByChannelsReportData"
-#            type: dql
-#            dql: "select date(t.createdAt) as day, t.source as source, count(t.source) as data from Diamante\\DeskBundle\\Entity\\Ticket t GROUP BY t.source, day"
+            type: dql
+            dql: "select date(t.createdAt) as day, t.source as source, count(t.source) as data from Diamante\\DeskBundle\\Entity\\Ticket t GROUP BY t.source, day"
 
     tickets_by_channels_widget:
         label: "Tickets by Channels"
