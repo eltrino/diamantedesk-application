@@ -17,8 +17,8 @@ namespace Diamante\AutomationBundle\EventListener;
 use Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction;
 use Diamante\AutomationBundle\Entity\Action;
 use Diamante\UserBundle\Model\User;
-use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class OroUserListener
 {
@@ -35,10 +35,10 @@ class OroUserListener
         }
 
         $workflowActions = $manager->getRepository('DiamanteAutomationBundle:WorkflowAction')->findByType(
-            UpdatePropertyAction::UPDATE_PROPERTY_ACTION
+            [UpdatePropertyAction::ACTION_NAME]
         );
         $businessActions = $manager->getRepository('DiamanteAutomationBundle:BusinessAction')->findByType(
-            UpdatePropertyAction::UPDATE_PROPERTY_ACTION
+            [UpdatePropertyAction::ACTION_NAME]
         );
 
         /** @var Action[] $actions */

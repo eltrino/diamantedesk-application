@@ -31,7 +31,7 @@ class UpdatePropertyAction extends AbstractModifyAction
 {
     const ASSIGNEE = 'assignee';
     const UNASSIGNED = 'unassigned';
-    const UPDATE_PROPERTY_ACTION = 'update_property';
+    const ACTION_NAME = 'update_property';
 
     /**
      * @var AutomationConfigurationProvider
