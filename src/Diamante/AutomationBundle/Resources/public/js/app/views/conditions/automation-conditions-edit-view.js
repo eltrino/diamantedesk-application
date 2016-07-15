@@ -3,8 +3,9 @@ define([
     'underscore',
     'oroui/js/mediator',
     'tpl!diamanteautomation/js/app/templates/conditions/automation-conditions-edit-template.ejs',
-    'diamanteautomation/js/app/views/abstract/view'
-],function ($, _, mediator, AutomationConditionsEditTemplate, AbstractView) {
+    'diamanteautomation/js/app/views/abstract/view',
+    'chaplin'
+],function ($, _, mediator, AutomationConditionsEditTemplate, AbstractView, Chaplin) {
     'use strict';
 
     var AutomationConditionsEditView = AbstractView.extend({
@@ -23,6 +24,8 @@ define([
             'change :input' : 'change'
         },
 
+
+
         render: function () {
             AbstractView.prototype.render.apply(this, arguments);
             if(this.model.isNew() || !this.firstRun){
@@ -38,14 +41,23 @@ define([
         change: function (e) {
             var input = $(e.target),
                 model = this.model,
-                relAttr = input.data('rel-attr');
+                relAttr = input.data('rel-attr'),
+                selectType = input.data('attr'),
+                value = input.val();
+
             this.firstRun = false;
-            if(model.get(input.data('attr')) != input.val() && relAttr ){
+
+            if(model.get(selectType) != value && relAttr ){
                 _.each(relAttr.split(','), function(attr){
                     model.unset(attr, {silent: true});
                 });
             }
-            model.set( input.data('attr'), input.val() );
+
+            model.set( selectType, value );
+
+            if ('entity_type' == selectType) {
+                Chaplin.mediator.publish('automation/condition/entity-type', value);
+            }
         },
 
         entityChanged: function(model, attr){

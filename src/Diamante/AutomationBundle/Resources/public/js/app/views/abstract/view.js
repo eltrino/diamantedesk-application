@@ -15,6 +15,7 @@ define([
             var data = BaseView.prototype.getTemplateData.call(this);
             data.index = this.cid;
             data.isNew = this.model.isNew();
+
             return _.extend(data, this.options);
         }
     });
