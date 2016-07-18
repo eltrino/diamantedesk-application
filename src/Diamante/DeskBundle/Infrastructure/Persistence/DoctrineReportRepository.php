@@ -52,10 +52,10 @@ class DoctrineReportRepository
         $dateDiffExpression = $this->getDateDiffExpression();
         return $this->execute("
         SELECT  `day`,
-                coalesce(sum(`0-1`), 0)  AS '0-1',
-                coalesce(sum(`1-8`), 0) as '1-8',
-                coalesce(sum(`8-24`), 0) as '8-24',
-                coalesce(sum(`more 24`), 0) as 'more 24' from
+                coalesce(sum(`0-1`), 0)  AS '0-1 hours',
+                coalesce(sum(`1-8`), 0) as '1-8 hours',
+                coalesce(sum(`8-24`), 0) as '8-24 hours',
+                coalesce(sum(`more 24`), 0) as 'more 24 hours' from
         (SELECT date(t.created_at) as 'day',
                 count(t.id) as '0-1',
                 null as '1-8',

@@ -12,6 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+
 namespace Diamante\AutomationBundle\Migrations\Schema;
 
 use Doctrine\DBAL\Schema\Schema;
@@ -40,6 +41,7 @@ class DiamanteAutomationBundleInstaller implements Installation
         /** Tables generation **/
         $this->createDiamanteAutomationContextTable($schema);
         $this->createDiamanteBusinessRuleTable($schema);
+        $this->createDiamanteCronScheduleTable($schema);
         $this->createDiamanteRuleActionTable($schema);
         $this->createDiamanteRuleConditionTable($schema);
         $this->createDiamanteRuleGroupTable($schema);
@@ -66,6 +68,7 @@ class DiamanteAutomationBundleInstaller implements Installation
         $table->addColumn('action', 'string', ['length' => 255]);
         $table->addColumn('targetEntityChangeset', 'array', ['comment' => '(DC2Type:array)']);
         $table->addColumn('state', 'string', ['length' => 255]);
+        $table->addColumn('editor_id', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
     }
 
@@ -87,6 +90,21 @@ class DiamanteAutomationBundleInstaller implements Installation
         $table->addColumn('target', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['root_group_id'], 'UNIQ_5182F28A8509B3A1');
+    }
+
+    /**
+     * Create diamante_cron_schedule table
+     *
+     * @param Schema $schema
+     */
+    protected function createDiamanteCronScheduleTable(Schema $schema)
+    {
+        $table = $schema->createTable('diamante_cron_schedule');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('command', 'string', ['length' => 255]);
+        $table->addColumn('parameters', 'array', ['comment' => '(DC2Type:array)']);
+        $table->addColumn('definition', 'string', ['notnull' => false, 'length' => 100]);
+        $table->setPrimaryKey(['id']);
     }
 
     /**

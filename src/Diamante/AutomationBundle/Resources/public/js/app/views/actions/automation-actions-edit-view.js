@@ -4,8 +4,9 @@ define([
     'oroui/js/mediator',
     'tpl!diamanteautomation/js/app/templates/actions/automation-actions-edit-template.ejs',
     //'oroui/js/app/components/base/component-container-mixin',
-    'diamanteautomation/js/app/views/abstract/view'
-],function ($, _, mediator, AutomationActionsEditTemplate, AbstractView) {
+    'diamanteautomation/js/app/views/abstract/view',
+    'chaplin'
+],function ($, _, mediator, AutomationActionsEditTemplate, AbstractView, Chaplin) {
     'use strict';
 
     var AutomationActionsEditView = AbstractView.extend({
@@ -22,7 +23,18 @@ define([
             'change :input': 'change'
         },
 
-        render: function (model) {
+        initialize: function(options){
+            this.options = _.omit(options, 'el', 'model');
+            var entityTypeChanged = _.bind(this.entityTypeChanged, this);
+            Chaplin.mediator.subscribe('automation/condition/entity-type', entityTypeChanged);
+        },
+
+        entityTypeChanged: function (type) {
+            this.model.trigger('change', this.model, type);
+        },
+
+        render: function () {
+            this.conditionType = arguments[1];
             AbstractView.prototype.render.apply(this, arguments);
             this.$(':input:not(button)').trigger('change');
             if(this.model.collection.length == 1){
@@ -62,8 +74,15 @@ define([
             if(this.$el.is(':visible')){
                 mediator.execute('layout:init', this.$el)
             }
-        }
+        },
 
+        getTemplateData: function() {
+            var data = AbstractView.prototype.getTemplateData.call(this);
+
+            data.conditionType = this.conditionType;
+
+            return _.extend(data, this.options);
+        }
     });
 
     return AutomationActionsEditView;

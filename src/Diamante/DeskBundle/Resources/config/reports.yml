@@ -30,10 +30,10 @@ reports:
             x-axis: day
             y-axis:
               items:
-                  - 0-1
-                  - 1-8
-                  - 8-24
-                  - more 24
+                  - 0-1 hours
+                  - 1-8 hours
+                  - 8-24 hours
+                  - more 24 hours
         source:
             type: repository
             repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTimeOfResponseReportData"

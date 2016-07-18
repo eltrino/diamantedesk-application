@@ -63,7 +63,7 @@ abstract class Rule implements AutomationRule, Entity
      */
     protected $updatedAt;
 
-    public function __construct($name, $target, $status)
+    public function __construct($name, $target, $status = true)
     {
         $this->id = Uuid::uuid4();
         $this->name = $name;
