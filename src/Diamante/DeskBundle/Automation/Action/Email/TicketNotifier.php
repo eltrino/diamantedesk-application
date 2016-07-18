@@ -118,6 +118,8 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
                     $options = $this->filterDiamanteUserOptions($options);
                 }
 
+                $options['target'] = $target;
+
                 $this->notificationManager->notifyByScenario($provider, $recipient, $options);
             }
         }

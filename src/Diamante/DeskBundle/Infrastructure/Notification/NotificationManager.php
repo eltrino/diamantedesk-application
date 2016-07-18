@@ -87,7 +87,7 @@ class NotificationManager
     protected $translator;
 
     /**
-     * @var NotificationOptionsProvider[]
+     * @var OptionsProviderInterface[]
      */
     protected $providers = [];
 
@@ -190,6 +190,7 @@ class NotificationManager
         $message->setSubject($this->subject);
         $message->setFrom($this->fromEmail, $this->fromName);
         $message->setTo($this->toEmail, $this->toName);
+        $this->templateOptions['format'] = self::TEMPLATE_TYPE_HTML;
         $message->setBody($this->twig->render(
             $this->templates[self::TEMPLATE_TYPE_HTML],
             $this->templateOptions
@@ -200,6 +201,7 @@ class NotificationManager
         $headers->addIdHeader('References', $this->referencesHeader());
 
         if (isset($this->templates[self::TEMPLATE_TYPE_TXT])) {
+            $this->templateOptions['format'] = self::TEMPLATE_TYPE_TXT;
             $message->addPart($this->twig->render(
                 $this->templates[self::TEMPLATE_TYPE_TXT],
                 $this->templateOptions
@@ -261,9 +263,9 @@ class NotificationManager
     }
 
     /**
-     * @param NotificationOptionsProvider $provider
+     * @param OptionsProviderInterface $provider
      */
-    public function addOptionsProvider(NotificationOptionsProvider $provider)
+    public function addOptionsProvider(OptionsProviderInterface $provider)
     {
         $this->providers[$provider->getName()] = $provider;
     }
@@ -283,6 +285,10 @@ class NotificationManager
         $provider->setRecipient($recipient);
 
         $templateOptions = array_merge($provider->getDefaultOptions(), $options, $this->getUrlOptions());
+
+        if (isset($options['target'])) {
+            $templateOptions = array_merge($templateOptions, $provider->getAdditionalOptions($options['target']));
+        }
 
         foreach ($provider->getDefaultOptions() as $option => $value) {
             if (!array_key_exists($option, $templateOptions)) {

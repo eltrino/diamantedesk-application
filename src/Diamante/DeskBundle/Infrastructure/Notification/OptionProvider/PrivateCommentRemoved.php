@@ -15,8 +15,49 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
-class PrivateCommentRemoved extends AbstractProvider
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProvider;
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProviderInterface;
+
+class PrivateCommentRemoved extends OptionsProvider implements OptionsProviderInterface
 {
-    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.comment.private.removed';
-    const NAME = 'private_comment_removed';
+    /**
+     * @return string
+     */
+    public function getHtmlTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/commentRemoved.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTxtTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/commentRemoved.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'private_comment_removed';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return 'diamante.desk.automation.notification.comment.private.removed';
+    }
+
+    /**
+     * @param $target
+     * @return array
+     */
+    public function getAdditionalOptions($target)
+    {
+        return [];
+    }
 }

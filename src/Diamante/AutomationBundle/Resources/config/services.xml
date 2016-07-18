@@ -34,8 +34,8 @@
         <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
         <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder</parameter>
         <parameter key="diamante_automation.action.execution_context.class">Diamante\AutomationBundle\Rule\Action\ExecutionContext</parameter>
-        <parameter key="diamante_automation.action.comment_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier</parameter>
-        <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier</parameter>
+        <parameter key="diamante_automation.action.comment_notifier.class">Diamante\DeskBundle\Automation\Action\Email\CommentNotifier</parameter>
+        <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\DeskBundle\Automation\Action\Email\TicketNotifier</parameter>
         <parameter key="diamante.upper_case.twig.extension.class">Diamante\AutomationBundle\Twig\Filters\UpperCaseFilter</parameter>
         <parameter key="diamante_automation.listener.oro_user_listener.class">Diamante\AutomationBundle\EventListener\OroUserListener</parameter>
     </parameters>

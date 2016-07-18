@@ -15,17 +15,17 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
-class TicketRemoved extends AbstractProvider
-{
-    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.ticket.removed';
-    const NAME = 'ticket_removed';
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProvider;
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProviderInterface;
 
+class TicketRemoved extends OptionsProvider implements OptionsProviderInterface
+{
     /**
      * @return string
      */
     public function getHtmlTemplate()
     {
-        return 'DiamanteDeskBundle:Automation:Notification/notification.html.twig';
+        return '@DiamanteDesk/Automation/Notification/Entity/ticketRemoved.html.twig';
     }
 
     /**
@@ -33,6 +33,35 @@ class TicketRemoved extends AbstractProvider
      */
     public function getTxtTemplate()
     {
-        return 'DiamanteDeskBundle:Automation:Notification/notification.txt.twig';
+        return '@DiamanteDesk/Automation/Notification/Entity/ticketRemoved.txt.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'ticket_removed';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return 'diamante.desk.automation.notification.ticket.removed';
+    }
+
+    /**
+     * @param $target
+     * @return array
+     */
+    public function getAdditionalOptions($target)
+    {
+        if (is_array($target) && isset($target['subject'])) {
+            return ['ticketSubject' => $target['subject']];
+        }
+
+        return [];
     }
 }

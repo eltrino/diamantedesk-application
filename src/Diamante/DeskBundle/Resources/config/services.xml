@@ -58,8 +58,8 @@
         <parameter key="diamante.pre_build.listener.class">Diamante\DeskBundle\EventListener\DataGridPreBuildListener</parameter>
         <parameter key="diamante.branch.twig.extension.class">Diamante\DeskBundle\Twig\Extensions\BranchExtension</parameter>
         <parameter key="diamante.automation.action.move_to_branch.class">Diamante\DeskBundle\Automation\Action\MoveToBranchAction</parameter>
-        <parameter key="diamante_automation.action.comment_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\CommentNotifier</parameter>
-        <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\AutomationBundle\Automation\Action\Email\TicketNotifier</parameter>
+        <parameter key="diamante_automation.action.comment_notifier.class">Diamante\DeskBundle\Automation\Action\Email\CommentNotifier</parameter>
+        <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\DeskBundle\Automation\Action\Email\TicketNotifier</parameter>
         <parameter key="diamante_desk.property.ticket_handler.class">Diamante\DeskBundle\Infrastructure\Ticket\TicketPropertyHandler</parameter>
         <parameter key="diamante_desk.entity.abstract_property_handler.class">Diamante\DeskBundle\Infrastructure\Shared\Entity\AbstractPropertyHandler</parameter>
         <parameter key="diamante_desk.property.comment_handler.class">Diamante\DeskBundle\Infrastructure\Comment\CommentPropertyHandler</parameter>

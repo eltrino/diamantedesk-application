@@ -1,0 +1,7 @@
+{% extends format == 'html' ? "@DiamanteDesk/Automation/Notification/notification.html.twig" : "@DiamanteDesk/Automation/Notification/notification.txt.twig" %}
+
+{% block header %}
+    Ticket {{ ticketKey }}: {{ ticketSubject }} has been deleted by {{ user }}.
+{% endblock %}
+
+{% block info %}{% endblock %}

@@ -16,7 +16,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Notification;
 
 
-interface NotificationOptionsProvider
+interface OptionsProviderInterface
 {
     /**
      * @return string
@@ -48,6 +48,10 @@ interface NotificationOptionsProvider
      */
     public function getSubject();
 
+    /**
+     * @param $recipient
+     * @return mixed
+     */
     public function setRecipient($recipient);
 
     /**
@@ -64,4 +68,11 @@ interface NotificationOptionsProvider
      * @return array
      */
     public function getDefaultOptions();
+
+    /**
+     * @param $target
+     * @return array
+     */
+    public function getAdditionalOptions($target);
+
 }

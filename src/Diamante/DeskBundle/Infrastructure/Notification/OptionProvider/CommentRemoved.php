@@ -15,8 +15,49 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
-class CommentRemoved extends AbstractProvider
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProvider;
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProviderInterface;
+
+class CommentRemoved extends OptionsProvider implements OptionsProviderInterface
 {
-    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.comment.removed';
-    const NAME = 'comment_removed';
+    /**
+     * @return string
+     */
+    public function getHtmlTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/commentRemoved.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTxtTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/commentRemoved.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'comment_removed';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return 'diamante.desk.automation.notification.comment.removed';
+    }
+
+    /**
+     * @param $target
+     * @return array
+     */
+    public function getAdditionalOptions($target)
+    {
+        return [];
+    }
 }

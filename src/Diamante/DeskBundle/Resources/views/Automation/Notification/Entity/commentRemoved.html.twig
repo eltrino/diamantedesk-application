@@ -1,0 +1,5 @@
+{% extends format == 'html' ? "@DiamanteDesk/Automation/Notification/notification.html.twig" : "@DiamanteDesk/Automation/Notification/notification.txt.twig" %}
+
+{% block header %}
+    Comment was removed by {{ user }}
+{% endblock %}

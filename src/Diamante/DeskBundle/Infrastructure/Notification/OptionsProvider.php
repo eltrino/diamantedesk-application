@@ -13,43 +13,17 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
+namespace Diamante\DeskBundle\Infrastructure\Notification;
 
-
-use Diamante\DeskBundle\Infrastructure\Notification\NotificationOptionsProvider;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 
-abstract class AbstractProvider implements NotificationOptionsProvider
+abstract class OptionsProvider
 {
     /**
      * @var DiamanteUser
      */
     protected $recipient;
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return static::NAME;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHtmlTemplate()
-    {
-        return 'DiamanteDeskBundle:Automation/Notification/notification.html.twig';
-    }
-
-    /**
-     * @return string
-     */
-    public function getTxtTemplate()
-    {
-        return 'DiamanteDeskBundle:Automation/Notification/notification.txt.twig';
-    }
 
     /**
      * @param $recipient
@@ -79,13 +53,6 @@ abstract class AbstractProvider implements NotificationOptionsProvider
         return $this->recipient->getFirstName() . ' ' . $this->recipient->getLastName();
     }
 
-    /**
-     * @return string
-     */
-    public function getSubject()
-    {
-        return static::SUBJECT_IDENTIFIER;
-    }
 
     /**
      * @return array
@@ -111,7 +78,7 @@ abstract class AbstractProvider implements NotificationOptionsProvider
         return [
             'delimiter' => MessageReferenceServiceImpl::DELIMITER_LINE,
             'user'      => $this->getRecipientName(),
-            'header'    => static::SUBJECT_IDENTIFIER
+            'header'    => $this->getSubject()
         ];
     }
 }

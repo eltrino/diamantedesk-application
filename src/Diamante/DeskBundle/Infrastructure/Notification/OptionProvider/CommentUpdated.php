@@ -15,8 +15,49 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
-class CommentUpdated extends AbstractProvider
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProvider;
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProviderInterface;
+
+class CommentUpdated extends OptionsProvider implements OptionsProviderInterface
 {
-    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.comment.updated';
-    const NAME = 'comment_updated';
+    /**
+     * @return string
+     */
+    public function getHtmlTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/commentUpdated.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTxtTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/commentUpdated.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'comment_updated';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return 'diamante.desk.automation.notification.comment.updated';
+    }
+
+    /**
+     * @param $target
+     * @return array
+     */
+    public function getAdditionalOptions($target)
+    {
+        return [];
+    }
 }

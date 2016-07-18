@@ -326,9 +326,11 @@ diamante:
 
           notification:
             ticket:
-              removed:
+              created: Ticket was created
+              updated: Ticket was updated
+              removed: Ticket was removed
             comment:
-              created:
+              created: Comment was created
               updated: Comment was updated
               removed: Comment was removed
             private:

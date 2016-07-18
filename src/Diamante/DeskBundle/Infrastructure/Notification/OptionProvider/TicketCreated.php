@@ -15,8 +15,49 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification\OptionProvider;
 
-class TicketCreated extends AbstractProvider
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProvider;
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProviderInterface;
+
+class TicketCreated extends OptionsProvider implements OptionsProviderInterface
 {
-    const SUBJECT_IDENTIFIER = 'diamante.desk.automation.notification.ticket.created';
-    const NAME = 'ticket_created';
+    /**
+     * @return string
+     */
+    public function getHtmlTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/ticketCreated.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTxtTemplate()
+    {
+        return '@DiamanteDesk/Automation/Notification/Entity/ticketCreated.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'ticket_created';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return 'diamante.desk.automation.notification.ticket.created';
+    }
+
+    /**
+     * @param $target
+     * @return array
+     */
+    public function getAdditionalOptions($target)
+    {
+        return [];
+    }
 }

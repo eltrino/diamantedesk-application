@@ -16,10 +16,10 @@
 namespace Diamante\UserBundle\Infrastructure\Notification\OptionProvider;
 
 
-use Diamante\DeskBundle\Infrastructure\Notification\NotificationOptionsProvider;
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProviderInterface;
 use Diamante\UserBundle\Entity\DiamanteUser;
 
-class ForceReset implements NotificationOptionsProvider
+class ForceReset implements OptionsProviderInterface
 {
     const HTML_TEMPLATE = 'DiamanteUserBundle:Notification:ForceReset/reset.html.twig';
     const TXT_TEMPLATE  = 'DiamanteUserBundle:Notification:ForceReset/reset.txt.twig';
@@ -57,6 +57,7 @@ class ForceReset implements NotificationOptionsProvider
 
     /**
      * @param $recipient
+     * @return mixed|void
      */
     public function setRecipient($recipient)
     {
@@ -110,6 +111,15 @@ class ForceReset implements NotificationOptionsProvider
      * @return mixed
      */
     public function getDefaultOptions()
+    {
+        return [];
+    }
+
+    /**
+     * @param $target
+     * @return array
+     */
+    public function getAdditionalOptions($target)
     {
         return [];
     }
