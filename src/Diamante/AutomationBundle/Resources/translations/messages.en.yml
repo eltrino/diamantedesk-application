@@ -89,9 +89,9 @@ diamante:
       lte:          is less than or equals to
       contains:     contains
       not_contains: not contains
-      created:      created
-      updated:      updated
-      removed:      removed
+      created:      Created
+      updated:      Updated
+      removed:      Removed
       changed:      changed
       changed_from: changed from
       changed_to:   changed to
