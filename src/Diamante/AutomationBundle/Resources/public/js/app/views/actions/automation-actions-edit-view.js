@@ -30,7 +30,9 @@ define([
         },
 
         entityTypeChanged: function (type) {
-            this.model.trigger('change', this.model, type);
+            if (typeof this.model != 'undefined') {
+                this.model.trigger('change', this.model, type);
+            }
         },
 
         render: function () {
