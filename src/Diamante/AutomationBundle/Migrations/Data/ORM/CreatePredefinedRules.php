@@ -13,7 +13,7 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\DataFixtures\ORM;
+namespace Diamante\AutomationBundle\Migrations\Data\ORM;
 
 use Diamante\AutomationBundle\Entity\BusinessAction;
 use Diamante\AutomationBundle\Entity\BusinessRule;
