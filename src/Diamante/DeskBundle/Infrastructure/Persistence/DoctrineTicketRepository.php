@@ -50,7 +50,10 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
             ->from('DiamanteDeskBundle:Ticket', 't')
             ->leftJoin('t.comments', 'c', 'WITH', 'c.private = :private')
             ->where('t.id = :ticketId')
-            ->setParameters(['ticketId' => $id]);
+            ->setParameters([
+                'private'  => false,
+                'ticketId' => $id
+            ]);
 
         $ticket = $queryBuilder->getQuery()->getOneOrNullResult();
 
