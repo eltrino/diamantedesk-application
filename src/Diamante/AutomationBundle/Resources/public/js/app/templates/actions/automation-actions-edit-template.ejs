@@ -1,5 +1,4 @@
 <% 'TEMPLATE: automation-actions-edit-template' %>
-<% var conditionType = typeof conditionType !== 'undefined' ? conditionType : ''; %>
 <% var entities = config.entities; %>
 <% var actions = config.actions; %>
 <% var entity = typeof entity !== 'undefined' && entity; %>
@@ -10,9 +9,6 @@
 <div class="controls">
     <select name="actions[type]" data-attr="type" data-rel-attr="property,value">
         <% for(var key in config.actions) { %>
-
-        <% if('removed' == conditionType && (key == 'update_property' || key == 'move_to_branch')) { continue; } %>
-
         <% if(isBusiness && key == 'notify_by_email') { continue; } %>
 
         <option value="<%= key %>"<%= key == type ? ' selected' : ''%>><%= config.actions[key].label %></option>
