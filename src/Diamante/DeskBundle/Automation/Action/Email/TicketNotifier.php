@@ -102,6 +102,7 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
         $options = $this->getOptions();
         $target = $this->fact->getTarget();
         $editor = $this->fact->getEditor();
+        $editor = $this->container->get('diamante.user.service')->getByUser($editor);
 
         if ($this->isChanged()) {
             $ticketId = $target['id'];
@@ -113,18 +114,14 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
 
             foreach ($emails as $email) {
                 $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
-                $editor = $this->container->get('diamante.user.service')->getByUser($editor);
+                $options = array_merge(
+                    $options,
+                    ['recipient' => $recipient, 'editor' => $this->getEditorName($editor), 'target' => $target]
+                );
 
                 if ($recipient instanceof DiamanteUser) {
                     $options = $this->filterDiamanteUserOptions($options);
                 }
-
-                $options = array_merge(
-                    $options,
-                    ['recipient' => $recipient, 'editor' => $this->getEditorName($editor)]
-                );
-
-                $options['target'] = $target;
 
                 $this->notificationManager->notifyByScenario($provider, $recipient, $options);
             }
