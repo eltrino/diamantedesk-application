@@ -98,6 +98,7 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
         $emails = $this->getEmailList();
         $provider = $this->getProvider();
         $options = $this->getOptions();
+        $editor = $this->fact->getEditor();
         $ticketId = $target['ticket']->getId();
 
         if (!is_null($ticketId)) {
@@ -107,11 +108,17 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
 
         foreach ($emails as $email) {
             $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
-            $options['recipient'] = $recipient;
 
             if ($recipient instanceof DiamanteUser && $target['private']) {
                 continue;
             }
+
+            $editor = $this->container->get('diamante.user.service')->getByUser($editor);
+            $options = array_merge(
+                $options,
+                ['recipient' => $recipient, 'editor' => $this->getEditorName($editor)]
+            );
+
 
             $this->notificationManager->notifyByScenario($provider, $recipient, $options);
         }
