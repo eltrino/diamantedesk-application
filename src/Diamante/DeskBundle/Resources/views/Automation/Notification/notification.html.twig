@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <td style="width: 100%; text-align: left; vertical-align: top; margin: 0; padding: 0;" align="left" valign="top">
-                            <h1 style="font-size: 18px; font-weight: 400; margin: 0 0 25px;">
+                            <h1 style="font-size: 14px; font-weight: 200; margin: 0 0 25px;">
                             {% block header %}
                                 {{ user }}
                             {% endblock %}
@@ -58,7 +58,7 @@
                             {% endif %}
 
                             {% if attachments is defined and attachments is not empty %}
-                                <h4 style="font-size: 16px; font-weight: 400; margin: 15px 0;">Attachments:</h4>
+                                <h4 style="font-size: 14px; font-weight: 200; margin: 15px 0;">Attachments:</h4>
                                 {% for key, value in attachments %}
                                     <p style="font-size: 14px; font-weight: 200; line-height: 20px; margin: 0; padding: 0;">{{ value }}</p>
                                 {% endfor %}
