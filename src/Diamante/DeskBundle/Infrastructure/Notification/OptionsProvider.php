@@ -15,11 +15,17 @@
 
 namespace Diamante\DeskBundle\Infrastructure\Notification;
 
+use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\Services\MessageReferenceServiceImpl;
 
 abstract class OptionsProvider
 {
+    /**
+     * @var UserService
+     */
+    protected $userService;
+
     /**
      * @var DiamanteUser
      */
@@ -46,11 +52,7 @@ abstract class OptionsProvider
      */
     public function getRecipientName()
     {
-        if ($this->recipient instanceof DiamanteUser) {
-            return $this->recipient->getFullName();
-        }
-
-        return $this->recipient->getFirstName() . ' ' . $this->recipient->getLastName();
+        return $this->userService->getFullName($this->recipient);
     }
 
 
@@ -80,5 +82,10 @@ abstract class OptionsProvider
             'user'      => $this->getRecipientName(),
             'header'    => $this->getSubject()
         ];
+    }
+
+    public function setUserService(UserService $userService)
+    {
+        $this->userService = $userService;
     }
 }

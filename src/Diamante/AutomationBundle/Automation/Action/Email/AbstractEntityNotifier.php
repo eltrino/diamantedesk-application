@@ -112,18 +112,20 @@ abstract class AbstractEntityNotifier
     }
 
     /**
-     * @param $editor
+     * Reloading oro user because it loses email after execute unserialize method
      *
-     * @return string
+     * @param OroUser|DiamanteUser $user
+     *
+     * @return OroUser|DiamanteUser
+     *
      */
-    protected function getEditorName($editor)
+    protected function reloadUser($user)
     {
-        if ($editor instanceof DiamanteUser) {
-            return $editor->getFullName();
+        if ($user instanceof OroUser) {
+            $user = $this->oroUserManager->findUserBy(['id' => $user->getId()]);
         }
 
-        /** @var OroUser $editor */
-        return sprintf('%s %s', $editor->getFirstName(), $editor->getLastName());
+        return $user;
     }
 
     /**

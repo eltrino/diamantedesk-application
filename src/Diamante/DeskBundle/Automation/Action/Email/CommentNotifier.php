@@ -116,7 +116,7 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
 
             $options = array_merge(
                 $options,
-                ['recipient' => $recipient, 'editor' => $this->getEditorName($editor)]
+                ['recipient' => $recipient, 'editor' => $this->userService->getFullName($editor)]
             );
 
 
@@ -207,24 +207,11 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
     {
         /** @var \Diamante\DeskBundle\Entity\Ticket $ticket */
         $ticket = $target['ticket'];
-        /** @var array|DiamanteUser $assignee */
+        /** @var OroUser $assignee */
         $assignee = $ticket->getAssignee();
+        $assignee = $this->reloadUser($assignee);
 
-        if (!empty($assignee)) {
-            if ($assignee instanceof OroUser) {
-                /**
-                 * Reloading oro user because it loses email after execute unserialize method
-                 *
-                 * @var OroUser $user
-                 */
-                $user = $this->oroUserManager->findUserBy(['id' => $assignee->getId()]);
-                if (!is_null($user)) {
-                    return $user->getEmail();
-                }
-
-                return null;
-            }
-
+        if (!is_null($assignee)) {
             return $assignee->getEmail();
         }
 

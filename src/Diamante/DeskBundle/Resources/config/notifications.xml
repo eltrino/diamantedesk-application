@@ -17,39 +17,45 @@
     </parameters>
 
     <services>
-        <service id="diamante_desk.notification.option_provider.ticket_created" class="%diamante_desk.notification.option_provider.ticket_created.class%">
+        <service id="diamante_desk.notification.option_provider.abstract_provider" abstract="true">
+            <call method="setUserService">
+                <argument type="service" id="diamante.user.service" />
+            </call>
+        </service>
+
+        <service id="diamante_desk.notification.option_provider.ticket_created" class="%diamante_desk.notification.option_provider.ticket_created.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.ticket_updated" class="%diamante_desk.notification.option_provider.ticket_updated.class%">
+        <service id="diamante_desk.notification.option_provider.ticket_updated" class="%diamante_desk.notification.option_provider.ticket_updated.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.ticket_removed" class="%diamante_desk.notification.option_provider.ticket_removed.class%">
+        <service id="diamante_desk.notification.option_provider.ticket_removed" class="%diamante_desk.notification.option_provider.ticket_removed.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.comment_created" class="%diamante_desk.notification.option_provider.comment_created.class%">
+        <service id="diamante_desk.notification.option_provider.comment_created" class="%diamante_desk.notification.option_provider.comment_created.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.comment_updated" class="%diamante_desk.notification.option_provider.comment_updated.class%">
+        <service id="diamante_desk.notification.option_provider.comment_updated" class="%diamante_desk.notification.option_provider.comment_updated.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.comment_removed" class="%diamante_desk.notification.option_provider.comment_removed.class%">
+        <service id="diamante_desk.notification.option_provider.comment_removed" class="%diamante_desk.notification.option_provider.comment_removed.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.private_comment_created" class="%diamante_desk.notification.option_provider.private_comment_created.class%">
+        <service id="diamante_desk.notification.option_provider.private_comment_created" class="%diamante_desk.notification.option_provider.private_comment_created.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.private_comment_updated" class="%diamante_desk.notification.option_provider.private_comment_updated.class%">
+        <service id="diamante_desk.notification.option_provider.private_comment_updated" class="%diamante_desk.notification.option_provider.private_comment_updated.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante_desk.notification.option_provider.private_comment_removed" class="%diamante_desk.notification.option_provider.private_comment_removed.class%">
+        <service id="diamante_desk.notification.option_provider.private_comment_removed" class="%diamante_desk.notification.option_provider.private_comment_removed.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
     </services>

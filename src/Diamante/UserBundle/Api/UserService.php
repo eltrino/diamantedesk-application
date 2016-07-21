@@ -104,4 +104,10 @@ interface UserService
      * @return string
      */
     public function resolveCurrentUserType();
+
+    /**
+     * @param OroUser|DiamanteUser $user
+     * @return string
+     */
+    public function getFullName($user);
 }

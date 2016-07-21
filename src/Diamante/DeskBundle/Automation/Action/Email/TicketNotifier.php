@@ -116,7 +116,11 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
                 $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
                 $options = array_merge(
                     $options,
-                    ['recipient' => $recipient, 'editor' => $this->getEditorName($editor), 'target' => $target]
+                    [
+                        'recipient' => $recipient,
+                        'editor'    => $this->userService->getFullName($editor),
+                        'target'    => $target
+                    ]
                 );
 
                 if ($recipient instanceof DiamanteUser) {
@@ -192,15 +196,30 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
      */
     private function convertProperties(array $diff)
     {
+        if (array_key_exists('assignee', $diff)) {
+            $oldAssignee = $diff['assignee']['old'];
+            $newAssignee = $diff['assignee']['new'];
+
+            if (!is_null($oldAssignee)) {
+                $oldAssignee = $this->reloadUser($oldAssignee);
+                $diff['assignee']['old'] = $this->userService->getFullName($oldAssignee);
+            }
+
+            $newAssignee = $this->reloadUser($newAssignee);
+            $diff['assignee']['new'] = $this->userService->getFullName($newAssignee);
+        }
+
         if (array_key_exists('reporter', $diff)) {
             $oldReporter = $diff['reporter']['old'];
             $newReporter = $diff['reporter']['new'];
 
             if (!is_null($oldReporter)) {
-                $diff['reporter']['old'] = $this->container->get('diamante.user.service')->getByUser($oldReporter);
+                $oldReporter = $this->container->get('diamante.user.service')->getByUser($oldReporter);
+                $diff['reporter']['old'] = $this->userService->getFullName($oldReporter);
             }
 
-            $diff['reporter']['new'] = $this->container->get('diamante.user.service')->getByUser($newReporter);
+            $newReporter = $this->container->get('diamante.user.service')->getByUser($newReporter);
+            $diff['reporter']['new'] = $this->userService->getFullName($newReporter);
         }
 
         if (array_key_exists('status', $diff)) {
@@ -259,15 +278,11 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
      */
     protected function getAssignee(array $target)
     {
-        /** @var array|DiamanteUser $assignee */
+        /** @var OroUser $assignee */
         $assignee = $target['assignee'];
-        if (!empty($assignee)) {
-            if ($assignee instanceof OroUser) {
-                $user = $this->oroUserManager->findUserBy(['id' => $assignee->getId()]);
+        $assignee = $this->reloadUser($assignee);
 
-                return $user->getEmail();
-            }
-
+        if (!is_null($assignee)) {
             return $assignee->getEmail();
         }
 

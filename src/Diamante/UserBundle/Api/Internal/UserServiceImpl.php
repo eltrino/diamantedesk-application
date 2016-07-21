@@ -419,4 +419,16 @@ class UserServiceImpl implements UserService, GravatarProvider
         $this->resetPassword(new User($user->getId(), User::TYPE_DIAMANTE));
     }
 
+    /**
+     * @param OroUser|DiamanteUser $user
+     * @return string
+     */
+    public function getFullName($user)
+    {
+        if ($user instanceof DiamanteUser) {
+            return $user->getFullName();
+        }
+
+        return sprintf('%s %s', $user->getFirstName(), $user->getLastName());
+    }
 }
