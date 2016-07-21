@@ -46,9 +46,9 @@
                                                 <td style="color: #A09F9F; font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; white-space: nowrap; vertical-align: top;" valign="top">{{ key|capitalize }}</td>
                                                 <td style="font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; vertical-align: top;" valign="top">
                                                     {% if old is not null %}
-                                                        <del>{{ old|striptags|capitalize }}</del><br />{{ new|striptags|capitalize }}
+                                                        <del>{{ old|striptags }}</del><br />{{ new|striptags }}
                                                     {% else %}
-                                                        {{ new|striptags|capitalize }}
+                                                        {{ new|striptags }}
                                                     {% endif %}
                                                 </td>
                                             </tr>
