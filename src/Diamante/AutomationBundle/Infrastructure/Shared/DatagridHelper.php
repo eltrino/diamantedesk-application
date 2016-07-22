@@ -55,7 +55,7 @@ class DatagridHelper
 
             foreach ((array)$result as $value) {
                 $type = substr($value['timeInterval'], -1);
-                $time = rtrim($value['timeInterval'], 'mh');
+                $time = rtrim($value['timeInterval'], 'mhd');
 
                 $message = $this->translator->transChoice(
                     sprintf('diamante.automation.cron.%s', $type),
