@@ -24,6 +24,7 @@ use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
 use Diamante\UserBundle\Api\UserService;
+use Diamante\UserBundle\Model\User;
 
 class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInterface
 {
@@ -90,7 +91,24 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
     public function postNewCommentForTicket(Command\CommentCommand $command)
     {
         $this->prepareAttachmentInput($command);
-        return parent::postNewCommentForTicket($command);
+        $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Comment');
+
+        \Assert\that($command->attachmentsInput)->nullOr()->all()
+            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+
+        /**
+         * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket
+         */
+        $ticket = $this->loadTicketBy($command->ticket);
+        $author = User::fromString($command->author);
+        $comment = $this->commentFactory->create($command->content, $ticket, $author, $command->private);
+
+        $this->createAttachments($command, $comment);
+        $ticket->updateTimestamps();
+        $ticket->postNewComment($comment);
+        $this->ticketRepository->store($ticket);
+
+        return $comment;
     }
 
     /**

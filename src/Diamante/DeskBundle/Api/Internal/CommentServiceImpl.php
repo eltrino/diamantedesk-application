@@ -44,42 +44,42 @@ class CommentServiceImpl implements CommentService
     /**
      * @var Repository
      */
-    private $ticketRepository;
+    protected $ticketRepository;
 
     /**
      * @var Repository
      */
-    private $commentRepository;
+    protected $commentRepository;
 
     /**
      * @var CommentFactory
      */
-    private $commentFactory;
+    protected $commentFactory;
 
     /**
      * @var UserService
      */
-    private $userService;
+    protected $userService;
 
     /**
      * @var AttachmentManager
      */
-    private $attachmentManager;
+    protected $attachmentManager;
 
     /**
      * @var AuthorizationService
      */
-    private $authorizationService;
+    protected $authorizationService;
 
     /**
      * @var Registry
      */
-    private $registry;
+    protected $registry;
 
     /**
      * @var EventDispatcherInterface
      */
-    private $dispatcher;
+    protected $dispatcher;
 
     /**
      * @param Registry $doctrineRegistry
@@ -148,7 +148,7 @@ class CommentServiceImpl implements CommentService
      *
      * @throws TicketNotFoundException
      */
-    private function loadTicketBy($ticketId)
+    protected function loadTicketBy($ticketId)
     {
         $ticket = $this->ticketRepository->get($ticketId);
         if (is_null($ticket)) {
@@ -369,7 +369,7 @@ class CommentServiceImpl implements CommentService
      * @param Comment|string $entity
      * @throws ForbiddenException
      */
-    private function isGranted($operation, $entity)
+    protected function isGranted($operation, $entity)
     {
         // User should have ability to view all comments (except private)
         // if he is an owner of a ticket
