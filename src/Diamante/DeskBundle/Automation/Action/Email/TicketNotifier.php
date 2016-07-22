@@ -103,6 +103,7 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
         $target = $this->fact->getTarget();
         $editor = $this->fact->getEditor();
         $editor = $this->container->get('diamante.user.service')->getByUser($editor);
+        $editorName = $this->userService->getFullName($editor);
 
         if ($this->isChanged()) {
             $ticketId = $target['id'];
@@ -118,7 +119,7 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
                     $options,
                     [
                         'recipient' => $recipient,
-                        'editor'    => $this->userService->getFullName($editor),
+                        'editor'    => $editorName,
                         'target'    => $target
                     ]
                 );
