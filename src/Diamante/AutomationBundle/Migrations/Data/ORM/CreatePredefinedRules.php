@@ -182,7 +182,7 @@ class CreatePredefinedRules extends ContainerAwareFixture
     {
         $rule
             =
-        $rule = new BusinessRule('Auto close ticket with pending status and no update for 30 days', 'ticket', '30');
+        $rule = new BusinessRule('Auto close ticket with pending status and no update for 30 days', 'ticket', '30d');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('gt', ['status_updated_since' => '720'], $group);
         $action = new BusinessAction('update_property', ['status' => Status::CLOSED], $rule);
