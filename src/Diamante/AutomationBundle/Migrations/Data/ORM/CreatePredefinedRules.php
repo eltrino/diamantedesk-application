@@ -34,16 +34,10 @@ class CreatePredefinedRules extends ContainerAwareFixture
 {
     private $rules
         = [
-            'NotifyReporterTicketWasOpen',
-            'notifyReporterCommentWasAdded',
-            'notifyAssigneeCommentWasAdded',
-            'notifyWatchersCommentWasAdded',
-            'notifyReporterTicketStatusChanged',
-            'notifyAssigneeTicketStatusChanged',
-            'notifyWatchersTicketStatusChanged',
-            'notifyAssigneeTicketCreated',
-            'notifyAssigneeTicketReassigned',
-            'notifyWatchersTicketReassigned',
+            'notifyThatTicketCreated',
+            'notifyThatCommentWasAdded',
+            'notifyThatTicketStatusChanged',
+            'notifyThatTicketReassigned',
 //            'notifyAssigneeTicketNew24Hours',
 //            'notifyAssigneeTicketNew3Days',
             'closeTicketWithPendingStatus',
@@ -76,62 +70,18 @@ class CreatePredefinedRules extends ContainerAwareFixture
     /**
      * @return WorkflowRule
      */
-    private function NotifyReporterTicketWasOpen()
+    private function notifyThatCommentWasAdded()
     {
-        $rule = new WorkflowRule('Notify reporter that ticket was open', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
-        $condition = new Condition('eq', ['status' => Status::OPEN], $group);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
-        $rule->setGrouping($group);
-        $rule->addAction($action);
-        $group->addCondition($condition);
-
-        return $rule;
-    }
-
-    /**
-     * @return WorkflowRule
-     */
-    private function notifyReporterCommentWasAdded()
-    {
-        $rule = new WorkflowRule('Notify reporter that comment was added', 'comment');
+        $rule = new WorkflowRule('Notify assignee, reporter, watchers that comment was added', 'comment');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('created', ['created' => 'true'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
-        $group->addCondition($condition);
-
-        return $rule;
-    }
-
-    /**
-     * @return WorkflowRule
-     */
-    private function notifyAssigneeCommentWasAdded()
-    {
-        $rule = new WorkflowRule('Notify assignee that comment was added', 'comment');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
-        $condition = new Condition('created', ['created' => 'true'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
-        $group->addCondition($condition);
-
-        return $rule;
-    }
-
-    /**
-     * @return WorkflowRule
-     */
-    private function notifyWatchersCommentWasAdded()
-    {
-        $rule = new WorkflowRule('Notify watchers that comment was added', 'comment');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
-        $condition = new Condition('created', ['created' => 'true'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
+        $rule->setGrouping($group);
         $group->addCondition($condition);
 
         return $rule;
@@ -140,46 +90,18 @@ class CreatePredefinedRules extends ContainerAwareFixture
     /**
      * @return WorkflowRule
      */
-    private function notifyReporterTicketStatusChanged()
+    private function notifyThatTicketStatusChanged()
     {
-        $rule = new WorkflowRule('Notify reporter that ticket status was changed', 'ticket');
+        $rule = new WorkflowRule('Notify assignee, reporter, watchers that ticket status was changed', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('changed', ['status' => 'changed'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
-        $group->addCondition($condition);
-
-        return $rule;
-    }
-
-    /**
-     * @return WorkflowRule
-     */
-    private function notifyAssigneeTicketStatusChanged()
-    {
-        $rule = new WorkflowRule('Notify assignee that ticket status was changed', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
-        $condition = new Condition('changed', ['status' => 'changed'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
-        $group->addCondition($condition);
-
-        return $rule;
-    }
-
-    /**
-     * @return WorkflowRule
-     */
-    private function notifyWatchersTicketStatusChanged()
-    {
-        $rule = new WorkflowRule('Notify watchers that ticket status was changed', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
-        $condition = new Condition('changed', ['status' => 'changed'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
+        $rule->setGrouping($group);
         $group->addCondition($condition);
 
         return $rule;
@@ -188,14 +110,16 @@ class CreatePredefinedRules extends ContainerAwareFixture
     /**
      * @return WorkflowRule
      */
-    private function notifyAssigneeTicketCreated()
+    private function notifyThatTicketCreated()
     {
-        $rule = new WorkflowRule('Notify assignee that ticket was created', 'ticket');
+        $rule = new WorkflowRule('Notify reporter, assignee that ticket was created', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('created', ['created' => 'true'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
+        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
+        $rule->addAction($action);
+        $rule->setGrouping($group);
         $group->addCondition($condition);
 
         return $rule;
@@ -204,30 +128,16 @@ class CreatePredefinedRules extends ContainerAwareFixture
     /**
      * @return WorkflowRule
      */
-    private function notifyAssigneeTicketReassigned()
+    private function notifyThatTicketReassigned()
     {
         $rule = new WorkflowRule('Notify assignee that ticket was reassigned', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('changed', ['assignee' => 'changed'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
-        $group->addCondition($condition);
-
-        return $rule;
-    }
-
-    /**
-     * @return WorkflowRule
-     */
-    private function notifyWatchersTicketReassigned()
-    {
-        $rule = new WorkflowRule('Notify watchers that ticket was reassigned', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
-        $condition = new Condition('changed', ['assignee' => 'changed'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
-        $rule->setGrouping($group);
         $rule->addAction($action);
+        $rule->setGrouping($group);
         $group->addCondition($condition);
 
         return $rule;
@@ -274,7 +184,7 @@ class CreatePredefinedRules extends ContainerAwareFixture
             =
         $rule = new BusinessRule('Auto close ticket with pending status and no update for 30 days', 'ticket', '30d');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
-        $condition = new Condition('gt', ['status_updated_since' => '30d'], $group);
+        $condition = new Condition('gt', ['status_updated_since' => '720'], $group);
         $action = new BusinessAction('update_property', ['status' => Status::CLOSED], $rule);
         $rule->setGrouping($group);
         $rule->addAction($action);
