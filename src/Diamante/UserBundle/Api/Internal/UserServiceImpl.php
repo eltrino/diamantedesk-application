@@ -427,8 +427,10 @@ class UserServiceImpl implements UserService, GravatarProvider
     {
         if ($user instanceof DiamanteUser) {
             return $user->getFullName();
+        } elseif ($user instanceof OroUser) {
+            return sprintf('%s %s', $user->getFirstName(), $user->getLastName());
         }
 
-        return sprintf('%s %s', $user->getFirstName(), $user->getLastName());
+        return null;
     }
 }
