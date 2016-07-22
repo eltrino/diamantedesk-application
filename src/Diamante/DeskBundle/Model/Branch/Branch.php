@@ -117,7 +117,7 @@ class Branch implements Taggable, Entity, Property
      */
     public function getValue()
     {
-        return $this->getId();
+        return $this->name;
     }
 
     /**

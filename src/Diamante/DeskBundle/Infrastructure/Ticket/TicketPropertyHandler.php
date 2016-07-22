@@ -18,7 +18,6 @@ namespace Diamante\DeskBundle\Infrastructure\Ticket;
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Infrastructure\Shared\Entity\AbstractPropertyHandler;
-use Diamante\DeskBundle\Model\Shared\Property;
 
 class TicketPropertyHandler extends AbstractPropertyHandler
 {
@@ -57,8 +56,8 @@ class TicketPropertyHandler extends AbstractPropertyHandler
             /** @var Branch $property */
             $value = $property->getName();
         } else {
-            /** @var Property $property */
-            $value = $property->getValue();
+            /** @var Branch $property */
+            $value = $property->getId();
         }
 
         return $value;
