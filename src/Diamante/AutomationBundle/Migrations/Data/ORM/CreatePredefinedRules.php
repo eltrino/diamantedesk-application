@@ -130,7 +130,7 @@ class CreatePredefinedRules extends ContainerAwareFixture
      */
     private function notifyThatTicketReassigned()
     {
-        $rule = new WorkflowRule('Notify assignee that ticket was reassigned', 'ticket');
+        $rule = new WorkflowRule('Notify assignee, watchers that ticket was reassigned', 'ticket');
         $group = new Group(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('changed', ['assignee' => 'changed'], $group);
         $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
