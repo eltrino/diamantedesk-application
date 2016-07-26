@@ -66,6 +66,10 @@ class MoveToBranchAction extends AbstractModifyAction
                 $this->getTicketId($target, $targetType)
             );
 
+            if ($branchId == $ticket->getBranchId()) {
+                return;
+            }
+
             /** @var Branch $branch */
             $branch = $this->em->find('DiamanteDeskBundle:Branch', $branchId, LockMode::PESSIMISTIC_READ);
             $this->em->getRepository('DiamanteDeskBundle:TicketHistory')->store(new TicketHistory($ticket));
