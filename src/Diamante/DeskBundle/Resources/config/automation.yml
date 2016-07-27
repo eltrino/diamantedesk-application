@@ -32,7 +32,7 @@ diamante_automation:
             conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to']
           reporter_email:
             frontend_label: diamante.desk.ticket.reporter_email.label
-            type: string
+            type: virtual
             updatable: false
             conditions: ['eq', 'neq', 'like', 'not_like']
             accessor: diamante_automation.ticket.property.processor::getReporterEmail
