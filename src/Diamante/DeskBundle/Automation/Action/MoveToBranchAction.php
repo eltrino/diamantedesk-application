@@ -38,6 +38,7 @@ class MoveToBranchAction extends AbstractModifyAction
         $branchId = null;
         $target = $this->context->getFact()->getTarget();
         $targetType = $this->context->getFact()->getTargetType();
+        $ticketId = $this->getTicketId($target, $targetType);
 
         if ($this->context->getParameters()->has(static::ACTION_NAME)) {
             $branchId = $this->context->getParameters()->all()[static::ACTION_NAME];
@@ -47,23 +48,30 @@ class MoveToBranchAction extends AbstractModifyAction
             throw new \RuntimeException("Invalid rule configuration");
         }
 
-        $this->move($target, $targetType, $branchId);
+        if (is_null($ticketId)) {
+            return;
+        }
+
+        $this->move($target, $targetType, $branchId, $ticketId);
     }
 
     /**
      * @param $target
      * @param $targetType
      * @param $branchId
+     * @param $ticketId
      */
-    protected function move($target, $targetType, $branchId)
+    protected function move($target, $targetType, $branchId, $ticketId)
     {
         $this->em = $this->getEntityManager();
         $this->em->getConnection()->beginTransaction();
 
         try {
             /** @var Ticket $ticket */
-            $ticket = $this->em->getRepository('DiamanteDeskBundle:Ticket')->get(
-                $this->getTicketId($target, $targetType)
+            $ticket = $this->em->find(
+                'DiamanteDeskBundle:Ticket',
+                $ticketId,
+                LockMode::PESSIMISTIC_READ
             );
 
             if ($branchId == $ticket->getBranchId()) {
@@ -82,19 +90,8 @@ class MoveToBranchAction extends AbstractModifyAction
             $this->em->getConnection()->commit();
         } catch (\Exception $e) {
             $this->em->getConnection()->rollback();
-            $this->move($target, $targetType, $branchId);
+            $this->move($target, $targetType, $branchId, $ticketId);
         }
-    }
-
-    protected function getEntityManager()
-    {
-        $em = $this->registry->getManager();
-        if (!$em->isOpen()) {
-            $this->registry->resetManager();
-            $em = $this->registry->getManager();
-        }
-
-        return $em;
     }
 
     /**

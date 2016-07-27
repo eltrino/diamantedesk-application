@@ -52,6 +52,17 @@ abstract class AbstractModifyAction extends AbstractAction
         $this->getContext()->addParameters($parameters);
     }
 
+    protected function getEntityManager()
+    {
+        $em = $this->registry->getManager();
+        if (!$em->isOpen()) {
+            $this->registry->resetManager();
+            $em = $this->registry->getManager();
+        }
+
+        return $em;
+    }
+
     /**
      * to avoid update action entry in PersistentProcessingContext entity
      */

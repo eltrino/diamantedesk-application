@@ -15,12 +15,13 @@
 
 namespace Diamante\AutomationBundle\Automation\Action;
 
+use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Rule\Action\AbstractModifyAction;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Shared\Updatable;
-use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
+use Doctrine\DBAL\LockMode;
 
 /**
  * Class UpdatePropertyAction
@@ -50,11 +51,17 @@ class UpdatePropertyAction extends AbstractModifyAction
         $targetType = $context->getFact()->getTargetType();
         $properties = $context->getParameters()->all();
         $targetClass = $this->configurationProvider->getEntityConfiguration($targetType)->get('class');
+        $targetEntity = new \ReflectionClass($targetClass);
 
-        $entity = $this->update($target, $targetClass, $properties);
-        $this->disableListeners();
-        $this->em->persist($entity);
-        $this->em->flush();
+        if (!$targetEntity->hasMethod('updateProperties')) {
+            throw new \RuntimeException('Can\'t load entity.');
+        }
+
+        if (is_null($target['id'])) {
+            return;
+        }
+
+        $this->update($target, $targetType, $properties);
     }
 
     /**
@@ -75,27 +82,31 @@ class UpdatePropertyAction extends AbstractModifyAction
 
     /**
      * @param array $target
-     * @param       $targetClass
+     * @param       $targetType
      * @param       $properties
      *
      * @return Updatable
      */
-    protected function update(array $target, $targetClass, $properties)
+    protected function update(array $target, $targetType, $properties)
     {
-        $targetEntity = new \ReflectionClass($targetClass);
+        $this->em = $this->getEntityManager();
+        $this->em->getConnection()->beginTransaction();
 
-        if ($targetEntity->hasMethod('updateProperties')) {
-            /** @var DoctrineGenericRepository $repository */
-            $repository = $this->em->getRepository($targetClass);
-            /** @var Updatable $entity */
-            $entity = $repository->get($target['id']);
+        try {
+            $repository = sprintf('DiamanteDeskBundle:%s', ucfirst($targetType));
+            $entity = $this->em->find($repository, $target['id'], LockMode::PESSIMISTIC_READ);
             $properties = $this->convertProperties($properties);
             $entity->updateProperties($properties);
 
-            return $entity;
-        }
+            $this->disableListeners();
+            $this->em->persist($entity);
+            $this->em->flush();
+            $this->em->getConnection()->commit();
 
-        throw new \RuntimeException('Can\'t load entity.');
+        } catch (\Exception $e) {
+            $this->em->getConnection()->rollback();
+            $this->update($target, $targetType, $properties);
+        }
     }
 
     /**
