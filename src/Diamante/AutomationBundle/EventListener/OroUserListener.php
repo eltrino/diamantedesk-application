@@ -51,8 +51,9 @@ class OroUserListener
                 $user = User::fromString($parameters['assignee']);
 
                 if ($user->getId() == $entity->getId()) {
-                    $parameters['assignee'] = UpdatePropertyAction::UNASSIGNED;
+                    $parameters['assignee'] = UpdatePropertyAction::PROPERTY_REMOVED;
                     $action->setParameters($parameters);
+                    $action->getRule()->deactivate();
                     $manager->persist($action);
                 }
             }

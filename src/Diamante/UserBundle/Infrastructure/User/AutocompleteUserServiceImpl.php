@@ -14,6 +14,7 @@
  */
 namespace Diamante\UserBundle\Infrastructure\User;
 
+use Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction;
 use Diamante\DeskBundle\Automation\Action\Email\CommentNotifier;
 use Diamante\DeskBundle\Automation\Action\Email\TicketNotifier;
 use Diamante\UserBundle\Api\UserService;
@@ -158,7 +159,10 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
         }
 
         $assigners = array_merge(
-            ['unassigned' => 'Unassigned'],
+            [
+                UpdatePropertyAction::UNASSIGNED       => 'Unassigned',
+                UpdatePropertyAction::PROPERTY_REMOVED => 'User was removed'
+            ],
             $list
         );
 

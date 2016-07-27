@@ -44,6 +44,9 @@
             <span class="label">To: </span>
             <select name="actions[value][<%= index %>]" data-attr="value">
                 <% for(var key in properties[property].frontend_options) { %>
+                <% if ('property_removed' == key) { %>
+                <% continue; %>
+                <% } %>
                 <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
                     <% if (properties[property].type == 'user'){ %>
                     <%= actions[type].frontend_options[key] %>

@@ -17,7 +17,6 @@ namespace Diamante\AutomationBundle\Automation\Action;
 
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Rule\Action\AbstractModifyAction;
-use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 use Diamante\DeskBundle\Model\Shared\Updatable;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
@@ -32,6 +31,7 @@ class UpdatePropertyAction extends AbstractModifyAction
 {
     const ASSIGNEE = 'assignee';
     const UNASSIGNED = 'unassigned';
+    const PROPERTY_REMOVED = 'property_removed';
     const ACTION_NAME = 'update_property';
 
     /**
@@ -117,6 +117,11 @@ class UpdatePropertyAction extends AbstractModifyAction
     private function convertProperties(array $properties)
     {
         foreach ($properties as $name => $value) {
+            if (self::PROPERTY_REMOVED == $value) {
+                unset($properties[$name]);
+                continue;
+            }
+
             if (static::ASSIGNEE == $name) {
                 if (self::UNASSIGNED == $value) {
                     $user = null;

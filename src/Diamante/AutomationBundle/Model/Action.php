@@ -59,6 +59,9 @@ class Action implements Entity
         $this->parameters = $parameters;
     }
 
+    /**
+     * @return Rule
+     */
     public function getRule()
     {
         return $this->rule;
