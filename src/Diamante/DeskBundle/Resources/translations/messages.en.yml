@@ -333,10 +333,10 @@ diamante:
               created: Comment was created
               updated: Comment was updated
               removed: Comment was removed
-            private:
-              created: Private comment was created
-              updated: Private comment was updated
-              removed: Private comment was removed
+              private:
+                created: Private comment was created
+                updated: Private comment was updated
+                removed: Private comment was removed
 
 
 oro:
