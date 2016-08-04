@@ -54,10 +54,10 @@ diamante_automation:
       frontend_label: diamante.automation.condition.changed_to
       rules: ['workflow']
     'true':
-      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\True'
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\TrueCondition'
       frontend_label: diamante.automation.condition.true
     'false':
-      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\False'
+      class: 'Diamante\AutomationBundle\Rule\Condition\Expression\FalseCondition'
       frontend_label: diamante.automation.condition.false
     is_customer:
       class: 'Diamante\AutomationBundle\Rule\Condition\Expression\IsCustomer'

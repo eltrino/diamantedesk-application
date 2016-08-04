@@ -29,7 +29,7 @@ class Like extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->getActualValue($fact);
+        $actualValue = $this->getActualValueByMode($fact, self::MODE);
 
         return false !== stripos($actualValue, $this->context->getExpectedValue());
     }

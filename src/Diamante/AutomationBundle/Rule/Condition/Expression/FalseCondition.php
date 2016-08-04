@@ -18,7 +18,7 @@ namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
-class False extends AbstractCondition
+class FalseCondition extends AbstractCondition
 {
     /**
      * @param AbstractFact $fact

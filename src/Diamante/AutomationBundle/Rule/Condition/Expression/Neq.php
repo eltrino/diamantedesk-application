@@ -29,7 +29,7 @@ class Neq extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        $actualValue = $this->getActualValue($fact);
+        $actualValue = $this->getActualValueByMode($fact, self::MODE);
 
         return strcasecmp($actualValue, $this->context->getExpectedValue()) !== 0;
     }

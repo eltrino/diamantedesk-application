@@ -48,7 +48,23 @@ abstract class AbstractCondition implements ConditionInterface
     {
         $type = $fact->getTargetType();
         $propertyHandler = $this->propertyManager->getPropertyHandler($type);
-        $this->context->setMode(static::MODE);
+        $propertyHandler->setContext($this->context);
+        $value = $propertyHandler->extractPropertyValue($fact);
+
+        return $value;
+    }
+
+    /**
+     * @param AbstractFact $fact
+     * @param string       $mode
+     *
+     * @return mixed
+     */
+    public function getActualValueByMode(AbstractFact $fact, $mode)
+    {
+        $type = $fact->getTargetType();
+        $propertyHandler = $this->propertyManager->getPropertyHandler($type);
+        $this->context->setMode($mode);
         $propertyHandler->setContext($this->context);
         $value = $propertyHandler->extractPropertyValue($fact);
 

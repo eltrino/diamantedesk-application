@@ -18,8 +18,10 @@ namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
-class True extends AbstractCondition
+class TrueCondition extends AbstractCondition
 {
+    const MODE = 'strict';
+
     /**
      * @param AbstractFact $fact
      *

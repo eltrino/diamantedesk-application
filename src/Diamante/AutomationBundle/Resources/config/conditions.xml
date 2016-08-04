@@ -11,7 +11,7 @@
         <parameter key="diamante_automation.condition.like.class">Diamante\AutomationBundle\Rule\Condition\Expression\Like</parameter>
         <parameter key="diamante_automation.condition.created.class">Diamante\AutomationBundle\Rule\Condition\Expression\Created</parameter>
         <parameter key="diamante_automation.condition.eq.class">Diamante\AutomationBundle\Rule\Condition\Expression\Eq</parameter>
-        <parameter key="diamante_automation.condition.false.class">Diamante\AutomationBundle\Rule\Condition\Expression\False</parameter>
+        <parameter key="diamante_automation.condition.false.class">Diamante\AutomationBundle\Rule\Condition\Expression\FalseCondition</parameter>
         <parameter key="diamante_automation.condition.gt.class">Diamante\AutomationBundle\Rule\Condition\Expression\Gt</parameter>
         <parameter key="diamante_automation.condition.gte.class">Diamante\AutomationBundle\Rule\Condition\Expression\Gte</parameter>
         <parameter key="diamante_automation.condition.is_admin.class">Diamante\AutomationBundle\Rule\Condition\Expression\IsAdmin</parameter>
@@ -21,7 +21,7 @@
         <parameter key="diamante_automation.condition.neq.class">Diamante\AutomationBundle\Rule\Condition\Expression\Neq</parameter>
         <parameter key="diamante_automation.condition.not_like.class">Diamante\AutomationBundle\Rule\Condition\Expression\NotLike</parameter>
         <parameter key="diamante_automation.condition.removed.class">Diamante\AutomationBundle\Rule\Condition\Expression\Removed</parameter>
-        <parameter key="diamante_automation.condition.true.class">Diamante\AutomationBundle\Rule\Condition\Expression\True</parameter>
+        <parameter key="diamante_automation.condition.true.class">Diamante\AutomationBundle\Rule\Condition\Expression\TrueCondition</parameter>
         <parameter key="diamante_automation.condition.updated.class">Diamante\AutomationBundle\Rule\Condition\Expression\Updated</parameter>
     </parameters>
 
