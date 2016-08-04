@@ -75,6 +75,9 @@
                 <% } else if (properties[property].frontend_options){ %>
                 <select name="conditions[value][<%= index %>]" data-attr="value">
                     <% for(var key in properties[property].frontend_options) { %>
+                    <% if ('property_removed' == key) { %>
+                    <% continue; %>
+                    <% } %>
                     <option value="<%= key %>"<%= key == value ? ' selected' : ''%>>
                         <% if (properties[property].type == 'user'){ %>
                         <%= properties[property].frontend_options[key] %>

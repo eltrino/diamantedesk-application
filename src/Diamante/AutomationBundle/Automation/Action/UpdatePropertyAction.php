@@ -29,9 +29,6 @@ use Doctrine\DBAL\LockMode;
  */
 class UpdatePropertyAction extends AbstractModifyAction
 {
-    const ASSIGNEE = 'assignee';
-    const UNASSIGNED = 'unassigned';
-    const PROPERTY_REMOVED = 'property_removed';
     const ACTION_NAME = 'update_property';
 
     /**

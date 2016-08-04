@@ -25,6 +25,10 @@ use Oro\Bundle\EntityBundle\Event\OroEventManager;
  */
 abstract class AbstractModifyAction extends AbstractAction
 {
+    const PROPERTY_REMOVED = 'property_removed';
+    const UNASSIGNED = 'unassigned';
+    const ASSIGNEE = 'assignee';
+
     /**
      * @var \Oro\Bundle\EntityBundle\ORM\OroEntityManager
      */

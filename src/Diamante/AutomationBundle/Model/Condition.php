@@ -69,9 +69,22 @@ class Condition implements Entity
         return $this->parameters;
     }
 
+    /**
+     * @param array $parameters
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
     public function getGroup()
     {
         return $this->group;
+    }
+
+    public function getRule()
+    {
+        return $this->group->getRule();
     }
 
     public function update(

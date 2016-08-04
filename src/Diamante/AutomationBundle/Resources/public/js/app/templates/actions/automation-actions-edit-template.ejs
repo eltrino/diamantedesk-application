@@ -75,6 +75,9 @@
     <input type="hidden" name="actions[property][<%= index %>]" data-attr="property" value="<%= type %>" />
     <select name="actions[value][<%= index %>]" data-attr="value">
         <% for(var key in actions[type].frontend_options[entity]) { %>
+        <% if ('property_removed' == key) { %>
+        <% continue; %>
+        <% } %>
         <option value="<%= key %>"<%= key == value ? ' selected' : key == 'null' ? ' disabled': '' %>>
             <%= actions[type].frontend_options[entity][key] %>
         </option>

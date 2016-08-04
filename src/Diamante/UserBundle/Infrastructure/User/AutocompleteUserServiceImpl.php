@@ -14,7 +14,7 @@
  */
 namespace Diamante\UserBundle\Infrastructure\User;
 
-use Diamante\AutomationBundle\Automation\Action\UpdatePropertyAction;
+use Diamante\AutomationBundle\Rule\Action\AbstractModifyAction;
 use Diamante\DeskBundle\Automation\Action\Email\CommentNotifier;
 use Diamante\DeskBundle\Automation\Action\Email\TicketNotifier;
 use Diamante\UserBundle\Api\UserService;
@@ -98,6 +98,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
     public function getNotifyActionList()
     {
         $list[CommentNotifier::COMMENT_TYPE] = [
+            AbstractModifyAction::PROPERTY_REMOVED => 'User was removed',
             'watchers' => $this->translator->trans(static::WATCHERS),
             'assignee' => $this->translator->trans(static::ASSIGNEE),
             'reporter' => $this->translator->trans(static::REPORTER),
@@ -105,6 +106,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
         ];
 
         $list[TicketNotifier::TICKET_TYPE] = [
+            AbstractModifyAction::PROPERTY_REMOVED => 'User was removed',
             'watchers' => $this->translator->trans(static::WATCHERS),
             'assignee' => $this->translator->trans(static::ASSIGNEE),
             'reporter' => $this->translator->trans(static::REPORTER),
@@ -160,8 +162,8 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
 
         $assigners = array_merge(
             [
-                UpdatePropertyAction::UNASSIGNED       => 'Unassigned',
-                UpdatePropertyAction::PROPERTY_REMOVED => 'User was removed'
+                AbstractModifyAction::UNASSIGNED       => 'Unassigned',
+                AbstractModifyAction::PROPERTY_REMOVED => 'User was removed'
             ],
             $list
         );

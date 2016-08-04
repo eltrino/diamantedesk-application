@@ -38,6 +38,7 @@
         <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\DeskBundle\Automation\Action\Email\TicketNotifier</parameter>
         <parameter key="diamante.upper_case.twig.extension.class">Diamante\AutomationBundle\Twig\Filters\UpperCaseFilter</parameter>
         <parameter key="diamante_automation.listener.oro_user_listener.class">Diamante\AutomationBundle\EventListener\OroUserListener</parameter>
+        <parameter key="diamante_automation.listener.diamante_user_listener.class">Diamante\AutomationBundle\EventListener\DiamanteUserListener</parameter>
     </parameters>
 
     <services>
@@ -213,7 +214,13 @@
         </service>
 
         <service id="diamante.listener.oro_user_listener" class="%diamante_automation.listener.oro_user_listener.class%">
+            <argument type="service" id="service_container"/>
             <tag name="doctrine.event_listener" event="preRemove"/>
+        </service>
+
+        <service id="diamante.listener.diamante_user_listener" class="%diamante_automation.listener.diamante_user_listener.class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="preUpdate"/>
         </service>
     </services>
 </container>
