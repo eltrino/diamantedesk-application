@@ -75,6 +75,7 @@ class MoveToBranchAction extends AbstractModifyAction
             );
 
             if ($branchId == $ticket->getBranchId()) {
+                $this->em->getConnection()->rollback();
                 return;
             }
 
