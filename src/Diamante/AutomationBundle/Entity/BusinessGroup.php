@@ -20,11 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class BusinessAction extends Action
+class BusinessGroup extends Group
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="BusinessRule", inversedBy="actions")
-     * @ORM\JoinColumn(name="rule_id", referencedColumnName="id")
+   /**
+     * @ORM\OneToOne(targetEntity="BusinessRule", mappedBy="grouping")
      */
     protected $rule;
 }

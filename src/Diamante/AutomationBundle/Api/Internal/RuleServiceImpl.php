@@ -18,6 +18,8 @@ use Diamante\AutomationBundle\Api\RuleService;
 use Diamante\AutomationBundle\Automation\Validator\RuleValidator;
 use Diamante\AutomationBundle\Entity\BusinessRule;
 use Diamante\AutomationBundle\Entity\Condition;
+use Diamante\AutomationBundle\Entity\WorkflowGroup;
+use Diamante\AutomationBundle\Entity\BusinessGroup;
 use Diamante\AutomationBundle\Entity\Group;
 use Diamante\AutomationBundle\Entity\WorkflowRule;
 use Diamante\AutomationBundle\Infrastructure\Shared\CronExpressionMapper;
@@ -244,7 +246,11 @@ class RuleServiceImpl implements RuleService
     private function createBusinessRule(array $input)
     {
         $rule = new BusinessRule($input['name'], $input['target'], $input['time_interval'], $input['status']);
-        $this->addGrouping($rule, $input['grouping']);
+        $group = function ($connector) {
+            return new BusinessGroup($connector);
+        };
+
+        $this->addGrouping($rule, $input['grouping'], $group);
         $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
 
         $this->businessRuleRepository->store($rule);
@@ -263,11 +269,14 @@ class RuleServiceImpl implements RuleService
     private function updateBusinessRule(array $input, $id)
     {
         $rule = $this->getBusinessRuleById($id);
-        $rule->update($input['name'], $input['time_interval'], $input['status']);
+        $group = function ($connector) {
+            return new BusinessGroup($connector);
+        };
 
+        $rule->update($input['name'], $input['time_interval'], $input['status']);
         $rule->removeActions();
         $rule->removeGrouping();
-        $this->addGrouping($rule, $input['grouping']);
+        $this->addGrouping($rule, $input['grouping'], $group);
         $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
 
         $this->businessRuleRepository->store($rule);
@@ -284,11 +293,14 @@ class RuleServiceImpl implements RuleService
     private function updateWorkflowRule(array $input, $id)
     {
         $rule = $this->getWorkflowRuleById($id);
-        $rule->update($input['name'], $input['status']);
+        $group = function ($connector) {
+            return new WorkflowGroup($connector);
+        };
 
+        $rule->update($input['name'], $input['status']);
         $rule->removeActions();
         $rule->removeGrouping();
-        $this->addGrouping($rule, $input['grouping']);
+        $this->addGrouping($rule, $input['grouping'], $group);
         $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
 
         $this->workflowRuleRepository->store($rule);
@@ -304,7 +316,11 @@ class RuleServiceImpl implements RuleService
     private function createWorkflowRule(array $input)
     {
         $rule = new WorkflowRule($input['name'], $input['target'], $input['status']);
-        $this->addGrouping($rule, $input['grouping']);
+        $group = function ($connector) {
+            return new WorkflowGroup($connector);
+        };
+
+        $this->addGrouping($rule, $input['grouping'], $group);
         $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
 
         $this->workflowRuleRepository->store($rule);
@@ -315,13 +331,14 @@ class RuleServiceImpl implements RuleService
     /**
      * @param Rule       $rule
      * @param array      $grouping
+     * @param callable   $groupInstance
      * @param Group|null $parent
      *
      * @return $this
      */
-    private function addGrouping(Rule $rule, array $grouping, Group $parent = null)
+    private function addGrouping(Rule $rule, array $grouping, $groupInstance, Group $parent = null)
     {
-        $group = new Group($grouping['connector']);
+        $group = $groupInstance($grouping['connector']);
         if (is_null($parent)) {
             $rule->setGrouping($group);
         } else {
@@ -338,7 +355,7 @@ class RuleServiceImpl implements RuleService
 
         if (!empty($grouping['children'])) {
             foreach ($grouping['children'] as $child) {
-                $this->addGrouping($rule, $child, $group);
+                $this->addGrouping($rule, $child, $groupInstance, $group);
             }
         }
 

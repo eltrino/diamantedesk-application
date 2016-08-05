@@ -15,7 +15,6 @@
 
 namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

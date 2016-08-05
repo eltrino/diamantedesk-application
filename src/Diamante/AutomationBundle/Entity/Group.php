@@ -15,17 +15,17 @@
 
 namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\AutomationBundle\Model\Target;
-use Diamante\AutomationBundle\Rule\Condition\Condition as RuleCondition;
-use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\Table(name="diamante_rule_group")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"workflow" = "WorkflowGroup", "business" = "BusinessGroup"})
  */
-class Group extends \Diamante\AutomationBundle\Model\Group
+abstract class Group extends \Diamante\AutomationBundle\Model\Group
 {
     /**
      * @var \Rhumsaa\Uuid\Uuid
@@ -58,10 +58,4 @@ class Group extends \Diamante\AutomationBundle\Model\Group
      * @ORM\OneToMany(targetEntity="Condition", mappedBy="group", cascade={"persist", "remove"})
      */
     protected $conditions;
-
-    /**
-     * @ORM\OneToOne(targetEntity="WorkflowRule", mappedBy="grouping")
-     * @ORM\OneToOne(targetEntity="BusinessRule", mappedBy="grouping")
-     */
-    protected $rule;
 }

@@ -15,10 +15,6 @@
 
 namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\AutomationBundle\Model\Target;
-use Diamante\AutomationBundle\Rule\Condition\Condition as RuleCondition;
-use Diamante\DeskBundle\Model\Shared\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

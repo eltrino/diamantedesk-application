@@ -15,9 +15,6 @@
 
 namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\AutomationBundle\Model\Target;
-use Diamante\DeskBundle\Model\Shared\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -52,7 +49,7 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule
     protected $status;
 
     /**
-     * @ORM\OneToOne(targetEntity="Group", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="BusinessGroup", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="root_group_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $grouping;
