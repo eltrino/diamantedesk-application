@@ -534,7 +534,15 @@ class TicketServiceImpl implements TicketService
      */
     public function deleteTicketByKey($key)
     {
-        $ticket = $this->loadTicketByTicketKey(TicketKey::from($key));
+        $ticketHistory = $this->ticketHistoryRepository->findOneByTicketKey($key);
+
+        if ($ticketHistory) {
+            $ticket = $this->ticketRepository->get($ticketHistory->getTicket()->getId());
+        } else {
+            $ticketKey = TicketKey::from($key);
+            $ticket = $this->loadTicketByTicketKey($ticketKey);
+        }
+
         $this->isGranted('DELETE', $ticket);
         $this->processDeleteTicket($ticket);
     }
