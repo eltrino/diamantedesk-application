@@ -2,7 +2,7 @@ define(['oroui/js/app/models/base/model'
 ],function (BaseModel) {
     'use strict';
 
-    var AutomationCoditionsModel = BaseModel.extend({
+    var AutomationConditionsModel = BaseModel.extend({
 
         defaults: {
             entity: ''
@@ -17,6 +17,11 @@ define(['oroui/js/app/models/base/model'
                             entity_type : attr.type,
                             property: key,
                             value: 'true'
+                        });
+                    } else if ('assignee' == key && options.edit && 'property_removed' == parameters[key]) {
+                        this.set({
+                            property: key,
+                            value: 'unassigned'
                         });
                     } else {
                         this.set({
@@ -37,5 +42,5 @@ define(['oroui/js/app/models/base/model'
         }
     });
 
-    return AutomationCoditionsModel;
+    return AutomationConditionsModel;
 });
