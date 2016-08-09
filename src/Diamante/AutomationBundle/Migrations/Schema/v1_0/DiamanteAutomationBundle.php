@@ -1,17 +1,4 @@
 <?php
-/*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
- *
- * Licensed under the Open Software License (OSL 3.0).
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://opensource.org/licenses/osl-3.0.php
- *
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@eltrino.com so we can send you a copy immediately.
- */
 
 namespace Diamante\AutomationBundle\Migrations\Schema;
 
@@ -40,18 +27,18 @@ class DiamanteAutomationBundleInstaller implements Installation
     {
         /** Tables generation **/
         $this->createDiamanteAutomationContextTable($schema);
-        $this->createDiamanteBusinessRuleTable($schema);
         $this->createDiamanteCronScheduleTable($schema);
+        $this->createDiamanteEventTriggeredRuleTable($schema);
         $this->createDiamanteRuleActionTable($schema);
         $this->createDiamanteRuleConditionTable($schema);
         $this->createDiamanteRuleGroupTable($schema);
-        $this->createDiamanteWorkflowRuleTable($schema);
+        $this->createDiamanteTimeTriggeredRuleTable($schema);
 
         /** Foreign keys generation **/
-        $this->addDiamanteBusinessRuleForeignKeys($schema);
+        $this->addDiamanteEventTriggeredRuleForeignKeys($schema);
         $this->addDiamanteRuleConditionForeignKeys($schema);
         $this->addDiamanteRuleGroupForeignKeys($schema);
-        $this->addDiamanteWorkflowRuleForeignKeys($schema);
+        $this->addDiamanteTimeTriggeredRuleForeignKeys($schema);
     }
 
     /**
@@ -73,26 +60,6 @@ class DiamanteAutomationBundleInstaller implements Installation
     }
 
     /**
-     * Create diamante_business_rule table
-     *
-     * @param Schema $schema
-     */
-    protected function createDiamanteBusinessRuleTable(Schema $schema)
-    {
-        $table = $schema->createTable('diamante_business_rule');
-        $table->addColumn('id', 'string', ['length' => 255]);
-        $table->addColumn('root_group_id', 'string', ['notnull' => false, 'length' => 255]);
-        $table->addColumn('name', 'string', ['length' => 255]);
-        $table->addColumn('created_at', 'datetime', []);
-        $table->addColumn('updated_at', 'datetime', []);
-        $table->addColumn('time_interval', 'string', ['length' => 255]);
-        $table->addColumn('status', 'boolean', []);
-        $table->addColumn('target', 'string', ['length' => 255]);
-        $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['root_group_id'], 'UNIQ_5182F28A8509B3A1');
-    }
-
-    /**
      * Create diamante_cron_schedule table
      *
      * @param Schema $schema
@@ -105,6 +72,25 @@ class DiamanteAutomationBundleInstaller implements Installation
         $table->addColumn('parameters', 'array', ['comment' => '(DC2Type:array)']);
         $table->addColumn('definition', 'string', ['notnull' => false, 'length' => 100]);
         $table->setPrimaryKey(['id']);
+    }
+
+    /**
+     * Create diamante_event_triggered_rule table
+     *
+     * @param Schema $schema
+     */
+    protected function createDiamanteEventTriggeredRuleTable(Schema $schema)
+    {
+        $table = $schema->createTable('diamante_event_triggered_rule');
+        $table->addColumn('id', 'string', ['length' => 255]);
+        $table->addColumn('root_group_id', 'string', ['notnull' => false, 'length' => 255]);
+        $table->addColumn('name', 'string', ['length' => 255]);
+        $table->addColumn('status', 'boolean', []);
+        $table->addColumn('target', 'string', ['length' => 255]);
+        $table->addColumn('created_at', 'datetime', []);
+        $table->addColumn('updated_at', 'datetime', []);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['root_group_id'], 'UNIQ_58F8EF2C8509B3A1');
     }
 
     /**
@@ -152,37 +138,39 @@ class DiamanteAutomationBundleInstaller implements Installation
         $table->addColumn('id', 'string', ['length' => 255]);
         $table->addColumn('parent_id', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('connector', 'string', ['length' => 255]);
+        $table->addColumn('discr', 'string', ['length' => 255]);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['parent_id'], 'IDX_5E6DB1A6727ACA70', []);
     }
 
     /**
-     * Create diamante_workflow_rule table
+     * Create diamante_time_triggered_rule table
      *
      * @param Schema $schema
      */
-    protected function createDiamanteWorkflowRuleTable(Schema $schema)
+    protected function createDiamanteTimeTriggeredRuleTable(Schema $schema)
     {
-        $table = $schema->createTable('diamante_workflow_rule');
+        $table = $schema->createTable('diamante_time_triggered_rule');
         $table->addColumn('id', 'string', ['length' => 255]);
         $table->addColumn('root_group_id', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('name', 'string', ['length' => 255]);
-        $table->addColumn('created_at', 'datetime', []);
-        $table->addColumn('updated_at', 'datetime', []);
+        $table->addColumn('time_interval', 'string', ['length' => 255]);
         $table->addColumn('status', 'boolean', []);
         $table->addColumn('target', 'string', ['length' => 255]);
+        $table->addColumn('created_at', 'datetime', []);
+        $table->addColumn('updated_at', 'datetime', []);
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['root_group_id'], 'UNIQ_4486E0BC8509B3A1');
+        $table->addUniqueIndex(['root_group_id'], 'UNIQ_369D941F8509B3A1');
     }
 
     /**
-     * Add diamante_business_rule foreign keys.
+     * Add diamante_event_triggered_rule foreign keys.
      *
      * @param Schema $schema
      */
-    protected function addDiamanteBusinessRuleForeignKeys(Schema $schema)
+    protected function addDiamanteEventTriggeredRuleForeignKeys(Schema $schema)
     {
-        $table = $schema->getTable('diamante_business_rule');
+        $table = $schema->getTable('diamante_event_triggered_rule');
         $table->addForeignKeyConstraint(
             $schema->getTable('diamante_rule_group'),
             ['root_group_id'],
@@ -224,13 +212,13 @@ class DiamanteAutomationBundleInstaller implements Installation
     }
 
     /**
-     * Add diamante_workflow_rule foreign keys.
+     * Add diamante_time_triggered_rule foreign keys.
      *
      * @param Schema $schema
      */
-    protected function addDiamanteWorkflowRuleForeignKeys(Schema $schema)
+    protected function addDiamanteTimeTriggeredRuleForeignKeys(Schema $schema)
     {
-        $table = $schema->getTable('diamante_workflow_rule');
+        $table = $schema->getTable('diamante_time_triggered_rule');
         $table->addForeignKeyConstraint(
             $schema->getTable('diamante_rule_group'),
             ['root_group_id'],
