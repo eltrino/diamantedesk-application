@@ -18,11 +18,11 @@ namespace Diamante\AutomationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineBusinessRuleRepository")
+ * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="diamante_business_rule")
+ * @ORM\Table(name="diamante_event_triggered_rule")
  */
-class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule
+class EventTriggeredRule extends \Diamante\AutomationBundle\Model\EventTriggeredRule
 {
     /**
      * @var \Rhumsaa\Uuid\Uuid
@@ -39,23 +39,18 @@ class BusinessRule extends \Diamante\AutomationBundle\Model\BusinessRule
     protected $name;
 
     /**
-     * @ORM\Column(name="time_interval", type="string")
-     */
-    protected $timeInterval;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     protected $status;
 
     /**
-     * @ORM\OneToOne(targetEntity="BusinessGroup", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="EventTriggeredGroup", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="root_group_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $grouping;
 
     /**
-     * @ORM\OneToMany(targetEntity="BusinessAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="EventTriggeredAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $actions;
 

@@ -22,13 +22,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class WorkflowController
+ * Class EventTriggeredController
  *
  * @package Diamante\AutomationBundle\Controller
  *
  * @Route("automation")
  */
-class WorkflowController extends Controller
+class EventTriggeredController extends Controller
 {
     use Shared\FormHandlerTrait;
     use Shared\ExceptionHandlerTrait;
@@ -39,8 +39,8 @@ class WorkflowController extends Controller
     /**
      * @Route(
      *      "/{type}/{_format}",
-     *      name="diamante_workflow_list",
-     *      requirements={"type"="workflow", "_format"="html|json"},
+     *      name="diamante_event_triggered_list",
+     *      requirements={"type"="event_triggered", "_format"="html|json"},
      *      defaults={"_format" = "html"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:list.html.twig")
@@ -57,9 +57,9 @@ class WorkflowController extends Controller
     /**
      * @Route(
      *      "/{type}/view/{id}",
-     *      name="diamante_workflow_view",
+     *      name="diamante_event_triggered_view",
      *      requirements={
-     *          "type"="workflow",
+     *          "type"="event_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -78,8 +78,8 @@ class WorkflowController extends Controller
     /**
      * @Route(
      *      "/{type}/create",
-     *      name="diamante_workflow_create",
-     *      requirements={"type"="workflow"}
+     *      name="diamante_event_triggered_create",
+     *      requirements={"type"="event_triggered"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:create.html.twig")
      *
@@ -95,9 +95,9 @@ class WorkflowController extends Controller
     /**
      * @Route(
      *      "/{type}/update/{id}",
-     *      name="diamante_workflow_update",
+     *      name="diamante_event_triggered_update",
      *      requirements={
-     *          "type"="workflow",
+     *          "type"="event_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -116,9 +116,9 @@ class WorkflowController extends Controller
     /**
      * @Route(
      *      "/{type}/delete/{id}",
-     *      name="diamante_workflow_delete",
+     *      name="diamante_event_triggered_delete",
      *      requirements={
-     *          "type"="workflow",
+     *          "type"="event_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -136,9 +136,9 @@ class WorkflowController extends Controller
     /**
      * @Route(
      *      "/{type}/activate/{id}",
-     *      name="diamante_workflow_activate",
+     *      name="diamante_event_triggered_activate",
      *      requirements={
-     *          "type"="workflow",
+     *          "type"="event_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -156,9 +156,9 @@ class WorkflowController extends Controller
     /**
      * @Route(
      *      "/{type}/deactivate/{id}",
-     *      name="diamante_workflow_deactivate",
+     *      name="diamante_event_triggered_deactivate",
      *      requirements={
-     *          "type"="workflow",
+     *          "type"="event_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )

@@ -13,9 +13,25 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Rule\Fact;
+namespace Diamante\DeskBundle\Infrastructure\Shared;
 
-class BusinessFact extends AbstractFact
+trait StringUtils
 {
+    /**
+     * @param string $input
+     *
+     * @return string
+     */
+    private function camelize($input)
+    {
+        $value = preg_replace_callback(
+            '/_(.?)/',
+            function ($matches) {
+                return ucfirst($matches[1]);
+            },
+            $input
+        );
 
+        return ucfirst($value);
+    }
 }

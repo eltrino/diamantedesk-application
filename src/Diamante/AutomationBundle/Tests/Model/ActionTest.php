@@ -15,49 +15,49 @@
 
 namespace Diamante\AutomationBundle\Tests\Model;
 
-use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredRule;
 use Diamante\AutomationBundle\Model\Action;
-use Diamante\AutomationBundle\Model\BusinessRule;
+use Diamante\AutomationBundle\Model\TimeTriggeredRule;
 
 class ActionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function testCreateActionWithWorkflowRule()
+    public function testCreateActionWithEventTriggeredRule()
     {
         $action = new Action(
             'NotifyByEmail',
             ['mike@diamantedesk.com'],
-            new WorkflowRule('workflow_rule_name', 'ticket')
+            new EventTriggeredRule('event_triggered_rule_name', 'ticket')
         );
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $action->getId());
         $this->assertEquals('NotifyByEmail', $action->getType());
         $parameters = $action->getParameters();
         $this->assertEquals('mike@diamantedesk.com', array_pop($parameters));
-        $this->assertEquals('workflow_rule_name', $action->getRule()->getName());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $action->getRule());
+        $this->assertEquals('event_triggered_rule_name', $action->getRule()->getName());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $action->getRule());
         $this->assertEquals(0, $action->getWeight());
     }
 
     /**
      * @test
      */
-    public function testCreateActionWithBusinessRule()
+    public function testCreateActionWithTimeTriggeredRule()
     {
         $action = new Action(
             'NotifyByEmail',
             ['mike@diamantedesk.com'],
-            new BusinessRule('business_rule_name', 'ticket', '5m')
+            new TimeTriggeredRule('time_triggered_rule_name', 'ticket', '5m')
         );
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $action->getId());
         $this->assertEquals('NotifyByEmail', $action->getType());
         $parameters = $action->getParameters();
         $this->assertEquals('mike@diamantedesk.com', array_pop($parameters));
-        $this->assertEquals('business_rule_name', $action->getRule()->getName());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $action->getRule());
+        $this->assertEquals('time_triggered_rule_name', $action->getRule()->getName());
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $action->getRule());
         $this->assertEquals(0, $action->getWeight());
     }
 } 

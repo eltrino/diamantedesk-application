@@ -46,14 +46,14 @@ define([
             } else {
                 options.target = attr.target
             }
-            if(!attr.time_interval && attr.type === 'business') {
+            if(!attr.time_interval && attr.type === 'time_triggered') {
                 this.set('time_interval', _.keys(config.time_intervals)[0])
             }
             if(typeof attr.status == 'undefined') {
                 this.set('status', 1);
             }
             delete options.model;
-            options.isBusiness = attr.type === 'business';
+            options.isTimeTriggered = attr.type === 'time_triggered';
             this.set('actions', attr.actions ?
                 new AutomationActionsCollection(attr.actions, options) :
                 new AutomationActionsCollection([{}], options));

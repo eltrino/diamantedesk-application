@@ -10,7 +10,7 @@
 <% var entity_type = typeof entity_type !== 'undefined' && entity_type; %>
 <% var type = typeof type !== 'undefined' && type; %>
 <% var value = typeof value !== 'undefined' && value; value = value ? value : ''; %>
-<% var rule_type = isBusiness ? 'business' : 'workflow'; %>
+<% var rule_type = isTimeTriggered ? 'time_triggered' : 'event_triggered'; %>
 <div class="controls">
     <span class="label">If</span>
     <label for="automation-target" class="value"><%= entities[entity].label %></label>
@@ -18,7 +18,7 @@
         <option value="">Property Updated</option>
         <% if(entity_conditions){ %>
             <% _.each(entity_conditions, function(key){ %>
-                <% if (!isBusiness) { %>
+                <% if (!isTimeTriggered) { %>
                     <option value="<%= key %>"<%= key == entity_type ? ' selected' : ''%>>
                         <%= conditions[key].label.charAt(0).toUpperCase()+conditions[key].label.slice(1) %>
                     </option>

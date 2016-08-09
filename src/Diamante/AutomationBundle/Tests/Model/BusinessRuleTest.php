@@ -16,20 +16,20 @@
 namespace Diamante\AutomationBundle\Tests\Model;
 
 use Diamante\AutomationBundle\Model\Action;
-use Diamante\AutomationBundle\Model\BusinessRule;
+use Diamante\AutomationBundle\Model\TimeTriggeredRule;
 use Diamante\AutomationBundle\Model\Group;
 
-class BusinessRuleTest extends \PHPUnit_Framework_TestCase
+class TimeTriggeredRuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function testCreateBusinessRule()
+    public function testCreateTimeTriggeredRule()
     {
         $rule = $this->createRule();
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertEquals('business_rule_name', $rule->getName());
+        $this->assertEquals('time_triggered_rule_name', $rule->getName());
         $this->assertEquals(true, $rule->isActive());
         $this->assertEquals('5m', $rule->getTimeInterval());
         $this->assertInstanceOf('\DateTime', $rule->getUpdatedAt());
@@ -43,10 +43,10 @@ class BusinessRuleTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $rule = $this->createRule();
-        $rule->update('business_rule_name_updated', '10m');
+        $rule->update('time_triggered_rule_name_updated', '10m');
 
         $this->assertEquals(true, $rule->isActive());
-        $this->assertEquals('business_rule_name_updated', $rule->getName());
+        $this->assertEquals('time_triggered_rule_name_updated', $rule->getName());
         $this->assertEquals('10m', $rule->getTimeInterval());
     }
 
@@ -82,6 +82,6 @@ class BusinessRuleTest extends \PHPUnit_Framework_TestCase
 
     private function createRule()
     {
-        return new BusinessRule('business_rule_name', 'ticket', '5m');
+        return new TimeTriggeredRule('time_triggered_rule_name', 'ticket', '5m');
     }
 } 

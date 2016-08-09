@@ -39,21 +39,21 @@ oro_menu_config:
                 icon: icon-group
                 position: 96
 
-        diamante_workflow_list:
-            label: 'diamante.automation.rule.workflow.entity_label'
-            route: diamante_workflow_list
+        diamante_event_triggered_list:
+            label: 'diamante.automation.rule.event_triggered.entity_label'
+            route: diamante_event_triggered_list
             routeParameters:
-                type: 'workflow'
+                type: 'event_triggered'
             extras:
-                routes: ['diamante_workflow_*']
+                routes: ['diamante_event_triggered_*']
 
-        diamante_business_list:
-            label: 'diamante.automation.rule.business.entity_label'
-            route: diamante_business_list
+        diamante_time_triggered_list:
+            label: 'diamante.automation.rule.time_triggered.entity_label'
+            route: diamante_time_triggered_list
             routeParameters:
-                type: 'business'
+                type: 'time_triggered'
             extras:
-                routes: ['diamante_business_*']
+                routes: ['diamante_time_triggered_*']
 
         #reports
         diamante_report_tickets_by_priority:
@@ -133,8 +133,8 @@ oro_menu_config:
                 diamante_ticket_list: ~
                 diamante_automation_list:
                     children:
-                        diamante_business_list: ~
-                        diamante_workflow_list: ~
+                        diamante_time_triggered_list: ~
+                        diamante_event_triggered_list: ~
                 diamante_report_list:
                     children:
                         diamante_report_tickets_by_priority: ~
@@ -175,15 +175,15 @@ oro_titles:
     diamante_ticket_update: '%%ticket.subject%% - Edit'
     diamante_ticket_create_attach: 'Add Attachment'
 
-    diamante_workflow_list: 'Workflow Rules'
-    diamante_workflow_view: '%%rule.name%%'
-    diamante_workflow_create: 'Create Workflow Rule'
-    diamante_workflow_update: '%%rule.name%% - Edit'
+    diamante_event_triggered_list: 'Workflow Rules'
+    diamante_event_triggered_view: '%%rule.name%%'
+    diamante_event_triggered_create: 'Create Workflow Rule'
+    diamante_event_triggered_update: '%%rule.name%% - Edit'
 
-    diamante_business_list: 'Business Rules'
-    diamante_business_view: '%%rule.name%%'
-    diamante_business_create: 'Create Business Rule'
-    diamante_business_update: '%%rule.name%% - Edit'
+    diamante_time_triggered_list: 'Time Triggered Rules'
+    diamante_time_triggered_view: '%%rule.name%%'
+    diamante_time_triggered_create: 'Create Time Triggered Rule'
+    diamante_time_triggered_update: '%%rule.name%% - Edit'
 
     diamante_report_view: '%%report.label%%'
 

@@ -26,7 +26,7 @@ use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class WorkflowListener
+class EventTriggeredListener
 {
     const CREATED = 'created';
     const UPDATED = 'updated';
@@ -56,7 +56,7 @@ class WorkflowListener
     protected $container;
 
     /**
-     * WorkflowListener constructor.
+     * EventTriggeredListener constructor.
      *
      * @param AutomationConfigurationProvider $provider
      * @param QueueManager                    $manager

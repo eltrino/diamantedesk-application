@@ -16,12 +16,14 @@
 namespace Diamante\AutomationBundle\Tests\Api\Internal;
 
 use Diamante\AutomationBundle\Api\Internal\RuleServiceImpl;
-use Diamante\AutomationBundle\Entity\BusinessAction;
-use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Entity\TimeTriggeredAction;
+use Diamante\AutomationBundle\Entity\TimeTriggeredGroup;
+use Diamante\AutomationBundle\Entity\TimeTriggeredRule;
 use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\Group;
-use Diamante\AutomationBundle\Entity\WorkflowAction;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredAction;
+use Diamante\AutomationBundle\Entity\EventTriggeredGroup;
+use Diamante\AutomationBundle\Entity\EventTriggeredRule;
 use Diamante\AutomationBundle\Model\Rule;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 
@@ -42,13 +44,13 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
      * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
      * @Mock Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
      */
-    private $workflowRuleRepository;
+    private $eventTriggeredRuleRepository;
 
     /**
      * @var \Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
      * @Mock Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository
      */
-    private $businessRuleRepository;
+    private $timeTriggeredRuleRepository;
 
     /**
      * @var \Diamante\AutomationBundle\Automation\Validator\RuleValidator
@@ -73,8 +75,8 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $this->ruleService = new RuleServiceImpl(
             $this->registry,
-            $this->workflowRuleRepository,
-            $this->businessRuleRepository,
+            $this->eventTriggeredRuleRepository,
+            $this->timeTriggeredRuleRepository,
             $this->validator
         );
     }
@@ -82,42 +84,42 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testCreateWorkflowRule()
+    public function testCreateEventTriggeredRule()
     {
-        $input = $this->getJsonRule(Rule::TYPE_WORKFLOW);
+        $input = $this->getJsonRule(Rule::TYPE_EVENT_TRIGGERED);
 
         $this->validator
             ->expects($this->once())
             ->method('validate')
             ->will($this->returnValue(true));
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule'));
 
         $rule = $this->ruleService->createRule($input);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
     }
 
     /**
      * @test
      */
-    public function testCreateBusinessRule()
+    public function testCreateTimeTriggeredRule()
     {
-        $input = $this->getJsonRule(Rule::TYPE_BUSINESS);
+        $input = $this->getJsonRule(Rule::TYPE_TIME_TRIGGERED);
 
         $this->validator
             ->expects($this->once())
             ->method('validate')
             ->will($this->returnValue(true));
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule'));
 
         $this->registry
             ->expects($this->once())
@@ -136,16 +138,16 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
         $rule = $this->ruleService->createRule($input);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
     }
 
     /**
      * @test
      */
-    public function testUpdateWorkflowRule()
+    public function testUpdateEventTriggeredRule()
     {
-        $workflowRule = $this->getWorkflowRule();
-        $input = $this->getJsonRule(Rule::TYPE_WORKFLOW);
+        $eventTriggeredRule = $this->getEventTriggeredRule();
+        $input = $this->getJsonRule(Rule::TYPE_EVENT_TRIGGERED);
         $ruleId = 'rule_id';
 
         $this->validator
@@ -153,21 +155,21 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->returnValue(true));
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($workflowRule));
+            ->will($this->returnValue($eventTriggeredRule));
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule'));
 
         $rule = $this->ruleService->updateRule($input, $ruleId);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
         $this->assertEquals(2, $rule->getGrouping()->getConditions()->count());
         $this->assertEquals('update_property', $rule->getActions()->first()->getType());
     }
@@ -175,10 +177,10 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testUpdateBusinessRule()
+    public function testUpdateTimeTriggeredRule()
     {
-        $businessRule = $this->getBusinessRule();
-        $input = $this->getJsonRule(Rule::TYPE_BUSINESS);
+        $timeTriggeredRule = $this->getTimeTriggeredRule();
+        $input = $this->getJsonRule(Rule::TYPE_TIME_TRIGGERED);
         $ruleId = 'rule_id';
 
         $this->validator
@@ -186,21 +188,21 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->returnValue(true));
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($businessRule));
+            ->will($this->returnValue($timeTriggeredRule));
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule'));
 
         $rule = $this->ruleService->updateRule($input, $ruleId);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
         $this->assertEquals(2, $rule->getGrouping()->getConditions()->count());
         $this->assertEquals('update_property', $rule->getActions()->first()->getType());
     }
@@ -208,161 +210,161 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function testDeleteWorkflowRule()
+    public function testDeleteEventTriggeredRule()
     {
         $ruleId = 'rule_id';
-        $workflowRule = $this->getWorkflowRule();
+        $eventTriggeredRule = $this->getEventTriggeredRule();
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($workflowRule));
+            ->will($this->returnValue($eventTriggeredRule));
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('remove')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule'));
 
-        $this->ruleService->deleteRule(Rule::TYPE_WORKFLOW, $ruleId);
+        $this->ruleService->deleteRule(Rule::TYPE_EVENT_TRIGGERED, $ruleId);
     }
 
     /**
      * @test
      */
-    public function testDeleteBusinessRule()
+    public function testDeleteTimeTriggeredRule()
     {
         $ruleId = 'rule_id';
-        $businessRule = $this->getBusinessRule();
+        $timeTriggeredRule = $this->getTimeTriggeredRule();
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($businessRule));
+            ->will($this->returnValue($timeTriggeredRule));
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('remove')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule'));
 
-        $this->ruleService->deleteRule(Rule::TYPE_BUSINESS, $ruleId);
+        $this->ruleService->deleteRule(Rule::TYPE_TIME_TRIGGERED, $ruleId);
     }
 
     /**
      * @test
      */
-    public function testActivateBusinessRule()
+    public function testActivateTimeTriggeredRule()
     {
         $ruleId = 'rule_id';
-        $businessRule = $this->getBusinessRule();
+        $timeTriggeredRule = $this->getTimeTriggeredRule();
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($businessRule));
+            ->will($this->returnValue($timeTriggeredRule));
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule'));
 
-        $rule = $this->ruleService->activateRule(Rule::TYPE_BUSINESS, $ruleId);
+        $rule = $this->ruleService->activateRule(Rule::TYPE_TIME_TRIGGERED, $ruleId);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
         $this->assertTrue($rule->isActive());
     }
 
     /**
      * @test
      */
-    public function testActivateWorkflowRule()
+    public function testActivateEventTriggeredRule()
     {
         $ruleId = 'rule_id';
-        $workflowRule = $this->getWorkflowRule();
+        $eventTriggeredRule = $this->getEventTriggeredRule();
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($workflowRule));
+            ->will($this->returnValue($eventTriggeredRule));
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule'));
 
-        $rule = $this->ruleService->activateRule(Rule::TYPE_WORKFLOW, $ruleId);
+        $rule = $this->ruleService->activateRule(Rule::TYPE_EVENT_TRIGGERED, $ruleId);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
         $this->assertTrue($rule->isActive());
     }
 
     /**
      * @test
      */
-    public function testDeactivateWorkflowRule()
+    public function testDeactivateEventTriggeredRule()
     {
         $ruleId = 'rule_id';
-        $workflowRule = $this->getWorkflowRule();
+        $eventTriggeredRule = $this->getEventTriggeredRule();
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($workflowRule));
+            ->will($this->returnValue($eventTriggeredRule));
 
-        $this->workflowRuleRepository
+        $this->eventTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule'));
 
-        $rule = $this->ruleService->deactivateRule(Rule::TYPE_WORKFLOW, $ruleId);
+        $rule = $this->ruleService->deactivateRule(Rule::TYPE_EVENT_TRIGGERED, $ruleId);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\WorkflowRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
         $this->assertFalse($rule->isActive());
     }
 
     /**
      * @test
      */
-    public function testDeactivateBusinessRule()
+    public function testDeactivateTimeTriggeredRule()
     {
         $ruleId = 'rule_id';
-        $businessRule = $this->getBusinessRule();
+        $timeTriggeredRule = $this->getTimeTriggeredRule();
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('get')
             ->with($ruleId)
-            ->will($this->returnValue($businessRule));
+            ->will($this->returnValue($timeTriggeredRule));
 
-        $this->businessRuleRepository
+        $this->timeTriggeredRuleRepository
             ->expects($this->once())
             ->method('store')
-            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\BusinessRule'));
+            ->with($this->isInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule'));
 
-        $rule = $this->ruleService->deactivateRule(Rule::TYPE_BUSINESS, $ruleId);
+        $rule = $this->ruleService->deactivateRule(Rule::TYPE_TIME_TRIGGERED, $ruleId);
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertInstanceOf('Diamante\AutomationBundle\Model\BusinessRule', $rule);
+        $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
         $this->assertFalse($rule->isActive());
     }
 
     /**
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
-    private function getWorkflowRule()
+    private function getEventTriggeredRule()
     {
-        $rule = new WorkflowRule('workflow_rule', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new EventTriggeredRule('event_triggered_rule', 'ticket');
+        $group = new EventTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $equalCondition = new Condition('Eq', ['status' => 'new'], $group);
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
-        $action = new WorkflowAction('UpdateProperty', ['status' => 'closed'], $rule);
+        $action = new EventTriggeredAction('UpdateProperty', ['status' => 'closed'], $rule);
 
         $rule->setGrouping($group);
         $rule->addAction($action);
@@ -373,15 +375,15 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return BusinessRule
+     * @return TimeTriggeredRule
      */
-    private function getBusinessRule()
+    private function getTimeTriggeredRule()
     {
-        $rule = new BusinessRule('business_rule', 'ticket', '5m');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new TimeTriggeredRule('time_triggered_rule', 'ticket', '5m');
+        $group = new TimeTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $equalCondition = new Condition('Eq', ['status' => 'new'], $group);
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
-        $action = new BusinessAction('UpdateProperty', ['status' => 'closed'], $rule);
+        $action = new TimeTriggeredAction('UpdateProperty', ['status' => 'closed'], $rule);
 
         $rule->setGrouping($group);
         $rule->addAction($action);
@@ -456,7 +458,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
             'target'   => 'ticket'
         ];
 
-        if (Rule::TYPE_BUSINESS == $type) {
+        if (Rule::TYPE_TIME_TRIGGERED == $type) {
             $rule['timeInterval'] = '5m';
         }
 

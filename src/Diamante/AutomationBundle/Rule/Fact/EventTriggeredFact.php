@@ -15,7 +15,7 @@
 
 namespace Diamante\AutomationBundle\Rule\Fact;
 
-class WorkflowFact extends AbstractFact
+class EventTriggeredFact extends AbstractFact
 {
     /**
      * @var string

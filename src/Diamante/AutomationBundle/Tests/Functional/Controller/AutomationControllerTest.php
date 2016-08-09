@@ -31,14 +31,14 @@ class AutomationControllerTest extends AbstractController
         );
     }
 
-    public function testWorkflowList()
+    public function testEventTriggeredList()
     {
-        $this->ruleList('workflow');
+        $this->ruleList('event_triggered');
     }
 
-    public function testBusinessList()
+    public function testTimeTriggeredList()
     {
-        $this->ruleList('business');
+        $this->ruleList('time_triggered');
     }
 
     private function ruleList($type)

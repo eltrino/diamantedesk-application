@@ -17,7 +17,7 @@ namespace Diamante\AutomationBundle\Infrastructure\Persistence;
 
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
 
-class DoctrineBusinessRuleRepository extends DoctrineGenericRepository implements BusinessRuleRepository
+class DoctrineTimeTriggeredRuleRepository extends DoctrineGenericRepository implements TimeTriggeredRuleRepository
 {
     /**
      * @return array
@@ -26,7 +26,7 @@ class DoctrineBusinessRuleRepository extends DoctrineGenericRepository implement
     {
         $result = $this->_em->createQueryBuilder()
             ->add('select', 'b.timeInterval')
-            ->add('from', 'DiamanteAutomationBundle:BusinessRule b')
+            ->add('from', 'DiamanteAutomationBundle:TimeTriggeredRule b')
             ->distinct('a.timeInterval')
             ->getQuery()
             ->getArrayResult();

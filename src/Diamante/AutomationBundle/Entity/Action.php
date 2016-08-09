@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="diamante_rule_action")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"workflow" = "WorkflowAction", "business" = "BusinessAction"})
+ * @ORM\DiscriminatorMap({"event_triggered" = "EventTriggeredAction", "time_triggered" = "TimeTriggeredAction"})
  */
 abstract class Action extends \Diamante\AutomationBundle\Model\Action
 {

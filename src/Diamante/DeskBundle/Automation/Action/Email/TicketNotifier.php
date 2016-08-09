@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Automation\Action\Email;
 
 use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
 use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
-use Diamante\AutomationBundle\EventListener\WorkflowListener;
+use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
@@ -153,7 +153,7 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
     {
         $action = $this->fact->getAction();
         $changesetDiff = $this->changeset->getDiff();
-        if (empty($changesetDiff) && $action != WorkflowListener::REMOVED) {
+        if (empty($changesetDiff) && $action != EventTriggeredListener::REMOVED) {
             return false;
         }
 

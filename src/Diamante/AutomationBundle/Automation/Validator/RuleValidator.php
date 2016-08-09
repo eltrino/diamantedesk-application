@@ -58,11 +58,11 @@ class RuleValidator implements ValidatorInterface
     {
         $type = isset($subject['type']) ? $subject['type'] : null;
 
-        if (empty($type) || !in_array($type, [Rule::TYPE_WORKFLOW, Rule::TYPE_BUSINESS])) {
+        if (empty($type) || !in_array($type, [Rule::TYPE_EVENT_TRIGGERED, Rule::TYPE_TIME_TRIGGERED])) {
             return false;
         }
 
-        if ($type == Rule::TYPE_BUSINESS && (!array_key_exists('time_interval', $subject) || !$this->validateTimeInterval($subject))) {
+        if ($type == Rule::TYPE_TIME_TRIGGERED && (!array_key_exists('time_interval', $subject) || !$this->validateTimeInterval($subject))) {
             return false;
         }
 

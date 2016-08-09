@@ -61,15 +61,15 @@ class DiamanteUserListener
             return;
         }
 
-        $workflowActions = $manager->getRepository('DiamanteAutomationBundle:WorkflowAction')->findByType(
+        $eventTriggeredActions = $manager->getRepository('DiamanteAutomationBundle:EventTriggeredAction')->findByType(
             [NotifyByEmailAction::ACTION_NAME]
         );
-        $businessActions = $manager->getRepository('DiamanteAutomationBundle:BusinessAction')->findByType(
+        $timeTriggeredActions = $manager->getRepository('DiamanteAutomationBundle:TimeTriggeredAction')->findByType(
             [NotifyByEmailAction::ACTION_NAME]
         );
 
         /** @var Action[] $items */
-        $items = array_merge($workflowActions, $businessActions);
+        $items = array_merge($eventTriggeredActions, $timeTriggeredActions);
 
         foreach ($items as $item) {
             $parameters = $item->getParameters();

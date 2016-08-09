@@ -15,7 +15,7 @@
 
 namespace Diamante\AutomationBundle\Rule\Condition\Expression;
 
-use Diamante\AutomationBundle\EventListener\WorkflowListener;
+use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
 use Diamante\AutomationBundle\Rule\Condition\AbstractCondition;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 
@@ -28,6 +28,6 @@ class Updated extends AbstractCondition
      */
     public function isSatisfiedBy(AbstractFact $fact)
     {
-        return WorkflowListener::UPDATED == $fact->getAction();
+        return EventTriggeredListener::UPDATED == $fact->getAction();
     }
 }

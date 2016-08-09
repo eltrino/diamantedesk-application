@@ -18,11 +18,11 @@ namespace Diamante\AutomationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository")
+ * @ORM\Entity(repositoryClass="Diamante\AutomationBundle\Infrastructure\Persistence\DoctrineTimeTriggeredRuleRepository")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="diamante_workflow_rule")
+ * @ORM\Table(name="diamante_time_triggered_rule")
  */
-class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule
+class TimeTriggeredRule extends \Diamante\AutomationBundle\Model\TimeTriggeredRule
 {
     /**
      * @var \Rhumsaa\Uuid\Uuid
@@ -39,18 +39,23 @@ class WorkflowRule extends \Diamante\AutomationBundle\Model\WorkflowRule
     protected $name;
 
     /**
+     * @ORM\Column(name="time_interval", type="string")
+     */
+    protected $timeInterval;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $status;
 
     /**
-     * @ORM\OneToOne(targetEntity="WorkflowGroup", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="TimeTriggeredGroup", inversedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="root_group_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $grouping;
 
     /**
-     * @ORM\OneToMany(targetEntity="WorkflowAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TimeTriggeredAction", mappedBy="rule", orphanRemoval=true, cascade={"persist", "remove"})
      */
     protected $actions;
 

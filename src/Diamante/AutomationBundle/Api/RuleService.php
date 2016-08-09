@@ -16,8 +16,8 @@
 namespace Diamante\AutomationBundle\Api;
 
 use Diamante\AutomationBundle\Model\Rule;
-use Diamante\AutomationBundle\Entity\BusinessRule;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\TimeTriggeredRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredRule;
 
 /**
  * Interface RuleService
@@ -30,14 +30,14 @@ interface RuleService
      * @param string $type
      * @param string $id
      *
-     * @return BusinessRule|WorkflowRule
+     * @return TimeTriggeredRule|EventTriggeredRule
      */
     public function viewRule($type, $id);
 
     /**
      * @param string $input
      *
-     * @return BusinessRule|WorkflowRule
+     * @return TimeTriggeredRule|EventTriggeredRule
      */
     public function createRule($input);
 
@@ -45,7 +45,7 @@ interface RuleService
      * @param string $input
      * @param string $id
      *
-     * @return BusinessRule|WorkflowRule
+     * @return TimeTriggeredRule|EventTriggeredRule
      */
     public function updateRule($input, $id);
 

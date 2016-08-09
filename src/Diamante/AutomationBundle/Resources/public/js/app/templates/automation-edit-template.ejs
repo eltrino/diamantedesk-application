@@ -24,7 +24,7 @@
         </select>
     </div>
 </div>
-<% if(type == 'business') { %>
+<% if(type == 'time_triggered') { %>
 <div class="control-group">
     <div class="control-label wrap">
         <label for="automation-time_interval" class="required">Frequency<em>*</em></label>
@@ -46,7 +46,7 @@
     <div class="controls">
         <select name="target" data-attr="target" id="automation-target">
             <% for(var key in entities) { %>
-                <% if (isBusiness && 'comment' == key) {%>
+                <% if (isTimeTriggered && 'comment' == key) {%>
                     <% continue; %>
                 <% } %>
 

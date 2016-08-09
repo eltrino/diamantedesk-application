@@ -58,31 +58,31 @@ diamante_automation:
             updatable: false
             conditions: ['eq', 'neq', 'like', 'not_like']
             accessor: diamante.ticket.email_processing_message_reference.repository::getEndpointByTicket
-            rules: ['workflow']
+            rules: ['event_triggered']
           created_at:
             frontend_label: diamante.desk.ticket.since_created.label
             type: datetime
             updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
-            rules: ['business']
+            rules: ['time_triggered']
           updated_at:
             frontend_label: diamante.desk.ticket.since_updated.label
             type: datetime
             updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
-            rules: ['business']
+            rules: ['time_triggered']
           status_updated_since:
             frontend_label: diamante.desk.ticket.since_status_updated.label
             type: datetime
             updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
-            rules: ['business']
+            rules: ['time_triggered']
           assigned_since:
             frontend_label: diamante.desk.ticket.since_assignee_updated.label
             type: datetime
             updatable: false
             conditions: ['gt', 'gte', 'lt', 'lte']
-            rules: ['business']
+            rules: ['time_triggered']
       comment:
         class: "Diamante\DeskBundle\Entity\Comment"
         frontend_label: diamante.desk.comment.entity_label

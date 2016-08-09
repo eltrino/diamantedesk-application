@@ -16,9 +16,10 @@
 namespace Diamante\AutomationBundle\Automation;
 
 use Diamante\AutomationBundle\Entity\Condition;
+use Diamante\AutomationBundle\Entity\EventTriggeredGroup;
 use Diamante\AutomationBundle\Entity\Group;
-use Diamante\AutomationBundle\Entity\WorkflowAction;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredAction;
+use Diamante\AutomationBundle\Entity\EventTriggeredRule;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
 use Diamante\DeskBundle\Entity\Branch;
@@ -231,15 +232,15 @@ class EngineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
     private function getRule()
     {
-        $rule = new WorkflowRule('workflow_rule', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new EventTriggeredRule('event_triggered_rule', 'ticket');
+        $group = new EventTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $equalCondition = new Condition('Eq', ['status' => 'new'], $group);
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
-        $action = new WorkflowAction('UpdateProperty', ['status' => 'closed'], $rule);
+        $action = new EventTriggeredAction('UpdateProperty', ['status' => 'closed'], $rule);
 
         $rule->setGrouping($group);
         $rule->addAction($action);

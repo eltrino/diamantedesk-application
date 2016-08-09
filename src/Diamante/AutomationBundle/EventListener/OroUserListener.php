@@ -55,16 +55,16 @@ class OroUserListener
             return;
         }
 
-        $workflowActions = $manager->getRepository('DiamanteAutomationBundle:WorkflowAction')->findByType(
+        $eventTriggeredActions = $manager->getRepository('DiamanteAutomationBundle:EventTriggeredAction')->findByType(
             [UpdatePropertyAction::ACTION_NAME, NotifyByEmailAction::ACTION_NAME]
         );
-        $businessActions = $manager->getRepository('DiamanteAutomationBundle:BusinessAction')->findByType(
+        $timeTriggeredActions = $manager->getRepository('DiamanteAutomationBundle:TimeTriggeredAction')->findByType(
             [UpdatePropertyAction::ACTION_NAME, NotifyByEmailAction::ACTION_NAME]
         );
         $conditions = $manager->getRepository('DiamanteAutomationBundle:Condition')->getAll();
 
         /** @var Action[] $items */
-        $items = array_merge($workflowActions, $businessActions, $conditions);
+        $items = array_merge($eventTriggeredActions, $timeTriggeredActions, $conditions);
 
         foreach ($items as $item) {
             $parameters = $item->getParameters();

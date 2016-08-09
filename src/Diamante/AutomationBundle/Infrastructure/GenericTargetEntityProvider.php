@@ -36,7 +36,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class GenericTargetEntityProvider
 {
     const TARGET_ALIAS = 't';
-    const BUSINESS = 'business';
+    const TIME_TRIGGERED = 'time_triggered';
 
     /**
      * @var EntityManager
@@ -193,8 +193,8 @@ class GenericTargetEntityProvider
         $conditionsMapper = $this->container->getParameter('diamante.automation.config.conditions_mapper');
         $parameterNumber = $this->getParameterNumber();
 
-        if (isset($conditionsMapper[self::BUSINESS][$targetType][$property][$expr])) {
-            $getter = $conditionsMapper[self::BUSINESS][$targetType][$property][$expr];
+        if (isset($conditionsMapper[self::TIME_TRIGGERED][$targetType][$property][$expr])) {
+            $getter = $conditionsMapper[self::TIME_TRIGGERED][$targetType][$property][$expr];
 
             if (isset($getter['service']) && isset($getter['method']) && $this->container->has($getter['service'])) {
                 $conditionServiceBuilder = $this->container->get($getter['service']);

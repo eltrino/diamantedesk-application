@@ -13,18 +13,13 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Entity;
+namespace Diamante\AutomationBundle\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- */
-class WorkflowAction extends Action
+class EventTriggeredRule extends Rule
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="WorkflowRule", inversedBy="actions")
-     * @ORM\JoinColumn(name="rule_id", referencedColumnName="id")
-     */
-    protected $rule;
+    public function update($name, $status)
+    {
+        $this->name = $name;
+        $this->status = $status;
+    }
 }

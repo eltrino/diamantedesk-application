@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,9 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Entity;
+namespace Diamante\AutomationBundle\Rule\Fact;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- */
-class BusinessAction extends Action
+class TimeTriggeredFact extends AbstractFact
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="BusinessRule", inversedBy="actions")
-     * @ORM\JoinColumn(name="rule_id", referencedColumnName="id")
-     */
-    protected $rule;
+
 }

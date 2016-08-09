@@ -1,11 +1,11 @@
 diamante:
   automation:
     rule:
-      entity_label:                        Rule
-      entity_plural_label:                 Rules
-      workflow_entity_plural_label:        Workflow Rules
-      business_entity_plural_label:        Business Rules
-      details :                            Rule Details
+      entity_label:                          Rule
+      entity_plural_label:                   Rules
+      event_triggered_entity_plural_label:   Event Triggered Rules
+      time_triggered_entity_plural_label:    Time Triggered Rules
+      details :                              Rule Details
       messages:
         create:
           error:           Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
@@ -35,11 +35,11 @@ diamante:
               success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
             deactivate:
               success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
-      business:
-        entity_label: Business Rules
+      time_triggered:
+        entity_label: Time Triggered Rules
         repetition_time: Frequency
-      workflow:
-        entity_label: Workflow Rules
+      event_triggered:
+        entity_label: Event Triggered Rules
     ui:
       create:              Create
       ok:                  Ok
@@ -50,10 +50,10 @@ diamante:
       edit:                Edit
       add:                 Add
       change:              Change
-      workflow:
-        create:              Create Workflow Rule
-      business:
-        create:              Create Business Rule
+      event_triggered:
+        create:              Create Event Triggered Rule
+      time_triggered:
+        create:              Create Time Triggered Rule
 
 
     attributes:

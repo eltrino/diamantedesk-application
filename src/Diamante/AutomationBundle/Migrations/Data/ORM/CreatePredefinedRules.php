@@ -15,12 +15,14 @@
 
 namespace Diamante\AutomationBundle\Migrations\Data\ORM;
 
-use Diamante\AutomationBundle\Entity\BusinessAction;
-use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredGroup;
+use Diamante\AutomationBundle\Entity\TimeTriggeredAction;
+use Diamante\AutomationBundle\Entity\TimeTriggeredGroup;
+use Diamante\AutomationBundle\Entity\TimeTriggeredRule;
 use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\Group;
-use Diamante\AutomationBundle\Entity\WorkflowAction;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredAction;
+use Diamante\AutomationBundle\Entity\EventTriggeredRule;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\ContainerAwareFixture;
@@ -68,18 +70,18 @@ class CreatePredefinedRules extends ContainerAwareFixture
     }
 
     /**
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
     private function notifyThatCommentWasAdded()
     {
-        $rule = new WorkflowRule('Notify assignee, reporter, watchers that comment was added', 'comment');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new EventTriggeredRule('Notify assignee, reporter, watchers that comment was added', 'comment');
+        $group = new EventTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('created', ['created' => 'true'], $group);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
         $rule->addAction($action);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
         $rule->addAction($action);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
         $rule->addAction($action);
         $rule->setGrouping($group);
         $group->addCondition($condition);
@@ -88,18 +90,18 @@ class CreatePredefinedRules extends ContainerAwareFixture
     }
 
     /**
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
     private function notifyThatTicketStatusChanged()
     {
-        $rule = new WorkflowRule('Notify assignee, reporter, watchers that ticket status was changed', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new EventTriggeredRule('Notify assignee, reporter, watchers that ticket status was changed', 'ticket');
+        $group = new EventTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('changed', ['status' => 'changed'], $group);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
         $rule->addAction($action);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
         $rule->addAction($action);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
         $rule->addAction($action);
         $rule->setGrouping($group);
         $group->addCondition($condition);
@@ -108,16 +110,16 @@ class CreatePredefinedRules extends ContainerAwareFixture
     }
 
     /**
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
     private function notifyThatTicketCreated()
     {
-        $rule = new WorkflowRule('Notify reporter, assignee that ticket was created', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new EventTriggeredRule('Notify reporter, assignee that ticket was created', 'ticket');
+        $group = new EventTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('created', ['created' => 'true'], $group);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
         $rule->addAction($action);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
         $rule->addAction($action);
         $rule->setGrouping($group);
         $group->addCondition($condition);
@@ -126,16 +128,16 @@ class CreatePredefinedRules extends ContainerAwareFixture
     }
 
     /**
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
     private function notifyThatTicketReassigned()
     {
-        $rule = new WorkflowRule('Notify assignee, watchers that ticket was reassigned', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new EventTriggeredRule('Notify assignee, watchers that ticket was reassigned', 'ticket');
+        $group = new EventTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('changed', ['assignee' => 'changed'], $group);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
         $rule->addAction($action);
-        $action = new WorkflowAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
+        $action = new EventTriggeredAction('notify_by_email', ['notify_by_email' => 'watchers'], $rule);
         $rule->addAction($action);
         $rule->setGrouping($group);
         $group->addCondition($condition);
@@ -144,14 +146,14 @@ class CreatePredefinedRules extends ContainerAwareFixture
     }
 
 //    /**
-//     * @return BusinessRule
+//     * @return TimeTriggeredRule
 //     */
 //    private function notifyAssigneeTicketNew24Hours()
 //    {
-//        $rule = new BusinessRule('Notify assignee that ticket is new for 24 hours', 'ticket', '24h');
-//        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+//        $rule = new TimeTriggeredRule('Notify assignee that ticket is new for 24 hours', 'ticket', '24h');
+//        $group = new TimeTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
 //        $condition = new Condition('eq', ['status' => Status::NEW_ONE], $group);
-//        $action = new BusinessAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
+//        $action = new TimeTriggeredAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
 //        $rule->setGrouping($group);
 //        $rule->addAction($action);
 //        $group->addCondition($condition);
@@ -160,14 +162,14 @@ class CreatePredefinedRules extends ContainerAwareFixture
 //    }
 
 //    /**
-//     * @return BusinessRule
+//     * @return TimeTriggeredRule
 //     */
 //    private function notifyAssigneeTicketNew3Days()
 //    {
-//        $rule = new BusinessRule('Notify assignee that ticket is new for 3 days', 'ticket', '3d');
-//        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+//        $rule = new TimeTriggeredRule('Notify assignee that ticket is new for 3 days', 'ticket', '3d');
+//        $group = new TimeTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
 //        $condition = new Condition('eq', ['status' => Status::NEW_ONE], $group);
-//        $action = new BusinessAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
+//        $action = new TimeTriggeredAction('notify_by_email', ['notify_by_email' => 'assignee'], $rule);
 //        $rule->setGrouping($group);
 //        $rule->addAction($action);
 //        $group->addCondition($condition);
@@ -176,16 +178,16 @@ class CreatePredefinedRules extends ContainerAwareFixture
 //    }
 
     /**
-     * @return BusinessRule
+     * @return TimeTriggeredRule
      */
     private function closeTicketWithPendingStatus()
     {
         $rule
             =
-        $rule = new BusinessRule('Auto close ticket with pending status and no update for 30 days', 'ticket', '30d');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new TimeTriggeredRule('Auto close ticket with pending status and no update for 30 days', 'ticket', '30d');
+        $group = new TimeTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $condition = new Condition('gt', ['status_updated_since' => '720'], $group);
-        $action = new BusinessAction('update_property', ['status' => Status::CLOSED], $rule);
+        $action = new TimeTriggeredAction('update_property', ['status' => Status::CLOSED], $rule);
         $rule->setGrouping($group);
         $rule->addAction($action);
         $group->addCondition($condition);
@@ -194,19 +196,19 @@ class CreatePredefinedRules extends ContainerAwareFixture
     }
 
 //    /**
-//     * @return BusinessRule
+//     * @return TimeTriggeredRule
 //     */
 //    private function notifyReporterTicketPending7Days()
 //    {
 //        $rule
-//            = $rule = new BusinessRule(
+//            = $rule = new TimeTriggeredRule(
 //            ' If pending for 7 days email reporter that support team waits for response',
 //            'ticket',
 //            '7d'
 //        );
-//        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+//        $group = new TimeTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
 //        $condition = new Condition('eq', ['status' => Status::PENDING], $group);
-//        $action = new BusinessAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
+//        $action = new TimeTriggeredAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
 //        $rule->setGrouping($group);
 //        $rule->addAction($action);
 //        $group->addCondition($condition);
@@ -215,19 +217,19 @@ class CreatePredefinedRules extends ContainerAwareFixture
 //    }
 
 //    /**
-//     * @return BusinessRule
+//     * @return TimeTriggeredRule
 //     */
 //    private function notifyReporterTicketSupportClose25Days()
 //    {
 //        $rule
-//            = $rule = new BusinessRule(
+//            = $rule = new TimeTriggeredRule(
 //            ' If pending for 25 days email reporter that support team will close ticket soon',
 //            'ticket',
 //            '25d'
 //        );
-//        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+//        $group = new TimeTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
 //        $condition = new Condition('eq', ['status' => Status::PENDING], $group);
-//        $action = new BusinessAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
+//        $action = new TimeTriggeredAction('notify_by_email', ['notify_by_email' => 'reporter'], $rule);
 //        $rule->setGrouping($group);
 //        $rule->addAction($action);
 //        $group->addCondition($condition);

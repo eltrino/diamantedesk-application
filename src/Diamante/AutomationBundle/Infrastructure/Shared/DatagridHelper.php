@@ -15,7 +15,7 @@
 
 namespace Diamante\AutomationBundle\Infrastructure\Shared;
 
-use Diamante\AutomationBundle\Infrastructure\Persistence\BusinessRuleRepository;
+use Diamante\AutomationBundle\Infrastructure\Persistence\TimeTriggeredRuleRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -31,16 +31,16 @@ class DatagridHelper
     private $translator;
 
     /**
-     * @var BusinessRuleRepository
+     * @var TimeTriggeredRuleRepository
      */
-    private $businessRuleRepository;
+    private $timeTriggeredRuleRepository;
 
     /** @var null|array */
     private $timeIntervalChoices = null;
 
-    public function __construct(TranslatorInterface $translator, BusinessRuleRepository $businessRuleRepository)
+    public function __construct(TranslatorInterface $translator, TimeTriggeredRuleRepository $timeTriggeredRuleRepository)
     {
-        $this->businessRuleRepository = $businessRuleRepository;
+        $this->timeTriggeredRuleRepository = $timeTriggeredRuleRepository;
         $this->translator = $translator;
     }
 
@@ -51,7 +51,7 @@ class DatagridHelper
     {
         if (is_null($this->timeIntervalChoices)) {
             $options = [];
-            $result = $this->businessRuleRepository->getTimeIntervalChoices();
+            $result = $this->timeTriggeredRuleRepository->getTimeIntervalChoices();
 
             foreach ((array)$result as $value) {
                 $type = substr($value['timeInterval'], -1);

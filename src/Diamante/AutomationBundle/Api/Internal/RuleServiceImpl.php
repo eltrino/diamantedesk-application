@@ -16,15 +16,16 @@ namespace Diamante\AutomationBundle\Api\Internal;
 
 use Diamante\AutomationBundle\Api\RuleService;
 use Diamante\AutomationBundle\Automation\Validator\RuleValidator;
-use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Entity\TimeTriggeredRule;
 use Diamante\AutomationBundle\Entity\Condition;
-use Diamante\AutomationBundle\Entity\WorkflowGroup;
-use Diamante\AutomationBundle\Entity\BusinessGroup;
+use Diamante\AutomationBundle\Entity\EventTriggeredGroup;
+use Diamante\AutomationBundle\Entity\TimeTriggeredGroup;
 use Diamante\AutomationBundle\Entity\Group;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredRule;
 use Diamante\AutomationBundle\Infrastructure\Shared\CronExpressionMapper;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\DeskBundle\Infrastructure\Persistence\DoctrineGenericRepository;
+use Diamante\DeskBundle\Infrastructure\Shared\StringUtils;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\DeskBundle\Model\Entity\Exception\ValidationException;
 use Diamante\AutomationBundle\Entity\Schedule;
@@ -33,7 +34,9 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RuleServiceImpl implements RuleService
 {
-    const BUSINESS_RULE_COMMAND_NAME = 'diamante:cron:automation:business:run';
+    use StringUtils;
+
+    const TIME_TRIGGERED_RULE_COMMAND_NAME = 'diamante:cron:automation:time:run';
 
     /**
      * @var RegistryInterface
@@ -43,12 +46,12 @@ class RuleServiceImpl implements RuleService
     /**
      * @var DoctrineGenericRepository
      */
-    private $workflowRuleRepository;
+    private $eventTriggeredRuleRepository;
 
     /**
      * @var DoctrineGenericRepository
      */
-    private $businessRuleRepository;
+    private $timeTriggeredRuleRepository;
 
     /**
      * @var DoctrineGenericRepository
@@ -62,21 +65,21 @@ class RuleServiceImpl implements RuleService
 
     /**
      * @param RegistryInterface         $registry
-     * @param DoctrineGenericRepository $workflowRuleRepository
-     * @param DoctrineGenericRepository $businessRuleRepository
+     * @param DoctrineGenericRepository $eventTriggeredRuleRepository
+     * @param DoctrineGenericRepository $timeTriggeredRuleRepository
      * @param DoctrineGenericRepository $scheduleRepository
      * @param RuleValidator             $validator
      */
     public function __construct(
         RegistryInterface $registry,
-        DoctrineGenericRepository $workflowRuleRepository,
-        DoctrineGenericRepository $businessRuleRepository,
+        DoctrineGenericRepository $eventTriggeredRuleRepository,
+        DoctrineGenericRepository $timeTriggeredRuleRepository,
         DoctrineGenericRepository $scheduleRepository,
         RuleValidator $validator
     ) {
         $this->registry = $registry;
-        $this->workflowRuleRepository = $workflowRuleRepository;
-        $this->businessRuleRepository = $businessRuleRepository;
+        $this->eventTriggeredRuleRepository = $eventTriggeredRuleRepository;
+        $this->timeTriggeredRuleRepository = $timeTriggeredRuleRepository;
         $this->scheduleRepository = $scheduleRepository;
         $this->validator = $validator;
     }
@@ -85,11 +88,11 @@ class RuleServiceImpl implements RuleService
      * @param string $type
      * @param string $id
      *
-     * @return BusinessRule|WorkflowRule
+     * @return TimeTriggeredRule|EventTriggeredRule
      */
     public function viewRule($type, $id)
     {
-        $rule = $type == Rule::TYPE_WORKFLOW ? $this->getWorkflowRuleById($id) : $this->getBusinessRuleById($id);
+        $rule = $type == Rule::TYPE_EVENT_TRIGGERED ? $this->getEventTriggeredRuleById($id) : $this->getTimeTriggeredRuleById($id);
 
         return $rule;
     }
@@ -97,13 +100,13 @@ class RuleServiceImpl implements RuleService
     /**
      * @param string $input
      *
-     * @return BusinessRule|WorkflowRule
+     * @return TimeTriggeredRule|EventTriggeredRule
      */
     public function createRule($input)
     {
         $input = $this->getValidatedInput($input);
 
-        $rule = call_user_func([$this, sprintf("create%sRule", ucfirst($input['type']))], $input);
+        $rule = call_user_func([$this, sprintf("create%sRule", $this->camelize($input['type']))], $input);
 
         return $rule;
     }
@@ -112,13 +115,13 @@ class RuleServiceImpl implements RuleService
      * @param string $input
      * @param string $id
      *
-     * @return BusinessRule|WorkflowRule
+     * @return TimeTriggeredRule|EventTriggeredRule
      */
     public function updateRule($input, $id)
     {
         $input = $this->getValidatedInput($input);
 
-        $rule = call_user_func_array([$this, sprintf("update%sRule", ucfirst($input['type']))], [$input, $id]);
+        $rule = call_user_func_array([$this, sprintf("update%sRule", $this->camelize($input['type']))], [$input, $id]);
 
         return $rule;
     }
@@ -129,7 +132,7 @@ class RuleServiceImpl implements RuleService
      */
     public function deleteRule($type, $id)
     {
-        $method = $type == Rule::TYPE_BUSINESS ? 'deleteBusinessRule' : 'deleteWorkflowRule';
+        $method = $type == Rule::TYPE_TIME_TRIGGERED ? 'deleteTimeTriggeredRule' : 'deleteEventTriggeredRule';
 
         call_user_func([$this, $method], $id);
     }
@@ -142,7 +145,7 @@ class RuleServiceImpl implements RuleService
      */
     public function activateRule($type, $id)
     {
-        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
+        $repo = $type == Rule::TYPE_EVENT_TRIGGERED ? $this->eventTriggeredRuleRepository : $this->timeTriggeredRuleRepository;
 
         /** @var Rule $rule */
         $rule = $repo->get($id);
@@ -165,7 +168,7 @@ class RuleServiceImpl implements RuleService
      */
     public function deactivateRule($type, $id)
     {
-        $repo = $type == Rule::TYPE_WORKFLOW ? $this->workflowRuleRepository : $this->businessRuleRepository;
+        $repo = $type == Rule::TYPE_EVENT_TRIGGERED ? $this->eventTriggeredRuleRepository : $this->timeTriggeredRuleRepository;
 
         /** @var Rule $rule */
         $rule = $repo->get($id);
@@ -183,37 +186,37 @@ class RuleServiceImpl implements RuleService
     /**
      * @param string $id
      */
-    private function deleteBusinessRule($id)
+    private function deleteTimeTriggeredRule($id)
     {
-        $rule = $this->getBusinessRuleById($id);
+        $rule = $this->getTimeTriggeredRuleById($id);
 
         /** @var Schedule $schedule */
-        foreach ($this->scheduleRepository->findByCommand(static::BUSINESS_RULE_COMMAND_NAME) as $schedule) {
+        foreach ($this->scheduleRepository->findByCommand(static::TIME_TRIGGERED_RULE_COMMAND_NAME) as $schedule) {
             if ($rule->getId() == $schedule->getParameters()['rule-id']) {
                 $this->scheduleRepository->remove($schedule);
             }
         }
 
-        $this->businessRuleRepository->remove($rule);
+        $this->timeTriggeredRuleRepository->remove($rule);
     }
 
     /**
      * @param string $id
      */
-    private function deleteWorkflowRule($id)
+    private function deleteEventTriggeredRule($id)
     {
-        $rule = $this->getWorkflowRuleById($id);
-        $this->workflowRuleRepository->remove($rule);
+        $rule = $this->getEventTriggeredRuleById($id);
+        $this->eventTriggeredRuleRepository->remove($rule);
     }
 
     /**
      * @param string $id
      *
-     * @return BusinessRule
+     * @return TimeTriggeredRule
      */
-    private function getBusinessRuleById($id)
+    private function getTimeTriggeredRuleById($id)
     {
-        $rule = $this->businessRuleRepository->get($id);
+        $rule = $this->timeTriggeredRuleRepository->get($id);
 
         if (is_null($rule)) {
             throw new \RuntimeException('Rule loading failed. Rule not found.');
@@ -225,11 +228,11 @@ class RuleServiceImpl implements RuleService
     /**
      * @param string $id
      *
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
-    private function getWorkflowRuleById($id)
+    private function getEventTriggeredRuleById($id)
     {
-        $rule = $this->workflowRuleRepository->get($id);
+        $rule = $this->eventTriggeredRuleRepository->get($id);
 
         if (is_null($rule)) {
             throw new \RuntimeException('Rule loading failed. Rule not found.');
@@ -241,21 +244,21 @@ class RuleServiceImpl implements RuleService
     /**
      * @param array $input
      *
-     * @return BusinessRule
+     * @return TimeTriggeredRule
      */
-    private function createBusinessRule(array $input)
+    private function createTimeTriggeredRule(array $input)
     {
-        $rule = new BusinessRule($input['name'], $input['target'], $input['time_interval'], $input['status']);
+        $rule = new TimeTriggeredRule($input['name'], $input['target'], $input['time_interval'], $input['status']);
         $group = function ($connector) {
-            return new BusinessGroup($connector);
+            return new TimeTriggeredGroup($connector);
         };
 
         $this->addGrouping($rule, $input['grouping'], $group);
-        $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_TIME_TRIGGERED);
 
-        $this->businessRuleRepository->store($rule);
+        $this->timeTriggeredRuleRepository->store($rule);
 
-        $this->createBusinessRuleProcessingCronJob($rule->getId(), $rule->getTimeInterval());
+        $this->createTimeTriggeredRuleProcessingCronJob($rule->getId(), $rule->getTimeInterval());
 
         return $rule;
     }
@@ -264,22 +267,22 @@ class RuleServiceImpl implements RuleService
      * @param array  $input
      * @param string $id
      *
-     * @return BusinessRule
+     * @return TimeTriggeredRule
      */
-    private function updateBusinessRule(array $input, $id)
+    private function updateTimeTriggeredRule(array $input, $id)
     {
-        $rule = $this->getBusinessRuleById($id);
+        $rule = $this->getTimeTriggeredRuleById($id);
         $group = function ($connector) {
-            return new BusinessGroup($connector);
+            return new TimeTriggeredGroup($connector);
         };
 
         $rule->update($input['name'], $input['time_interval'], $input['status']);
         $rule->removeActions();
         $rule->removeGrouping();
         $this->addGrouping($rule, $input['grouping'], $group);
-        $this->addActions($rule, $input['actions'], Rule::TYPE_BUSINESS);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_TIME_TRIGGERED);
 
-        $this->businessRuleRepository->store($rule);
+        $this->timeTriggeredRuleRepository->store($rule);
 
         return $rule;
     }
@@ -290,20 +293,20 @@ class RuleServiceImpl implements RuleService
      *
      * @return \Diamante\DeskBundle\Model\Shared\Entity|null
      */
-    private function updateWorkflowRule(array $input, $id)
+    private function updateEventTriggeredRule(array $input, $id)
     {
-        $rule = $this->getWorkflowRuleById($id);
+        $rule = $this->getEventTriggeredRuleById($id);
         $group = function ($connector) {
-            return new WorkflowGroup($connector);
+            return new EventTriggeredGroup($connector);
         };
 
         $rule->update($input['name'], $input['status']);
         $rule->removeActions();
         $rule->removeGrouping();
         $this->addGrouping($rule, $input['grouping'], $group);
-        $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_EVENT_TRIGGERED);
 
-        $this->workflowRuleRepository->store($rule);
+        $this->eventTriggeredRuleRepository->store($rule);
 
         return $rule;
     }
@@ -311,19 +314,19 @@ class RuleServiceImpl implements RuleService
     /**
      * @param array $input
      *
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
-    private function createWorkflowRule(array $input)
+    private function createEventTriggeredRule(array $input)
     {
-        $rule = new WorkflowRule($input['name'], $input['target'], $input['status']);
+        $rule = new EventTriggeredRule($input['name'], $input['target'], $input['status']);
         $group = function ($connector) {
-            return new WorkflowGroup($connector);
+            return new EventTriggeredGroup($connector);
         };
 
         $this->addGrouping($rule, $input['grouping'], $group);
-        $this->addActions($rule, $input['actions'], Rule::TYPE_WORKFLOW);
+        $this->addActions($rule, $input['actions'], Rule::TYPE_EVENT_TRIGGERED);
 
-        $this->workflowRuleRepository->store($rule);
+        $this->eventTriggeredRuleRepository->store($rule);
 
         return $rule;
     }
@@ -368,10 +371,10 @@ class RuleServiceImpl implements RuleService
      *
      * @return Schedule
      */
-    private function createBusinessRuleProcessingCronJob($ruleId, $timeInterval)
+    private function createTimeTriggeredRuleProcessingCronJob($ruleId, $timeInterval)
     {
         $schedule = new Schedule();
-        $schedule->setCommand(self::BUSINESS_RULE_COMMAND_NAME)
+        $schedule->setCommand(self::TIME_TRIGGERED_RULE_COMMAND_NAME)
             ->setParameters(['rule-id' => $ruleId])
             ->setDefinition(CronExpressionMapper::getMappedCronExpression($timeInterval));
 
@@ -393,7 +396,7 @@ class RuleServiceImpl implements RuleService
     {
 
         foreach ($actions as $action) {
-            $class = sprintf("Diamante\\AutomationBundle\\Entity\\%sAction", ucfirst($ruleType));
+            $class = sprintf("Diamante\\AutomationBundle\\Entity\\%sAction", $this->camelize($ruleType));
             $entity = new $class($action['type'], $action['parameters'], $rule);
             $rule->addAction($entity);
         }

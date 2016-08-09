@@ -23,15 +23,15 @@ use Diamante\AutomationBundle\Infrastructure\Shared\TargetMapper;
 use Diamante\AutomationBundle\Model\Rule;
 use Diamante\AutomationBundle\Rule\Condition\ConditionFactory;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
-use Diamante\AutomationBundle\Rule\Fact\BusinessFact;
-use Diamante\AutomationBundle\Rule\Fact\WorkflowFact;
+use Diamante\AutomationBundle\Rule\Fact\TimeTriggeredFact;
+use Diamante\AutomationBundle\Rule\Fact\EventTriggeredFact;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Monolog\Logger;
 
 class Engine
 {
-    const WORKFLOW_ENTITY = 'DiamanteAutomationBundle:WorkflowRule';
+    const EVENT_TRIGGERED_ENTITY = 'DiamanteAutomationBundle:EventTriggeredRule';
 
     /**
      * @var AutomationConfigurationProvider
@@ -99,14 +99,14 @@ class Engine
     /**
      * @param $entity
      *
-     * @return BusinessFact
+     * @return TimeTriggeredFact
      */
-    public function createBusinessFact($entity)
+    public function createTimeTriggeredFact($entity)
     {
         $entityType = $this->configurationProvider->getTargetByEntity($entity);
         $entity = TargetMapper::fromEntity($entity);
 
-        return new BusinessFact($entity, $entityType);
+        return new TimeTriggeredFact($entity, $entityType);
     }
 
     /**
@@ -121,7 +121,7 @@ class Engine
     {
         $entity = TargetMapper::fromChangeset($entityChangeset);
 
-        return new WorkflowFact($entity, $entityType, $action, $editor, $entityChangeset);
+        return new EventTriggeredFact($entity, $entityType, $action, $editor, $entityChangeset);
     }
 
     /**
@@ -231,7 +231,7 @@ class Engine
     protected function getRules(AbstractFact $fact)
     {
         if (empty($this->rules[$fact->getTargetType()])) {
-            $repository = $this->em->getRepository(static::WORKFLOW_ENTITY);
+            $repository = $this->em->getRepository(static::EVENT_TRIGGERED_ENTITY);
 
             $this->rules[$fact->getTargetType()] = $repository->findBy(['status' => true, 'target' => $fact->getTargetType()]);
         }
@@ -281,7 +281,7 @@ class Engine
 
         if (!$dryRun && !$this->scheduler->isEmpty() && !empty($targetEntities)) {
             foreach ($targetEntities as $entity) {
-                $fact = $this->createBusinessFact($entity);
+                $fact = $this->createTimeTriggeredFact($entity);
                 $this->scheduler->run($fact);
             }
         }

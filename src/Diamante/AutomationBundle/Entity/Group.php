@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="diamante_rule_group")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"workflow" = "WorkflowGroup", "business" = "BusinessGroup"})
+ * @ORM\DiscriminatorMap({"event_triggered" = "EventTriggeredGroup", "time_triggered" = "TimeTriggeredGroup"})
  */
 abstract class Group extends \Diamante\AutomationBundle\Model\Group
 {

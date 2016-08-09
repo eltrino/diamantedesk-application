@@ -1,11 +1,14 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-{% set gridName = 'diamante-automation-' ~ type ~ '-grid' %}
+
+{% set gridNames = {'time_triggered': 'time-triggered', 'event_triggered': 'event-triggered'} %}
+{% set entities = {'time_triggered': 'TimeTriggeredRule', 'event_triggered': 'EventTriggeredRule'} %}
+{% set gridName = 'diamante-automation-' ~ gridNames[type] ~ '-grid' %}
 {% set ruleLabel = 'diamante.automation.rule.' ~ type ~ '_entity_plural_label' %}
 {% set pageTitle = ruleLabel|trans %}
 
 {% block navButtons %}
-    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:' ~ type|capitalize ~ 'Rule') %}
+    {% if resource_granted('CREATE', 'Entity:DiamanteAutomationBundle:' ~ entities[type]) %}
         {% set ruleCreateLabel = 'diamante.automation.ui.' ~ type ~ '.create' %}
         {{
         UI.addButton({

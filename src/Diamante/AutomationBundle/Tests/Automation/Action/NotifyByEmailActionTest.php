@@ -16,7 +16,7 @@
 namespace Diamante\AutomationBundle\Tests\Automation\Action;
 
 use Diamante\AutomationBundle\Automation\Action\Email\NotifyByEmailAction;
-use Diamante\AutomationBundle\EventListener\WorkflowListener;
+use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
 use Diamante\AutomationBundle\Rule\Action\ExecutionContext;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
 use Diamante\DeskBundle\Entity\Branch;
@@ -87,7 +87,7 @@ class NotifyByEmailActionTest extends \PHPUnit_Framework_TestCase
             'priority' => new Priority(Priority::PRIORITY_LOW),
             'status' => new Status(Status::CLOSED),
         ];
-        $fact = new Fact($ticket, 'ticket', WorkflowListener::CREATED, $this->getChangeset());
+        $fact = new Fact($ticket, 'ticket', EventTriggeredListener::CREATED, $this->getChangeset());
         $context = new ExecutionContext(['status' => Status::NEW_ONE, 'priority' => Priority::PRIORITY_HIGH]);
         $context->setFact($fact);
         $this->service->updateContext($context);

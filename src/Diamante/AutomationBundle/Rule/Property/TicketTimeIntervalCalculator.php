@@ -16,7 +16,7 @@
 namespace Diamante\AutomationBundle\Rule\Property;
 
 use Diamante\AutomationBundle\Entity\PersistentProcessingContext;
-use Diamante\AutomationBundle\EventListener\WorkflowListener;
+use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
 use Diamante\AutomationBundle\Infrastructure\Shared\TargetMapper;
 use Doctrine\ORM\EntityManager;
 
@@ -42,7 +42,7 @@ class TicketTimeIntervalCalculator
     {
         /** @var PersistentProcessingContext $processingContext */
         $processingContext = $this->processingContextRepository
-            ->findOneBy(['targetEntityId' => $target['id'], 'action' => WorkflowListener::CREATED]);
+            ->findOneBy(['targetEntityId' => $target['id'], 'action' => EventTriggeredListener::CREATED]);
         $target = TargetMapper::fromChangeset($processingContext->getTargetEntityChangeset());
         $hours = $this->getDiff($target['createdAt']);
 
@@ -53,7 +53,7 @@ class TicketTimeIntervalCalculator
     {
         /** @var PersistentProcessingContext $processingContext */
         $processingContext = $this->processingContextRepository
-            ->findOneBy(['targetEntityId' => $target['id'], 'action' => WorkflowListener::UPDATED]);
+            ->findOneBy(['targetEntityId' => $target['id'], 'action' => EventTriggeredListener::UPDATED]);
         $target = TargetMapper::fromChangeset($processingContext->getTargetEntityChangeset());
         $hours = $this->getDiff($target['createdAt']);
 

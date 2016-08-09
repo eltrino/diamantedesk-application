@@ -22,13 +22,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class BusinessController
+ * Class TimeTriggeredController
  *
  * @package Diamante\AutomationBundle\Controller
  *
  * @Route("automation")
  */
-class BusinessController extends Controller
+class TimeTriggeredController extends Controller
 {
     use Shared\FormHandlerTrait;
     use Shared\ExceptionHandlerTrait;
@@ -39,8 +39,8 @@ class BusinessController extends Controller
     /**
      * @Route(
      *      "/{type}/{_format}",
-     *      name="diamante_business_list",
-     *      requirements={"type"="business", "_format"="html|json"},
+     *      name="diamante_time_triggered_list",
+     *      requirements={"type"="time_triggered", "_format"="html|json"},
      *      defaults={"_format" = "html"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:list.html.twig")
@@ -57,9 +57,9 @@ class BusinessController extends Controller
     /**
      * @Route(
      *      "/{type}/view/{id}",
-     *      name="diamante_business_view",
+     *      name="diamante_time_triggered_view",
      *      requirements={
-     *          "type"="business",
+     *          "type"="time_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -78,8 +78,8 @@ class BusinessController extends Controller
     /**
      * @Route(
      *      "/{type}/create",
-     *      name="diamante_business_create",
-     *      requirements={"type"="business"}
+     *      name="diamante_time_triggered_create",
+     *      requirements={"type"="time_triggered"}
      * )
      * @Template("DiamanteAutomationBundle:Automation:create.html.twig")
      *
@@ -95,9 +95,9 @@ class BusinessController extends Controller
     /**
      * @Route(
      *      "/{type}/update/{id}",
-     *      name="diamante_business_update",
+     *      name="diamante_time_triggered_update",
      *      requirements={
-     *          "type"="business",
+     *          "type"="time_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -116,9 +116,9 @@ class BusinessController extends Controller
     /**
      * @Route(
      *      "/{type}/delete/{id}",
-     *      name="diamante_business_delete",
+     *      name="diamante_time_triggered_delete",
      *      requirements={
-     *          "type"="business",
+     *          "type"="time_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -136,9 +136,9 @@ class BusinessController extends Controller
     /**
      * @Route(
      *      "/{type}/activate/{id}",
-     *      name="diamante_business_activate",
+     *      name="diamante_time_triggered_activate",
      *      requirements={
-     *          "type"="business",
+     *          "type"="time_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )
@@ -156,9 +156,9 @@ class BusinessController extends Controller
     /**
      * @Route(
      *      "/{type}/deactivate/{id}",
-     *      name="diamante_business_deactivate",
+     *      name="diamante_time_triggered_deactivate",
      *      requirements={
-     *          "type"="business",
+     *          "type"="time_triggered",
      *          "id"="^(?i)[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
      *      }
      * )

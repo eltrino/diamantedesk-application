@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,19 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Model;
+namespace Diamante\AutomationBundle\Infrastructure\Persistence;
 
-class WorkflowRule extends Rule
+use Diamante\DeskBundle\Model\Shared\Repository;
+
+/**
+ * Interface TimeTriggeredRuleRepository
+ *
+ * @package Diamante\AutomationBundle\Model\Ticket
+ */
+interface TimeTriggeredRuleRepository extends Repository
 {
-    public function update($name, $status)
-    {
-        $this->name = $name;
-        $this->status = $status;
-    }
+    /**
+     * @return array
+     */
+    public function getTimeIntervalChoices();
 }

@@ -22,8 +22,8 @@ use JMS\JobQueueBundle\Entity\Job;
 
 class QueueManager
 {
-    const SELF_WORKFLOW_COMMAND_NAME = 'diamante:automation:workflow:run';
-    const QUEUE_NAME                 = 'diamante_automation_workflow_rule';
+    const SELF_EVENT_TRIGGERED_COMMAND_NAME = 'diamante:automation:event:run';
+    const QUEUE_NAME                 = 'diamante_automation_event_triggered_rule';
 
     /**
      * @var \Doctrine\Common\Persistence\ObjectManager|object
@@ -80,7 +80,7 @@ class QueueManager
 
         foreach ($this->persistedQueue as $context) {
             $job = new Job(
-                self::SELF_WORKFLOW_COMMAND_NAME,
+                self::SELF_EVENT_TRIGGERED_COMMAND_NAME,
                 [sprintf('--context-id=%d', $context->getId())],
                 true,
                 self::QUEUE_NAME

@@ -16,11 +16,11 @@
 namespace Diamante\AutomationBundle\Model;
 
 /**
- * Class BusinessRule
+ * Class TimeTriggeredRule
  *
  * @package Diamante\AutomationBundle\Model
  */
-class BusinessRule extends Rule
+class TimeTriggeredRule extends Rule
 {
     /**
      * @var string
@@ -28,7 +28,7 @@ class BusinessRule extends Rule
     protected $timeInterval;
 
     /**
-     * BusinessRule constructor.
+     * TimeTriggeredRule constructor.
      *
      * @param string $name
      * @param string $target

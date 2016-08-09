@@ -1,5 +1,5 @@
 datagrid:
-  diamante-automation-workflow-grid:
+  diamante-automation-event-triggered-grid:
     source:
       type: orm
       query:
@@ -7,9 +7,9 @@ datagrid:
           - w.id
           - w.name
           - w.status
-          - ('workflow') as type
+          - ('event_triggered') as type
         from:
-          - { table: %diamante_automation.workflow_rule.entity.class%, alias: w}
+          - { table: %diamante_automation.event_triggered_rule.entity.class%, alias: w}
 
     properties:
       id: ~
@@ -17,17 +17,17 @@ datagrid:
 
       view_link:
         type: url
-        route: diamante_workflow_view
+        route: diamante_event_triggered_view
         params: [type, id]
 
       update_link:
         type: url
-        route: diamante_workflow_update
+        route: diamante_event_triggered_update
         params: [type, id]
 
       delete_link:
         type: url
-        route: diamante_workflow_delete
+        route: diamante_event_triggered_delete
         params: [type, id]
 
     sorters:
@@ -60,45 +60,45 @@ datagrid:
         icon: eye-open
         link: view_link
         rowAction: true
-        acl_resource: VIEW;Entity:DiamanteAutomationBundle:WorkflowRule
+        acl_resource: VIEW;Entity:DiamanteAutomationBundle:EventTriggeredRule
       update:
         type: navigate
         label: diamante.automation.rule.actions.edit
         icon: edit
         link: update_link
         rowAction: true
-        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:EventTriggeredRule
       delete:
         type: delete
         label: diamante.automation.rule.actions.delete
         icon: trash
         link: delete_link
-        acl_resource: DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:EventTriggeredRule
 
     mass_actions:
       delete:
         type: delete
         label: diamante.automation.rule.actions.mass.remove
-        acl_resource: DELETE;Entity:DiamanteAutomationBundle:WorkflowRule
-        entity_name: DiamanteAutomationBundle:WorkflowRule
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:EventTriggeredRule
+        entity_name: DiamanteAutomationBundle:EventTriggeredRule
         data_identifier: w.id
         icon: trash
       deactivate_rule:
         type: deactivate_rule
         label: diamante.automation.rule.actions.mass.deactivate
-        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
-        entity_name: DiamanteAutomationBundle:WorkflowRule
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:EventTriggeredRule
+        entity_name: DiamanteAutomationBundle:EventTriggeredRule
         data_identifier: w.id
         icon: remove
       activate_rule:
         type: activate_rule
         label: diamante.automation.rule.actions.mass.activate
-        acl_resource: EDIT;Entity:DiamanteAutomationBundle:WorkflowRule
-        entity_name: DiamanteAutomationBundle:WorkflowRule
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:EventTriggeredRule
+        entity_name: DiamanteAutomationBundle:EventTriggeredRule
         data_identifier: w.id
         icon: check
 
-  diamante-automation-business-grid:
+  diamante-automation-time-triggered-grid:
     source:
       type: orm
       query:
@@ -107,9 +107,9 @@ datagrid:
           - b.name
           - b.timeInterval as time
           - b.status
-          - ('business') as type
+          - ('time_triggered') as type
         from:
-          - { table: %diamante_automation.business_rule.entity.class%, alias: b}
+          - { table: %diamante_automation.time_triggered_rule.entity.class%, alias: b}
 
     properties:
       id: ~
@@ -117,17 +117,17 @@ datagrid:
 
       view_link:
         type: url
-        route: diamante_business_view
+        route: diamante_time_triggered_view
         params: [type, id]
 
       update_link:
         type: url
-        route: diamante_business_update
+        route: diamante_time_triggered_update
         params: [type, id]
 
       delete_link:
         type: url
-        route: diamante_business_delete
+        route: diamante_time_triggered_delete
         params: [type, id]
 
     sorters:
@@ -147,7 +147,7 @@ datagrid:
       name:
         label: diamante.automation.common.name
       time:
-        label: diamante.automation.rule.business.repetition_time
+        label: diamante.automation.rule.time_triggered.repetition_time
         frontend_type: select
         choices: @diamante_automation.datagrid.helper->getTimeIntervalChoices
 
@@ -165,40 +165,40 @@ datagrid:
         icon: eye-open
         link: view_link
         rowAction: true
-        acl_resource: VIEW;Entity:DiamanteAutomationBundle:BusinessRule
+        acl_resource: VIEW;Entity:DiamanteAutomationBundle:TimeTriggeredRule
       update:
         type: navigate
         label: diamante.automation.rule.actions.edit
         icon: edit
         link: update_link
         rowAction: true
-        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:TimeTriggeredRule
       delete:
         type: delete
         label: diamante.automation.rule.actions.delete
         icon: trash
         link: delete_link
-        acl_resource: DELETE;Entity:DiamanteAutomationBundle:BusinessRule
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:TimeTriggeredRule
 
     mass_actions:
       delete:
         type: delete
         label: diamante.automation.rule.actions.mass.remove
-        acl_resource: DELETE;Entity:DiamanteAutomationBundle:BusinessRule
-        entity_name: DiamanteAutomationBundle:BusinessRule
+        acl_resource: DELETE;Entity:DiamanteAutomationBundle:TimeTriggeredRule
+        entity_name: DiamanteAutomationBundle:TimeTriggeredRule
         data_identifier: b.id
         icon: trash
       deactivate_rule:
         type: deactivate_rule
         label: diamante.automation.rule.actions.mass.deactivate
-        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
-        entity_name: DiamanteAutomationBundle:BusinessRule
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:TimeTriggeredRule
+        entity_name: DiamanteAutomationBundle:TimeTriggeredRule
         data_identifier: b.id
         icon: remove
       activate_rule:
         type: activate_rule
         label: diamante.automation.rule.actions.mass.activate
-        acl_resource: EDIT;Entity:DiamanteAutomationBundle:BusinessRule
-        entity_name: DiamanteAutomationBundle:BusinessRule
+        acl_resource: EDIT;Entity:DiamanteAutomationBundle:TimeTriggeredRule
+        entity_name: DiamanteAutomationBundle:TimeTriggeredRule
         data_identifier: b.id
         icon: check

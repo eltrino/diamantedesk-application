@@ -15,13 +15,14 @@
 
 namespace Diamante\AutomationBundle\Automation;
 
+use Diamante\AutomationBundle\Entity\EventTriggeredGroup;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Diamante\AutomationBundle\Infrastructure\Shared\ParameterBag;
-use Diamante\AutomationBundle\Entity\WorkflowAction;
+use Diamante\AutomationBundle\Entity\EventTriggeredAction;
 use Diamante\AutomationBundle\Entity\Condition;
 use Diamante\AutomationBundle\Entity\Group;
-use Diamante\AutomationBundle\Entity\WorkflowRule;
+use Diamante\AutomationBundle\Entity\EventTriggeredRule;
 
 /**
  * Class ActionProviderTest
@@ -144,15 +145,15 @@ class ActionProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $actionName
      *
-     * @return WorkflowRule
+     * @return EventTriggeredRule
      */
     private function getRule($actionName = 'update_property')
     {
-        $rule = new WorkflowRule('workflow_rule', 'ticket');
-        $group = new Group(Group::CONNECTOR_INCLUSIVE);
+        $rule = new EventTriggeredRule('event_triggered_rule', 'ticket');
+        $group = new EventTriggeredGroup(Group::CONNECTOR_INCLUSIVE);
         $equalCondition = new Condition('Eq', ['status' => 'new'], $group);
         $notEqualCondition = new Condition('Neq', ['status' => 'open'], $group);
-        $action = new WorkflowAction($actionName, ['status' => 'closed'], $rule);
+        $action = new EventTriggeredAction($actionName, ['status' => 'closed'], $rule);
 
         $rule->setGrouping($group);
         $rule->addAction($action);

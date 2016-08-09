@@ -300,7 +300,7 @@ class AutomationConfigurationProvider
      */
     protected function getSupportedRulesForProperty($entity, $property)
     {
-        $defaultRules = [Rule::TYPE_BUSINESS, Rule::TYPE_WORKFLOW];
+        $defaultRules = [Rule::TYPE_TIME_TRIGGERED, Rule::TYPE_EVENT_TRIGGERED];
         $config = $this->getEntityConfiguration($entity);
         $rules = $config->get(sprintf("properties.%s.rules", $property));
 
@@ -314,7 +314,7 @@ class AutomationConfigurationProvider
 
     protected function getSupportedRulesForCondition($conditionName)
     {
-        $defaultRules = [Rule::TYPE_BUSINESS, Rule::TYPE_WORKFLOW];
+        $defaultRules = [Rule::TYPE_TIME_TRIGGERED, Rule::TYPE_EVENT_TRIGGERED];
         $config = $this->getConfiguredConditions();
         $rules = $config->get(sprintf("%s.rules", $conditionName));
 

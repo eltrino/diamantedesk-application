@@ -23,8 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 abstract class Rule implements AutomationRule, Entity
 {
-    const TYPE_BUSINESS = 'business';
-    const TYPE_WORKFLOW = 'workflow';
+    const TYPE_TIME_TRIGGERED = 'time_triggered';
+    const TYPE_EVENT_TRIGGERED = 'event_triggered';
 
     /**
      * @var int

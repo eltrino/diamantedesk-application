@@ -1,6 +1,6 @@
 # DiamanteDesk Automation Bundle #
 
-**Automation bundle** implements business and workflow rules.
+**Automation bundle** implements time triggered and event triggered rules.
 
 ### Requirements ###
 

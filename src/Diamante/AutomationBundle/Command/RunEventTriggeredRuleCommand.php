@@ -24,7 +24,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RunWorkflowRuleCommand extends ContainerAwareCommand
+class RunEventTriggeredRuleCommand extends ContainerAwareCommand
 {
     /**
      * @var
@@ -57,7 +57,7 @@ class RunWorkflowRuleCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('diamante:automation:workflow:run')
+        $this->setName('diamante:automation:event:run')
             ->addOption("context-id", "c", InputOption::VALUE_REQUIRED, "Processing Context")
             ->addOption("dry-run", 'd', InputOption::VALUE_OPTIONAL, "Do not execute configured actions")
             ->setDescription("Run single entity against the set of applicable rules");

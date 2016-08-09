@@ -12,19 +12,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
-namespace Diamante\AutomationBundle\Api\Command;
 
-use Symfony\Component\Validator\Constraints as Assert;
+namespace Diamante\AutomationBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class TimeTriggeredRuleCommand
- *
- * @package Diamante\AutomationBundle\Api\Command
+ * @ORM\Entity
  */
-class TimeTriggeredRuleCommand extends EventTriggeredRuleCommand
+class TimeTriggeredAction extends Action
 {
     /**
-     * @var string
+     * @ORM\ManyToOne(targetEntity="TimeTriggeredRule", inversedBy="actions")
+     * @ORM\JoinColumn(name="rule_id", referencedColumnName="id")
      */
-    public $frequency;
+    protected $rule;
 }

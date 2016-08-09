@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Entity;
 
 use Diamante\AutomationBundle\Configuration\AutomationConfigurationProvider;
 use Diamante\AutomationBundle\Rule\Fact\AbstractFact;
+use Diamante\DeskBundle\Infrastructure\Shared\StringUtils;
 use Diamante\DeskBundle\Model\Shared\Property;
 use Diamante\DeskBundle\Model\Shared\Weightable;
 use Diamante\UserBundle\Model\User;
@@ -24,6 +25,8 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 abstract class AbstractPropertyHandler implements PropertyHandler
 {
+    use StringUtils;
+
     const STRICT = 'strict';
     const SOFT = 'soft';
 
@@ -219,24 +222,6 @@ abstract class AbstractPropertyHandler implements PropertyHandler
         }
 
         return $property;
-    }
-
-    /**
-     * @param string $input
-     *
-     * @return mixed
-     */
-    private function camelize($input)
-    {
-        $value = preg_replace_callback(
-            '/_(.?)/',
-            function ($matches) {
-                return ucfirst($matches[1]);
-            },
-            $input
-        );
-
-        return ucfirst($value);
     }
 
     /**

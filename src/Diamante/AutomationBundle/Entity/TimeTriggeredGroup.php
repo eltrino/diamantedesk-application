@@ -20,10 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class WorkflowGroup extends Group
+class TimeTriggeredGroup extends Group
 {
-    /**
-     * @ORM\OneToOne(targetEntity="WorkflowRule", mappedBy="grouping")
+   /**
+     * @ORM\OneToOne(targetEntity="TimeTriggeredRule", mappedBy="grouping")
      */
     protected $rule;
 }

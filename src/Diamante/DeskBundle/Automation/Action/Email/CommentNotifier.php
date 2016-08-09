@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Automation\Action\Email;
 
 use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
 use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
-use Diamante\AutomationBundle\EventListener\WorkflowListener;
+use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -109,7 +109,7 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
         }
 
         foreach ($emails as $email) {
-            if ($this->fact->getAction() == WorkflowListener::UPDATED && !array_key_exists('changes', $options)) {
+            if ($this->fact->getAction() == EventTriggeredListener::UPDATED && !array_key_exists('changes', $options)) {
                 continue;
             }
             $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);

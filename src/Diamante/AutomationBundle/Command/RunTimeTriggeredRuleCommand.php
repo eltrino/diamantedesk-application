@@ -15,17 +15,17 @@
 
 namespace Diamante\AutomationBundle\Command;
 
-use Diamante\AutomationBundle\Entity\BusinessRule;
+use Diamante\AutomationBundle\Entity\TimeTriggeredRule;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RunBusinessRuleCommand extends ContainerAwareCommand
+class RunTimeTriggeredRuleCommand extends ContainerAwareCommand
 {
     /**
-     * @var BusinessRule
+     * @var TimeTriggeredRule
      */
     protected $rule;
 
@@ -39,8 +39,8 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName("diamante:cron:automation:business:run")
-            ->addOption("rule-id", "id", InputOption::VALUE_REQUIRED, "Business rule id")
+        $this->setName("diamante:cron:automation:time:run")
+            ->addOption("rule-id", "id", InputOption::VALUE_REQUIRED, "Time triggered rule id")
             ->addOption("dry-run", "d", InputOption::VALUE_OPTIONAL, "Do not execute actions configured in rule");
     }
 
@@ -54,7 +54,7 @@ class RunBusinessRuleCommand extends ContainerAwareCommand
         $id = $input->getOption('rule-id');
         $this->rule = $this->getContainer()
             ->get('doctrine')
-            ->getRepository("DiamanteAutomationBundle:BusinessRule")
+            ->getRepository("DiamanteAutomationBundle:TimeTriggeredRule")
             ->get($id);
 
         if (empty($this->rule)) {

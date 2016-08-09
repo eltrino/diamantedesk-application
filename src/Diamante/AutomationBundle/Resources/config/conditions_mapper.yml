@@ -1,6 +1,6 @@
 diamante_automation:
   conditions_mapper:
-    business:
+    time_triggered:
       ticket:
         priority:
           gt:

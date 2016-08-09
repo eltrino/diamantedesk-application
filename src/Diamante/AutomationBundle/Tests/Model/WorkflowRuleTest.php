@@ -16,20 +16,20 @@
 namespace Diamante\AutomationBundle\Tests\Model;
 
 use Diamante\AutomationBundle\Model\Action;
-use Diamante\AutomationBundle\Model\WorkflowRule;
+use Diamante\AutomationBundle\Model\EventTriggeredRule;
 use Diamante\AutomationBundle\Model\Group;
 
-class WorkflowRuleTest extends \PHPUnit_Framework_TestCase
+class EventTriggeredRuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function testCreateWorkflowRule()
+    public function testCreateEventTriggeredRule()
     {
         $rule = $this->createRule();
 
         $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
-        $this->assertEquals('workflow_rule_name', $rule->getName());
+        $this->assertEquals('event_triggered_rule_name', $rule->getName());
         $this->assertEquals(true, $rule->isActive());
         $this->assertInstanceOf('\DateTime', $rule->getUpdatedAt());
         $this->assertInstanceOf('\DateTime', $rule->getCreatedAt());
@@ -42,10 +42,10 @@ class WorkflowRuleTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $rule = $this->createRule();
-        $rule->update('workflow_rule_name_updated');
+        $rule->update('event_triggered_rule_name_updated', true);
 
         $this->assertEquals(true, $rule->isActive());
-        $this->assertEquals('workflow_rule_name_updated', $rule->getName());
+        $this->assertEquals('event_triggered_rule_name_updated', $rule->getName());
     }
 
     /**
@@ -80,6 +80,6 @@ class WorkflowRuleTest extends \PHPUnit_Framework_TestCase
 
     private function createRule()
     {
-        return new WorkflowRule('workflow_rule_name', 'ticket');
+        return new EventTriggeredRule('event_triggered_rule_name', 'ticket');
     }
 } 

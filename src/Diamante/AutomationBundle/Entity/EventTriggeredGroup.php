@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2015 Eltrino LLC (http://eltrino.com)
+ * Copyright (c) 2014 Eltrino LLC (http://eltrino.com)
  *
  * Licensed under the Open Software License (OSL 3.0).
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,17 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\AutomationBundle\Infrastructure\Persistence;
+namespace Diamante\AutomationBundle\Entity;
 
-use Diamante\DeskBundle\Model\Shared\Repository;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Interface BusinessRuleRepository
- *
- * @package Diamante\AutomationBundle\Model\Ticket
+ * @ORM\Entity
  */
-interface BusinessRuleRepository extends Repository
+class EventTriggeredGroup extends Group
 {
     /**
-     * @return array
+     * @ORM\OneToOne(targetEntity="EventTriggeredRule", mappedBy="grouping")
      */
-    public function getTimeIntervalChoices();
+    protected $rule;
 }
