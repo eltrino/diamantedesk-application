@@ -175,9 +175,9 @@ oro_titles:
     diamante_ticket_update: '%%ticket.subject%% - Edit'
     diamante_ticket_create_attach: 'Add Attachment'
 
-    diamante_event_triggered_list: 'Workflow Rules'
+    diamante_event_triggered_list: 'Event Triggered Rules'
     diamante_event_triggered_view: '%%rule.name%%'
-    diamante_event_triggered_create: 'Create Workflow Rule'
+    diamante_event_triggered_create: 'Create Event Triggered Rule'
     diamante_event_triggered_update: '%%rule.name%% - Edit'
 
     diamante_time_triggered_list: 'Time Triggered Rules'
