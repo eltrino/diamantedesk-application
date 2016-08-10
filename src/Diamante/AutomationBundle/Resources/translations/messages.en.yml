@@ -36,10 +36,10 @@ diamante:
             deactivate:
               success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
       time_triggered:
-        entity_label: Time Triggered Rules
+        entity_label: Time Triggered
         repetition_time: Frequency
       event_triggered:
-        entity_label: Event Triggered Rules
+        entity_label: Event Triggered
     ui:
       create:              Create
       ok:                  Ok
