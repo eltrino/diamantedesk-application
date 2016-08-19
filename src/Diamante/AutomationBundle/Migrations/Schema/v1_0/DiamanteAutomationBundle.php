@@ -1,16 +1,17 @@
 <?php
 
-namespace Diamante\AutomationBundle\Migrations\Schema;
+namespace Diamante\AutomationBundle\Migrations\Schema\v1_0;
 
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 /**
- * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassLength)
+ * Class DiamanteAutomationBundle
+ *
+ * @package Diamante\AutomationBundle\Migrations\Schema\v1_0
  */
-class DiamanteAutomationBundleInstaller implements Installation
+class DiamanteAutomationBundle implements Installation
 {
     /**
      * {@inheritdoc}
