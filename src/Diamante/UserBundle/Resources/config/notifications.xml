@@ -10,11 +10,11 @@
     </parameters>
 
     <services>
-        <service id="diamante.user.created.option_provider" class="%diamante.user.created.option_provider.class%">
+        <service id="diamante.user.created.option_provider" class="%diamante.user.created.option_provider.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
 
-        <service id="diamante.user.force_reset.option_provider" class="%diamante.user.force_reset.option_provider.class%">
+        <service id="diamante.user.force_reset.option_provider" class="%diamante.user.force_reset.option_provider.class%" parent="diamante_desk.notification.option_provider.abstract_provider">
             <tag name="diamante.notification.options.provider"/>
         </service>
     </services>

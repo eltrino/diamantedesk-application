@@ -18,18 +18,14 @@ namespace Diamante\UserBundle\Infrastructure\Notification\OptionProvider;
 
 use Diamante\DeskBundle\Infrastructure\Notification\OptionsProviderInterface;
 use Diamante\UserBundle\Entity\DiamanteUser;
+use Diamante\DeskBundle\Infrastructure\Notification\OptionsProvider;
 
-class ForceReset implements OptionsProviderInterface
+class ForceReset extends OptionsProvider implements OptionsProviderInterface
 {
     const HTML_TEMPLATE = 'DiamanteUserBundle:Notification:ForceReset/reset.html.twig';
     const TXT_TEMPLATE  = 'DiamanteUserBundle:Notification:ForceReset/reset.txt.twig';
 
     const SUBJECT_IDENTIFIER = 'diamante.user.notification.force_reset';
-
-    /**
-     * @var DiamanteUser
-     */
-    protected $recipient;
 
     /**
      * @return string
@@ -56,34 +52,6 @@ class ForceReset implements OptionsProviderInterface
     }
 
     /**
-     * @param $recipient
-     * @return mixed|void
-     */
-    public function setRecipient($recipient)
-    {
-        if (!($recipient instanceof DiamanteUser)) {
-            throw new \RuntimeException('This notification should only be sent to Diamante Users');
-        }
-        $this->recipient = $recipient;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRecipientEmail()
-    {
-        return $this->recipient->getEmail();
-    }
-
-    /**
-     * @return string
-     */
-    public function getRecipientName()
-    {
-        return $this->recipient->getFullName();
-    }
-
-    /**
      * @return string
      */
     public function getSubject()
@@ -96,15 +64,7 @@ class ForceReset implements OptionsProviderInterface
      */
     public function getRequiredParams()
     {
-        return ['activation_hash'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function subjectIsTranslatable()
-    {
-        return true;
+        return array_merge(parent::getRequiredParams(), ['activation_hash']);
     }
 
     /**
