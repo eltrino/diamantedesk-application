@@ -1,0 +1,10 @@
+.diam-channels-info {
+    margin-top: 20px;
+}
+
+.diam-channels-image {
+    width: 13px;
+    height: 13px;
+    position: relative;
+    bottom: 1px;
+}

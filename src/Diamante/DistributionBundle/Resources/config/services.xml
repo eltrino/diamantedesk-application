@@ -13,6 +13,7 @@
         <parameter key="diamante.distribution.whitelist.provider.class">Diamante\DistributionBundle\Routing\Whitelist\WhitelistProviderImpl</parameter>
         <parameter key="oro_installer.scenario.class">Diamante\DistributionBundle\Installer\Process\InstallerScenario</parameter>
         <parameter key="diamante.setup.form.class">Diamante\DistributionBundle\Form\SetupType</parameter>
+        <parameter key="diamante.version.service.class">Diamante\DistributionBundle\Infrastructure\Version</parameter>
     </parameters>
 
     <services>
@@ -59,6 +60,10 @@
         <service id="diamante_installer_setup" class="%diamante.setup.form.class%">
             <argument type="string">Oro\Bundle\UserBundle\Entity\User</argument>
             <tag name="form.type" alias="diamante_installer_setup"/>
+        </service>
+
+        <service id="diamante.version.service" class="%diamante.version.service.class%">
+            <argument type="service" id="oro_platform.composer.local_repo_factory"/>
         </service>
     </services>
 </container>

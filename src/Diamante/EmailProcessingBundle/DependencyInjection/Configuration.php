@@ -56,7 +56,8 @@ class Configuration implements ConfigurationInterface
                 'mailbox_delete_processed_messages' => [
                     'value' => false,
                     'type' => 'bool'
-                ]
+                ],
+                'mailbox_help' => ['type' => 'array']
             )
         );
 

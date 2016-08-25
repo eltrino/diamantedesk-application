@@ -1,0 +1,8 @@
+{% block diamante_config_channels_help_widget %}
+    {{ form_widget(form) }}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'url': path('diamante_config_channels_help'),
+            'alias': 'diamante_config_channels_help'
+        }) }}
+{% endblock %}

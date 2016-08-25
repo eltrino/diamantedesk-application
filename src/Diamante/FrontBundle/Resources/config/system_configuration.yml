@@ -13,6 +13,10 @@ oro_system_configuration:
                     - No
                     - Yes
 
+        diamante_email_processing.mailbox_help:
+            data_type: block
+            type:  diamante_config_channels_help
+
     tree:
         system_configuration:
             platform:
@@ -25,3 +29,4 @@ oro_system_configuration:
                                         priority: 160
                                         children:
                                             - diamante_front.registration_required
+                                            - diamante_email_processing.mailbox_help
