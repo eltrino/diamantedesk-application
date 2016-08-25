@@ -58,7 +58,6 @@ diamante_automation:
             updatable: false
             conditions: ['eq', 'neq', 'like', 'not_like']
             accessor: diamante.ticket.email_processing_message_reference.repository::getEndpointByTicket
-            rules: ['event_triggered']
           created_at:
             frontend_label: diamante.desk.ticket.since_created.label
             type: datetime
