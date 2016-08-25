@@ -22,10 +22,10 @@ diamante_automation:
         assignee:
           eq:
             service: diamante_automation.generic.condition_builder
-            method: getAssigneeCondition
+            method: getAssigneeEqCondition
           neq:
             service: diamante_automation.generic.condition_builder
-            method: getAssigneeCondition
+            method: getAssigneeNeqCondition
         reporter_email:
           like:
             service: diamante_automation.generic.condition_builder

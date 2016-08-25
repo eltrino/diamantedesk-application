@@ -199,10 +199,34 @@ class ConditionBuilder
      *
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
-    public function getAssigneeCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
+    public function getAssigneeEqCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
     {
         if (self::UNASSIGNED == $value) {
             $condition = $qb->expr()->isNull(sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName));
+        } else {
+            $condition = call_user_func_array(
+                [$qb->expr(), $expr],
+                [sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName), sprintf("?%d", $parameterNumber)]
+            );
+            $qb->setParameter($parameterNumber, User::fromString($value)->getId());
+        }
+
+        return $condition;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string       $expr
+     * @param string       $fieldName
+     * @param string       $value
+     * @param integer      $parameterNumber
+     *
+     * @return \Doctrine\ORM\Query\Expr\Comparison
+     */
+    public function getAssigneeNeqCondition(QueryBuilder $qb, $expr, $fieldName, $value, $parameterNumber)
+    {
+        if (self::UNASSIGNED == $value) {
+            $condition = $qb->expr()->isNotNull(sprintf("%s.%s", TargetProvider::TARGET_ALIAS, $fieldName));
         } else {
             $condition = call_user_func_array(
                 [$qb->expr(), $expr],
