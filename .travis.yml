@@ -23,11 +23,9 @@ before_install:
 install:
   - composer install --prefer-source --profile --no-interaction
 
-script: if [ "$TRAVIS_PHP_VERSION" != "7.0" ] && [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then vendor/bin/phpunit --testsuite Unit --coverage-clover=build/coverage.clover; else vendor/bin/phpunit --testsuite Unit; fi
+script: 
 
 after_script:
-  - if [ -e build/coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar -O build/ocular.phar; fi
-  - if [ -e build/coverage.clover ]; then php build/ocular.phar code-coverage:upload --format=php-clover build/coverage.clover; fi
 
 before_deploy:
   - rm -rf app/cache/*
