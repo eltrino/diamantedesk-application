@@ -14,6 +14,14 @@
  */
 namespace Diamante\FrontBundle\Infrastructure;
 
+use Diamante\DeskBundle\Infrastructure\Notification\NotificationManager;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+
+/**
+ * Class RegistrationMailer
+ *
+ * @package Diamante\FrontBundle\Infrastructure
+ */
 class RegistrationMailer implements \Diamante\FrontBundle\Model\RegistrationMailer
 {
     /**
@@ -25,6 +33,11 @@ class RegistrationMailer implements \Diamante\FrontBundle\Model\RegistrationMail
      * @var \Swift_Mailer
      */
     private $mailer;
+
+    /**
+     * @var ConfigManager
+     */
+    protected $config;
 
     /**
      * @var string
@@ -41,15 +54,27 @@ class RegistrationMailer implements \Diamante\FrontBundle\Model\RegistrationMail
      */
     private $txtTwigTemplate;
 
+    /**
+     * RegistrationMailer constructor.
+     *
+     * @param \Twig_Environment $twig
+     * @param \Swift_Mailer     $mailer
+     * @param ConfigManager     $configManager
+     * @param                   $senderEmail
+     * @param                   $htmlTwigTemplate
+     * @param                   $txtTwigTemplate
+     */
     public function __construct(
         \Twig_Environment $twig,
         \Swift_Mailer $mailer,
+        ConfigManager $configManager,
         $senderEmail,
         $htmlTwigTemplate,
         $txtTwigTemplate
     ) {
         $this->twig = $twig;
         $this->mailer = $mailer;
+        $this->config = $configManager;
         $this->senderEmail = $senderEmail;
         $this->htmlTwigTemplate = $htmlTwigTemplate;
         $this->txtTwigTemplate  = $txtTwigTemplate;
@@ -66,7 +91,10 @@ class RegistrationMailer implements \Diamante\FrontBundle\Model\RegistrationMail
         /** @var \Swift_Message $confirmation */
         $confirmation = $this->mailer->createMessage();
         $confirmation->setSubject('Confirmation');
-        $confirmation->setFrom($this->senderEmail);
+        $confirmation->setFrom(
+            $this->config->get(NotificationManager::SENDER_EMAIL_CONFIG_PATH),
+            $this->config->get(NotificationManager::SENDER_NAME_CONFIG_PATH)
+        );
         $confirmation->setTo($email);
         $confirmation->setReplyTo($this->senderEmail);
 
