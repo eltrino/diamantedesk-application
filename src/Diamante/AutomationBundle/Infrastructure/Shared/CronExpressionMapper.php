@@ -19,7 +19,6 @@ namespace Diamante\AutomationBundle\Infrastructure\Shared;
 class CronExpressionMapper
 {
     protected static $expressionMap = [
-        '1m'    => '*/1 * * * *',
         '5m'    => '*/5 * * * *',
         '10m'   => '*/10 * * * *',
         '15m'   => '*/15 * * * *',
@@ -49,7 +48,7 @@ class CronExpressionMapper
     public static function getFrontendOptionsConfig()
     {
         return [
-            'm' => [1, 5, 10, 15, 20, 30],
+            'm' => [5, 10, 15, 20, 30],
             'h' => [1, 2, 4, 8, 12, 24],
             'd' => [3, 7, 25, 30]
         ];
