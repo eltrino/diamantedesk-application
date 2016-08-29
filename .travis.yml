@@ -23,7 +23,7 @@ before_install:
 install:
   - composer install --prefer-source --profile --no-interaction
 
-script: 
+script: vendor/bin/phpunit --version
 
 after_script:
 
