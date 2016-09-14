@@ -101,5 +101,5 @@ reports:
                     - closed
                     - reopen
         source:
-            type: dql
-            dql: "select date(ttl.date) as day, sum(ttl.new), sum(ttl.closed), sum(ttl.reopen) from Diamante\\DeskBundle\\Entity\\TicketTimeline ttl GROUP BY day"
+            type: repository
+            repository: "Diamante\\DeskBundle\\Infrastructure\\Persistence\\DoctrineReportRepository::getTicketTimelineData"

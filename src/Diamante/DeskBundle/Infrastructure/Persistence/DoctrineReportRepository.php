@@ -178,6 +178,14 @@ class DoctrineReportRepository
         group by day");
     }
 
+    public function getTicketTimelineData()
+    {
+        return $this->execute("select date(ttl.date) day,
+          sum(ttl.new) new,
+          sum(ttl.closed) closed,
+          sum(ttl.reopen) reopen from diamante_ticket_timeline ttl GROUP BY day");
+    }
+
     /**
      * @param $sql
      * @return array
