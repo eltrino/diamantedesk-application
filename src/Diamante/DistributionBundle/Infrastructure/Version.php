@@ -23,7 +23,7 @@ use Oro\Bundle\PlatformBundle\Composer\LocalRepositoryFactory;
  */
 class Version
 {
-    const DIAMANTE_VERSION = '2.0.0';
+    const DIAMANTE_VERSION = '2.0.1';
 
     /**
      * @var LocalRepositoryFactory
