@@ -1,14 +1,15 @@
-{%- macro scrollToDesctiption() -%}
+{%- macro scrollToDesctiption(id) -%}
     <script type="text/javascript">
         require(['jquery', 'underscore'],
             function ($, _) {
                 $('body').on('focusin', function (elem) {
                     var targetId = $(elem.target).attr('id');
 
-                    if (!_.isEmpty(targetId) && (targetId.indexOf('diamante_ticket_form_description') !== -1
-                        || targetId.indexOf('diamante_ticket_update_form_description') !== -1)) {
-                        var url = location.href;
-                        location.href = '#scroll-2-41';
+                    if (!_.isEmpty(targetId) && targetId == '{{ id }}') {
+                        var href = $('#ticketDetails .nav li:last-child a').attr('href'),
+                            url = location.href;
+
+                        location.href = href;
                         history.replaceState(null,null,url);
                     }
                 });
