@@ -133,6 +133,12 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
      */
     private $oroUserRepository;
 
+    /**
+     * @var \Doctrine\DBAL\Connection
+     * @Mock \Doctrine\DBAL\Connection
+     */
+    private $connection;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -254,6 +260,15 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
 
         $this->em
+            ->expects($this->any())
+            ->method('getConnection')
+            ->will($this->returnValue($this->connection));
+
+        $this->connection
+            ->expects($this->once())
+            ->method('beginTransaction');
+
+        $this->em
             ->expects($this->once())
             ->method('persist')
             ->with($this->equalTo($ticket));
@@ -319,6 +334,15 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
         $this->ticketBuilder->expects($this->once())->method('build')->will($this->returnValue($ticket));
 
         $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('getConnection')
+            ->will($this->returnValue($this->connection));
+
+        $this->connection
+            ->expects($this->once())
+            ->method('beginTransaction');
 
         $this->em
             ->expects($this->once())
@@ -397,6 +421,15 @@ class TicketServiceImplTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->doctrineRegistry->expects($this->any())->method('getManager')->will($this->returnValue($this->em));
+
+        $this->em
+            ->expects($this->any())
+            ->method('getConnection')
+            ->will($this->returnValue($this->connection));
+
+        $this->connection
+            ->expects($this->once())
+            ->method('beginTransaction');
 
         $this->em
             ->expects($this->once())
