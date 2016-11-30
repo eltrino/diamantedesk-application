@@ -16,12 +16,16 @@ namespace Diamante\DeskBundle\Tests\Infrastructure\Ticket\EmailProcessing;
 
 use Diamante\DeskBundle\Entity\Branch;
 use Diamante\DeskBundle\Infrastructure\Ticket\EmailProcessing\TicketStrategy;
+use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\EmailProcessingBundle\Model\Message;
 use Diamante\UserBundle\Model\User;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
+use \Diamante\DeskBundle\Tests\EntityBuilderTrait;
 
 class TicketStrategyTest extends \PHPUnit_Framework_TestCase
 {
+    use EntityBuilderTrait;
+
     const DEFAULT_BRANCH_ID  = 1;
     const DUMMY_BRANCH_ID    = 1;
 
@@ -87,6 +91,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $defaultBranch;
 
+    /**
+     * @var \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
+     * @Mock \Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReferenceRepository
+     */
+    private $messageReferenceRepository;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
@@ -97,7 +107,8 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             $this->oroUserManager,
             $this->configManager,
             $this->userService,
-            $this->branchRepository
+            $this->branchRepository,
+            $this->messageReferenceRepository
         );
     }
 
@@ -107,7 +118,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $diamanteUser = $this->getReporter(1);
+        $diamanteUser = $this->createReporter(1);
 
         $this->userService->expects($this->once())
             ->method('getUserByEmail')
@@ -200,7 +211,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $diamanteUser = $this->getReporter(1);
+        $diamanteUser = $this->createReporter(1);
 
         $this->userService->expects($this->once())
             ->method('getUserByEmail')
@@ -244,7 +255,7 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO);
 
         $assigneeId = 1;
-        $diamanteUser = $this->getReporter(1);
+        $diamanteUser = $this->createReporter(1);
 
         $this->userService->expects($this->once())
             ->method('getUserByEmail')
@@ -282,13 +293,12 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
         $this->ticketStrategy->process($message);
     }
 
-
     public function testProcessWhenMessageWithReference()
     {
         $message = new Message(self::DUMMY_UNIQUE_ID, self::DUMMY_MESSAGE_ID, self::DUMMY_SUBJECT,
             self::DUMMY_CONTENT, $this->getDummyFrom(), self::DUMMY_MESSAGE_TO, self::DUMMY_REFERENCE);
 
-        $diamanteUser = $this->getReporter(1);
+        $diamanteUser = $this->createReporter(1);
 
         $this->userService->expects($this->once())
             ->method('getUserByEmail')
@@ -296,23 +306,19 @@ class TicketStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(self::DUMMY_MESSAGE_FROM)
             )->will($this->returnValue($diamanteUser));
 
+        $this->messageReferenceRepository->expects($this->once())
+            ->method('getReferenceByMessageId')
+            ->with(
+                $this->equalTo(self::DUMMY_REFERENCE)
+            )
+            ->will($this->returnValue($this->getMessageReference()));
 
-        $reporter = $this->getReporter($diamanteUser->getId());
+        $reporter = $this->createReporter($diamanteUser->getId());
 
         $this->messageReferenceService->expects($this->once())
             ->method('createCommentForTicket')
             ->with($this->equalTo($message->getContent()), $reporter, $message->getReference());
 
         $this->ticketStrategy->process($message);
-    }
-
-    private function getReporter($id)
-    {
-        return new User($id, User::TYPE_DIAMANTE);
-    }
-
-    private function getDummyFrom()
-    {
-        return new Message\MessageSender(self::DUMMY_MESSAGE_FROM, 'Dummy User');
     }
 }
