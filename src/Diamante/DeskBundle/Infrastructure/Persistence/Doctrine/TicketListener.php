@@ -43,12 +43,11 @@ class TicketListener
      * @ORM\PreUpdate
      *
      * @param Ticket             $ticket
-     * @param LifecycleEventArgs $event
      *
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
      */
-    public function prePersistHandler(Ticket $ticket, LifecycleEventArgs $event)
+    public function prePersistHandler(Ticket $ticket)
     {
         $this->reporterEmailSetter($ticket);
 

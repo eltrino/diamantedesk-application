@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 use Diamante\DeskBundle\Model\Ticket\TicketSequenceNumber;
 use Diamante\DeskBundle\Model\Ticket\UniqueId;
+use Diamante\DeskBundle\Tests\EntityBuilderTrait;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Eltrino\PHPUnit\MockAnnotations\MockAnnotations;
@@ -28,6 +29,8 @@ use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
 class TicketListenerTest extends \PHPUnit_Framework_TestCase
 {
+    use EntityBuilderTrait;
+
     /**
      * @var TicketListener
      */
@@ -39,10 +42,22 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $objectManager;
 
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @Mock \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var \Diamante\UserBundle\Api\UserService
+     * @Mock \Diamante\UserBundle\Api\UserService
+     */
+    private $diamanteUserService;
+
     protected function setUp()
     {
         MockAnnotations::init($this);
-        $this->listener = new TicketListener();
+        $this->listener = new TicketListener($this->container);
     }
 
     public function testPrePersistHandler()
@@ -50,12 +65,13 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
         $branchId = 1;
         $ticketSequenceNumberValue = 9;
         $branch = new BranchStub('DB', 'Dummy Branch', 'Desc');
+        $branch->setSequenceNumber(10);
         $branch->setId($branchId);
         $reporter = new User(1, User::TYPE_DIAMANTE);
 
         $ticket = new Ticket(
             new UniqueId('unique_id'),
-            new TicketSequenceNumber(null),
+            new TicketSequenceNumber(),
             'Subject',
             'Description',
             $branch,
@@ -67,18 +83,14 @@ class TicketListenerTest extends \PHPUnit_Framework_TestCase
         );
         $event = new LifecycleEventArgs($ticket, $this->objectManager);
 
-        $dqlQueryStr = "SELECT MAX(t.sequenceNumber) FROM DiamanteDeskBundle:Ticket t WHERE t.branch = :branchId";
+        $this->container->expects($this->once())
+            ->method('get')
+            ->with('diamante.user.service')
+            ->will($this->returnValue($this->diamanteUserService));
 
-        $query = $this->getMockBuilder('\Doctrine\ORM\AbstractQuery')
-            ->disableOriginalConstructor()
-            ->setMethods(array('setParameter', 'getSingleScalarResult'))
-            ->getMockForAbstractClass();
-
-        $this->objectManager->expects($this->once())->method('createQuery')->with($dqlQueryStr)
-            ->will($this->returnValue($query));
-        $query->expects($this->once())->method('setParameter')->with('branchId', $branchId)
-            ->will($this->returnValue($query));
-        $query->expects($this->once())->method('getSingleScalarResult')->will($this->returnValue($ticketSequenceNumberValue));
+        $this->diamanteUserService->expects($this->once())
+            ->method('getByUser')
+            ->will($this->returnValue($this->createDiamanteUser()));
 
         $this->listener->prePersistHandler($ticket, $event);
 

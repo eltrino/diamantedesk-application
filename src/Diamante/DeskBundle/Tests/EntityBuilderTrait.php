@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Model\Branch\Branch;
 use Diamante\UserBundle\Model\User;
 use Diamante\DeskBundle\Model\Ticket\EmailProcessing\MessageReference;
 use \Diamante\EmailProcessingBundle\Model\Message\MessageSender;
+use \Diamante\UserBundle\Entity\DiamanteUser;
 
 trait EntityBuilderTrait
 {
@@ -93,6 +94,11 @@ trait EntityBuilderTrait
     protected function createOroUser()
     {
         return new OroUser();
+    }
+
+    protected function createDiamanteUser()
+    {
+        return new DiamanteUser('dummy@mail.com', 'dummy_name', 'dummy_surname');
     }
 
     /**
