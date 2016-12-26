@@ -17,7 +17,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "http://packagist.orocrm.com"
+            "url": "https://packagist.orocrm.com"
         }
     ],
     "config": {
@@ -34,7 +34,8 @@
         "zendframework/zend-mail": "~2.1.5",
         "ezyang/htmlpurifier": "4.6.*",
         "bordeux/email-cleaner": "0.6.*",
-        "michelf/php-markdown": "~1.4"
+        "michelf/php-markdown": "~1.4",
+        "hwi/oauth-bundle": "0.3.9 as 1.0"
 
     },
     "require-dev": {
