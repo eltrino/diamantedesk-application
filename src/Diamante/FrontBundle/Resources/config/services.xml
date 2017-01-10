@@ -27,6 +27,11 @@
         <parameter key="diamante.front.current_user.api.service.class">Diamante\FrontBundle\Api\Internal\CurrentUserApiServiceImpl</parameter>
         <parameter key="diamante.front.send_confirm.service.class">Diamante\FrontBundle\Api\Internal\SendConfirmationServiceImpl</parameter>
         <parameter key="diamante.front.translate.class">Diamante\FrontBundle\Controller\TranslateController</parameter>
+        <parameter key="diamante.front.js_translation.options" type="collection">
+            <parameter key="domains" type="collection">
+                <parameter>jsmessages</parameter>
+            </parameter>
+        </parameter>
     </parameters>
 
     <services>
@@ -83,7 +88,7 @@
             <argument type="service" id="translator.default"/>
             <argument type="service" id="templating"/>
             <argument type="string">DiamanteFrontBundle:Translation:translation.js.twig</argument>
-            <argument type="string">""</argument>
+            <argument>%diamante.front.js_translation.options%</argument>
         </service>
     </services>
 </container>
