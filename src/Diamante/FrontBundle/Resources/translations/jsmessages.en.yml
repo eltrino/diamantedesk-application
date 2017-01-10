@@ -1,0 +1,12 @@
+"Loading...": "Loading..."
+
+diamante:
+  front:
+    header:
+      new_ticket: New Ticket
+
+    session:
+      registration: Registration
+
+    footer:
+      copyright: Diamante is released under %{license} License by %{company}

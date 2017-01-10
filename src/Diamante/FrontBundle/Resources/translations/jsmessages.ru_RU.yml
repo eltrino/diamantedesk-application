@@ -1,0 +1,12 @@
+"Loading...": "Загрузка..."
+
+diamante:
+  front:
+    header:
+      new_ticket: Новый Тикет
+
+    session:
+      registration: Регистрация
+
+    footer:
+      copyright: Diamante выпущена под лицензией %{license} команией %{company}

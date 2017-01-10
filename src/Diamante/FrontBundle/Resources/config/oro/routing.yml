@@ -21,3 +21,9 @@ diamante_front_api_user:
     defaults:
         version:  latest
         _format:  json
+
+diamante_front_jstranslation:
+    path:      /js/diamante_translation/{_locale}.js
+    defaults:  { _controller:  diamante.front.translate.controller:indexAction }
+    options:
+        expose: true
