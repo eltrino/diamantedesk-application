@@ -19,24 +19,37 @@ define(['app'], function(App){
             this.model.newPassword(data)
               .done(function(){
                 App.trigger('session:login');
-                App.trigger('message:show',{ status: 'success', text:'Password successfully changed, you can use it to login'});
+                App.trigger('message:show',{
+                  status: 'success',
+                  text:__('diamante_front.session.controller.message.reset_success')
+                });
               })
               .fail(function(data, xhr){
                 App.trigger('session:reset');
-                App.alert({ title: 'Password Reset Failed', messages: ['Reset Code is invalid or expired'], xhr:xhr });
+                App.alert({
+                  title: __('diamante_front.session.controller.alert.reset_fail.title'),
+                  messages: [__('diamante_front.session.controller.alert.reset_fail.text')],
+                  xhr:xhr
+                });
               });
           } else {
             this.model.reset(data)
               .done(function(model){
-                App.alert({ title: 'Password Reset Info', status: 'info', messages: [{
-                  status:'info',
-                  text: 'We have sent you email to ' + model.get('email') + '.\n' +
-                  'Please click the link in that message to reset your password.'
-                }] });
+                App.alert({
+                  title: 'Password Reset Info',
+                  status: 'info',
+                  messages: [{
+                    status:'info',
+                    text: __('diamante_front.session.controller.alert.reset_info.text', {email: model.get(email)})
+                  }]
+                });
                 App.trigger('session:login');
               })
               .fail(function(model, xhr){
-                App.alert({ title: 'Password Reset Failed', xhr: xhr });
+                App.alert({
+                  title: __('diamante_front.session.controller.alert.reset_fail.title'),
+                  xhr: xhr
+                });
               });
           }
         });

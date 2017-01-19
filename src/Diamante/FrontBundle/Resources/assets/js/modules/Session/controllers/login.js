@@ -12,7 +12,10 @@ define(['app'], function(App){
 
         loginView.on('form:submit', function(data){
           this.model.login(data).fail(function(model, xhr){
-            App.alert({ title: "Authorization Failed", xhr: xhr });
+            App.alert({
+              title: __('diamante_front.session.controller.alert.login_fail.title'),
+              xhr: xhr
+            });
           });
         });
 

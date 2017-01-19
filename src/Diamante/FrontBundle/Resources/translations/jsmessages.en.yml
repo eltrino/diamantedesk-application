@@ -1,12 +1,79 @@
 "Loading...": "Loading..."
 
-diamante:
-  front:
-    header:
+diamante_front:
+  header:
+    template:
       new_ticket: New Ticket
 
-    session:
-      registration: Registration
-
-    footer:
+  footer:
+    template:
       copyright: Diamante is released under %{license} License by %{company}
+
+  session:
+    controller:
+      alert:
+        confirm_success:
+          title: Email Confirmation Success
+          text: You may login and use application
+        reconfirm_succes:
+          title: Email Confirmation Success
+          text: We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+        confirm_fail:
+          title: Email Confirmation Failed
+          text: Activation code is wrong
+        login_fail:
+          title: Authorization Failed
+        register_succes:
+          title: Registration Success
+          text: Thank you. We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+        register_fail:
+          title: Registration Failed
+        reset_info:
+          title: Password Reset Info
+          text: We have sent you email to %{email}.</br>Please click the link in that message to reset your password.
+        reset_fail:
+          title: Password Reset Failed
+          text: Reset Code is invalid or expired
+      message:
+        resset_success: Password successfully changed, you can use it to login
+
+    model:
+      alert:
+        auth_required:
+          title: Authorization Required
+          text: This action requires authorization
+      error:
+        required: Can't be blank
+        email_format: '"%{email}" is not a valid email'
+        password_length: Must be at least six (6) symbols
+
+    template:
+      register: Registration
+      login: Sign In
+      forgot: Amnesia?
+      remember: Remember me
+      back:
+        register: Already have an account? &mdash; <a href="%{url}">Sign In</a>
+        reset: Back to <a href="%{url}">Sign in</a>
+      label:
+        email: Email
+        first_name: First Name
+        last_name: Last Name
+        password: Password
+        new_password: New Password
+      placeholder:
+        email: Enter Email
+        first_name: Enter First Name
+        last_name: Enter Last Name
+        password: Enter Password
+        new_password: Enter New Password
+      button:
+        login: Sign In
+        register: Continue
+        reset_password: Reset Password
+        new_password: Set New Password
+
+    title:
+      login: Login
+      register: Registration
+      reset: Reset Password
