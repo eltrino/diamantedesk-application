@@ -1,13 +1,27 @@
 "Loading...": "Loading..."
 
 diamante_front:
-  header:
+  common:
     template:
-      new_ticket: New Ticket
+      close: Close
+      cancel: Cancel
+      sort: Sort By
+
+    view:
+      alert:
+        title: Error
+        text: An unprocessed error happened. Please try again!
+      model:
+        title: Modal Window
+        submit: Save changes
 
   footer:
     template:
       copyright: Diamante is released under %{license} License by %{company}
+
+  header:
+    template:
+      new_ticket: New Ticket
 
   session:
     controller:
