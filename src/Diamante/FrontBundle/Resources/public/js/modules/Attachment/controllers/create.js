@@ -21,7 +21,7 @@ define(['app'], function(App){
               attachmentCollection.add(collection, { ticket: options.ticket });
               App.trigger('message:show', {
                 status:'success',
-                text: 'Files attached successfully'
+                text: __('diamante_front.attachment.controller.message.attach_success')
               });
               Create.Controller(options);
             }
