@@ -49,7 +49,7 @@ diamante_front:
           title: Password Reset Failed
           text: Reset Code is invalid or expired
       message:
-        resset_success: Password successfully changed, you can use it to login
+        reset_success: Password successfully changed, you can use it to login
 
     model:
       alert:
