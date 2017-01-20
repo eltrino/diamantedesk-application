@@ -1,6 +1,34 @@
 "Loading...": "Loading..."
 
 diamante_front:
+  attachment:
+    controller:
+      alert:
+        delete_error:
+          title: Delete Attachment Error
+      message:
+         attach_success: Files attached successfully
+         delete_success: File deleted successfully
+
+    model:
+      alert:
+        add_error:
+          title: Add Attachments Error
+
+    template:
+      dropzone:
+        dropfiles: Drop files here to attach
+        attachfiles: Click here to attach files
+        read: Reading...
+        send: Sending...
+        receive: Receiving...
+      button:
+        remove: Remove Attachment
+      link:
+        download: Download:
+      header:
+        file: File Attachments
+
   common:
     template:
       close: Close
@@ -15,33 +43,6 @@ diamante_front:
         title: Modal Window
         submit: Save changes
 
-  attachment:
-      controller:
-        alert:
-          delete_error:
-            title: Delete Attachment Error
-        message:
-           attach_success: Files attached successfully
-           delete_success: File deleted successfully
-
-      model:
-        alert:
-          add_error:
-            title: Add Attachments Error
-
-      template:
-        dropzone:
-          dropfiles: Drop files here to attach
-          attachfiles: Click here to attach files
-          read: Reading...
-          send: Sending...
-          receive: Receiving...
-        button:
-          remove: Remove Attachment
-        link:
-          download: Download:
-        header:
-          file: File Attachments
 
 
   footer:
