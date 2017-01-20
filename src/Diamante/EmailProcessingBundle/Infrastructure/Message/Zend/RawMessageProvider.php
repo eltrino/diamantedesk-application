@@ -30,9 +30,10 @@ class RawMessageProvider extends AbstractMessageProvider implements MessageProvi
     private $converter;
 
     /**
-     * @param string $input
+     * @param $input
+     * @param MessageConverter $converter
      */
-    public function __construct($input, MessageConverter $converter)
+    public function setRawStorage($input, MessageConverter $converter)
     {
         $this->validate($input);
         $this->input           = $input;

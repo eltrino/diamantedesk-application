@@ -16,9 +16,15 @@ namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
 
 use Diamante\EmailProcessingBundle\Model\Message\MessageSender;
 use Diamante\EmailProcessingBundle\Model\Message\MessageRecipient;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
 abstract class AbstractMessageProvider
 {
+    /**
+     * @var ConfigManager
+     */
+    private $configManager;
+
     /**
      * Retrieves Message ID
      *
@@ -52,7 +58,13 @@ abstract class AbstractMessageProvider
      */
     public function processTo($headers)
     {
-        $messageTo = $headers->get('to')->getAddressList()->key();
+        $to = $headers->get('to');
+        if($to) {
+            $messageTo = $to->getAddressList()->key();
+        } else {
+            $messageTo = $this->configManager->get('diamante_email_processing.mailbox_username');
+        }
+
         return $messageTo;
     }
 
@@ -95,5 +107,13 @@ abstract class AbstractMessageProvider
             $messageReference = $matches[1];
         }
         return $messageReference;
+    }
+
+    /**
+     * @param ConfigManager $configManager
+     */
+    public function setConfigManager(ConfigManager $configManager)
+    {
+        $this->configManager = $configManager;
     }
 } 

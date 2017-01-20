@@ -21,6 +21,16 @@ use Diamante\EmailProcessingBundle\Model\Message\MessageProviderFactory;
 class ZendImapMessageProviderFactory implements MessageProviderFactory
 {
     /**
+     * @var ImapMessageProvider
+     */
+    public $imapMessageProvider;
+
+    public function __construct(ImapMessageProvider $imapMessageProvider)
+    {
+        $this->imapMessageProvider = $imapMessageProvider;
+    }
+
+    /**
      * Create message provider
      * @param array $params
      * @return MessageProvider
@@ -32,6 +42,9 @@ class ZendImapMessageProviderFactory implements MessageProviderFactory
         } elseif (isset($params['ssl']) && false === $params['ssl']) {
             unset($params['ssl']);
         }
-        return new ImapMessageProvider(new \Zend\Mail\Storage\Imap($params));
+
+        $this->imapMessageProvider->setImapStorage(new \Zend\Mail\Storage\Imap($params));
+
+        return $this->imapMessageProvider;
     }
 }

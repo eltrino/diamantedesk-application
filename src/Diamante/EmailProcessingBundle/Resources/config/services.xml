@@ -27,6 +27,8 @@
         <parameter key="diamante.email_processing.message_processing_manager.class">Diamante\EmailProcessingBundle\Model\Service\MessageProcessingManager</parameter>
         <parameter key="diamante.email_processing.zend_imap_message_provider.factory.class">Diamante\EmailProcessingBundle\Infrastructure\Message\ZendImapMessageProviderFactory</parameter>
         <parameter key="diamante.email_processing.zend_raw_message_provider.factory.class">Diamante\EmailProcessingBundle\Infrastructure\Message\ZendRawMessageProviderFactory</parameter>
+        <parameter key="diamante.email_processing.imap_message_provider.class">Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\ImapMessageProvider</parameter>
+        <parameter key="diamante.email_processing.raw_message_provider.class">Diamante\EmailProcessingBundle\Infrastructure\Message\Zend\RawMessageProvider</parameter>
     </parameters>
 
     <services>
@@ -34,8 +36,13 @@
 
         <service id="diamante.email_processing.context" class="%diamante.email_processing.context.class%" />
 
-        <service id="diamante.email_processing.zend_imap_message_provider.factory" class="%diamante.email_processing.zend_imap_message_provider.factory.class%"/>
-        <service id="diamante.email_processing.zend_raw_message_provider.factory" class="%diamante.email_processing.zend_raw_message_provider.factory.class%"/>
+        <service id="diamante.email_processing.zend_imap_message_provider.factory" class="%diamante.email_processing.zend_imap_message_provider.factory.class%">
+            <argument type="service" strict="false" id="diamante.email_processing.imap_message_provider"/>
+        </service>
+
+        <service id="diamante.email_processing.zend_raw_message_provider.factory" class="%diamante.email_processing.zend_raw_message_provider.factory.class%">
+            <argument type="service" strict="false" id="diamante.email_processing.raw_message_provider"/>
+        </service>
 
         <service id="diamante.email_processing.filter.service" class="%diamante.email_processing.filter.service.class%"/>
 
@@ -56,6 +63,18 @@
 
         <service id="diamante.email_processing.mail_system_settings" class="%diamante.email_processing.mail_system_settings.class%">
             <argument type="service" id="oro_config.global"/>
+        </service>
+
+        <service id="diamante.email_processing.abstract_message_provider" abstract="true" scope="prototype">
+            <call method="setConfigManager">
+                <argument type="service" id="oro_config.manager"/>
+            </call>
+        </service>
+
+        <service id="diamante.email_processing.raw_message_provider" class="%diamante.email_processing.raw_message_provider.class%" parent="diamante.email_processing.abstract_message_provider" scope="prototype">
+        </service>
+
+        <service id="diamante.email_processing.imap_message_provider" class="%diamante.email_processing.imap_message_provider.class%" parent="diamante.email_processing.abstract_message_provider" scope="prototype">
         </service>
     </services>
 </container>

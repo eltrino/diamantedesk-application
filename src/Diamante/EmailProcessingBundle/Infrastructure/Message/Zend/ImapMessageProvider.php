@@ -39,7 +39,7 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
      */
     private $folderOfProcessedMessages;
 
-    public function __construct(
+    public function setImapStorage(
         \Zend\Mail\Storage\Imap $zendImapStorage,
         $batchSizeInBytes = self::BATCH_SIZE_OF_MESSAGES_IN_BYTES
     ) {
@@ -124,7 +124,8 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
     private function processContent($imapMessage)
     {
         $messageContent = null;
-        if ($imapMessage->isMultipart()) {
+
+        if (@$imapMessage->isMultipart()) {
             foreach (new \RecursiveIteratorIterator($imapMessage) as $part) {
                 $headers = $part->getHeaders();
                 if ($headers->get('contenttype')) {

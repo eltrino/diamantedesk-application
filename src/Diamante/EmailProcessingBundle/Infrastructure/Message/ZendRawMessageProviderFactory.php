@@ -23,6 +23,16 @@ use Diamante\EmailProcessingBundle\Model\MessageProcessingException;
 class ZendRawMessageProviderFactory implements MessageProviderFactory
 {
     /**
+     * @var RawMessageProvider
+     */
+    public $rawMessageProvider;
+
+    public function __construct(RawMessageProvider $rawMessageProvider)
+    {
+        $this->rawMessageProvider = $rawMessageProvider;
+    }
+
+    /**
      * Create message provider
      * @param array $params
      * @return MessageProvider
@@ -32,6 +42,9 @@ class ZendRawMessageProviderFactory implements MessageProviderFactory
         if (!isset($params['raw_message']) || false === is_string($params['raw_message'])) {
             throw new MessageProcessingException('Input raw message is missed or has a wrong type.');
         }
-        return new RawMessageProvider($params['raw_message'], new MessageConverter());
+
+        $this->rawMessageProvider->setRawStorage($params['raw_message'], new MessageConverter());
+
+        return $this->rawMessageProvider;
     }
 }
