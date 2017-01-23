@@ -16,12 +16,12 @@ define(['app'], function(App){
           success: function(){
             App.trigger('message:show', {
               status:'success',
-              text: 'Your comment was successfully deleted'
+              text: __('diamante_front.comment.controller.message.delete_success')
             });
           },
           error : function(model, xhr){
             App.alert({
-              title: "Delete Comment Error",
+              title: __('diamante_front.comment.controller.alert.delete_error.title'),
               xhr: xhr
             });
           }

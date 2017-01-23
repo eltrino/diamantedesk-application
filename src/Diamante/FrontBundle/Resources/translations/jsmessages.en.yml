@@ -29,6 +29,31 @@ diamante_front:
       header:
         file: File Attachments
 
+  comment:
+      controller:
+        alert:
+          create_error:
+            title: Create Comment Error
+          delete_error:
+            title: Delete Comment Error
+          edit_success:
+            title: Your comment has been edited
+
+        message:
+          post_success: Comment was posted successfully
+          delete_success: Your comment was successfully deleted
+      model:
+        error:
+          required: Can't be blank
+      template:
+        form:
+          add: Add Comment
+          cancel: Cancel
+          save: Save Changes
+        button:
+          edit: Edit Comment
+          delete: Delete Comment
+
   common:
     template:
       close: Close
