@@ -25,7 +25,7 @@ define([
           errors.email = '"' + attrs.email + '" is not a valid email';
         }
         if(!trim(attrs.email)) {
-          errors.email = "Can't be blank";
+          errors.email = __('Error_required');
         }
         if(!_.isEmpty(errors)){
           return errors;

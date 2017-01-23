@@ -198,6 +198,22 @@ diamante_front:
         submit_button: Submit
       logout: Log Out
 
+  watcher:
+    controller:
+      alert:
+        add_error:
+          title: Add Watcher Error
+        delete_comment_error:
+          title: Delete Comment Error
+      message:
+        add_success: A new watcher has been successfully added to the ticket
+        remove_success: A watcher has been removed from the ticket
+      add_watcher: Add Watcher
+    template:
+      email_watcher: Watcher Email
+      remove_watcher: Remove Watcher
+      add_watcher: Add Watcher
+
 
 
 
