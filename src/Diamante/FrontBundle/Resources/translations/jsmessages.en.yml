@@ -144,3 +144,19 @@ diamante_front:
       login: Login
       register: Registration
       reset: Reset Password
+
+  ticket:
+    controller:
+      alert:
+        create_error:
+          title: Create Ticket Error
+        edit_error:
+          title: Edit Ticket Error
+      message:
+        key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
+        ticket_update: Ticket %{ticket_update_id} updated
+      edit:
+        title: Edit Ticket%{ticket_id}
+      edit_ticket: Edit Ticket: %{key} - %{subject}
+
+
