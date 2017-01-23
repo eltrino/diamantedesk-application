@@ -49,14 +49,14 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
                   if(isChanged || data.password){
                     App.trigger('message:show', {
                       status: 'success',
-                      text: 'You have successfully updated your profile'
+                      text: __('diamante_front.user.controller.message.update_success')
                     });
                   }
                   modalEditView.$el.modal('hide');
                 }.bind(this),
                 error : function(model, xhr){
                   App.alert({
-                    title: "Edit User Error",
+                    title: __('diamante_front.user.controller.alert.edit_error.title'),
                     xhr : xhr
                   });
                 }

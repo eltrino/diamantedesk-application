@@ -24,7 +24,7 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!trim(attrs.content)) {
-          errors.content = __('diamante_front.comment.model.error.required');
+          errors.content = __('Error_required');
         }
         if(!_.isEmpty(errors)){
           return errors;

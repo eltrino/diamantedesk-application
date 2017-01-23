@@ -79,12 +79,12 @@ define([
             errors.email = __('diamante_front.session.model.error.email_format', {email: attrs.email});
           }
           if(!trim(attrs.email)) {
-            errors.email = __('diamante_front.session.model.error.required');
+            errors.email = __('Error_required');
           }
         }
         if(_.indexOf(options.ignore, 'password') === -1){
           if(!trim(attrs.password)) {
-            errors.password = __('diamante_front.session.model.error.required');
+            errors.password = __('Error_required');
           } else if(attrs.password.length < 6) {
             errors.password = __('diamante_front.session.model.error.password_length');
           }

@@ -1,4 +1,5 @@
 "Loading...": "Loading..."
+"Error_required": "Can't be blank"
 
 diamante_front:
   attachment:
@@ -42,9 +43,6 @@ diamante_front:
         message:
           post_success: Comment was posted successfully
           delete_success: Your comment was successfully deleted
-      model:
-        error:
-          required: Can't be blank
       template:
         form:
           add: Add Comment
@@ -110,7 +108,6 @@ diamante_front:
           title: Authorization Required
           text: This action requires authorization
       error:
-        required: Can't be blank
         email_format: '"%{email}" is not a valid email'
         password_length: Must be at least six (6) symbols
 
@@ -181,6 +178,29 @@ diamante_front:
         status: Status
     view:
       all_tickets: View all tickets
+
+  user:
+    controller:
+      message:
+        update_success: You have successfully updated your profile
+      alert:
+        edit_error:
+          title: Edit User Error
+    model:
+      error:
+        password: Must be at least six (6) symbols
+    template:
+      form:
+        first_name_label: First Name
+        last_name_label: Last Name
+        email_label: Email
+        password_label: New Password
+        submit_button: Submit
+      logout: Log Out
+
+
+
+
 
 
 
