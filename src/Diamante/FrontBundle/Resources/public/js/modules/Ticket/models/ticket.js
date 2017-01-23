@@ -23,11 +23,11 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!trim(attrs.subject)) {
-          errors.subject = __('Error_required');
+          errors.subject = __('diamante_front.ticket.model.error.required');
         }
         if(!trim(attrs.description) ||
             !trim(tinymce.get('description').getContent({format:'text'}))) {
-          errors.description = __('Error_required');
+          errors.description = __('diamante_front.ticket.model.error.required');
         }
         if(!_.isEmpty(errors)){
           return errors;

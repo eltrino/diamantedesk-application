@@ -29,6 +29,33 @@ diamante_front:
       header:
         file: File Attachments
 
+  comment:
+    controller:
+      alert:
+        create_error:
+          title: Create Comment Error
+        delete_error:
+          title: Delete Comment Error
+        edit_success:
+          title: Your comment has been edited
+
+      message:
+        post_success: Comment was posted successfully
+        delete_success: Your comment was successfully deleted
+
+    model:
+      error:
+        required: Can't be blank
+
+    template:
+      form:
+        add: Add Comment
+        cancel: Cancel
+        save: Save Changes
+      button:
+        edit: Edit Comment
+        delete: Delete Comment
+
   common:
     template:
       close: Close
@@ -119,3 +146,98 @@ diamante_front:
       login: Login
       register: Registration
       reset: Reset Password
+
+  ticket:
+    controller:
+      alert:
+        create_error:
+          title: Create Ticket Error
+        edit_error:
+          title: Edit Ticket Error
+      message:
+        key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
+        ticket_update: Ticket %{ticket_update_id} updated
+        status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
+        status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
+      edit:
+        title: Edit Ticket %{ticket_id}
+      edit_ticket: Edit Ticket: %{key} - %{subject}
+
+    model:
+      error:
+        required: Can't be blank
+
+    template:
+      empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
+      empty_search: There are no tickets matching your criteria.
+      empty_view: This ticket doesn't exist!
+      form:
+        subject_label: Ticket Subject
+        subject_placeholder: Short ticket summary
+        description_label: Description
+        description_placeholder: Provide a detailed description of your support request
+        priority_label: Priority
+        low_option: Low
+        medium_option: Medium
+        high_option: High
+      list:
+        key: Key
+        date: Date
+        subject: Subject
+        priority: Priority
+        status: Status
+
+    view:
+      all_tickets: View all tickets
+
+  user:
+    controller:
+      message:
+        update_success: You have successfully updated your profile
+      alert:
+        edit_error:
+          title: Edit User Error
+
+    model:
+      error:
+        required: Can't be blank
+        password_length: Must be at least six (6) symbols
+
+    template:
+      form:
+        first_name_label: First Name
+        last_name_label: Last Name
+        email_label: Email
+        password_label: New Password
+        submit_button: Submit
+      logout: Log Out
+
+  watcher:
+    controller:
+      alert:
+        add_error:
+          title: Add Watcher Error
+        delete_comment_error:
+          title: Delete Comment Error
+      message:
+        add_success: A new watcher has been successfully added to the ticket
+        remove_success: A watcher has been removed from the ticket
+      add_watcher: Add Watcher
+
+    model:
+      error:
+        required: Can't be blank
+        email_format: '"%{email}" is not a valid email'
+
+    template:
+      email_watcher: Watcher Email
+      remove_watcher: Remove Watcher
+      add_watcher: Add Watcher
+
+
+
+
+
+
+
+

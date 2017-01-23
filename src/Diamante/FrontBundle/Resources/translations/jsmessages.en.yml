@@ -1,5 +1,4 @@
 "Loading...": "Loading..."
-"Error_required": "Can't be blank"
 
 diamante_front:
   attachment:
@@ -31,26 +30,31 @@ diamante_front:
         file: File Attachments
 
   comment:
-      controller:
-        alert:
-          create_error:
-            title: Create Comment Error
-          delete_error:
-            title: Delete Comment Error
-          edit_success:
-            title: Your comment has been edited
+    controller:
+      alert:
+        create_error:
+          title: Create Comment Error
+        delete_error:
+          title: Delete Comment Error
+        edit_success:
+          title: Your comment has been edited
 
-        message:
-          post_success: Comment was posted successfully
-          delete_success: Your comment was successfully deleted
-      template:
-        form:
-          add: Add Comment
-          cancel: Cancel
-          save: Save Changes
-        button:
-          edit: Edit Comment
-          delete: Delete Comment
+      message:
+        post_success: Comment was posted successfully
+        delete_success: Your comment was successfully deleted
+
+    model:
+      error:
+        required: "Can't be blank"
+
+    template:
+      form:
+        add: Add Comment
+        cancel: Cancel
+        save: Save Changes
+      button:
+        edit: Edit Comment
+        delete: Delete Comment
 
   common:
     template:
@@ -108,6 +112,7 @@ diamante_front:
           title: Authorization Required
           text: This action requires authorization
       error:
+        required: Can't be blank
         email_format: '"%{email}" is not a valid email'
         password_length: Must be at least six (6) symbols
 
@@ -152,11 +157,16 @@ diamante_front:
       message:
         key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
         ticket_update: Ticket %{ticket_update_id} updated
-        status_closed: 'Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"'
-        status_open: 'Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"'
+        status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
+        status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
       edit:
-        title: Edit Ticket%{ticket_id}
+        title: Edit Ticket %{ticket_id}
       edit_ticket: Edit Ticket: %{key} - %{subject}
+
+    model:
+      error:
+        required: Can't be blank
+
     template:
       empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
       empty_search: There are no tickets matching your criteria.
@@ -176,6 +186,7 @@ diamante_front:
         subject: Subject
         priority: Priority
         status: Status
+
     view:
       all_tickets: View all tickets
 
@@ -186,9 +197,12 @@ diamante_front:
       alert:
         edit_error:
           title: Edit User Error
+
     model:
       error:
-        password: Must be at least six (6) symbols
+        required: Can't be blank
+        password_length: Must be at least six (6) symbols
+
     template:
       form:
         first_name_label: First Name
@@ -209,6 +223,12 @@ diamante_front:
         add_success: A new watcher has been successfully added to the ticket
         remove_success: A watcher has been removed from the ticket
       add_watcher: Add Watcher
+
+    model:
+      error:
+        required: Can't be blank
+        email_format: '"%{email}" is not a valid email'
+
     template:
       email_watcher: Watcher Email
       remove_watcher: Remove Watcher

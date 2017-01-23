@@ -12,13 +12,13 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!trim(attrs.email)) {
-          errors.email = __('Error_required');
+          errors.email = __('diamante_front.user.model.error.required');
         }
         if(_.indexOf(options.ignore, 'password') === -1){
           if(!trim(attrs.password)) {
-            errors.password = __('Error_required');
+            errors.password = __('diamante_front.user.model.error.required');
           } else if(attrs.password.length < 6) {
-            errors.password = __('diamante_front.user.model.error.password');
+            errors.password = __('diamante_front.user.model.error.password_length');
           }
         }
         if(!_.isEmpty(errors)){
