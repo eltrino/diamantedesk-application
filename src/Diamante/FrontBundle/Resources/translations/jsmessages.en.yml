@@ -155,8 +155,33 @@ diamante_front:
       message:
         key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
         ticket_update: Ticket %{ticket_update_id} updated
+        status_closed: 'Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"'
+        status_open: 'Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"'
       edit:
         title: Edit Ticket%{ticket_id}
       edit_ticket: Edit Ticket: %{key} - %{subject}
+    template:
+      empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
+      empty_search: There are no tickets matching your criteria.
+      empty_view: This ticket doesn't exist!
+      form:
+        subject_label: Ticket Subject
+        subject_placeholder: Short ticket summary
+        description_label: Description
+        description_placeholder: Provide a detailed description of your support request
+        priority_label: Priority
+        low_option: Low
+        medium_option: Medium
+        high_option: High
+      list:
+        key: Key
+        date: Date
+        subject: Subject
+        priority: Priority
+        status: Status
+    view:
+      all_tickets: View all tickets
+
+
 
 

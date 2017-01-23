@@ -64,7 +64,7 @@ define(['app'], function(App){
               function(){
                 App.trigger('message:show', {
                   status:'success',
-                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Closed"'
+                  text: __('diamante_front.ticket.controller.message.status_closed', {ticket_status_closed_id: ticketModel.get('key')})
                 });
               }
             );
@@ -76,7 +76,7 @@ define(['app'], function(App){
               function(){
                 App.trigger('message:show', {
                   status:'success',
-                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Open"'
+                  text: __('diamante_front.ticket.controller.message.status_open', {ticket_status_open_id: ticketModel.get('key')})
                 });
               }
             );
@@ -100,7 +100,7 @@ define(['app'], function(App){
             key = decodeURIComponent(link.href.replace(model.urlRoot,'').replace('/',''));
             App.trigger('message:show', {
               status:'info',
-              text: 'While we were actively working on your ticket, its key was changed to ' + key
+              text: __('diamante_front.ticket.controller.message.key_changed', {ticket_key_id: key})
             });
             App.trigger('ticket:view', key, backUrl);
           } else {
