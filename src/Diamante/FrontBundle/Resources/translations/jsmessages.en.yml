@@ -162,6 +162,7 @@ diamante_front:
       edit:
         title: Edit Ticket %{ticket_id}
       edit_ticket: Edit Ticket: %{key} - %{subject}
+      search_result: Search Result
 
     model:
       error:
@@ -189,6 +190,11 @@ diamante_front:
 
     view:
       all_tickets: View all tickets
+
+    router:
+      view_ticket: View Ticket
+      create_ticket: Create Ticket
+      edit_ticket: Edit Ticket
 
   user:
     controller:
