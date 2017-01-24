@@ -1,4 +1,4 @@
-33333333333333333333333333333333333333333333333333333333define(['app'], function(App){
+define(['app'], function(App){
 
   return App.module('Session', function(Session, App, Backbone, Marionette, $, _){
 

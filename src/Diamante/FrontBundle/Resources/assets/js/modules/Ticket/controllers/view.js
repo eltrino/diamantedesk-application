@@ -11,9 +11,9 @@ define(['app'], function(App){
         App.request('ticket:model', id).done(function(ticketModel){
 
           var ticketView = new View.ItemView({
-                model : ticketModel,
-                backUrl : backUrl
-              });
+            model : ticketModel,
+            backUrl : backUrl
+          });
 
           App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
 
@@ -61,24 +61,24 @@ define(['app'], function(App){
           ticketView.on('ticket:close', function(){
             ticketView.showLoader();
             ticketModel.save({'status':'closed'}, {patch : true, wait: true}).done(
-              function(){
-                App.trigger('message:show', {
-                  status:'success',
-                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Closed"'
-                });
-              }
+                function(){
+                  App.trigger('message:show', {
+                    status:'success',
+                    text: __('diamante_front.ticket.controller.message.status_closed', {ticket_status_closed_id: ticketModel.get('key')})
+                  });
+                }
             );
           });
 
           ticketView.on('ticket:open', function(){
             ticketView.showLoader();
             ticketModel.save({'status':'open'}, {patch : true, wait: true}).done(
-              function(){
-                App.trigger('message:show', {
-                  status:'success',
-                  text: 'Ticket ' + ticketModel.get('key') + ' status changed. Ticket status is "Open"'
-                });
-              }
+                function(){
+                  App.trigger('message:show', {
+                    status:'success',
+                    text: __('diamante_front.ticket.controller.message.status_open', {ticket_status_open_id: ticketModel.get('key')})
+                  });
+                }
             );
           });
 
@@ -100,7 +100,7 @@ define(['app'], function(App){
             key = decodeURIComponent(link.href.replace(model.urlRoot,'').replace('/',''));
             App.trigger('message:show', {
               status:'info',
-              text: 'While we were actively working on your ticket, its key was changed to ' + key
+              text: __('diamante_front.ticket.controller.message.key_changed', {ticket_key_id: key})
             });
             App.trigger('ticket:view', key, backUrl);
           } else {

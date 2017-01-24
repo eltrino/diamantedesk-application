@@ -6,9 +6,9 @@
     </div>
     <div class="col-xs-6 col-sm-4 col-sm-push-8 col-md-3 col-md-push-9 ticket-action">
         <% if(status !== 'closed'){ %>
-        <button type="button" class="btn btn-primary btn-block js-close-ticket">Resolve Ticket</button>
+        <button type="button" class="btn btn-primary btn-block js-close-ticket"><%= __('diamante_front.ticket.template.resolve_button') %></button>
         <% } else { %>
-        <button type="button" class="btn btn-primary btn-block js-open-ticket">Reopen Ticket</button>
+        <button type="button" class="btn btn-primary btn-block js-open-ticket"><%= __('diamante_front.ticket.template.reopen_button') %></button>
         <% } %>
     </div>
     <div class="col-xs-12 col-sm-8 col-sm-pull-4 col-md-9 col-md-pull-3 ticket-title">
@@ -23,20 +23,20 @@
         <div class="ticket-meta">
             <span class="key"><%= key %></span>
             <span class="createdAt"><%= created %></span>
-            <span class="priority">Priority: <span><%= priority %></span></span>
-            <span class="status">Status: <span><%= status %></span></span>
+            <span class="priority"><%= __('diamante_front.ticket.template.list.priority') %>: <span><%= priority %></span></span>
+            <span class="status"><%= __('diamante_front.ticket.template.list.status') %>: <span><%= status %></span></span>
         </div>
         <div class="ticket-description"><%= description %></div>
     </div>
     <div class="col-sm-4 col-md-3 ticket-aside">
         <div class="block" id="attachments">
-            Loading ...
+            <%= __('Loading...') %>
         </div>
         <div class="block" id="watchers">
-            Loading ...
+            <%= __('Loading...') %>
         </div>
     </div>
     <div class="col-sm-8 col-md-9 block" id="comments">
-        Loading ...
+        <%= __('Loading...') %>
     </div>
 </div>

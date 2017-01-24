@@ -52,7 +52,7 @@ define(['app'], function(App){
               },
               error : function(){
                 App.alert({
-                  title: "Create Ticket Error"
+                  title: __('diamante_front.ticket.controller.alert.create_error.title')
                 });
               }
             });

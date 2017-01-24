@@ -187,6 +187,8 @@ diamante_front:
         subject: Subject
         priority: Priority
         status: Status
+      resolve_button: Resolve Ticket
+      reopen_button: Reopen Ticket
 
     view:
       all_tickets: View all tickets
