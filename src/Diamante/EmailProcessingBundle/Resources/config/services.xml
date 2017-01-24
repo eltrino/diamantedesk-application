@@ -69,6 +69,9 @@
             <call method="setConfigManager">
                 <argument type="service" id="oro_config.manager"/>
             </call>
+            <call method="setLogger">
+                <argument type="service" id="monolog.logger.diamante"/>
+            </call>
         </service>
 
         <service id="diamante.email_processing.raw_message_provider" class="%diamante.email_processing.raw_message_provider.class%" parent="diamante.email_processing.abstract_message_provider" scope="prototype">

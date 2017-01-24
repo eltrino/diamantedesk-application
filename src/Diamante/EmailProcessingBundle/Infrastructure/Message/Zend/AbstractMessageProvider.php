@@ -14,6 +14,7 @@
  */
 namespace Diamante\EmailProcessingBundle\Infrastructure\Message\Zend;
 
+use Symfony\Bridge\Monolog\Logger;
 use Diamante\EmailProcessingBundle\Model\Message\MessageSender;
 use Diamante\EmailProcessingBundle\Model\Message\MessageRecipient;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
@@ -24,6 +25,11 @@ abstract class AbstractMessageProvider
      * @var ConfigManager
      */
     private $configManager;
+
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger
+     */
+    private $logger;
 
     /**
      * Retrieves Message ID
@@ -42,14 +48,36 @@ abstract class AbstractMessageProvider
     }
 
     /**
+     * Do not use $headers->get('from')->getAddressList()->current() if comma use between name and surname it
+     * parse email incorrect
+     *
      * @param \Zend\Mail\Headers $headers
      * @return MessageSender
      */
     public function processFrom($headers)
     {
-        $senderInfo = $headers->get('from')->getAddressList()->current();
+        try {
+            $from = $headers->toArray()['From'];
 
-        return new MessageSender($senderInfo->getEmail(), $senderInfo->getName());
+            preg_match('/^((?P<name>.*?)<(?P<namedEmail>[^>]+)>|(?P<email>.+))/', $from, $matches);
+
+            if (array_key_exists('email', $matches)) {
+                $email = explode(',', $matches['email'])[0];
+                $name = explode('@', $email)[0];
+            } else {
+                $name = $matches['name'];
+                $email = $matches['namedEmail'];
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw new \RuntimeException(sprintf('This %s email address is considered invalid.'), $email);
+            }
+
+            return new MessageSender($email, $name);
+        } catch (\RuntimeException $e) {
+            $this->logger->addError($e->getMessage());
+            throw new \RuntimeException($e->getMessage());
+        }
     }
 
     /**
@@ -115,5 +143,13 @@ abstract class AbstractMessageProvider
     public function setConfigManager(ConfigManager $configManager)
     {
         $this->configManager = $configManager;
+    }
+
+    /**
+     * @param Logger $logger
+     */
+    public function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
     }
 } 

@@ -50,10 +50,11 @@ class MessageSender implements Person
     protected function parseName($name)
     {
         if (!empty($name)) {
-            $name = trim($name, "\"");
+            $name = trim($name, "\" ");
             $name = $this->canonicalizeName($name);
 
             if (strpos($name, " ")) {
+                $name = preg_replace('!\s+!', ' ', $name);
                 list($firstName, $lastName) = explode(" ", $name);
             } else {
                 $firstName = $name;

@@ -61,8 +61,12 @@ class WsseProvider implements AuthenticationProviderInterface
      * @param EncoderFactoryInterface        $encoderFactory
      * @param \Symfony\Bridge\Monolog\Logger $logger
      */
-    public function __construct(UserProviderInterface $userProvider, Cache $nonceCache, EncoderFactoryInterface $encoderFactory, Logger $logger)
-    {
+    public function __construct(
+        UserProviderInterface $userProvider,
+        Cache $nonceCache,
+        EncoderFactoryInterface $encoderFactory,
+        Logger $logger
+    ) {
         $this->userProvider   = $userProvider;
         $this->nonceCache     = $nonceCache;
         $this->encoderFactory = $encoderFactory;
