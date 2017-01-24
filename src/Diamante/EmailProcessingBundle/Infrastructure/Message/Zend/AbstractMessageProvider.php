@@ -57,27 +57,38 @@ abstract class AbstractMessageProvider
     public function processFrom($headers)
     {
         try {
-            $from = $headers->toArray()['From'];
-
-            preg_match('/^((?P<name>.*?)<(?P<namedEmail>[^>]+)>|(?P<email>.+))/', $from, $matches);
-
-            if (array_key_exists('email', $matches)) {
-                $email = explode(',', $matches['email'])[0];
-                $name = explode('@', $email)[0];
-            } else {
-                $name = $matches['name'];
-                $email = $matches['namedEmail'];
-            }
-
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                throw new \RuntimeException(sprintf('This %s email address is considered invalid.'), $email);
-            }
+            list($name, $email) = $this->parseFrom($headers);
 
             return new MessageSender($email, $name);
         } catch (\RuntimeException $e) {
             $this->logger->addError($e->getMessage());
             throw new \RuntimeException($e->getMessage());
         }
+    }
+
+    /**
+     * @param \Zend\Mail\Headers $headers
+     * @return array
+     */
+    protected function parseFrom($headers)
+    {
+        $from = $headers->toArray()['From'];
+
+        preg_match('/^((?P<name>.*?)<(?P<namedEmail>[^>]+)>|(?P<email>.+))/', $from, $matches);
+
+        if (array_key_exists('email', $matches)) {
+            $email = explode(',', $matches['email'])[0];
+            $name = explode('@', $email)[0];
+        } else {
+            $name = $matches['name'];
+            $email = $matches['namedEmail'];
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \RuntimeException(sprintf('This %s email address is considered invalid.'), $email);
+        }
+
+        return [$name, $email];
     }
 
     /**
@@ -102,7 +113,7 @@ abstract class AbstractMessageProvider
      */
     public function processRecipients($headers)
     {
-        $processAddressTypes = ['to', 'cc', 'from'];
+        $processAddressTypes = ['to', 'cc'];
         $recipients = [];
 
         foreach ($processAddressTypes as $type) {
@@ -117,6 +128,9 @@ abstract class AbstractMessageProvider
                 $recipients[] = new MessageRecipient($address->getEmail(), null);
             }
         }
+
+        list($name, $email) = $this->parseFrom($headers);
+        $recipients[] = new MessageRecipient($email, $name);
 
         return $recipients;
     }
