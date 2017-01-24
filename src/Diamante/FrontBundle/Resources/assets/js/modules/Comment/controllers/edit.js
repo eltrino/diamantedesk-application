@@ -39,7 +39,7 @@ define(['app'], function(App){
                 commentView.$el.removeClass('is-editing');
                 App.trigger('message:show', {
                   status:'success',
-                  text: 'Your comment has been edited'
+                  text: __('diamante_front.comment.controller.alert.edit_success.title'),
                 });
               },
               error : function(model, xhr){

@@ -10,7 +10,7 @@ define(['app', 'helpers/wsse'], function(App, Wsse){
 
         var request = App.request('user:model:current'),
             modalEditView = new Edit.ModalView({
-              title: 'Edit User',
+              title: __('diamante_front.user.controller.edit_user'),
               submit: 'Submit'
             });
 

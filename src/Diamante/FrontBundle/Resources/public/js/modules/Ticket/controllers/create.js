@@ -46,7 +46,7 @@ define(['app'], function(App){
                 App.trigger('ticket:view', resultModel.get('key'));
                 App.trigger('message:show', {
                   status:'success',
-                  text: 'Ticket ' + resultModel.get('key') + ' created'
+                  text:  __('diamante_front.ticket.controller.message.create_ticket', {ticket_created_id: resultModel.get('key')})
                 });
                 modalCreateView.$el.modal('hide');
               },

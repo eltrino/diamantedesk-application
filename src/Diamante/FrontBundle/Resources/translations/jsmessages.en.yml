@@ -159,6 +159,7 @@ diamante_front:
         ticket_update: Ticket %{ticket_update_id} updated
         status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
         status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
+        create_ticket: Ticket %{ticket_created_id} created
       edit:
         title: Edit Ticket %{ticket_id}
       edit_ticket: Edit Ticket: %{key} - %{subject}
@@ -205,6 +206,7 @@ diamante_front:
       alert:
         edit_error:
           title: Edit User Error
+      edit_user: Edit User
 
     model:
       error:
