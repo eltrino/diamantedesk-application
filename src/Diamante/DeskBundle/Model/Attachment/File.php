@@ -78,4 +78,10 @@ class File
         $location = array_slice(explode("/", $this->getPathname()), -2);
         return sprintf("/%s/%s", $location[0], $location[1]);
     }
+
+    public function getFileSize()
+    {
+        $path = $this->getPathname();
+        return filesize($path);
+    }
 }

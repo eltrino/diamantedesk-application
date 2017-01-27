@@ -182,7 +182,9 @@ diamante:
           entity_label:        Attachment
           entity_plural_label: Attachments
           file:                File
+          files:               "{1}1 File|]1,Inf]%count% Files"
           image:               Image
+          download:            Download %filename%
           created_at.label:    Created at
           file.label:          File
           hash.label:          Hash

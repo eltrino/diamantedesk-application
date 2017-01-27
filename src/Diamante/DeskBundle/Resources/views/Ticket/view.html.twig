@@ -24,7 +24,7 @@
                     {% set avatar = get_gravatar(diamanteUser.email) %}
                 {% endif %}
             {% endif %}
-            <li class="diam-comment">
+            <li class="diam-comment{% if comment.private %} private{% endif %}">
                 <div class="pull-right">
                 {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
                     <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
@@ -37,14 +37,53 @@
                     {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
                     <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
                 </div>
-                <div class="diam-comment-meta">{{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }} {% if comment.private %}<span>private</span>{% endif %}</div>
+                <div class="diam-comment-meta">
+                    {% if comment.private %}<span>private</span>{% endif %}
+                    {{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }}
+                    {{ comment.createdAt|time_diff}}
+                    <small>({{ comment.createdAt|oro_format_datetime }})</small>
+                </div>
                 <div class="diam-comment-content">{{ comment.content|raw }}</div>
                 {% if comment.attachments is not empty %}
+                    {% set files_count = comment.attachments|length %}
                     <div class="diam-comment-attachments-box">
-                        <strong class="diam-comment-attachments-title">{{ 'diamante.desk.attachment.entity_plural_label'|trans }}:</strong>
+                        <strong class="diam-comment-attachments-title">
+                            {{ 'diamante.desk.attachment.entity_plural_label'|trans }}:
+                            <small>
+                                ({% transchoice files_count with {'%count%': files_count} %}
+                                diamante.desk.attachment.files
+                                {% endtranschoice %})
+                            </small>
+                        </strong>
                         <ul class="diam-comment-attachments unstyled">
                             {% for attachment in comment.attachments %}
-                                <li><i class="icon-paper-clip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
+                                <li class="diam-comment-attachment">
+                                    <a class="no-hash"
+                                       title="{{ 'diamante.desk.attachment.download'|trans({ '%filename%': attachment.filename|escape }) }}"
+                                       href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">
+                                        <figure>
+                                            <div class="diam-comment-attachment-preview">
+                                            {% set attachmentExtension = attachment.file.extension %}
+                                            {% set attachmentPreviewSrc = attachment.file.Pathname %}
+                                            {% if attachmentExtension == '' %}
+                                                <img src="{{ asset('bundles/diamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
+                                            {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
+                                            attachmentExtension == 'png' or attachmentExtension == 'gif')
+                                            %}
+                                                <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt="{{ attachment.filename|escape }}"/>
+                                            {% else %}
+                                                <img src="{{ asset('bundles/diamantedesk/img/file.png') }}" alt="{{
+                                                attachment.filename|escape }}" class="diam-comment-attachment-placeholder" />
+                                                <span class="diam-comment-attachment-label">{{ attachmentExtension }}</span>
+                                            {% endif %}
+                                            </div>
+                                            <figcaption>
+                                                <strong>{{ attachment.filename|escape }}</strong>
+                                                <small>({{ attachment.file.fileSize|bites_to_human }})</small>
+                                            </figcaption>
+                                        </figure>
+                                    </a>
+                                </li>
                             {% endfor %}
                         </ul>
                     </div>

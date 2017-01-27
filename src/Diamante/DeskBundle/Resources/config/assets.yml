@@ -1,4 +1,4 @@
 css:
   'diamantedesk':
-      - 'bundles/diamantedesk/css/diam.css'
+      - 'bundles/diamantedesk/css/diam.less'
       - 'bundles/diamantedesk/css/diam.widget.css'
