@@ -10,7 +10,9 @@
 
 {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Comment') %}
     <ol class="diam-comments unstyled">
+
         {% for comment in comments if comment.id  %}
+
             {% set imagePath = '' %}
             {% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
             {% if comment.author %}
@@ -222,14 +224,6 @@
                     }
                 }
             }
-        }) }}
-    {% endif %}
-    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
-        {{ UI.button({
-        'path': path('diamante_ticket_create'),
-        'iCss': 'icon-plus',
-        'title': 'diamante.desk.ticket.actions.create'|trans,
-        'label': 'diamante.desk.ticket.actions.create'|trans
         }) }}
     {% endif %}
 

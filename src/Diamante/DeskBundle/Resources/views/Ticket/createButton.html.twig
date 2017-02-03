@@ -1,0 +1,13 @@
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Ticket') %}
+    <div class="pull-right create-ticket">
+        {{ UI.button({
+            'path': path('diamante_ticket_create'),
+            'iCss': 'icon-plus',
+            'title': 'diamante.desk.ticket.actions.create'|trans,
+            'label': 'diamante.desk.ticket.actions.create'|trans
+        }) }}
+    </div>
+{% endif %}
+
+

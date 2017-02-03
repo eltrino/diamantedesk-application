@@ -6,6 +6,10 @@ placeholders:
     view_content_data_additional_information:
         items:
             diamante_orouser_ticket_grid: ~
+    pin_button:
+        items:
+            create_ticket_button:
+                order: 200
 
 items:
     default_branch_notification:
@@ -17,3 +21,5 @@ items:
     diamante_orouser_ticket_grid:
         template: DiamanteDeskBundle:OroUser:Grid.html.twig
         applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %oro_user.entity.class%)
+    create_ticket_button:
+        template: DiamanteDeskBundle:Ticket:createButton.html.twig
