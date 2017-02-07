@@ -57,7 +57,7 @@ class MessageProcessingManager implements ManagerInterface
             foreach ($strategies as $strategy) {
                 $this->processingContext->setStrategy($strategy);
                 try {
-                    if (!$message->isFailed() && !$message->isSystem()) {
+                    if (!$message->isFailed() && !$message->isSystem() && !$this->isEmailContainedInBlacklist($message)) {
                         $this->processingContext->execute($message);
                     }
 
@@ -76,5 +76,14 @@ class MessageProcessingManager implements ManagerInterface
         } else {
             $provider->markMessagesAsProcessed($processedMessages);
         }
+    }
+
+    public function isEmailContainedInBlacklist($message)
+    {
+        if (in_array($message->getFrom()->getEmail(), ['mailer-daemon@googlemail.com'])) {
+            return true;
+        }
+
+        return false;
     }
 }
