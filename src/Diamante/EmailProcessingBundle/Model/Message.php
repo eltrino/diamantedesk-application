@@ -75,17 +75,23 @@ class Message
     private $isSystem;
 
     /**
+     * @var bool
+     */
+    private $isAutoresponder;
+
+    /**
      * @param               $uniqueId
      * @param               string|null $messageId
      * @param               string|null $subject
      * @param               string|null $content
      * @param MessageSender $from
      * @param               string $to
-     * @param string|null          $reference
+     * @param string|null   $reference
      * @param array         $attachments
+     * @param array         $recipients
      * @param bool          $isFailed
      * @param bool          $isSystem
-     * @param array         $recipients
+     * @param bool          $isAutoresponder
      */
     public function __construct(
         $uniqueId,
@@ -96,21 +102,23 @@ class Message
         $to,
         $reference = null,
         array $attachments = null,
+        $recipients = null,
         $isFailed = false,
         $isSystem = true,
-        $recipients = null
+        $isAutoresponder = false
     ) {
-        $this->uniqueId    = $uniqueId;
-        $this->messageId   = $messageId;
-        $this->subject     = $subject;
-        $this->content     = $content;
-        $this->from        = $from;
-        $this->to          = $to;
-        $this->reference   = $reference;
-        $this->attachments = $attachments;
-        $this->isFailed    = $isFailed;
-        $this->isSystem    = $isSystem;
-        $this->recipients  = $recipients;
+        $this->uniqueId        = $uniqueId;
+        $this->messageId       = $messageId;
+        $this->subject         = $subject;
+        $this->content         = $content;
+        $this->from            = $from;
+        $this->to              = $to;
+        $this->reference       = $reference;
+        $this->attachments     = $attachments;
+        $this->recipients      = $recipients;
+        $this->isFailed        = $isFailed;
+        $this->isSystem        = $isSystem;
+        $this->isAutoresponder = $isAutoresponder;
     }
 
     /**
@@ -199,6 +207,14 @@ class Message
     public function isSystem()
     {
         return $this->isSystem;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutoresponder()
+    {
+        return $this->isAutoresponder;
     }
 
     /**

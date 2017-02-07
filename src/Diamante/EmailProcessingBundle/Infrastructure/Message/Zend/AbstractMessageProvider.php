@@ -29,7 +29,7 @@ abstract class AbstractMessageProvider
     /**
      * @var \Symfony\Bridge\Monolog\Logger
      */
-    private $logger;
+    protected $logger;
 
     /**
      * Retrieves Message ID
