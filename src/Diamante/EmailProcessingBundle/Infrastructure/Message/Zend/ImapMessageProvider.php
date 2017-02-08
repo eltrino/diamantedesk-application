@@ -112,22 +112,24 @@ class ImapMessageProvider extends AbstractMessageProvider implements MessageProv
         foreach ($autoresponderHeaders as $header => $value) {
             $headerEntity = $headers->get($header);
 
-            if ($headerEntity instanceof \ArrayIterator) {
-                foreach ($headerEntity->getArrayCopy() as $k => $nestedHeader) {
-                    if (!$nestedHeader instanceof HeaderInterface) {
-                        throw new MessageProcessingException('Expected type header ArrayIterator or HeaderInterface');
-                    }
+            if ($headerEntity) {
+                if ($headerEntity instanceof \ArrayIterator) {
+                    foreach ($headerEntity->getArrayCopy() as $k => $nestedHeader) {
+                        if (!$nestedHeader instanceof HeaderInterface) {
+                            throw new MessageProcessingException('Expected type header HeaderInterface');
+                        }
 
-                    if ($this->checkAutoresponder($nestedHeader, $value)) {
+                        if ($this->checkAutoresponder($nestedHeader, $value)) {
+                            return true;
+                        }
+                    }
+                } elseif ($headerEntity instanceof HeaderInterface) {
+                    if ($this->checkAutoresponder($headerEntity, $value)) {
                         return true;
                     }
+                } else {
+                    throw new MessageProcessingException('Expected type header ArrayIterator or HeaderInterface');
                 }
-            } elseif ($headerEntity instanceof HeaderInterface) {
-                if ($this->checkAutoresponder($headerEntity, $value)) {
-                    return true;
-                }
-            } else {
-                throw new MessageProcessingException('Expected type header ArrayIterator or HeaderInterface');
             }
         }
 
