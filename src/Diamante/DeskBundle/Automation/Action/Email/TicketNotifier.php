@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\Automation\Action\Email;
 use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
 use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
 use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
+use Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
@@ -80,7 +81,11 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
 
             if (array_key_exists('attachments', $changesetDiff)) {
                 $attachments = $changesetDiff['attachments']['new'];
-                $additionalOptions['attachments'] = $attachments;
+                /** @var AttachmentServiceImpl $attachmentService */
+                $attachmentService = $this->container->get('diamante.attachment.service');
+                foreach ($attachments as $attachmentHash) {
+                    $additionalOptions['attachments'][] = $attachmentService->getByHash($attachmentHash);
+                }
             }
 
             $changesetDiff = $this->unsetProperties($changesetDiff);

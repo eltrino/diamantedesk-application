@@ -31,6 +31,11 @@ class ChangesetBuilder
     protected $container;
 
     /**
+     * @var FieldProcessorProvider
+     */
+    protected $fieldProcessorProvider;
+
+    /**
      * ChangesetBuilder constructor.
      *
      * @param ContainerInterface $container
@@ -38,6 +43,7 @@ class ChangesetBuilder
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->fieldProcessorProvider = new FieldProcessorProvider();
     }
 
     /**
@@ -55,6 +61,7 @@ class ChangesetBuilder
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
             $value = $refProperty->getValue($entity);
+            $value = $this->fieldProcessorProvider->provideProcessor($name)->processField($value);
 
             $changeset[$name] = [null, $value];
         }
@@ -79,6 +86,7 @@ class ChangesetBuilder
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
             $new = $refProperty->getValue($entity);
+            $new = $this->fieldProcessorProvider->provideProcessor($name)->processField($new);
             $old = $new;
 
             if (array_key_exists($name, $uowChangeset)) {
@@ -106,6 +114,7 @@ class ChangesetBuilder
             $refProperty->setAccessible(true);
             $name = $refProperty->getName();
             $value = $refProperty->getValue($entity);
+            $value = $this->fieldProcessorProvider->provideProcessor($name)->processField($value);
 
             $changeset[$name] = [$value, $value];
         }

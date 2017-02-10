@@ -78,7 +78,7 @@
                             {% if attachments is defined and attachments is not empty %}
                                 <h4 style="font-size: 14px; font-weight: 200; margin: 15px 0;">Attachments:</h4>
                                 {% for key, value in attachments %}
-                                    <p style="font-size: 14px; font-weight: 200; line-height: 20px; margin: 0; padding: 0;">{{ value }}</p>
+                                    <p style="font-size: 14px; font-weight: 200; line-height: 20px; margin: 0; padding: 0;"><a href="{{ scheme ~ '://' ~ host }}{{ path('diamante_attachment_file_download', {'hash': value.getHash}) }}">{{ value.getFilename }}</a></p>
                                 {% endfor %}
                             {% endif %}
                         </td>

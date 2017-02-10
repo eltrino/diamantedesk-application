@@ -18,6 +18,7 @@ namespace Diamante\DeskBundle\Automation\Action\Email;
 use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
 use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
 use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
+use Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -142,7 +143,11 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
 
             if (array_key_exists('attachments', $changesetDiff)) {
                 $attachments = $changesetDiff['attachments']['new'];
-                $additionalOptions['attachments'] = $attachments;
+                /** @var AttachmentServiceImpl $attachmentService */
+                $attachmentService = $this->container->get('diamante.attachment.service');
+                foreach ($attachments as $attachmentHash) {
+                    $additionalOptions['attachments'][] = $attachmentService->getByHash($attachmentHash);
+                }
             }
 
             $changesetDiff = $this->unsetProperties($changesetDiff);
