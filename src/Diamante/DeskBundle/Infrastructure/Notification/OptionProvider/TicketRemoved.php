@@ -64,4 +64,12 @@ class TicketRemoved extends OptionsProvider implements OptionsProviderInterface
 
         return [];
     }
+
+    /**
+     * @return array
+     */
+    public function getHtmlOptions()
+    {
+        return ['html_options' => ['description']];
+    }
 }

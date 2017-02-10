@@ -284,7 +284,12 @@ class NotificationManager
         $provider = $this->providers[$name];
         $provider->setRecipient($recipient);
 
-        $templateOptions = array_merge($provider->getDefaultOptions(), $options, $this->getUrlOptions());
+        $templateOptions = array_merge(
+            $provider->getDefaultOptions(),
+            $options,
+            $this->getUrlOptions(),
+            $provider->getHtmlOptions()
+        );
 
         if (isset($options['target'])) {
             $templateOptions = array_merge($templateOptions, $provider->getAdditionalOptions($options['target']));

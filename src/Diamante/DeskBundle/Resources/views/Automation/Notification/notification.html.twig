@@ -42,19 +42,37 @@
                                         {% set new = attribute(value, 'new') %}
 
                                         {% if new is not null %}
-                                            <tr>
-                                                <td style="color: #A09F9F; font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; white-space: nowrap; vertical-align: top;" valign="top">{{ key|capitalize }}</td>
-                                                <td style="font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; vertical-align: top;" valign="top">
-                                                    {% if old is not null %}
-                                                        <del>{{ old|striptags }}</del><br />{{ new|striptags }}
-                                                    {% else %}
-                                                        {{ new|striptags }}
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
+                                            {% if key not in html_options %}
+                                                <tr>
+                                                    <td style="color: #A09F9F; font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; white-space: nowrap; vertical-align: top;" valign="top">{{ key|capitalize }}</td>
+                                                    <td style="font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; vertical-align: top;" valign="top">
+                                                        {% if old is not null %}
+                                                            <del>{{ old|striptags }}</del><br/>{{ new|striptags }}
+                                                        {% else %}
+                                                            {{ new|striptags }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                 </table>
+                                <br/>
+                                {% for key, value in changes %}
+                                    {% set old = attribute(value, 'old') %}
+                                    {% set new = attribute(value, 'new') %}
+
+                                    {% if new is not null %}
+                                        {% if key in html_options %}
+                                            <p style="color: #A09F9F; font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; white-space: nowrap; vertical-align: top;">{{ key|capitalize }}:</p>
+                                            {% if old is not null %}
+                                                <del>{{ old|striptags }}</del><br/>{{ new|striptags }}
+                                            {% else %}
+                                                {{ new|raw }}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
                             {% endif %}
 
                             {% if attachments is defined and attachments is not empty %}

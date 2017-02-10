@@ -60,4 +60,12 @@ class PrivateCommentCreated extends OptionsProvider implements OptionsProviderIn
     {
         return [];
     }
+
+    /**
+     * @return array
+     */
+    public function getHtmlOptions()
+    {
+        return ['html_options' => ['content']];
+    }
 }

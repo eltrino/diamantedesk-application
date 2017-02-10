@@ -84,6 +84,14 @@ abstract class OptionsProvider
         ];
     }
 
+    /**
+     * @return array
+     */
+    public function getHtmlOptions()
+    {
+        return ['html_options' => []];
+    }
+
     public function setUserService(UserService $userService)
     {
         $this->userService = $userService;

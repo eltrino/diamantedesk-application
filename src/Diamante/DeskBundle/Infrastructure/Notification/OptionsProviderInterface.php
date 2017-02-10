@@ -75,4 +75,9 @@ interface OptionsProviderInterface
      */
     public function getAdditionalOptions($target);
 
+    /**
+     * @return array
+     */
+    public function getHtmlOptions();
+
 }
