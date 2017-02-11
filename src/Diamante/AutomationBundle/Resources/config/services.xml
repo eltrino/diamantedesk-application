@@ -33,6 +33,7 @@
         <parameter key="diamante_automation.command_factory.class">Diamante\AutomationBundle\Form\CommandFactory</parameter>
         <parameter key="diamante_automation.frontend.options.resolver.class">Diamante\AutomationBundle\Configuration\FrontendOptionsResolver</parameter>
         <parameter key="diamante_automation.changeset.builder.class">Diamante\AutomationBundle\Infrastructure\Changeset\ChangesetBuilder</parameter>
+        <parameter key="diamante_automation.changeset.field_processor_provider.class">Diamante\AutomationBundle\Infrastructure\Changeset\FieldProcessorProvider</parameter>
         <parameter key="diamante_automation.action.execution_context.class">Diamante\AutomationBundle\Rule\Action\ExecutionContext</parameter>
         <parameter key="diamante_automation.action.comment_notifier.class">Diamante\DeskBundle\Automation\Action\Email\CommentNotifier</parameter>
         <parameter key="diamante_automation.action.ticket_notifier.class">Diamante\DeskBundle\Automation\Action\Email\TicketNotifier</parameter>
@@ -142,6 +143,8 @@
         <service id="diamante_automation.changeset.builder" class="%diamante_automation.changeset.builder.class%">
             <argument type="service" id="service_container"/>
         </service>
+
+        <service id="diamante_automation.changeset.field_processor_provider" class="%diamante_automation.changeset.field_processor_provider.class%"/>
 
         <service id="diamante_automation.engine" class="%diamante_automation.engine.class%">
             <argument type="service" id="diamante_automation.config.provider"/>
