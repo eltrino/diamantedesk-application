@@ -18,7 +18,7 @@ namespace Diamante\AutomationBundle\Infrastructure\Changeset;
 use Diamante\AutomationBundle\Infrastructure\Changeset\FieldProcessor\DefaultProcessor;
 
 /**
- * Interface FieldProcessor
+ * Class FieldProcessorProvider
  * @package Diamante\AutomationBundle\Infrastructure\Changeset
  */
 class FieldProcessorProvider
