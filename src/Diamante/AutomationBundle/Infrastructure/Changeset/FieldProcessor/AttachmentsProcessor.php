@@ -19,9 +19,9 @@ use Diamante\AutomationBundle\Infrastructure\Changeset\FieldProcessor;
 use Diamante\DeskBundle\Entity\Attachment;
 
 /**
- * Class ChangesetBuilder
+ * Class AttachmentsProcessor
  *
- * @package Diamante\AutomationBundle\Infrastructure\Changeset
+ * @package Diamante\AutomationBundle\Infrastructure\Changeset\FieldProcessor
  */
 class AttachmentsProcessor implements FieldProcessor
 {

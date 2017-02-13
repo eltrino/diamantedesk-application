@@ -64,7 +64,6 @@
 
                                     {% if new is not null %}
                                         {% if key in html_options %}
-                                            <p style="color: #A09F9F; font-size: 14px; font-weight: 200; line-height: 18px; margin: 0; padding: 5px 15px 0 0; white-space: nowrap; vertical-align: top;">{{ key|capitalize }}:</p>
                                             {% if old is not null %}
                                                 <del>{{ old|striptags }}</del><br/>{{ new|striptags }}
                                             {% else %}
