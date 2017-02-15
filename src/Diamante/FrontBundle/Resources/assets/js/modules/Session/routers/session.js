@@ -24,7 +24,7 @@ define(['app'], function(App){
         if(App.session.get('logged_in')){
           App.navigate('');
         } else {
-          App.setTitle('Login');
+          App.setTitle(__('diamante_front.session.title.login'));
           require(['modules/Session/controllers/login'], function(){
             Session.LoginController();
           });
@@ -40,7 +40,7 @@ define(['app'], function(App){
         if(App.session.get('logged_in')){
           App.navigate('');
         } else {
-          App.setTitle('Registration');
+          App.setTitle(__('diamante_front.session.title.register'));
           require(['modules/Session/controllers/registration'], function(){
             Session.RegistrationController();
           });
@@ -68,7 +68,7 @@ define(['app'], function(App){
       },
 
       reset: function(){
-        App.setTitle('Reset Password');
+        App.setTitle(__('diamante_front.session.title.reset'));
         require(['modules/Session/controllers/reset'], function(){
           Session.ResetController();
         });

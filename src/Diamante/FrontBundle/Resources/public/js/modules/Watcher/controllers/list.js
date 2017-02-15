@@ -16,12 +16,12 @@ define(['app'], function(App){
           success : function(){
             App.trigger('message:show', {
               status:'success',
-              text: 'A watcher has been removed from the ticket'
+              text: __('diamante_front.watcher.controller.message.remove_success'),
             });
           },
           error : function(model, xhr){
             App.alert({
-              title: "Delete Comment Error",
+              title: __('diamante_front.watcher.controller.alert.delete_comment_error.title'),
               xhr: xhr
             });
           }

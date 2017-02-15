@@ -24,7 +24,7 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!trim(attrs.content)) {
-          errors.content = "Can't be blank";
+          errors.content = __('Error_required');
         }
         if(!_.isEmpty(errors)){
           return errors;

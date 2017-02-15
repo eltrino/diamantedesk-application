@@ -39,13 +39,13 @@ define(['app'], function(App){
                 commentView.$el.removeClass('is-editing');
                 App.trigger('message:show', {
                   status:'success',
-                  text: 'Your comment has been edited'
+                  text: __('diamante_front.comment.controller.alert.edit_success.title'),
                 });
               },
               error : function(model, xhr){
                 formView.hideLoader();
                 App.alert({
-                  title: "Create Comment Error",
+                  title: __('diamante_front.comment.controller.alert.create_error.title'),
                   xhr : xhr
                 });
               }
@@ -57,7 +57,7 @@ define(['app'], function(App){
             console.warn(arguments);
             formView.hideLoader();
             App.alert({
-              title: "Edit Attachments Error",
+              title: __('diamante_front.comment.controller.alert.edit_success.title'),
               xhr : xhr
             });
           });

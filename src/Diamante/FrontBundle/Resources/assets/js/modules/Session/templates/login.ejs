@@ -3,27 +3,23 @@
 </a>
 <form role="form">
     <div class="form-group">
-        <a class="register pull-right" href="#registration">Registration</a>
-        <label class="control-label" for="email">Email</label>
-        <input type="text"
-               class="form-control input-lg"
-               id="email" name="email"
-               tabindex="1" placeholder="Enter Email">
+        <a class="register pull-right" href="#registration"><%= __('diamante_front.session.template.register') %></a>
+        <label class="control-label" for="email"><%= __('diamante_front.session.template.label.email') %></label>
+        <input type="text" class="form-control input-lg" id="email" name="email" tabindex="1"
+               placeholder="<%= __('diamante_front.session.template.placeholder.email') %>">
     </div>
     <div class="form-group">
-        <a class="forgot pull-right" href="#resetpassword">Amnesia?</a>
-        <label class="control-label" for="password">Password</label>
-        <input type="password"
-               class="form-control input-lg"
-               name="password" id="password"
-               tabindex="2" placeholder="Password">
+        <a class="forgot pull-right" href="#resetpassword"><%= __('diamante_front.session.template.forgot') %></a>
+        <label class="control-label" for="password"><%= __('diamante_front.session.template.label.password') %></label>
+        <input type="password" class="form-control input-lg" name="password" id="password" tabindex="2"
+               placeholder="<%= __('diamante_front.session.template.label.password') %>">
     </div>
     <div class="checkbox">
         <label>
-            <input name="remember" id="remember" type="checkbox" tabindex="3"> Remember me
+            <input name="remember" id="remember" type="checkbox" tabindex="3"> <%= __('diamante_front.session.template.remember') %>
         </label>
     </div>
     <p>
-        <button type="submit" class="btn btn-lg btn-primary js-submit" tabindex="4">Sign In</button>
+        <button type="submit" class="btn btn-lg btn-primary js-submit" tabindex="4"><%= __('diamante_front.session.template.button.login') %></button>
     </p>
 </form>

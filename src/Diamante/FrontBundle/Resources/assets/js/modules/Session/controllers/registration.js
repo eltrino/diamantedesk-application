@@ -13,16 +13,21 @@ define(['app'], function(App){
         registrationView.on('form:submit', function(data){
           this.model.register(data).
             done(function(model){
-              App.alert({ title: 'Registration Success', status: 'success', messages: [{
+              App.alert({
+                title: __('diamante_front.session.controller.alert.register_success.title'),
                 status: 'success',
-                text: 'Thank you. ' +
-                'We have sent you email to ' + model.get('email') + '.\n'+
-                'Please click the link in that message to activate your account.'
-              }] });
+                messages: [{
+                  status: 'success',
+                  text: __('diamante_front.session.controller.alert.register_success.text', {email: model.get(email)})
+                }]
+              });
               App.trigger('session:login');
             }).
             fail(function(model, xhr){
-              App.alert({ title: "Registration Failed", xhr: xhr });
+              App.alert({
+                title: __('diamante_front.session.controller.alert.register_fail.title'),
+                xhr: xhr
+              });
             });
         });
 

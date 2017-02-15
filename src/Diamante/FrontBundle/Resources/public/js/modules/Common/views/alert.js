@@ -11,9 +11,9 @@ define(['app', 'tpl!../templates/alert.ejs'], function(App, alertTemplate){
       initialize: function(options){
         var opt = options || {},
             message;
-        this.title = opt.title || 'Error';
+        this.title = opt.title || __('diamante_front.common.view.alert.title');
         this.status = opt.status || 'error';
-        this.messages = opt.messages || 'An unprocessed error happened. Please try again!';
+        this.messages = opt.messages || __('diamante_front.common.view.alert.text');
         if(opt.xhr && opt.xhr.responseJSON){
           message = opt.xhr.responseJSON.message || opt.xhr.responseJSON.error;
         }

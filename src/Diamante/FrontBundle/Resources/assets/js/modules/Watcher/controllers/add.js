@@ -13,7 +13,7 @@ define(['app'], function(App){
               model: watcherModel
             }),
             modalAddView = new AddView.ModalView({
-              title: 'Add Watcher',
+              title: __('diamante_front.watcher.controller.add_watcher'),
               submit: 'Add'
             });
 
@@ -28,12 +28,12 @@ define(['app'], function(App){
               modalAddView.$el.modal('hide');
               App.trigger('message:show', {
                 status:'success',
-                text: 'A new watcher has been successfully added to the ticket'
+                text: __('diamante_front.watcher.controller.message.add_success'),
               });
             },
             error: function(model, xhr){
               App.alert({
-                title: "Add Watcher Error",
+                title: __('diamante_front.watcher.controller.alert.add_error.title'),
                 xhr : xhr
               });
             }

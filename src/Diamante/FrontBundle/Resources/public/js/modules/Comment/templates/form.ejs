@@ -1,6 +1,6 @@
 <% var isEdit = !!content; %>
 <% if(!isEdit){ %>
-<h2>Add Comment</h2>
+<h2><%= __('diamante_front.comment.template.form.add') %></h2>
 <% } %>
 <form action="/" role="form">
     <div class="form-group">
@@ -10,10 +10,10 @@
     <div id="comment<%= isEdit? '-edit':''%>-attachment-drop"></div>
     <div class="comment-form-actions">
         <% if(isEdit){ %>
-        <button type="reset" class="btn btn-default js-cancel">Cancel</button>
-        <button type="submit" class="btn btn-primary js-submit">Save Changes</button>
+        <button type="reset" class="btn btn-default js-cancel"><%= __('diamante_front.comment.template.form.cancel') %></button>
+        <button type="submit" class="btn btn-primary js-submit"><%= __('diamante_front.comment.template.form.save') %></button>
         <% } else { %>
-        <button type="submit" class="btn btn-primary js-submit">Add Comment</button>
+        <button type="submit" class="btn btn-primary js-submit"><%= __('diamante_front.comment.template.form.add') %></button>
         <% } %>
     </div>
 </form>

@@ -12,8 +12,8 @@ define(['app', 'tpl!../templates/modal.ejs'], function(App, modalTemplate){
 
       initialize: function(options){
         var opt = options || {};
-        this.title = opt.title || 'Modal Window';
-        this.submit = opt.submit || 'Save changes';
+        this.title = opt.title || __('diamante_front.common.view.modal.title');
+        this.submit = opt.submit ||  __('diamante_front.common.view.modal.submit');
       },
 
       regions : {

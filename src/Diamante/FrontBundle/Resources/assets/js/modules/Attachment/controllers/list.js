@@ -16,12 +16,12 @@ define(['app'], function(App){
           success: function(){
             App.trigger('message:show', {
               status:'success',
-              text: 'File deleted successfully'
+              text: __('diamante_front.attachment.controller.message.delete_success')
             });
           },
           error : function(model, xhr){
             App.alert({
-              title: "Delete Attachment Error",
+              title: __('diamante_front.attachment.controller.alert.delete_error.title'),
               xhr: xhr
             });
           }
