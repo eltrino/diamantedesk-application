@@ -14,7 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader;
 
-use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
+use Liip\ImagineBundle\Binary\Loader\FileSystemLoader;
 use Imagine\Image\ImagineInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

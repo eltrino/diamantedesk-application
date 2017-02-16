@@ -1,0 +1,11 @@
+security:
+    firewalls:
+        wsse_secured_diamante:
+            pattern:                        ^/api/diamante/(rest|soap).*
+            provider:                       diamante_api_user
+            stateless:                      true
+            wsse_diamante_api:              true
+        diamante_attachments_download:
+            pattern:        ^/desk/attachments/download/*
+            provider:       chain_provider
+            anonymous:      true

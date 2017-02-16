@@ -14,17 +14,22 @@
  */
 namespace Diamante\DeskBundle\Loggable;
 
+/**
+ * @TODO ORO 2.0 Parent class OroLoggableManager have been rewritten
+ */
+
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata as DoctrineClassMetadata;
-use  Oro\Bundle\DataAuditBundle\Loggable\LoggableManager as OroLoggableManager;
+//use Oro\Bundle\DataAuditBundle\Loggable\LoggableManager as OroLoggableManager;
 use Doctrine\ORM\EntityManager;
 use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\EntityConfigBundle\DependencyInjection\Utils\ServiceLink;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Oro\Bundle\DataAuditBundle\Entity\AbstractAudit;
 
-class LoggableManager extends OroLoggableManager
+//class LoggableManager extends OroLoggableManager
+class LoggableManager
 {
     /**
      * @var ContainerInterface

@@ -28,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class Group extends \Diamante\AutomationBundle\Model\Group
 {
     /**
-     * @var \Rhumsaa\Uuid\Uuid
+     * @var \Ramsey\Uuid\Uuid;
      *
      * @ORM\Id
      * @ORM\Column(type="string", name="id")

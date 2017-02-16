@@ -44,4 +44,14 @@ class GeneralEmailProcessingCommand extends ContainerAwareCommand implements Cro
     {
         return '*/5 * * * *';
     }
+
+    /**
+     * Checks if the command active (i.e. properly configured etc).
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return true;
+    }
 }

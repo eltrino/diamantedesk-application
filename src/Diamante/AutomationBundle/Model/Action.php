@@ -16,7 +16,7 @@
 namespace Diamante\AutomationBundle\Model;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 class Action implements Entity
 {

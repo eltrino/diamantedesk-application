@@ -42,6 +42,7 @@
             <argument type="service" id="oro_entity_config.config_manager"/>
             <argument type="service" id="oro_entity_extend.extend.field_type_helper"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="oro_security.security_facade"/>
             <tag name="twig.extension"/>
         </service>
         <service id="diamante_embedded_form.back_link.twig.extension" class="%diamante_embedded_form.back_link.twig.extension.class%">

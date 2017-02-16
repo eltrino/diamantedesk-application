@@ -29,17 +29,27 @@ class AddSupportDashboard extends AbstractDashboardFixture
      */
     public function load(ObjectManager $manager)
     {
-        $dashboard = $this->findAdminDashboardModel($manager, 'diamante_support');
-        if (!$dashboard) {
-            $dashboard = $this->createAdminDashboardModel($manager, 'diamante_support');
-            $dashboard->setLabel(
-                $this->container->get('translator')->trans('diamante.desk.dashboard.support.label')
-            );
-        }
-
-        $this->populateDashboard($dashboard, $manager);
-
-        $manager->flush();
+        /**
+         * @TODO ORO 2.0 Fix installation
+         * Notice: Undefined index: phone in /Volumes/Sites/diamantedesk-application/vendor/doctrine/orm/lib/Doctrine/ORM/Internal/Hydration/AbstractHydrator.php on line 369
+         *
+         * Unknown column type "" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType(). You can get a list of all the known types with
+         * \Doctrine\DBAL\Types\Type::getTypesMap(). If this error occurs during database introspection then you might have forgot to register all database types for a Doctrine Type.
+         * Use AbstractPlatform#registerDoctrineTypeMapping() or have your custom types implement Type#getMappedDatabaseTypes(). If the type name is empty you might have a problem with
+         * the cache or forgot some mapping information.
+         *
+         */
+//        $dashboard = $this->findAdminDashboardModel($manager, 'diamante_support');
+//        if (!$dashboard) {
+//            $dashboard = $this->createAdminDashboardModel($manager, 'diamante_support');
+//            $dashboard->setLabel(
+//                $this->container->get('translator')->trans('diamante.desk.dashboard.support.label')
+//            );
+//        }
+//
+//        $this->populateDashboard($dashboard, $manager);
+//
+//        $manager->flush();
     }
 
     private function populateDashboard(DashboardModel $dashboard, ObjectManager $manager)

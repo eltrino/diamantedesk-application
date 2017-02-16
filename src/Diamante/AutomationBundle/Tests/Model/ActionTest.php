@@ -32,7 +32,7 @@ class ActionTest extends \PHPUnit_Framework_TestCase
             new EventTriggeredRule('event_triggered_rule_name', 'ticket')
         );
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $action->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $action->getId());
         $this->assertEquals('NotifyByEmail', $action->getType());
         $parameters = $action->getParameters();
         $this->assertEquals('mike@diamantedesk.com', array_pop($parameters));
@@ -52,7 +52,7 @@ class ActionTest extends \PHPUnit_Framework_TestCase
             new TimeTriggeredRule('time_triggered_rule_name', 'ticket', '5m')
         );
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $action->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $action->getId());
         $this->assertEquals('NotifyByEmail', $action->getType());
         $parameters = $action->getParameters();
         $this->assertEquals('mike@diamantedesk.com', array_pop($parameters));

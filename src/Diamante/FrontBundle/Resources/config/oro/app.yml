@@ -1,0 +1,16 @@
+security:
+    providers:
+        diamante_api_user:
+            id:                             diamante.api.user.security.provider
+    encoders:
+        Diamante\ApiBundle\Entity\ApiUser: sha1
+    firewalls:
+        front_diamante:
+            pattern:        ^/portal
+            provider:       chain_provider
+            anonymous:      true
+
+        front_diamante_reset_password:
+            pattern:        ^/portal/password/*
+            provider:       chain_provider
+            anonymous:      true

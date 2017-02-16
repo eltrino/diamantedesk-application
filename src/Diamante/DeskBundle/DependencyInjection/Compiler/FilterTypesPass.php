@@ -18,7 +18,7 @@ namespace Diamante\DeskBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Oro\Bundle\FilterBundle\DependencyInjection\CompilerPass\FilterTypesPass as OroFilterTypePass;
+use Oro\Bundle\FilterBundle\DependencyInjection\Compiler\FilterTypesPass as OroFilterTypePass;
 
 class FilterTypesPass implements CompilerPassInterface
 {

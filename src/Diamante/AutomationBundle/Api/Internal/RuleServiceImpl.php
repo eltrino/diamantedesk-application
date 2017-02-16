@@ -29,7 +29,7 @@ use Diamante\DeskBundle\Infrastructure\Shared\StringUtils;
 use Diamante\DeskBundle\Model\Entity\Exception\EntityNotFoundException;
 use Diamante\DeskBundle\Model\Entity\Exception\ValidationException;
 use Diamante\AutomationBundle\Entity\Schedule;
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RuleServiceImpl implements RuleService

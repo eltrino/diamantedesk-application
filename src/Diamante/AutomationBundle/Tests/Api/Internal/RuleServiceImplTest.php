@@ -100,7 +100,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->createRule($input);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
     }
 
@@ -137,7 +137,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->createRule($input);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
     }
 
@@ -168,7 +168,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->updateRule($input, $ruleId);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
         $this->assertEquals(2, $rule->getGrouping()->getConditions()->count());
         $this->assertEquals('update_property', $rule->getActions()->first()->getType());
@@ -201,7 +201,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->updateRule($input, $ruleId);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
         $this->assertEquals(2, $rule->getGrouping()->getConditions()->count());
         $this->assertEquals('update_property', $rule->getActions()->first()->getType());
@@ -272,7 +272,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->activateRule(Rule::TYPE_TIME_TRIGGERED, $ruleId);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
         $this->assertTrue($rule->isActive());
     }
@@ -298,7 +298,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->activateRule(Rule::TYPE_EVENT_TRIGGERED, $ruleId);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
         $this->assertTrue($rule->isActive());
     }
@@ -324,7 +324,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->deactivateRule(Rule::TYPE_EVENT_TRIGGERED, $ruleId);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\EventTriggeredRule', $rule);
         $this->assertFalse($rule->isActive());
     }
@@ -350,7 +350,7 @@ class RuleServiceImplTest extends \PHPUnit_Framework_TestCase
 
         $rule = $this->ruleService->deactivateRule(Rule::TYPE_TIME_TRIGGERED, $ruleId);
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\TimeTriggeredRule', $rule);
         $this->assertFalse($rule->isActive());
     }

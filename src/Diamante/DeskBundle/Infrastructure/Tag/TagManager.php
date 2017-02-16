@@ -19,9 +19,10 @@ class TagManager extends OroTagManager
      *
      * @param Taggable $entity
      * @param ArrayCollection|null $tags
+     * @param Organization $organization
      * @return array
      */
-    public function getPreparedArray(Taggable $entity, $tags = null, Organization $organization = null)
+    public function getPreparedArray($entity, $tags = null, Organization $organization = null)
     {
         if (is_null($tags)) {
             $this->loadTagging($entity);
@@ -89,7 +90,7 @@ class TagManager extends OroTagManager
      *
      * @return User
      */
-    private function getUser()
+    protected function getUser()
     {
         return $this->securityFacade->getLoggedUser();
     }

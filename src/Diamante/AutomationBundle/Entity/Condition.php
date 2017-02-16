@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Condition extends \Diamante\AutomationBundle\Model\Condition
 {
     /**
-     * @var \Rhumsaa\Uuid\Uuid
+     * @var \Ramsey\Uuid\Uuid;
      *
      * @ORM\Id
      * @ORM\Column(type="string", name="id")

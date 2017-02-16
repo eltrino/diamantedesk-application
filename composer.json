@@ -10,9 +10,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "": "src/"
-        }
+        "psr-4": {"": "src/"},
+        "exclude-from-classmap": ["**/Tests/"]
     },
     "repositories": [
         {
@@ -21,21 +20,24 @@
         }
     ],
     "config": {
-        "component-dir": "web/bundles/components"
+        "component-dir": "web/bundles/components",
+        "bin-dir": "bin"
     },
     "require":{
         "php": ">=5.4.4",
-        "oro/platform": "1.8.*",
+        "oro/platform": "2.0.*",
+        "oro/platform-serialised-fields": "2.0.*",
         "akeneo/batch-bundle": "0.4.2",
-        "monolog/monolog": "1.8.0",
-        "nelmio/api-doc-bundle": "2.9.*",
-        "jms/serializer-bundle": "0.*",
+        "monolog/monolog": "~1.22",
+        "nelmio/api-doc-bundle": "~2.13",
+        "jms/serializer-bundle": "~1.1",
         "beberlei/assert": "2.*",
-        "zendframework/zend-mail": "~2.1.5",
-        "ezyang/htmlpurifier": "4.6.*",
+        "zendframework/zend-mail": "~2.4",
+        "ezyang/htmlpurifier": "~4.8",
         "bordeux/email-cleaner": "0.6.*",
         "michelf/php-markdown": "~1.4",
-        "hwi/oauth-bundle": "0.3.9 as 1.0"
+        "hwi/oauth-bundle": "~0.5",
+        "ramsey/uuid": "~3.5"
 
     },
     "require-dev": {
@@ -67,6 +69,10 @@
         "symfony-assets-install": "symlink",
         "branch-alias": {
             "dev-master": "2.0.x-dev"
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "web/bundles/npmassets",
+            "bower-asset-library": "web/bundles/bowerassets"
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Diamante\AutomationBundle\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\AutomationBundle\Model\Shared\AutomationRule;
 use Diamante\DeskBundle\Model\Shared\Entity;
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 abstract class Rule implements AutomationRule, Entity
