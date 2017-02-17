@@ -21,7 +21,7 @@ before_install:
 install:
   - composer install --prefer-source --profile --no-interaction
 
-script: vendor/bin/phpunit --version
+script: phpunit --version
 
 after_script:
 
