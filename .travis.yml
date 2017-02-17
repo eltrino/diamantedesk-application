@@ -1,17 +1,15 @@
 language: php
 
 php:
-  - 5.4
-  - 5.5
   - 5.6
   - 7.0
+  - 7.1
   - hhvm
 
 sudo: false
 
 matrix:
   allow_failures:
-    - php: 7.0
     - php: hhvm
 
 before_install:
@@ -43,7 +41,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    php: '5.6'
+    php: '7.1'
 notifications:
   slack:
     secure: m50vDN3EBDOTuaakmieAnA/phVYbx+r9RlLItLgKiT1Y1+bYmqBqDJ/Uo2iXFumnGPQsan64nLI6mq9xaE3sCwaRYpNy3BPuOIJURe55Bnov5zaHwXl3c1ZSoSvfhJkfKniFSmo6gLSz+r4T2WwLwZKtHKEkiJ6mx9+DLMaal7fbe+fXFiejNjAqwZJ0/r8hTNkPMZUfuDRnlhAT4wijQbehFhhk0nZ0H+zY1yikrI7sO9a1KmBfWivnrGdN4s+svWj4jheIvQPSM022Xxr8z4bh09H5VJ4qrDl3S566QKP/Vn0bp15dLq/6YLZmIN5gCKof1FONwqirstvGwGaYWo1ea23vhJvG8uu1qs0KOXROzITWDVHTsqPqGriGUq4tGUPjNi2GR3ogMFQJmrdCru7SG8NaDP43N9nR1kC8vuG1HItivw+r9qOFWYFcnfBpPWi8Dyzsx4M+kiHKCZjkGhsWaAVs31Sd2Lhvh9JY7wu3eGRd+GiQDfTuiQ0mtQij3LlQDXg+fNtsiZHU7te4qAiQSODOvhjapTSNTl0iebbKLOTEwlf/rh4sy0k7ZeZu54TK/GjVCDcD0EkDWBG4uwjUOFRV+G0pmOEdYVlJzpbpibeaIKDpm577B8sdTjXL12Qpybyfov59W6oWn7lXG5nwnsh8RAXYB62qAE8FPt4=
