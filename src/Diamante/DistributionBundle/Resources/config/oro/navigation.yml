@@ -106,36 +106,32 @@ navigation:
                 route_parameters:
                     id: 'ticket_timeline'
 
-#            dashboard_tab:
-#                extras:
-#                    icon: icon-dashboard
-#
-#            tags_management:
-#                label: 'oro.tag.entity_plural_label'
-#                route: 'oro_tag_index'
-#                extras:
-#                    position: 90
-#                    routes:      ['oro_tag_*']
-#                    description: 'oro.tag.menu.tag_list.description'
-#
-#            oro_calendar_view_default:
-#                display: false
-#            oro_email_user_emails:
-#                display: false
-#            activities_tab:
-#                display: false
-#            reports_tab:
-#                display: false
-#            system_tab:
-#                display: false
-#            oro_platform_system_info:
-#                display: false
-#            diamante_config_tab:
-#              label: 'System'
-#              uri: '#'
-#              extras:
-#                  icon: icon-cog
-#                  position: 100
+            tags_management_extra:
+                label: 'oro.tag.entity_plural_label'
+                route: 'oro_tag_index'
+                extras:
+                    position: 90
+                    routes:      ['oro_tag_*']
+                    description: 'oro.tag.menu.tag_list.description'
+
+            oro_calendar_view_default:
+                display: false
+            oro_email_user_emails:
+                display: false
+            activities_tab:
+                display: false
+            reports_tab:
+                display: false
+            system_tab:
+                display: false
+            oro_platform_system_info:
+                display: false
+            diamante_config_tab:
+              label: 'System'
+              uri: '#'
+              extras:
+                  icon: icon-cog
+                  position: 100
         tree:
             application_menu:
                 children:
@@ -155,19 +151,29 @@ navigation:
                     diamante_customer_management: ~
                     diamante_config_tab:
                       children:
-                        tags_management: ~
-                        system_configuration: ~
+                        tags_management_extra:
+                          merge_strategy: move
+                        system_configuration:
+                          merge_strategy: move
                         users_management:
+                          merge_strategy: move
                           children:
-                            user_list: ~
-                            user_create: ~
-                            user_groups: ~
-                            user_roles: ~
+                            user_list:
+                              merge_strategy: move
+                            user_create:
+                              merge_strategy: move
+                            user_groups:
+                              merge_strategy: move
+                            user_roles:
+                              merge_strategy: move
                         integrations_submenu:
+                          merge_strategy: move
                           children:
                             embedded_forms: ~
-                        oro_platform_system_info: ~
-                        audit_list: ~
+                        oro_platform_system_info:
+                          merge_strategy: move
+                        audit_list:
+                          merge_strategy: move
 
     titles:
         diamante_branch_list: ~
