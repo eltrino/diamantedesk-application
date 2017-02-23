@@ -98,15 +98,9 @@
 {% endif %}
 
 {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
-    <div class="clearfix">
-        {{ UI.button({
-            'path': path('diamante_comment_create', {'id': entity.id}),
-            'iCss': 'icon-edit',
-            'title': 'diamante.desk.comment.entity_label'|trans,
-            'label': 'diamante.desk.comment.entity_label'|trans
-            })
-        }}
-    </div>
+
+    {%  render path('diamante_comment_widget_form', {'id': entity.id}) %}
+
 {% endif %}
 <script type="text/javascript">
     require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],

@@ -1,0 +1,67 @@
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% form_theme form with ['OroAddressBundle:Include:fields.html.twig', 'OroFormBundle:Form:fields.html.twig', 'OroTagBundle:Form:fields.html.twig'] %}
+
+{% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
+{% set oroUser = fetch_oro_user(user) %}
+{% set diamanteUser = fetch_diamante_user(user) %}
+{% if oroUser %}
+    {% set author = oroUser|oro_format_name %}
+    {% set avatar = oro_configured_image_url(oroUser, 'avatar') %}
+{% elseif diamanteUser %}
+    {% set author = diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName %}
+    {% set avatar = get_gravatar(diamanteUser.email) %}
+{% endif %}
+
+{{ form_start(form, { 'action' : path('diamante_comment_create', { 'id': ticket.id }) }) }}
+<div class="diam-comment-form">
+    <div class="diam-comment-user-image">
+        {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
+        <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
+    </div>
+    {{ form_errors(form) }}
+    {{ form_row(form.content) }}
+    {{ form_row(form.attachmentsInput) }}
+    {{ form_row(form.private) }}
+    <div class="hide">{{ form_row(form.ticketStatus) }}</div>
+</div>
+{{ form_end(form) }}
+{% set html %}
+    {{ UI.dropdownItem({
+        'path': '',
+        'title': "Reply",
+        'label': "Reply",
+        'data' : {
+            'comment-action' : 'add'
+        }
+    }) }}
+    {% for status in form.ticketStatus.vars.choices %}
+        {{ UI.dropdownItem({
+            'path': '',
+            'title': "Reply and set status to \"#{ status.label }\"",
+            'label': "Reply and set status to \"#{ status.label }\"",
+            'data' : {
+                'comment-action' : 'set',
+                'field-name' : form.ticketStatus.vars.full_name,
+                'field-value' : status.value
+            }
+        }) }}
+    {% endfor %}
+{% endset %}
+{% set options  = {
+    formName : form.vars.full_name
+} %}
+<div class="clearfix">
+    <div class="pull-right"
+         data-page-component-name="comment-component"
+         data-page-component-module="diamantedesk/js/app/components/comment-component"
+         data-page-component-options="{{ options|json_encode }}">
+        {{ UI.dropdownButton({
+            'iCss': 'icon-edit',
+            'aCss': 'pull-right',
+            'label': "Reply",
+            'html': html
+        }) }}
+    </div>
+</div>
+
