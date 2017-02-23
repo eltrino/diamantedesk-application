@@ -1,4 +1,4 @@
-datagrid:
+datagrids:
     diamante-branch-grid:
         source:
             type: orm
