@@ -1,0 +1,4 @@
+assets:
+    css:
+        'diamanteautomation':
+            - 'bundles/diamanteautomation/css/less/main.less'
