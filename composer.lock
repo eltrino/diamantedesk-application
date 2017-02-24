@@ -4044,6 +4044,80 @@
             "time": "2015-11-10 12:26:42"
         },
         {
+            "name": "jms/job-queue-bundle",
+            "version": "1.4.0",
+            "target-dir": "JMS/JobQueueBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/JMSJobQueueBundle.git",
+                "reference": "d9bab4d3ffa2d45e2959106712c6beed79372c62"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/JMSJobQueueBundle/zipball/d9bab4d3ffa2d45e2959106712c6beed79372c62",
+                "reference": "d9bab4d3ffa2d45e2959106712c6beed79372c62",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "^2.3",
+                "jms/di-extra-bundle": "^1.1",
+                "php": "^5.5.0 || ^7.0",
+                "symfony/debug": "^2.3 || ^3.0",
+                "symfony/framework-bundle": "^2.1 || ^3.1"
+            },
+            "require-dev": {
+                "doctrine/doctrine-bundle": "*",
+                "doctrine/doctrine-fixtures-bundle": "*",
+                "doctrine/orm": "*",
+                "pagerfanta/pagerfanta": "dev-master",
+                "phpunit/phpunit": "^5.2",
+                "sensio/framework-extra-bundle": "*",
+                "symfony/browser-kit": "*",
+                "symfony/class-loader": "*",
+                "symfony/css-selector": "*",
+                "symfony/finder": "*",
+                "symfony/form": "*",
+                "symfony/intl": "*",
+                "symfony/process": "*",
+                "symfony/twig-bundle": "*",
+                "symfony/validator": "*",
+                "symfony/yaml": "*"
+            },
+            "suggest": {
+                "pagerfanta/pagerfanta": "Required when using the webinterface.",
+                "sensio/framework-extra-bundle": "Required when using the webinterface.",
+                "symfony/twig-bundle": "Required when using the webinterface."
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "JMS\\JobQueueBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache2"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Allows to schedule Symfony2 console commands as jobs.",
+            "homepage": "http://jmsyst.com/bundles/JMSJobQueueBundle",
+            "keywords": [
+                "job",
+                "queue"
+            ],
+            "time": "2016-09-09T14:26:27+00:00"
+        },
+        {
             "name": "justinrainbow/json-schema",
             "version": "2.0.5",
             "source": {
