@@ -37,7 +37,8 @@
         "bordeux/email-cleaner": "0.6.*",
         "michelf/php-markdown": "~1.4",
         "hwi/oauth-bundle": "~0.5",
-        "ramsey/uuid": "~3.5"
+        "ramsey/uuid": "~3.5",
+        "jms/job-queue-bundle": "1.4"
 
     },
     "require-dev": {
