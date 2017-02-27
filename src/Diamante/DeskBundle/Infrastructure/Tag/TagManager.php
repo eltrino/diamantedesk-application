@@ -26,7 +26,7 @@ class TagManager extends OroTagManager
     {
         if (is_null($tags)) {
             $this->loadTagging($entity);
-            $tags = $entity->getTags();
+            $tags = $this->getTags($entity);
         }
         $result = [];
 
