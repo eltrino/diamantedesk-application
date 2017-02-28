@@ -253,6 +253,8 @@ class DoctrineTicketRepository extends DoctrineGenericRepository implements Tick
 
         $qb = $this->_em->createQueryBuilder();
 
+        $qb->select('count(t.id)')->from('DiamanteDeskBundle:Ticket', 't');
+
         foreach ($criteria as $condition) {
             $whereExpression = $this->buildWhereExpression($qb, $condition);
             $qb->orWhere($whereExpression);
