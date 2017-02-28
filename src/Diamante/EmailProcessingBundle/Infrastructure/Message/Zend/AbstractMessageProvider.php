@@ -125,6 +125,9 @@ abstract class AbstractMessageProvider
              * @var \Zend\Mail\Address $address
              */
             foreach ($headers->get($type)->getAddressList() as $email => $address) {
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    continue;
+                }
                 $recipients[] = new MessageRecipient($address->getEmail(), null);
             }
         }
