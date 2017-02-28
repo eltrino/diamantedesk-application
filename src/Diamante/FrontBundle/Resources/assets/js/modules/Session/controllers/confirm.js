@@ -6,13 +6,21 @@ define(['app'], function(App){
 
       App.session.confirm(hash)
         .done(function(){
-          App.alert({ title: 'Email Confirmation Success', status: 'success', messages: [{
+          App.alert({
+            title: __('diamante_front.session.controller.alert.confirm_success.title'),
             status: 'success',
-            text: 'You may login and use application'}] });
+            messages: [{
+              status: 'success',
+              text: __('diamante_front.session.controller.alert.confirm_success.text')
+            }]
+          });
           App.trigger('session:login');
         })
         .fail(function(model, xhr){
-          App.alert({ title: 'Email Confirmation Failed', messages: ['Activation code is wrong'] });
+          App.alert({
+            title: __('diamante_front.session.controller.alert.confirm_fail.title'),
+            messages: [__('diamante_front.session.controller.alert.confirm_fail.text')]
+          });
           App.trigger('session:registration');
         });
 
@@ -22,16 +30,21 @@ define(['app'], function(App){
 
       App.session.reconfirm(email)
         .done(function(){
-          App.alert({ title: 'Email Confirmation Success', status: 'success', messages: [{
+          App.alert({
+            title: __('diamante_front.session.controller.alert.reconfirm_success.title'),
             status: 'success',
-            text:
-              'We have sent you email to ' + email + '.<br>'+
-              'Please click the link in that message to activate your account.'
-          }] });
+            messages: [{
+              status: 'success',
+              text: __('diamante_front.session.controller.alert.reconfirm_success.text', {email: email})
+            }]
+          });
           App.trigger('session:login');
         })
         .fail(function(model, xhr){
-          App.alert({ title: 'Email Confirmation Failed', messages: ['Activation code is wrong'] });
+          App.alert({
+            title: __('diamante_front.session.controller.alert.confirm_fail.title'),
+            messages: [__('diamante_front.session.controller.alert.confirm_fail.text')]
+          });
           App.trigger('session:registration');
         });
 

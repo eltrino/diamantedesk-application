@@ -23,20 +23,20 @@
         <div class="ticket-meta">
             <span class="key"><%= key %></span>
             <span class="createdAt"><%= created %></span>
-            <span class="priority">Priority: <span><%= priority %></span></span>
-            <span class="status">Status: <span><%= status %></span></span>
+            <span class="priority"><%= __('diamante_front.ticket.template.list.priority') %>: <span><%= priority %></span></span>
+            <span class="status"><%= __('diamante_front.ticket.template.list.status') %>: <span><%= status %></span></span>
         </div>
         <div class="ticket-description"><%= description %></div>
     </div>
     <div class="col-sm-4 col-md-3 ticket-aside">
         <div class="block" id="attachments">
-            Loading ...
+            <%= __('Loading...') %>
         </div>
         <div class="block" id="watchers">
-            Loading ...
+            <%= __('Loading...') %>
         </div>
     </div>
     <div class="col-sm-8 col-md-9 block" id="comments">
-        Loading ...
+        <%= __('Loading...') %>
     </div>
 </div>

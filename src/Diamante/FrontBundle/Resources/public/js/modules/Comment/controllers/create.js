@@ -17,7 +17,7 @@ define(['app'], function(App){
               commentCollection.add(model);
               App.trigger('message:show', {
                 status:'success',
-                text: 'Comment was posted successfully'
+                text: __('diamante_front.comment.controller.message.post_success')
               });
               formView.destroy();
               Create.Controller(options);
@@ -45,7 +45,7 @@ define(['app'], function(App){
               error : function(model, xhr){
                 formView.hideLoader();
                 App.alert({
-                  title: "Create Comment Error",
+                  title: __('diamante_front.comment.controller.alert.create_error.title'),
                   xhr : xhr
                 });
               }

@@ -1,29 +1,29 @@
 <form action="/" role="form">
     <div class="form-group required">
-        <label class="control-label" for="subject">Ticket Subject</label>
+        <label class="control-label" for="subject"><%= __('diamante_front.ticket.template.form.subject_label') %></label>
         <input type="text"
                class="form-control"
                id="subject"
                name="subject"
-               placeholder="Short ticket summary"
+               placeholder="<%= __('diamante_front.ticket.template.form.subject_placeholder') %>"
                value="<%= subject %>">
     </div>
     <div class="form-group required">
-        <label class="control-label" for="description">Description</label>
+        <label class="control-label" for="description"><%= __('diamante_front.ticket.template.form.description_label') %></label>
         <textarea class="form-control"
                   id="description"
                   name="description"
                   rows="5"
-                  placeholder="Provide a detailed description of your support request"><%= description %></textarea>
+                  placeholder="<%= __('diamante_front.ticket.template.form.description_placeholder') %>"><%= description %></textarea>
     </div>
     <div class="form-group">
-        <label class="control-label" for="priority">Priority</label>
+        <label class="control-label" for="priority"><%= __('diamante_front.ticket.template.form.priority_label') %></label>
         <select class="form-control"
                 id="priority"
                 name="priority">
-            <option value="low"<% if (priority.toLowerCase() == 'low') { %> selected<% } %>>Low</option>
-            <option value="medium"<% if (priority.toLowerCase() == 'medium') { %> selected<% } %>>Medium</option>
-            <option value="high"<% if (priority.toLowerCase() == 'high') { %> selected<% } %>>High</option>
+            <option value="low"<% if (priority.toLowerCase() == 'low') { %> selected<% } %>><%= __('diamante_front.ticket.template.form.low_option') %></option>
+            <option value="medium"<% if (priority.toLowerCase() == 'medium') { %> selected<% } %>><%= __('diamante_front.ticket.template.form.medium_option') %></option>
+            <option value="high"<% if (priority.toLowerCase() == 'high') { %> selected<% } %>><%= __('diamante_front.ticket.template.form.high_option') %></option>
         </select>
     </div>
     <% if(typeof is_new !== 'undifined'){ %>

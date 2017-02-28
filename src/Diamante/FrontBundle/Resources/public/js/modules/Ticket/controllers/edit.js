@@ -16,10 +16,10 @@ define(['app'], function(App){
                 model: editTicketModel
               }),
               modalEditView = new Edit.ModalView({
-                title: 'Edit Ticket ' + editTicketModel.get('key')
+                title: __('diamante_front.ticket.controller.edit.title', {ticket_id: editTicketModel.get('key')})
               });
 
-          App.setTitle(_.template('Edit Ticket: <%=key%> - <%=subject%>')(editTicketModel.toJSON()));
+          App.setTitle(__('diamante_front.ticket.controller.edit_ticket', editTicketModel.toJSON() ));
 
           modalEditView.on('show', function(){
             this.$el.modal();
@@ -39,13 +39,15 @@ define(['app'], function(App){
                   App.trigger('ticket:view', resultModel.get('key'));
                   App.trigger('message:show', {
                     status:'success',
-                    text: 'Ticket ' + resultModel.get('key') + ' updated'
+                    text: __('diamante_front.ticket.controller.message.ticket_update', {ticket_update_id: resultModel.get('key')})
                   });
                   modalEditView.off('modal:closed');
                   modalEditView.$el.modal('hide');
                 },
                 error : function(){
-                  App.alert({title: "Edit Ticket Error"});
+                  App.alert({
+                    title: __('diamante_front.ticket.controller.alert.edit_error.title')
+                  });
                 }
               });
             } else {
@@ -67,7 +69,7 @@ define(['app'], function(App){
             key = decodeURIComponent(link.href.replace(model.urlRoot,'').replace('/',''));
             App.trigger('message:show', {
               status:'info',
-              text: 'While we were actively working on your ticket, its key was changed to ' + key
+              text: __('diamante_front.ticket.controller.message.key_changed', {ticket_key_id: key})
             });
             App.trigger('ticket:edit', key);
           } else {

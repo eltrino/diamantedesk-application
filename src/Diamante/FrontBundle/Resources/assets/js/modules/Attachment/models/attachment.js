@@ -78,7 +78,7 @@ define([
           error: function(xhr){
             settings.error();
             App.alert({
-              title: "Add Attachments Error",
+              title: __('diamante_front.attachment.model.alert.add_error.title'),
               xhr : xhr
             });
           }

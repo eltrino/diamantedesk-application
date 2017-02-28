@@ -22,10 +22,10 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!validateEmail(attrs.email)){
-          errors.email = '"' + attrs.email + '" is not a valid email';
+          errors.email =  __('diamante_front.session.model.error.email_format', {email: attrs.email});
         }
         if(!trim(attrs.email)) {
-          errors.email = "Can't be blank";
+          errors.email = __('diamante_front.watcher.model.error.required');
         }
         if(!_.isEmpty(errors)){
           return errors;

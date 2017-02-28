@@ -5,14 +5,14 @@
       </span>
   <% } %>
   <ul class="attachment-tools pull-right">
-    <li><button class="btn btn-link js-delete-attachment" title="Remove Attachment"><i class="fa
+    <li><button class="btn btn-link js-delete-attachment" title="<%= __('diamante_front.attachment.template.button.remove') %>" ><i class="fa
       fa-times"></i></button></li>
   </ul>
-  <a href="<%= file.url %>" title="Download: <%= file.filename %>"><%= file.filename %></a>
+  <a href="<%= file.url %>" title="<%= __('diamante_front.attachment.template.link.download') %> <%= file.filename %>"><%= file.filename %></a>
 <% } else { %>
   <ul class="attachment-tools pull-right">
-    <li><button class="btn btn-link js-delete-attachment" title="Remove Attachment"><i class="fa
+    <li><button class="btn btn-link js-delete-attachment" title="<%= __('diamante_front.attachment.template.button.remove') %>" ><i class="fa
       fa-times"></i></button></li>
   </ul>
-  <a href="<%= base64 %>" title="Download: <%= filename %>" target="_blank"><%= filename %></a>
+  <a href="<%= base64 %>" title="<%= __('diamante_front.attachment.template.link.download') %> <%= filename %>" target="_blank"><%= filename %></a>
 <% } %>

@@ -12,13 +12,13 @@ define([
       validate: function(attrs, options){
         var errors = {};
         if(!trim(attrs.email)) {
-          errors.email = "Can't be blank";
+          errors.email = __('diamante_front.user.model.error.required');
         }
         if(_.indexOf(options.ignore, 'password') === -1){
           if(!trim(attrs.password)) {
-            errors.password = "Can't be blank";
+            errors.password = __('diamante_front.user.model.error.required');
           } else if(attrs.password.length < 6) {
-            errors.password = 'Must be at least six (6) symbols';
+            errors.password = __('diamante_front.user.model.error.password_length');
           }
         }
         if(!_.isEmpty(errors)){

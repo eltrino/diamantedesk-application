@@ -1,7 +1,7 @@
 <% if(is_author) {%>
 <ul class="comment-tools pull-right">
-    <li><button class="btn btn-link js-edit-comment" title="Edit Comment"><i class="fa fa-pencil"></i></button></li>
-    <li><button class="btn btn-link js-delete-comment" title="Delete Comment"><i class="fa fa-times"></i></button></li>
+    <li><button class="btn btn-link js-edit-comment" title="<%= __('diamante_front.comment.template.button.edit') %>"><i class="fa fa-pencil"></i></button></li>
+    <li><button class="btn btn-link js-delete-comment" title="<%= __('diamante_front.comment.template.button.delete') %>"><i class="fa fa-times"></i></button></li>
 </ul>
 <% } %>
 <img src="<%= avatar_url %>"

@@ -5,19 +5,21 @@
 <form role="form">
   <input name="hash" type="hidden" value="<%= hash %>"/>
   <div class="form-group">
-    <label class="control-label" for="password">New Password</label>
-    <input type="password" class="form-control input-lg" id="password" name="password" placeholder="Enter New Password">
+    <label class="control-label" for="password"><%= __('diamante_front.session.template.label.new_password') %></label>
+    <input type="password" class="form-control input-lg" id="password" name="password" tabindex="1"
+           placeholder="<%= __('diamante_front.session.template.placeholder.new_password') %>">
   </div>
-  <p>Back to <a href="#login">Sign in</a></p>
-  <button type="submit" class="btn btn-primary btn-lg btn-block js-submit">Set New Password</button>
+  <p><%= __('diamante_front.session.template.back.reset', {url: '#login'}) %></p>
+  <button type="submit" class="btn btn-primary btn-lg btn-block js-submit" tabindex="2"><%= __('diamante_front.session.template.button.set_password') %></button>
 </form>
 <% } else { %>
 <form role="form">
   <div class="form-group">
-    <label class="control-label" for="email">Email</label>
-    <input type="text" class="form-control input-lg" id="email" name="email" placeholder="Enter Email">
+    <label class="control-label" for="email"><%= __('diamante_front.session.template.label.email') %></label>
+    <input type="text" class="form-control input-lg" id="email" name="email" tabindex="1"
+           placeholder="<%= __('diamante_front.session.template.placeholder.email') %>">
   </div>
-  <p>Back to <a href="#login">Sign in</a></p>
-  <p><button type="submit" class="btn btn-primary btn-lg js-submit">Reset Password</button></p>
+  <p><%= __('diamante_front.session.template.back.reset', {url: '#login'}) %></p>
+  <p><button type="submit" class="btn btn-primary btn-lg js-submit" tabindex="2"><%= __('diamante_front.session.template.button.reset_password') %></button></p>
 </form>
 <% } %>

@@ -15,6 +15,7 @@ define([
   'marionette',
   'backbone',
   'config',
+  'helpers/translator',
   'bootstrap'], function(Marionette, Backbone, Config) {
 
   var App = new Marionette.Application({

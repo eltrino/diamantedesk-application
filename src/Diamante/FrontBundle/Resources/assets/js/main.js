@@ -28,7 +28,8 @@ require.config({
     "cryptojs.md5" : "vendor/dfm-crypto-js/components/md5",
     "cryptojs.sha1" : "vendor/dfm-crypto-js/components/sha1",
     "cryptojs.sha512" : "vendor/dfm-crypto-js/components/sha512",
-    "cryptojs.base64" : "vendor/dfm-crypto-js/components/enc-base64"
+    "cryptojs.base64" : "vendor/dfm-crypto-js/components/enc-base64",
+    "polyglot" : "vendor/polyglot/build/polyglot"
   },
   shim : {
     "jquery" : {

@@ -63,7 +63,10 @@ define([
         $(document).ajaxError(function(event, jqxhr, settings){
           if(jqxhr.status === 401 && App.getCurrentRoute() !== 'login') {
             this.logout();
-            App.alert({ title: "Authorization Required", messages: ["This action requires authorization"] });
+            App.alert({
+              title: __('diamante_front.session.model.alert.auth_required.title'),
+              messages: [__('diamante_front.session.model.alert.auth_required.text')]
+            });
             App.trigger('session:login', { return_path: App.getCurrentRoute() });
           }
         }.bind(this));
@@ -73,17 +76,17 @@ define([
         var errors = {};
         if(_.indexOf(options.ignore, 'email') === -1){
           if(!validateEmail(attrs.email)){
-            errors.email = '"' + attrs.email + '" is not a valid email';
+            errors.email = __('diamante_front.session.model.error.email_format', {email: attrs.email});
           }
           if(!trim(attrs.email)) {
-            errors.email = 'Can\'t be blank';
+            errors.email = __('diamante_front.session.model.error.required');
           }
         }
         if(_.indexOf(options.ignore, 'password') === -1){
           if(!trim(attrs.password)) {
-            errors.password = 'Can\'t be blank';
+            errors.password = __('diamante_front.session.model.error.required');
           } else if(attrs.password.length < 6) {
-            errors.password = 'Must be at least six (6) symbols';
+            errors.password = __('diamante_front.session.model.error.password_length');
           }
         }
         if(!_.isEmpty(errors)){

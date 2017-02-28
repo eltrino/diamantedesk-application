@@ -1,0 +1,15 @@
+{
+  "name": "polyglot",
+  "homepage": "https://github.com/airbnb/polyglot.js",
+  "version": "2.2.2",
+  "_release": "2.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.2.2",
+    "commit": "bcd829f8b0a5a70846f790ac2f3c73da3feb8fef"
+  },
+  "_source": "https://github.com/airbnb/polyglot.js.git",
+  "_target": "^2.2.2",
+  "_originalSource": "polyglot",
+  "_direct": true
+}

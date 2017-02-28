@@ -77,7 +77,10 @@ module.exports = function(grunt) {
           wrapShim: true,
           name: 'main',
           mainConfigFile: '<%= assetsDir %>/js/main.js',
-          out: '<%= publicDir %>/js/main.built.js'
+          out: '<%= publicDir %>/js/main.built.js',
+          paths: {
+            translations: 'empty:'
+          }
         }
       }
     },

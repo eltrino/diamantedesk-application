@@ -14,7 +14,7 @@ define(['app', 'Common/views/loader'], function(App, loaderView){
             search = params.search;
 
         if(search){
-          App.setTitle('Search Result');
+          App.setTitle(__('diamante_front.ticket.controller.search_result'));
         }
 
         request.done(function(ticketCollection){
