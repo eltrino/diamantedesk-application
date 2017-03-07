@@ -226,4 +226,34 @@ class CommentController extends Controller
 
         return $response;
     }
+
+    /**
+     * @param $id
+     *
+     * @Route("/form/{id}",
+     *      name="diamante_comment_widget_form",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Template("DiamanteDeskBundle:Comment:form.html.twig")
+     *
+     * @return array
+     */
+    public function form($id)
+    {
+        $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
+        $user = new User($this->getUser()->getId(), User::TYPE_ORO);
+        $command = $this->get('diamante.command_factory')
+            ->createCommentCommandForCreate($ticket, $user);
+        $form = $this->createForm('diamante_comment_form', $command);
+        $formView = $form->createView();
+        $formView->children['attachmentsInput']->vars = array_replace(
+            $formView->children['attachmentsInput']->vars,
+            array('full_name' => 'diamante_comment_form[attachmentsInput][]')
+        );
+        return [
+            'ticket' => $ticket,
+            'form' => $formView,
+            'user' => $user
+        ];
+    }
 }
