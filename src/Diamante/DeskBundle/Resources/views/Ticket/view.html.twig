@@ -8,134 +8,91 @@
     {% set comments = entity.comments %}
     {% import 'OroUIBundle::macros.html.twig' as UI %}
 
-{% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Comment') %}
-    <ol class="diam-comments unstyled">
-
-        {% for comment in comments if comment.id  %}
-
-            {% set imagePath = '' %}
-            {% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
-            {% if comment.author %}
-                {% set oroUser = fetch_oro_user(comment.author) %}
-                {% set diamanteUser = fetch_diamante_user(comment.author) %}
-                {% if oroUser %}
-                    {% set author = oroUser|oro_format_name %}
-                    {% set avatar = oro_configured_image_url(oroUser, 'avatar') %}
-                {% elseif diamanteUser %}
-                    {% set author = diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName %}
-                    {% set avatar = get_gravatar(diamanteUser.email) %}
+    {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Comment') %}
+        <ol class="diam-comments unstyled">
+            {% for comment in comments if comment.id  %}
+                {% set imagePath = '' %}
+                {% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
+                {% if comment.author %}
+                    {% set oroUser = fetch_oro_user(comment.author) %}
+                    {% set diamanteUser = fetch_diamante_user(comment.author) %}
+                    {% if oroUser %}
+                        {% set author = oroUser|oro_format_name %}
+                        {% set avatar = oro_configured_image_url(oroUser, 'avatar') %}
+                    {% elseif diamanteUser %}
+                        {% set author = diamanteUser.firstName ~ ' ' ~ diamanteUser.lastName %}
+                        {% set avatar = get_gravatar(diamanteUser.email) %}
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-            <li class="diam-comment{% if comment.private %} private{% endif %}">
-                <div class="pull-right">
-                {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
-                {% endif %}
-                {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': ticketKey|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
-                {% endif %}
-                </div>
-                <div class="diam-comment-user-image">
-                    {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
-                    <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
-                </div>
-                <div class="diam-comment-meta">
-                    {% if comment.private %}<span>private</span>{% endif %}
-                    {{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }}
-                    {{ comment.createdAt|time_diff}}
-                    <small>({{ comment.createdAt|oro_format_datetime }})</small>
-                </div>
-                <div class="diam-comment-content">{{ comment.content|raw }}</div>
-                {% if comment.attachments is not empty %}
-                    {% set files_count = comment.attachments|length %}
-                    <div class="diam-comment-attachments-box">
-                        <strong class="diam-comment-attachments-title">
-                            {{ 'diamante.desk.attachment.entity_plural_label'|trans }}:
-                            <small>
-                                ({% transchoice files_count with {'%count%': files_count} %}
-                                diamante.desk.attachment.files
-                                {% endtranschoice %})
-                            </small>
-                        </strong>
-                        <ul class="diam-comment-attachments unstyled">
-                            {% for attachment in comment.attachments %}
-                                <li class="diam-comment-attachment">
-                                    <a class="no-hash"
-                                       title="{{ 'diamante.desk.attachment.download'|trans({ '%filename%': attachment.filename|escape }) }}"
-                                       href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">
-                                        <figure>
-                                            <div class="diam-comment-attachment-preview">
-                                            {% set attachmentExtension = attachment.file.extension %}
-                                            {% set attachmentPreviewSrc = attachment.file.Pathname %}
-                                            {% if attachmentExtension == '' %}
-                                                <img src="{{ asset('bundles/diamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
-                                            {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
-                                            attachmentExtension == 'png' or attachmentExtension == 'gif')
-                                            %}
-                                                <img src="{{ attachmentPreviewSrc | imagine_filter('attach_preview_img') }}" alt="{{ attachment.filename|escape }}"/>
-                                            {% else %}
-                                                <img src="{{ asset('bundles/diamantedesk/img/file.png') }}" alt="{{
-                                                attachment.filename|escape }}" class="diam-comment-attachment-placeholder" />
-                                                <span class="diam-comment-attachment-label">{{ attachmentExtension }}</span>
-                                            {% endif %}
-                                            </div>
-                                            <figcaption>
-                                                <strong>{{ attachment.filename|escape }}</strong>
-                                                <small>({{ attachment.file.fileSize|bites_to_human }})</small>
-                                            </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                <li class="diam-comment">
+                    <div class="pull-right">
+                        {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
+                            <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
+                        {% endif %}
+                        {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
+                            <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': ticketKey|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
+                        {% endif %}
                     </div>
-                {% endif %}
-            </li>
-        {% else %}
-            <li><em>{{ 'diamante.desk.comment.messages.empty'|trans }}</em></li>
-        {% endfor %}
-    </ol>
-{% endif %}
+                    <div class="diam-comment-user-image">
+                        {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
+                        <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
+                    </div>
+                    <div class="diam-comment-meta">{{ author }} {{ 'diamante.desk.comment.placeholders.added'|trans }} - {{ comment.createdAt|oro_format_datetime }} {% if comment.private %}<span>private</span>{% endif %}</div>
+                    <div class="diam-comment-content">{{ comment.content|raw }}</div>
+                    {% if comment.attachments is not empty %}
+                        <div class="diam-comment-attachments-box">
+                            <strong class="diam-comment-attachments-title">{{ 'diamante.desk.attachment.entity_plural_label'|trans }}:</strong>
+                            <ul class="diam-comment-attachments unstyled">
+                                {% for attachment in comment.attachments %}
+                                    <li><i class="icon-paper-clip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li><em>{{ 'diamante.desk.comment.messages.empty'|trans }}</em></li>
+            {% endfor %}
+        </ol>
+    {% endif %}
 
-{% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
-    <div class="clearfix">
-        {{ UI.button({
-            'path': path('diamante_comment_create', {'id': entity.id}),
-            'iCss': 'icon-edit',
-            'title': 'diamante.desk.comment.entity_label'|trans,
-            'label': 'diamante.desk.comment.entity_label'|trans
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
+        <p style="text-align: right;">{{ UI.button({
+                'path': path('diamante_comment_create', {'id': entity.id}),
+                'iCss': 'icon-edit',
+                'title': 'diamante.desk.comment.entity_label'|trans,
+                'label': 'diamante.desk.comment.entity_label'|trans
             })
-        }}
-    </div>
-{% endif %}
-<script type="text/javascript">
-    require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
-            function($, Modal, Mediator, __) {
-                $('.delete-item-confirmation').click(function (e) {
-                    e.preventDefault();
-                    var url = $(this).data('url');
-
-                    if (dialog) {
-                        dialog.close();
-                        dialog.remove();
-                    }
-
-                    var dialog = new Modal({
-                        content: '{{ 'diamante.desk.comment.messages.delete.query'|trans }}',
-                        okText: __('{{ 'diamante.desk.ui.ok'|trans }}'),
-                        cancelText: __('{{ 'diamante.desk.ui.cancel'|trans }}'),
-                        title: __('{{ 'diamante.desk.common.delete_confirmation'|trans }}'),
-                        className: 'modal oro-modal-danger'
-                    });
-
-                    dialog.open(function () {
-                        Mediator.execute('showLoading');
-                        Mediator.execute('redirectTo', {url: url})
+            }}
+        </p>
+    {% endif %}
+    <script type="text/javascript">
+        require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
+                function($, Modal, Mediator, __) {
+                    $('.delete-item-confirmation').click(function (e) {
+                        e.preventDefault();
+                        var url = $(this).data('url');
+                        if (dialog) {
+                            dialog.close();
+                            dialog.remove();
+                        }
+                        var dialog = new Modal({
+                            content: '{{ 'diamante.desk.comment.messages.delete.query'|trans }}',
+                            okText: __('{{ 'diamante.desk.ui.ok'|trans }}'),
+                            cancelText: __('{{ 'diamante.desk.ui.cancel'|trans }}'),
+                            title: __('{{ 'diamante.desk.common.delete_confirmation'|trans }}'),
+                            className: 'modal oro-modal-danger'
+                        });
+                        dialog.open(function () {
+                            Mediator.execute('showLoading');
+                            Mediator.execute('redirectTo', {url: url})
+                        });
                     });
                 });
-            });
-</script>
+    </script>
 {% endmacro %}
+
+
 
 {% block navButtons %}
     <script>
@@ -287,10 +244,10 @@
 
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
-        'path': path('diamante_ticket_create_attach', {'id': entity.id}),
-        'iCss': 'icon-file',
-        'title': 'diamante.desk.attachment.actions.attach'|trans,
-        'label': 'diamante.desk.attachment.actions.attach'|trans
+            'path': path('diamante_ticket_create_attach', {'id': entity.id}),
+            'iCss': 'icon-file',
+            'title': 'diamante.desk.attachment.actions.attach'|trans,
+            'label': 'diamante.desk.attachment.actions.attach'|trans
         }) }}
     {% endif %}
 
@@ -311,18 +268,19 @@
 
 {% block pageHeader %}
     {% set breadcrumbs = {
-        'entity': entity,
-        'indexPath': path('diamante_branch_view', {'id': entity.branch.id}),
-        'indexLabel': entity.branchName,
-        'entityTitle': ticketKey ~ ' ' ~ entity.subject|default('diamante.desk.common.not_available'|trans),
-        'hasAvatar': true,
-        'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
+    'entity': entity,
+    'indexPath': path('diamante_branch_view', {'id': entity.branch.id}),
+    'indexLabel': entity.branchName,
+    'entityTitle': ticketKey ~ ' ' ~ entity.subject|default('diamante.desk.common.not_available'|trans),
+    'hasAvatar': true,
+    'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
     }
     %}
     {{ parent() }}
 {% endblock pageHeader %}
 
 {% block content_data %}
+
     {% set id = 'navbarTicketView' %}
     {% set reporterDisplayName = entity.unassignedLabel|trans %}
     {% if entity.reporter %}
@@ -406,5 +364,31 @@
     ) %}
 
     {% set data = {'dataBlocks': dataBlocks} %}
-    {{ parent() }}
+
+    <div class="row-fluid" id="wrapper">
+        <div class="span9">
+            {{ parent() }}
+            {#{{ dump(entity) }}#}
+        </div>
+        <div class="span3">
+            {#{% placeholder ticket_content_view with {entity: entity, data: data, ticketKey: ticketKey, UI: UI} %}#}
+            {{ _self.renderSidebar(data) }}
+        </div>
+    </div>
 {% endblock content_data %}
+
+{% macro renderSidebar(data) %}
+    {#{% for scrollBlock in data.dataBlocks %}#}
+        {#{{ dump(scrollBlock.subblocks[0]) }}#}
+        {#{% for subblock in scrollBlock.subblocks %}#}
+            {#{% for dataBlock in subblock.data %}#}
+                {#{{ dataBlock|raw }}#}
+            {#{% endfor %}#}
+        {#{% endfor %}#}
+    {#{% endfor %}#}
+    {{ data.dataBlocks[0].subblocks[0].title }}
+    {% for dataBlock in data.dataBlocks[0].subblocks[0].data %}
+        {{ dataBlock|raw }}
+    {% endfor %}
+
+{% endmacro %}

@@ -1,0 +1,32 @@
+{#{% extends 'DiamanteDeskBundle:Ticket:view.html.twig' %}#}
+{#{% oro_title_set({params : {"%ticket.key%": ticketKey, "%ticket.subject%": entity.subject}}) %}#}
+
+{#{% block content_data %}#}
+{#<div class="row-fluid" id="wrapper">#}
+    {#<div class="span9">#}
+        {#{{ UI.scrollData(entity.id, data) }}#}
+    {#</div>#}
+    {#<div class="span3">#}
+        <div class="sidebar-block details">
+            <h4>Details</h4>
+            <p>Source: <span>&lt;Placeholder&gt;</span></p>
+            <p>Priority: <span>&lt;Placeholder&gt;</span></p>
+        </div>
+        <div class="sidebar-block reported">
+            <h4>Reported by <span>&lt;Placeholder&gt;</span> </h4>
+            <p>email@gmail.com</p>
+            <p>+74387364582647</p>
+        </div>
+        <div class="sidebar-block assigned">
+            <h4>Assigned to <span>&lt;Placeholder&gt;</span></h4>
+            <p>email@gmail.com</p>
+            <p>+74387364582647</p>
+        </div>
+        <div class="sidebar-block listeners">
+            <h4>Listeners/Watchers</h4>
+            <p>User 1, User 2, User 3</p>
+        </div>
+
+    {#</div>#}
+{#</div>#}
+{#{% endblock content_data %}#}

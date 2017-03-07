@@ -10,6 +10,9 @@ placeholders:
         items:
             create_ticket_button:
                 order: 200
+    ticket_content_view:
+      items:
+        ticket_content: ~
 
 items:
     default_branch_notification:
@@ -23,3 +26,7 @@ items:
         applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %oro_user.entity.class%)
     create_ticket_button:
         template: DiamanteDeskBundle:Ticket:createButton.html.twig
+    ticket_content:
+        template: DiamanteDeskBundle:Ticket:contentView.html.twig
+
+
