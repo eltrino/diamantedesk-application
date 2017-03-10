@@ -55,7 +55,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
     }
 
     var svg = plot.append("svg")
-        .attr("width", w)
+        .attr("width", w)  // width ???
         .attr("height", h)
         .attr("viewBox", "0 0 " + w + " " + h);
 
@@ -72,7 +72,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
         .scale(x)
         .orient("bottom");
 
-    var ticksCount = parseInt(d3.max(data, function(d) { return d.y; }),10) + 1;
+    var ticksCount = d3.max(data, function(d) { return parseInt(d.y, 10) }) + 1;
     if(ticksCount > 20) {
       ticksCount = 20;
     }
@@ -91,7 +91,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
     var color = d3.scale.ordinal().domain(data).range(palette[data.length]);
 
     x.domain( data.map(function(d) { return d.x; }));
-    y.domain([0, parseInt(d3.max(data, function(d) { return d.y; }),10) + 1]);
+    y.domain([0, d3.max(data, function(d) { return parseInt(d.y, 10) }) + 1]);
 
     if(x.rangeBand() > width / 4) {
       x.rangeRoundBands([0, width * .5], .1);
