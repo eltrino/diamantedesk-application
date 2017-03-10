@@ -55,7 +55,7 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
     }
 
     var svg = plot.append("svg")
-        .attr("width", w)  // width ???
+        .attr("width", w)
         .attr("height", h)
         .attr("viewBox", "0 0 " + w + " " + h);
 
