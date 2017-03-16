@@ -88,7 +88,10 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
           return '<div class="tooltip-arrow"></div><div class="tooltip-inner">Tickets: <span>' + d.y + '</span></div>';
         });
 
-    var color = d3.scale.ordinal().domain(data).range(palette[data.length]);
+    var paletteLength = Object.keys(palette).length;
+    var dataLength = (data.length <= paletteLength) ? data.length : paletteLength;
+
+    var color = d3.scale.ordinal().domain(data).range(palette[dataLength]);
 
     x.domain( data.map(function(d) { return d.x; }));
     y.domain([0, d3.max(data, function(d) { return parseInt(d.y, 10) }) + 1]);

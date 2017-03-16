@@ -103,7 +103,10 @@ define(['d3', 'd3-tip', 'diamante/palette', 'underscore'], function (d3, d3tip, 
             .innerRadius(radius * 0.9)
             .outerRadius(radius * 0.9);
 
-        var color = d3.scale.ordinal().domain(data).range(palette[data.length]);
+        var paletteLength = Object.keys(palette).length;
+        var dataLength = (data.length <= paletteLength) ? data.length : paletteLength;
+
+        var color = d3.scale.ordinal().domain(data).range(palette[dataLength]);
 
         var slice = svg.select(".slices").selectAll("path.slice")
             .data(pie(data));
