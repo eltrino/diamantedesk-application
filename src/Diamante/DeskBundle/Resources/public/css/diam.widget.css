@@ -142,6 +142,10 @@
   text-transform: capitalize;
 }
 
+.diam-plot.diam-pie-chart-widget {
+    padding: 10px;
+}
+
 .dashboard-widgets-wrapper .dashboard-widget-container .dashboard-widget-small-column:nth-child(2) {
   width: 50px;
 }
