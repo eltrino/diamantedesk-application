@@ -101,6 +101,7 @@
     }
 }
 
+
 .diam-comment-user-image {
     float: left;
     margin-left: -5.5em;
@@ -206,6 +207,43 @@
     bottom: .1em;
     width: 100%;
     font-size: .75em;
+}
+
+.diam-comment-form-privacy {
+    margin: 0 0 1em;
+    input {
+        position: absolute;
+        left:-999em;
+    }
+    label {
+        display: inline;
+        color: #006acc;
+        &:hover {
+            color: #005580;
+        }
+    }
+}
+
+.diam-comment-form-privacy-private {
+    display: none;
+}
+
+.diam-comment-form {
+    &.private {
+        .diam-comment-form-privacy-private {
+            display: block;
+        }
+        .diam-comment-form-privacy-public {
+            display: none;
+        }
+    }
+}
+
+.diam-comment-form-content {
+    margin-bottom: 1em;
+    .mce-tinymce {
+        width: 100%;
+    }
 }
 
 

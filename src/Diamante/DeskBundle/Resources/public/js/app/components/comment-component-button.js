@@ -3,13 +3,13 @@ define(function (require) {
   "use strict";
 
   var $ = require('jquery');
-  // var _ = require('underscore');
   var BaseComponent = require('oroui/js/app/components/base/component');
 
-  var CommentComponent = BaseComponent.extend({
+  var CommentComponentButton = BaseComponent.extend({
 
     initialize : function(options){
       this.$elem  = options._sourceElement;
+      this.$elem.find('.btn-group').addClass('dropup');
       this.form = $('form[name="'+ options.formName +'"]');
       this.$elem.on('click', 'a', this.clickHandler.bind(this));
     },
@@ -42,7 +42,7 @@ define(function (require) {
 
   });
 
-  return CommentComponent;
+  return CommentComponentButton;
 
 
 });

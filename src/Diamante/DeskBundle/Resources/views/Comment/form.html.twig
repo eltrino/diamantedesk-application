@@ -13,19 +13,44 @@
     {% set avatar = get_gravatar(diamanteUser.email) %}
 {% endif %}
 
-{{ form_start(form, { 'action' : path('diamante_comment_create', { 'id': ticket.id }) }) }}
-<div class="diam-comment-form">
+{% set options  = {
+    formName : form.vars.full_name,
+    privateInputId : form.private.vars.id
+} %}
+
+<div class="diam-comment-form"
+     data-page-component-name="comment-component-form"
+     data-page-component-module="diamantedesk/js/app/components/comment-component-form"
+     data-page-component-options="{{ options|json_encode }}">
     <div class="diam-comment-user-image">
         {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
         <img src="{{ (avatar is defined and avatar != '' ) ? avatar : defaultAvatar }}" alt="{{ author }}">
     </div>
-    {{ form_errors(form) }}
-    {{ form_row(form.content) }}
-    {{ form_row(form.attachmentsInput) }}
-    {{ form_row(form.private) }}
-    <div class="hide">{{ form_row(form.ticketStatus) }}</div>
+    {{ form_start(form, { 'action' : path('diamante_comment_create', { 'id': ticket.id }) }) }}
+        {{ form_errors(form) }}
+        <div class="diam-comment-form-privacy">
+            {{ form_widget(form.private) }}
+            <div class="diam-comment-form-privacy-private">
+                {{ 'diamante.desk.comment.privacy.private.text' | trans }} <label for="{{ form.private.vars.id }}">{{ 'diamante.desk.comment.privacy.private.label' | trans }}</label>
+            </div>
+            <div class="diam-comment-form-privacy-public">
+                {{ 'diamante.desk.comment.privacy.public.text' | trans }} <label for="{{ form.private.vars.id }}">{{ 'diamante.desk.comment.privacy.public.label' | trans }}</label>
+            </div>
+        </div>
+        <div class="diam-comment-form-content">
+            {{ form_widget(form.content) }}
+            {{ form_errors(form.content) }}
+        </div>
+        <div>
+            {{ form_widget(form.attachmentsInput) }}
+            {{ form_errors(form.attachmentsInput) }}
+        </div>
+        <div class="hide">{{ form_widget(form.ticketStatus) }}</div>
+    {{ form_end(form) }}
 </div>
-{{ form_end(form) }}
+
+
+
 {% set html %}
     {{ UI.dropdownItem({
         'path': '',
@@ -48,13 +73,10 @@
         }) }}
     {% endfor %}
 {% endset %}
-{% set options  = {
-    formName : form.vars.full_name
-} %}
 <div class="clearfix">
     <div class="pull-right"
-         data-page-component-name="comment-component"
-         data-page-component-module="diamantedesk/js/app/components/comment-component"
+         data-page-component-name="comment-component-button"
+         data-page-component-module="diamantedesk/js/app/components/comment-component-button"
          data-page-component-options="{{ options|json_encode }}">
         {{ UI.dropdownButton({
             'iCss': 'icon-edit',
