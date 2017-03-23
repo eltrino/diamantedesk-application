@@ -27,19 +27,19 @@ define(['app'], function(App){
         });
       },
       viewTicket: function(id, query){
-        App.setTitle('View Ticket');
+        App.setTitle(__('diamante_front.ticket.router.view_ticket'));
         require(['Ticket/controllers/view'], function(View){
           View.Controller(id, query);
         });
       },
       createTicket: function(){
-        App.setTitle('Create Ticket');
+        App.setTitle(__('diamante_front.ticket.router.create_ticket'));
         require(['Ticket/controllers/create'], function(Create){
           Create.Controller();
         });
       },
       editTicket: function(key){
-        App.setTitle('Edit Ticket');
+        App.setTitle(__('diamante_front.ticket.router.edit_ticket'));
         require(['Ticket/controllers/edit'], function(Edit){
           Edit.Controller(key);
         });

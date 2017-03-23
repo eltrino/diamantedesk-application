@@ -142,7 +142,10 @@ define(['oroui/js/app/components/base/component' ,'d3', 'd3-tip', 'diamante/pale
         .filter(function(key) { return key !== "date"; })
         .value();
 
-    var color = d3.scale.ordinal().domain(keys).range(palette[keys.length]);
+    var paletteLength = Object.keys(palette).length;
+    var dataLength = (data.length <= paletteLength) ? data.length : paletteLength;
+
+    var color = d3.scale.ordinal().domain(keys).range(palette[dataLength]);
 
     populateData(data);
 

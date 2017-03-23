@@ -122,7 +122,7 @@ class DoctrineReportRepository
     {
         $dateDiffExpression = $this->getDateDiffExpression();
         return $this->execute("
-              SELECT '0-1'     AS data_range,
+              SELECT '< 1 hour'     AS data_range,
                     count(t.id) as data_count
               FROM diamante_ticket t
               INNER JOIN
@@ -133,7 +133,7 @@ class DoctrineReportRepository
               ON (t.id = s.subquery_ticket_id)
               WHERE {$dateDiffExpression} BETWEEN 0 AND 3600
               UNION ALL
-              SELECT '1-8' AS data_range,
+              SELECT '1-8 hours' AS data_range,
                       count(t.id) as data_count
               FROM diamante_ticket t
               INNER JOIN
@@ -144,7 +144,7 @@ class DoctrineReportRepository
               ON (t.id = s.subquery_ticket_id)
               WHERE {$dateDiffExpression} BETWEEN 3600 AND 3600 * 8
               UNION ALL
-              SELECT '8-24' AS data_range,
+              SELECT '8-24 hours' AS data_range,
                      count(t.id) as data_count
               FROM diamante_ticket t
               INNER JOIN
@@ -155,7 +155,7 @@ class DoctrineReportRepository
               ON (t.id = s.subquery_ticket_id)
               WHERE {$dateDiffExpression} BETWEEN 3600 * 8 AND 3600 * 24
               UNION ALL
-              SELECT 'more 24' AS data_range,
+              SELECT '> 24 hours' AS data_range,
               count(t.id) as data_count
               FROM diamante_ticket t
               INNER JOIN
