@@ -4,6 +4,8 @@ define(function (require) {
 
   var $ = require('jquery');
   var BaseComponent = require('oroui/js/app/components/base/component');
+  var Mediator = require('oroui/js/mediator');
+  var formToAjaxOptions = require('oroui/js/tools/form-to-ajax-options');
 
   var CommentComponentButton = BaseComponent.extend({
 
@@ -25,7 +27,16 @@ define(function (require) {
     },
 
     add: function(data){
-      this.form.submit();
+      var options = formToAjaxOptions(this.form, {
+        complete: function() {
+          console.log(arguments);
+          Mediator.execute('refreshPage');
+        }
+      });
+      console.log(options);
+      Mediator.execute('showLoading');
+      Mediator.execute('submitPage', options);
+      //this.form.submit();
     },
 
     set: function(data){
