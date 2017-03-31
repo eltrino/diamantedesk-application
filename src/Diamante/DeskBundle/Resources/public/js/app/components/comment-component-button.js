@@ -27,16 +27,10 @@ define(function (require) {
     },
 
     add: function(data){
-      var options = formToAjaxOptions(this.form, {
-        complete: function() {
-          console.log(arguments);
-          Mediator.execute('refreshPage');
-        }
-      });
-      console.log(options);
+      var options = formToAjaxOptions(this.form);
+      //this.form.submit();
       Mediator.execute('showLoading');
       Mediator.execute('submitPage', options);
-      //this.form.submit();
     },
 
     set: function(data){

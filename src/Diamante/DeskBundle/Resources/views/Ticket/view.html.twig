@@ -55,12 +55,6 @@
             {% endfor %}
         </ol>
     {% endif %}
-
-    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
-
-        {%  render path('diamante_comment_widget_form', {'id': entity.id}) %}
-
-    {% endif %}
     <script type="text/javascript">
         require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
                 function($, Modal, Mediator, __) {
@@ -85,6 +79,13 @@
                     });
                 });
     </script>
+
+    {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
+
+        {% render path('diamante_comment_widget_form', {'id': entity.id}) %}
+
+    {% endif %}
+
 {% endmacro %}
 
 

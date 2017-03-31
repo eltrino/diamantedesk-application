@@ -10,7 +10,9 @@ define(function (require) {
     initialize : function(options){
       this.$elem  = options._sourceElement;
       this.privateToggler = $('#' + options.privateInputId);
+      if(!this.privateToggler.length) return;
       this.privateToggler.change(this.onChange.bind(this));
+      this.contentElem = $('#' + options.contentInputId);
       this.onChange();
     },
 
@@ -23,6 +25,7 @@ define(function (require) {
         return;
       }
       delete this.$elem;
+      CommentComponentForm.__super__.initialize.call(this, arguments);
     }
 
   });

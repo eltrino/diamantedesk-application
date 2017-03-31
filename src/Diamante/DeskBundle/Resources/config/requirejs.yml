@@ -4,7 +4,10 @@ config:
             'oro/datagrid/action/delete-action': 'diamante/datagrid/action/delete-action'
             'orodatagrid/js/app/plugins/grid/floating-header-plugin': 'diamantedesk/js/app/plugins/grid/floating-header-plugin'
             'orodatagrid/js/app/components/datagrid-component': 'diamantedesk/js/app/components/datagrid-component'
+            'oroform/js/app/views/wysiwig-editor/wysiwyg-editor-view': 'diamantedesk/js/app/views/wysiwig-editor/wysiwyg-editor-view'
         'diamante/datagrid/action/delete-action': 'oro/datagrid/action/delete-action'
+        'diamantedesk/js/app/views/wysiwig-editor/wysiwyg-editor-view' :
+            'oroform/js/app/views/wysiwig-editor/wysiwyg-editor-view' : 'oroform/js/app/views/wysiwig-editor/wysiwyg-editor-view'
 
     paths:
         'd3': 'bundles/diamantedesk/lib/d3/d3.min.js'
