@@ -157,6 +157,14 @@ diamante:
             edit:              Edit Comment
             add:               Add Comment
 
+          privacy:
+            private:
+              text: Type a private comment or
+              label: change it to public
+            public:
+              text: Type a public comment or
+              label: change it to private
+
           messages:
             create:
               error:           Error occured while creating a comment.

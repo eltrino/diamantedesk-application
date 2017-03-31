@@ -3,13 +3,15 @@ define(function (require) {
   "use strict";
 
   var $ = require('jquery');
-  // var _ = require('underscore');
   var BaseComponent = require('oroui/js/app/components/base/component');
+  var Mediator = require('oroui/js/mediator');
+  var formToAjaxOptions = require('oroui/js/tools/form-to-ajax-options');
 
-  var CommentComponent = BaseComponent.extend({
+  var CommentComponentButton = BaseComponent.extend({
 
     initialize : function(options){
       this.$elem  = options._sourceElement;
+      this.$elem.find('.btn-group').addClass('dropup');
       this.form = $('form[name="'+ options.formName +'"]');
       this.$elem.on('click', 'a', this.clickHandler.bind(this));
     },
@@ -25,7 +27,10 @@ define(function (require) {
     },
 
     add: function(data){
-      this.form.submit();
+      var options = formToAjaxOptions(this.form);
+      //this.form.submit();
+      Mediator.execute('showLoading');
+      Mediator.execute('submitPage', options);
     },
 
     set: function(data){
@@ -42,7 +47,7 @@ define(function (require) {
 
   });
 
-  return CommentComponent;
+  return CommentComponentButton;
 
 
 });
