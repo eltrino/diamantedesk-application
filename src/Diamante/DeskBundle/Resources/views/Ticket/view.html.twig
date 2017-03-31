@@ -3,6 +3,9 @@
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 {% import 'DiamanteDeskBundle:UI:macros.html.twig' as DiamUI %}
+{% use "@DiamanteDesk/Ticket/rightPanel.html.twig"  %}
+
+
 {% oro_title_set({params : {"%ticket.key%": ticketKey, "%ticket.subject%": entity.subject}}) %}
 {% macro renderComments(entity, ticketKey) %}
     {% set comments = entity.comments %}
@@ -63,29 +66,30 @@
     {% endif %}
     <script type="text/javascript">
         require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
-                function($, Modal, Mediator, __) {
-                    $('.delete-item-confirmation').click(function (e) {
-                        e.preventDefault();
-                        var url = $(this).data('url');
-                        if (dialog) {
-                            dialog.close();
-                            dialog.remove();
-                        }
-                        var dialog = new Modal({
-                            content: '{{ 'diamante.desk.comment.messages.delete.query'|trans }}',
-                            okText: __('{{ 'diamante.desk.ui.ok'|trans }}'),
-                            cancelText: __('{{ 'diamante.desk.ui.cancel'|trans }}'),
-                            title: __('{{ 'diamante.desk.common.delete_confirmation'|trans }}'),
-                            className: 'modal oro-modal-danger'
-                        });
-                        dialog.open(function () {
-                            Mediator.execute('showLoading');
-                            Mediator.execute('redirectTo', {url: url})
-                        });
+            function($, Modal, Mediator, __) {
+                $('.delete-item-confirmation').click(function (e) {
+                    e.preventDefault();
+                    var url = $(this).data('url');
+                    if (dialog) {
+                        dialog.close();
+                        dialog.remove();
+                    }
+                    var dialog = new Modal({
+                        content: '{{ 'diamante.desk.comment.messages.delete.query'|trans }}',
+                        okText: __('{{ 'diamante.desk.ui.ok'|trans }}'),
+                        cancelText: __('{{ 'diamante.desk.ui.cancel'|trans }}'),
+                        title: __('{{ 'diamante.desk.common.delete_confirmation'|trans }}'),
+                        className: 'modal oro-modal-danger'
+                    });
+                    dialog.open(function () {
+                        Mediator.execute('showLoading');
+                        Mediator.execute('redirectTo', {url: url})
                     });
                 });
+            });
     </script>
 {% endmacro %}
+
 
 
 
@@ -363,27 +367,10 @@
     <div class="row-fluid" id="wrapper">
         <div class="span9">
             {{ parent() }}
-            {#{{ dump(entity) }}#}
         </div>
         <div class="span3">
-            {#{% placeholder ticket_content_view with {entity: entity, data: data, ticketKey: ticketKey, UI: UI} %}#}
-            {{ _self.renderSidebar(data) }}
+            {{ block('sidebar') }}
         </div>
     </div>
 {% endblock content_data %}
 
-{% macro renderSidebar(data) %}  {# try output ticket details in sidebar #}
-    {#{% for scrollBlock in data.dataBlocks %}#}
-        {#{{ dump(scrollBlock.subblocks[0]) }}#}
-        {#{% for subblock in scrollBlock.subblocks %}#}
-            {#{% for dataBlock in subblock.data %}#}
-                {#{{ dataBlock|raw }}#}
-            {#{% endfor %}#}
-        {#{% endfor %}#}
-    {#{% endfor %}#}
-    {{ data.dataBlocks[0].subblocks[0].title }}
-    {% for dataBlock in data.dataBlocks[0].subblocks[0].data %}
-        {{ dataBlock|raw }}
-    {% endfor %}
-
-{% endmacro %}

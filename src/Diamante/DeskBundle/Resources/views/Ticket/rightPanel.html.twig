@@ -1,0 +1,40 @@
+{% block sidebar %}
+    <div class="form-horizontal">
+        <div class="responsive-cell responsive-cell-no-blocks">
+            {% set detailsBlock = [DiamUI.attributeRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)] %}
+            {% set detailsBlock = detailsBlock|merge([DiamUI.attributeRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
+            {% set reporterBlock = [DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: reporterModel.isDeleted ? 'deleted-reporter' : ''})] %}
+            {% set reporterBlock = reporterBlock|merge([DiamUI.attributeRow('email', reporter.getEmail)]) %}
+            {% set assignedBlock = [DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)] %}
+
+            {% set sidebarDataBlocks =
+                [
+                {
+                'title': 'diamante.desk.ticket.details'|trans,
+                'data' : detailsBlock
+                },
+                {
+                'title': 'Reporter by',
+                'data': reporterBlock
+                },
+                {
+                'title': 'Assigned to',
+                'data': assignedBlock
+                },
+                {
+                'title': 'Listeners/Watchers',
+                'data': [WatchersListWidget]
+                },
+                ]
+            %}
+
+            {% for subblock in sidebarDataBlocks %}
+                <h5 class="user-fieldset"><span>{{ subblock.title }}</span></h5>
+
+                {% for curData in subblock.data %}
+                    {{ curData }}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock sidebar %}
