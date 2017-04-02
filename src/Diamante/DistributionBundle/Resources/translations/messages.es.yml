@@ -1,0 +1,28 @@
+---
+title: DiamanteDesk Application Installation
+process:
+  step:
+    diamanteinstall:
+      header: Initialization
+    installation:
+      cache: Clear cache before database initialization
+      clear-config: Clear entities cache
+      clear-extend: Clear extended entities data
+      schema-drop: Drop current schema
+      schema-update: Schema update
+      fixtures: Load fixtures
+      workflows: Load workflow definitions
+      processes: Load processes configuration
+      navigation: Init navigation
+      js-routing: Dump JS routing
+      localization: Dump localization
+      assets: Install assets
+      assetic: Dump assetic
+      translation: Prepare translations
+      requirejs: Optimize JS resources (optional)
+      finish: Clear cache to finalize installation
+    check:
+      table:
+        diamante: DiamanteDesk Requirements
+    final:
+      content: 'You''re lucky to start using DiamanteDesk right away.<br>If you''re looking for some help or need some support, please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you''re our Enterprise client.'
