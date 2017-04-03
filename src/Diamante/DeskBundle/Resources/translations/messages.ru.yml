@@ -15,7 +15,7 @@ diamante:
       default_assignee.label: Default Assignee
       columns:
         logo: Logo
-        branch_name: Branch Name
+        branch_name: Branch Имя
         branch_key: Branch Key
       actions:
         create: Create Branch
@@ -49,8 +49,8 @@ diamante:
       entity_plural_label: Tickets
       details: Ticket Details
       all: All Tickets
-      created_at.label: Created At
-      description.label: Description
+      created_at.label: Создан в
+      description.label: Описание
       id.label: Ticket Id
       priority.label: Priority
       reporter_email.label: Reporter Email
@@ -59,7 +59,7 @@ diamante:
       comments.label: Comments
       sequence_number.label: Sequence Number
       source.label: Source
-      status.label: Status
+      status.label: Статус
       subject.label: Subject
       unique_id.label: Unique Id
       updated_at.label: Updated At
@@ -77,15 +77,15 @@ diamante:
         assignee: Assignee
         reporter: Reporter
         priority: Priority
-        status: Status
-        created: Created
-        updated: Updated
+        status: Статус
+        created: Создан
+        updated: Обновлен
       actions:
         add: Add Ticket
         edit: Edit Ticket
         view: View Ticket
         remove: Delete Ticket
-        delete: Delete
+        delete: Удалить
         assign: Assign
         create: Create Ticket
         change_status: Change Status
@@ -179,7 +179,7 @@ diamante:
         delete_file: Delete File
         add: Add Attachment
         download: Download
-        remove: Delete
+        remove: Удалить
         attach: Attach File
       messages:
         create:
@@ -214,41 +214,41 @@ diamante:
         unwatch:
           success: You have successfully unsubscribed from watching the ticket.
     ui:
-      create: Create
-      ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
-      edit: Edit
-      add: Add
-      change: Change
+      create: Создать
+      ok: Принять
+      cancel: Отменить
+      save: Сохранить
+      delete: Удалить
+      save_and_close: Сохранить и закрыть
+      edit: Редактировать
+      add: Добавить
+      change: Изменить
       select_watcher: Select User
     common:
-      general: General
-      description: Description
-      created: Created
-      updated: Updated
-      not_available: N/A
-      not_defined: Not defined
+      general: Основная информация
+      description: Описание
+      created: Создан
+      updated: Обновлен
+      not_available: Недоступен
+      not_defined: Не определен
       no_description: No description
-      delete_confirmation: Confirm Deletion
+      delete_confirmation: Подтвердите удаление
       filters: Filters
       watchers: Watchers
       messages:
         validation:
           failed: Form is invalid. Fill out all required fields correctly.
     forms:
-      name: Name
+      name: Имя
       default_assignee: Default Assignee
       logoFile: Logo
       tags: Tags
       key: Key
     attributes:
-      name: Name
+      name: Имя
       subject: Subject
       branch: Branch
-      status: Status
+      status: Статус
       priority: Priority
       source: Source
       reporter: Reporter
@@ -311,10 +311,10 @@ oro:
   entity_extend:
     form:
       data_type:
-        branch_logo: Branch Logo
+        branch_logo: Branch Логотип
         user_type: User Type
         source: Source
-        status: Status
+        status: Статус
         priority: Priority
         ticket_unique_id: Ticket unique id
         ticket_sequence_number: Ticket sequence number
