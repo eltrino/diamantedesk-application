@@ -2,7 +2,7 @@
 diamante:
   automation:
     rule:
-      entity_label: Правило
+      entity_label: "Правило \n  "
       entity_plural_label: Правила
       event_triggered_entity_plural_label: Правила по действию
       time_triggered_entity_plural_label: Правила по времени
