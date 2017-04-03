@@ -27,23 +27,23 @@ diamante:
         delete: Удалить Правило
         mass:
           remove: Удалить Правила
-          activate: Activate Rules
-          deactivate: Deactivate Rules
+          activate: Активировать Правила
+          deactivate: Отключить Правила
           response:
             activate:
-              success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
+              success_message: "{0} Объекты не были активированы|{1} Один объект был активирован|]1,Inf[ %count% Обьекты были активированы"
             deactivate:
-              success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
+              success_message: "{0} Объекты не были отключены|{1} Один объект был отключен|]1,Inf[ %count% Объекты были отключены"
       time_triggered:
-        entity_label: Time Triggered
-        repetition_time: Frequency
+        entity_label: Временной Triggered
+        repetition_time: Частота использования
       event_triggered:
-        entity_label: Event Triggered
+        entity_label: Событийный Triggered
     ui:
-      create: Create
-      ok: Ok
-      cancel: Cancel
-      save: Save
+      create: Создать
+      ok: Принять
+      cancel: Отменить
+      save: Сохранить
       delete: Delete
       save_and_close: Save and close
       edit: Edit
