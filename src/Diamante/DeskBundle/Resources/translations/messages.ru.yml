@@ -9,8 +9,8 @@ diamante:
       description.label: Описание
       id.label: Branch Id
       key.label: Branch Key
-      logo.label: Branch Logo
-      name.label: Branch Name
+      logo.label: Branch Логотип
+      name.label: Branch Имя
       updated_at.label: Updated At
       default_assignee.label: Default Assignee
       columns:
