@@ -1,5 +1,9 @@
 #footer {
   background: @footer-bg;
+  display: none;
+  .app-started &{
+    display: block;
+  }
   .container {
     color: @footer-color;
     background: @footer-bg;
@@ -17,5 +21,10 @@
   .text-muted {
     color: @footer-color;
     opacity: .5;
+  }
+  @media (max-width: @screen-xs-max) {
+    .container {
+      padding: 35px @grid-gutter-width/2 0;
+    }
   }
 }

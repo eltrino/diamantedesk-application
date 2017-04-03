@@ -9,3 +9,5 @@ eltrino:
         comment:
           entity_label:        Comment
           entity_plural_label: Comments
+        js_warning_label: Warning!
+        js_warning_text: Either you have javascript disabled or your browser does not support javascript. To work properly, this page requires javascript to be enabled.

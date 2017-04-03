@@ -11,9 +11,9 @@ define(['app'], function(App){
         App.request('ticket:model', id).done(function(ticketModel){
 
           var ticketView = new View.ItemView({
-            model : ticketModel,
-            backUrl : backUrl
-          });
+                model : ticketModel,
+                backUrl : backUrl
+              });
 
           App.setTitle(_.template('[#<%=key%>] <%=subject%>')(ticketModel.toJSON()));
 

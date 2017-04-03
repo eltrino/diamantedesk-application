@@ -22,6 +22,7 @@ define([
   });
 
   App.on('session:login:success', function(){
+    document.documentElement.classList.add('app-started');
     if(App.session.return_path){
       App.navigate(App.session.return_path, {trigger: true});
       delete App.session.return_path;

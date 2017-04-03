@@ -7247,6 +7247,7 @@ body {
   background: #fff;
 }
 #header {
+  display: none;
   background: #50828E;
   position: fixed;
   right: 0;
@@ -7255,6 +7256,9 @@ body {
   z-index: 1030;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
+}
+.app-started #header {
+  display: block;
 }
 @media (min-width: 768px) {
   #header {
@@ -7447,7 +7451,6 @@ body {
     content: '\f002';
     display: inline-block;
     font: normal normal normal 24px/1 FontAwesome;
-    font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -7524,6 +7527,10 @@ body {
 }
 #footer {
   background: #525252;
+  display: none;
+}
+.app-started #footer {
+  display: block;
 }
 #footer .container {
   color: #fff;
@@ -7542,6 +7549,11 @@ body {
 #footer .text-muted {
   color: #fff;
   opacity: .5;
+}
+@media (max-width: 767px) {
+  #footer .container {
+    padding: 35px 15px 0;
+  }
 }
 h1,
 .h1 {
@@ -8044,6 +8056,14 @@ h1,
   left: 11px;
   height: 0;
   width: 14px;
+}
+@media (max-width: 767px) {
+  .ticket-list .message {
+    font-size: 24px;
+  }
+  .ticket-list .message td {
+    padding: 48px 8px;
+  }
 }
 @media (max-width: 767px) {
   .ticket-list {
@@ -8631,5 +8651,25 @@ h1,
 }
 .watchers-item .btn:hover {
   color: #446e78;
+}
+.alert-js {
+  display: none;
+}
+@media (max-width: 767px) {
+  .alert-js {
+    margin: 0 15px;
+  }
+}
+.no-js .alert-js {
+  display: block;
+}
+.no-js #header {
+  display: block;
+}
+.no-js #content {
+  display: none;
+}
+.no-js #footer {
+  display: block;
 }
 /*# sourceMappingURL=main.css.map */

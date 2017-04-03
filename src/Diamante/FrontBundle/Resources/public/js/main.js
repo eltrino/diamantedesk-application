@@ -124,10 +124,6 @@ require.config({
       location: 'modules/Header'
     },
     {
-      name: 'Footer',
-      location: 'modules/Footer'
-    },
-    {
       name: 'Ticket',
       location: 'modules/Ticket'
     },

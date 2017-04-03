@@ -1,4 +1,5 @@
 #header {
+  display: none;
   background: @mainColor;
   position: fixed;
   right: 0;
@@ -6,6 +7,10 @@
   top:0;
   z-index: @zindex-navbar-fixed;
   .translate3d(0, 0, 0);
+
+  .app-started & {
+    display: block;
+  }
 
   @media (min-width: @grid-float-breakpoint) {
     border-radius: 0;
@@ -207,7 +212,6 @@
           content: '\f002';
           display: inline-block;
           font: normal normal normal 24px/1 FontAwesome;
-          font-size: inherit;
           text-rendering: auto;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;

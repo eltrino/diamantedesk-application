@@ -22,7 +22,10 @@ define([
       templateHelpers: function(){
         return {
           baseUrl: this.options.baseUrl,
-          basePath: this.options.basePath
+          basePath: this.options.basePath,
+          title: this.options.title,
+          logo: this.options.logo,
+          logoXs: this.options.logoXs
         };
       },
 

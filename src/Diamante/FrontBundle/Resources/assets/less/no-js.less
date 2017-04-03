@@ -1,0 +1,22 @@
+.alert-js {
+  display: none;
+  @media (max-width: @screen-xs-max) {
+    margin: 0 @grid-gutter-width/2;
+  }
+}
+
+.no-js {
+  .alert-js {
+    display: block;
+  }
+  #header {
+    display: block;
+  }
+  #content {
+    display: none;
+  }
+  #footer {
+    display: block;
+  }
+}
+

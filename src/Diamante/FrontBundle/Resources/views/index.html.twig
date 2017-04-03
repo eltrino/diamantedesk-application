@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,16 +25,32 @@
     <meta name="msapplication-TileImage" content="{{ asset('bundles/diamantedistribution/img/ico/mstile-144x144.png') }}" />
     <meta name="theme-color" content="#ffffff">
 
+    <script>(function(h){h.className=h.classList.remove('no-js')})(document.documentElement)</script>
+
     {% if app.environment == 'dev' %}
     <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.css') }}" type="text/css"/>
     {% else %}
     <link rel="stylesheet" href="{{ asset('bundles/diamantefront/css/main.min.css') }}" type="text/css"/>
     {% endif %}
+    <style></style>
 </head>
 <body>
 <div class="wrap">
-    <header id="header"></header>
+    <header id="header">
+        <div class="container">
+            <div class="row header-links">
+                <a href="/app_dev.php/portal/" class="logo col-sm-3 col-xs-4">
+                    <img src="{{ basePath }}/bundles/diamantefront/img/logo.png" alt="DiamanteDesk" class="hidden-xs">
+                    <img src="{{ basePath }}/bundles/diamantefront/img/logo_xs.png" alt="DiamanteDesk" class="logo-xs visible-xs-block">
+                </a>
+            </div>
+        </div>
+    </header>
     <section id="main" class="container">
+        <div class="alert alert-warning alert-js" role="alert">
+            <strong>{{ 'eltrino.diamantedesk.js_warning_label' | trans }}</strong>
+            {{ 'eltrino.diamantedesk.js_warning_text' | trans }}
+        </div>
         <div id="messages"></div>
         <div id="content">
             <div class="loader">
@@ -45,7 +61,13 @@
             </div>
         </div>
     </section>
-    <footer id="footer"></footer>
+    <footer id="footer">
+        <div class="container">
+            <div class="copyright small">
+                Diamante is released under <a href="http://opensource.org/licenses/osl-3.0.php" target="_blank">OSL 3.0</a> License by <a href="http://eltrino.com" target="_blank">Eltrino LLC</a>
+            </div>
+        </div>
+    </footer>
 </div>
 <div id="dialog"></div>
 
@@ -65,8 +87,8 @@
                 basePath : '{{ basePath }}',
                 baseUrl : '{{ baseUrl }}',
                 apiUrl : '{{ apiUrl }}',
-                branchId : {{ branchId }},
                 logo : '{{ basePath }}/bundles/diamantefront/img/logo.png',
+                logoXs : '{{ basePath }}/bundles/diamantefront/img/logo_xs.png',
                 title : 'DiamanteDesk'
             }
         },

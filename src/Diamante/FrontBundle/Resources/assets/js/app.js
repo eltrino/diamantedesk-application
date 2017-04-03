@@ -24,7 +24,6 @@ define([
       headerRegion: '#header',
       messagesRegion: '#messages',
       mainRegion:   '#content',
-      footerRegion: '#footer',
       dialogRegion: '#dialog'
     }
 
@@ -78,7 +77,7 @@ define([
 
   require(['Common/views/loader']);
 
-  require(['Common', 'User', 'Session', 'Header', 'Footer', 'Ticket'], function(){
+  require(['Common', 'User', 'Session', 'Header', 'Ticket'], function(){
     App.start();
   });
 

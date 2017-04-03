@@ -70,10 +70,6 @@ diamante_front:
         title: Modal Window
         submit: Save changes
 
-  footer:
-    template:
-      copyright: Diamante выпущена под лицензией %{license} команией %{company}
-
   header:
     template:
       new_ticket: Новый Тикет
