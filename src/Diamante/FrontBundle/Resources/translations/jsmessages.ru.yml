@@ -44,7 +44,7 @@ diamante_front:
     template:
       form:
         add: Add Comment
-        cancel: Cancel
+        cancel: Отменить
         save: Save Changes
       button:
         edit: Edit Comment
@@ -52,7 +52,7 @@ diamante_front:
   common:
     template:
       close: Close
-      cancel: Cancel
+      cancel: Отменить
       sort: Sort By
     view:
       alert:
@@ -160,7 +160,7 @@ diamante_front:
       form:
         subject_label: Ticket Subject
         subject_placeholder: Short ticket summary
-        description_label: Description
+        description_label: Описание
         description_placeholder: Provide a detailed description of your support request
         priority_label: Priority
         low_option: Low
@@ -171,7 +171,7 @@ diamante_front:
         date: Date
         subject: Subject
         priority: Priority
-        status: Status
+        status: Статус
       resolve_button: Resolve Ticket
       reopen_button: Reopen Ticket
     view:
