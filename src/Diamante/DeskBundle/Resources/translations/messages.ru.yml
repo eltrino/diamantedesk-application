@@ -4,9 +4,9 @@ diamante:
     branch:
       entity_label: Branch
       entity_plural_label: Branches
-      details: Branch Details
-      created_at.label: Created At
-      description.label: Description
+      details: Branch Элементы
+      created_at.label: Создан в
+      description.label: Описание
       id.label: Branch Id
       key.label: Branch Key
       logo.label: Branch Logo
