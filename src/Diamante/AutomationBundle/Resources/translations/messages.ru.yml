@@ -44,8 +44,8 @@ diamante:
       ok: Принять
       cancel: Отменить
       save: Сохранить
-      delete: Delete
-      save_and_close: Save and close
+      delete: Удалить
+      save_and_close: Сохранить и закрыть
       edit: Edit
       add: Add
       change: Change
