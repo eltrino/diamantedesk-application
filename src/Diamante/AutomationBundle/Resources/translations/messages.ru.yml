@@ -80,27 +80,27 @@ diamante:
       neq: не равно
       gt: больше, чем
       gte: больше или равно
-      lt: is less than
-      lte: is less than or equals to
-      contains: contains
-      not_contains: not contains
-      created: Created
-      updated: Updated
-      removed: Removed
-      changed: changed
-      changed_from: changed from
-      changed_to: changed to
-      "true": "true"
-      "false": "false"
-      customer: is customer
-      admin: is admin
+      lt: меньше, чем
+      lte: меньше или равно
+      contains: содержит
+      not_contains: не содержит
+      created: Создан
+      updated: Обновлен
+      removed: Удален
+      changed: изменен
+      changed_from: изменено с
+      changed_to: изменено на
+      "true": "верно"
+      "false": "неверно"
+      customer: Клиент
+      admin: Администратор
     action:
-      update_property: Update property
-      notify_by_email: Notify by email
+      update_property: Обновление свойств
+      notify_by_email: Уведомлять по электронной почте
     connector:
-      inclusive: All of these are true
-      exclusive: Any of these are true
+      inclusive: Все верно
+      exclusive: Любое из утверждений справедливо
     cron:
-      d: "{1} Every day|]1,Inf[ Every %time% days"
-      h: "{1} Every hour|]1,Inf[ Every %time% hours"
-      m: Every %time% minutes
+      d: "{1} каждый день |] 1, Inf [каждые %time% дней"
+      h: "{1} каждый час |] 1, Inf [каждые %time% часов"
+      m: Каждых %time% минут
