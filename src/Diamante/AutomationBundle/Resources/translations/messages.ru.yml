@@ -46,40 +46,40 @@ diamante:
       save: Сохранить
       delete: Удалить
       save_and_close: Сохранить и закрыть
-      edit: Edit
-      add: Add
-      change: Change
+      edit: Редактировать
+      add: Добавить
+      change: Изменить
       event_triggered:
-        create: Create Event Triggered Rule
+        create: Создать правило по действию
       time_triggered:
-        create: Create Time Triggered Rule
+        create: Создать правило по времени
     attributes:
-      condition: Condition
-      action: Action
-      weight: Weight
-      target: Target
-      parent: Parent
-      status: Status
-      expression: Expression
-      mode: Mode
+      condition: Состояние
+      action: Действие
+      weight: Значение
+      target: Цель
+      parent: Источник
+      status: Статус
+      expression: Выражение
+      mode: Режим
     common:
-      name: Name
-      general: General
-      created: Created
-      updated: Updated
-      not_available: N/A
-      not_defined: Not defined
-      delete_confirmation: Confirm Deletion
+      name: Имя
+      general: Основная информация
+      created: Создан
+      updated: Обновлен
+      not_available: Недоступен
+      not_defined: Не определен
+      delete_confirmation: Подтвердите удаление
       messages:
         validation:
-          failed: Form is invalid. Please correctly fill in all required fields.
+          failed: Недопустимая форма. Пожалуйста, заполните правильно все необходимые поля.
     forms:
-      name: Name
+      name: Имя
     condition:
-      eq: is equal to
-      neq: is not equal to
-      gt: is greater than
-      gte: is greater than or equals to
+      eq: равно
+      neq: не равно
+      gt: больше, чем
+      gte: больше или равно
       lt: is less than
       lte: is less than or equals to
       contains: contains
