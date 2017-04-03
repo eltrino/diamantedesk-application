@@ -4,16 +4,16 @@ diamante:
     rule:
       entity_label: Правило
       entity_plural_label: Правила
-      event_triggered_entity_plural_label: Event Triggered Rules
-      time_triggered_entity_plural_label: Time Triggered Rules
-      details: Rule Details
+      event_triggered_entity_plural_label: Правила по действию
+      time_triggered_entity_plural_label: Правила по времени
+      details: Сведения о правиле
       messages:
         create:
-          error: Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
-          success: Rule successfully created.
+          error: Произошла ошибка при создании правила. Правило не создается. Введите все необходимые данные и повторите попытку снова.
+          success: Правило успешно создано.
         update:
-          error: Error occurred when updating the rule. Rule is not updated. Enter all required data and try again.
-          success: Rule successfully updated.
+          error: Произошла ошибка при обновлении правила. Правило не обновляется. Введите все необходимые данные и повторите попытку снова.
+          success: Правило успешно обновлено.
         delete:
           query: Are you sure you want to delete this rule?
           success: Rule successfully deleted.
