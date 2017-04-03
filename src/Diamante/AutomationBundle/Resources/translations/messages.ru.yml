@@ -15,18 +15,18 @@ diamante:
           error: Произошла ошибка при обновлении правила. Правило не обновляется. Введите все необходимые данные и повторите попытку снова.
           success: Правило успешно обновлено.
         delete:
-          query: Are you sure you want to delete this rule?
-          success: Rule successfully deleted.
+          query: Вы уверены, что хотите удалить это правило?
+          success: Правило, успешно удалено.
       status:
-        active: Active
-        inactive: Inactive
+        active: Aктивный
+        inactive: Неактивный
       actions:
-        add: Add Rule
-        view: View Rule
-        edit: Edit Rule
-        delete: Delete Rule
+        add: Добавить Правило
+        view: Просмотреть Правило
+        edit: Редактировать Правило
+        delete: Удалить Правило
         mass:
-          remove: Remove Rules
+          remove: Удалить Правила
           activate: Activate Rules
           deactivate: Deactivate Rules
           response:
