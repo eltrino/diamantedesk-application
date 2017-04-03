@@ -1,4 +1,4 @@
-{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% extends 'DiamanteDeskBundle:Ticket:twoColumnRight.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 {% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
@@ -280,7 +280,6 @@
 {% endblock pageHeader %}
 
 {% block content_data %}
-
     {% set id = 'navbarTicketView' %}
     {% set reporterDisplayName = entity.unassignedLabel|trans %}
     {% if entity.reporter %}
@@ -364,14 +363,6 @@
     ) %}
 
     {% set data = {'dataBlocks': dataBlocks} %}
-
-    <div class="row-fluid" id="wrapper">
-        <div class="span9">
-            {{ parent() }}
-        </div>
-        <div class="span3">
-            {{ block('sidebar') }}
-        </div>
-    </div>
+    {{ parent() }}
 {% endblock content_data %}
 

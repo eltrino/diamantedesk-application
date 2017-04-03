@@ -1,0 +1,14 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+
+{% block content_data %}
+    <div class="row-fluid" id="wrapper">
+        <div class="span9">
+            {{ parent() }}
+        </div>
+        <div class="span3">
+            {% block sidebar %}
+            {% endblock sidebar %}
+        </div>
+    </div>
+{% endblock content_data %}
+
