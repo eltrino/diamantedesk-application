@@ -1,28 +1,28 @@
 ---
-title: DiamanteDesk Application Installation
+title: Установка приложения DiamanteDesk
 process:
   step:
     diamanteinstall:
-      header: Initialization
+      header: Инициализация
     installation:
-      cache: Clear cache before database initialization
-      clear-config: Clear entities cache
-      clear-extend: Clear extended entities data
-      schema-drop: Drop current schema
-      schema-update: Schema update
-      fixtures: Load fixtures
-      workflows: Load workflow definitions
-      processes: Load processes configuration
-      navigation: Init navigation
-      js-routing: Dump JS routing
-      localization: Dump localization
-      assets: Install assets
-      assetic: Dump assetic
-      translation: Prepare translations
-      requirejs: Optimize JS resources (optional)
-      finish: Clear cache to finalize installation
+      cache: Очистить кэш до инициализации базы данных
+      clear-config: Очистить кэш объектов
+      clear-extend: Очистить данные расширенных объектов
+      schema-drop: Сбросить текущую схему
+      schema-update: Обновление схемы
+      fixtures: Загрузка конфигурации
+      workflows: Загрузка определений рабочих процессов
+      processes: Загрузка конфигурации процессов
+      navigation: Инициализация навигации
+      js-routing: Сброс JS маршрутизации
+      localization: Сброс локализации
+      assets: Установка активов
+      assetic: Сброс активов
+      translation: Подготовка к трансляции
+      requirejs: Оптимизация JS ресурсов (необязательно)
+      finish: Очистить кэш, чтобы завершить установку
     check:
       table:
-        diamante: DiamanteDesk Requirements
+        diamante: Требования DiamanteDesk
     final:
-      content: 'You''re lucky to start using DiamanteDesk right away.<br>If you''re looking for some help or need some support, please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you''re our Enterprise client.'
+      content: 'Вы успешно начали использовать DiamanteDesk.<br>Если вам нужна некоторая помощь или поддержка, пожалуйста, присоединитесь к нашему сообществу по ссылке <a href="https://github.com/eltrino">Github</a> или свяжитесь с нашими специалистами из службы поддержки, если вы являетесь клиентом нашего предприятия.'
