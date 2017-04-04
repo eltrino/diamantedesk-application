@@ -66,44 +66,44 @@ diamante:
       attachments.label: Вложения
       watcher_list.label: Список наблюдателей
       created_via_email.label: Создан по электронной почте
-      since_created.label: Since created
-      since_updated.label: Since updated
-      since_status_updated.label: Since status updated
-      since_assignee_updated.label: Since assignee updated
+      since_created.label: Создано от
+      since_updated.label: Обновлено от
+      since_status_updated.label: Статус обновлен с
+      since_assignee_updated.label: Представитель обновлен с
       columns:
-        key: Key
+        key: Ключ
         subject: Название
         branch: Ветка
-        assignee: Assignee
-        reporter: Reporter
+        assignee: Исполнитель
+        reporter: Докладчик
         priority: Приоритет
         status: Статус
         created: Создан
         updated: Обновлен
       actions:
-        add: Add Ticket
-        edit: Edit Ticket
-        view: View Ticket
-        remove: Delete Ticket
+        add: Добавить тикет
+        edit: Редактировать тикет
+        view: Просмотреть тикет
+        remove: Удалить билет
         delete: Удалить
-        assign: Assign
-        create: Create Ticket
-        change_status: Change Status
-        move: Move
-        watch: Watch
-        unwatch: Un-watch
-        add_watcher: Add Watcher
+        assign: Назначить
+        create: Создать тикет
+        change_status: Изменить статус
+        move: Переместить
+        watch: Просмотренные
+        unwatch: Непросмотренные
+        add_watcher: Добавить наблюдателя
       messages:
         create:
-          error: Error occurred while creating a ticket.
-          success: Ticket successfully created.
+          error: Произошла ошибка при создании тикета.
+          success: Тикет успешно создан.
         save:
-          error: Error occurred while saving the ticket.
-          success: Ticket successfully saved.
+          error: Произошла ошибка при сохранении тикета.
+          success: Тикет успешно сохранен.
         delete:
-          query: Are you sure you want to delete this ticket?
-          error: Error occurred while deleting the ticket.
-          success: Ticket successfully deleted.
+          query: Вы уверены, что хотите удалить этот тикет?
+          error: Произошла ошибка при удалении тикета.
+          success: Тикет успешно удален.
         reassign:
           error: Error occurred while re-assiging the ticket.
           success: Ticket successfully re-assigned.
@@ -243,7 +243,7 @@ diamante:
       default_assignee: Представитель по умолчанию
       logoFile: Логотип
       tags: Tags
-      key: Key
+      key: Ключ
     attributes:
       name: Имя
       subject: Название
@@ -251,11 +251,11 @@ diamante:
       status: Статус
       priority: Приоритет
       source: Источник
-      reporter: Reporter
+      reporter: Докладчик
       default_assignee: Представитель по умолчанию
-      assignee: Assignee
+      assignee: Исполнитель
       watcher: Watcher
-      key: Key
+      key: Ключ
     email:
       configuration: Email Configuration
     dashboard:
