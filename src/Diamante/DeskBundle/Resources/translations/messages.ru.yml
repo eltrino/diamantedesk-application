@@ -7,34 +7,34 @@ diamante:
       details: Элементы ветки
       created_at.label: Создан в
       description.label: Описание
-      id.label: Branch Id
-      key.label: Branch Key
-      logo.label: Branch Логотип
-      name.label: Branch Имя
+      id.label: Идентификатор ветки
+      key.label: Ключ ветки
+      logo.label: Логотип Ветки
+      name.label: Имя Ветки
       updated_at.label: Дата обновления
-      default_assignee.label: Default Assignee
+      default_assignee.label: Представитель по умолчанию
       columns:
         logo: Логотип
-        branch_name: Branch Имя
-        branch_key: Branch Key
+        branch_name: Имя Ветки
+        branch_key: Ключ ветки
       actions:
         create: Создать ветку
-        view: View Branch
-        edit: Edit Branch
-        remove: Delete Branch
-        remove_mass: Delete Branches
+        view: Просмотр ветки
+        edit: Редактировать ветку
+        remove: Удалить ветку
+        remove_mass: Удаление веток
       messages:
         create:
-          error: Error occurred while creating a branch. Branch is not created. Enter all the required data and try again.
-          success: Branch successfully created.
+          error: Произошла ошибка при создании ветки. Ветка не создана. Введите все необходимые данные и повторите попытку снова.
+          success: Ветка успешно создана.
         save:
-          error: Error occurred while saving the branch. Branch is not saved. Enter all the required data and try again.
-          success: Branch successfully saved.
+          error: Произошла ошибка при сохранении ветки. Ветка не сохранена. Введите все необходимые данные и повторите попытку снова.
+          success: Ветка успешно сохранена.
         delete:
-          query: WARNING! Are you sure you want to delete this branch with ALL tickets assigned to it?
-          success: Branch successfully deleted.
-          mass_success: "{1} One branch was deleted.|]1,Inf[ %count% branches were deleted."
-          error: Current branch is configured as default for Email Processing and cannot be deleted.
+          query: ПРЕДУПРЕЖДЕНИЕ! Вы уверенны что хотите удалить эту ветку вместе с установленными тикетами?
+          success: Ветка успешно сохранена.
+          mass_success: "{1} Одна ветка была удалена.|]1,Inf[ %count% ветки были удалены."
+          error: Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.
           mass_error: "{0} Current branch is configured as a default for Email Processing and can't be deleted.|{1} One of the branches cannot be deleted as it was configured as a default one|]1,Inf[ %count% branches were deleted except default branch"
           exist_tickets_error: One or more branches have tickets and cannot be deleted.
           move: Keep the tickets and move them to another branch.
@@ -43,7 +43,7 @@ diamante:
           error: Branch loading failed. Branch not found.
       placeholders:
         form: Choose a branch...
-        default: Current branch is configured as default for Email Processing and cannot be deleted.
+        default: Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.
     ticket:
       entity_label: Ticket
       entity_plural_label: Tickets
@@ -240,7 +240,7 @@ diamante:
           failed: Form is invalid. Fill out all required fields correctly.
     forms:
       name: Имя
-      default_assignee: Default Assignee
+      default_assignee: Представитель по умолчанию
       logoFile: Логотип
       tags: Tags
       key: Key
@@ -252,7 +252,7 @@ diamante:
       priority: Priority
       source: Source
       reporter: Reporter
-      default_assignee: Default Assignee
+      default_assignee: Представитель по умолчанию
       assignee: Assignee
       watcher: Watcher
       key: Key
@@ -311,7 +311,7 @@ oro:
   entity_extend:
     form:
       data_type:
-        branch_logo: Branch Логотип
+        branch_logo: Логотип Ветки
         user_type: User Type
         source: Source
         status: Статус
