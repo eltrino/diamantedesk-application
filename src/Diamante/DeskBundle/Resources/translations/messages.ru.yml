@@ -35,48 +35,48 @@ diamante:
           success: Ветка успешно сохранена.
           mass_success: "{1} Одна ветка была удалена.|]1,Inf[ %count% ветки были удалены."
           error: Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.
-          mass_error: "{0} Current branch is configured as a default for Email Processing and can't be deleted.|{1} One of the branches cannot be deleted as it was configured as a default one|]1,Inf[ %count% branches were deleted except default branch"
-          exist_tickets_error: One or more branches have tickets and cannot be deleted.
-          move: Keep the tickets and move them to another branch.
-          select: Select a new branch
+          mass_error: "{0} Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.|{1} Одна из веток не может быть удалена, поскольку была настроена по умолчанию|]1,Inf[ %count% ветки были удалены, за исключением ветки по умолчанию"
+          exist_tickets_error: Одна или несколько веток имеют тикеты и не могут быть удалены.
+          move: Сохраните тикеты и переместите их на другую ветку.
+          select: Выберите новую ветку
         get:
-          error: Branch loading failed. Branch not found.
+          error: Ошибка загрузки ветки. Ветки не найдено.
       placeholders:
-        form: Choose a branch...
+        form: Выберите ветку...
         default: Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.
     ticket:
-      entity_label: Ticket
-      entity_plural_label: Tickets
-      details: Ticket Details
-      all: All Tickets
+      entity_label: Тикет
+      entity_plural_label: Тикеты
+      details: Элементы тикетов
+      all: Все тикеты
       created_at.label: Создан в
       description.label: Описание
-      id.label: Ticket Id
-      priority.label: Priority
-      reporter_email.label: Reporter Email
-      assignee.label: Assigner
+      id.label: Идентификатор тикета
+      priority.label: Приоритет
+      reporter_email.label: Докладчик электронной почты
+      assignee.label: Представитель
       branch.label: Ветка
-      comments.label: Comments
-      sequence_number.label: Sequence Number
-      source.label: Source
+      comments.label: Комментарии
+      sequence_number.label: Порядковый номер
+      source.label: Источник
       status.label: Статус
-      subject.label: Subject
-      unique_id.label: Unique Id
+      subject.label: Название
+      unique_id.label: Уникальный идентификатор
       updated_at.label: Дата обновления
-      attachments.label: Attachments
-      watcher_list.label: Watcher List
-      created_via_email.label: Created via email to
+      attachments.label: Вложения
+      watcher_list.label: Список наблюдателей
+      created_via_email.label: Создан по электронной почте
       since_created.label: Since created
       since_updated.label: Since updated
       since_status_updated.label: Since status updated
       since_assignee_updated.label: Since assignee updated
       columns:
         key: Key
-        subject: Subject
+        subject: Название
         branch: Ветка
         assignee: Assignee
         reporter: Reporter
-        priority: Priority
+        priority: Приоритет
         status: Статус
         created: Создан
         updated: Обновлен
@@ -130,17 +130,17 @@ diamante:
             error: Assignee validation failed, assignee not found.
     comment:
       entity_label: Comment
-      entity_plural_label: Comments
+      entity_plural_label: Комментарии
       ticket_status: Ticket status
       content: Content
       private: Private
-      attachments.label: Attachments
+      attachments.label: Вложения
       author.label: Author
       content.label: Content
       created_at.label: Created_at
       id.label: Id
       private.label: Private
-      ticket.label: Ticket
+      ticket.label: Тикет
       updated_at.label: Updated at
       author_email.label: Author email
       actions:
@@ -167,7 +167,7 @@ diamante:
         deleted_user: Deleted user
     attachment:
       entity_label: Attachment
-      entity_plural_label: Attachments
+      entity_plural_label: Вложения
       file: File
       image: Image
       created_at.label: Created at
@@ -246,11 +246,11 @@ diamante:
       key: Key
     attributes:
       name: Имя
-      subject: Subject
+      subject: Название
       branch: Ветка
       status: Статус
-      priority: Priority
-      source: Source
+      priority: Приоритет
+      source: Источник
       reporter: Reporter
       default_assignee: Представитель по умолчанию
       assignee: Assignee
@@ -286,10 +286,10 @@ diamante:
       reopen.label: Reopen
       solved.label: Solved
     watcherlist:
-      entity_label: Watcher List
+      entity_label: Список наблюдателей
       entity_plural_label: Watcher Lists
       id.label: Id
-      ticket.label: Ticket
+      ticket.label: Тикет
       user_type.label: User Type
     automation:
       action:
@@ -313,9 +313,9 @@ oro:
       data_type:
         branch_logo: Логотип Ветки
         user_type: User Type
-        source: Source
+        source: Источник
         status: Статус
-        priority: Priority
+        priority: Приоритет
         ticket_unique_id: Ticket unique id
         ticket_sequence_number: Ticket sequence number
 oro_datagrid:
