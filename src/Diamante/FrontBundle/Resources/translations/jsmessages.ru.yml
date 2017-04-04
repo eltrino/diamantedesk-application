@@ -1,53 +1,53 @@
 ---
-"Loading...": "Loading..."
+"Loading...": "Загрузка..."
 diamante_front:
   attachment:
     controller:
       alert:
         delete_error:
-          title: Delete Attachment Error
+          title: Ошибка удаления вложения
       message:
-        attach_success: Files attached successfully
-        delete_success: File deleted successfully
+        attach_success: Файлы успешно прикреплены
+        delete_success: Файл успешно удален
     model:
       alert:
         add_error:
-          title: Add Attachments Error
+          title: Ошибка добавления вложений
     template:
       dropzone:
         dropfiles: Drop files here to attach
-        attachfiles: Click here to attach files
-        read: Reading...
-        send: Sending...
-        receive: Receiving...
+        attachfiles: Нажмите здесь, чтобы прикрепить файлы
+        read: Чтение...
+        send: Отправка...
+        receive: Получение...
       button:
-        remove: Remove Attachment
+        remove: Удалить вложение
       link:
-        download: 'Download:'
+        download: 'Скачать:'
       header:
-        file: File Attachments
+        file: Вложенные файлы
   comment:
     controller:
       alert:
         create_error:
-          title: Create Comment Error
+          title: Ошибка создания комментария
         delete_error:
-          title: Delete Comment Error
+          title: Ошибка удаления комментария
         edit_success:
-          title: Your comment has been edited
+          title: Ваш комментарий был отредактирован
       message:
-        post_success: Comment was posted successfully
-        delete_success: Your comment was successfully deleted
+        post_success: Комментарий был успешно отправлен
+        delete_success: Ваш комментарий успешно удален
     model:
       error:
-        required: "Can't be blank"
+        required: "Не может быть пустым"
     template:
       form:
-        add: Add Comment
+        add: Добавить комментарий
         cancel: Отменить
-        save: Save Changes
+        save: Сохранить изменения
       button:
-        edit: Edit Comment
+        edit: Править комментарий
         delete: Delete Comment
   common:
     template:
@@ -100,7 +100,7 @@ diamante_front:
           title: Authorization Required
           text: This action requires authorization
       error:
-        required: Can't be blank
+        required: Не может быть пустым
         email_format: '"%{email}" is not a valid email'
         password_length: Must be at least six (6) symbols
     template:
@@ -152,7 +152,7 @@ diamante_front:
       search_result: Search Result
     model:
       error:
-        required: Can't be blank
+        required: Не может быть пустым
     template:
       empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
       empty_search: There are no tickets matching your criteria.
@@ -162,24 +162,24 @@ diamante_front:
         subject_placeholder: Short ticket summary
         description_label: Описание
         description_placeholder: Provide a detailed description of your support request
-        priority_label: Priority
+        priority_label: Приоритет
         low_option: Low
         medium_option: Medium
         high_option: High
       list:
-        key: Key
-        date: Date
-        subject: Subject
-        priority: Priority
+        key: Ключ
+        date: Дата
+        subject: Название
+        priority: Приоритет
         status: Статус
       resolve_button: Resolve Ticket
       reopen_button: Reopen Ticket
     view:
       all_tickets: View all tickets
     router:
-      view_ticket: View Ticket
-      create_ticket: Create Ticket
-      edit_ticket: Edit Ticket
+      view_ticket: Просмотреть тикет
+      create_ticket: Создать тикет
+      edit_ticket: Редактировать тикет
   user:
     controller:
       message:
@@ -190,7 +190,7 @@ diamante_front:
       edit_user: Edit User
     model:
       error:
-        required: Can't be blank
+        required: Не может быть пустым
         password_length: Must be at least six (6) symbols
     template:
       form:
@@ -206,16 +206,16 @@ diamante_front:
         add_error:
           title: Add Watcher Error
         delete_comment_error:
-          title: Delete Comment Error
+          title: Ошибка удаления комментария
       message:
         add_success: A new watcher has been successfully added to the ticket
         remove_success: A watcher has been removed from the ticket
-      add_watcher: Add Watcher
+      add_watcher: Добавить наблюдателя
     model:
       error:
-        required: Can't be blank
+        required: Не может быть пустым
         email_format: '"%{email}" is not a valid email'
     template:
       email_watcher: Watcher Email
       remove_watcher: Remove Watcher
-      add_watcher: Add Watcher
+      add_watcher: Добавить наблюдателя
