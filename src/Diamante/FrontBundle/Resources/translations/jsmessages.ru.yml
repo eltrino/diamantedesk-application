@@ -48,15 +48,15 @@ diamante_front:
         save: Сохранить изменения
       button:
         edit: Править комментарий
-        delete: Delete Comment
+        delete: Удалить комментарий
   common:
     template:
-      close: Close
+      close: Закрыть
       cancel: Отменить
-      sort: Sort By
+      sort: Сортировать по
     view:
       alert:
-        title: Error
+        title: Ошибка
         text: An unprocessed error happened. Please try again!
       modal:
         title: Modal Window
