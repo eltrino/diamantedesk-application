@@ -35,10 +35,10 @@ diamante:
             deactivate:
               success_message: "{0} Объекты не были отключены|{1} Один объект был отключен|]1,Inf[ %count% Объекты были отключены"
       time_triggered:
-        entity_label: Временной Triggered
+        entity_label: Время запуска
         repetition_time: Частота использования
       event_triggered:
-        entity_label: Событийный Triggered
+        entity_label: Событие
     ui:
       create: Создать
       ok: Принять
