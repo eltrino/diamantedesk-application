@@ -5,23 +5,45 @@
             {% set detailsBlock = detailsBlock|merge([DiamUI.attributeRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
             {% set reporterBlock = [DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: reporterModel.isDeleted ? 'deleted-reporter' : ''})] %}
             {% set reporterBlock = reporterBlock|merge([DiamUI.attributeRow('email', reporter.getEmail)]) %}
+            {% set oroUserReporter = fetch_oro_user(entity.reporter) %}
+            {% set diamanteUserReporter = fetch_diamante_user(entity.reporter) %}
+            {% if oroUserReporter %}
+                {% set avatarReporter = oro_configured_image_url(oroUserReporter, 'avatar') %}
+                {% set reporterBlock = reporterBlock|merge([DiamUI.attributeRow('oro.user.phone.label'|trans, oroUserReporter.getPhone ? oroUserReporter.getPhone : 'diamante.desk.common.not_available'|trans)]) %}
+            {% elseif diamanteUserReporter %}
+                {% set avatarReporter = get_gravatar(diamanteUserReporter.email) %}
+                {% set reporterBlock = reporterBlock|merge([DiamUI.attributeRow('oro.user.phone.label'|trans,diamanteUserReporter.getPhone ? diamanteUserReporter.getPhone : 'diamante.desk.common.not_available'|trans)]) %}
+            {% endif %}
+
             {% set assignedBlock = [DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)] %}
+            {% set assignedBlock = assignedBlock|merge([DiamUI.attributeRow('oro.user.emails.label'|trans, entity.assignee.getEmail) ]) %}
+            {% set assignedBlock = assignedBlock|merge([DiamUI.attributeRow('oro.user.phone.label'|trans, entity.assignee.getPhone ? entity.assignee.getPhone : 'diamante.desk.common.not_available'|trans) ]) %}
+
+            {% set oroUserAssigned = entity.assignee %}
+            {% set authorAssigned = oroUserAssigned|oro_format_name %}
+            {% set avatarAssigned = oro_configured_image_url(oroUserAssigned, 'avatar') %}
 
             {% set sidebarDataBlocks =
                 [
                 {
+                'id': 'details',
                 'title': 'diamante.desk.ticket.details'|trans,
                 'data' : detailsBlock
                 },
                 {
+                'id': 'reporter',
                 'title': 'Reporter by',
-                'data': reporterBlock
+                'data': reporterBlock,
+                'avatar': avatarReporter
                 },
                 {
+                'id': 'asignee',
                 'title': 'Assigned to',
-                'data': assignedBlock
+                'data': assignedBlock,
+                'avatar': avatarAssigned
                 },
                 {
+                'id': 'watchers',
                 'title': 'Listeners/Watchers',
                 'data': [WatchersListWidget]
                 },
@@ -29,12 +51,33 @@
             %}
 
             {% for subblock in sidebarDataBlocks %}
-                <h5 class="user-fieldset"><span>{{ subblock.title }}</span></h5>
-
+                {% if subblock.id == 'reporter' %}
+                    <h5 class="user-fieldset"><span>{{ subblock.title }}</span><span class="info-date"></span></h5>
+                {% else %}
+                    <h5 class="user-fieldset"><span>{{ subblock.title }}</span></h5>
+                {% endif %}
+                {% if subblock.avatar is defined %}
+                    {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
+                    <div class="user-avatar">
+                        <img src="{{ (subblock.avatar is defined and subblock.avatar != '' ) ? subblock.avatar : defaultAvatar }}" alt="{{ reporterDisplayName }}">
+                    </div>
+                {% endif %}
                 {% for curData in subblock.data %}
                     {{ curData }}
                 {% endfor %}
             {% endfor %}
+
         </div>
     </div>
+
+    <script type="text/javascript">
+        require(['jquery', 'moment'],
+        function($, moment) {
+            var date = moment('{{ entity.getCreatedAt.date }}');
+            date.locale('ru');
+            $('.info-date').text(date.fromNow());
+        });
+    </script>
+
+    {#{{ dump(entity) }}#}
 {% endblock sidebar %}
