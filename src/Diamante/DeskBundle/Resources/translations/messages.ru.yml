@@ -108,7 +108,7 @@ diamante:
           error: Произошла ошибка во время повторного назначения тикета.
           success: Тикет был успешно переназначен.
         change_status:
-          error: Error occurred while trying to change the ticket status.
+          error: Произошла ошибка при попытке изменить статус тикета.
           success: Status successfully changed.
         move:
           error: Error occurred while trying to move the ticket.
