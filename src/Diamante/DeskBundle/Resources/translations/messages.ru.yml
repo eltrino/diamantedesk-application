@@ -105,8 +105,8 @@ diamante:
           error: Произошла ошибка при удалении тикета.
           success: Тикет успешно удален.
         reassign:
-          error: Error occurred while re-assiging the ticket.
-          success: Ticket successfully re-assigned.
+          error: Произошла ошибка во время повторного назначения тикета.
+          success: Тикет был успешно переназначен.
         change_status:
           error: Error occurred while trying to change the ticket status.
           success: Status successfully changed.
