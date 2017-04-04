@@ -109,92 +109,92 @@ diamante:
           success: Тикет был успешно переназначен.
         change_status:
           error: Произошла ошибка при попытке изменить статус тикета.
-          success: Status successfully changed.
+          success: Статус успешно изменен.
         move:
-          error: Error occurred while trying to move the ticket.
-          success: Ticket successfully moved.
+          error: Произошла ошибка при попытке переместить тикет.
+          success: Тикет успешно сохранен.
         watch:
-          error: Error occurred while trying to add a watcher.
-          success: Watcher successfully added.
+          error: Произошла ошибка при попытке добавления наблюдателя.
+          success: Наблюдатель успешно добавлен.
         watcher_remove:
-          success: Watcher successfully removed.
+          success: Наблюдатель успешно удален.
         get:
-          error: Ticket loading failed, ticket not found.
+          error: Ошибка загрузки тикета, тикет не удалось найти.
           attachment:
-            error: Attachment loading failed. Ticket has no such attachment.
+            error: Ошибка загрузки вложения. Тикет не имеет такого вложения.
           branch:
-            error: Branch loading failed, branch not found.
+            error: Ошибка загрузки ветки, ветку не удалось найти.
           reporter:
-            error: Reporter loading failed, reporter not found.
+            error: Ошибка загрузки докладчика, докладчика не удалось найти.
           assignee:
-            error: Assignee validation failed, assignee not found.
+            error: Произошел сбой при проверке исполнителя, исполнителя не удалось найти.
     comment:
-      entity_label: Comment
+      entity_label: Комментарий
       entity_plural_label: Комментарии
-      ticket_status: Ticket status
-      content: Content
-      private: Private
+      ticket_status: Статус тикета
+      content: Содержание
+      private: Видно только мне
       attachments.label: Вложения
-      author.label: Author
-      content.label: Content
-      created_at.label: Created_at
-      id.label: Id
-      private.label: Private
+      author.label: Автор
+      content.label: Содержание
+      created_at.label: Создан в
+      id.label: Идентификатор
+      private.label: Видно только мне
       ticket.label: Тикет
-      updated_at.label: Updated at
-      author_email.label: Author email
+      updated_at.label: Дата обновления
+      author_email.label: Электронная почта автора
       actions:
-        edit: Edit Comment
-        add: Add Comment
+        edit: Править комментарий
+        add: Добавить комментарий
       messages:
         create:
-          error: Error occured while creating a comment.
-          success: Comment successfully created.
+          error: Произошла ошибка при создании комментария.
+          success: Комментарий успешно создан.
         save:
-          error: Error occured while saving the comment.
-          success: Comment successfully saved.
+          error: Произошла ошибка при сохранении комментария.
+          success: Комментарий успешно сохранен.
         delete:
           error: ""
-          success: Comment successfully deleted.
-          query: Are you sure you want to delete this comment?
+          success: Комментарий успешно удален.
+          query: Вы уверены, что хотите удалить комментарий?
         get:
-          error: Comment loading failed, comment not found.
+          error: Ошибка загрузки комментария, комментарий не найдено.
         get_attach:
-          error: Attachment loading failed. Comment has no such attachment.
-        empty: There are no comments yet.
+          error: Ошибка загрузки вложения. Комментарий не имеет такого вложения.
+        empty: Пока нет комментариев.
       placeholders:
-        added: added a comment
-        deleted_user: Deleted user
+        added: добавлен комментарий
+        deleted_user: Удалённый пользователь
     attachment:
-      entity_label: Attachment
+      entity_label: Вложение
       entity_plural_label: Вложения
-      file: File
-      image: Image
-      created_at.label: Created at
-      file.label: File
-      hash.label: Hash
-      id.label: Id
-      updated_at.label: Updated at
+      file: Файл
+      image: Изображение
+      created_at.label: Дата создания
+      file.label: Файл
+      hash.label: Хэш
+      id.label: Идентификатор
+      updated_at.label: Дата обновления
       actions:
-        delete_file: Delete File
-        add: Add Attachment
-        download: Download
+        delete_file: Удалить файл
+        add: Прикрепить файл
+        download: Скачать
         remove: Удалить
-        attach: Attach File
+        attach: Прикрепить файл
       messages:
         create:
-          error: Error occured while uploading an attachment.
-          success: Attachment(s) successfully uploaded.
+          error: Произошла ошибка при загрузке вложений.
+          success: Вложение(я) успешно загружены.
         delete:
-          error: Unable to remove attachment.
-          success: Attachment successfully deleted.
-          query: Are you sure you want to delete this attachment?
+          error: Не удается удалить вложение.
+          success: Вложение успешно удалено.
+          query: Вы уверены, что хотите удалить это вложение?
         get:
-          error: Attachment not found
+          error: Вложение не найдено
         load:
-          error: Attachment loading failed, attachment not found.
+          error: Ошибка загрузки вложения, вложения не найдено.
         upload:
-          error: Upload directory is not writable, doesn't exist or no space left on the disk.
+          error: Загруженная директория недоступна для записи, нет или не осталось пространства на диске.
       placeholders:
         dropzone: Drop File Here
     file:
@@ -274,21 +274,21 @@ diamante:
     tickethistory:
       entity_label: Ticket History
       entity_plural_label: Tickets History
-      id.label: Id
+      id.label: Идентификатор
       ticket_id.label: Ticket id
       ticket_key.label: Ticket Key
     tickettimeline:
       entity_label: Ticket Timeline
       closed.label: Closed
       date.label: Date
-      id.label: Id
+      id.label: Идентификатор
       new.label: New
       reopen.label: Reopen
       solved.label: Solved
     watcherlist:
       entity_label: Список наблюдателей
       entity_plural_label: Watcher Lists
-      id.label: Id
+      id.label: Идентификатор
       ticket.label: Тикет
       user_type.label: User Type
     automation:
@@ -317,6 +317,6 @@ oro:
         status: Статус
         priority: Приоритет
         ticket_unique_id: Ticket unique id
-        ticket_sequence_number: Ticket sequence number
+        ticket_sequence_number: Порядковый номер тикета
 oro_datagrid:
-  "not_found_hint %entityHint%": "No %entityHint% matching your search were found. Try modifying your search criteria."
+  "not_found_hint %entityHint%": "Данные %entityHint% соответствующие вашему запросу не были найдены. Попробуйте изменить критерии поиска."
