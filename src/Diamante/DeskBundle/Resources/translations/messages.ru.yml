@@ -2,23 +2,23 @@
 diamante:
   desk:
     branch:
-      entity_label: Branch
-      entity_plural_label: Branches
-      details: Branch Элементы
+      entity_label: Ветка
+      entity_plural_label: Ветки
+      details: Элементы ветки
       created_at.label: Создан в
       description.label: Описание
       id.label: Branch Id
       key.label: Branch Key
       logo.label: Branch Логотип
       name.label: Branch Имя
-      updated_at.label: Updated At
+      updated_at.label: Дата обновления
       default_assignee.label: Default Assignee
       columns:
-        logo: Logo
+        logo: Логотип
         branch_name: Branch Имя
         branch_key: Branch Key
       actions:
-        create: Create Branch
+        create: Создать ветку
         view: View Branch
         edit: Edit Branch
         remove: Delete Branch
@@ -55,14 +55,14 @@ diamante:
       priority.label: Priority
       reporter_email.label: Reporter Email
       assignee.label: Assigner
-      branch.label: Branch
+      branch.label: Ветка
       comments.label: Comments
       sequence_number.label: Sequence Number
       source.label: Source
       status.label: Статус
       subject.label: Subject
       unique_id.label: Unique Id
-      updated_at.label: Updated At
+      updated_at.label: Дата обновления
       attachments.label: Attachments
       watcher_list.label: Watcher List
       created_via_email.label: Created via email to
@@ -73,7 +73,7 @@ diamante:
       columns:
         key: Key
         subject: Subject
-        branch: Branch
+        branch: Ветка
         assignee: Assignee
         reporter: Reporter
         priority: Priority
@@ -241,13 +241,13 @@ diamante:
     forms:
       name: Имя
       default_assignee: Default Assignee
-      logoFile: Logo
+      logoFile: Логотип
       tags: Tags
       key: Key
     attributes:
       name: Имя
       subject: Subject
-      branch: Branch
+      branch: Ветка
       status: Статус
       priority: Priority
       source: Source
