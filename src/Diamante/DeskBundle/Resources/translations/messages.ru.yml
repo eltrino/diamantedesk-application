@@ -196,13 +196,13 @@ diamante:
         upload:
           error: Загруженная директория недоступна для записи, нет или не осталось пространства на диске.
       placeholders:
-        dropzone: Drop File Here
+        dropzone: Перетащите файл сюда
     file:
       messages:
         dump:
-          error: File name cannot be an empty string.
+          error: Имя файла не может быть пустой строкой.
         type:
-          error: Value should be a File type.
+          error: Значение должно быть типом файла.
     permissions:
       messages:
         granted:
