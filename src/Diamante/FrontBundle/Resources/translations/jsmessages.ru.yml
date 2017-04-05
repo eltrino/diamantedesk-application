@@ -15,7 +15,7 @@ diamante_front:
           title: Ошибка добавления вложений
     template:
       dropzone:
-        dropfiles: Drop files here to attach
+        dropfiles: Перетащите файлы сюда, чтобы прикрепить
         attachfiles: Нажмите здесь, чтобы прикрепить файлы
         read: Чтение...
         send: Отправка...
@@ -57,27 +57,27 @@ diamante_front:
     view:
       alert:
         title: Ошибка
-        text: An unprocessed error happened. Please try again!
+        text: Произошла необработанная ошибка. Пожалуйста, попробуйте снова!
       modal:
-        title: Modal Window
-        submit: Save changes
+        title: Модальное окно
+        submit: Сохранить изменения
   footer:
     template:
       copyright: Diamante is released under %{license} License by %{company}
   header:
     template:
-      new_ticket: New Ticket
+      new_ticket: Новый тикет
   session:
     controller:
       alert:
         confirm_success:
-          title: Email Confirmation Success
-          text: You may login and use application
+          title: Успешное подтверждение адреса электронной почты
+          text: Вы можете авторизоваться и использовать приложение
         reconfirm_succes:
-          title: Email Confirmation Success
-          text: We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: Успешное подтверждение адреса электронной почты
+          text: Мы отправили вам письмо на электронную почту %{email}.</br> Пожалуйста, нажмите на ссылку в этом сообщении, чтобы активировать вашу учетную запись.
         confirm_fail:
-          title: Email Confirmation Failed
+          title: Подтверждение электронной почты не удалось
           text: Activation code is wrong
         login_fail:
           title: Authorization Failed
