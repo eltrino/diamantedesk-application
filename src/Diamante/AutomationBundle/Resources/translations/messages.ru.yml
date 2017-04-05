@@ -2,7 +2,7 @@
 diamante:
   automation:
     rule:
-      entity_label: "Правило \n  "
+      entity_label: Правило
       entity_plural_label: Правила
       event_triggered_entity_plural_label: Правила по действию
       time_triggered_entity_plural_label: Правила по времени
@@ -31,7 +31,7 @@ diamante:
           deactivate: Отключить Правила
           response:
             activate:
-              success_message: "{0} Объекты не были активированы|{1} Один объект был активирован|]1,Inf[ %count% Обьекты были активированы"
+              success_message: "{0} Объекты не были активированы|{1} Один объект был активирован|]1,Inf[ %count% Объекты были активированы"
             deactivate:
               success_message: "{0} Объекты не были отключены|{1} Один объект был отключен|]1,Inf[ %count% Объекты были отключены"
       time_triggered:
@@ -92,7 +92,7 @@ diamante:
       changed_to: изменено на
       "true": "верно"
       "false": "неверно"
-      customer: Клиент
+      customer: клиент
       admin: Администратор
     action:
       update_property: Обновление свойств
