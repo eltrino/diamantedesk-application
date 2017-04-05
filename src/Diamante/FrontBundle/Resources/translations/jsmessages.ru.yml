@@ -140,42 +140,42 @@ diamante_front:
         edit_error:
           title: Ошибка редактирования тикета
       message:
-        key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
-        ticket_update: Ticket %{ticket_update_id} updated
-        status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
-        status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
-        create_ticket: Ticket %{ticket_created_id} created
+        key_changed: Пока мы активно работали над вашим тикетом, его ключ был изменен на %{ticket_key_id}
+        ticket_update: Обновление %{ticket_update_id} тикета
+        status_closed: Статус %{ticket_status_closed_id} тикета изменен. Статус тикета "Закрыт"
+        status_open: Статус %{ticket_status_open_id} тикета изменен. Статус тикета "Открыт"
+        create_ticket: Создан %{ticket_created_id} тикет
       edit:
-        title: Edit Ticket %{ticket_id}
+        title: Редактировать %{ticket_id} тикет
       edit_ticket:
         Edit Ticket: '%{key} - %{subject}'
-      search_result: Search Result
+      search_result: Результат поиска
     model:
       error:
         required: Не может быть пустым
     template:
-      empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
-      empty_search: There are no tickets matching your criteria.
-      empty_view: This ticket doesn't exist!
+      empty_list: Вы еще не создали тикеты. <br> Нажмите <a href="%{url}"> + </a>, чтобы создать новый.
+      empty_search: Нет тикетов, соответствующих вашим критериям.
+      empty_view: Этот тикет не существует!
       form:
-        subject_label: Ticket Subject
-        subject_placeholder: Short ticket summary
+        subject_label: Тема тикета
+        subject_placeholder: Краткая сводка о тикетах
         description_label: Описание
-        description_placeholder: Provide a detailed description of your support request
+        description_placeholder: Предоставить подробное описание вашего запроса на поддержку
         priority_label: Приоритет
-        low_option: Low
-        medium_option: Medium
-        high_option: High
+        low_option: Низкий
+        medium_option: Средний
+        high_option: Высокий
       list:
         key: Ключ
         date: Дата
         subject: Название
         priority: Приоритет
         status: Статус
-      resolve_button: Resolve Ticket
-      reopen_button: Reopen Ticket
+      resolve_button: Решить тикет
+      reopen_button: Открыть снова тикет
     view:
-      all_tickets: View all tickets
+      all_tickets: Посмотреть все тикеты
     router:
       view_ticket: Просмотреть тикет
       create_ticket: Создать тикет
@@ -183,11 +183,11 @@ diamante_front:
   user:
     controller:
       message:
-        update_success: You have successfully updated your profile
+        update_success: Вы успешно обновили свой профиль
       alert:
         edit_error:
-          title: Edit User Error
-      edit_user: Edit User
+          title: Ошибка редактирования пользователя
+      edit_user: Редактирование пользователя
     model:
       error:
         required: Не может быть пустым
@@ -198,24 +198,24 @@ diamante_front:
         last_name_label: Last Name
         email_label: Email
         password_label: Новый пароль
-        submit_button: Submit
-      logout: Log Out
+        submit_button: Отправить
+      logout: Выход
   watcher:
     controller:
       alert:
         add_error:
-          title: Add Watcher Error
+          title: Ошибка добавления наблюдателя
         delete_comment_error:
           title: Ошибка удаления комментария
       message:
-        add_success: A new watcher has been successfully added to the ticket
-        remove_success: A watcher has been removed from the ticket
+        add_success: Новым наблюдателем был успешно добавлен тикет
+        remove_success: Наблюдатель был удален из тикета
       add_watcher: Добавить наблюдателя
     model:
       error:
         required: Не может быть пустым
         email_format: '«%{email}» недействительный адрес электронной почты'
     template:
-      email_watcher: Watcher Email
-      remove_watcher: Remove Watcher
+      email_watcher: Электронная почта наблюдателя
+      remove_watcher: Удалить наблюдателя
       add_watcher: Добавить наблюдателя
