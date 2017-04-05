@@ -5,57 +5,57 @@ diamante:
       entity: Клиент
       entity.plural: Клиенты
       email: Электронная почта
-      first_name: First Name
-      last_name: Last Name
-      active: Is Active
+      first_name: Имя
+      last_name: Фамилия
+      active: Активен
       id: Идентификатор
-      is_deleted: Is Deleted
+      is_deleted: Удален
       related_tickets: Тикеты
-      activated: Email Confirmed
+      activated: E-mail подтвержден
     actions:
-      create: Create Customer
-      remove: Delete Customer
-      view: View Customer
-      update: Update Customer
-      delete: Delete Customer
-      reset_pwd: Reset Password
+      create: Создать клиента
+      remove: Удалить клиента
+      view: Просмотр клиента
+      update: Обновить клиента
+      delete: Удалить клиента
+      reset_pwd: Сброс пароля
       mass:
         delete:
-          label: Delete сustomers
+          label: Удалить клиентов
           messages:
-            success: Selected customers successfully deleted.
-            fail: Failed to delete selected customers.
+            success: Выбранные клиенты успешно удалены.
+            fail: Не удалось удалить выбранных клиентов.
         reset_pwd:
-          label: Reset passwords for customers
+          label: Сброс паролей для клиентов
           messages:
-            success: Passwords for %count% selected customer(s) have been successfully reset.
-            fail: Error occured while resetting passwords.
+            success: Пароли для выбранных %count% клиента(ов) были успешно сброшены.
+            fail: Произошла ошибка при сбросе паролей.
     messages:
       delete:
-        query: Are you sure you want to delete this customer?
-        success: Customer successfully deleted.
+        query: Вы уверены, что хотите удалить этого клиента?
+        success: Клиент успешно удален.
       create:
-        success: Customer successfully created.
+        success: Клиент успешно создан.
       update:
-        success: Customer successfully updated.
+        success: Клиент успешно обновлен.
       reset_pwd:
-        query: Are you sure you want to reset password for this customer?
-        success: User password successfully reset.
+        query: Вы уверены, что хотите сбросить пароль для этого клиента?
+        success: Пароль пользователя успешно сброшен.
       remove:
         failed:
-          related: Error deleting user. User has related entities.
+          related: Ошибка при удалении пользователя. Пользователь имеет связанные объекты.
     placeholder:
-      email: 'Please enter an email address'
-    details: Customer Details
-    activity: Customer Activity
+      email: 'Пожалуйста, введите адрес электронной почты'
+    details: Информация о клиенте
+    activity: Активность клиента
     ui:
       "yes": true
       "no": false
     notification:
-      created: New DiamanteDesk account created.
-      force_reset: Password reset notification
+      created: Новый аккаунт DiamanteDesk создан.
+      force_reset: Уведомление о сбросе пароля
     exception:
-      customer_exists: Customer with such email already exists.
+      customer_exists: Клиент с таким электронным адресом уже существует.
     autocomplete:
       group:
         assignee: '[Assignee]'
