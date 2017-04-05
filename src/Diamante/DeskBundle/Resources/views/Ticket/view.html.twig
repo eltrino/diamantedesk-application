@@ -273,6 +273,9 @@
     'imagePath': entity.branch.logo ? entity.branch.logo.pathname : null
     }
     %}
+
+
+
     {{ parent() }}
 {% endblock pageHeader %}
 
@@ -361,5 +364,34 @@
 
     {% set data = {'dataBlocks': dataBlocks} %}
     {{ parent() }}
+
+
+    <script type="text/javascript">
+        require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
+            function($) {
+                $(document).ready(function () {
+                    var leftContent = $('.scrollspy.container-fluid.scrollable-container');
+                    leftContent.on('scroll', function () {
+                        var distanceY = this.scrollTop;
+                        var hideOn = 50;
+                        var header = $('#oroplatform-header');
+                        var breadcrumbs = $('.breadcrumb-pin');
+                        if (distanceY > hideOn) {
+                            header.addClass("nav-hide");
+                            breadcrumbs.addClass("nav-hide");
+                        } else {
+                            if (header.hasClass("nav-hide")) {
+                                header.removeClass("nav-hide");
+                                breadcrumbs.removeClass("nav-hide");
+                            }
+                        }
+                    })
+                });
+
+            });
+    </script>
+
 {% endblock content_data %}
+
+
 
