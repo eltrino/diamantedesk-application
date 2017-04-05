@@ -2,15 +2,15 @@
 diamante:
   user:
     labels:
-      entity: Customer
-      entity.plural: Customers
-      email: Email
+      entity: Клиент
+      entity.plural: Клиенты
+      email: Электронная почта
       first_name: First Name
       last_name: Last Name
       active: Is Active
-      id: Id
+      id: Идентификатор
       is_deleted: Is Deleted
-      related_tickets: Tickets
+      related_tickets: Тикеты
       activated: Email Confirmed
     actions:
       create: Create Customer
