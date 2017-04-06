@@ -98,7 +98,7 @@ diamante:
       update_property: Обновление свойств
       notify_by_email: Уведомлять по электронной почте
     connector:
-      inclusive: Все верно
+      inclusive: Все утверждения справедливы
       exclusive: Любое из утверждений справедливо
     cron:
       d: "{1} каждый день |] 1, Inf [каждые %time% дней"
