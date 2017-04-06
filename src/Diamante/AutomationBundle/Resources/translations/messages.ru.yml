@@ -21,14 +21,14 @@ diamante:
         active: Aктивный
         inactive: Неактивный
       actions:
-        add: Добавить Правило
-        view: Просмотреть Правило
-        edit: Редактировать Правило
-        delete: Удалить Правило
+        add: Добавить правило
+        view: Просмотреть правило
+        edit: Редактировать правило
+        delete: Удалить правило
         mass:
-          remove: Удалить Правила
-          activate: Активировать Правила
-          deactivate: Отключить Правила
+          remove: Удалить правила
+          activate: Активировать правила
+          deactivate: Отключить правила
           response:
             activate:
               success_message: "{0} Объекты не были активированы|{1} Один объект был активирован|]1,Inf[ %count% Объекты были активированы"
@@ -87,7 +87,7 @@ diamante:
       created: Создан
       updated: Обновлен
       removed: Удален
-      changed: изменен
+      changed: изменено
       changed_from: изменено с
       changed_to: изменено на
       "true": "верно"
