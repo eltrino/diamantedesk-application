@@ -2,18 +2,18 @@
 diamante:
   automation:
     rule:
-      entity_label: Rule
-      entity_plural_label: Rules
-      event_triggered_entity_plural_label: Event Triggered Rules
-      time_triggered_entity_plural_label: Time Triggered Rules
-      details: Rule Details
+      entity_label: Правило
+      entity_plural_label: Правила
+      event_triggered_entity_plural_label: Правила за дією
+      time_triggered_entity_plural_label: Правила за часом
+      details: Відомості про правила
       messages:
         create:
-          error: Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
-          success: Rule successfully created.
+          error: Сталася помилка під час створення правила. Правило не створено. Введіть всі необхідні дані і спробуйте ще раз.
+          success: Правило успішно створено.
         update:
-          error: Error occurred when updating the rule. Rule is not updated. Enter all required data and try again.
-          success: Rule successfully updated.
+          error: Сталася помилка під час оновлення правила. Правило не оновлюється. Введіть всі необхідні дані та повторіть спробу ще раз.
+          success: Правило успішно оновлено.
         delete:
           query: Are you sure you want to delete this rule?
           success: Rule successfully deleted.
