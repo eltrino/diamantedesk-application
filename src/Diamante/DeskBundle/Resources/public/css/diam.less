@@ -488,8 +488,53 @@ div[id^="grid-audit-grid"] td.number-cell {
     transform: translateY(-100%);
 }
 
+.main-translate {
+    transform: translateY(-15%);
+}
+
 #oroplatform-header {
-    transition: transform .2s;
+    transition: transform .5ms;
+}
+
+#right-block {
+    .control-group label.control-label {
+        width: auto;
+        text-align: left;
+    }
+    .control-group .controls {
+        margin-left: 65px;
+    }
+    h5.user-fieldset {
+        margin: 10px 10px 10px 0;
+    }
+    .reporter-block, .assignee-block {
+        .user-avatar {
+            float: left;
+            margin-top: 10px;
+        }
+        .reporter-info, .assignee-info {
+            float: left;
+            margin-left: 10px;
+        }
+    }
+    .reporter-block:after, .assignee-block:after {
+        content: " ";
+        display: block;
+        clear: both;
+    }
+    .info-date {
+        color: #777;
+    }
+    .diam-attachment {
+        margin: 5px 5px 5px 0;
+    }
+}
+
+#wrapper {
+    border: 0;
+    .span9.left-block {
+        border: 1px solid #ddd;
+    }
 }
 
 

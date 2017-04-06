@@ -3,10 +3,9 @@
         <div class="responsive-cell responsive-cell-no-blocks">
             {% set detailsBlock = [DiamUI.attributeRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)] %}
             {% set detailsBlock = detailsBlock|merge([DiamUI.attributeRow('diamante.desk.attributes.priority'|trans, entity.priority.getLabel)]) %}
-            {% set reporterBlock = [DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: reporterModel.isDeleted ? 'deleted-reporter' : ''})] %}
-            {% set reporterBlock = reporterBlock|merge([DiamUI.attributeRow('email', reporter.getEmail)]) %}
             {% set oroUserReporter = fetch_oro_user(entity.reporter) %}
             {% set diamanteUserReporter = fetch_diamante_user(entity.reporter) %}
+            {% set reporterBlock = [DiamUI.attributeRow('email', reporter.getEmail)] %}
             {% if oroUserReporter %}
                 {% set avatarReporter = oro_configured_image_url(oroUserReporter, 'avatar') %}
                 {% set reporterBlock = reporterBlock|merge([DiamUI.attributeRow('oro.user.phone.label'|trans, oroUserReporter.getPhone ? oroUserReporter.getPhone : 'diamante.desk.common.not_available'|trans)]) %}
@@ -16,18 +15,16 @@
             {% endif %}
 
             {% set oroUserAssigned = entity.assignee  %}
-            {% set assignedBlock = [DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, oroUserAssigned ? oroUserAssigned|oro_format_name : entity.unassignedLabel|trans)] %}
+
             {% if oroUserAssigned != null %}
-                {% set assignedBlock = assignedBlock|merge([DiamUI.attributeRow('oro.user.emails.label'|trans, oroUserAssigned.getEmail) ]) %}
+                {% set assignedBlock = [DiamUI.attributeRow('oro.user.emails.label'|trans, oroUserAssigned.getEmail)] %}
                 {% set assignedBlock = assignedBlock|merge([DiamUI.attributeRow('oro.user.phone.label'|trans, oroUserAssigned.getPhone ? oroUserAssigned.getPhone : 'diamante.desk.common.not_available'|trans) ]) %}
                 {% set avatarAssigned = oro_configured_image_url(oroUserAssigned, 'avatar') %}
             {% else %}
-                {% set avatarAssigned = null %}
+                {% set detailsBlock = detailsBlock|merge([DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, entity.unassignedLabel|trans)]) %}
             {% endif %}
 
-
-            {% set sidebarDataBlocks =
-                [
+            {% set sidebarDataBlocks = [
                 {
                 'id': 'details',
                 'title': 'diamante.desk.ticket.details'|trans,
@@ -35,32 +32,49 @@
                 },
                 {
                 'id': 'reporter',
+                'name': reporterDisplayName,
                 'title': 'Reporter by',
                 'data': reporterBlock,
                 'avatar': avatarReporter
-                },
-                {
-                'id': 'assignee',
-                'title': 'Assigned to',
-                'data': assignedBlock,
-                'avatar': avatarAssigned
-                },
+                }
+                ]
+            %}
+
+            {% if oroUserAssigned != null %}
+                {% set sidebarDataBlocks = sidebarDataBlocks|merge([
+                    {
+                    'id': 'assignee',
+                    'name': oroUserAssigned|oro_format_name,
+                    'title': 'Assigned to',
+                    'data': assignedBlock,
+                    'avatar': avatarAssigned
+                    }
+                    ])
+                %}
+            {% endif %}
+
+            {% set sidebarDataBlocks = sidebarDataBlocks|merge([
                 {
                 'id': 'watchers',
                 'title': 'Listeners/Watchers',
                 'data': [WatchersListWidget]
-                },
-                ]
+                }
+                ])
             %}
 
             {% for subblock in sidebarDataBlocks %}
                 <div class="{{ subblock.id }}-block">
                     {% if subblock.id == 'reporter' %}
-                        <h5 class="user-fieldset"><span>{{ subblock.title }}</span><span class="info-date"></span></h5>
+                        <h5 class="user-fieldset">{{ subblock.title }} {{ subblock.name }} <span class="info-date"></span></h5>
                     {% else %}
-                        <h5 class="user-fieldset"><span>{{ subblock.title }}</span></h5>
+                        {% if subblock.id == 'assignee' %}
+                            <h5 class="user-fieldset">{{ subblock.title }} {{ subblock.name }}</h5>
+                        {% else %}
+                            <h5 class="user-fieldset">{{ subblock.title }}</h5>
+                        {% endif %}
                     {% endif %}
-                    {% if subblock.avatar is defined and subblock.avatar %}
+
+                    {% if (subblock.avatar is defined)  %}
                         {% set defaultAvatar = asset('bundles/oroui/img/info-user.png') %}
                         <div class="user-avatar">
                             <img src="{{ (subblock.avatar != '') ? subblock.avatar : defaultAvatar }}" alt="{{ reporterDisplayName }}">
@@ -81,8 +95,7 @@
         require(['jquery', 'moment'],
         function($, moment) {
             var date = moment('{{ entity.getCreatedAt.date }}');
-            date.locale('ru');
-            $('.info-date').text(date.fromNow());
+            $('.info-date').text('('+date.fromNow()+')');
         });
     </script>
 

@@ -367,27 +367,44 @@
 
 
     <script type="text/javascript">
-        require(['jquery', 'oroui/js/modal', 'oroui/js/mediator', 'orotranslation/js/translator'],
+        require(['jquery'],
             function($) {
-                $(document).ready(function () {
+                $(function () {
                     var leftContent = $('.scrollspy.container-fluid.scrollable-container');
+                    var hide = false;
+                    var header = $('#oroplatform-header');
+                    var breadcrumbs = $('.breadcrumb-pin');
+                    var hideOn = 50;
+
                     leftContent.on('scroll', function () {
                         var distanceY = this.scrollTop;
-                        var hideOn = 50;
-                        var header = $('#oroplatform-header');
-                        var breadcrumbs = $('.breadcrumb-pin');
                         if (distanceY > hideOn) {
-                            header.addClass("nav-hide");
-                            breadcrumbs.addClass("nav-hide");
+                            if(!hide) {
+                                header.addClass("nav-hide");
+                                breadcrumbs.addClass("nav-hide");
+                                $('.scrollable-container').height(function (index, heightOld) {
+                                    return heightOld + header.height() + breadcrumbs.height();
+                                });
+                                $('#right-panel').height(function (index, heightOld) {
+                                    return heightOld + header.height();
+                                });
+                                hide = true;
+                            }
                         } else {
                             if (header.hasClass("nav-hide")) {
                                 header.removeClass("nav-hide");
                                 breadcrumbs.removeClass("nav-hide");
+                                $('.scrollable-container').height(function (index, heightOld) {
+                                    return heightOld - header.height() - breadcrumbs.height();
+                                });
+                                $('#right-panel').height(function (index, heightOld) {
+                                    return heightOld - header.height();
+                                });
+                                hide = false;
                             }
                         }
                     })
                 });
-
             });
     </script>
 
