@@ -257,14 +257,14 @@ diamante:
       watcher: Спостерігач
       key: Key
     email:
-      configuration: Email Configuration
+      configuration: Налаштування електронної пошти
     dashboard:
-      support.label: Support Dashboard
+      support.label: Підтримка моніторингу
     report:
-      plural_label: Reports
+      plural_label: Звіти
       reports:
-        tickets_by_priority: Tickets by Priority
-        tickets_by_response_time: Time of Response
+        tickets_by_priority: Тікети за пріоритетом
+        tickets_by_response_time: Час відгуку
         tickets_by_channels: Tickets by Channels
         tickets_by_branches: Tickets by Branches
         ticket_timeline: Ticket Timeline
