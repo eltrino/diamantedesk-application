@@ -265,8 +265,8 @@ diamante:
       reports:
         tickets_by_priority: Тікети за пріоритетом
         tickets_by_response_time: Час відгуку
-        tickets_by_channels: Tickets by Channels
-        tickets_by_branches: Tickets by Branches
+        tickets_by_channels: Тікети по каналах
+        tickets_by_branches: Тікети за гілками
         ticket_timeline: Ticket Timeline
       messages:
         build:
