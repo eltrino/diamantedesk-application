@@ -1,2 +1,2 @@
 ---
-"oro.datagrid.no.results": "No {{ entityHint }} matching your search were found. Try modifying your search criteria."
+"oro.datagrid.no.results": "Даних {{ entityHint }} відповідно до вашого запиту не знайдено. Спробуйте змінити критерії пошуку."
