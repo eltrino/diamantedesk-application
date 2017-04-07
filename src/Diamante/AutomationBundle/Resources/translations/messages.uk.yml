@@ -33,72 +33,72 @@ diamante:
             activate:
               success_message: "{0} Об’єкти не були активовані|{1} Один об'єкт був активований |] 1, Inf [%count% Об'єкти були активовані"
             deactivate:
-              success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
+              success_message: "{0} Об’єкти не були відключені|{1} Один об'єкт був відключений|] 1, Inf [%count% Об'єкти були відключені"
       time_triggered:
-        entity_label: Time Triggered
-        repetition_time: Frequency
+        entity_label: Час запуску
+        repetition_time: Частота
       event_triggered:
-        entity_label: Event Triggered
+        entity_label: Подія
     ui:
-      create: Create
-      ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
-      edit: Edit
-      add: Add
-      change: Change
+      create: Створити
+      ok: Ок
+      cancel: Відмінити
+      save: Зберегти
+      delete: Видалити
+      save_and_close: Зберегти та закрити
+      edit: Редагувати
+      add: Додати
+      change: Змінити
       event_triggered:
-        create: Create Event Triggered Rule
+        create: Створити правило по дії
       time_triggered:
-        create: Create Time Triggered Rule
+        create: Створити правило по часу
     attributes:
-      condition: Condition
-      action: Action
-      weight: Weight
-      target: Target
-      parent: Parent
-      status: Status
-      expression: Expression
-      mode: Mode
+      condition: Стан
+      action: Дія
+      weight: Значення
+      target: Ціль
+      parent: Джерело
+      status: Статус
+      expression: Вираз
+      mode: Режим
     common:
-      name: Name
-      general: General
-      created: Created
-      updated: Updated
-      not_available: N/A
-      not_defined: Not defined
-      delete_confirmation: Confirm Deletion
+      name: Назва
+      general: Загальні відомості
+      created: Створений
+      updated: Оновлений
+      not_available: Недоступний
+      not_defined: Невизначений
+      delete_confirmation: Підтвердити видалення
       messages:
         validation:
-          failed: Form is invalid. Please correctly fill in all required fields.
+          failed: Недоступна форма. Будь ласка, правильно заповніть всі обов'язкові поля.
     forms:
-      name: Name
+      name: Назва
     condition:
-      eq: is equal to
-      neq: is not equal to
-      gt: is greater than
-      gte: is greater than or equals to
-      lt: is less than
-      lte: is less than or equals to
-      contains: contains
-      not_contains: not contains
-      created: Created
-      updated: Updated
-      removed: Removed
-      changed: changed
-      changed_from: changed from
-      changed_to: changed to
-      "true": "true"
-      "false": "false"
-      customer: is customer
-      admin: is admin
+      eq: рівно
+      neq: не рівно
+      gt: більше, ніж
+      gte: більше або дорівнює
+      lt: менше ніж
+      lte: менше або рівне
+      contains: містить
+      not_contains: не містить
+      created: Створений
+      updated: Оновлений
+      removed: Видалений
+      changed: змінено
+      changed_from: змінено з
+      changed_to: змінено на
+      "true": "вірно"
+      "false": "не вірно"
+      customer: клієнт
+      admin: адміністратор
     action:
-      update_property: Update property
-      notify_by_email: Notify by email
+      update_property: Редагувати параметр
+      notify_by_email: Повідомити по електронній пошті
     connector:
-      inclusive: All of these are true
+      inclusive: Всі твердження справедливі
       exclusive: Any of these are true
     cron:
       d: "{1} Every day|]1,Inf[ Every %time% days"
