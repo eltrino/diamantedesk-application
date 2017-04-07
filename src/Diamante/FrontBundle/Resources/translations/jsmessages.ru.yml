@@ -63,7 +63,7 @@ diamante_front:
         submit: Сохранить изменения
   footer:
     template:
-      copyright: Diamante выпущена под лицензией %{license} на %{company}
+      copyright: Diamante выпускается под лицензией %{license} на %{company}
   header:
     template:
       new_ticket: Новый тикет
