@@ -15,20 +15,20 @@ diamante:
           error: Сталася помилка під час оновлення правила. Правило не оновлюється. Введіть всі необхідні дані та повторіть спробу ще раз.
           success: Правило успішно оновлено.
         delete:
-          query: Are you sure you want to delete this rule?
-          success: Rule successfully deleted.
+          query: Ви впевнені, що хочете видалити це правило?
+          success: Правило успішно видалено.
       status:
-        active: Active
-        inactive: Inactive
+        active: Активний
+        inactive: Неактивний
       actions:
-        add: Add Rule
-        view: View Rule
-        edit: Edit Rule
-        delete: Delete Rule
+        add: Додати правило
+        view: Переглянути правило
+        edit: Редагувати правило
+        delete: Видалити правило
         mass:
-          remove: Remove Rules
-          activate: Activate Rules
-          deactivate: Deactivate Rules
+          remove: Видалити правила
+          activate: Активувати правила
+          deactivate: Відключити правила
           response:
             activate:
               success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
