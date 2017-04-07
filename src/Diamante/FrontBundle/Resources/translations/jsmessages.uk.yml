@@ -36,53 +36,53 @@ diamante_front:
         edit_success:
           title: Ваш коментар було змінено
       message:
-        post_success: Comment was posted successfully
-        delete_success: Your comment was successfully deleted
+        post_success: Коментарій був успішно опублікований
+        delete_success: Ваш коментар успішно видалено
     model:
       error:
-        required: "Can't be blank"
+        required: "Не може бути пустим"
     template:
       form:
         add: Додати коментар
         cancel: Відмінити
-        save: Save Changes
+        save: Зберегти зміни
       button:
         edit: Редагувати коментар
-        delete: Delete Comment
+        delete: Видалити коментар
   common:
     template:
-      close: Close
+      close: Закрити
       cancel: Відмінити
-      sort: Sort By
+      sort: Сортувати за
     view:
       alert:
-        title: Error
-        text: An unprocessed error happened. Please try again!
+        title: Помилка
+        text: Сталась неопрацьована помилка. Будь ласка, спробуйте ще раз!
       modal:
-        title: Modal Window
-        submit: Save changes
+        title: Модальне вікно
+        submit: Зберегти зміни
   footer:
     template:
-      copyright: Diamante is released under %{license} License by %{company}
+      copyright: Diamante доступний за ліцензією %{license} на %{company}
   header:
     template:
-      new_ticket: New Ticket
+      new_ticket: Новий тікет
   session:
     controller:
       alert:
         confirm_success:
-          title: Email Confirmation Success
-          text: You may login and use application
+          title: Успішне підтвердження адреси електронної пошти
+          text: Ви можете авторизуватися і використовувати додаток
         reconfirm_succes:
-          title: Email Confirmation Success
-          text: We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: Успішне підтвердження адреси електронної пошти
+          text: Ми відправили вам лист на електронну пошту %{email}. </br> Будь ласка, натисніть на посилання в цьому повідомленні, щоб активувати ваш профіль.
         confirm_fail:
-          title: Email Confirmation Failed
-          text: Activation code is wrong
+          title: Підтвердження електронної пошти не вдалося
+          text: Неправильний код активації
         login_fail:
-          title: Authorization Failed
+          title: Помилка авторизації
         register_succes:
-          title: Registration Success
+          title: Ви успішно зареєструвались
           text: Thank you. We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
         register_fail:
           title: Registration Failed
@@ -100,7 +100,7 @@ diamante_front:
           title: Authorization Required
           text: This action requires authorization
       error:
-        required: Can't be blank
+        required: Не може бути пустим
         email_format: '"%{email}" is not a valid email'
         password_length: Must be at least six (6) symbols
     template:
@@ -112,9 +112,9 @@ diamante_front:
         register: Already have an account? &mdash; <a href="%{url}">Sign In</a>
         reset: Back to <a href="%{url}">Sign in</a>
       label:
-        email: Email
-        first_name: First Name
-        last_name: Last Name
+        email: Електронна пошта
+        first_name: Ім'я
+        last_name: Прізвище
         password: Password
         new_password: New Password
       placeholder:
@@ -126,12 +126,12 @@ diamante_front:
       button:
         login: Sign In
         register: Continue
-        reset_password: Reset Password
+        reset_password: Скинути пароль
         new_password: Set New Password
     title:
       login: Login
       register: Registration
-      reset: Reset Password
+      reset: Скинути пароль
   ticket:
     controller:
       alert:
@@ -152,7 +152,7 @@ diamante_front:
       search_result: Search Result
     model:
       error:
-        required: Can't be blank
+        required: Не може бути пустим
     template:
       empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
       empty_search: There are no tickets matching your criteria.
@@ -190,13 +190,13 @@ diamante_front:
       edit_user: Edit User
     model:
       error:
-        required: Can't be blank
+        required: Не може бути пустим
         password_length: Must be at least six (6) symbols
     template:
       form:
-        first_name_label: First Name
-        last_name_label: Last Name
-        email_label: Email
+        first_name_label: Ім'я
+        last_name_label: Прізвище
+        email_label: Електронна пошта
         password_label: New Password
         submit_button: Submit
       logout: Log Out
@@ -213,7 +213,7 @@ diamante_front:
       add_watcher: Додати спостерігача
     model:
       error:
-        required: Can't be blank
+        required: Не може бути пустим
         email_format: '"%{email}" is not a valid email'
     template:
       email_watcher: Watcher Email
