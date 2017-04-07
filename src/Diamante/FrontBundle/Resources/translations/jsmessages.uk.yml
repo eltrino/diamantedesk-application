@@ -1,5 +1,5 @@
 ---
-"Loading...": "Loading..."
+"Loading...": "Завантаження..."
 diamante_front:
   attachment:
     controller:
@@ -43,16 +43,16 @@ diamante_front:
         required: "Can't be blank"
     template:
       form:
-        add: Add Comment
-        cancel: Cancel
+        add: Додати коментар
+        cancel: Відмінити
         save: Save Changes
       button:
-        edit: Edit Comment
+        edit: Редагувати коментар
         delete: Delete Comment
   common:
     template:
       close: Close
-      cancel: Cancel
+      cancel: Відмінити
       sort: Sort By
     view:
       alert:
@@ -160,26 +160,26 @@ diamante_front:
       form:
         subject_label: Ticket Subject
         subject_placeholder: Short ticket summary
-        description_label: Description
+        description_label: Опис
         description_placeholder: Provide a detailed description of your support request
-        priority_label: Priority
+        priority_label: Пріоритет
         low_option: Low
         medium_option: Medium
         high_option: High
       list:
-        key: Key
-        date: Date
-        subject: Subject
-        priority: Priority
-        status: Status
+        key: Ключ
+        date: Дата
+        subject: Тема
+        priority: Пріоритет
+        status: Статус
       resolve_button: Resolve Ticket
       reopen_button: Reopen Ticket
     view:
       all_tickets: View all tickets
     router:
-      view_ticket: View Ticket
-      create_ticket: Create Ticket
-      edit_ticket: Edit Ticket
+      view_ticket: Переглянути тікет
+      create_ticket: Створити тікет
+      edit_ticket: Редагувати тікет
   user:
     controller:
       message:
@@ -210,7 +210,7 @@ diamante_front:
       message:
         add_success: A new watcher has been successfully added to the ticket
         remove_success: A watcher has been removed from the ticket
-      add_watcher: Add Watcher
+      add_watcher: Додати спостерігача
     model:
       error:
         required: Can't be blank
@@ -218,4 +218,4 @@ diamante_front:
     template:
       email_watcher: Watcher Email
       remove_watcher: Remove Watcher
-      add_watcher: Add Watcher
+      add_watcher: Додати спостерігача
