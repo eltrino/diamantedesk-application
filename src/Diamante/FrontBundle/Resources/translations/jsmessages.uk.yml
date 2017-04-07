@@ -83,12 +83,12 @@ diamante_front:
           title: Помилка авторизації
         register_succes:
           title: Ви успішно зареєструвались
-          text: Thank you. We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          text: Дякуємо. Ми відправили вам лист по електронній пошті %{email}.</br> Будь ласка, натисніть на посилання в цьому повідомленні, щоб активувати ваш профіль.
         register_fail:
-          title: Registration Failed
+          title: Помилка реєстрації
         reset_info:
-          title: Password Reset Info
-          text: We have sent you email to %{email}.</br>Please click the link in that message to reset your password.
+          title: Відомості про скидання пароля
+          text: Ми надіслали вам інформацію по електронній пошті %{email}.</br> Будь ласка, натисніть на посилання в повідомленні для відновлення пароля.
         reset_fail:
           title: Password Reset Failed
           text: Reset Code is invalid or expired
