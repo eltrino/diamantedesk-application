@@ -1,17 +1,17 @@
 ---
-title: DiamanteDesk Application Installation
+title: Встановлення програми Diamante Desk
 process:
   step:
     diamanteinstall:
-      header: Initialization
+      header: Ініціалізація
     installation:
-      cache: Clear cache before database initialization
-      clear-config: Clear entities cache
-      clear-extend: Clear extended entities data
-      schema-drop: Drop current schema
-      schema-update: Schema update
-      fixtures: Load fixtures
-      workflows: Load workflow definitions
+      cache: Очистити кеш до ініціалізації бази даних
+      clear-config: Очистити кеш об'єктів
+      clear-extend: Очистити дані розширених об'єктів
+      schema-drop: Очистити поточну схему
+      schema-update: Оновити схему
+      fixtures: Завантаження конфігурації
+      workflows: Завантаження визначень робочих процесів
       processes: Load processes configuration
       navigation: Init navigation
       js-routing: Dump JS routing
