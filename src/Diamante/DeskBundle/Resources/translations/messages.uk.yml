@@ -102,11 +102,11 @@ diamante:
           success: Тікет успішно збережено.
         delete:
           query: Ви впевнені, що хочете видалити цей тікет?
-          error: Error occurred while deleting the ticket.
-          success: Ticket successfully deleted.
+          error: Сталася помилка під час видалення квитка.
+          success: Тікет успішно вилучено.
         reassign:
-          error: Error occurred while re-assiging the ticket.
-          success: Ticket successfully re-assigned.
+          error: Сталася помилка під час повторного призначення тікета.
+          success: Тікет був успішно перепризначений.
         change_status:
           error: Error occurred while trying to change the ticket status.
           success: Status successfully changed.
