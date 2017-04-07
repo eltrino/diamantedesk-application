@@ -101,6 +101,6 @@ diamante:
       inclusive: Всі твердження справедливі
       exclusive: Будь-яке з твердженнь справедливо
     cron:
-      d: "{1} Every day|]1,Inf[ Every %time% days"
-      h: "{1} Every hour|]1,Inf[ Every %time% hours"
-      m: Every %time% minutes
+      d: "{1} кожного дня |] 1, Inf [кожних %time% днів"
+      h: "{1} кожну годину |] 1, Inf [кожних %time% годин"
+      m: Кожних %time% хвилин
