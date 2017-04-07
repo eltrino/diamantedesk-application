@@ -36,7 +36,7 @@ diamante_front:
         edit_success:
           title: Ваш комментарий был отредактирован
       message:
-        post_success: Комментарий был успешно отправлен
+        post_success: Комментарий был успешно опубликован
         delete_success: Ваш комментарий успешно удален
     model:
       error:
@@ -112,9 +112,9 @@ diamante_front:
         register: Уже есть аккаунт? &mdash; <a href="%{url}"> Вход</a>
         reset: Вернуться к <a href="%{url}"> Войти</a>
       label:
-        email: Email
-        first_name: First Name
-        last_name: Last Name
+        email: Электронная почта
+        first_name: Имя
+        last_name: Фамилия
         password: Пароль
         new_password: Новый пароль
       placeholder:
@@ -126,12 +126,12 @@ diamante_front:
       button:
         login: Войти
         register: Продолжить
-        reset_password: Reset Password
+        reset_password: Сброс пароля
         new_password: Установить новый пароль
     title:
       login: Авторизация
       register: Регистрация
-      reset: Reset Password
+      reset: Сброс пароля
   ticket:
     controller:
       alert:
@@ -194,9 +194,9 @@ diamante_front:
         password_length: Должно быть не менее шести (6) символов
     template:
       form:
-        first_name_label: First Name
-        last_name_label: Last Name
-        email_label: Email
+        first_name_label: Имя
+        last_name_label: Фамилия
+        email_label: Электронная почта
         password_label: Новый пароль
         submit_button: Отправить
       logout: Выход
