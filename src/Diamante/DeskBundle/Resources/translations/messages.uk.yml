@@ -319,4 +319,4 @@ oro:
         ticket_unique_id: Унікальний ідентифікатор тікета
         ticket_sequence_number: Порядковий номер тікету
 oro_datagrid:
-  "not_found_hint %entityHint%": "No %entityHint% matching your search were found. Try modifying your search criteria."
+  "not_found_hint %entityHint%": "Даних %entityHint% відповідно до вашого запиту не знайдено. Спробуйте змінити критерії пошуку."
