@@ -31,7 +31,7 @@ diamante:
           deactivate: Відключити правила
           response:
             activate:
-              success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
+              success_message: "{0} Об’єкти не були активовані|{1} Один об'єкт був активований |] 1, Inf [%count% Об'єкти були активовані"
             deactivate:
               success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
       time_triggered:
