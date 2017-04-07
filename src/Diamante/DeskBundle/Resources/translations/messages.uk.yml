@@ -69,39 +69,39 @@ diamante:
       since_created.label: Створений з
       since_updated.label: Оновлений з
       since_status_updated.label: Статус оновлений з
-      since_assignee_updated.label: Since assignee updated
+      since_assignee_updated.label: Представник оновлений з
       columns:
-        key: Key
+        key: Ключ
         subject: Тема
         branch: Гілка
-        assignee: Assignee
-        reporter: Reporter
+        assignee: Виконавець
+        reporter: Доповідач
         priority: Пріоритет
         status: Статус
         created: Створений
         updated: Оновлений
       actions:
-        add: Add Ticket
-        edit: Edit Ticket
-        view: View Ticket
-        remove: Delete Ticket
+        add: Додати тікет
+        edit: Редагувати тікет
+        view: Переглянути тікет
+        remove: Видалити тікет
         delete: Видалити
-        assign: Assign
-        create: Create Ticket
-        change_status: Change Status
-        move: Move
-        watch: Watch
-        unwatch: Un-watch
-        add_watcher: Add Watcher
+        assign: Призначити
+        create: Створити тікет
+        change_status: Змінити статус
+        move: Перемістити
+        watch: Переглянуті
+        unwatch: Не переглянуті
+        add_watcher: Додати спостерігача
       messages:
         create:
-          error: Error occurred while creating a ticket.
-          success: Ticket successfully created.
+          error: Сталася помилка під час створення тікета.
+          success: Тікет успішно створено.
         save:
-          error: Error occurred while saving the ticket.
-          success: Ticket successfully saved.
+          error: Сталася помилка під час збереження тікета.
+          success: Тікет успішно збережено.
         delete:
-          query: Are you sure you want to delete this ticket?
+          query: Ви впевнені, що хочете видалити цей тікет?
           error: Error occurred while deleting the ticket.
           success: Ticket successfully deleted.
         reassign:
@@ -243,7 +243,7 @@ diamante:
       default_assignee: Представник за замовчуванням
       logoFile: Логотип
       tags: Теги
-      key: Key
+      key: Ключ
     attributes:
       name: Назва
       subject: Тема
@@ -251,11 +251,11 @@ diamante:
       status: Статус
       priority: Пріоритет
       source: Вихідний код
-      reporter: Reporter
+      reporter: Доповідач
       default_assignee: Представник за замовчуванням
-      assignee: Assignee
+      assignee: Виконавець
       watcher: Спостерігач
-      key: Key
+      key: Ключ
     email:
       configuration: Налаштування електронної пошти
     dashboard:
@@ -267,18 +267,18 @@ diamante:
         tickets_by_response_time: Час відгуку
         tickets_by_channels: Тікети по каналах
         tickets_by_branches: Тікети за гілками
-        ticket_timeline: Ticket Timeline
+        ticket_timeline: Хронологія тікетів
       messages:
         build:
-          error: Error occured while generating the report.
+          error: Сталася помилка під час створення звіту.
     tickethistory:
-      entity_label: Ticket History
-      entity_plural_label: Tickets History
+      entity_label: Історія тікету
+      entity_plural_label: Історія тікетів
       id.label: Id
-      ticket_id.label: Ticket id
+      ticket_id.label: Ідентифікатор тікета
       ticket_key.label: Ticket Key
     tickettimeline:
-      entity_label: Ticket Timeline
+      entity_label: Хронологія тікетів
       closed.label: Closed
       date.label: Date
       id.label: Id
