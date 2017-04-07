@@ -27,7 +27,7 @@ diamante:
         delete: Удалить правило
         mass:
           remove: Удалить правила
-          activate: Активировать правила
+          activate: Включить правила
           deactivate: Отключить правила
           response:
             activate:
