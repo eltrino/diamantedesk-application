@@ -5,36 +5,36 @@ diamante_front:
     controller:
       alert:
         delete_error:
-          title: Delete Attachment Error
+          title: Помилка видалення додатку
       message:
-        attach_success: Files attached successfully
-        delete_success: File deleted successfully
+        attach_success: Файли успішно прикріплені
+        delete_success: Файли успішно видалені
     model:
       alert:
         add_error:
-          title: Add Attachments Error
+          title: Помилка додавання вкладень
     template:
       dropzone:
-        dropfiles: Drop files here to attach
-        attachfiles: Click here to attach files
-        read: Reading...
-        send: Sending...
-        receive: Receiving...
+        dropfiles: Перетягніть файли сюди, щоб прикріпити
+        attachfiles: Натисніть тут, щоб вкласти файли
+        read: Читання даних...
+        send: Відправка...
+        receive: Отримання...
       button:
-        remove: Remove Attachment
+        remove: Видалити вкладення
       link:
-        download: 'Download:'
+        download: 'Завантажити:'
       header:
-        file: File Attachments
+        file: Прикріплені файли
   comment:
     controller:
       alert:
         create_error:
-          title: Create Comment Error
+          title: Помилка створення коментаря
         delete_error:
-          title: Delete Comment Error
+          title: Помилка видалення коментаря
         edit_success:
-          title: Your comment has been edited
+          title: Ваш коментар було змінено
       message:
         post_success: Comment was posted successfully
         delete_success: Your comment was successfully deleted
@@ -206,7 +206,7 @@ diamante_front:
         add_error:
           title: Add Watcher Error
         delete_comment_error:
-          title: Delete Comment Error
+          title: Помилка видалення коментаря
       message:
         add_success: A new watcher has been successfully added to the ticket
         remove_success: A watcher has been removed from the ticket
