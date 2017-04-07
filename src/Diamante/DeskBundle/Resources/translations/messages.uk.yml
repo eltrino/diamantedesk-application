@@ -108,50 +108,50 @@ diamante:
           error: Сталася помилка під час повторного призначення тікета.
           success: Тікет був успішно перепризначений.
         change_status:
-          error: Error occurred while trying to change the ticket status.
-          success: Status successfully changed.
+          error: Сталася помилка під час спроби змінити статус тікета.
+          success: Статус успішно змінено.
         move:
-          error: Error occurred while trying to move the ticket.
-          success: Ticket successfully moved.
+          error: Сталася помилка під час спроби перемістити тікет.
+          success: Тікет успішно перенесено.
         watch:
-          error: Error occurred while trying to add a watcher.
-          success: Watcher successfully added.
+          error: Сталася помилка під час спроби додати спостерігача.
+          success: Спостерігач успішно доданий.
         watcher_remove:
-          success: Watcher successfully removed.
+          success: Спостерігач успішно видалений.
         get:
-          error: Ticket loading failed, ticket not found.
+          error: Помилка завантаження тікета, тікет не вдалося знайти.
           attachment:
-            error: Attachment loading failed. Ticket has no such attachment.
+            error: Помилка завантаження вкладення. Тікет не має такого вкладення.
           branch:
-            error: Branch loading failed, branch not found.
+            error: Помилка завантаження гілки, гілку не вдалося знайти.
           reporter:
-            error: Reporter loading failed, reporter not found.
+            error: Помилка завантаження доповідача, доповідача не вдалося знайти.
           assignee:
-            error: Assignee validation failed, assignee not found.
+            error: Стався збій при перевірці виконавця, виконавця не вдалося знайти.
     comment:
-      entity_label: Comment
+      entity_label: Коментар
       entity_plural_label: Коментарі
-      ticket_status: Ticket status
-      content: Content
-      private: Private
+      ticket_status: Cтатус тікета
+      content: Контент
+      private: Приватний
       attachments.label: Вкладення
-      author.label: Author
-      content.label: Content
-      created_at.label: Created_at
-      id.label: Id
-      private.label: Private
+      author.label: Автор
+      content.label: Контент
+      created_at.label: Створений в
+      id.label: Ідентифікатор
+      private.label: Приватний
       ticket.label: Тікет
-      updated_at.label: Updated at
-      author_email.label: Author email
+      updated_at.label: Оновлено в
+      author_email.label: Електронна пошта автора
       actions:
-        edit: Edit Comment
-        add: Add Comment
+        edit: Редагувати коментар
+        add: Додати коментар
       messages:
         create:
-          error: Error occured while creating a comment.
-          success: Comment successfully created.
+          error: Сталася помилка під час створення коментаря.
+          success: Коментар успішно створено.
         save:
-          error: Error occured while saving the comment.
+          error: Сталася помилка під час збереження коментаря.
           success: Коментар успішно збережено.
         delete:
           error: ""
@@ -173,8 +173,8 @@ diamante:
       created_at.label: Дата створення
       file.label: Файл
       hash.label: Хеш
-      id.label: Id
-      updated_at.label: Updated at
+      id.label: Ідентифікатор
+      updated_at.label: Оновлено в
       actions:
         delete_file: Видалити файл
         add: Прикріпити файл
@@ -274,49 +274,49 @@ diamante:
     tickethistory:
       entity_label: Історія тікету
       entity_plural_label: Історія тікетів
-      id.label: Id
+      id.label: Ідентифікатор
       ticket_id.label: Ідентифікатор тікета
-      ticket_key.label: Ticket Key
+      ticket_key.label: Ключ тікета
     tickettimeline:
       entity_label: Хронологія тікетів
-      closed.label: Closed
-      date.label: Date
-      id.label: Id
-      new.label: New
-      reopen.label: Reopen
-      solved.label: Solved
+      closed.label: Закритий
+      date.label: Дата
+      id.label: Ідентифікатор
+      new.label: Новий
+      reopen.label: Повторне відкриття
+      solved.label: Вирішено
     watcherlist:
       entity_label: Списки спостерігача
-      entity_plural_label: Watcher Lists
-      id.label: Id
+      entity_plural_label: Списки спостерігача
+      id.label: Ідентифікатор
       ticket.label: Тікет
-      user_type.label: User Type
+      user_type.label: Тип користувача
     automation:
       action:
-        move_to_branch: Move to branch
+        move_to_branch: Переміститись на гілку
       notification:
         ticket:
-          created: Ticket was created
-          updated: Ticket was updated
-          removed: Ticket was removed
+          created: Тікет був створений
+          updated: Тікет був оновлений
+          removed: Тікет був видалений
         comment:
-          created: Comment was created
-          updated: Comment was updated
-          removed: Comment was removed
+          created: Коментар був створений
+          updated: Коментар був оновлений
+          removed: Коментар було видалено
           private:
-            created: Private comment was created
-            updated: Private comment was updated
-            removed: Private comment was removed
+            created: Приватний коментар був створений
+            updated: Приватний коментар був оновлений
+            removed: Приватний коментар видалено
 oro:
   entity_extend:
     form:
       data_type:
         branch_logo: Логотип гілки
-        user_type: User Type
+        user_type: Тип користувача
         source: Вихідний код
         status: Статус
         priority: Пріоритет
-        ticket_unique_id: Ticket unique id
-        ticket_sequence_number: Ticket sequence number
+        ticket_unique_id: Унікальний ідентифікатор тікета
+        ticket_sequence_number: Порядковий номер тікету
 oro_datagrid:
   "not_found_hint %entityHint%": "No %entityHint% matching your search were found. Try modifying your search criteria."
