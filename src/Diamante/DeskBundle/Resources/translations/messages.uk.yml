@@ -160,59 +160,59 @@ diamante:
         get:
           error: Помилка завантаження коментаря, коментар не знайдено.
         get_attach:
-          error: Attachment loading failed. Comment has no such attachment.
-        empty: There are no comments yet.
+          error: Помилка завантаження вкладення. Коментар не має такого вкладення.
+        empty: Коментарів ще немає.
       placeholders:
-        added: added a comment
-        deleted_user: Deleted user
+        added: додати коментар
+        deleted_user: Віддалений користувач
     attachment:
-      entity_label: Attachment
+      entity_label: Вкладення
       entity_plural_label: Вкладення
-      file: File
-      image: Image
-      created_at.label: Created at
-      file.label: File
-      hash.label: Hash
+      file: Файл
+      image: Зображення
+      created_at.label: Дата створення
+      file.label: Файл
+      hash.label: Хеш
       id.label: Id
       updated_at.label: Updated at
       actions:
-        delete_file: Delete File
-        add: Add Attachment
-        download: Download
+        delete_file: Видалити файл
+        add: Прикріпити файл
+        download: Завантажити
         remove: Видалити
-        attach: Attach File
+        attach: Прикріпити файл
       messages:
         create:
-          error: Error occured while uploading an attachment.
-          success: Attachment(s) successfully uploaded.
+          error: Сталася помилка під час завантаження вкладень.
+          success: Вкладення успішно завантажено.
         delete:
-          error: Unable to remove attachment.
-          success: Attachment successfully deleted.
-          query: Are you sure you want to delete this attachment?
+          error: Не вдалося видалити вкладення.
+          success: Вкладення успішно вилучено.
+          query: Ви впевнені, що хочете видалити це вкладення?
         get:
-          error: Attachment not found
+          error: Вкладення не знайдено
         load:
-          error: Attachment loading failed, attachment not found.
+          error: Помилка завантаження вкладення, вкладення не знайдено.
         upload:
-          error: Upload directory is not writable, doesn't exist or no space left on the disk.
+          error: Завантажена директорія недоступна для запису, немає або не залишилося простору на диску.
       placeholders:
-        dropzone: Drop File Here
+        dropzone: Перемістіть файл сюди
     file:
       messages:
         dump:
-          error: File name cannot be an empty string.
+          error: Назва файлу не може бути порожнім рядком.
         type:
-          error: Value should be a File type.
+          error: Значення має бути типом файлу.
     permissions:
       messages:
         granted:
-          error: Not enough permissions.
+          error: Недостатньо прав доступу.
     watcher:
       messages:
         watch:
-          success: You are watching the ticket now.
+          success: Ви переглядаєте тікет зараз.
         unwatch:
-          success: You have successfully unsubscribed from watching the ticket.
+          success: Ви успішно скасували підписку від перегляду тікета.
     ui:
       create: Створити
       ok: Ок
@@ -223,7 +223,7 @@ diamante:
       edit: Редагувати
       add: Додати
       change: Змінити
-      select_watcher: Select User
+      select_watcher: Вибрати користувача
     common:
       general: Загальні відомості
       description: Опис
@@ -231,18 +231,18 @@ diamante:
       updated: Оновлений
       not_available: Недоступний
       not_defined: Невизначений
-      no_description: No description
+      no_description: Опис відсутній
       delete_confirmation: Підтвердити видалення
-      filters: Filters
-      watchers: Watchers
+      filters: Фільтри
+      watchers: Спостерігачі
       messages:
         validation:
-          failed: Form is invalid. Fill out all required fields correctly.
+          failed: Неприпустима форма. Будь ласка, заповніть правильно всі необхідні поля.
     forms:
       name: Назва
       default_assignee: Представник за замовчуванням
       logoFile: Логотип
-      tags: Tags
+      tags: Теги
       key: Key
     attributes:
       name: Назва
@@ -254,7 +254,7 @@ diamante:
       reporter: Reporter
       default_assignee: Представник за замовчуванням
       assignee: Assignee
-      watcher: Watcher
+      watcher: Спостерігач
       key: Key
     email:
       configuration: Email Configuration
