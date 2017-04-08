@@ -144,7 +144,7 @@ diamante:
       updated_at.label: Дата обновления
       author_email.label: Электронная почта автора
       actions:
-        edit: Править комментарий
+        edit: Редактировать комментарий
         add: Добавить комментарий
       messages:
         create:
