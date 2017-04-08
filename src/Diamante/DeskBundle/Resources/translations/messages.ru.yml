@@ -177,7 +177,7 @@ diamante:
       updated_at.label: Дата обновления
       actions:
         delete_file: Удалить файл
-        add: Прикрепить файл
+        add: Добавить вложение
         download: Скачать
         remove: Удалить
         attach: Прикрепить файл
@@ -259,7 +259,7 @@ diamante:
     email:
       configuration: Настройка электронной почты
     dashboard:
-      support.label: Поддержка мониторинга
+      support.label: Поддержка
     report:
       plural_label: Отчеты
       reports:
@@ -293,7 +293,7 @@ diamante:
       user_type.label: Тип пользователя
     automation:
       action:
-        move_to_branch: Переместить на ветку
+        move_to_branch: Переместить в ветку
       notification:
         ticket:
           created: Тикет был создан
