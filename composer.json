@@ -25,8 +25,8 @@
     },
     "require":{
         "php": ">=5.4.4",
-        "oro/platform": "2.0.*",
-        "oro/platform-serialised-fields": "2.0.*",
+        "oro/platform": "2.1.*",
+        "oro/platform-serialised-fields": "2.1.*",
         "akeneo/batch-bundle": "0.4.2",
         "monolog/monolog": "~1.22",
         "nelmio/api-doc-bundle": "~2.13",
