@@ -146,22 +146,22 @@ diamante_front:
         status_open: Статус %{ticket_status_open_id} тікета змінений. Статус тікета "Відкритий"
         create_ticket: Тікет %{ticket_created_id} створений
       edit:
-        title: Edit Ticket %{ticket_id}
+        title: Редагувати %{ticket_id} тікет
       edit_ticket:
         Edit Ticket: '%{key} - %{subject}'
-      search_result: Search Result
+      search_result: Результат пошуку
     model:
       error:
         required: Не може бути пустим
     template:
-      empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
-      empty_search: There are no tickets matching your criteria.
-      empty_view: This ticket doesn't exist!
+      empty_list: Ви ще не створили тікети. <br> Натисніть <a href="%{url}"> + </a> щоб створити новий.
+      empty_search: Не знайдемо тікетів відповідно до ваших критерій.
+      empty_view: Цей тікет не існує!
       form:
-        subject_label: Ticket Subject
-        subject_placeholder: Short ticket summary
+        subject_label: Тема тікету
+        subject_placeholder: Короткий звіт про тікети
         description_label: Опис
-        description_placeholder: Provide a detailed description of your support request
+        description_placeholder: Надати детальний опис вашого запиту на підтримку
         priority_label: Пріоритет
         low_option: Низький
         medium_option: Середній
@@ -175,7 +175,7 @@ diamante_front:
       resolve_button: Вирішити тікет
       reopen_button: Повторно відкрити тікет
     view:
-      all_tickets: View all tickets
+      all_tickets: Переглянути всі тікети
     router:
       view_ticket: Переглянути тікет
       create_ticket: Створити тікет
@@ -183,11 +183,11 @@ diamante_front:
   user:
     controller:
       message:
-        update_success: You have successfully updated your profile
+        update_success: Ви успішно оновили свій профіль
       alert:
         edit_error:
-          title: Edit User Error
-      edit_user: Edit User
+          title: Помилка редагування користувача
+      edit_user: Редагувати користувача
     model:
       error:
         required: Не може бути пустим
@@ -198,24 +198,24 @@ diamante_front:
         last_name_label: Прізвище
         email_label: Електронна пошта
         password_label: Новий пароль
-        submit_button: Submit
-      logout: Log Out
+        submit_button: Відправити
+      logout: Вийти
   watcher:
     controller:
       alert:
         add_error:
-          title: Add Watcher Error
+          title: Помилка додавання спостерігача
         delete_comment_error:
           title: Помилка видалення коментаря
       message:
-        add_success: A new watcher has been successfully added to the ticket
-        remove_success: A watcher has been removed from the ticket
+        add_success: Новий спостерігач був успішно доданий до тікету
+        remove_success: Спостерігач був видалений з тікету
       add_watcher: Додати спостерігача
     model:
       error:
         required: Не може бути пустим
         email_format: '«%{email}» недійсна адреса електронної пошти'
     template:
-      email_watcher: Watcher Email
+      email_watcher: Адреса електронної пошти спостерігача
       remove_watcher: Видалити спостерігача
       add_watcher: Додати спостерігача
