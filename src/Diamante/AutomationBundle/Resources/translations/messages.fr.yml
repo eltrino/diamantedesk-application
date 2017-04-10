@@ -63,10 +63,10 @@ diamante:
       expression: Expression
       mode: Mode
     common:
-      name: Name
-      general: General
-      created: Created
-      updated: Updated
+      name: Nom
+      general: Générale
+      created: Créé
+      updated: Actualisé
       not_available: N/A
       not_defined: Not defined
       delete_confirmation: Confirm Deletion
@@ -74,7 +74,7 @@ diamante:
         validation:
           failed: Form is invalid. Please correctly fill in all required fields.
     forms:
-      name: Name
+      name: Nom
     condition:
       eq: is equal to
       neq: is not equal to
@@ -84,8 +84,8 @@ diamante:
       lte: is less than or equals to
       contains: contains
       not_contains: not contains
-      created: Created
-      updated: Updated
+      created: Créé
+      updated: Actualisé
       removed: Removed
       changed: changed
       changed_from: changed from
