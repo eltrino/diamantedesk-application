@@ -2,8 +2,8 @@
 diamante:
   automation:
     rule:
-      entity_label: Rule
-      entity_plural_label: Rules
+      entity_label: Règle
+      entity_plural_label: Régles
       event_triggered_entity_plural_label: Event Triggered Rules
       time_triggered_entity_plural_label: Time Triggered Rules
       details: Rule Details
