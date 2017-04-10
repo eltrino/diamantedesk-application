@@ -4,9 +4,9 @@ diamante:
     rule:
       entity_label: Règle
       entity_plural_label: Régles
-      event_triggered_entity_plural_label: Event Triggered Rules
-      time_triggered_entity_plural_label: Time Triggered Rules
-      details: Rule Details
+      event_triggered_entity_plural_label: Règles déclenchées par l'événement
+      time_triggered_entity_plural_label: Règles de déclenchement du temps
+      details: Détails de la règle
       messages:
         create:
           error: Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
