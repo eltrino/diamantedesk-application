@@ -90,61 +90,61 @@ diamante_front:
           title: Відомості про скидання пароля
           text: Ми надіслали вам інформацію по електронній пошті %{email}.</br> Будь ласка, натисніть на посилання в повідомленні для відновлення пароля.
         reset_fail:
-          title: Password Reset Failed
-          text: Reset Code is invalid or expired
+          title: Не вдалося виконати скидання пароля
+          text: Код скидання недійсний або застарів
       message:
-        reset_success: Password successfully changed, you can use it to login
+        reset_success: Пароль успішно змінений, ви можете використовувати його для входу
     model:
       alert:
         auth_required:
-          title: Authorization Required
-          text: This action requires authorization
+          title: Потрібна авторизація
+          text: Ця дія вимагає авторизації
       error:
         required: Не може бути пустим
-        email_format: '"%{email}" is not a valid email'
-        password_length: Must be at least six (6) symbols
+        email_format: '«%{email}» недійсна адреса електронної пошти'
+        password_length: Повинно бути не менше шести (6) символів
     template:
-      register: Registration
-      login: Sign In
-      forgot: Amnesia?
-      remember: Remember me
+      register: Реєстрація
+      login: Вхід
+      forgot: Амнезія?
+      remember: Запам'ятати мене
       back:
-        register: Already have an account? &mdash; <a href="%{url}">Sign In</a>
-        reset: Back to <a href="%{url}">Sign in</a>
+        register: Вже зареєстровані? &mdash; <a href="%{url}"> Вхід</a>
+        reset: Назад до <a href="%{url}"> Вхід</a>
       label:
         email: Електронна пошта
         first_name: Ім'я
         last_name: Прізвище
-        password: Password
-        new_password: New Password
+        password: Пароль
+        new_password: Новий пароль
       placeholder:
-        email: Enter Email
-        first_name: Enter First Name
-        last_name: Enter Last Name
-        password: Enter Password
-        new_password: Enter New Password
+        email: Введіть адресу електронної пошти
+        first_name: Введіть ім'я
+        last_name: Введіть прізвище
+        password: Введіть пароль
+        new_password: Введіть новий пароль
       button:
-        login: Sign In
-        register: Continue
+        login: Вхід
+        register: Продовжити
         reset_password: Скинути пароль
-        new_password: Set New Password
+        new_password: Встановити новий пароль
     title:
-      login: Login
-      register: Registration
+      login: Авторизація
+      register: Реєстрація
       reset: Скинути пароль
   ticket:
     controller:
       alert:
         create_error:
-          title: Create Ticket Error
+          title: Помилка створення тікету
         edit_error:
-          title: Edit Ticket Error
+          title: Помилка редагування тікету
       message:
-        key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
-        ticket_update: Ticket %{ticket_update_id} updated
-        status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
-        status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
-        create_ticket: Ticket %{ticket_created_id} created
+        key_changed: Поки ми активно працювали над вашим тікетом, його ключ був змінений на %{ticket_key_id}
+        ticket_update: Тікет %{ticket_update_id} оновлено
+        status_closed: Статус %{ticket_status_closed_id} тікета змінений. Статус тікета "Закритий"
+        status_open: Статус %{ticket_status_open_id} тікета змінений. Статус тікета "Відкритий"
+        create_ticket: Тікет %{ticket_created_id} створений
       edit:
         title: Edit Ticket %{ticket_id}
       edit_ticket:
@@ -163,17 +163,17 @@ diamante_front:
         description_label: Опис
         description_placeholder: Provide a detailed description of your support request
         priority_label: Пріоритет
-        low_option: Low
-        medium_option: Medium
-        high_option: High
+        low_option: Низький
+        medium_option: Середній
+        high_option: Високий
       list:
         key: Ключ
         date: Дата
         subject: Тема
         priority: Пріоритет
         status: Статус
-      resolve_button: Resolve Ticket
-      reopen_button: Reopen Ticket
+      resolve_button: Вирішити тікет
+      reopen_button: Повторно відкрити тікет
     view:
       all_tickets: View all tickets
     router:
@@ -191,13 +191,13 @@ diamante_front:
     model:
       error:
         required: Не може бути пустим
-        password_length: Must be at least six (6) symbols
+        password_length: Повинно бути не менше шести (6) символів
     template:
       form:
         first_name_label: Ім'я
         last_name_label: Прізвище
         email_label: Електронна пошта
-        password_label: New Password
+        password_label: Новий пароль
         submit_button: Submit
       logout: Log Out
   watcher:
@@ -214,8 +214,8 @@ diamante_front:
     model:
       error:
         required: Не може бути пустим
-        email_format: '"%{email}" is not a valid email'
+        email_format: '«%{email}» недійсна адреса електронної пошти'
     template:
       email_watcher: Watcher Email
-      remove_watcher: Remove Watcher
+      remove_watcher: Видалити спостерігача
       add_watcher: Додати спостерігача
