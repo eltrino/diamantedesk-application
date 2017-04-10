@@ -5,7 +5,7 @@ diamante:
       entity_label: Règle
       entity_plural_label: Régles
       event_triggered_entity_plural_label: Règles déclenchées par l'événement
-      time_triggered_entity_plural_label: Règles de déclenchement du temps
+      time_triggered_entity_plural_label: Temps a déclenché des règles
       details: Détails de la règle
       messages:
         create:
@@ -31,24 +31,24 @@ diamante:
           deactivate: Désactiver les règles
           response:
             activate:
-              success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
+              success_message: "{0} aucune entité ont été activées |{1} une entité a été activé |] 1, Inf [%count% entités ont été activées"
             deactivate:
-              success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
+              success_message: "{0} aucune entité ont été désactivées |{1} une entité a été désactivé |] 1, Inf [%count% entités étaient désactivées"
       time_triggered:
-        entity_label: Time Triggered
-        repetition_time: Frequency
+        entity_label: Temps déclenché
+        repetition_time: Fréquence
       event_triggered:
-        entity_label: Event Triggered
+        entity_label: Événement déclenché
     ui:
-      create: Create
-      ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
-      edit: Edit
-      add: Add
-      change: Change
+      create: Créer
+      ok: Bien
+      cancel: Annuler
+      save: Sauvegarder
+      delete: Supprimer
+      save_and_close: Sauvegarder et fermer
+      edit: Modifier
+      add: Ajouter
+      change: Changement
       event_triggered:
         create: Create Event Triggered Rule
       time_triggered:
