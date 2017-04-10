@@ -9,26 +9,26 @@ diamante:
       details: Détails de la règle
       messages:
         create:
-          error: Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
-          success: Rule successfully created.
+          error: Erreur s’est produite lors de la création de la règle. Règle n’est pas créé. Entrez toutes les données requises, puis réessayez.
+          success: Règle créée avec succès.
         update:
-          error: Error occurred when updating the rule. Rule is not updated. Enter all required data and try again.
-          success: Rule successfully updated.
+          error: Erreur s’est produite lors de l’actualisation de la règle. Règle n’est pas mis à jour. Entrez toutes les données requises, puis réessayez.
+          success: Règle mise à jour avec succès.
         delete:
-          query: Are you sure you want to delete this rule?
-          success: Rule successfully deleted.
+          query: Êtes-vous sûr de que vouloir supprimer cette règle ?
+          success: Règle supprimée avec succès.
       status:
         active: Active
-        inactive: Inactive
+        inactive: Inactif
       actions:
-        add: Add Rule
-        view: View Rule
-        edit: Edit Rule
-        delete: Delete Rule
+        add: Ajouter une règle
+        view: Voir règle
+        edit: Éditer la règle
+        delete: Supprimer la règle
         mass:
-          remove: Remove Rules
-          activate: Activate Rules
-          deactivate: Deactivate Rules
+          remove: Supprimer des règles
+          activate: Activer les règles
+          deactivate: Désactiver les règles
           response:
             activate:
               success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
