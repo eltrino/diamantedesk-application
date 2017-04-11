@@ -176,15 +176,15 @@ diamante:
       id.label: Id
       updated_at.label: Updated at
       actions:
-        delete_file: Delete File
-        add: Add Attachment
-        download: Download
+        delete_file: Supprimer le fichier
+        add: Ajouter une pièce jointe
+        download: Télécharger
         remove: Supprimer
-        attach: Attach File
+        attach: Joindre fichier
       messages:
         create:
-          error: Error occured while uploading an attachment.
-          success: Attachment(s) successfully uploaded.
+          error: Une erreur s'est produite lors du téléchargement d'une pièce jointe.
+          success: Les pièces jointes téléchargées avec succès.
         delete:
           error: Unable to remove attachment.
           success: Attachment successfully deleted.
