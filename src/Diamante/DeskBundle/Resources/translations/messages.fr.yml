@@ -158,12 +158,12 @@ diamante:
           success: Commentaire supprimé avec succès.
           query: Êtes-vous sûr de que vouloir supprimer ce commentaire ?
         get:
-          error: Comment loading failed, comment not found.
+          error: Commentaire de chargement a échoué, commentaire introuvable.
         get_attach:
-          error: Attachment loading failed. Comment has no such attachment.
-        empty: There are no comments yet.
+          error: Le chargement des pièces jointes a échoué. Le commentaire n'a pas de telles pièces jointes.
+        empty: Il n'y a pas encore de commentaires.
       placeholders:
-        added: added a comment
+        added: ajouter un commentaire
         deleted_user: Deleted user
     attachment:
       entity_label: Attachment
