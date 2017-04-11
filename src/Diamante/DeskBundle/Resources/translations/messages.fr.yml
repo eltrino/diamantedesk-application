@@ -91,8 +91,8 @@ diamante:
         change_status: Changer le satut
         move: Se déplacer
         watch: Regarder
-        unwatch: Un-watch
-        add_watcher: Add Watcher
+        unwatch: Non regarder
+        add_watcher: Ajouter un observateur
       messages:
         create:
           error: Error occurred while creating a ticket.
