@@ -2,21 +2,21 @@
 diamante:
   desk:
     branch:
-      entity_label: Branch
+      entity_label: Branche
       entity_plural_label: Branches
-      details: Branch Details
-      created_at.label: Created At
+      details: Détails de la branche
+      created_at.label: Créé à
       description.label: Description
-      id.label: Branch Id
-      key.label: Branch Key
-      logo.label: Branch Logo
-      name.label: Branch Name
-      updated_at.label: Updated At
+      id.label: Id de la branche
+      key.label: Clé de la branche
+      logo.label: Logo de la branche
+      name.label: Nom de la branche
+      updated_at.label: Mis à jour à
       default_assignee.label: Default Assignee
       columns:
         logo: Logo
-        branch_name: Branch Name
-        branch_key: Branch Key
+        branch_name: Nom de la branche
+        branch_key: Clé de la branche
       actions:
         create: Create Branch
         view: View Branch
@@ -49,20 +49,20 @@ diamante:
       entity_plural_label: Tickets
       details: Ticket Details
       all: All Tickets
-      created_at.label: Created At
+      created_at.label: Créé à
       description.label: Description
       id.label: Ticket Id
       priority.label: Priority
       reporter_email.label: Reporter Email
       assignee.label: Assigner
-      branch.label: Branch
+      branch.label: Branche
       comments.label: Comments
       sequence_number.label: Sequence Number
       source.label: Source
-      status.label: Status
+      status.label: Statut
       subject.label: Subject
       unique_id.label: Unique Id
-      updated_at.label: Updated At
+      updated_at.label: Mis à jour à
       attachments.label: Attachments
       watcher_list.label: Watcher List
       created_via_email.label: Created via email to
@@ -73,19 +73,19 @@ diamante:
       columns:
         key: Key
         subject: Subject
-        branch: Branch
+        branch: Branche
         assignee: Assignee
         reporter: Reporter
         priority: Priority
-        status: Status
-        created: Created
-        updated: Updated
+        status: Statut
+        created: Créé
+        updated: Actualisé
       actions:
         add: Add Ticket
         edit: Edit Ticket
         view: View Ticket
         remove: Delete Ticket
-        delete: Delete
+        delete: Supprimer
         assign: Assign
         create: Create Ticket
         change_status: Change Status
@@ -179,7 +179,7 @@ diamante:
         delete_file: Delete File
         add: Add Attachment
         download: Download
-        remove: Delete
+        remove: Supprimer
         attach: Attach File
       messages:
         create:
@@ -214,41 +214,41 @@ diamante:
         unwatch:
           success: You have successfully unsubscribed from watching the ticket.
     ui:
-      create: Create
-      ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
-      edit: Edit
-      add: Add
-      change: Change
+      create: Créer
+      ok: Bien
+      cancel: Annuler
+      save: Sauvegarder
+      delete: Supprimer
+      save_and_close: Sauvegarder et fermer
+      edit: Modifier
+      add: Ajouter
+      change: Changement
       select_watcher: Select User
     common:
-      general: General
+      general: Générale
       description: Description
-      created: Created
-      updated: Updated
+      created: Créé
+      updated: Actualisé
       not_available: N/A
-      not_defined: Not defined
+      not_defined: Non défini
       no_description: No description
-      delete_confirmation: Confirm Deletion
+      delete_confirmation: Confirmer la suppression
       filters: Filters
       watchers: Watchers
       messages:
         validation:
           failed: Form is invalid. Fill out all required fields correctly.
     forms:
-      name: Name
+      name: Nom
       default_assignee: Default Assignee
       logoFile: Logo
       tags: Tags
       key: Key
     attributes:
-      name: Name
+      name: Nom
       subject: Subject
-      branch: Branch
-      status: Status
+      branch: Branche
+      status: Statut
       priority: Priority
       source: Source
       reporter: Reporter
@@ -311,10 +311,10 @@ oro:
   entity_extend:
     form:
       data_type:
-        branch_logo: Branch Logo
+        branch_logo: Logo de la branche
         user_type: User Type
         source: Source
-        status: Status
+        status: Statut
         priority: Priority
         ticket_unique_id: Ticket unique id
         ticket_sequence_number: Ticket sequence number
