@@ -82,25 +82,25 @@ diamante:
       gte: est supérieur ou égal à
       lt: est inférieure à
       lte: est inférieur à ou égal à
-      contains: contains
-      not_contains: not contains
+      contains: contient
+      not_contains: ne contient pas
       created: Créé
       updated: Actualisé
-      removed: Removed
-      changed: changed
-      changed_from: changed from
-      changed_to: changed to
-      "true": "true"
-      "false": "false"
-      customer: is customer
-      admin: is admin
+      removed: Supprimé
+      changed: modifié
+      changed_from: modifiée de
+      changed_to: changé à
+      "true": "vrai"
+      "false": "faux"
+      customer: est client
+      admin: est admin
     action:
-      update_property: Update property
-      notify_by_email: Notify by email
+      update_property: Mettre à jour la propriété
+      notify_by_email: Notifier par email
     connector:
-      inclusive: All of these are true
-      exclusive: Any of these are true
+      inclusive: Tout cela est vrai
+      exclusive: Tout d'entre eux est vrai
     cron:
-      d: "{1} Every day|]1,Inf[ Every %time% days"
-      h: "{1} Every hour|]1,Inf[ Every %time% hours"
-      m: Every %time% minutes
+      d: "{1} chaque jour |] 1, Inf [tous les jours %time%"
+      h: "{1} toutes les heures |] 1, Inf [toutes les heures %time%"
+      m: Toutes %time% les minutes
