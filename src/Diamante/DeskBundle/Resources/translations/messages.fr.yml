@@ -69,28 +69,28 @@ diamante:
       since_created.label: Créé depuis
       since_updated.label: Depuis mis à jour
       since_status_updated.label: Depuis la mise à jour du statut
-      since_assignee_updated.label: Since assignee updated
+      since_assignee_updated.label: Depuis la mise à jour du cessionnaire
       columns:
-        key: Key
+        key: Clé
         subject: Objet
         branch: Branche
-        assignee: Assignee
+        assignee: Cessionnaire
         reporter: Reporter
         priority: Priorité
         status: Statut
         created: Créé
         updated: Actualisé
       actions:
-        add: Add Ticket
-        edit: Edit Ticket
-        view: View Ticket
-        remove: Delete Ticket
+        add: Ajouter un ticket
+        edit: Modifier le tiket
+        view: Voir du tiket
+        remove: Supprimer le ticket
         delete: Supprimer
         assign: Assign
-        create: Create Ticket
-        change_status: Change Status
-        move: Move
-        watch: Watch
+        create: Créer un ticket
+        change_status: Changer le satut
+        move: Se déplacer
+        watch: Regarder
         unwatch: Un-watch
         add_watcher: Add Watcher
       messages:
@@ -243,7 +243,7 @@ diamante:
       default_assignee: Assigné par défaut
       logoFile: Logo
       tags: Tags
-      key: Key
+      key: Clé
     attributes:
       name: Nom
       subject: Objet
@@ -253,9 +253,9 @@ diamante:
       source: Source
       reporter: Reporter
       default_assignee: Assigné par défaut
-      assignee: Assignee
+      assignee: Cessionnaire
       watcher: Watcher
-      key: Key
+      key: Clé
     email:
       configuration: Email Configuration
     dashboard:
