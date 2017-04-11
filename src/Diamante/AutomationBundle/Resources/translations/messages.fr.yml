@@ -50,9 +50,9 @@ diamante:
       add: Ajouter
       change: Changement
       event_triggered:
-        create: Create Event Triggered Rule
+        create: Créer une règle de déclenchement d'événement
       time_triggered:
-        create: Create Time Triggered Rule
+        create: Créer la règle déclenchée de l’heure
     attributes:
       condition: Condition
       action: Action
