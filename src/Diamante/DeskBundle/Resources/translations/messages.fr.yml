@@ -61,10 +61,10 @@ diamante:
       source.label: Source
       status.label: Statut
       subject.label: Objet
-      unique_id.label: Unique Id
+      unique_id.label: Identifiant unique
       updated_at.label: Mis à jour à
-      attachments.label: Attachments
-      watcher_list.label: Watcher List
+      attachments.label: L`attachement
+      watcher_list.label: Liste des surveillants
       created_via_email.label: Created via email to
       since_created.label: Since created
       since_updated.label: Since updated
@@ -134,7 +134,7 @@ diamante:
       ticket_status: Ticket status
       content: Content
       private: Private
-      attachments.label: Attachments
+      attachments.label: L`attachement
       author.label: Author
       content.label: Content
       created_at.label: Created_at
@@ -167,7 +167,7 @@ diamante:
         deleted_user: Deleted user
     attachment:
       entity_label: Attachment
-      entity_plural_label: Attachments
+      entity_plural_label: L`attachement
       file: File
       image: Image
       created_at.label: Created at
@@ -286,7 +286,7 @@ diamante:
       reopen.label: Reopen
       solved.label: Solved
     watcherlist:
-      entity_label: Watcher List
+      entity_label: Liste des surveillants
       entity_plural_label: Watcher Lists
       id.label: Id
       ticket.label: Ticket
