@@ -36,31 +36,31 @@ diamante:
           mass_success: "{1} Une branche a été supprimée. |] 1, Inf [%count% branches ont été supprimés."
           error: La branche actuelle est configurée par défaut pour le traitement des courriels et ne peut pas être supprimée.
           mass_error: "{0} La branche actuelle est configuré par défaut pour le traitement de courrier électronique et ne peut pas être supprimé. | Impossible de supprimer{1} une des branches comme il a été configuré par défaut on |] 1, Inf [%count% branches ont été supprimés sauf la branche par défaut"
-          exist_tickets_error: One or more branches have tickets and cannot be deleted.
-          move: Keep the tickets and move them to another branch.
-          select: Select a new branch
+          exist_tickets_error: Une ou plusieurs branches ont des tickets et ne peuvent pas être supprimées.
+          move: Gardez les billets et déplacez-les vers une autre branche.
+          select: Sélectionnez une nouvelle branche
         get:
-          error: Branch loading failed. Branch not found.
+          error: Le chargement des branches a échoué. Branche non trouvée.
       placeholders:
-        form: Choose a branch...
+        form: Choisissez une branche...
         default: La branche actuelle est configurée par défaut pour le traitement des courriels et ne peut pas être supprimée.
     ticket:
       entity_label: Ticket
       entity_plural_label: Tickets
-      details: Ticket Details
-      all: All Tickets
+      details: Détails du tiket
+      all: Tous les tickets
       created_at.label: Créé à
       description.label: Description
-      id.label: Ticket Id
-      priority.label: Priority
-      reporter_email.label: Reporter Email
+      id.label: Tiket Id
+      priority.label: Priorité
+      reporter_email.label: Email du reporter
       assignee.label: Assigner
       branch.label: Branche
-      comments.label: Comments
-      sequence_number.label: Sequence Number
+      comments.label: Commentaires
+      sequence_number.label: Numéro de séquence
       source.label: Source
       status.label: Statut
-      subject.label: Subject
+      subject.label: Objet
       unique_id.label: Unique Id
       updated_at.label: Mis à jour à
       attachments.label: Attachments
@@ -72,11 +72,11 @@ diamante:
       since_assignee_updated.label: Since assignee updated
       columns:
         key: Key
-        subject: Subject
+        subject: Objet
         branch: Branche
         assignee: Assignee
         reporter: Reporter
-        priority: Priority
+        priority: Priorité
         status: Statut
         created: Créé
         updated: Actualisé
@@ -130,7 +130,7 @@ diamante:
             error: Assignee validation failed, assignee not found.
     comment:
       entity_label: Comment
-      entity_plural_label: Comments
+      entity_plural_label: Commentaires
       ticket_status: Ticket status
       content: Content
       private: Private
@@ -246,10 +246,10 @@ diamante:
       key: Key
     attributes:
       name: Nom
-      subject: Subject
+      subject: Objet
       branch: Branche
       status: Statut
-      priority: Priority
+      priority: Priorité
       source: Source
       reporter: Reporter
       default_assignee: Assigné par défaut
@@ -315,7 +315,7 @@ oro:
         user_type: User Type
         source: Source
         status: Statut
-        priority: Priority
+        priority: Priorité
         ticket_unique_id: Ticket unique id
         ticket_sequence_number: Ticket sequence number
 oro_datagrid:
