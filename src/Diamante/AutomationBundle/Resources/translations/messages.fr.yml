@@ -56,7 +56,7 @@ diamante:
     attributes:
       condition: Condition
       action: Action
-      weight: Weight
+      weight: Signification
       target: Target
       parent: Parent
       status: Status
