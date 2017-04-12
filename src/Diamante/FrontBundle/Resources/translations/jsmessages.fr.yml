@@ -1,25 +1,25 @@
 ---
-"Loading...": "Loading..."
+"Loading...": "Chargement..."
 diamante_front:
   attachment:
     controller:
       alert:
         delete_error:
-          title: Delete Attachment Error
+          title: Supprimer l’erreur de pièce jointe
       message:
-        attach_success: Files attached successfully
-        delete_success: File deleted successfully
+        attach_success: Fichiers joints avec succès
+        delete_success: Fichier supprimé avec succès
     model:
       alert:
         add_error:
-          title: Add Attachments Error
+          title: Ajouter des pièces jointes erreur
     template:
       dropzone:
-        dropfiles: Drop files here to attach
-        attachfiles: Click here to attach files
-        read: Reading...
-        send: Sending...
-        receive: Receiving...
+        dropfiles: Faites glisser les fichiers ici pour joindre
+        attachfiles: Cliquez ici pour joindre des fichiers
+        read: Lecture...
+        send: Envoi...
+        receive: Recevoir...
       button:
         remove: Remove Attachment
       link:
@@ -43,16 +43,16 @@ diamante_front:
         required: "Can't be blank"
     template:
       form:
-        add: Add Comment
-        cancel: Cancel
+        add: Ajouter un commentaire
+        cancel: Annuler
         save: Save Changes
       button:
-        edit: Edit Comment
+        edit: Éditer le commentaire
         delete: Delete Comment
   common:
     template:
       close: Close
-      cancel: Cancel
+      cancel: Annuler
       sort: Sort By
     view:
       alert:
@@ -162,24 +162,24 @@ diamante_front:
         subject_placeholder: Short ticket summary
         description_label: Description
         description_placeholder: Provide a detailed description of your support request
-        priority_label: Priority
+        priority_label: Priorité
         low_option: Low
         medium_option: Medium
         high_option: High
       list:
-        key: Key
+        key: Clé
         date: Date
-        subject: Subject
-        priority: Priority
-        status: Status
+        subject: Objet
+        priority: Priorité
+        status: Statut
       resolve_button: Resolve Ticket
       reopen_button: Reopen Ticket
     view:
       all_tickets: View all tickets
     router:
-      view_ticket: View Ticket
-      create_ticket: Create Ticket
-      edit_ticket: Edit Ticket
+      view_ticket: Voir du tiket
+      create_ticket: Créer un ticket
+      edit_ticket: Modifier le tiket
   user:
     controller:
       message:
@@ -210,7 +210,7 @@ diamante_front:
       message:
         add_success: A new watcher has been successfully added to the ticket
         remove_success: A watcher has been removed from the ticket
-      add_watcher: Add Watcher
+      add_watcher: Ajouter un observateur
     model:
       error:
         required: Can't be blank
@@ -218,4 +218,4 @@ diamante_front:
     template:
       email_watcher: Watcher Email
       remove_watcher: Remove Watcher
-      add_watcher: Add Watcher
+      add_watcher: Ajouter un observateur
