@@ -15,6 +15,7 @@
 
 namespace Diamante\DistributionBundle\Command;
 
+use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -267,6 +268,79 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return $this;
+    }
+
+    /**
+     * Update the administrator user
+     *
+     * @param CommandExecutor $commandExecutor
+     */
+    protected function updateUser(CommandExecutor $commandExecutor)
+    {
+        $emailValidator     = $this->getNotBlankValidator('The email must be specified');
+        $firstNameValidator = $this->getNotBlankValidator('The first name must be specified');
+        $lastNameValidator  = $this->getNotBlankValidator('The last name must be specified');
+        $passwordValidator  = function ($value) {
+            if (strlen(trim($value)) < 2) {
+                throw new \Exception('The password must be at least 2 characters long');
+            }
+
+            return $value;
+        };
+
+        $options = [
+            'user-name'      => [
+                'label'                  => 'Username',
+                'askMethod'              => 'ask',
+                'additionalAskArguments' => [],
+                'defaultValue'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
+            ],
+            'user-email'     => [
+                'label'                  => 'Email',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$emailValidator],
+                'defaultValue'           => null,
+            ],
+            'user-firstname' => [
+                'label'                  => 'First name',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$firstNameValidator],
+                'defaultValue'           => null,
+            ],
+            'user-lastname'  => [
+                'label'                  => 'Last name',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$lastNameValidator],
+                'defaultValue'           => null,
+            ],
+            'user-password'  => [
+                'label'                  => 'Password',
+                'askMethod'              => 'askHiddenResponseAndValidate',
+                'additionalAskArguments' => [$passwordValidator],
+                'defaultValue'           => null,
+            ],
+        ];
+
+        $commandParameters = [];
+        foreach ($options as $optionName => $optionData) {
+            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $optionData['defaultValue'],
+                $optionData['askMethod'],
+                $optionData['additionalAskArguments']
+            );
+        }
+
+        $commandExecutor->runCommand(
+            'oro:user:update',
+            array_merge(
+                [
+                    'user-name'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
+                ],
+                $commandParameters
+            )
+        );
     }
 
     /**
