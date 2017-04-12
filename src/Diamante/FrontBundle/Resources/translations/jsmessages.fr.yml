@@ -21,42 +21,42 @@ diamante_front:
         send: Envoi...
         receive: Recevoir...
       button:
-        remove: Remove Attachment
+        remove: Supprimer la pièce jointe
       link:
-        download: 'Download:'
+        download: 'Téléchargement :'
       header:
-        file: File Attachments
+        file: Pièces jointes
   comment:
     controller:
       alert:
         create_error:
-          title: Create Comment Error
+          title: Créer un commentaire erreur
         delete_error:
-          title: Delete Comment Error
+          title: Supprimer le commentaire erreur
         edit_success:
-          title: Your comment has been edited
+          title: Votre commentaire a été édité
       message:
-        post_success: Comment was posted successfully
-        delete_success: Your comment was successfully deleted
+        post_success: Commentaire a été posté avec succès
+        delete_success: Votre commentaire a été supprimé avec succès
     model:
       error:
-        required: "Can't be blank"
+        required: "Ne peut pas être vide"
     template:
       form:
         add: Ajouter un commentaire
         cancel: Annuler
-        save: Save Changes
+        save: Enregistrer les modifications
       button:
         edit: Éditer le commentaire
-        delete: Delete Comment
+        delete: Supprimer le commentaire
   common:
     template:
-      close: Close
+      close: Fermer
       cancel: Annuler
-      sort: Sort By
+      sort: Trier par
     view:
       alert:
-        title: Error
+        title: Erreur
         text: An unprocessed error happened. Please try again!
       modal:
         title: Modal Window
@@ -100,7 +100,7 @@ diamante_front:
           title: Authorization Required
           text: This action requires authorization
       error:
-        required: Can't be blank
+        required: Ne peut pas être vide
         email_format: '"%{email}" is not a valid email'
         password_length: Must be at least six (6) symbols
     template:
@@ -152,7 +152,7 @@ diamante_front:
       search_result: Search Result
     model:
       error:
-        required: Can't be blank
+        required: Ne peut pas être vide
     template:
       empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
       empty_search: There are no tickets matching your criteria.
@@ -190,7 +190,7 @@ diamante_front:
       edit_user: Edit User
     model:
       error:
-        required: Can't be blank
+        required: Ne peut pas être vide
         password_length: Must be at least six (6) symbols
     template:
       form:
@@ -206,14 +206,14 @@ diamante_front:
         add_error:
           title: Add Watcher Error
         delete_comment_error:
-          title: Delete Comment Error
+          title: Supprimer le commentaire erreur
       message:
         add_success: A new watcher has been successfully added to the ticket
         remove_success: A watcher has been removed from the ticket
       add_watcher: Ajouter un observateur
     model:
       error:
-        required: Can't be blank
+        required: Ne peut pas être vide
         email_format: '"%{email}" is not a valid email'
     template:
       email_watcher: Watcher Email
