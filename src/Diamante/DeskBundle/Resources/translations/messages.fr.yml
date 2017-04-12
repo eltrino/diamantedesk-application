@@ -123,7 +123,7 @@ diamante:
           attachment:
             error: Le chargement des pièces jointes a échoué. Le ticket n'a pas une telle pièce jointe.
           branch:
-            error: Branch loading failed, branch not found.
+            error: Le chargement des branches a échoué, la branche n'a pas été trouvée.
           reporter:
             error: Reporter loading failed, reporter not found.
           assignee:
