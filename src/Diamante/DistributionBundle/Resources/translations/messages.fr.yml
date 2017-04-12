@@ -1,9 +1,9 @@
 ---
-title: DiamanteDesk Application Installation
+title: Installation de l’Application DiamanteDesk
 process:
   step:
     diamanteinstall:
-      header: Initialization
+      header: Initialisation
     installation:
       cache: Clear cache before database initialization
       clear-config: Clear entities cache
