@@ -14,15 +14,15 @@ process:
       workflows: Load workflow definitions
       processes: Load processes configuration
       navigation: Init navigation
-      js-routing: Dump JS routing
-      localization: Dump localization
-      assets: Install assets
+      js-routing: Réinitialiser le routage JS
+      localization: Réinitialiser localisation
+      assets: Actif d'installation
       assetic: Dump assetic
-      translation: Prepare translations
-      requirejs: Optimize JS resources (optional)
-      finish: Clear cache to finalize installation
+      translation: Préparer des traductions
+      requirejs: Optimiser les JS ressources (facultatifs)
+      finish: Vider le cache afin de finaliser l'installation
     check:
       table:
-        diamante: DiamanteDesk Requirements
+        diamante: Exigences DiamanteDesk
     final:
       content: 'You''re lucky to start using DiamanteDesk right away.<br>If you''re looking for some help or need some support, please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you''re our Enterprise client.'
