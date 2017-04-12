@@ -5,14 +5,14 @@ process:
     diamanteinstall:
       header: Initialisation
     installation:
-      cache: Clear cache before database initialization
-      clear-config: Clear entities cache
-      clear-extend: Clear extended entities data
-      schema-drop: Drop current schema
-      schema-update: Schema update
-      fixtures: Load fixtures
-      workflows: Load workflow definitions
-      processes: Load processes configuration
+      cache: Effacer le cache avant l'initialisation de la base de données
+      clear-config: Effacer le cache des entités
+      clear-extend: Effacer les données des entités étendues
+      schema-drop: Réinitialiser la configuration actuelle
+      schema-update: Mise à jour du schéma
+      fixtures: Fixations de charge
+      workflows: Charger les définitions de flux de travail
+      processes: Configuration de processus de charge
       navigation: Init navigation
       js-routing: Réinitialiser le routage JS
       localization: Réinitialiser localisation
@@ -25,4 +25,4 @@ process:
       table:
         diamante: Exigences DiamanteDesk
     final:
-      content: 'You''re lucky to start using DiamanteDesk right away.<br>If you''re looking for some help or need some support, please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you''re our Enterprise client.'
+      content: 'Vous avez commencé avec succès à l''aide DiamanteDesk.<br> Si vous cherchez de l''aide ou avez besoin de soutien, rejoignez notre communauté à <a href="https://github.com/eltrino"> Github < /a> ou contactez notre équipe de support dédiée si vous êtes notre client d''entreprise.'
