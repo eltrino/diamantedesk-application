@@ -212,7 +212,7 @@ diamante:
         watch:
           success: Vous regardez maintenant le tiket.
         unwatch:
-          success: You have successfully unsubscribed from watching the ticket.
+          success: Vous avez désabonné avec succès de regarder le ticket.
     ui:
       create: Créer
       ok: Bien
@@ -237,7 +237,7 @@ diamante:
       watchers: Observateurs
       messages:
         validation:
-          failed: Form is invalid. Fill out all required fields correctly.
+          failed: Le formulaire n'est pas valide. Remplissez correctement tous les champs requis.
     forms:
       name: Nom
       default_assignee: Assigné par défaut
@@ -270,13 +270,13 @@ diamante:
         ticket_timeline: Chronologie des tickets
       messages:
         build:
-          error: Error occured while generating the report.
+          error: Une erreur s'est produite lors de la génération du rapport.
     tickethistory:
-      entity_label: Ticket History
-      entity_plural_label: Tickets History
+      entity_label: Histoire de ticket
+      entity_plural_label: Histoire de tickets
       id.label: Identifiant
-      ticket_id.label: Ticket id
-      ticket_key.label: Ticket Key
+      ticket_id.label: Identifiant du ticket
+      ticket_key.label: Clé de ticket
     tickettimeline:
       entity_label: Chronologie des tickets
       closed.label: Fermé
@@ -293,7 +293,7 @@ diamante:
       user_type.label: Type d'utilisateur
     automation:
       action:
-        move_to_branch: Move to branch
+        move_to_branch: Passer à la branche
       notification:
         ticket:
           created: Ticket a été créé
