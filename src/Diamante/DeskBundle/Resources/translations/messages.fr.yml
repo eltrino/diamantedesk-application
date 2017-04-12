@@ -88,25 +88,25 @@ diamante:
         delete: Supprimer
         assign: Assign
         create: Créer un ticket
-        change_status: Changer le satut
+        change_status: Changer le statut
         move: Se déplacer
         watch: Regarder
         unwatch: Non regarder
         add_watcher: Ajouter un observateur
       messages:
         create:
-          error: Error occurred while creating a ticket.
-          success: Ticket successfully created.
+          error: Une erreur s'est produite lors de la création d'un ticket.
+          success: Ticket créé avec succès.
         save:
-          error: Error occurred while saving the ticket.
-          success: Ticket successfully saved.
+          error: Une erreur s'est produite lors de l'enregistrement du ticket.
+          success: Ticket enregistré avec succès.
         delete:
-          query: Are you sure you want to delete this ticket?
-          error: Error occurred while deleting the ticket.
-          success: Ticket successfully deleted.
+          query: Êtes-vous sûr de vouloir supprimer cet tiket?
+          error: Une erreur s'est produite lors de la suppression du ticket.
+          success: Le ticket a été supprimé avec succès.
         reassign:
-          error: Error occurred while re-assiging the ticket.
-          success: Ticket successfully re-assigned.
+          error: Une erreur s'est produite lors du réassignation du ticket.
+          success: Ticket réaffecté avec succès.
         change_status:
           error: Error occurred while trying to change the ticket status.
           success: Status successfully changed.
