@@ -125,33 +125,33 @@ diamante:
           branch:
             error: Le chargement des branches a échoué, la branche n'a pas été trouvée.
           reporter:
-            error: Reporter loading failed, reporter not found.
+            error: Le chargement du rapport a échoué, le journaliste n'a pas été trouvé.
           assignee:
-            error: Assignee validation failed, assignee not found.
+            error: La validation du cessionnaire a échoué, le cessionnaire n'a pas été trouvé.
     comment:
-      entity_label: Comment
+      entity_label: Commentaire
       entity_plural_label: Commentaires
-      ticket_status: Ticket status
-      content: Content
-      private: Private
+      ticket_status: Statut du ticket
+      content: Contenu 
+      private: Privé
       attachments.label: L`attachement
-      author.label: Author
-      content.label: Content
-      created_at.label: Created_at
-      id.label: Id
-      private.label: Private
+      author.label: Auteur
+      content.label: Contenu 
+      created_at.label: Créé à
+      id.label: Identifiant
+      private.label: Privé
       ticket.label: Ticket
-      updated_at.label: Updated at
-      author_email.label: Author email
+      updated_at.label: Mis à jour à
+      author_email.label: E-mail de l'auteur
       actions:
-        edit: Edit Comment
-        add: Add Comment
+        edit: Éditer le commentaire
+        add: Ajouter un commentaire
       messages:
         create:
-          error: Error occured while creating a comment.
-          success: Comment successfully created.
+          error: Une erreur s'est produite lors de la création d'un commentaire.
+          success: Commentaire créé avec succès.
         save:
-          error: Error occured while saving the comment.
+          error: Une erreur s'est produite lors de l'enregistrement du commentaire.
           success: Commentaire enregistré avec succès.
         delete:
           error: ""
@@ -173,8 +173,8 @@ diamante:
       created_at.label: Créé à
       file.label: Fichier
       hash.label: Hash
-      id.label: Id
-      updated_at.label: Updated at
+      id.label: Identifiant
+      updated_at.label: Mis à jour à
       actions:
         delete_file: Supprimer le fichier
         add: Ajouter une pièce jointe
@@ -186,17 +186,17 @@ diamante:
           error: Une erreur s'est produite lors du téléchargement d'une pièce jointe.
           success: Les pièces jointes téléchargées avec succès.
         delete:
-          error: Unable to remove attachment.
-          success: Attachment successfully deleted.
-          query: Are you sure you want to delete this attachment?
+          error: Impossible de supprimer la pièce jointe.
+          success: Pièce jointe supprimée avec succès.
+          query: Êtes-vous sûr de vouloir supprimer cette pièce jointe ?
         get:
-          error: Attachment not found
+          error: Pièce jointe non trouvée
         load:
-          error: Attachment loading failed, attachment not found.
+          error: Le chargement des pièces jointes a échoué, l'attachement n'a pas été trouvé.
         upload:
-          error: Upload directory is not writable, doesn't exist or no space left on the disk.
+          error: Le répertoire de téléchargement n'est pas accessible en écriture, n'existe pas ou il ne reste plus d'espace sur le disque.
       placeholders:
-        dropzone: Drop File Here
+        dropzone: Déposer le fichier ici
     file:
       messages:
         dump:
@@ -274,21 +274,21 @@ diamante:
     tickethistory:
       entity_label: Ticket History
       entity_plural_label: Tickets History
-      id.label: Id
+      id.label: Identifiant
       ticket_id.label: Ticket id
       ticket_key.label: Ticket Key
     tickettimeline:
       entity_label: Ticket Timeline
       closed.label: Closed
       date.label: Date
-      id.label: Id
-      new.label: New
+      id.label: Identifiant
+      new.label: Nouveau
       reopen.label: Reopen
       solved.label: Solved
     watcherlist:
       entity_label: Liste des surveillants
       entity_plural_label: Watcher Lists
-      id.label: Id
+      id.label: Identifiant
       ticket.label: Ticket
       user_type.label: User Type
     automation:
