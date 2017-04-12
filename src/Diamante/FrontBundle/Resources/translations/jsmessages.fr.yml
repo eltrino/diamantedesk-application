@@ -57,35 +57,35 @@ diamante_front:
     view:
       alert:
         title: Erreur
-        text: An unprocessed error happened. Please try again!
+        text: Une erreur non traitée s'est produite. S'il vous plaît essayer à nouveau!
       modal:
-        title: Modal Window
-        submit: Save changes
+        title: Fenêtre modale
+        submit: Enregistrer les modifications
   footer:
     template:
-      copyright: Diamante is released under %{license} License by %{company}
+      copyright: Diamante est publié sous licence de %{license} par %{company}
   header:
     template:
-      new_ticket: New Ticket
+      new_ticket: Nouveau Ticket
   session:
     controller:
       alert:
         confirm_success:
-          title: Email Confirmation Success
-          text: You may login and use application
+          title: Succès de Confirmation de l`email
+          text: Vous pouvez vous connecter et utiliser l'application
         reconfirm_succes:
-          title: Email Confirmation Success
-          text: We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: Succès de Confirmation de l`email
+          text: Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour activer votre compte.
         confirm_fail:
-          title: Email Confirmation Failed
-          text: Activation code is wrong
+          title: Confirmation de l'email échoué
+          text: Code d’activation est faux
         login_fail:
-          title: Authorization Failed
+          title: L'autorisation a échoué
         register_succes:
-          title: Registration Success
-          text: Thank you. We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: Succès de l’enregistrement
+          text: Merci. Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour activer votre compte.
         register_fail:
-          title: Registration Failed
+          title: L'enregistrement a échoué
         reset_info:
           title: Password Reset Info
           text: We have sent you email to %{email}.</br>Please click the link in that message to reset your password.
