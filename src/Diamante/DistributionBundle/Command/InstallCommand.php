@@ -144,7 +144,7 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('<info>Installing DiamanteDesk.</info>');
 
         $this->checkRequirementsStep($output);
-        $this->prepareStep($this->commandExecutor, $input->getOption('drop-database'))
+        $this->prepareStep($this->commandExecutor, $input, $output)
                 ->loadDataStep($this->commandExecutor, $output);
 
 
@@ -331,6 +331,8 @@ class InstallCommand extends OroInstallCommand
                 $optionData['additionalAskArguments']
             );
         }
+
+        $this->commandExecutor->runCommand('cache:clear');
 
         $commandExecutor->runCommand(
             'oro:user:update',
