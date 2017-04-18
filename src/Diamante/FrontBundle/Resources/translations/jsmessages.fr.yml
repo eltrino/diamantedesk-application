@@ -154,18 +154,18 @@ diamante_front:
       error:
         required: Ne peut pas être vide
     template:
-      empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
-      empty_search: There are no tickets matching your criteria.
-      empty_view: This ticket doesn't exist!
+      empty_list: Vous n'avez pas encore créé de tickets.<br> Cliquez sur <a href="%{url}"> + </a> pour en créer un.
+      empty_search: Il n’y a pas de tickets correspondant à vos critères.
+      empty_view: Ce ticket n'existe pas!
       form:
-        subject_label: Ticket Subject
-        subject_placeholder: Short ticket summary
+        subject_label: Objet de ticket
+        subject_placeholder: Résumé abrégé des tickets
         description_label: Description
-        description_placeholder: Provide a detailed description of your support request
+        description_placeholder: Fournissez une description détaillée de votre demande de soutien
         priority_label: Priorité
-        low_option: Low
-        medium_option: Medium
-        high_option: High
+        low_option: Faible
+        medium_option: Médium
+        high_option: Haute
       list:
         key: Clé
         date: Date
