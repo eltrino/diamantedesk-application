@@ -118,38 +118,38 @@ diamante_front:
         password: Password
         new_password: New Password
       placeholder:
-        email: Enter Email
-        first_name: Enter First Name
-        last_name: Enter Last Name
-        password: Enter Password
-        new_password: Enter New Password
+        email: Saisissez l'email
+        first_name: Saisir le prénom
+        last_name: Saisir le nom
+        password: Saisissez le mot de passe
+        new_password: Saisissez le nouveau mot de passe
       button:
         login: Sign In
-        register: Continue
+        register: Continuer
         reset_password: Reset Password
-        new_password: Set New Password
+        new_password: Définir un nouveau mot de passe
     title:
-      login: Login
+      login: Ouvrir une session
       register: Registration
       reset: Reset Password
   ticket:
     controller:
       alert:
         create_error:
-          title: Create Ticket Error
+          title: Créer de ticket erreur
         edit_error:
-          title: Edit Ticket Error
+          title: Modifier le ticket erreur
       message:
-        key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
-        ticket_update: Ticket %{ticket_update_id} updated
-        status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
-        status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
-        create_ticket: Ticket %{ticket_created_id} created
+        key_changed: Alors que nous travaillons activement sur votre billet, sa clé a été changée pour %{ticket_key_id}
+        ticket_update: Ticket %{ticket_update_id} mis à jour
+        status_closed: Ticket %{ticket_status_closed_id} statut modifié. État du billet est « fermé »
+        status_open: Ticket %{ticket_status_open_id} statut modifié. Statut du billet est « ouvert »
+        create_ticket: Ticket %{ticket_created_id} créé
       edit:
-        title: Edit Ticket %{ticket_id}
+        title: Modifier le ticket %{ticket_id}
       edit_ticket:
         Edit Ticket: '%{key} - %{subject}'
-      search_result: Search Result
+      search_result: Résultat de la recherche
     model:
       error:
         required: Ne peut pas être vide
