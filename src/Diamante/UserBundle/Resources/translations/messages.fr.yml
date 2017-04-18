@@ -28,8 +28,8 @@ diamante:
         reset_pwd:
           label: Réinitialiser les mots de passe pour les clients
           messages:
-            success: Passwords for %count% selected customer(s) have been successfully reset.
-            fail: Error occured while resetting passwords.
+            success: Mots de passe pour %count% clients sélectionnés ont été réinitialisées.
+            fail: Erreur s’est produite lors de la réinitialisation de mots de passe.
     messages:
       delete:
         query: Are you sure you want to delete this customer?
