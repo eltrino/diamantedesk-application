@@ -2,31 +2,31 @@
 diamante:
   user:
     labels:
-      entity: Customer
-      entity.plural: Customers
+      entity: Client
+      entity.plural: Clients
       email: Email
-      first_name: First Name
-      last_name: Last Name
-      active: Is Active
-      id: Id
-      is_deleted: Is Deleted
+      first_name: Prénom
+      last_name: Nom de famille
+      active: Est actif
+      id: Identifiant
+      is_deleted: Est supprimé
       related_tickets: Tickets
-      activated: Email Confirmed
+      activated: Email confirmé
     actions:
-      create: Create Customer
-      remove: Delete Customer
-      view: View Customer
-      update: Update Customer
-      delete: Delete Customer
-      reset_pwd: Reset Password
+      create: Créer le client
+      remove: Supprimer le client
+      view: Voir le client
+      update: Mise à jour client
+      delete: Supprimer le client
+      reset_pwd: Réinitialiser le mot de passe
       mass:
         delete:
-          label: Delete сustomers
+          label: Supprimer clients
           messages:
-            success: Selected customers successfully deleted.
-            fail: Failed to delete selected customers.
+            success: Clientèle sélectionnée a été correctement supprimé.
+            fail: Échec de la suppression des clients sélectionnés.
         reset_pwd:
-          label: Reset passwords for customers
+          label: Réinitialiser les mots de passe pour les clients
           messages:
             success: Passwords for %count% selected customer(s) have been successfully reset.
             fail: Error occured while resetting passwords.
@@ -45,17 +45,17 @@ diamante:
         failed:
           related: Error deleting user. User has related entities.
     placeholder:
-      email: 'Please enter an email address'
-    details: Customer Details
-    activity: Customer Activity
+      email: 'Entrez une adresse mail s''il vous plaît'
+    details: Détails du client
+    activity: Activité des clients
     ui:
       "yes": true
       "no": false
     notification:
-      created: New DiamanteDesk account created.
-      force_reset: Password reset notification
+      created: Nouveau DiamanteDesk compte créé.
+      force_reset: Mot de passe réinitialiser notification
     exception:
-      customer_exists: Customer with such email already exists.
+      customer_exists: Client avec ce e-mail existe déjà.
     autocomplete:
       group:
         assignee: '[Assignee]'
