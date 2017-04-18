@@ -216,6 +216,6 @@ diamante_front:
         required: Ne peut pas être vide
         email_format: '« %{email} » n’est pas une adresse email valide'
     template:
-      email_watcher: Watcher Email
-      remove_watcher: Remove Watcher
+      email_watcher: Email du observateur
+      remove_watcher: Retirer du observateur
       add_watcher: Ajouter un observateur
