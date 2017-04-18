@@ -172,10 +172,10 @@ diamante_front:
         subject: Objet
         priority: Priorité
         status: Statut
-      resolve_button: Resolve Ticket
-      reopen_button: Reopen Ticket
+      resolve_button: Résoudre le ticket
+      reopen_button: Rouvrir le ticket
     view:
-      all_tickets: View all tickets
+      all_tickets: Voir tous les tickets
     router:
       view_ticket: Voir du tiket
       create_ticket: Créer un ticket
