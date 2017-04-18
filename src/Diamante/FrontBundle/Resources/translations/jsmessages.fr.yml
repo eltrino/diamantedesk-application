@@ -87,21 +87,21 @@ diamante_front:
         register_fail:
           title: L'enregistrement a échoué
         reset_info:
-          title: Password Reset Info
-          text: We have sent you email to %{email}.</br>Please click the link in that message to reset your password.
+          title: Info de réinitialisation de mot de passe
+          text: Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour réinitialiser votre mot de passe.
         reset_fail:
-          title: Password Reset Failed
-          text: Reset Code is invalid or expired
+          title: Réinitialisation du mot de passe échoué
+          text: Code de réinitialisation est non valide ou expiré
       message:
-        reset_success: Password successfully changed, you can use it to login
+        reset_success: Le mot de passe a changé avec succès, vous pouvez l'utiliser pour vous connecter
     model:
       alert:
         auth_required:
-          title: Authorization Required
-          text: This action requires authorization
+          title: Autorisation requise
+          text: Cette action nécessite une autorisation
       error:
         required: Ne peut pas être vide
-        email_format: '"%{email}" is not a valid email'
+        email_format: '« %{email} » n’est pas une adresse email valide'
         password_length: Must be at least six (6) symbols
     template:
       register: Registration
@@ -183,11 +183,11 @@ diamante_front:
   user:
     controller:
       message:
-        update_success: You have successfully updated your profile
+        update_success: Vous avez réussi à mettre à jour votre profil
       alert:
         edit_error:
-          title: Edit User Error
-      edit_user: Edit User
+          title: Modifier de l'utilisateur erreur
+      edit_user: Modifier l'utilisateur
     model:
       error:
         required: Ne peut pas être vide
@@ -214,7 +214,7 @@ diamante_front:
     model:
       error:
         required: Ne peut pas être vide
-        email_format: '"%{email}" is not a valid email'
+        email_format: '« %{email} » n’est pas une adresse email valide'
     template:
       email_watcher: Watcher Email
       remove_watcher: Remove Watcher
