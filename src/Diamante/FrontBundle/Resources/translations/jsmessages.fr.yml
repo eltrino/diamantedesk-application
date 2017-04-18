@@ -102,21 +102,21 @@ diamante_front:
       error:
         required: Ne peut pas être vide
         email_format: '« %{email} » n’est pas une adresse email valide'
-        password_length: Must be at least six (6) symbols
+        password_length: Doit être au moins de six (6) symboles
     template:
-      register: Registration
-      login: Sign In
-      forgot: Amnesia?
-      remember: Remember me
+      register: Enregistrement
+      login: Connexion
+      forgot: Amnésie ?
+      remember: Souviens-toi de moi
       back:
-        register: Already have an account? &mdash; <a href="%{url}">Sign In</a>
-        reset: Back to <a href="%{url}">Sign in</a>
+        register: Vous avez déjà un compte ? &mdash; <a href="%{url}"> Сonnecter</a>
+        reset: Retour à se <a href="%{url}"> Se connecter</a>
       label:
         email: Email
         first_name: First Name
         last_name: Last Name
-        password: Password
-        new_password: New Password
+        password: Mot de passe
+        new_password: Nouveau mot de passe
       placeholder:
         email: Saisissez l'email
         first_name: Saisir le prénom
@@ -124,13 +124,13 @@ diamante_front:
         password: Saisissez le mot de passe
         new_password: Saisissez le nouveau mot de passe
       button:
-        login: Sign In
+        login: Connexion
         register: Continuer
         reset_password: Reset Password
         new_password: Définir un nouveau mot de passe
     title:
       login: Ouvrir une session
-      register: Registration
+      register: Enregistrement
       reset: Reset Password
   ticket:
     controller:
@@ -191,25 +191,25 @@ diamante_front:
     model:
       error:
         required: Ne peut pas être vide
-        password_length: Must be at least six (6) symbols
+        password_length: Doit être au moins de six (6) symboles
     template:
       form:
         first_name_label: First Name
         last_name_label: Last Name
         email_label: Email
-        password_label: New Password
-        submit_button: Submit
-      logout: Log Out
+        password_label: Nouveau mot de passe
+        submit_button: Envoyer
+      logout: Connectez - Out
   watcher:
     controller:
       alert:
         add_error:
-          title: Add Watcher Error
+          title: Ajouter du observateur erreur
         delete_comment_error:
           title: Supprimer le commentaire erreur
       message:
-        add_success: A new watcher has been successfully added to the ticket
-        remove_success: A watcher has been removed from the ticket
+        add_success: Un nouvel observateur a été correctement ajouté au ticket
+        remove_success: Un observateur a été retiré du ticket
       add_watcher: Ajouter un observateur
     model:
       error:
