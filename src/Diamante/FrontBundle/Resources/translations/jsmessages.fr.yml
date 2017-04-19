@@ -72,7 +72,7 @@ diamante_front:
       alert:
         confirm_success:
           title: Succès de Confirmation de l`email
-          text: Vous pouvez vous connecter et utiliser l'application
+          text: You may log in and use application
         reconfirm_succes:
           title: Succès de Confirmation de l`email
           text: Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour activer votre compte.
@@ -93,7 +93,7 @@ diamante_front:
           title: Réinitialisation du mot de passe échoué
           text: Code de réinitialisation est non valide ou expiré
       message:
-        reset_success: Le mot de passe a changé avec succès, vous pouvez l'utiliser pour vous connecter
+        reset_success: Password successfully changed, you can use it to log in
     model:
       alert:
         auth_required:
@@ -105,7 +105,7 @@ diamante_front:
         password_length: Doit être au moins de six (6) symboles
     template:
       register: Enregistrement
-      login: Connexion
+      login: Log In
       forgot: Amnésie ?
       remember: Souviens-toi de moi
       back:
@@ -113,8 +113,8 @@ diamante_front:
         reset: Retour à se <a href="%{url}"> Se connecter</a>
       label:
         email: Email
-        first_name: First Name
-        last_name: Last Name
+        first_name: Prénom
+        last_name: Nom de famille
         password: Mot de passe
         new_password: Nouveau mot de passe
       placeholder:
@@ -124,14 +124,14 @@ diamante_front:
         password: Saisissez le mot de passe
         new_password: Saisissez le nouveau mot de passe
       button:
-        login: Connexion
+        login: Log In
         register: Continuer
-        reset_password: Reset Password
+        reset_password: Réinitialiser le mot de passe
         new_password: Définir un nouveau mot de passe
     title:
-      login: Ouvrir une session
+      login: Log In
       register: Enregistrement
-      reset: Reset Password
+      reset: Réinitialiser le mot de passe
   ticket:
     controller:
       alert:
@@ -194,8 +194,8 @@ diamante_front:
         password_length: Doit être au moins de six (6) symboles
     template:
       form:
-        first_name_label: First Name
-        last_name_label: Last Name
+        first_name_label: Prénom
+        last_name_label: Nom de famille
         email_label: Email
         password_label: Nouveau mot de passe
         submit_button: Envoyer
