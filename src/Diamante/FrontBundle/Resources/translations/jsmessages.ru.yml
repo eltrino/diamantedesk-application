@@ -47,7 +47,7 @@ diamante_front:
         cancel: Отменить
         save: Сохранить изменения
       button:
-        edit: Править комментарий
+        edit: Редактировать комментарий
         delete: Удалить комментарий
   common:
     template:
@@ -72,7 +72,7 @@ diamante_front:
       alert:
         confirm_success:
           title: Успешное подтверждение адреса электронной почты
-          text: Вы можете авторизоваться и использовать приложение
+          text: You may log in and use application
         reconfirm_succes:
           title: Успешное подтверждение адреса электронной почты
           text: Мы отправили вам письмо на электронную почту %{email}.</br> Пожалуйста, нажмите на ссылку в этом сообщении, чтобы активировать вашу учетную запись.
@@ -93,7 +93,7 @@ diamante_front:
           title: Не удалось сбросить пароль
           text: Код сброса недействителен или устарел
       message:
-        reset_success: Пароль успешно изменен, вы можете использовать его для входа
+        reset_success: Password successfully changed, you can use it to log in
     model:
       alert:
         auth_required:
@@ -105,7 +105,7 @@ diamante_front:
         password_length: Должно быть не менее шести (6) символов
     template:
       register: Регистрация
-      login: Войти
+      login: Log In
       forgot: Амнезия?
       remember: Запомнить
       back:
@@ -124,12 +124,12 @@ diamante_front:
         password: Введите пароль
         new_password: Введите новый пароль
       button:
-        login: Войти
+        login: Log In
         register: Продолжить
         reset_password: Сброс пароля
         new_password: Установить новый пароль
     title:
-      login: Авторизация
+      login: Log In
       register: Регистрация
       reset: Сброс пароля
   ticket:
