@@ -72,7 +72,7 @@ diamante_front:
       alert:
         confirm_success:
           title: Email Confirmation Success
-          text: You may login and use application
+          text: You may log in and use application
         reconfirm_succes:
           title: Email Confirmation Success
           text: We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
@@ -93,7 +93,7 @@ diamante_front:
           title: Password Reset Failed
           text: Reset Code is invalid or expired
       message:
-        reset_success: Password successfully changed, you can use it to login
+        reset_success: Password successfully changed, you can use it to log in
     model:
       alert:
         auth_required:
@@ -105,7 +105,7 @@ diamante_front:
         password_length: Must be at least six (6) symbols
     template:
       register: Registration
-      login: Sign In
+      login: Log In
       forgot: Amnesia?
       remember: Remember me
       back:
@@ -124,12 +124,12 @@ diamante_front:
         password: Enter Password
         new_password: Enter New Password
       button:
-        login: Sign In
+        login: Log In
         register: Continue
         reset_password: Reset Password
         new_password: Set New Password
     title:
-      login: Login
+      login: Log In
       register: Registration
       reset: Reset Password
   ticket:
