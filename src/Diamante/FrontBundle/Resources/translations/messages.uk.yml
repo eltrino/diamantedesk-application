@@ -2,11 +2,11 @@
 eltrino:
   diamantedesk:
     branch:
-      entity_label: Branch
-      entity_plural_label: Branches
+      entity_label: Гілка
+      entity_plural_label: Гілки
     ticket:
-      entity_label: Ticket
-      entity_plural_label: Tickets
+      entity_label: Тікет
+      entity_plural_label: Тікети
     comment:
-      entity_label: Comment
-      entity_plural_label: Comments
+      entity_label: Коментар
+      entity_plural_label: Коментарі
