@@ -36,8 +36,6 @@ class InitializationStep extends AbstractStep
                 return $this->handleAjaxAction('oro:process:configuration:load');
             case 'fixtures':
                 return $this->handleFixtures();
-            case 'navigation':
-                return $this->handleAjaxAction('oro:navigation:init');
             case 'js-routing':
                 return $this->handleAjaxAction('fos:js-routing:dump', ['--target' => 'js/routes.js']);
             case 'localization':

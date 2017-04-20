@@ -98,7 +98,7 @@ function iterateRequirements(array $collection)
     <link rel="stylesheet" type="text/css" href="bundles/oroinstaller/css/style.css" />
     <link rel="stylesheet" type="text/css" href="bundles/diamantedistribution/css/style.css" />
 
-    <script type="text/javascript" src="bundles/oroinstaller/lib/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="bundles/components/jquery/jquery.min.js"></script>
     <script type="text/javascript">
         $(function() {
             <?php if (!count($majorProblems)) : ?>

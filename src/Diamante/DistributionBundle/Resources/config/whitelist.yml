@@ -66,6 +66,7 @@ whitelist:
     - 'fos_js_routing_js'
     - 'oro_installer_flow'
     - '_imagine_avatar_med'
+    - '_profiler_search_bar'
 
     #Shortcuts
     - 'diamante_branch_list'
@@ -82,6 +83,7 @@ whitelist:
     - '^oro_user_[a-z_]+'
     - '^sylius_flow_[a-z_]+'
     - '^_imagine[a-z_]+'
+    - '^liip_imagine[a-z_]+'
     - '^oro_dashboard_[a-z_]+'
     - '^oro_tag_[a-z_]+'
     - '^oro_api_[a-z_]+_user.*'
