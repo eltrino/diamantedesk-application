@@ -3,6 +3,7 @@
 namespace Diamante\DistributionBundle\Installer\Process\Step;
 
 use Oro\Bundle\InstallerBundle\InstallerEvents;
+use Oro\Bundle\SecurityBundle\Command\LoadPermissionConfigurationCommand;
 use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
 use Oro\Bundle\InstallerBundle\Process\Step\AbstractStep;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +12,7 @@ class InitializationStep extends AbstractStep
 {
     public function displayAction(ProcessContextInterface $context)
     {
-        set_time_limit(600);
+        set_time_limit(900);
 
         switch ($this->getRequest()->query->get('action')) {
             case 'cache':
@@ -19,25 +20,25 @@ class InitializationStep extends AbstractStep
                 // module's ini settings at this time
                 error_reporting(E_ALL ^ E_WARNING);
                 return $this->handleAjaxAction('cache:clear', ['--no-optional-warmers' => true]);
-            case 'clear-config':
-                return $this->handleAjaxAction('oro:entity-config:cache:clear', ['--no-warmup' => true]);
-            case 'clear-extend':
-                return $this->handleAjaxAction('oro:entity-extend:cache:clear', ['--no-warmup' => true]);
             case 'schema-drop':
                 return $this->handleAjaxAction(
                     'doctrine:schema:drop',
-                    ['--force' => true, '--full-database' => $context->getStorage()->get('fullDatabase', false)]
+                    ['--force' => true, '--full-database' => $context->getStorage()->get('dropDatabase', false)]
                 );
             case 'schema-update':
                 return $this->handleSchemaUpdate();
             case 'workflows':
                 return $this->handleAjaxAction('oro:workflow:definitions:load');
+            case 'permissions':
+                return $this->handleAjaxAction(LoadPermissionConfigurationCommand::NAME);
+            case 'crons':
+                return $this->handleAjaxAction('oro:cron:definitions:load');
             case 'processes':
                 return $this->handleAjaxAction('oro:process:configuration:load');
             case 'fixtures':
                 return $this->handleFixtures();
             case 'js-routing':
-                return $this->handleAjaxAction('fos:js-routing:dump', ['--target' => 'js/routes.js']);
+                return $this->handleAjaxAction('fos:js-routing:dump');
             case 'localization':
                 return $this->handleAjaxAction('oro:localization:dump');
             case 'assets':

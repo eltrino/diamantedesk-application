@@ -22,18 +22,6 @@ class DiamanteDeskRequirements extends OroRequirements
             'app/attachments/ directory must be writable',
             'Change the permissions of the "<strong>app/attachments/</strong>" directory so that the web server can write into it.'
         );
-
-        $this->addRecommendation(
-            $this->IsNpmInstalled(),
-            'npm package manager is installed',
-            'Install <strong>npm</strong> package manager.'
-        );
-
-        $this->addRecommendation(
-            $this->IsGruntAndBowerInstalled(),
-            'grunt and bower packages are installed',
-            'Install <strong>grunt and bower</strong> packages.'
-        );
     }
 
     /**
@@ -62,46 +50,6 @@ class DiamanteDeskRequirements extends OroRequirements
                 return $requirement instanceof DiamanteDeskRequirement;
             }
         );
-    }
-
-    /**
-     * @return string|null
-     */
-    protected function IsNpmInstalled()
-    {
-        $builder = new ProcessBuilder(array('npm', '-v'));
-        $builder = $builder->getProcess();
-        if (isset($_SERVER['PATH'])) {
-            $builder->setEnv(array('PATH' => $_SERVER['PATH']));
-        }
-        $builder->run();
-        if ($builder->getErrorOutput() === null) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return string|null
-     */
-    protected function IsGruntAndBowerInstalled()
-    {
-        $packages = array(array('grunt', '--version'), array('bower', '--version'));
-        $isInstalled = true;
-        foreach ($packages as $package) {
-            $builder = new ProcessBuilder($package);
-            $builder = $builder->getProcess();
-            if (isset($_SERVER['PATH'])) {
-                $builder->setEnv(array('PATH' => $_SERVER['PATH']));
-            }
-            $builder->run();
-            if ($builder->getErrorOutput() !== null) {
-                return false;
-            }
-        }
-
-        return $isInstalled;
     }
 
     /**
