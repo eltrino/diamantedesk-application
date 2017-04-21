@@ -9,7 +9,7 @@ process:
             clear-config:                   Clear entities cache
             clear-extend:                   Clear extended entities data
             permissions:                    Load permissions configuration
-            crons:                          Load workflow definitions
+            crons:                          Load cron definitions
             schema-drop:                    Drop current schema
             schema-update:                  Schema update
             fixtures:                       Load fixtures
