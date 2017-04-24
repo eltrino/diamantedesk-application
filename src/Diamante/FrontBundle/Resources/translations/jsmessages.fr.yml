@@ -72,7 +72,7 @@ diamante_front:
       alert:
         confirm_success:
           title: Succès de Confirmation de l`email
-          text: You may log in and use application
+          text: Vous pouvez vous connecter et utiliser application
         reconfirm_succes:
           title: Succès de Confirmation de l`email
           text: Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour activer votre compte.
@@ -93,7 +93,7 @@ diamante_front:
           title: Réinitialisation du mot de passe échoué
           text: Code de réinitialisation est non valide ou expiré
       message:
-        reset_success: Password successfully changed, you can use it to log in
+        reset_success: Le mot de passe a changé avec succès, vous pouvez l'utiliser pour vous connecter
     model:
       alert:
         auth_required:
@@ -105,7 +105,7 @@ diamante_front:
         password_length: Doit être au moins de six (6) symboles
     template:
       register: Enregistrement
-      login: Log In
+      login: Se connecter
       forgot: Amnésie ?
       remember: Souviens-toi de moi
       back:
@@ -124,12 +124,12 @@ diamante_front:
         password: Saisissez le mot de passe
         new_password: Saisissez le nouveau mot de passe
       button:
-        login: Log In
+        login: Se connecter
         register: Continuer
         reset_password: Réinitialiser le mot de passe
         new_password: Définir un nouveau mot de passe
     title:
-      login: Log In
+      login: Se connecter
       register: Enregistrement
       reset: Réinitialiser le mot de passe
   ticket:
