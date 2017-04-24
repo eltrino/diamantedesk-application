@@ -32,18 +32,18 @@ diamante:
             fail: Erreur s’est produite lors de la réinitialisation de mots de passe.
     messages:
       delete:
-        query: Are you sure you want to delete this customer?
-        success: Customer successfully deleted.
+        query: Êtes-vous sûr de que vouloir supprimer ce client ?
+        success: Client a été correctement supprimé.
       create:
-        success: Customer successfully created.
+        success: Client a été correctement créé.
       update:
-        success: Customer successfully updated.
+        success: Client a été correctement mis à jour.
       reset_pwd:
-        query: Are you sure you want to reset password for this customer?
-        success: User password successfully reset.
+        query: Êtes-vous sûr de que vouloir réinitialiser mot de passe pour ce client ?
+        success: Mot de passe utilisateur réinitialisées.
       remove:
         failed:
-          related: Error deleting user. User has related entities.
+          related: Erreur suppression utilisateur. L’utilisateur a des entités associées.
     placeholder:
       email: 'Entrez une adresse mail s''il vous plaît'
     details: Détails du client
