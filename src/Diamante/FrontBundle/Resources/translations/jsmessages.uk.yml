@@ -72,7 +72,7 @@ diamante_front:
       alert:
         confirm_success:
           title: Успішне підтвердження адреси електронної пошти
-          text: You may log in and use application
+          text: Ви можете авторизуватися і використовувати додаток
         reconfirm_succes:
           title: Успішне підтвердження адреси електронної пошти
           text: Ми відправили вам лист на електронну пошту %{email}. </br> Будь ласка, натисніть на посилання в цьому повідомленні, щоб активувати ваш профіль.
@@ -93,7 +93,7 @@ diamante_front:
           title: Не вдалося виконати скидання пароля
           text: Код скидання недійсний або застарів
       message:
-        reset_success: Password successfully changed, you can use it to log in
+        reset_success: Пароль успішно змінений, ви можете використовувати його для входу
     model:
       alert:
         auth_required:
@@ -105,7 +105,7 @@ diamante_front:
         password_length: Повинно бути не менше шести (6) символів
     template:
       register: Реєстрація
-      login: Log In
+      login: Вхід
       forgot: Амнезія?
       remember: Запам'ятати мене
       back:
@@ -124,12 +124,12 @@ diamante_front:
         password: Введіть пароль
         new_password: Введіть новий пароль
       button:
-        login: Log In
+        login: Вхід
         register: Продовжити
         reset_password: Скинути пароль
         new_password: Встановити новий пароль
     title:
-      login: Log In
+      login: Вхід
       register: Реєстрація
       reset: Скинути пароль
   ticket:
