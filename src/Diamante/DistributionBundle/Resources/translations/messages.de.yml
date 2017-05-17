@@ -9,7 +9,7 @@ process:
       clear-config: Entitäts-Cache leeren
       clear-extend: Erweiterte Entitäts-Daten löschen
       schema-drop: Aktuelles Schema löschen
-      schema-update: Schema update
+      schema-update: Schema Aktualisierung
       fixtures: Load fixtures
       workflows: Load workflow definitions
       processes: Load processes configuration
