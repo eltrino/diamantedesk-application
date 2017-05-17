@@ -23,6 +23,6 @@ process:
       finish: Clear cache to finalize installation
     check:
       table:
-        diamante: DiamanteDesk Requirements
+        diamante: DiamanteDesk Anforderungen
     final:
       content: 'You''re lucky to start using DiamanteDesk right away.<br>If you''re looking for some help or need some support, please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you''re our Enterprise client.'
