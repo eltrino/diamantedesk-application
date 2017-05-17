@@ -18,7 +18,7 @@ diamante:
         branch_name: Abteilungsname
         branch_key: Abteilungsschlüssel
       actions:
-        create: Create Branch
+        create: Abteilung erstellen
         view: View Branch
         edit: Edit Branch
         remove: Delete Branch
@@ -47,23 +47,23 @@ diamante:
     ticket:
       entity_label: Ticket
       entity_plural_label: Tickets
-      details: Ticket Details
-      all: All Tickets
+      details: Ticket-Details
+      all: Alle Tickets
       created_at.label: Erstellt am
       description.label: Beschreibung
-      id.label: Ticket Id
-      priority.label: Priority
+      id.label: Ticket ID
+      priority.label: Priorität
       reporter_email.label: Reporter Email
       assignee.label: Assigner
       branch.label: Abteilung
-      comments.label: Comments
+      comments.label: Kommentare
       sequence_number.label: Sequence Number
-      source.label: Source
+      source.label: Quelle
       status.label: Status
-      subject.label: Subject
-      unique_id.label: Unique Id
+      subject.label: Betreff
+      unique_id.label: Eindeutige ID
       updated_at.label: Aktualisiert am
-      attachments.label: Attachments
+      attachments.label: Anhänge
       watcher_list.label: Watcher List
       created_via_email.label: Created via email to
       since_created.label: Since created
@@ -72,11 +72,11 @@ diamante:
       since_assignee_updated.label: Since assignee updated
       columns:
         key: Schlüssel
-        subject: Subject
+        subject: Betreff
         branch: Abteilung
         assignee: Bearbeiter
         reporter: Reporter
-        priority: Priority
+        priority: Priorität
         status: Status
         created: Erstellt
         updated: Aktualisiert
@@ -89,8 +89,8 @@ diamante:
         assign: Zuordnen
         create: Ticket erstellen
         change_status: Change Status
-        move: Move
-        watch: Watch
+        move: Verschieben
+        watch: Beobachten
         unwatch: Un-watch
         add_watcher: Add Watcher
       messages:
@@ -129,12 +129,12 @@ diamante:
           assignee:
             error: Assignee validation failed, assignee not found.
     comment:
-      entity_label: Comment
-      entity_plural_label: Comments
+      entity_label: Kommentar
+      entity_plural_label: Kommentare
       ticket_status: Ticket status
       content: Content
       private: Private
-      attachments.label: Attachments
+      attachments.label: Anhänge
       author.label: Author
       content.label: Content
       created_at.label: Created_at
@@ -167,7 +167,7 @@ diamante:
         deleted_user: Deleted user
     attachment:
       entity_label: Attachment
-      entity_plural_label: Attachments
+      entity_plural_label: Anhänge
       file: File
       image: Image
       created_at.label: Created at
@@ -246,11 +246,11 @@ diamante:
       key: Schlüssel
     attributes:
       name: Name
-      subject: Subject
+      subject: Betreff
       branch: Abteilung
       status: Status
-      priority: Priority
-      source: Source
+      priority: Priorität
+      source: Quelle
       reporter: Reporter
       default_assignee: Default Assignee
       assignee: Bearbeiter
@@ -313,9 +313,9 @@ oro:
       data_type:
         branch_logo: Abteilungslogo
         user_type: User Type
-        source: Source
+        source: Quelle
         status: Status
-        priority: Priority
+        priority: Priorität
         ticket_unique_id: Ticket unique id
         ticket_sequence_number: Ticket sequence number
 oro_datagrid:
