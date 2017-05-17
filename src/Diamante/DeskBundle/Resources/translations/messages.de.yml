@@ -19,10 +19,10 @@ diamante:
         branch_key: Abteilungsschlüssel
       actions:
         create: Abteilung erstellen
-        view: View Branch
-        edit: Edit Branch
-        remove: Delete Branch
-        remove_mass: Delete Branches
+        view: Abteilung anzeigen
+        edit: Abteilung ändern
+        remove: Abteilung löschen
+        remove_mass: Abteilungen löschen
       messages:
         create:
           error: Error occurred while creating a branch. Branch is not created. Enter all the required data and try again.
@@ -131,12 +131,12 @@ diamante:
     comment:
       entity_label: Kommentar
       entity_plural_label: Kommentare
-      ticket_status: Ticket status
-      content: Content
+      ticket_status: Ticket-Status
+      content: Inhalt
       private: Private
       attachments.label: Anhänge
       author.label: Author
-      content.label: Content
+      content.label: Inhalt
       created_at.label: Created_at
       id.label: Id
       private.label: Private
