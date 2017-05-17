@@ -93,7 +93,7 @@ diamante:
       "true": "true"
       "false": "false"
       customer: is customer
-      admin: is admin
+      admin: ist Administrator
     action:
       update_property: Update property
       notify_by_email: Notify by email
