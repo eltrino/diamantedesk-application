@@ -16,21 +16,21 @@ diamante_front:
     template:
       dropzone:
         dropfiles: Datei hier ablegen, um sie anzuhängen
-        attachfiles: Click here to attach files
-        read: Reading...
-        send: Sending...
-        receive: Receiving...
+        attachfiles: Klicken Sie hier, um Dateien anhängen
+        read: Lesen...
+        send: Sende...
+        receive: Wird empfangen...
       button:
-        remove: Remove Attachment
+        remove: Anhang entfernen
       link:
         download: 'Download:'
       header:
-        file: File Attachments
+        file: Datei-Anhänge
   comment:
     controller:
       alert:
         create_error:
-          title: Create Comment Error
+          title: Kommentarfehler erstellen
         delete_error:
           title: Delete Comment Error
         edit_success:
