@@ -15,8 +15,8 @@ diamante:
           error: Fehler beim Aktualisieren von der Regel. Regel wird nicht aktualisiert. Geben Sie alle erforderliche Daten und versuchen Sie es erneut.
           success: Regel erfolgreich aktualisiert.
         delete:
-          query: Are you sure you want to delete this rule?
-          success: Rule successfully deleted.
+          query: Sind Sie sicher, dass Sie diese Rolle löschen wollen?
+          success: Regel erfolgreich gelöscht.
       status:
         active: Active
         inactive: Inactive
