@@ -8,7 +8,7 @@ diamante:
       created_at.label: Erstellt am
       description.label: Beschreibung
       id.label: Abteilungs-ID
-      key.label: Branch Key
+      key.label: Abteilungsschlüssel
       logo.label: Branch Logo
       name.label: Branch Name
       updated_at.label: Updated At
@@ -16,7 +16,7 @@ diamante:
       columns:
         logo: Logo
         branch_name: Branch Name
-        branch_key: Branch Key
+        branch_key: Abteilungsschlüssel
       actions:
         create: Create Branch
         view: View Branch
