@@ -10,9 +10,9 @@ process:
       clear-extend: Erweiterte Entitäts-Daten löschen
       schema-drop: Aktuelles Schema löschen
       schema-update: Schema Aktualisierung
-      fixtures: Load fixtures
-      workflows: Load workflow definitions
-      processes: Load processes configuration
+      fixtures: Daten laden
+      workflows: Workflow-Definitionen laden
+      processes: Prozesskonfiguration laden
       navigation: Init navigation
       js-routing: Dump JS routing
       localization: Dump localization
