@@ -9,13 +9,13 @@ diamante:
       description.label: Beschreibung
       id.label: Abteilungs-ID
       key.label: Abteilungsschlüssel
-      logo.label: Branch Logo
-      name.label: Branch Name
-      updated_at.label: Updated At
+      logo.label: Abteilungslogo
+      name.label: Abteilungsname
+      updated_at.label: Aktualisiert am
       default_assignee.label: Default Assignee
       columns:
         logo: Logo
-        branch_name: Branch Name
+        branch_name: Abteilungsname
         branch_key: Abteilungsschlüssel
       actions:
         create: Create Branch
@@ -62,7 +62,7 @@ diamante:
       status.label: Status
       subject.label: Subject
       unique_id.label: Unique Id
-      updated_at.label: Updated At
+      updated_at.label: Aktualisiert am
       attachments.label: Attachments
       watcher_list.label: Watcher List
       created_via_email.label: Created via email to
@@ -311,7 +311,7 @@ oro:
   entity_extend:
     form:
       data_type:
-        branch_logo: Branch Logo
+        branch_logo: Abteilungslogo
         user_type: User Type
         source: Source
         status: Status
