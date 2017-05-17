@@ -32,15 +32,15 @@ diamante_front:
         create_error:
           title: Kommentarfehler erstellen
         delete_error:
-          title: Delete Comment Error
+          title: Kommentarfehler löschen
         edit_success:
-          title: Your comment has been edited
+          title: Ihr Kommentar wurde bearbeitet
       message:
-        post_success: Comment was posted successfully
-        delete_success: Your comment was successfully deleted
+        post_success: Kommentar wurde erfolgreich veröffentlicht
+        delete_success: Ihr Kommentar wurde erfolgreich gelöscht
     model:
       error:
-        required: "Can't be blank"
+        required: "Darf nicht leer sein"
     template:
       form:
         add: Add Comment
@@ -100,7 +100,7 @@ diamante_front:
           title: Authorization Required
           text: This action requires authorization
       error:
-        required: Can't be blank
+        required: Darf nicht leer sein
         email_format: '"%{email}" is not a valid email'
         password_length: Must be at least six (6) symbols
     template:
@@ -152,7 +152,7 @@ diamante_front:
       search_result: Search Result
     model:
       error:
-        required: Can't be blank
+        required: Darf nicht leer sein
     template:
       empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
       empty_search: There are no tickets matching your criteria.
@@ -190,7 +190,7 @@ diamante_front:
       edit_user: Edit User
     model:
       error:
-        required: Can't be blank
+        required: Darf nicht leer sein
         password_length: Must be at least six (6) symbols
     template:
       form:
@@ -206,14 +206,14 @@ diamante_front:
         add_error:
           title: Add Watcher Error
         delete_comment_error:
-          title: Delete Comment Error
+          title: Kommentarfehler löschen
       message:
         add_success: A new watcher has been successfully added to the ticket
         remove_success: A watcher has been removed from the ticket
       add_watcher: Add Watcher
     model:
       error:
-        required: Can't be blank
+        required: Darf nicht leer sein
         email_format: '"%{email}" is not a valid email'
     template:
       email_watcher: Watcher Email
