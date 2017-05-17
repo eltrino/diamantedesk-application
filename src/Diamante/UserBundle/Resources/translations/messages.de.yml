@@ -13,11 +13,11 @@ diamante:
       related_tickets: Tickets
       activated: E-Mail bestätigt
     actions:
-      create: Create Customer
-      remove: Delete Customer
-      view: View Customer
+      create: Kunden erstellen
+      remove: Kunde löschen
+      view: Kunden anzeigen
       update: Update Customer
-      delete: Delete Customer
+      delete: Kunde löschen
       reset_pwd: Reset Password
       mass:
         delete:
@@ -46,8 +46,8 @@ diamante:
           related: Error deleting user. User has related entities.
     placeholder:
       email: 'Please enter an email address'
-    details: Customer Details
-    activity: Customer Activity
+    details: Kundendetails
+    activity: Kundenaktivität
     ui:
       "yes": true
       "no": false
