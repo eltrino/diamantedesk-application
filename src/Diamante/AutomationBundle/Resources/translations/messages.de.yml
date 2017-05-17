@@ -31,42 +31,42 @@ diamante:
           deactivate: Regeln deaktiviern
           response:
             activate:
-              success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
+              success_message: "{0} Keine Entitäten wurden aktiviert |{1} eine Entität wurde aktiviert |] 1, Inf [%count% Entitäten wurden aktiviert"
             deactivate:
-              success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
+              success_message: "{0} Keine Entitäten wurden deaktiviert |{1} eine Entität wurde deaktiviert |] 1, Inf [%count% Entitäten wurden deaktiviert"
       time_triggered:
-        entity_label: Time Triggered
-        repetition_time: Frequency
+        entity_label: Zeitgetriggert
+        repetition_time: Frequenz
       event_triggered:
-        entity_label: Event Triggered
+        entity_label: Ereignisgetriggert
     ui:
-      create: Create
+      create: Erstellen
       ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
-      edit: Edit
-      add: Add
-      change: Change
+      cancel: Abbrechen
+      save: Speichern
+      delete: Löschen
+      save_and_close: Speichern und schließen
+      edit: Bearbeiten
+      add: Hinzufügen
+      change: Ändern
       event_triggered:
-        create: Create Event Triggered Rule
+        create: Ereignisgetriggerte Regel erstellen
       time_triggered:
-        create: Create Time Triggered Rule
+        create: Zeitgetriggerte Regel erstellen
     attributes:
-      condition: Condition
-      action: Action
-      weight: Weight
-      target: Target
-      parent: Parent
+      condition: Bedingung
+      action: Aktion
+      weight: Verhältnis
+      target: Ziel
+      parent: Übergeordneter Eintrag
       status: Status
-      expression: Expression
-      mode: Mode
+      expression: Ausdruck
+      mode: Modus
     common:
       name: Name
-      general: General
-      created: Created
-      updated: Updated
+      general: Allgemein
+      created: Erstellt
+      updated: Aktualisiert
       not_available: N/A
       not_defined: Not defined
       delete_confirmation: Confirm Deletion
@@ -84,8 +84,8 @@ diamante:
       lte: is less than or equals to
       contains: contains
       not_contains: not contains
-      created: Created
-      updated: Updated
+      created: Erstellt
+      updated: Aktualisiert
       removed: Removed
       changed: changed
       changed_from: changed from
