@@ -67,40 +67,40 @@ diamante:
       general: Allgemein
       created: Erstellt
       updated: Aktualisiert
-      not_available: N/A
-      not_defined: Not defined
-      delete_confirmation: Confirm Deletion
+      not_available: NV
+      not_defined: Nicht definiert
+      delete_confirmation: Löschen bestätigen
       messages:
         validation:
-          failed: Form is invalid. Please correctly fill in all required fields.
+          failed: Formular ist ungültig. Bitte alle erforderlichen Felder korrekt ausfüllen.
     forms:
       name: Name
     condition:
-      eq: is equal to
-      neq: is not equal to
-      gt: is greater than
-      gte: is greater than or equals to
-      lt: is less than
-      lte: is less than or equals to
-      contains: contains
-      not_contains: not contains
+      eq: ist gleich
+      neq: ist nicht gleich
+      gt: ist größer als
+      gte: ist größer als oder gleich
+      lt: ist weniger als
+      lte: ist kleiner als oder gleich
+      contains: enthält
+      not_contains: enthält nicht
       created: Erstellt
       updated: Aktualisiert
-      removed: Removed
-      changed: changed
-      changed_from: changed from
-      changed_to: changed to
-      "true": "true"
-      "false": "false"
-      customer: is customer
+      removed: Entfernt
+      changed: geändert
+      changed_from: geändert von
+      changed_to: geändert in
+      "true": "wahr"
+      "false": "falsch"
+      customer: ist Kunde
       admin: ist Administrator
     action:
-      update_property: Update property
-      notify_by_email: Notify by email
+      update_property: Änderungseigenschaft
+      notify_by_email: Per E-Mail benachtichtigen
     connector:
-      inclusive: All of these are true
-      exclusive: Any of these are true
+      inclusive: All diese sind wahr
+      exclusive: Keines dieser ist wahr
     cron:
-      d: "{1} Every day|]1,Inf[ Every %time% days"
-      h: "{1} Every hour|]1,Inf[ Every %time% hours"
-      m: Every %time% minutes
+      d: "{1} Jeden Tag|]1,Inf[ Alle %time% Tage"
+      h: "{1} Jede Stunde|]1,Inf[ Alle %time% Stunden"
+      m: Alle %time% Minuten
