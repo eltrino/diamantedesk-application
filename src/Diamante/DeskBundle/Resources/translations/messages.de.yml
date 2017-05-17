@@ -2,12 +2,12 @@
 diamante:
   desk:
     branch:
-      entity_label: Branch
-      entity_plural_label: Branches
-      details: Branch Details
-      created_at.label: Created At
-      description.label: Description
-      id.label: Branch Id
+      entity_label: Abteilung
+      entity_plural_label: Abteilungen
+      details: Abteilungsdetails
+      created_at.label: Erstellt am
+      description.label: Beschreibung
+      id.label: Abteilungs-ID
       key.label: Branch Key
       logo.label: Branch Logo
       name.label: Branch Name
@@ -49,13 +49,13 @@ diamante:
       entity_plural_label: Tickets
       details: Ticket Details
       all: All Tickets
-      created_at.label: Created At
-      description.label: Description
+      created_at.label: Erstellt am
+      description.label: Beschreibung
       id.label: Ticket Id
       priority.label: Priority
       reporter_email.label: Reporter Email
       assignee.label: Assigner
-      branch.label: Branch
+      branch.label: Abteilung
       comments.label: Comments
       sequence_number.label: Sequence Number
       source.label: Source
@@ -73,7 +73,7 @@ diamante:
       columns:
         key: Key
         subject: Subject
-        branch: Branch
+        branch: Abteilung
         assignee: Assignee
         reporter: Reporter
         priority: Priority
@@ -226,7 +226,7 @@ diamante:
       select_watcher: Select User
     common:
       general: General
-      description: Description
+      description: Beschreibung
       created: Created
       updated: Updated
       not_available: N/A
@@ -247,7 +247,7 @@ diamante:
     attributes:
       name: Name
       subject: Subject
-      branch: Branch
+      branch: Abteilung
       status: Status
       priority: Priority
       source: Source
