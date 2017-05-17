@@ -140,16 +140,16 @@ diamante_front:
         edit_error:
           title: Ticket-Fehler bearbeiten
       message:
-        key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
-        ticket_update: Ticket %{ticket_update_id} updated
-        status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
-        status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
-        create_ticket: Ticket %{ticket_created_id} created
+        key_changed: Während wir aktiv an Ihrem Ticket gearbeitet haben, änderte sich der Ticket-Schlüssel in %{ticket_key_id}
+        ticket_update: Ticket-%{ticket_update_id} aktualisiert
+        status_closed: Ticketstatus %{ticket_status_closed_id} geändert. Ticketstatus "geschlossen"
+        status_open: Ticketstatus %{ticket_status_open_id} geändert. Ticketstatus ist "Offen"
+        create_ticket: Ticket-%{ticket_created_id} erstellt
       edit:
-        title: Edit Ticket %{ticket_id}
+        title: Ticket-%{ticket_id} bearbeiten
       edit_ticket:
         Edit Ticket: '%{key} - %{subject}'
-      search_result: Search Result
+      search_result: Suchergebnis
     model:
       error:
         required: Darf nicht leer sein
