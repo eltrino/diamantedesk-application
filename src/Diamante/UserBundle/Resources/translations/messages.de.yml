@@ -9,9 +9,9 @@ diamante:
       last_name: Nachname
       active: Ist aktiv
       id: Id
-      is_deleted: Is Deleted
+      is_deleted: Ist gelöscht
       related_tickets: Tickets
-      activated: Email Confirmed
+      activated: E-Mail bestätigt
     actions:
       create: Create Customer
       remove: Delete Customer
