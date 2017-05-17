@@ -1,21 +1,21 @@
 ---
-"Loading...": "Loading..."
+"Loading...": "Wird geladen..."
 diamante_front:
   attachment:
     controller:
       alert:
         delete_error:
-          title: Delete Attachment Error
+          title: Anhangfehler löschen
       message:
-        attach_success: Files attached successfully
-        delete_success: File deleted successfully
+        attach_success: Dateien erfolgreich angehängt
+        delete_success: Datei erfolgreich gelöscht
     model:
       alert:
         add_error:
-          title: Add Attachments Error
+          title: Anhangsfehler hinzufügen
     template:
       dropzone:
-        dropfiles: Drop files here to attach
+        dropfiles: Datei hier ablegen, um sie anzuhängen
         attachfiles: Click here to attach files
         read: Reading...
         send: Sending...
@@ -112,9 +112,9 @@ diamante_front:
         register: Already have an account? &mdash; <a href="%{url}">Sign In</a>
         reset: Back to <a href="%{url}">Sign in</a>
       label:
-        email: Email
-        first_name: First Name
-        last_name: Last Name
+        email: E-Mail
+        first_name: Vorname
+        last_name: Nachname
         password: Password
         new_password: New Password
       placeholder:
@@ -160,7 +160,7 @@ diamante_front:
       form:
         subject_label: Ticket Subject
         subject_placeholder: Short ticket summary
-        description_label: Description
+        description_label: Beschreibung
         description_placeholder: Provide a detailed description of your support request
         priority_label: Priority
         low_option: Low
@@ -194,9 +194,9 @@ diamante_front:
         password_length: Must be at least six (6) symbols
     template:
       form:
-        first_name_label: First Name
-        last_name_label: Last Name
-        email_label: Email
+        first_name_label: Vorname
+        last_name_label: Nachname
+        email_label: E-Mail
         password_label: New Password
         submit_button: Submit
       logout: Log Out
