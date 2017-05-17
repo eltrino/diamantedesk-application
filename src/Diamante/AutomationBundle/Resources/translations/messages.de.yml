@@ -4,8 +4,8 @@ diamante:
     rule:
       entity_label: Regel
       entity_plural_label: Regeln
-      event_triggered_entity_plural_label: Event Triggered Rules
-      time_triggered_entity_plural_label: Time Triggered Rules
+      event_triggered_entity_plural_label: Eventbasierte Regeln
+      time_triggered_entity_plural_label: Zeitbasierte Regeln
       details: Regeldetails
       messages:
         create:
