@@ -45,100 +45,100 @@ diamante_front:
       form:
         add: Add Comment
         cancel: Cancel
-        save: Save Changes
+        save: Änderungen speichern
       button:
         edit: Edit Comment
-        delete: Delete Comment
+        delete: Kommentar löschen
   common:
     template:
-      close: Close
+      close: Schließen
       cancel: Cancel
-      sort: Sort By
+      sort: Sortieren nach
     view:
       alert:
-        title: Error
-        text: An unprocessed error happened. Please try again!
+        title: Fehler
+        text: Ein unprozessierter Fehler ist passiert. Bitte versuchen Sie es erneut!
       modal:
-        title: Modal Window
-        submit: Save changes
+        title: Popup-Fenster
+        submit: Änderungen speichern
   footer:
     template:
-      copyright: Diamante is released under %{license} License by %{company}
+      copyright: Diamante ist unter der %{license} Lizenz von %{company} veröffentlicht
   header:
     template:
-      new_ticket: New Ticket
+      new_ticket: Neues Ticket
   session:
     controller:
       alert:
         confirm_success:
-          title: Email Confirmation Success
-          text: You may log in and use application
+          title: E-Mail-Bestätigungserfolg
+          text: Loggen Sie sich ein und nutzen Sie die Anwendung
         reconfirm_succes:
-          title: Email Confirmation Success
-          text: We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: E-Mail-Bestätigungserfolg
+          text: Wir haben eine E-Mail an %{email} gesendet.</br> Bitte klicken Sie auf den Link in der Nachricht, um Ihr Konto zu bestätigen.
         confirm_fail:
-          title: Email Confirmation Failed
-          text: Activation code is wrong
+          title: E-Mail-Bestätigung fehlgeschlagen
+          text: Aktivierungsschlüssel ist ungültig
         login_fail:
-          title: Authorization Failed
+          title: Autorisierung fehlgeschlagen
         register_succes:
-          title: Registration Success
-          text: Thank you. We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: Registrierung erfolgreich
+          text: Danke. Wir haben eine E-Mail an %{email} gesendet.</br> Bitte klicken Sie auf den Link in der Nachricht, um Ihr Konto zu bestätigen.
         register_fail:
-          title: Registration Failed
+          title: Registrierung fehlgeschlagen
         reset_info:
-          title: Password Reset Info
-          text: We have sent you email to %{email}.</br>Please click the link in that message to reset your password.
+          title: Passwortzurücksetzungs-Info
+          text: Wir haben eine E-Mail an %{email} gesendet.</br> Bitte klicken Sie auf den Link in der Nachricht, um Ihr Passwort zurückzusetzen.
         reset_fail:
-          title: Password Reset Failed
-          text: Reset Code is invalid or expired
+          title: Passwortzurücksetzung fehlgeschlagen
+          text: Zurücksetzungsschlüssel ungültig oder abgelaufen
       message:
-        reset_success: Password successfully changed, you can use it to log in
+        reset_success: Passwort erfolgreich geändert, Sie können sich anmelden
     model:
       alert:
         auth_required:
-          title: Authorization Required
-          text: This action requires authorization
+          title: Autorisierung erforderlich
+          text: Diese Aktion erfordert Autorisierung
       error:
         required: Darf nicht leer sein
-        email_format: '"%{email}" is not a valid email'
-        password_length: Must be at least six (6) symbols
+        email_format: '%{email} ist keine gültige E-Mail-Adresse'
+        password_length: Es müssen mindestens sechs (6) Zeichen sein
     template:
-      register: Registration
-      login: Log In
-      forgot: Amnesia?
-      remember: Remember me
+      register: Registrierung
+      login: Anmeldung
+      forgot: Amnesie?
+      remember: Eingeloggt bleiben
       back:
-        register: Already have an account? &mdash; <a href="%{url}">Sign In</a>
-        reset: Back to <a href="%{url}">Sign in</a>
+        register: Haben Sie bereits ein Konto? &mdash;<a href="%{url}">Anmelden</a>
+        reset: Zurück zur <a href="%{url}"> Anmeldung</a>
       label:
         email: E-Mail
         first_name: Vorname
         last_name: Nachname
-        password: Password
-        new_password: New Password
+        password: Passwort
+        new_password: Neues Passwort
       placeholder:
-        email: Enter Email
-        first_name: Enter First Name
-        last_name: Enter Last Name
-        password: Enter Password
-        new_password: Enter New Password
+        email: E-Mail-Adresse eintragen
+        first_name: Vorname eingeben
+        last_name: Nachname eingeben
+        password: Passwort eingeben
+        new_password: Neues Passwort eingeben
       button:
-        login: Log In
-        register: Continue
+        login: Anmeldung
+        register: Fortsetzen
         reset_password: Reset Password
-        new_password: Set New Password
+        new_password: Neues Passwort setzen
     title:
-      login: Log In
-      register: Registration
+      login: Anmeldung
+      register: Registrierung
       reset: Reset Password
   ticket:
     controller:
       alert:
         create_error:
-          title: Create Ticket Error
+          title: Ticket-Fehler erstellen
         edit_error:
-          title: Edit Ticket Error
+          title: Ticket-Fehler bearbeiten
       message:
         key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
         ticket_update: Ticket %{ticket_update_id} updated
@@ -191,13 +191,13 @@ diamante_front:
     model:
       error:
         required: Darf nicht leer sein
-        password_length: Must be at least six (6) symbols
+        password_length: Es müssen mindestens sechs (6) Zeichen sein
     template:
       form:
         first_name_label: Vorname
         last_name_label: Nachname
         email_label: E-Mail
-        password_label: New Password
+        password_label: Neues Passwort
         submit_button: Submit
       logout: Log Out
   watcher:
@@ -214,7 +214,7 @@ diamante_front:
     model:
       error:
         required: Darf nicht leer sein
-        email_format: '"%{email}" is not a valid email'
+        email_format: '%{email} ist keine gültige E-Mail-Adresse'
     template:
       email_watcher: Watcher Email
       remove_watcher: Remove Watcher
