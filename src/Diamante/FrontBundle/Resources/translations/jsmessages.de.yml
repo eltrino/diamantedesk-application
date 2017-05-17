@@ -154,28 +154,28 @@ diamante_front:
       error:
         required: Darf nicht leer sein
     template:
-      empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
-      empty_search: There are no tickets matching your criteria.
-      empty_view: This ticket doesn't exist!
+      empty_list: Sie haben noch keine Tickets erstellt.<br>Klicken Sie <a href="%{url}">+</a>, um ein neues zu erstellen.
+      empty_search: Es gibt keine Tickets, die Ihren Kriterien entsprechen.
+      empty_view: Dieses Ticket existiert nicht!
       form:
-        subject_label: Ticket Subject
-        subject_placeholder: Short ticket summary
+        subject_label: Ticket-Betreff
+        subject_placeholder: Ticket-Kurzzusammenfassung
         description_label: Beschreibung
-        description_placeholder: Provide a detailed description of your support request
+        description_placeholder: Stellen Sie eine detaillierte Beschreibung Ihrer Anfrage bereit
         priority_label: Priority
-        low_option: Low
-        medium_option: Medium
-        high_option: High
+        low_option: Niedrig
+        medium_option: Mittel
+        high_option: Hoch
       list:
         key: Key
         date: Date
         subject: Subject
         priority: Priority
         status: Status
-      resolve_button: Resolve Ticket
-      reopen_button: Reopen Ticket
+      resolve_button: Ticket lösen
+      reopen_button: Ticket wiedereröffnen
     view:
-      all_tickets: View all tickets
+      all_tickets: Alle Tickets anzeigen
     router:
       view_ticket: View Ticket
       create_ticket: Create Ticket
@@ -183,11 +183,11 @@ diamante_front:
   user:
     controller:
       message:
-        update_success: You have successfully updated your profile
+        update_success: Sie haben erfolgreich Ihr Profil aktualisiert
       alert:
         edit_error:
-          title: Edit User Error
-      edit_user: Edit User
+          title: Benutzerfehler bearbeiten
+      edit_user: Benutzer bearbeiten
     model:
       error:
         required: Darf nicht leer sein
@@ -198,24 +198,24 @@ diamante_front:
         last_name_label: Nachname
         email_label: E-Mail
         password_label: Neues Passwort
-        submit_button: Submit
-      logout: Log Out
+        submit_button: Absenden
+      logout: Ausloggen
   watcher:
     controller:
       alert:
         add_error:
-          title: Add Watcher Error
+          title: Beobachtungs-Fehler hinzufügen
         delete_comment_error:
           title: Kommentarfehler löschen
       message:
-        add_success: A new watcher has been successfully added to the ticket
-        remove_success: A watcher has been removed from the ticket
+        add_success: Ein neuer Beobachter wurde erfolgreich zum Ticket hinzugefügt
+        remove_success: Ein Beobachter wurde vom Ticket entfernt
       add_watcher: Add Watcher
     model:
       error:
         required: Darf nicht leer sein
         email_format: '%{email} ist keine gültige E-Mail-Adresse'
     template:
-      email_watcher: Watcher Email
-      remove_watcher: Remove Watcher
+      email_watcher: E-Mail des Beobachters
+      remove_watcher: Beobachter entfernen
       add_watcher: Add Watcher
