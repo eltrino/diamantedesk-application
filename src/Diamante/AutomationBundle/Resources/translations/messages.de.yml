@@ -18,17 +18,17 @@ diamante:
           query: Sind Sie sicher, dass Sie diese Rolle löschen wollen?
           success: Regel erfolgreich gelöscht.
       status:
-        active: Active
-        inactive: Inactive
+        active: Aktiv
+        inactive: Inaktiv
       actions:
-        add: Add Rule
-        view: View Rule
-        edit: Edit Rule
-        delete: Delete Rule
+        add: Regel hinzufügen
+        view: Regel anzeigen
+        edit: Regel ändern
+        delete: Regel löschen
         mass:
-          remove: Remove Rules
-          activate: Activate Rules
-          deactivate: Deactivate Rules
+          remove: Regeln entfernen
+          activate: Aktive Regeln
+          deactivate: Regeln deaktiviern
           response:
             activate:
               success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
