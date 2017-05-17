@@ -71,23 +71,23 @@ diamante:
       since_status_updated.label: Since status updated
       since_assignee_updated.label: Since assignee updated
       columns:
-        key: Key
+        key: Schlüssel
         subject: Subject
         branch: Abteilung
-        assignee: Assignee
+        assignee: Bearbeiter
         reporter: Reporter
         priority: Priority
         status: Status
-        created: Created
-        updated: Updated
+        created: Erstellt
+        updated: Aktualisiert
       actions:
-        add: Add Ticket
-        edit: Edit Ticket
-        view: View Ticket
-        remove: Delete Ticket
-        delete: Delete
-        assign: Assign
-        create: Create Ticket
+        add: Ticket hinzufügen
+        edit: Ticket bearbeiten
+        view: Ticket anzeigen
+        remove: Ticket löschen
+        delete: Löschen
+        assign: Zuordnen
+        create: Ticket erstellen
         change_status: Change Status
         move: Move
         watch: Watch
@@ -99,7 +99,7 @@ diamante:
           success: Ticket successfully created.
         save:
           error: Error occurred while saving the ticket.
-          success: Ticket successfully saved.
+          success: Ticket erfolgreich gespeichert.
         delete:
           query: Are you sure you want to delete this ticket?
           error: Error occurred while deleting the ticket.
@@ -179,7 +179,7 @@ diamante:
         delete_file: Delete File
         add: Add Attachment
         download: Download
-        remove: Delete
+        remove: Löschen
         attach: Attach File
       messages:
         create:
@@ -214,25 +214,25 @@ diamante:
         unwatch:
           success: You have successfully unsubscribed from watching the ticket.
     ui:
-      create: Create
+      create: Erstellen
       ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
-      edit: Edit
-      add: Add
-      change: Change
+      cancel: Abbrechen
+      save: Speichern
+      delete: Löschen
+      save_and_close: Speichern und schließen
+      edit: Bearbeiten
+      add: Hinzufügen
+      change: Ändern
       select_watcher: Select User
     common:
-      general: General
+      general: Allgemein
       description: Beschreibung
-      created: Created
-      updated: Updated
-      not_available: N/A
-      not_defined: Not defined
+      created: Erstellt
+      updated: Aktualisiert
+      not_available: NV
+      not_defined: Nicht definiert
       no_description: No description
-      delete_confirmation: Confirm Deletion
+      delete_confirmation: Löschen bestätigen
       filters: Filters
       watchers: Watchers
       messages:
@@ -243,7 +243,7 @@ diamante:
       default_assignee: Default Assignee
       logoFile: Logo
       tags: Tags
-      key: Key
+      key: Schlüssel
     attributes:
       name: Name
       subject: Subject
@@ -253,9 +253,9 @@ diamante:
       source: Source
       reporter: Reporter
       default_assignee: Default Assignee
-      assignee: Assignee
+      assignee: Bearbeiter
       watcher: Watcher
-      key: Key
+      key: Schlüssel
     email:
       configuration: Email Configuration
     dashboard:
