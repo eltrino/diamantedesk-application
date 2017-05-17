@@ -3,12 +3,12 @@ title: DiamanteDesk Anwendungsinstallation
 process:
   step:
     diamanteinstall:
-      header: Initialization
+      header: Initialisierung
     installation:
-      cache: Clear cache before database initialization
-      clear-config: Clear entities cache
-      clear-extend: Clear extended entities data
-      schema-drop: Drop current schema
+      cache: Leeren Sie den Cache vor der Datenbank-Initialisierung
+      clear-config: Entitäts-Cache leeren
+      clear-extend: Erweiterte Entitäts-Daten löschen
+      schema-drop: Aktuelles Schema löschen
       schema-update: Schema update
       fixtures: Load fixtures
       workflows: Load workflow definitions
