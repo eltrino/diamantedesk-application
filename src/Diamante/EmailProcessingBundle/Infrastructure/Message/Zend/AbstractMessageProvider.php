@@ -84,6 +84,8 @@ abstract class AbstractMessageProvider
             $email = $matches['namedEmail'];
         }
 
+        $email = trim($email);
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new \RuntimeException(sprintf('This %s email address is considered invalid.'), $email);
         }
