@@ -103,6 +103,7 @@ class DiamanteDeskBundle extends Bundle
             ->addCompilerPass(new Compiler\RegisterSubscribersPass())
             ->addCompilerPass(new Compiler\RegisterNotificationOptionsProvidersPass())
             ->addCompilerPass(new Compiler\FilterTypesPass())
-            ->addCompilerPass(new Compiler\RegisterPropertyHandlersPass());
+            ->addCompilerPass(new Compiler\RegisterPropertyHandlersPass())
+            ->addCompilerPass(new Compiler\AssetExtensionPass());
     }
 }
