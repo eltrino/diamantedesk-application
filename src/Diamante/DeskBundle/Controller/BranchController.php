@@ -59,7 +59,6 @@ class BranchController extends Controller
     {
         try {
             $branch = $this->get('diamante.branch.service')->getBranch($id);
-            $this->container->get('oro_tag.tag.manager')->loadTagging($branch);
 
             return ['entity' => $branch];
         } catch (\Exception $e) {
