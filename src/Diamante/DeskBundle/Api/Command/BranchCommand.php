@@ -16,11 +16,10 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Oro\Bundle\TagBundle\Entity\Taggable;
 use Symfony\Component\Validator\Constraints as Assert;
 use Diamante\DeskBundle\Validator\Constraints\Any;
 
-class BranchCommand implements Taggable, Shared\Command
+class BranchCommand implements Shared\Command
 {
     const PERSISTENT_ENTITY = 'Diamante\DeskBundle\Entity\Branch';
 
@@ -59,10 +58,10 @@ class BranchCommand implements Taggable, Shared\Command
      */
     public $description;
 
-    /**
-     * @Assert\Type(type="array")
-     */
-    public $tags;
+//    /**
+//     * @Assert\Type(type="array")
+//     */
+//    public $tags;
 
     /**
      * @Assert\File(
@@ -87,44 +86,6 @@ class BranchCommand implements Taggable, Shared\Command
      */
     public $removeLogo;
 
-    public function __construct()
-    {
-        $this->tags = new ArrayCollection();
-    }
-
-    /**
-     * Returns the unique taggable resource identifier
-     *
-     * @return string
-     */
-    public function getTaggableId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set tag collection
-     *
-     * @param $tags
-     * @return $this
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
-    }
-
-    /**
-     * Returns the collection of tags for this Taggable entity
-     *
-     * @return ArrayCollection
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
     public static function fromBranch(Branch $branch)
     {
         $command                  = new self();
@@ -132,7 +93,6 @@ class BranchCommand implements Taggable, Shared\Command
         $command->name            = $branch->getName();
         $command->description     = $branch->getDescription();
         $command->defaultAssignee = $branch->getDefaultAssignee();
-        $command->tags            = $branch->getTags();
         $command->logoFile        = null;
         $command->logo            = $branch->getLogo();
         return $command;

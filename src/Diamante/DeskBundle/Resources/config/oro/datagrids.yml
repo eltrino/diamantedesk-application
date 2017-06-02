@@ -1,5 +1,6 @@
 datagrids:
     diamante-branch-grid:
+        extended_entity_name: %diamante.branch.entity.class%
         source:
             type: orm
             query:
@@ -9,7 +10,7 @@ datagrids:
                     - b.logo
                     - b.key
                 from:
-                    - { table: %diamante.branch.entity.class%, alias: b }
+                    - { table: DiamanteDeskBundle:Branch, alias: b }
         properties:
             id: ~
             view_link:
@@ -38,6 +39,8 @@ datagrids:
                 key:
                     type: string
                     data_name: b.key
+        inline_editing:
+            enable: true
         columns:
             logo:
                 label: diamante.desk.branch.columns.logo
@@ -46,11 +49,11 @@ datagrids:
                 template: DiamanteDeskBundle:Branch:Datagrid/Property/logo.html.twig
             name:
                 label: diamante.desk.branch.columns.branch_name
-                type: twig
-                frontend_type: html
-                template: DiamanteDeskBundle:Branch:Datagrid/Property/name.html.twig
             key:
                 label: diamante.desk.branch.columns.branch_key
+                editable: false
+                inline_editing:
+                    enable: false
         actions:
             view:
                 type:          navigate

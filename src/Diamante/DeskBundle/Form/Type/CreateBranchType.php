@@ -79,13 +79,13 @@ class CreateBranchType extends AbstractType
         );
 
         // tags
-        $builder->add(
-            'tags',
-            'oro_tag_select',
-            array(
-                'label' => 'oro.tag.entity_plural_label'
-            )
-        );
+//        $builder->add(
+//            'tags',
+//            'oro_tag_select',
+//            array(
+//                'label' => 'oro.tag.entity_plural_label'
+//            )
+//        );
     }
 
     /**

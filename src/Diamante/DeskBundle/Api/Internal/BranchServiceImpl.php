@@ -127,8 +127,7 @@ class BranchServiceImpl implements BranchService
                 $branchCommand->description,
                 $branchCommand->key,
                 $assignee,
-                $logo,
-                $branchCommand->tags
+                $logo
             );
 
         $this->registry->getManager()->persist($branch);

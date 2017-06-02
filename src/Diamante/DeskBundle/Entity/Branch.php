@@ -29,7 +29,10 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *              "type"="ACL",
  *              "group_name"="DiamanteDesk"
  *          },
- *         "dataaudit"={"auditable"=true}
+ *         "dataaudit"={"auditable"=true},
+ *          "tag"={
+ *              "enabled"=true
+ *          }
  *      }
  * )
  */
@@ -117,11 +120,6 @@ class Branch extends \Diamante\DeskBundle\Model\Branch\Branch
      * @ORM\Column(name="number", type="integer")
      */
     protected $sequenceNumber = 1;
-
-    /**
-     * @var ArrayCollection
-     */
-    protected $tags;
 
     /**
      * @var \DateTime

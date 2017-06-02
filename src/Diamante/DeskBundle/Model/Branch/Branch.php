@@ -16,11 +16,9 @@ namespace Diamante\DeskBundle\Model\Branch;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Property;
-use Doctrine\Common\Collections\ArrayCollection;
-use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User;
 
-class Branch implements Taggable, Entity, Property
+class Branch implements Entity, Property
 {
     /**
      * @var integer
@@ -59,11 +57,6 @@ class Branch implements Taggable, Entity, Property
     protected $sequenceNumber;
 
     /**
-     * @var ArrayCollection
-     */
-    protected $tags;
-
-    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -78,20 +71,13 @@ class Branch implements Taggable, Entity, Property
         $name,
         $description,
         User $defaultAssignee = null,
-        Logo $logo = null,
-        $tags = null
+        Logo $logo = null
     ) {
-        mb_internal_encoding('UTF-8');
-        if (mb_strtoupper($key) != $key) {
-            $key = mb_strtoupper($key);
-        }
-
         $this->key = $key;
         $this->name = $name;
         $this->description = $description;
         $this->defaultAssignee = $defaultAssignee;
         $this->logo = $logo;
-        $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->updatedAt = clone $this->createdAt;
     }
@@ -209,47 +195,6 @@ class Branch implements Taggable, Entity, Property
             $this->logo = $logo;
         }
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
-    }
-
-    /**
-     * Returns the unique taggable resource identifier
-     *
-     * @return string
-     */
-    public function getTaggableId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Returns the collection of tags for this Taggable entity
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTags()
-    {
-        $this->tags = $this->tags ?: new ArrayCollection();
-        return $this->tags;
-    }
-
-    /**
-     * Set tag collection
-     *
-     * @param $tags
-     * @return $this
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
-    }
-
-    public function setName($tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
     }
 
     public function setSequenceNumber($sequenceNumber)

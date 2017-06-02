@@ -1,6 +1,5 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as macros %}
-{% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 {% import 'OroEmailBundle::macros.html.twig' as EA %}
 
@@ -72,7 +71,6 @@
 
     {% set defaultAssigneeFullName = entity.defaultAssignee ? entity.defaultAssignee|oro_format_name : 'diamante.desk.common.not_defined'|trans %}
     {% set dataSubBlocks = dataSubBlocks|merge([UI.attibuteRow('diamante.desk.forms.default_assignee'|trans, defaultAssigneeFullName)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
     {% set dataBlocks =
         [{
