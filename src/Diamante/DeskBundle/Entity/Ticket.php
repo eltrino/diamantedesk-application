@@ -34,7 +34,10 @@ use Diamante\UserBundle\Model\User as UserModel;
  *              "permissions"="VIEW;CREATE;EDIT;DELETE",
  *              "group_name"="DiamanteDesk"
  *          },
- *         "dataaudit"={"auditable"=true}
+ *         "dataaudit"={"auditable"=true},
+ *          "tag"={
+ *              "enabled"=true
+ *          }
  *      }
  * )
  */
@@ -228,11 +231,6 @@ class Ticket extends \Diamante\DeskBundle\Model\Ticket\Ticket
      * )
      */
     protected $source;
-
-    /**
-     * @var ArrayCollection
-     */
-    protected $tags;
 
     public static function getClassName()
     {

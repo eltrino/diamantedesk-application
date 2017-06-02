@@ -24,10 +24,9 @@ use Diamante\UserBundle\Model\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\TagBundle\Entity\Taggable;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
-class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
+class Ticket implements Entity, AttachmentHolder, Updatable, Owned
 {
     const UNASSIGNED_LABEL = 'Unassigned';
 
@@ -130,11 +129,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
     protected $assignedSince;
 
     /**
-     * @var ArrayCollection
-     */
-    protected $tags;
-
-    /**
      * @param UniqueId $uniqueId
      * @param TicketSequenceNumber $sequenceNumber
      * @param $subject
@@ -145,7 +139,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
      * @param Source $source
      * @param Priority $priority
      * @param Status $status
-     * @param ArrayCollection|null $tags
      */
     public function __construct(
         UniqueId $uniqueId,
@@ -157,8 +150,7 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         OroUser $assignee = null,
         Source $source,
         Priority $priority,
-        Status $status,
-        $tags = null
+        Status $status
     ) {
         $this->uniqueId = $uniqueId;
         $this->sequenceNumber = $sequenceNumber;
@@ -174,7 +166,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         $this->watcherList = new ArrayCollection();
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->source = $source;
-        $this->tags = is_null($tags) ? new ArrayCollection() : $tags;
     }
 
     /**
@@ -389,40 +380,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         return null;
     }
 
-    /**
-     * Returns the unique taggable resource identifier
-     *
-     * @return string
-     */
-    public function getTaggableId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Returns the collection of tags for this Taggable entity
-     *
-     * @return ArrayCollection
-     */
-    public function getTags()
-    {
-        $this->tags = $this->tags ?: new ArrayCollection();
-        return $this->tags;
-    }
-
-    /**
-     * Set tag collection
-     *
-     * @param $tags
-     * @return $this
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
-    }
-
     public function postNewComment(Comment $comment)
     {
         $this->comments->add($comment);
@@ -446,8 +403,7 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         Priority $priority,
         Status $status,
         Source $source,
-        OroUser $assignee = null,
-        $tags
+        OroUser $assignee = null
     ) {
         $this->subject     = $subject;
         $this->description = $description;
@@ -455,7 +411,6 @@ class Ticket implements Entity, AttachmentHolder, Taggable, Updatable, Owned
         $this->priority    = $priority;
         $this->source      = $source;
         $this->updatedAt   = new \DateTime('now', new \DateTimeZone('UTC'));
-        $this->tags        = $tags;
 
         $this->processUpdateStatus($status);
 

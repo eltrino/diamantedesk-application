@@ -88,11 +88,6 @@ class CommonTicketBuilder implements TicketBuilder
      */
     private $status;
 
-    /**
-     * @var ArrayCollection|array
-     */
-    private $tags;
-
     public function __construct(TicketFactory $factory, Repository $branchRepository, UserService $userService)
     {
         $this->factory = $factory;
@@ -214,17 +209,6 @@ class CommonTicketBuilder implements TicketBuilder
     }
 
     /**
-     * @param ArrayCollection|null|array $tags
-     * @return $this
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-        return $this;
-    }
-
-
-    /**
      * @return void
      */
     private function initializeDefaultValues()
@@ -248,10 +232,6 @@ class CommonTicketBuilder implements TicketBuilder
         if (is_null($this->status)) {
             $this->status = new Status(Status::NEW_ONE);
         }
-
-        if (is_null($this->tags)) {
-            $this->tags = new ArrayCollection();
-        }
     }
 
     /**
@@ -267,7 +247,7 @@ class CommonTicketBuilder implements TicketBuilder
                 ->create(
                     $this->uniqueId, $this->sequenceNumber, $this->subject, $this->description,
                     $this->branch, $this->reporter, $this->assignee,
-                    $this->priority, $this->source, $this->status, $this->tags
+                    $this->priority, $this->source, $this->status
                 );
 
         $this->clearBuilderValues();
@@ -290,6 +270,5 @@ class CommonTicketBuilder implements TicketBuilder
         $this->priority = null;
         $this->source = null;
         $this->status = null;
-        $this->tags = null;
     }
 } 

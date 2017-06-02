@@ -1,6 +1,5 @@
 {% extends 'OroUIBundle:actions:view.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as macros %}
-{% import 'OroTagBundle::macros.html.twig' as _tag %}
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 {% import 'DiamanteDeskBundle:UI:macros.html.twig' as DiamUI %}
 {% oro_title_set({params : {"%ticket.key%": ticketKey, "%ticket.subject%": entity.subject}}) %}
@@ -308,7 +307,6 @@
     {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.source'|trans, entity.source.getLabel)]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.reporter'|trans, reporterDisplayName, '', {valueCss: reporterModel.isDeleted ? 'deleted-reporter' : ''})]) %}
     {% set dataSubBlocks = dataSubBlocks|merge([DiamUI.attributeRow('diamante.desk.attributes.assignee'|trans, entity.assignee ? entity.assignee|oro_format_name : entity.unassignedLabel|trans)]) %}
-    {% set dataSubBlocks = dataSubBlocks|merge([UI.renderHtmlProperty('oro.tag.entity_plural_label'|trans, _tag.renderView(entity))]) %}
 
     {% set attachmentListWidget %}
         {{ oro_widget_render({

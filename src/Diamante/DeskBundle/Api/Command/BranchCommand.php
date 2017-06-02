@@ -58,11 +58,6 @@ class BranchCommand implements Shared\Command
      */
     public $description;
 
-//    /**
-//     * @Assert\Type(type="array")
-//     */
-//    public $tags;
-
     /**
      * @Assert\File(
      *              mimeTypes={"image/jpeg","image/png"},

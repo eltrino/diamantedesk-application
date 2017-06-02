@@ -136,15 +136,6 @@ class CreateTicketType extends AbstractType
                 'required' => false
             )
         );
-
-        // tags
-        $builder->add(
-            'tags',
-            'oro_tag_select',
-            array(
-                'label' => 'oro.tag.entity_plural_label'
-            )
-        );
     }
 
     /**

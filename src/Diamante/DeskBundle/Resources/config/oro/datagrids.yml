@@ -39,8 +39,10 @@ datagrids:
                 key:
                     type: string
                     data_name: b.key
+
         inline_editing:
             enable: true
+
         columns:
             logo:
                 label: diamante.desk.branch.columns.logo
@@ -106,6 +108,7 @@ datagrids:
                 status: { value: ['@diamante.ticket.datagrid_status_helper->getNewStatus', '@diamante.ticket.datagrid_status_helper->getOpenStatus'] }
 
     diamante-ticket-grid:
+        extended_entity_name: %diamante.ticket.entity.class%
         source:
             type: orm
             query:
@@ -142,31 +145,52 @@ datagrids:
                 route:      diamante_ticket_delete
                 params:     [ key ]
 
+        inline_editing:
+            enable: true
+
         columns:
             status:
                 label:   diamante.desk.ticket.columns.status
+                editable: false
+                inline_editing:
+                    enable: false
             priority:
                 label:   diamante.desk.ticket.columns.priority
+                editable: false
+                inline_editing:
+                    enable: false
             key:
                 label:   diamante.desk.ticket.columns.key
+                editable: false
+                inline_editing:
+                    enable: false
             subject:
                 label: diamante.desk.ticket.columns.subject
-                type: twig
-                frontend_type: html
-                template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
             branchName:
                 label:   diamante.desk.ticket.columns.branch
+                editable: false
+                inline_editing:
+                    enable: false
             assigneeFullName:
                 label:   diamante.desk.ticket.columns.assignee
                 type:    assignee
+                editable: false
+                inline_editing:
+                    enable: false
 #            reporterFullName:
 #                label:   diamante.desk.ticket.columns.reporter
             createdAt:
                 label:   diamante.desk.ticket.columns.created
                 frontend_type: datetime
+                editable: false
+                inline_editing:
+                    enable: false
             updatedAt:
                 label:   diamante.desk.ticket.columns.updated
                 frontend_type: datetime
+                editable: false
+                inline_editing:
+                    enable: false
 
         sorters:
             columns:
@@ -519,9 +543,6 @@ datagrids:
                 template: DiamanteDeskBundle:Ticket:Datagrid/Property/key_link.html.twig
             subject:
                 label: diamante.desk.ticket.columns.subject
-                type: twig
-                frontend_type: html
-                template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
         properties:
             id: ~
         options:
@@ -572,9 +593,6 @@ datagrids:
                 label:   diamante.desk.ticket.columns.key
             subject:
                 label: diamante.desk.ticket.columns.subject
-                type: twig
-                frontend_type: html
-                template: DiamanteDeskBundle:Ticket:Datagrid/Property/subject.html.twig
             status:
                 label:   diamante.desk.ticket.columns.status
             createdAt:
