@@ -24,7 +24,7 @@ class AppKernel extends OroKernel
             $bundles[] = new Oro\Bundle\TestFrameworkBundle\OroTestFrameworkBundle();
         }
 
-        $bundles[] = new JMS\JobQueueBundle\JMSJobQueueBundle();
+//        $bundles[] = new JMS\JobQueueBundle\JMSJobQueueBundle();
 
         return array_merge(parent::registerBundles(), $bundles);
     }
