@@ -37,11 +37,12 @@ class UserController extends FOSRestController
      */
     public function registerAction()
     {
+        $request = $this->get('request_stack')->getCurrentRequest();
         $command = new RegisterCommand();
-        $command->email = $this->getRequest()->get('email');
-        $command->password = $this->getRequest()->get('password');
-        $command->firstName = $this->getRequest()->get('first_name');
-        $command->lastName = $this->getRequest()->get('last_name');
+        $command->email = $request->get('email');
+        $command->password = $request->get('password');
+        $command->firstName = $request->get('first_name');
+        $command->lastName = $request->get('last_name');
 
         $errors = $this->get('validator')->validate($command);
 

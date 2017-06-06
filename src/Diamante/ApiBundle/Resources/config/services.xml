@@ -28,6 +28,8 @@
 
         <parameter key="diamante.api.headers.container.class">Symfony\Component\HttpFoundation\ResponseHeaderBag</parameter>
         <parameter key="diamante.api.paging.provider.class">Diamante\ApiBundle\Paging\Provider\PagingContextProvider</parameter>
+        <parameter key="wsse.security.authentication.listener.class">Diamante\ApiBundle\Security\Firewall\WsseListener</parameter>
+        <parameter key="wsse.security.authentication.provider.class">Diamante\ApiBundle\Security\Authentication\Provider\WsseProvider</parameter>
     </parameters>
 
     <services>
@@ -45,16 +47,14 @@
             <argument>%kernel.cache_dir%/security/nonces</argument>
         </service>
 
-        <service id="wsse.security.authentication.provider"
-                 class="Diamante\ApiBundle\Security\Authentication\Provider\WsseProvider" public="false">
+        <service id="wsse.security.authentication.provider" class="%wsse.security.authentication.provider.class%" public="false">
             <argument /> <!-- User Provider -->
             <argument type="service" id="wsse.security.cache.provider" />
             <argument type="service" id="security.encoder_factory" />
             <argument type="service" id="monolog.logger.diamante"/>
         </service>
 
-        <service id="wsse.security.authentication.listener"
-                 class="Diamante\ApiBundle\Security\Firewall\WsseListener" public="false">
+        <service id="wsse.security.authentication.listener" class="%wsse.security.authentication.listener.class%" public="false">
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.authentication.manager" />
