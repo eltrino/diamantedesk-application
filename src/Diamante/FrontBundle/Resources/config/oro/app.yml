@@ -14,3 +14,6 @@ security:
             pattern:        ^/portal/password/*
             provider:       chain_provider
             anonymous:      true
+        # add diamante uri to exception to fix portal log in
+        api_wsse_secured:
+            pattern: ^/api/(?!(diamante|rest|doc)($|/.*))
