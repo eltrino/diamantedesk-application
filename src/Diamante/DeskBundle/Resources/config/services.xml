@@ -212,26 +212,6 @@
             <tag name="kernel.event_listener" event="oro_config.settings_before_save" method="beforeSave"/>
         </service>
 
-        <!--<service id="diamante.loggable.loggable_manager" class="%diamante.loggable.loggable_manager.class%">-->
-            <!--<argument>%diamante.loggable.entity.class%</argument>-->
-            <!--<argument>%diamante.loggable.entity_field.class%</argument>-->
-            <!--<argument id="oro_entity_config.provider.dataaudit" type="service"/>-->
-            <!--<argument id="security.context.link" type="service"/>-->
-            <!--<argument id="diamante.loggable.loggable_mapper" type="service"/>-->
-            <!--<argument id="service_container" type="service"/>-->
-        <!--</service>-->
-
-        <service id="diamante.loggable.loggable_mapper" class="%diamante.loggable.loggable_mapper.class%">
-            <call method="addAuditEntryClass">
-                <argument>%diamante.user.entity.class%</argument>
-                <argument>%diamante.loggable.entity.class%</argument>
-            </call>
-            <call method="addAuditEntryFieldClass">
-                <argument>%diamante.user.entity.class%</argument>
-                <argument>%diamante.loggable.entity_field.class%</argument>
-            </call>
-        </service>
-
         <service id="diamante.audit_datagrid.configuration.provider" class="%diamante.audit_datagrid.configuration.provider.class%">
             <argument id="oro_datagrid.configuration.provider" type="service"/>
             <tag name="oro_datagrid.configuration.provider" />

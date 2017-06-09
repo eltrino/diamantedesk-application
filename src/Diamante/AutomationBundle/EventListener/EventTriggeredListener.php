@@ -154,7 +154,9 @@ class EventTriggeredListener
         }
 
         if ($disableListeners) {
-            $em->getEventManager()->disableListeners();
+            // disable all listeners except Oro\Bundle\DataAuditBundle\EventListener\SendChangedEntitiesToMessageQueueListener
+            // this listener needs for dataaudit entity save
+            $em->getEventManager()->disableListeners('^((?!SendChangedEntitiesToMessageQueueListener).)*$');
         }
 
         $this->queueManager->setEntityManager($em);
