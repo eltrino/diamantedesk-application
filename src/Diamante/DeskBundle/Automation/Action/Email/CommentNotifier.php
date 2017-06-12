@@ -19,6 +19,7 @@ use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
 use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
 use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
 use Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl;
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 
@@ -99,15 +100,17 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
         $target = $this->fact->getTarget();
         $emails = $this->getEmailList();
         $provider = $this->getProvider();
-        $options = $this->getOptions();
         $editor = $this->fact->getEditor();
         $editor = $this->container->get('diamante.user.service')->getByUser($editor);
         $ticketId = $target['ticket']->getId();
+        $ticket = null;
 
         if (!is_null($ticketId)) {
             $ticket = $this->container->get('diamante.ticket.repository')->get($ticketId);
             $this->notificationManager->setTicket($ticket);
         }
+
+        $options = $this->getOptions($ticket);
 
         foreach ($emails as $email) {
             if ($this->fact->getAction() == EventTriggeredListener::UPDATED && !array_key_exists('changes', $options)) {
@@ -130,12 +133,21 @@ class CommentNotifier extends AbstractEntityNotifier implements EntityNotifier
     }
 
     /**
+     * @param Ticket|null $ticket
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(Ticket $ticket = null)
     {
         $target = $this->fact->getTarget();
-        $options = ['ticketKey' => $target['ticket']->getKey()];
+
+        // get actual key if it was moved by previous action
+        if (is_null($ticket)) {
+            $key = $target['ticket']->getKey();
+        } else {
+            $key = $ticket->getKey();
+        }
+
+        $options = ['ticketKey' => $key];
 
         $changesetDiff = $this->changeset->getDiff();
         if (!empty($changesetDiff)) {

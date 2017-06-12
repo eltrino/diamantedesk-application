@@ -42,6 +42,9 @@ class Scheduler
      */
     public function run(AbstractFact $fact)
     {
+        // first move to branch and only then notify by email
+        asort($this->queue);
+
         foreach ($this->queue as $action) {
             try {
                 $action->getContext()->setFact($fact);

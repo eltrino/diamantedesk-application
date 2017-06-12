@@ -19,6 +19,7 @@ use Diamante\AutomationBundle\Automation\Action\Email\AbstractEntityNotifier;
 use Diamante\AutomationBundle\Automation\Action\Email\EntityNotifier;
 use Diamante\AutomationBundle\EventListener\EventTriggeredListener;
 use Diamante\DeskBundle\Api\Internal\AttachmentServiceImpl;
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\DeskBundle\Model\Ticket\TicketKey;
@@ -70,10 +71,18 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
         return sprintf($pattern, $targetType, $action);
     }
 
-    protected function getOptions()
+    protected function getOptions(Ticket $ticket = null)
     {
         $target = $this->fact->getTarget();
-        $options = ['ticketKey' => new TicketKey($target['branch']->getKey(), $target['sequenceNumber']->getValue())];
+
+        // get actual key if it was moved by previous action
+        if (is_null($ticket)) {
+            $key = new TicketKey($target['branch']->getKey(), $target['sequenceNumber']->getValue());
+        } else {
+            $key = $ticket->getKey();
+        }
+
+        $options = ['ticketKey' => $key];
 
         $changesetDiff = $this->changeset->getDiff();
         if (!empty($changesetDiff)) {
@@ -100,42 +109,50 @@ class TicketNotifier extends AbstractEntityNotifier implements EntityNotifier
         return $options;
     }
 
+    /**
+     * @return bool
+     */
     public function notify()
     {
+        if (!$this->isChanged()) {
+            return false;
+        }
+
+        $target = $this->fact->getTarget();
+        $ticket = null;
+        $ticketId = $target['id'];
+
+        if (!is_null($ticketId)) {
+            $ticket = $this->container->get('diamante.ticket.repository')->get($ticketId);
+            $this->notificationManager->setTicket($ticket);
+        }
+
         $emails = $this->getEmailList();
         $provider = $this->getProvider();
-        $options = $this->getOptions();
-        $target = $this->fact->getTarget();
+        $options = $this->getOptions($ticket);
         $editor = $this->fact->getEditor();
         $editor = $this->container->get('diamante.user.service')->getByUser($editor);
         $editorName = $this->userService->getFullName($editor);
 
-        if ($this->isChanged()) {
-            $ticketId = $target['id'];
+        foreach ($emails as $email) {
+            $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
+            $options = array_merge(
+                $options,
+                [
+                    'recipient' => $recipient,
+                    'editor' => $editorName,
+                    'target' => $target
+                ]
+            );
 
-            if (!is_null($ticketId)) {
-                $ticket = $this->container->get('diamante.ticket.repository')->get($ticketId);
-                $this->notificationManager->setTicket($ticket);
+            if ($recipient instanceof DiamanteUser) {
+                $options = $this->filterDiamanteUserOptions($options);
             }
 
-            foreach ($emails as $email) {
-                $recipient = $this->container->get('diamante.user.service')->getUserInstanceByEmail($email);
-                $options = array_merge(
-                    $options,
-                    [
-                        'recipient' => $recipient,
-                        'editor'    => $editorName,
-                        'target'    => $target
-                    ]
-                );
-
-                if ($recipient instanceof DiamanteUser) {
-                    $options = $this->filterDiamanteUserOptions($options);
-                }
-
-                $this->notificationManager->notifyByScenario($provider, $recipient, $options);
-            }
+            $this->notificationManager->notifyByScenario($provider, $recipient, $options);
         }
+
+        return true;
     }
 
     /**
