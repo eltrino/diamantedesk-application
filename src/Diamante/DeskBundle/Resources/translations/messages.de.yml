@@ -12,7 +12,7 @@ diamante:
       logo.label: Abteilungslogo
       name.label: Abteilungsname
       updated_at.label: Aktualisiert am
-      default_assignee.label: Default Assignee
+      default_assignee.label: Standard Zessionar
       columns:
         logo: Logo
         branch_name: Abteilungsname
@@ -25,11 +25,11 @@ diamante:
         remove_mass: Abteilungen löschen
       messages:
         create:
-          error: Error occurred while creating a branch. Branch is not created. Enter all the required data and try again.
-          success: Branch successfully created.
+          error: Fehler beim Erstellen einer Verzweigung. Zweig wird nicht erstellt. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
+          success: Zweig erfolgreich erstellt.
         save:
-          error: Error occurred while saving the branch. Branch is not saved. Enter all the required data and try again.
-          success: Branch successfully saved.
+          error: Fehler beim Speichern der Branche. Zweig wird nicht gespeichert. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
+          success: Zweig erfolgreich gespeichert.
         delete:
           query: WARNING! Are you sure you want to delete this branch with ALL tickets assigned to it?
           success: Branch successfully deleted.
@@ -240,7 +240,7 @@ diamante:
           failed: Form is invalid. Fill out all required fields correctly.
     forms:
       name: Name
-      default_assignee: Default Assignee
+      default_assignee: Standard Zessionar
       logoFile: Logo
       tags: Tags
       key: Schlüssel
@@ -252,7 +252,7 @@ diamante:
       priority: Priorität
       source: Quelle
       reporter: Reporter
-      default_assignee: Default Assignee
+      default_assignee: Standard Zessionar
       assignee: Bearbeiter
       watcher: Watcher
       key: Schlüssel
