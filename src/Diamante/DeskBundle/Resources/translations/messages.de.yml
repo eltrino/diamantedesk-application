@@ -53,18 +53,18 @@ diamante:
       description.label: Beschreibung
       id.label: Ticket ID
       priority.label: Priorität
-      reporter_email.label: Reporter Email
-      assignee.label: Assigner
+      reporter_email.label: Reporter-E-Mail
+      assignee.label: Auftraggeber
       branch.label: Abteilung
       comments.label: Kommentare
-      sequence_number.label: Sequence Number
+      sequence_number.label: Laufende Nummer
       source.label: Quelle
       status.label: Status
       subject.label: Betreff
       unique_id.label: Eindeutige ID
       updated_at.label: Aktualisiert am
       attachments.label: Anhänge
-      watcher_list.label: Watcher List
+      watcher_list.label: Beobachterliste
       created_via_email.label: Created via email to
       since_created.label: Since created
       since_updated.label: Since updated
@@ -168,23 +168,23 @@ diamante:
     attachment:
       entity_label: Attachment
       entity_plural_label: Anhänge
-      file: File
-      image: Image
-      created_at.label: Created at
-      file.label: File
+      file: Datei
+      image: Bild
+      created_at.label: Erstellt am
+      file.label: Datei
       hash.label: Hash
       id.label: Id
       updated_at.label: Updated at
       actions:
-        delete_file: Delete File
-        add: Add Attachment
+        delete_file: Datei löschen
+        add: Anlage hinzufügen
         download: Download
         remove: Löschen
-        attach: Attach File
+        attach: Datei hinzufügen
       messages:
         create:
-          error: Error occured while uploading an attachment.
-          success: Attachment(s) successfully uploaded.
+          error: Fehler beim Hochladen einer Anlage.
+          success: Anlage(n) wurde(n) erfolgreich hochgeladen.
         delete:
           error: Unable to remove attachment.
           success: Attachment successfully deleted.
@@ -286,7 +286,7 @@ diamante:
       reopen.label: Reopen
       solved.label: Solved
     watcherlist:
-      entity_label: Watcher List
+      entity_label: Beobachterliste
       entity_plural_label: Watcher Lists
       id.label: Id
       ticket.label: Ticket
@@ -296,17 +296,17 @@ diamante:
         move_to_branch: Move to branch
       notification:
         ticket:
-          created: Ticket was created
-          updated: Ticket was updated
-          removed: Ticket was removed
+          created: Ticket wurde erstellt
+          updated: Ticket wurde aktualisiert
+          removed: Ticket wurde entfernt
         comment:
-          created: Comment was created
-          updated: Comment was updated
-          removed: Comment was removed
+          created: Kommentar wurde erstellt
+          updated: Kommentar wurde aktualisiert
+          removed: Kommentar wurde entfernt
           private:
-            created: Private comment was created
-            updated: Private comment was updated
-            removed: Private comment was removed
+            created: Privater Kommentar erstellt wurde
+            updated: Privater Kommentar wurde aktualisiert
+            removed: Privater Kommentar wurde entfernt
 oro:
   entity_extend:
     form:
@@ -316,7 +316,7 @@ oro:
         source: Quelle
         status: Status
         priority: Priorität
-        ticket_unique_id: Ticket unique id
-        ticket_sequence_number: Ticket sequence number
+        ticket_unique_id: Eindeutige Id Ticket
+        ticket_sequence_number: Ticket Sequenznummer
 oro_datagrid:
-  "not_found_hint %entityHint%": "No %entityHint% matching your search were found. Try modifying your search criteria."
+  "not_found_hint %entityHint%": "Keine %entityHint% gefunden, die Ihrer Suche entsprechen. Versuchen Sie die Suchkriterien zu ändern."
