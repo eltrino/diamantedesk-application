@@ -29,13 +29,13 @@ diamante:
           label: Zurücksetzen von Kennwörtern für Kunden
           messages:
             success: Passwörter für ausgewählte Kunden %count% wurden erfolgreich zurückgesetzt.
-            fail: Error occured while resetting passwords.
+            fail: Fehler beim Zurücksetzen von Kennwörtern.
     messages:
       delete:
-        query: Are you sure you want to delete this customer?
-        success: Customer successfully deleted.
+        query: Sind Sie sicher, dass Sie diesen Kunden löschen möchten?
+        success: Kunden erfolgreich gelöscht.
       create:
-        success: Customer successfully created.
+        success: Kunden erfolgreich erstellt.
       update:
         success: Customer successfully updated.
       reset_pwd:
