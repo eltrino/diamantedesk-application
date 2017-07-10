@@ -44,7 +44,7 @@ diamante_front:
     template:
       form:
         add: Add Comment
-        cancel: Cancel
+        cancel: Abbrechen
         save: Änderungen speichern
       button:
         edit: Edit Comment
@@ -52,7 +52,7 @@ diamante_front:
   common:
     template:
       close: Schließen
-      cancel: Cancel
+      cancel: Abbrechen
       sort: Sortieren nach
     view:
       alert:
@@ -126,12 +126,12 @@ diamante_front:
       button:
         login: Anmeldung
         register: Fortsetzen
-        reset_password: Reset Password
+        reset_password: Passwort zurücksetzen
         new_password: Neues Passwort setzen
     title:
       login: Anmeldung
       register: Registrierung
-      reset: Reset Password
+      reset: Passwort zurücksetzen
   ticket:
     controller:
       alert:
@@ -162,24 +162,24 @@ diamante_front:
         subject_placeholder: Ticket-Kurzzusammenfassung
         description_label: Beschreibung
         description_placeholder: Stellen Sie eine detaillierte Beschreibung Ihrer Anfrage bereit
-        priority_label: Priority
+        priority_label: Priorität
         low_option: Niedrig
         medium_option: Mittel
         high_option: Hoch
       list:
-        key: Key
+        key: Schlüssel
         date: Date
-        subject: Subject
-        priority: Priority
+        subject: Betreff
+        priority: Priorität
         status: Status
       resolve_button: Ticket lösen
       reopen_button: Ticket wiedereröffnen
     view:
       all_tickets: Alle Tickets anzeigen
     router:
-      view_ticket: View Ticket
-      create_ticket: Create Ticket
-      edit_ticket: Edit Ticket
+      view_ticket: Ticket anzeigen
+      create_ticket: Ticket erstellen
+      edit_ticket: Ticket bearbeiten
   user:
     controller:
       message:
