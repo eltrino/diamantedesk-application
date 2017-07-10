@@ -37,28 +37,28 @@ diamante:
       create:
         success: Kunden erfolgreich erstellt.
       update:
-        success: Customer successfully updated.
+        success: Kunden erfolgreich aktualisiert.
       reset_pwd:
-        query: Are you sure you want to reset password for this customer?
-        success: User password successfully reset.
+        query: Sind Sie sicher, dass Sie für diesen Kunden Passwort zurücksetzen möchten?
+        success: Benutzerkennwort erfolgreich zurückgesetzt.
       remove:
         failed:
-          related: Error deleting user. User has related entities.
+          related: Fehler beim Löschen des Benutzers. Benutzer hat Entitäten verknüpft.
     placeholder:
-      email: 'Please enter an email address'
+      email: 'Bitte geben Sie eine e-Mail-Adresse'
     details: Kundendetails
     activity: Kundenaktivität
     ui:
       "yes": true
       "no": false
     notification:
-      created: New DiamanteDesk account created.
-      force_reset: Password reset notification
+      created: Neue DiamanteDesk Account erstellt.
+      force_reset: Kennwort zurücksetzen Benachrichtigung
     exception:
-      customer_exists: Customer with such email already exists.
+      customer_exists: Kunden mit dieser e-Mail-Adresse ist bereits vorhanden.
     autocomplete:
       group:
-        assignee: '[Assignee]'
-        watchers: '[Watchers]'
+        assignee: '[Beauftragter]'
+        watchers: '[Beobachter]'
         reporter: '[Ticket Reporter]'
-        comment_author: '[Comment author]'
+        comment_author: '[Kommentar Autor]'
