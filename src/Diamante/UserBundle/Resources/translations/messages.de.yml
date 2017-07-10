@@ -16,19 +16,19 @@ diamante:
       create: Kunden erstellen
       remove: Kunde löschen
       view: Kunden anzeigen
-      update: Update Customer
+      update: Kunden aktualisieren
       delete: Kunde löschen
-      reset_pwd: Reset Password
+      reset_pwd: Passwort zurücksetzen
       mass:
         delete:
-          label: Delete сustomers
+          label: Löschen von Kunden
           messages:
-            success: Selected customers successfully deleted.
-            fail: Failed to delete selected customers.
+            success: Ausgewählte Kunden erfolgreich gelöscht.
+            fail: Fehler beim Löschen von ausgewählter Kunden.
         reset_pwd:
-          label: Reset passwords for customers
+          label: Zurücksetzen von Kennwörtern für Kunden
           messages:
-            success: Passwords for %count% selected customer(s) have been successfully reset.
+            success: Passwörter für ausgewählte Kunden %count% wurden erfolgreich zurückgesetzt.
             fail: Error occured while resetting passwords.
     messages:
       delete:
