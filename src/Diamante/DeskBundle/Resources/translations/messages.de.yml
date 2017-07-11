@@ -66,10 +66,10 @@ diamante:
       attachments.label: Anhänge
       watcher_list.label: Beobachterliste
       created_via_email.label: Erstellt per e-Mail an
-      since_created.label: Since created
-      since_updated.label: Since updated
-      since_status_updated.label: Since status updated
-      since_assignee_updated.label: Since assignee updated
+      since_created.label: Da erstellt
+      since_updated.label: Da aktualisiert
+      since_status_updated.label: Da Status aktualisiert
+      since_assignee_updated.label: Seit Zessionar aktualisiert
       columns:
         key: Schlüssel
         subject: Betreff
@@ -88,22 +88,22 @@ diamante:
         delete: Löschen
         assign: Zuordnen
         create: Ticket erstellen
-        change_status: Change Status
+        change_status: Status ändern
         move: Verschieben
         watch: Beobachten
         unwatch: Un-watch
-        add_watcher: Add Watcher
+        add_watcher: Hinzufügen von Watcher
       messages:
         create:
-          error: Error occurred while creating a ticket.
-          success: Ticket successfully created.
+          error: Fehler beim Erstellen eines Tickets.
+          success: Ticket erfolgreich erstellt.
         save:
-          error: Error occurred while saving the ticket.
+          error: Fehler beim Speichern des Tickets.
           success: Ticket erfolgreich gespeichert.
         delete:
-          query: Are you sure you want to delete this ticket?
-          error: Error occurred while deleting the ticket.
-          success: Ticket successfully deleted.
+          query: Sind Sie sicher, dass Sie dieses Ticket löschen möchten?
+          error: Fehler beim Löschen des Tickets.
+          success: Ticket wurde erfolgreich gelöscht.
         reassign:
           error: Error occurred while re-assiging the ticket.
           success: Ticket successfully re-assigned.
