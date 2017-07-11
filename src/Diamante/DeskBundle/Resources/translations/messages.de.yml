@@ -115,13 +115,13 @@ diamante:
           success: Ticket erfolgreich verschoben.
         watch:
           error: Fehler beim Versuch, ein Beobachter hinzufügen.
-          success: Watcher successfully added.
+          success: Watcher erfolgreich hinzugefügt.
         watcher_remove:
-          success: Watcher successfully removed.
+          success: Watcher wurde erfolgreich entfernt.
         get:
-          error: Ticket loading failed, ticket not found.
+          error: Ticket Laden fehlgeschlagen, Ticket wurde nicht gefunden.
           attachment:
-            error: Attachment loading failed. Ticket has no such attachment.
+            error: Anlage laden fehlgeschlagen. Ticket hat keine solche Anlage.
           branch:
             error: Branch loading failed, branch not found.
           reporter:
@@ -133,15 +133,15 @@ diamante:
       entity_plural_label: Kommentare
       ticket_status: Ticket-Status
       content: Inhalt
-      private: Private
+      private: Privatgelände
       attachments.label: Anhänge
-      author.label: Author
+      author.label: Autor
       content.label: Inhalt
-      created_at.label: Created_at
-      id.label: Id
-      private.label: Private
+      created_at.label: Hergestellt in
+      id.label: Identifizieren
+      private.label: Privatgelände
       ticket.label: Ticket
-      updated_at.label: Updated at
+      updated_at.label: Aktualisiert am
       author_email.label: Author email
       actions:
         edit: Edit Comment
@@ -173,8 +173,8 @@ diamante:
       created_at.label: Erstellt am
       file.label: Datei
       hash.label: Hash
-      id.label: Id
-      updated_at.label: Updated at
+      id.label: Identifizieren
+      updated_at.label: Aktualisiert am
       actions:
         delete_file: Datei löschen
         add: Anlage hinzufügen
@@ -267,33 +267,33 @@ diamante:
         tickets_by_response_time: Antwortzeit
         tickets_by_channels: Tickets von Channels
         tickets_by_branches: Tickets von Branches
-        ticket_timeline: Ticket Timeline
+        ticket_timeline: Ticket-Timeline
       messages:
         build:
           error: Fehler beim Generieren des Berichts.
     tickethistory:
       entity_label: Ticket-Historie
       entity_plural_label: Tickets Geschichte
-      id.label: Id
+      id.label: Identifizieren
       ticket_id.label: Ticket-id
       ticket_key.label: Ticket-Schlüssel
     tickettimeline:
-      entity_label: Ticket Timeline
+      entity_label: Ticket-Timeline
       closed.label: Geschlossen
       date.label: Datum
-      id.label: Id
+      id.label: Identifizieren
       new.label: Neu
       reopen.label: Wieder öffnen
       solved.label: Gelöst
     watcherlist:
       entity_label: Beobachterliste
       entity_plural_label: Beobachterlisten
-      id.label: Id
+      id.label: Identifizieren
       ticket.label: Ticket
-      user_type.label: User Type
+      user_type.label: Benutzertyp
     automation:
       action:
-        move_to_branch: Move to branch
+        move_to_branch: Zum Zweig wechseln
       notification:
         ticket:
           created: Ticket wurde erstellt
@@ -312,7 +312,7 @@ oro:
     form:
       data_type:
         branch_logo: Abteilungslogo
-        user_type: User Type
+        user_type: Benutzertyp
         source: Quelle
         status: Status
         priority: Priorität
