@@ -105,16 +105,16 @@ diamante:
           error: Fehler beim Löschen des Tickets.
           success: Ticket wurde erfolgreich gelöscht.
         reassign:
-          error: Error occurred while re-assiging the ticket.
-          success: Ticket successfully re-assigned.
+          error: Fehler beim neu zuweisen das Ticket.
+          success: Ticket erfolgreich neu zugewiesen.
         change_status:
-          error: Error occurred while trying to change the ticket status.
-          success: Status successfully changed.
+          error: Fehler beim Versuch, den Ticketstatus zu ändern.
+          success: Status erfolgreich geändert.
         move:
-          error: Error occurred while trying to move the ticket.
-          success: Ticket successfully moved.
+          error: Fehler beim Versuch, das Ticket zu verschieben.
+          success: Ticket erfolgreich verschoben.
         watch:
-          error: Error occurred while trying to add a watcher.
+          error: Fehler beim Versuch, ein Beobachter hinzufügen.
           success: Watcher successfully added.
         watcher_remove:
           success: Watcher successfully removed.
@@ -261,33 +261,33 @@ diamante:
     dashboard:
       support.label: Support Dashboard
     report:
-      plural_label: Reports
+      plural_label: Berichte
       reports:
-        tickets_by_priority: Tickets by Priority
-        tickets_by_response_time: Time of Response
-        tickets_by_channels: Tickets by Channels
-        tickets_by_branches: Tickets by Branches
+        tickets_by_priority: Tickets nach Priorität
+        tickets_by_response_time: Antwortzeit
+        tickets_by_channels: Tickets von Channels
+        tickets_by_branches: Tickets von Branches
         ticket_timeline: Ticket Timeline
       messages:
         build:
-          error: Error occured while generating the report.
+          error: Fehler beim Generieren des Berichts.
     tickethistory:
-      entity_label: Ticket History
-      entity_plural_label: Tickets History
+      entity_label: Ticket-Historie
+      entity_plural_label: Tickets Geschichte
       id.label: Id
-      ticket_id.label: Ticket id
-      ticket_key.label: Ticket Key
+      ticket_id.label: Ticket-id
+      ticket_key.label: Ticket-Schlüssel
     tickettimeline:
       entity_label: Ticket Timeline
-      closed.label: Closed
-      date.label: Date
+      closed.label: Geschlossen
+      date.label: Datum
       id.label: Id
-      new.label: New
-      reopen.label: Reopen
-      solved.label: Solved
+      new.label: Neu
+      reopen.label: Wieder öffnen
+      solved.label: Gelöst
     watcherlist:
       entity_label: Beobachterliste
-      entity_plural_label: Watcher Lists
+      entity_plural_label: Beobachterlisten
       id.label: Id
       ticket.label: Ticket
       user_type.label: User Type
