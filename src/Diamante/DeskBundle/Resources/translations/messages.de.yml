@@ -65,7 +65,7 @@ diamante:
       updated_at.label: Aktualisiert am
       attachments.label: Anhänge
       watcher_list.label: Beobachterliste
-      created_via_email.label: Created via email to
+      created_via_email.label: Erstellt per e-Mail an
       since_created.label: Since created
       since_updated.label: Since updated
       since_status_updated.label: Since status updated
