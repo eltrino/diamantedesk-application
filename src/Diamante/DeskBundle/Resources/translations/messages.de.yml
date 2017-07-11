@@ -142,10 +142,10 @@ diamante:
       private.label: Privatgelände
       ticket.label: Ticket
       updated_at.label: Aktualisiert am
-      author_email.label: Author email
+      author_email.label: Autor email
       actions:
-        edit: Edit Comment
-        add: Add Comment
+        edit: Kommentar bearbeiten
+        add: Kommentar hinzufügen
       messages:
         create:
           error: Error occured while creating a comment.
@@ -212,7 +212,7 @@ diamante:
         watch:
           success: You are watching the ticket now.
         unwatch:
-          success: You have successfully unsubscribed from watching the ticket.
+          success: Sie haben sich erfolgreich abgemeldet aus der Beobachtung der Ticket.
     ui:
       create: Erstellen
       ok: Ok
@@ -223,7 +223,7 @@ diamante:
       edit: Bearbeiten
       add: Hinzufügen
       change: Ändern
-      select_watcher: Select User
+      select_watcher: Benutzer auswählen
     common:
       general: Allgemein
       description: Beschreibung
@@ -231,13 +231,13 @@ diamante:
       updated: Aktualisiert
       not_available: NV
       not_defined: Nicht definiert
-      no_description: No description
+      no_description: Keine Beschreibung
       delete_confirmation: Löschen bestätigen
-      filters: Filters
-      watchers: Watchers
+      filters: Filter
+      watchers: Beobachter
       messages:
         validation:
-          failed: Form is invalid. Fill out all required fields correctly.
+          failed: Form ist ungültig. Füllen Sie alle erforderlichen Felder korrekt aus.
     forms:
       name: Name
       default_assignee: Standard Zessionar
@@ -254,12 +254,12 @@ diamante:
       reporter: Reporter
       default_assignee: Standard Zessionar
       assignee: Bearbeiter
-      watcher: Watcher
+      watcher: Beobachter
       key: Schlüssel
     email:
-      configuration: Email Configuration
+      configuration: E-Mail-Konfiguration
     dashboard:
-      support.label: Support Dashboard
+      support.label: Support für Armaturenbrett
     report:
       plural_label: Berichte
       reports:
