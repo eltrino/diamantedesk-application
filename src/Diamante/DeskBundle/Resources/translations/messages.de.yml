@@ -152,11 +152,11 @@ diamante:
           success: Comment successfully created.
         save:
           error: Error occured while saving the comment.
-          success: Comment successfully saved.
+          success: Kommentar erfolgreich gespeichert.
         delete:
           error: ""
-          success: Comment successfully deleted.
-          query: Are you sure you want to delete this comment?
+          success: Kommentar wurde erfolgreich gelöscht.
+          query: Sind Sie sicher, dass Sie diesen Kommentar löschen möchten?
         get:
           error: Comment loading failed, comment not found.
         get_attach:
@@ -164,9 +164,9 @@ diamante:
         empty: There are no comments yet.
       placeholders:
         added: added a comment
-        deleted_user: Deleted user
+        deleted_user: Gelöschten Benutzer
     attachment:
-      entity_label: Attachment
+      entity_label: Anhang
       entity_plural_label: Anhänge
       file: Datei
       image: Bild
@@ -196,7 +196,7 @@ diamante:
         upload:
           error: Upload directory is not writable, doesn't exist or no space left on the disk.
       placeholders:
-        dropzone: Drop File Here
+        dropzone: Legen Sie die Datei hier
     file:
       messages:
         dump:
@@ -206,7 +206,7 @@ diamante:
     permissions:
       messages:
         granted:
-          error: Not enough permissions.
+          error: Nicht ausreichende Berechtigungen.
     watcher:
       messages:
         watch:
