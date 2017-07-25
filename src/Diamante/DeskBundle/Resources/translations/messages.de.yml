@@ -25,25 +25,25 @@ diamante:
         remove_mass: Abteilungen löschen
       messages:
         create:
-          error: Fehler beim Erstellen einer Verzweigung. Zweig wird nicht erstellt. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
-          success: Zweig erfolgreich erstellt.
+          error: Fehler beim Erstellen einer Abteilung. Die Abteilung wird nicht erstellt. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
+          success: Abteilung erfolgreich erstellt.
         save:
-          error: Fehler beim Speichern der Branche. Zweig wird nicht gespeichert. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
-          success: Zweig erfolgreich gespeichert.
+          error: Fehler beim Speichern der Abteilung. Die Abteilung wird nicht gespeichert. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
+          success: Abteilung erfolgreich gespeichert.
         delete:
-          query: WARNUNG! Sind Sie sicher, dass Sie diese Zweigniederlassung mit allen Eintrittskarten löschen möchten?
-          success: Zweig erfolgreich gelöscht.
+          query: WARNUNG! Sind Sie sicher, dass Sie diese Abteilung mit allen Tickets löschen möchten?
+          success: Abteilung erfolgreich gelöscht.
           mass_success: "{1} ein Zweig wurde gelöscht. |] 1, Inf [%count% Zweige wurden gelöscht."
-          error: Der aktuelle Zweig ist als Standard für die E-Mail-Verarbeitung konfiguriert und kann nicht gelöscht werden.
+          error: Die aktuelle Abteilung ist als Standard für die E-Mail-Verarbeitung konfiguriert und kann nicht gelöscht werden.
           mass_error: "{0} Aktueller Zweig wird als Standard für die Verarbeitung von E-Mail konfiguriert und kann nicht gelöscht werden. |{1} eines Zweiges kann nicht gelöscht werden, wie es, als Standard eine konfiguriert wurde |] 1, Inf [%count% Zweige außer Standardzweig gelöscht wurden"
-          exist_tickets_error: Eine oder mehrere Filialen haben Tickets und können nicht gelöscht werden.
-          move: Halten Sie die Karten und verschieben Sie sie zu einem anderen Zweig.
-          select: Wählen Sie einen neuen Zweig aus
+          exist_tickets_error: Eine oder mehrere Abteilungen haben Tickets welche nicht gelöscht werden können.
+          move: Behalten Sie die Tickets und verschieben Sie sie in eine andere Abteilung.
+          select: Wählen Sie eine neue Abteilung aus
         get:
-          error: Zweig laden fehlgeschlagen. Zweig nicht gefunden.
+          error: Abteilung laden fehlgeschlagen. Abteilung nicht gefunden.
       placeholders:
-        form: Wähle einen Zweig...
-        default: Der aktuelle Zweig ist als Standard für die E-Mail-Verarbeitung konfiguriert und kann nicht gelöscht werden.
+        form: Wähle eine Abteilung...
+        default: Die aktuelle Abteilung ist als Standard für die E-Mail-Verarbeitung konfiguriert und kann nicht gelöscht werden.
     ticket:
       entity_label: Ticket
       entity_plural_label: Tickets
@@ -123,11 +123,11 @@ diamante:
           attachment:
             error: Anlage laden fehlgeschlagen. Ticket hat keine solche Anlage.
           branch:
-            error: Zweig laden fehlgeschlagen. Zweig nicht gefunden.
+            error: Abteilung laden fehlgeschlagen. Abteilung nicht gefunden.
           reporter:
             error: Reporter laden fehlgeschlagen, Reporter wurde nicht gefunden.
           assignee:
-            error: Assignee validation failed, assignee not found.
+            error: Validierung des Beauftragten fehlgeschlagen, Beauftragten nicht gefunden.
     comment:
       entity_label: Kommentar
       entity_plural_label: Kommentare
