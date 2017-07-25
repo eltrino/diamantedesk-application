@@ -91,7 +91,7 @@ diamante:
         change_status: Status ändern
         move: Verschieben
         watch: Beobachten
-        unwatch: Un-watch
+        unwatch: Nicht mehr überwachen
         add_watcher: Hinzufügen von Watcher
       messages:
         create:
@@ -123,9 +123,9 @@ diamante:
           attachment:
             error: Anlage laden fehlgeschlagen. Ticket hat keine solche Anlage.
           branch:
-            error: Branch loading failed, branch not found.
+            error: Zweig laden fehlgeschlagen. Zweig nicht gefunden.
           reporter:
-            error: Reporter loading failed, reporter not found.
+            error: Reporter laden fehlgeschlagen, Reporter wurde nicht gefunden.
           assignee:
             error: Assignee validation failed, assignee not found.
     comment:
@@ -148,19 +148,19 @@ diamante:
         add: Kommentar hinzufügen
       messages:
         create:
-          error: Error occured while creating a comment.
-          success: Comment successfully created.
+          error: Fehler beim Erstellen eines Kommentars.
+          success: Kommentar wurde erfolgreich erstellt.
         save:
-          error: Error occured while saving the comment.
+          error: Fehler beim Speichern des Kommentars.
           success: Kommentar erfolgreich gespeichert.
         delete:
           error: ""
           success: Kommentar wurde erfolgreich gelöscht.
           query: Sind Sie sicher, dass Sie diesen Kommentar löschen möchten?
         get:
-          error: Comment loading failed, comment not found.
+          error: Laden des Kommentars fehlgeschlagen, Kommentar nicht gefunden.
         get_attach:
-          error: Attachment loading failed. Comment has no such attachment.
+          error: Anhang laden fehlgeschlagen. Kommentar hat keinen solchen Anhang.
         empty: Es gibt keine Kommentare.
       placeholders:
         added: Kommentar zugefügt
