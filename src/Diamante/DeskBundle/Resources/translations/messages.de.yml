@@ -163,7 +163,7 @@ diamante:
           error: Attachment loading failed. Comment has no such attachment.
         empty: There are no comments yet.
       placeholders:
-        added: added a comment
+        added: Kommentar zugefügt
         deleted_user: Gelöschten Benutzer
     attachment:
       entity_label: Anhang
