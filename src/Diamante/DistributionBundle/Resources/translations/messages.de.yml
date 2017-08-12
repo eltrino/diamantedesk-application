@@ -20,7 +20,7 @@ process:
       assetic: Dump assetic
       translation: Prepare translations
       requirejs: Optimize JS resources (optional)
-      finish: Clear cache to finalize installation
+      finish: Löschen Sie den Cache um die Installation abzuschließen
     check:
       table:
         diamante: DiamanteDesk Anforderungen
