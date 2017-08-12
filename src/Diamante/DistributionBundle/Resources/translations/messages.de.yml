@@ -19,10 +19,10 @@ process:
       assets: Install assets
       assetic: Dump assetic
       translation: Prepare translations
-      requirejs: Optimize JS resources (optional)
+      requirejs: JS-Ressourcen optimieren (optional)
       finish: Löschen Sie den Cache um die Installation abzuschließen
     check:
       table:
         diamante: DiamanteDesk Anforderungen
     final:
-      content: 'You''re lucky to start using DiamanteDesk right away.<br>If you''re looking for some help or need some support, please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you''re our Enterprise client.'
+      content: 'Sie können DiamanteDesk sofort verwenden. <br>Wenn Sie Hilfe oder Unterstützung benötigen treten Sie unserer Community bei <a href="https://github.com/eltrino"> Github</a> oder wenn Sie Enterprise Kunde sind, kontaktieren Sie unser engagiertes Support-Team.'
