@@ -33,9 +33,9 @@ diamante:
     messages:
       delete:
         query: Sind Sie sicher, dass Sie diesen Kunden löschen möchten?
-        success: Kunden erfolgreich gelöscht.
+        success: Kunde erfolgreich gelöscht.
       create:
-        success: Kunden erfolgreich erstellt.
+        success: Kunde erfolgreich erstellt.
       update:
         success: Kunden erfolgreich aktualisiert.
       reset_pwd:
@@ -55,7 +55,7 @@ diamante:
       created: Neue DiamanteDesk Account erstellt.
       force_reset: Kennwort zurücksetzen Benachrichtigung
     exception:
-      customer_exists: Kunde mit dieser e-Mail-Adresse ist bereits vorhanden.
+      customer_exists: Kunde mit dieser E-Mail-Adresse ist bereits vorhanden.
     autocomplete:
       group:
         assignee: '[Beauftragter]'
