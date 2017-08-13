@@ -8,15 +8,15 @@ diamante:
       first_name: Vorname
       last_name: Nachname
       active: Ist aktiv
-      id: Id
+      id: Identifizieren
       is_deleted: Ist gelöscht
       related_tickets: Tickets
       activated: E-Mail bestätigt
     actions:
-      create: Kunden erstellen
+      create: Kunde erstellen
       remove: Kunde löschen
-      view: Kunden anzeigen
-      update: Kunden aktualisieren
+      view: Kunde anzeigen
+      update: Kunde aktualisieren
       delete: Kunde löschen
       reset_pwd: Passwort zurücksetzen
       mass:
@@ -45,7 +45,7 @@ diamante:
         failed:
           related: Fehler beim Löschen des Benutzers. Benutzer hat Entitäten verknüpft.
     placeholder:
-      email: 'Bitte geben Sie eine e-Mail-Adresse'
+      email: 'Bitte geben Sie eine E-Mail-Adresse ein'
     details: Kundendetails
     activity: Kundenaktivität
     ui:
@@ -55,7 +55,7 @@ diamante:
       created: Neue DiamanteDesk Account erstellt.
       force_reset: Kennwort zurücksetzen Benachrichtigung
     exception:
-      customer_exists: Kunden mit dieser e-Mail-Adresse ist bereits vorhanden.
+      customer_exists: Kunde mit dieser e-Mail-Adresse ist bereits vorhanden.
     autocomplete:
       group:
         assignee: '[Beauftragter]'
