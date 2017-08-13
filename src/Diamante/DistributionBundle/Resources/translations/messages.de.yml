@@ -13,12 +13,12 @@ process:
       fixtures: Daten laden
       workflows: Workflow-Definitionen laden
       processes: Prozesskonfiguration laden
-      navigation: Init navigation
-      js-routing: Dump JS routing
-      localization: Dump localization
-      assets: Install assets
-      assetic: Dump assetic
-      translation: Prepare translations
+      navigation: Init-Navigation
+      js-routing: Dump, JS-routing
+      localization: Lokalisierung ausgeben
+      assets: Ressourcendateien installieren
+      assetic: Assetic ausgeben
+      translation: Übersetzungen vorbereiten
       requirejs: JS-Ressourcen optimieren (optional)
       finish: Löschen Sie den Cache um die Installation abzuschließen
     check:
