@@ -117,7 +117,7 @@ oro_menu_config:
         reports_tab:
             display: false
         system_tab:
-            display: false
+            display: true
         oro_platform_system_info:
             display: false
         diamante_config_tab:

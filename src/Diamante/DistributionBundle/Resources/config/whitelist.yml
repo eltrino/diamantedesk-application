@@ -81,6 +81,7 @@ whitelist:
   pattern:
     - '^diamante_[a-z_]+'
     - '^oro_user_[a-z_]+'
+    - '^oro_entity_[a-z_]+'
     - '^sylius_flow_[a-z_]+'
     - '^_imagine[a-z_]+'
     - '^oro_dashboard_[a-z_]+'

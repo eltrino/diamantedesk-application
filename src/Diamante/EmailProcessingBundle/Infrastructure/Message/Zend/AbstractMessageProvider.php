@@ -74,7 +74,7 @@ abstract class AbstractMessageProvider
     {
         $from = $headers->toArray()['From'];
 
-        preg_match('/^((?P<name>.*?)<(?P<namedEmail>[^>]+)>|(?P<email>.+))/', $from, $matches);
+        preg_match('/^((?P<name>.*?)<(?P<namedEmail>[^>]+)>|(?P<email>.+))/u', $from, $matches);
 
         if (array_key_exists('email', $matches)) {
             $email = explode(',', $matches['email'])[0];
