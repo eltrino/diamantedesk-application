@@ -8,6 +8,8 @@ process:
       cache: Effacer le cache avant l'initialisation de la base de données
       clear-config: Effacer le cache des entités
       clear-extend: Effacer les données des entités étendues
+      permissions: Load permissions configuration
+      crons: Load cron definitions
       schema-drop: Réinitialiser la configuration actuelle
       schema-update: Mise à jour du schéma
       fixtures: Fixations de charge
