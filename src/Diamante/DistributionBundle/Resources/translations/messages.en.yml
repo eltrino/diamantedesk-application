@@ -8,6 +8,8 @@ process:
             cache:                          Clear cache before database initialization
             clear-config:                   Clear entities cache
             clear-extend:                   Clear extended entities data
+            permissions:                    Load permissions configuration
+            crons:                          Load cron definitions
             schema-drop:                    Drop current schema
             schema-update:                  Schema update
             fixtures:                       Load fixtures

@@ -31,11 +31,10 @@ class TicketFactory extends AbstractEntityFactory
         OroUser $assignee = null,
         Priority $priority,
         Source $source,
-        Status $status,
-        $tags = null
+        Status $status
     ) {
         return new $this->entityClassName(
-            $uniqueId, $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status, $tags
+            $uniqueId, $number, $subject, $description, $branch, $reporter, $assignee, $source, $priority, $status
         );
     }
 }

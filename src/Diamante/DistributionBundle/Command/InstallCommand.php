@@ -15,6 +15,7 @@
 
 namespace Diamante\DistributionBundle\Command;
 
+use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,6 +25,11 @@ use Oro\Bundle\InstallerBundle\Command\Provider\InputOptionProvider;
 use Symfony\Component\Console\Input\InputOption;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
+/**
+ * @TODO ORO 2.0 Database schema dropped successfully! executes three times but looks like nothing dropped
+ *
+ *
+ */
 class InstallCommand extends OroInstallCommand
 {
     /**
@@ -83,10 +89,21 @@ class InstallCommand extends OroInstallCommand
                 CommandExecutor::DEFAULT_TIMEOUT
             )
             ->addOption(
+                'skip-assets',
+                null,
+                InputOption::VALUE_NONE,
+                'Skip UI related commands during installation'
+            )
+            ->addOption(
                 'force-debug',
                 null,
                 InputOption::VALUE_NONE,
                 'Forces launching of child commands in debug mode. By default they are launched with --no-debug'
+            )->addOption(
+                'skip-translations',
+                null,
+                InputOption::VALUE_NONE,
+                'Determines whether translation data need to be loaded or not'
             );
     }
 
@@ -127,12 +144,12 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('<info>Installing DiamanteDesk.</info>');
 
         $this->checkRequirementsStep($output);
-        $this->prepareStep($this->commandExecutor, $input->getOption('drop-database'))
+        $this->prepareStep($this->commandExecutor, $input, $output)
                 ->loadDataStep($this->commandExecutor, $output);
 
 
         $output->writeln('<info>Administration setup.</info>');
-        $this->finalStep($this->commandExecutor, $output, $input);
+        $this->finalStep($this->commandExecutor, $output, $input, $input->getOption('skip-assets'));
 
         $output->writeln(
             sprintf(
@@ -251,6 +268,81 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return $this;
+    }
+
+    /**
+     * Update the administrator user
+     *
+     * @param CommandExecutor $commandExecutor
+     */
+    protected function updateUser(CommandExecutor $commandExecutor)
+    {
+        $emailValidator     = $this->getNotBlankValidator('The email must be specified');
+        $firstNameValidator = $this->getNotBlankValidator('The first name must be specified');
+        $lastNameValidator  = $this->getNotBlankValidator('The last name must be specified');
+        $passwordValidator  = function ($value) {
+            if (strlen(trim($value)) < 2) {
+                throw new \Exception('The password must be at least 2 characters long');
+            }
+
+            return $value;
+        };
+
+        $options = [
+            'user-name'      => [
+                'label'                  => 'Username',
+                'askMethod'              => 'ask',
+                'additionalAskArguments' => [],
+                'defaultValue'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
+            ],
+            'user-email'     => [
+                'label'                  => 'Email',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$emailValidator],
+                'defaultValue'           => null,
+            ],
+            'user-firstname' => [
+                'label'                  => 'First name',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$firstNameValidator],
+                'defaultValue'           => null,
+            ],
+            'user-lastname'  => [
+                'label'                  => 'Last name',
+                'askMethod'              => 'askAndValidate',
+                'additionalAskArguments' => [$lastNameValidator],
+                'defaultValue'           => null,
+            ],
+            'user-password'  => [
+                'label'                  => 'Password',
+                'askMethod'              => 'askHiddenResponseAndValidate',
+                'additionalAskArguments' => [$passwordValidator],
+                'defaultValue'           => null,
+            ],
+        ];
+
+        $commandParameters = [];
+        foreach ($options as $optionName => $optionData) {
+            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $optionData['defaultValue'],
+                $optionData['askMethod'],
+                $optionData['additionalAskArguments']
+            );
+        }
+
+        $this->commandExecutor->runCommand('cache:clear');
+
+        $commandExecutor->runCommand(
+            'oro:user:update',
+            array_merge(
+                [
+                    'user-name'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
+                ],
+                $commandParameters
+            )
+        );
     }
 
     /**

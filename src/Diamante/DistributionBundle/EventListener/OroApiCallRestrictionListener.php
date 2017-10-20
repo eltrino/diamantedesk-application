@@ -86,7 +86,7 @@ class OroApiCallRestrictionListener
             $route = $request->attributes->get('_master_request_route');
         }
 
-        if (!$this->provider->isItemWhitelisted($route)) {
+        if (!$this->provider->isItemWhitelisted($route) && $route !== null) {
             $notFoundException = new NotFoundHttpException('Sorry, the page that you requested was not found.');
             $statusCode = $notFoundException->getStatusCode();
             $parameters = [

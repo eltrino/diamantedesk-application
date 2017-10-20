@@ -71,7 +71,7 @@ class GridViewsLoadListener implements EventSubscriber
             return;
         }
 
-        foreach ($gridViews['views'] as &$gridView) {
+        foreach ($gridViews as &$gridView) {
             if (isset($gridView['filters']['assigneeFullName']) && $gridView['filters']['assigneeFullName'] !== false) {
 
                 if (is_array($gridView['filters']['assigneeFullName'])) {

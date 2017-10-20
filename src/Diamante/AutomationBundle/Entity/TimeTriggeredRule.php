@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TimeTriggeredRule extends \Diamante\AutomationBundle\Model\TimeTriggeredRule
 {
     /**
-     * @var \Rhumsaa\Uuid\Uuid
+     * @var \Ramsey\Uuid\Uuid;
      *
      * @ORM\Id
      * @ORM\Column(type="string", name="id")

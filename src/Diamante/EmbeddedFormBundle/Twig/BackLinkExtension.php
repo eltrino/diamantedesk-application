@@ -43,7 +43,7 @@ class BackLinkExtension extends BaseBackLinkExtension
      * @param string $id
      * @return string
      */
-    public function backLinkFilter($string, $id)
+    public function backLinkFilter($string, $id = null)
     {
         $backLinkRegexp = '/{back_link(?:\|([^}]+))?}/';
         preg_match($backLinkRegexp, $string, $matches);

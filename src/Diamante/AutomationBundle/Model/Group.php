@@ -17,7 +17,7 @@ namespace Diamante\AutomationBundle\Model;
 
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 class Group implements Entity
 {

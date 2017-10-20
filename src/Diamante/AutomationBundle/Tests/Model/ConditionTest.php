@@ -27,7 +27,7 @@ class ConditionTest extends \PHPUnit_Framework_TestCase
     {
         $condition = $this->createCondition();
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $condition->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $condition->getId());
         $this->assertInstanceOf('Diamante\AutomationBundle\Model\Group', $condition->getGroup());
         $this->assertEquals(Group::CONNECTOR_INCLUSIVE, $condition->getGroup()->getConnector());
         $this->assertEquals('eq', $condition->getType());

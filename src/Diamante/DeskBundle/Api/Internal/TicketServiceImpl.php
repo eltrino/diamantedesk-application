@@ -37,7 +37,6 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
-use Oro\Bundle\TagBundle\Entity\TagManager;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -91,11 +90,6 @@ class TicketServiceImpl implements TicketService
     private $ticketHistoryRepository;
 
     /**
-     * @var TagManager
-     */
-    private $tagManager;
-
-    /**
      * @var OroUser|ApiUser
      */
     protected $loggedUser;
@@ -106,7 +100,6 @@ class TicketServiceImpl implements TicketService
      * @param AttachmentManager        $attachmentManager
      * @param AuthorizationService     $authorizationService
      * @param EventDispatcherInterface $dispatcher
-     * @param TagManager               $tagManager
      * @param SecurityFacade           $securityFacade
      */
     public function __construct(
@@ -115,7 +108,6 @@ class TicketServiceImpl implements TicketService
         AttachmentManager $attachmentManager,
         AuthorizationService $authorizationService,
         EventDispatcherInterface $dispatcher,
-        TagManager $tagManager,
         SecurityFacade $securityFacade
     ) {
         $this->doctrineRegistry = $doctrineRegistry;
@@ -123,7 +115,6 @@ class TicketServiceImpl implements TicketService
         $this->attachmentManager = $attachmentManager;
         $this->authorizationService = $authorizationService;
         $this->dispatcher = $dispatcher;
-        $this->tagManager = $tagManager;
 
         $this->ticketRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
         $this->branchRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
@@ -145,7 +136,6 @@ class TicketServiceImpl implements TicketService
     public function loadTicket($id)
     {
         $ticket = $this->loadTicketById($id);
-        $this->loadTagging($ticket);
 
         $this->isGranted('VIEW', $ticket);
 
@@ -173,8 +163,6 @@ class TicketServiceImpl implements TicketService
             $ticketKey = TicketKey::from($key);
             $ticket = $this->loadTicketByTicketKey($ticketKey);
         }
-
-        $this->loadTagging($ticket);
 
         $this->isGranted('VIEW', $ticket);
 
@@ -355,8 +343,7 @@ class TicketServiceImpl implements TicketService
                 ->setAssignee($command->assignee)
                 ->setPriority($command->priority)
                 ->setSource($command->source)
-                ->setStatus($command->status)
-                ->setTags($command->tags);
+                ->setStatus($command->status);
 
             $ticket = $this->ticketBuilder->build();
             $em->lock($ticket->getBranch(), LockMode::PESSIMISTIC_READ);
@@ -366,12 +353,6 @@ class TicketServiceImpl implements TicketService
             $em->persist($ticket);
             $em->flush();
             $em->getConnection()->commit();
-
-            if ($this->loggedUser instanceof OroUser) {
-                $this->tagManager->saveTagging($ticket);
-                $ticket->setTags(null);
-                $this->loadTagging($ticket);
-            }
         } catch (\Exception $e) {
             $em->getConnection()->rollback();
             throw $e;
@@ -420,18 +401,13 @@ class TicketServiceImpl implements TicketService
             new Priority($command->priority),
             new Status($command->status),
             new Source($command->source),
-            $assignee,
-            $command->tags
+            $assignee
         );
 
         $this->createAttachments($command, $ticket);
 
         $this->doctrineRegistry->getManager()->persist($ticket);
         $this->doctrineRegistry->getManager()->flush();
-        $this->tagManager->saveTagging($ticket);
-
-        $ticket->setTags(null);
-        $this->loadTagging($ticket);
 
         return $ticket;
     }
@@ -612,8 +588,6 @@ class TicketServiceImpl implements TicketService
         $ticket->updateProperties($command->properties);
         $this->ticketRepository->store($ticket);
 
-        $this->loadTagging($ticket);
-
         return $ticket;
     }
 
@@ -650,15 +624,5 @@ class TicketServiceImpl implements TicketService
     protected function getAuthorizationService()
     {
         return $this->authorizationService;
-    }
-
-    /**
-     * @param Ticket $ticket
-     */
-    private function loadTagging(Ticket $ticket)
-    {
-        if ($this->loggedUser instanceof OroUser) {
-            $this->tagManager->loadTagging($ticket);
-        }
     }
 }

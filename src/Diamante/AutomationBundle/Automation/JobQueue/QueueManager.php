@@ -78,19 +78,19 @@ class QueueManager
             return;
         }
 
-        foreach ($this->persistedQueue as $context) {
-            $job = new Job(
-                self::SELF_EVENT_TRIGGERED_COMMAND_NAME,
-                [sprintf('--context-id=%d', $context->getId())],
-                true,
-                self::QUEUE_NAME
-            );
-
-            $this->em->persist($job);
-        }
-
-        $this->em->flush();
-
+//        foreach ($this->persistedQueue as $context) {
+//            $job = new Job(
+//                self::SELF_EVENT_TRIGGERED_COMMAND_NAME,
+//                [sprintf('--context-id=%d', $context->getId())],
+//                true,
+//                self::QUEUE_NAME
+//            );
+//
+//            $this->em->persist($job);
+//        }
+//
+//        $this->em->flush();
+//
         $this->persistedQueue = [];
     }
 

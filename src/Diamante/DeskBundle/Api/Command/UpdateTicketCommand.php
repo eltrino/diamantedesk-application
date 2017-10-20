@@ -16,10 +16,9 @@ namespace Diamante\DeskBundle\Api\Command;
 
 use Diamante\DeskBundle\Entity\Branch;
 use Symfony\Component\Validator\Constraints as Assert;
-use Oro\Bundle\TagBundle\Entity\Taggable;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class UpdateTicketCommand implements Taggable, Shared\Command
+class UpdateTicketCommand implements Shared\Command
 {
     const PERSISTENT_ENTITY = 'Diamante\DeskBundle\Entity\Ticket';
 
@@ -94,48 +93,4 @@ class UpdateTicketCommand implements Taggable, Shared\Command
      * @var Branch
      */
     public $branch;
-
-    /**
-     * @Assert\Type(type="array")
-     */
-    public $tags;
-
-
-    public function __construct()
-    {
-        $this->tags = new ArrayCollection();
-    }
-
-    /**
-     * Returns the unique taggable resource identifier
-     *
-     * @return string
-     */
-    public function getTaggableId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set tag collection
-     *
-     * @param $tags
-     * @return $this
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
-    }
-
-    /**
-     * Returns the collection of tags for this Taggable entity
-     *
-     * @return ArrayCollection
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
 }

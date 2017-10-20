@@ -1,4 +1,4 @@
-datagrid:
+datagrids:
   diamante-user-grid:
     source:
       type: orm

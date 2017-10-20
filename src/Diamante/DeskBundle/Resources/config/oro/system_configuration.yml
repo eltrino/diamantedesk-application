@@ -1,4 +1,4 @@
-oro_system_configuration:
+system_configuration:
     groups:
         diamante_desk_setup:
             title: 'DiamanteDesk'

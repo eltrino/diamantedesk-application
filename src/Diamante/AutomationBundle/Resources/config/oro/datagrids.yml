@@ -1,4 +1,4 @@
-datagrid:
+datagrids:
   diamante-automation-event-triggered-grid:
     source:
       type: orm

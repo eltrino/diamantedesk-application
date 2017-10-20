@@ -1,4 +1,4 @@
-oro_system_configuration:
+system_configuration:
     groups:
         diamantedesk_channels_front_group:
             title: 'Web'

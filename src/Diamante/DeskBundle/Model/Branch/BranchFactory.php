@@ -39,7 +39,6 @@ class BranchFactory extends AbstractEntityFactory
      * @param null|string                   $key
      * @param null|User                     $defaultAssignee
      * @param Logo|null|\SplFileInfo        $logo
-     * @param null|array|ArrayCollection    $tags
      * @return Branch
      */
     public function create(
@@ -47,13 +46,12 @@ class BranchFactory extends AbstractEntityFactory
         $description,
         $key = null,
         User $defaultAssignee = null,
-        Logo $logo = null,
-        $tags = null
+        Logo $logo = null
     ) {
         if (is_null($key) || empty($key)) {
             $key = $this->branchKeyGenerator->generate($name);
         }
 
-        return new $this->entityClassName($key, $name, $description, $defaultAssignee, $logo, $tags);
+        return new $this->entityClassName($key, $name, $description, $defaultAssignee, $logo);
     }
 }

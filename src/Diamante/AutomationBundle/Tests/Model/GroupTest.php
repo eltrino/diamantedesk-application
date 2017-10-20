@@ -27,7 +27,7 @@ class GroupTest extends \PHPUnit_Framework_TestCase
     {
         $group = $this->createGroup();
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $group->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $group->getId());
         $this->assertEquals(Group::CONNECTOR_INCLUSIVE, $group->getConnector());
         $this->assertInstanceOf('\DateTime', $group->getUpdatedAt());
         $this->assertInstanceOf('\DateTime', $group->getCreatedAt());

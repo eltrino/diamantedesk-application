@@ -81,7 +81,7 @@ class TagHandler implements SubscribingHandlerInterface
     private function getTagData(Tag $tag)
     {
         $data = [
-            'id'         => $tag->getId(),
+            'id'   => $tag->getId(),
             'name' => $tag->getName()
         ];
 

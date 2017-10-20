@@ -25,7 +25,6 @@ use Diamante\DeskBundle\Model\Shared\Repository;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Oro\Bundle\TagBundle\Entity\TagManager;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Diamante\DeskBundle\Model\Branch\Branch;
@@ -49,11 +48,6 @@ class BranchServiceImpl implements BranchService
     private $branchLogoHandler;
 
     /**
-     * @var \Oro\Bundle\TagBundle\Entity\TagManager
-     */
-    private $tagManager;
-
-    /**
      * @var AuthorizationService
      */
     private $authorizationService;
@@ -68,13 +62,11 @@ class BranchServiceImpl implements BranchService
         BranchFactory $branchFactory,
         Repository $branchRepository,
         BranchLogoHandler $branchLogoHandler,
-        TagManager $tagManager,
         AuthorizationService $authorizationService
     ) {
         $this->branchFactory        = $branchFactory;
         $this->branchRepository     = $branchRepository;
         $this->branchLogoHandler    = $branchLogoHandler;
-        $this->tagManager           = $tagManager;
         $this->authorizationService = $authorizationService;
         $this->registry             = $doctrineRegistry;
     }
@@ -105,7 +97,6 @@ class BranchServiceImpl implements BranchService
             throw new BranchNotFoundException();
         }
 
-        $this->tagManager->loadTagging($branch);
         return $branch;
     }
 
@@ -127,13 +118,11 @@ class BranchServiceImpl implements BranchService
                 $branchCommand->description,
                 $branchCommand->key,
                 $assignee,
-                $logo,
-                $branchCommand->tags
+                $logo
             );
 
         $this->registry->getManager()->persist($branch);
         $this->registry->getManager()->flush();
-        $this->tagManager->saveTagging($branch);
 
         return $branch;
     }
@@ -162,10 +151,8 @@ class BranchServiceImpl implements BranchService
 
         $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
         $this->registry->getManager()->persist($branch);
-        $this->handleTagging($branchCommand, $branch);
 
         $this->registry->getManager()->flush();
-        $this->tagManager->saveTagging($branch);
 
         return $branch->getId();
     }
@@ -281,17 +268,6 @@ class BranchServiceImpl implements BranchService
         }
 
         return new Logo();
-    }
-
-    /**
-     * @param Command\BranchCommand $command
-     * @param Branch $branch
-     */
-    protected function handleTagging(Command\BranchCommand $command, Branch $branch)
-    {
-        $tags = $command->getTags();
-        $tags['owner'] = $tags['all'];
-        $branch->setTags($tags);
     }
 
     /**

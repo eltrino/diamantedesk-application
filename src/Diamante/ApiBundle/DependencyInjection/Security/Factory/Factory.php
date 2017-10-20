@@ -27,8 +27,7 @@ class Factory implements SecurityFactoryInterface
         $providerId = 'security.authentication.provider.wsse.' . $id;
         $container
             ->setDefinition($providerId, new DefinitionDecorator('wsse.security.authentication.provider'))
-            ->replaceArgument(0, new Reference($userProvider))
-        ;
+            ->replaceArgument(0, new Reference($userProvider));
 
         $listenerId = 'security.authentication.listener.wsse.' . $id;
         $container->setDefinition($listenerId, new DefinitionDecorator('wsse.security.authentication.listener'));

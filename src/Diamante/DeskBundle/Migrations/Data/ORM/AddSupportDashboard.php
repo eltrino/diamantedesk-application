@@ -13,8 +13,9 @@
  * to license@eltrino.com so we can send you a copy immediately.
  */
 
-namespace Diamante\DeskBundle\DataFixtures\ORM;
+namespace Diamante\DeskBundle\Migrations\Data\ORM;
 
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\DashboardBundle\Entity\Widget;
@@ -22,8 +23,14 @@ use Oro\Bundle\DashboardBundle\Entity\WidgetState;
 use Oro\Bundle\DashboardBundle\Migrations\Data\ORM\AbstractDashboardFixture;
 use Oro\Bundle\DashboardBundle\Model\DashboardModel;
 
-class AddSupportDashboard extends AbstractDashboardFixture
+class AddSupportDashboard extends AbstractDashboardFixture implements DependentFixtureInterface
 {
+
+    function getDependencies()
+    {
+        return ['Oro\Bundle\DashboardBundle\Migrations\Data\ORM\LoadDashboardData'];
+    }
+
     /**
      * @param ObjectManager $manager
      */
@@ -47,11 +54,11 @@ class AddSupportDashboard extends AbstractDashboardFixture
         $user = $this->getAdminUser($manager);
 
         $widgetConfiguration = [
-            'ticket_timeline'               => [0, 0],
-            'time_of_response_widget'       => [1, 0],
-            'tickets_by_channels_widget'    => [0, 1],
-            'tickets_by_branches_widget'    => [1, 2],
-            'tickets_by_priority_widget'    => [0, 2],
+            'ticket_timeline'            => [0, 0],
+            'time_of_response_widget'    => [1, 0],
+            'tickets_by_channels_widget' => [0, 1],
+            'tickets_by_branches_widget' => [1, 2],
+            'tickets_by_priority_widget' => [0, 2],
         ];
 
         foreach ($widgetConfiguration as $name => $position) {

@@ -28,7 +28,7 @@ class TimeTriggeredRuleTest extends \PHPUnit_Framework_TestCase
     {
         $rule = $this->createRule();
 
-        $this->assertInstanceOf('Rhumsaa\Uuid\Uuid', $rule->getId());
+        $this->assertInstanceOf('Ramsey\Uuid\Uuid', $rule->getId());
         $this->assertEquals('time_triggered_rule_name', $rule->getName());
         $this->assertEquals(true, $rule->isActive());
         $this->assertEquals('5m', $rule->getTimeInterval());

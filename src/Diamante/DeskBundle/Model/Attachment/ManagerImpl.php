@@ -17,7 +17,7 @@ namespace Diamante\DeskBundle\Model\Attachment;
 use Diamante\DeskBundle\Model\Shared\Repository;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Imagine\Image\Box;
-use Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader;
+use Liip\ImagineBundle\Binary\Loader\FileSystemLoader;
 use Symfony\Bridge\Monolog\Logger;
 
 class ManagerImpl implements Manager
@@ -58,7 +58,7 @@ class ManagerImpl implements Manager
      * @param \Diamante\DeskBundle\Model\Attachment\Services\FileStorageService $fileStorageService
      * @param \Diamante\DeskBundle\Model\Attachment\AttachmentFactory $factory
      * @param \Diamante\DeskBundle\Model\Shared\Repository $repository
-     * @param \Liip\ImagineBundle\Imagine\Data\Loader\FileSystemLoader $loader
+     * @param \Liip\ImagineBundle\Binary\Loader\FileSystemLoader $loader
      * @param \Symfony\Bridge\Monolog\Logger $logger
      */
     public function __construct(

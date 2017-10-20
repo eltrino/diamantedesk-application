@@ -1,0 +1,19 @@
+security:
+    providers:
+        diamante_api_user:
+            id:                             diamante.api.user.security.provider
+    encoders:
+        Diamante\ApiBundle\Entity\ApiUser: sha1
+    firewalls:
+        front_diamante:
+            pattern:        ^/portal
+            provider:       chain_provider
+            anonymous:      true
+
+        front_diamante_reset_password:
+            pattern:        ^/portal/password/*
+            provider:       chain_provider
+            anonymous:      true
+        # add diamante uri to exception to fix portal log in
+        api_wsse_secured:
+            pattern: ^/api/(?!(diamante|rest|doc)($|/.*))

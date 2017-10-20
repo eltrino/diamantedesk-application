@@ -28,13 +28,12 @@ whitelist:
     - 'oro_importexport_export_instant'
     - 'oro_importexport_export_download'
     - 'oro_attachment_file'
-    - 'oro_user_reset_reset'
+    - 'oro_action_widget_buttons'
 
     #OroUserBundle
     - 'oro_activity_list_api_get_list'
     - 'oro_comment_form'
     - 'orocrm_task_user_tasks'
-    - 'oro_user_apigen'
 
     #Dashboard
     - 'oro_api_post_dashboard_widget_add_widget'
@@ -67,6 +66,7 @@ whitelist:
     - 'fos_js_routing_js'
     - 'oro_installer_flow'
     - '_imagine_avatar_med'
+    - '_profiler_search_bar'
 
     #Shortcuts
     - 'diamante_branch_list'
@@ -83,6 +83,7 @@ whitelist:
     - '^oro_user_[a-z_]+'
     - '^sylius_flow_[a-z_]+'
     - '^_imagine[a-z_]+'
+    - '^liip_imagine[a-z_]+'
     - '^oro_dashboard_[a-z_]+'
     - '^oro_tag_[a-z_]+'
     - '^oro_api_[a-z_]+_user.*'

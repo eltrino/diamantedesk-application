@@ -29,7 +29,9 @@ class OroNotificationConfiguration implements ConfigurationInterface
             $rootNode,
             [
                 'email_notification_sender_email' => ['value' => sprintf('example@example.com', gethostname())],
-                'email_notification_sender_name'  => ['value' => 'DiamanteDesk']
+                'email_notification_sender_name'  => ['value' => 'DiamanteDesk'],
+                'mass_notification_template'      => ['value' => ''],
+                'mass_notification_recipients'    => ['value' => 'system_maintenance'],
             ]
         );
 

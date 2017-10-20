@@ -11,6 +11,7 @@
 /web/css
 /web/js
 /web/uploads/users/*
+/web/uploads/branch/*
 /web/media/cache
 /web/build.js
 /app/cache/*
@@ -21,3 +22,4 @@
 /app/attachments/*
 phpunit.xml
 .DS_Store
+bin

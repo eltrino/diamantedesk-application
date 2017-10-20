@@ -1,4 +1,4 @@
-oro_dashboard_config:
+dashboards:
     widgets:
         tickets_by_priority_widget:
             label:      Tickets By Priority
