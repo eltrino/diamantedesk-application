@@ -1,0 +1,221 @@
+---
+"Loading...": "Завантаження..."
+diamante_front:
+  attachment:
+    controller:
+      alert:
+        delete_error:
+          title: Помилка видалення додатку
+      message:
+        attach_success: Файли успішно прикріплені
+        delete_success: Файли успішно видалені
+    model:
+      alert:
+        add_error:
+          title: Помилка додавання вкладень
+    template:
+      dropzone:
+        dropfiles: Перетягніть файли сюди, щоб прикріпити
+        attachfiles: Натисніть тут, щоб вкласти файли
+        read: Читання даних...
+        send: Відправка...
+        receive: Отримання...
+      button:
+        remove: Видалити вкладення
+      link:
+        download: 'Завантажити:'
+      header:
+        file: Прикріплені файли
+  comment:
+    controller:
+      alert:
+        create_error:
+          title: Помилка створення коментаря
+        delete_error:
+          title: Помилка видалення коментаря
+        edit_success:
+          title: Ваш коментар було змінено
+      message:
+        post_success: Коментарій був успішно опублікований
+        delete_success: Ваш коментар успішно видалено
+    model:
+      error:
+        required: "Не може бути пустим"
+    template:
+      form:
+        add: Додати коментар
+        cancel: Відмінити
+        save: Зберегти зміни
+      button:
+        edit: Редагувати коментар
+        delete: Видалити коментар
+  common:
+    template:
+      close: Закрити
+      cancel: Відмінити
+      sort: Сортувати за
+    view:
+      alert:
+        title: Помилка
+        text: Сталась неопрацьована помилка. Будь ласка, спробуйте ще раз!
+      modal:
+        title: Модальне вікно
+        submit: Зберегти зміни
+  footer:
+    template:
+      copyright: Diamante доступний за ліцензією %{license} на %{company}
+  header:
+    template:
+      new_ticket: Новий тікет
+  session:
+    controller:
+      alert:
+        confirm_success:
+          title: Успішне підтвердження адреси електронної пошти
+          text: Ви можете авторизуватися і використовувати додаток
+        reconfirm_succes:
+          title: Успішне підтвердження адреси електронної пошти
+          text: Ми відправили вам лист на електронну пошту %{email}. </br> Будь ласка, натисніть на посилання в цьому повідомленні, щоб активувати ваш профіль.
+        confirm_fail:
+          title: Підтвердження електронної пошти не вдалося
+          text: Неправильний код активації
+        login_fail:
+          title: Помилка авторизації
+        register_succes:
+          title: Ви успішно зареєструвались
+          text: Дякуємо. Ми відправили вам лист по електронній пошті %{email}.</br> Будь ласка, натисніть на посилання в цьому повідомленні, щоб активувати ваш профіль.
+        register_fail:
+          title: Помилка реєстрації
+        reset_info:
+          title: Відомості про скидання пароля
+          text: Ми надіслали вам інформацію по електронній пошті %{email}.</br> Будь ласка, натисніть на посилання в повідомленні для відновлення пароля.
+        reset_fail:
+          title: Не вдалося виконати скидання пароля
+          text: Код скидання недійсний або застарів
+      message:
+        reset_success: Пароль успішно змінений, ви можете використовувати його для входу
+    model:
+      alert:
+        auth_required:
+          title: Потрібна авторизація
+          text: Ця дія вимагає авторизації
+      error:
+        required: Не може бути пустим
+        email_format: '«%{email}» недійсна адреса електронної пошти'
+        password_length: Повинно бути не менше шести (6) символів
+    template:
+      register: Реєстрація
+      login: Вхід
+      forgot: Амнезія?
+      remember: Запам'ятати мене
+      back:
+        register: Вже зареєстровані? &mdash; <a href="%{url}"> Вхід</a>
+        reset: Назад до <a href="%{url}"> Вхід</a>
+      label:
+        email: Електронна пошта
+        first_name: Ім'я
+        last_name: Прізвище
+        password: Пароль
+        new_password: Новий пароль
+      placeholder:
+        email: Введіть адресу електронної пошти
+        first_name: Введіть ім'я
+        last_name: Введіть прізвище
+        password: Введіть пароль
+        new_password: Введіть новий пароль
+      button:
+        login: Вхід
+        register: Продовжити
+        reset_password: Скинути пароль
+        new_password: Встановити новий пароль
+    title:
+      login: Вхід
+      register: Реєстрація
+      reset: Скинути пароль
+  ticket:
+    controller:
+      alert:
+        create_error:
+          title: Помилка створення тікету
+        edit_error:
+          title: Помилка редагування тікету
+      message:
+        key_changed: Поки ми активно працювали над вашим тікетом, його ключ був змінений на %{ticket_key_id}
+        ticket_update: Тікет %{ticket_update_id} оновлено
+        status_closed: Статус %{ticket_status_closed_id} тікета змінений. Статус тікета "Закритий"
+        status_open: Статус %{ticket_status_open_id} тікета змінений. Статус тікета "Відкритий"
+        create_ticket: Тікет %{ticket_created_id} створений
+      edit:
+        title: Редагувати %{ticket_id} тікет
+      edit_ticket:
+        Edit Ticket: '%{key} - %{subject}'
+      search_result: Результат пошуку
+    model:
+      error:
+        required: Не може бути пустим
+    template:
+      empty_list: Ви ще не створили тікети. <br> Натисніть <a href="%{url}"> + </a> щоб створити новий.
+      empty_search: Не знайдемо тікетів відповідно до ваших критерій.
+      empty_view: Цей тікет не існує!
+      form:
+        subject_label: Тема тікету
+        subject_placeholder: Короткий звіт про тікети
+        description_label: Опис
+        description_placeholder: Надати детальний опис вашого запиту на підтримку
+        priority_label: Пріоритет
+        low_option: Низький
+        medium_option: Середній
+        high_option: Високий
+      list:
+        key: Ключ
+        date: Дата
+        subject: Тема
+        priority: Пріоритет
+        status: Статус
+      resolve_button: Вирішити тікет
+      reopen_button: Повторно відкрити тікет
+    view:
+      all_tickets: Переглянути всі тікети
+    router:
+      view_ticket: Переглянути тікет
+      create_ticket: Створити тікет
+      edit_ticket: Редагувати тікет
+  user:
+    controller:
+      message:
+        update_success: Ви успішно оновили свій профіль
+      alert:
+        edit_error:
+          title: Помилка редагування користувача
+      edit_user: Редагувати користувача
+    model:
+      error:
+        required: Не може бути пустим
+        password_length: Повинно бути не менше шести (6) символів
+    template:
+      form:
+        first_name_label: Ім'я
+        last_name_label: Прізвище
+        email_label: Електронна пошта
+        password_label: Новий пароль
+        submit_button: Відправити
+      logout: Вийти
+  watcher:
+    controller:
+      alert:
+        add_error:
+          title: Помилка додавання спостерігача
+        delete_comment_error:
+          title: Помилка видалення коментаря
+      message:
+        add_success: Новий спостерігач був успішно доданий до тікету
+        remove_success: Спостерігач був видалений з тікету
+      add_watcher: Додати спостерігача
+    model:
+      error:
+        required: Не може бути пустим
+        email_format: '«%{email}» недійсна адреса електронної пошти'
+    template:
+      email_watcher: Адреса електронної пошти спостерігача
+      remove_watcher: Видалити спостерігача
+      add_watcher: Додати спостерігача

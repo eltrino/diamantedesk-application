@@ -1,0 +1,322 @@
+---
+diamante:
+  desk:
+    branch:
+      entity_label: Ветка
+      entity_plural_label: Ветки
+      details: Информация о ветке
+      created_at.label: Создан в
+      description.label: Описание
+      id.label: Идентификатор ветки
+      key.label: Ключ ветки
+      logo.label: Логотип ветки
+      name.label: Имя ветки
+      updated_at.label: Дата обновления
+      default_assignee.label: Ответственный по умолчанию
+      columns:
+        logo: Логотип
+        branch_name: Имя ветки
+        branch_key: Ключ ветки
+      actions:
+        create: Создать ветку
+        view: Просмотреть ветку
+        edit: Редактировать ветку
+        remove: Удалить ветку
+        remove_mass: Удалить ветки
+      messages:
+        create:
+          error: Произошла ошибка при создании ветки. Ветка не создана. Введите все необходимые данные и повторите попытку снова.
+          success: Ветка успешно создана.
+        save:
+          error: Произошла ошибка при сохранении ветки. Ветка не сохранена. Введите все необходимые данные и повторите попытку снова.
+          success: Ветка успешно сохранена.
+        delete:
+          query: ПРЕДУПРЕЖДЕНИЕ! Вы уверенны что хотите удалить эту ветку вместе со всеми ее тикетами?
+          success: Ветка успешно удалена.
+          mass_success: "{1} Одна ветка была удалена.|]1,Inf[ %count% ветки были удалены."
+          error: Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.
+          mass_error: "{0} Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.|{1} Одна из веток не может быть удалена, поскольку была настроена по умолчанию|]1,Inf[ %count% ветки были удалены, за исключением ветки по умолчанию"
+          exist_tickets_error: Одна или несколько веток имеют тикеты и не могут быть удалены.
+          move: Сохранить тикеты и переместить их на другую ветку.
+          select: Выберите новую ветку
+        get:
+          error: Ошибка загрузки ветки. Ветку не найдено.
+      placeholders:
+        form: Выберите ветку...
+        default: Текущая ветка настроена по умолчанию для обработки электронной почты и не может быть удалена.
+    ticket:
+      entity_label: Тикет
+      entity_plural_label: Тикеты
+      details: Информация о тикете
+      all: Все тикеты
+      created_at.label: Создан в
+      description.label: Описание
+      id.label: Идентификатор тикета
+      priority.label: Приоритет
+      reporter_email.label: Докладчик электронной почты
+      assignee.label: Ответственный
+      branch.label: Ветка
+      comments.label: Комментарии
+      sequence_number.label: Порядковый номер
+      source.label: Источник
+      status.label: Статус
+      subject.label: Название
+      unique_id.label: Уникальный идентификатор
+      updated_at.label: Дата обновления
+      attachments.label: Вложения
+      watcher_list.label: Список наблюдателей
+      created_via_email.label: Создан по электронной почте
+      since_created.label: Создано от
+      since_updated.label: Обновлено от
+      since_status_updated.label: Статус обновлен с
+      since_assignee_updated.label: Представитель обновлен с
+      columns:
+        key: Ключ
+        subject: Название
+        branch: Ветка
+        assignee: Ответственный
+        reporter: Докладчик
+        priority: Приоритет
+        status: Статус
+        created: Создан
+        updated: Обновлен
+      actions:
+        add: Добавить тикет
+        edit: Редактировать тикет
+        view: Просмотреть тикет
+        remove: Удалить билет
+        delete: Удалить
+        assign: Назначить
+        create: Создать тикет
+        change_status: Изменить статус
+        move: Переместить
+        watch: Просмотренные
+        unwatch: Непросмотренные
+        add_watcher: Добавить наблюдателя
+      messages:
+        create:
+          error: Произошла ошибка при создании тикета.
+          success: Тикет успешно создан.
+        save:
+          error: Произошла ошибка при сохранении тикета.
+          success: Тикет успешно сохранен.
+        delete:
+          query: Вы уверены, что хотите удалить этот тикет?
+          error: Произошла ошибка при удалении тикета.
+          success: Тикет успешно удален.
+        reassign:
+          error: Произошла ошибка во время переназначения тикета.
+          success: Тикет был успешно переназначен.
+        change_status:
+          error: Произошла ошибка при попытке изменить статус тикета.
+          success: Статус успешно изменен.
+        move:
+          error: Произошла ошибка при попытке переместить тикет.
+          success: Тикет успешно сохранен.
+        watch:
+          error: Произошла ошибка при попытке добавления наблюдателя.
+          success: Наблюдатель успешно добавлен.
+        watcher_remove:
+          success: Наблюдатель успешно удален.
+        get:
+          error: Ошибка загрузки тикета, тикет не удалось найти.
+          attachment:
+            error: Ошибка загрузки вложения. Тикет не имеет такого вложения.
+          branch:
+            error: Ошибка загрузки ветки, ветку не удалось найти.
+          reporter:
+            error: Ошибка загрузки докладчика, докладчика не удалось найти.
+          assignee:
+            error: Произошел сбой при проверке исполнителя, исполнителя не удалось найти.
+    comment:
+      entity_label: Комментарий
+      entity_plural_label: Комментарии
+      ticket_status: Статус тикета
+      content: Содержание
+      private: Видно только мне
+      attachments.label: Вложения
+      author.label: Автор
+      content.label: Содержание
+      created_at.label: Создан в
+      id.label: Идентификатор
+      private.label: Видно только мне
+      ticket.label: Тикет
+      updated_at.label: Дата обновления
+      author_email.label: Электронная почта автора
+      actions:
+        edit: Редактировать комментарий
+        add: Добавить комментарий
+      messages:
+        create:
+          error: Произошла ошибка при создании комментария.
+          success: Комментарий успешно создан.
+        save:
+          error: Произошла ошибка при сохранении комментария.
+          success: Комментарий успешно сохранен.
+        delete:
+          error: ""
+          success: Комментарий успешно удален.
+          query: Вы уверены, что хотите удалить комментарий?
+        get:
+          error: Ошибка загрузки комментария, комментарий не найдено.
+        get_attach:
+          error: Ошибка загрузки вложения. Комментарий не имеет такого вложения.
+        empty: Пока нет комментариев.
+      placeholders:
+        added: добавлен комментарий
+        deleted_user: Удалённый пользователь
+    attachment:
+      entity_label: Вложение
+      entity_plural_label: Вложения
+      file: Файл
+      image: Изображение
+      created_at.label: Дата создания
+      file.label: Файл
+      hash.label: Хэш
+      id.label: Идентификатор
+      updated_at.label: Дата обновления
+      actions:
+        delete_file: Удалить файл
+        add: Добавить вложение
+        download: Скачать
+        remove: Удалить
+        attach: Прикрепить файл
+      messages:
+        create:
+          error: Произошла ошибка при загрузке вложений.
+          success: Вложение(я) успешно загружены.
+        delete:
+          error: Не удается удалить вложение.
+          success: Вложение успешно удалено.
+          query: Вы уверены, что хотите удалить это вложение?
+        get:
+          error: Вложение не найдено
+        load:
+          error: Ошибка загрузки вложения, вложения не найдено.
+        upload:
+          error: Загруженная директория недоступна для записи, нет или не осталось пространства на диске.
+      placeholders:
+        dropzone: Перетащите файл сюда
+    file:
+      messages:
+        dump:
+          error: Имя файла не может быть пустой строкой.
+        type:
+          error: Значение должно быть типом файла.
+    permissions:
+      messages:
+        granted:
+          error: Недостаточно прав доступа.
+    watcher:
+      messages:
+        watch:
+          success: Вы просматриваете тикет сейчас.
+        unwatch:
+          success: Вы успешно отменили подписку от просмотра тикета.
+    ui:
+      create: Создать
+      ok: Принять
+      cancel: Отменить
+      save: Сохранить
+      delete: Удалить
+      save_and_close: Сохранить и закрыть
+      edit: Редактировать
+      add: Добавить
+      change: Изменить
+      select_watcher: Выберите пользователя
+    common:
+      general: Основная информация
+      description: Описание
+      created: Создан
+      updated: Обновлен
+      not_available: Недоступен
+      not_defined: Не определен
+      no_description: Нет описания
+      delete_confirmation: Подтвердите удаление
+      filters: Фильтры
+      watchers: Наблюдатели
+      messages:
+        validation:
+          failed: Недопустимая форма. Пожалуйста, заполните правильно все необходимые поля.
+    forms:
+      name: Имя
+      default_assignee: Ответственный по умолчанию
+      logoFile: Логотип
+      tags: Теги
+      key: Ключ
+    attributes:
+      name: Имя
+      subject: Название
+      branch: Ветка
+      status: Статус
+      priority: Приоритет
+      source: Источник
+      reporter: Докладчик
+      default_assignee: Ответственный по умолчанию
+      assignee: Ответственный
+      watcher: Наблюдатель
+      key: Ключ
+    email:
+      configuration: Настройка электронной почты
+    dashboard:
+      support.label: Поддержка
+    report:
+      plural_label: Отчеты
+      reports:
+        tickets_by_priority: Тикеты по приоритету
+        tickets_by_response_time: Время отклика
+        tickets_by_channels: Тикеты по каналам
+        tickets_by_branches: Тикеты по веткам
+        ticket_timeline: Хронология тикетов
+      messages:
+        build:
+          error: Произошла ошибка во время создания отчета.
+    tickethistory:
+      entity_label: История тикета
+      entity_plural_label: История тикетов
+      id.label: Идентификатор
+      ticket_id.label: Идентификатор тикета
+      ticket_key.label: Ключ тикета
+    tickettimeline:
+      entity_label: Хронология тикетов
+      closed.label: Закрыто
+      date.label: Дата
+      id.label: Идентификатор
+      new.label: Создать
+      reopen.label: Открыть снова
+      solved.label: Решено
+    watcherlist:
+      entity_label: Список наблюдателей
+      entity_plural_label: Списки наблюдателя
+      id.label: Идентификатор
+      ticket.label: Тикет
+      user_type.label: Тип пользователя
+    automation:
+      action:
+        move_to_branch: Переместить в ветку
+      notification:
+        ticket:
+          created: Тикет был создан
+          updated: Тикет был обновлен
+          removed: Тикет был удален
+        comment:
+          created: Комментарий был создан
+          updated: Комментарий был обновлен
+          removed: Комментарий был удален
+          private:
+            created: Был создан частный комментарий
+            updated: Частный комментарий был обновлен
+            removed: Частный комментарий был удален
+oro:
+  entity_extend:
+    form:
+      data_type:
+        branch_logo: Логотип ветки
+        user_type: Тип пользователя
+        source: Источник
+        status: Статус
+        priority: Приоритет
+        ticket_unique_id: Уникальный идентификатор тикета
+        ticket_sequence_number: Порядковый номер тикета
+oro_datagrid:
+  "not_found_hint %entityHint%": "Данные %entityHint% соответствующие вашему запросу не были найдены. Попробуйте изменить критерии поиска."

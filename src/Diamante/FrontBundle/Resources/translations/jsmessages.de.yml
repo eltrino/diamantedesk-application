@@ -1,0 +1,221 @@
+---
+"Loading...": "Wird geladen..."
+diamante_front:
+  attachment:
+    controller:
+      alert:
+        delete_error:
+          title: Anhangfehler löschen
+      message:
+        attach_success: Dateien erfolgreich angehängt
+        delete_success: Datei erfolgreich gelöscht
+    model:
+      alert:
+        add_error:
+          title: Anhangsfehler hinzufügen
+    template:
+      dropzone:
+        dropfiles: Datei hier ablegen, um sie anzuhängen
+        attachfiles: Klicken Sie hier, um Dateien anhängen
+        read: Lesen...
+        send: Sende...
+        receive: Wird empfangen...
+      button:
+        remove: Anhang entfernen
+      link:
+        download: 'Download:'
+      header:
+        file: Datei-Anhänge
+  comment:
+    controller:
+      alert:
+        create_error:
+          title: Kommentarfehler erstellen
+        delete_error:
+          title: Kommentarfehler löschen
+        edit_success:
+          title: Ihr Kommentar wurde bearbeitet
+      message:
+        post_success: Kommentar wurde erfolgreich veröffentlicht
+        delete_success: Ihr Kommentar wurde erfolgreich gelöscht
+    model:
+      error:
+        required: "Darf nicht leer sein"
+    template:
+      form:
+        add: Add Comment
+        cancel: Abbrechen
+        save: Änderungen speichern
+      button:
+        edit: Edit Comment
+        delete: Kommentar löschen
+  common:
+    template:
+      close: Schließen
+      cancel: Abbrechen
+      sort: Sortieren nach
+    view:
+      alert:
+        title: Fehler
+        text: Ein unprozessierter Fehler ist passiert. Bitte versuchen Sie es erneut!
+      modal:
+        title: Popup-Fenster
+        submit: Änderungen speichern
+  footer:
+    template:
+      copyright: Diamante ist unter der %{license} Lizenz von %{company} veröffentlicht
+  header:
+    template:
+      new_ticket: Neues Ticket
+  session:
+    controller:
+      alert:
+        confirm_success:
+          title: E-Mail-Bestätigungserfolg
+          text: Loggen Sie sich ein und nutzen Sie die Anwendung
+        reconfirm_succes:
+          title: E-Mail-Bestätigungserfolg
+          text: Wir haben eine E-Mail an %{email} gesendet.</br> Bitte klicken Sie auf den Link in der Nachricht, um Ihr Konto zu bestätigen.
+        confirm_fail:
+          title: E-Mail-Bestätigung fehlgeschlagen
+          text: Aktivierungsschlüssel ist ungültig
+        login_fail:
+          title: Autorisierung fehlgeschlagen
+        register_succes:
+          title: Registrierung erfolgreich
+          text: Danke. Wir haben eine E-Mail an %{email} gesendet.</br> Bitte klicken Sie auf den Link in der Nachricht, um Ihr Konto zu bestätigen.
+        register_fail:
+          title: Registrierung fehlgeschlagen
+        reset_info:
+          title: Passwortzurücksetzungs-Info
+          text: Wir haben eine E-Mail an %{email} gesendet.</br> Bitte klicken Sie auf den Link in der Nachricht, um Ihr Passwort zurückzusetzen.
+        reset_fail:
+          title: Passwortzurücksetzung fehlgeschlagen
+          text: Zurücksetzungsschlüssel ungültig oder abgelaufen
+      message:
+        reset_success: Passwort erfolgreich geändert, Sie können sich anmelden
+    model:
+      alert:
+        auth_required:
+          title: Autorisierung erforderlich
+          text: Diese Aktion erfordert Autorisierung
+      error:
+        required: Darf nicht leer sein
+        email_format: '%{email} ist keine gültige E-Mail-Adresse'
+        password_length: Es müssen mindestens sechs (6) Zeichen sein
+    template:
+      register: Registrierung
+      login: Anmeldung
+      forgot: Amnesie?
+      remember: Eingeloggt bleiben
+      back:
+        register: Haben Sie bereits ein Konto? &mdash;<a href="%{url}">Anmelden</a>
+        reset: Zurück zur <a href="%{url}"> Anmeldung</a>
+      label:
+        email: E-Mail
+        first_name: Vorname
+        last_name: Nachname
+        password: Passwort
+        new_password: Neues Passwort
+      placeholder:
+        email: E-Mail-Adresse eintragen
+        first_name: Vorname eingeben
+        last_name: Nachname eingeben
+        password: Passwort eingeben
+        new_password: Neues Passwort eingeben
+      button:
+        login: Anmeldung
+        register: Fortsetzen
+        reset_password: Passwort zurücksetzen
+        new_password: Neues Passwort setzen
+    title:
+      login: Anmeldung
+      register: Registrierung
+      reset: Passwort zurücksetzen
+  ticket:
+    controller:
+      alert:
+        create_error:
+          title: Ticket-Fehler erstellen
+        edit_error:
+          title: Ticket-Fehler bearbeiten
+      message:
+        key_changed: Während wir aktiv an Ihrem Ticket gearbeitet haben, änderte sich der Ticket-Schlüssel in %{ticket_key_id}
+        ticket_update: Ticket-%{ticket_update_id} aktualisiert
+        status_closed: Ticketstatus %{ticket_status_closed_id} geändert. Ticketstatus "geschlossen"
+        status_open: Ticketstatus %{ticket_status_open_id} geändert. Ticketstatus ist "Offen"
+        create_ticket: Ticket-%{ticket_created_id} erstellt
+      edit:
+        title: Ticket-%{ticket_id} bearbeiten
+      edit_ticket:
+        Edit Ticket: '%{key} - %{subject}'
+      search_result: Suchergebnis
+    model:
+      error:
+        required: Darf nicht leer sein
+    template:
+      empty_list: Sie haben noch keine Tickets erstellt.<br>Klicken Sie <a href="%{url}">+</a>, um ein neues zu erstellen.
+      empty_search: Es gibt keine Tickets, die Ihren Kriterien entsprechen.
+      empty_view: Dieses Ticket existiert nicht!
+      form:
+        subject_label: Ticket-Betreff
+        subject_placeholder: Ticket-Kurzzusammenfassung
+        description_label: Beschreibung
+        description_placeholder: Stellen Sie eine detaillierte Beschreibung Ihrer Anfrage bereit
+        priority_label: Priorität
+        low_option: Niedrig
+        medium_option: Mittel
+        high_option: Hoch
+      list:
+        key: Schlüssel
+        date: Date
+        subject: Betreff
+        priority: Priorität
+        status: Status
+      resolve_button: Ticket lösen
+      reopen_button: Ticket wiedereröffnen
+    view:
+      all_tickets: Alle Tickets anzeigen
+    router:
+      view_ticket: Ticket anzeigen
+      create_ticket: Ticket erstellen
+      edit_ticket: Ticket bearbeiten
+  user:
+    controller:
+      message:
+        update_success: Sie haben erfolgreich Ihr Profil aktualisiert
+      alert:
+        edit_error:
+          title: Benutzerfehler bearbeiten
+      edit_user: Benutzer bearbeiten
+    model:
+      error:
+        required: Darf nicht leer sein
+        password_length: Es müssen mindestens sechs (6) Zeichen sein
+    template:
+      form:
+        first_name_label: Vorname
+        last_name_label: Nachname
+        email_label: E-Mail
+        password_label: Neues Passwort
+        submit_button: Absenden
+      logout: Ausloggen
+  watcher:
+    controller:
+      alert:
+        add_error:
+          title: Beobachtungs-Fehler hinzufügen
+        delete_comment_error:
+          title: Kommentarfehler löschen
+      message:
+        add_success: Ein neuer Beobachter wurde erfolgreich zum Ticket hinzugefügt
+        remove_success: Ein Beobachter wurde vom Ticket entfernt
+      add_watcher: Add Watcher
+    model:
+      error:
+        required: Darf nicht leer sein
+        email_format: '%{email} ist keine gültige E-Mail-Adresse'
+    template:
+      email_watcher: E-Mail des Beobachters
+      remove_watcher: Beobachter entfernen
+      add_watcher: Add Watcher

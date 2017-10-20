@@ -1,0 +1,106 @@
+---
+diamante:
+  automation:
+    rule:
+      entity_label: Règle
+      entity_plural_label: Régles
+      event_triggered_entity_plural_label: Règles déclenchées par l'événement
+      time_triggered_entity_plural_label: Temps a déclenché des règles
+      details: Détails de la règle
+      messages:
+        create:
+          error: Erreur s’est produite lors de la création de la règle. Règle n’est pas créé. Entrez toutes les données requises, puis réessayez.
+          success: Règle créée avec succès.
+        update:
+          error: Erreur s’est produite lors de l’actualisation de la règle. Règle n’est pas mis à jour. Entrez toutes les données requises, puis réessayez.
+          success: Règle mise à jour avec succès.
+        delete:
+          query: Êtes-vous sûr de que vouloir supprimer cette règle ?
+          success: Règle supprimée avec succès.
+      status:
+        active: Active
+        inactive: Inactif
+      actions:
+        add: Ajouter une règle
+        view: Voir règle
+        edit: Éditer la règle
+        delete: Supprimer la règle
+        mass:
+          remove: Supprimer des règles
+          activate: Activer les règles
+          deactivate: Désactiver les règles
+          response:
+            activate:
+              success_message: "{0} aucune entité ont été activées |{1} une entité a été activé |] 1, Inf [%count% entités ont été activées"
+            deactivate:
+              success_message: "{0} aucune entité ont été désactivées |{1} une entité a été désactivé |] 1, Inf [%count% entités étaient désactivées"
+      time_triggered:
+        entity_label: Temps déclenché
+        repetition_time: Fréquence
+      event_triggered:
+        entity_label: Événement déclenché
+    ui:
+      create: Créer
+      ok: Bien
+      cancel: Annuler
+      save: Sauvegarder
+      delete: Supprimer
+      save_and_close: Sauvegarder et fermer
+      edit: Modifier
+      add: Ajouter
+      change: Changement
+      event_triggered:
+        create: Créer une règle de déclenchement d'événement
+      time_triggered:
+        create: Créer la règle déclenchée de l’heure
+    attributes:
+      condition: Condition
+      action: Action
+      weight: Signification
+      target: Objectif
+      parent: Parent
+      status: Statut
+      expression: Expression
+      mode: Mode
+    common:
+      name: Nom
+      general: Générale
+      created: Créé
+      updated: Actualisé
+      not_available: N/A
+      not_defined: Non défini
+      delete_confirmation: Confirmer la suppression
+      messages:
+        validation:
+          failed: Formulaire n’est pas valide. Veuillez remplir correctement tous les champs requis.
+    forms:
+      name: Nom
+    condition:
+      eq: est égal à
+      neq: n’est pas égal à
+      gt: est supérieure à
+      gte: est supérieur ou égal à
+      lt: est inférieure à
+      lte: est inférieur à ou égal à
+      contains: contient
+      not_contains: ne contient pas
+      created: Créé
+      updated: Actualisé
+      removed: Supprimé
+      changed: modifié
+      changed_from: modifiée de
+      changed_to: changé à
+      "true": "vrai"
+      "false": "faux"
+      customer: est client
+      admin: est admin
+    action:
+      update_property: Mettre à jour la propriété
+      notify_by_email: Notifier par email
+    connector:
+      inclusive: Tout cela est vrai
+      exclusive: Tout d'entre eux est vrai
+    cron:
+      d: "{1} chaque jour |] 1, Inf [tous les jours %time%"
+      h: "{1} toutes les heures |] 1, Inf [toutes les heures %time%"
+      m: Toutes %time% les minutes

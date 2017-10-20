@@ -1,0 +1,64 @@
+---
+diamante:
+  user:
+    labels:
+      entity: Kunde
+      entity.plural: Kunden
+      email: E-Mail
+      first_name: Vorname
+      last_name: Nachname
+      active: Ist aktiv
+      id: Identifizieren
+      is_deleted: Ist gelöscht
+      related_tickets: Tickets
+      activated: E-Mail bestätigt
+    actions:
+      create: Kunde erstellen
+      remove: Kunde löschen
+      view: Kunde anzeigen
+      update: Kunde aktualisieren
+      delete: Kunde löschen
+      reset_pwd: Passwort zurücksetzen
+      mass:
+        delete:
+          label: Löschen von Kunden
+          messages:
+            success: Ausgewählte Kunden erfolgreich gelöscht.
+            fail: Fehler beim Löschen von ausgewählter Kunden.
+        reset_pwd:
+          label: Zurücksetzen von Kennwörtern für Kunden
+          messages:
+            success: Passwörter für ausgewählte Kunden %count% wurden erfolgreich zurückgesetzt.
+            fail: Fehler beim Zurücksetzen von Kennwörtern.
+    messages:
+      delete:
+        query: Sind Sie sicher, dass Sie diesen Kunden löschen möchten?
+        success: Kunde erfolgreich gelöscht.
+      create:
+        success: Kunde erfolgreich erstellt.
+      update:
+        success: Kunden erfolgreich aktualisiert.
+      reset_pwd:
+        query: Sind Sie sicher, dass Sie für diesen Kunden Passwort zurücksetzen möchten?
+        success: Benutzerkennwort erfolgreich zurückgesetzt.
+      remove:
+        failed:
+          related: Fehler beim Löschen des Benutzers. Benutzer hat Entitäten verknüpft.
+    placeholder:
+      email: 'Bitte geben Sie eine E-Mail-Adresse ein'
+    details: Kundendetails
+    activity: Kundenaktivität
+    ui:
+      "yes": true
+      "no": false
+    notification:
+      created: Neue DiamanteDesk Account erstellt.
+      force_reset: Kennwort zurücksetzen Benachrichtigung
+    exception:
+      customer_exists: Kunde mit dieser E-Mail-Adresse ist bereits vorhanden.
+    autocomplete:
+      group:
+        assignee: '[Beauftragter]'
+        watchers: '[Beobachter]'
+        reporter: '[Ticket Reporter]'
+        comment_author: '[Kommentar Autor]'

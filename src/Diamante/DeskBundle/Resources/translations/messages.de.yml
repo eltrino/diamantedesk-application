@@ -1,0 +1,322 @@
+---
+diamante:
+  desk:
+    branch:
+      entity_label: Abteilung
+      entity_plural_label: Abteilungen
+      details: Abteilungsdetails
+      created_at.label: Erstellt am
+      description.label: Beschreibung
+      id.label: Abteilungs-ID
+      key.label: Abteilungsschlüssel
+      logo.label: Abteilungslogo
+      name.label: Abteilungsname
+      updated_at.label: Aktualisiert am
+      default_assignee.label: Standard Zessionar
+      columns:
+        logo: Logo
+        branch_name: Abteilungsname
+        branch_key: Abteilungsschlüssel
+      actions:
+        create: Abteilung erstellen
+        view: Abteilung anzeigen
+        edit: Abteilung ändern
+        remove: Abteilung löschen
+        remove_mass: Abteilungen löschen
+      messages:
+        create:
+          error: Fehler beim Erstellen einer Abteilung. Die Abteilung wird nicht erstellt. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
+          success: Abteilung erfolgreich erstellt.
+        save:
+          error: Fehler beim Speichern der Abteilung. Die Abteilung wird nicht gespeichert. Geben Sie alle erforderlichen Daten und versuchen Sie es erneut.
+          success: Abteilung erfolgreich gespeichert.
+        delete:
+          query: WARNUNG! Sind Sie sicher, dass Sie diese Abteilung mit allen Tickets löschen möchten?
+          success: Abteilung erfolgreich gelöscht.
+          mass_success: "{1} ein Zweig wurde gelöscht. |] 1, Inf [%count% Zweige wurden gelöscht."
+          error: Die aktuelle Abteilung ist als Standard für die E-Mail-Verarbeitung konfiguriert und kann nicht gelöscht werden.
+          mass_error: "{0} Aktueller Zweig wird als Standard für die Verarbeitung von E-Mail konfiguriert und kann nicht gelöscht werden. |{1} eines Zweiges kann nicht gelöscht werden, wie es, als Standard eine konfiguriert wurde |] 1, Inf [%count% Zweige außer Standardzweig gelöscht wurden"
+          exist_tickets_error: Eine oder mehrere Abteilungen haben Tickets welche nicht gelöscht werden können.
+          move: Behalten Sie die Tickets und verschieben Sie sie in eine andere Abteilung.
+          select: Wählen Sie eine neue Abteilung aus
+        get:
+          error: Abteilung laden fehlgeschlagen. Abteilung nicht gefunden.
+      placeholders:
+        form: Wähle eine Abteilung...
+        default: Die aktuelle Abteilung ist als Standard für die E-Mail-Verarbeitung konfiguriert und kann nicht gelöscht werden.
+    ticket:
+      entity_label: Ticket
+      entity_plural_label: Tickets
+      details: Ticket-Details
+      all: Alle Tickets
+      created_at.label: Erstellt am
+      description.label: Beschreibung
+      id.label: Ticket ID
+      priority.label: Priorität
+      reporter_email.label: Reporter-E-Mail
+      assignee.label: Auftraggeber
+      branch.label: Abteilung
+      comments.label: Kommentare
+      sequence_number.label: Laufende Nummer
+      source.label: Quelle
+      status.label: Status
+      subject.label: Betreff
+      unique_id.label: Eindeutige ID
+      updated_at.label: Aktualisiert am
+      attachments.label: Anhänge
+      watcher_list.label: Beobachterliste
+      created_via_email.label: Erstellt per e-Mail an
+      since_created.label: Da erstellt
+      since_updated.label: Da aktualisiert
+      since_status_updated.label: Da Status aktualisiert
+      since_assignee_updated.label: Seit Zessionar aktualisiert
+      columns:
+        key: Schlüssel
+        subject: Betreff
+        branch: Abteilung
+        assignee: Bearbeiter
+        reporter: Reporter
+        priority: Priorität
+        status: Status
+        created: Erstellt
+        updated: Aktualisiert
+      actions:
+        add: Ticket hinzufügen
+        edit: Ticket bearbeiten
+        view: Ticket anzeigen
+        remove: Ticket löschen
+        delete: Löschen
+        assign: Zuordnen
+        create: Ticket erstellen
+        change_status: Status ändern
+        move: Verschieben
+        watch: Beobachten
+        unwatch: Nicht mehr überwachen
+        add_watcher: Hinzufügen von Watcher
+      messages:
+        create:
+          error: Fehler beim Erstellen eines Tickets.
+          success: Ticket erfolgreich erstellt.
+        save:
+          error: Fehler beim Speichern des Tickets.
+          success: Ticket erfolgreich gespeichert.
+        delete:
+          query: Sind Sie sicher, dass Sie dieses Ticket löschen möchten?
+          error: Fehler beim Löschen des Tickets.
+          success: Ticket wurde erfolgreich gelöscht.
+        reassign:
+          error: Fehler beim neu zuweisen das Ticket.
+          success: Ticket erfolgreich neu zugewiesen.
+        change_status:
+          error: Fehler beim Versuch, den Ticketstatus zu ändern.
+          success: Status erfolgreich geändert.
+        move:
+          error: Fehler beim Versuch, das Ticket zu verschieben.
+          success: Ticket erfolgreich verschoben.
+        watch:
+          error: Fehler beim Versuch, ein Beobachter hinzufügen.
+          success: Watcher erfolgreich hinzugefügt.
+        watcher_remove:
+          success: Watcher wurde erfolgreich entfernt.
+        get:
+          error: Ticket Laden fehlgeschlagen, Ticket wurde nicht gefunden.
+          attachment:
+            error: Anlage laden fehlgeschlagen. Ticket hat keine solche Anlage.
+          branch:
+            error: Abteilung laden fehlgeschlagen. Abteilung nicht gefunden.
+          reporter:
+            error: Reporter laden fehlgeschlagen, Reporter wurde nicht gefunden.
+          assignee:
+            error: Validierung des Beauftragten fehlgeschlagen, Beauftragten nicht gefunden.
+    comment:
+      entity_label: Kommentar
+      entity_plural_label: Kommentare
+      ticket_status: Ticket-Status
+      content: Inhalt
+      private: Privatgelände
+      attachments.label: Anhänge
+      author.label: Autor
+      content.label: Inhalt
+      created_at.label: Hergestellt in
+      id.label: Identifizieren
+      private.label: Privatgelände
+      ticket.label: Ticket
+      updated_at.label: Aktualisiert am
+      author_email.label: Autor email
+      actions:
+        edit: Kommentar bearbeiten
+        add: Kommentar hinzufügen
+      messages:
+        create:
+          error: Fehler beim Erstellen eines Kommentars.
+          success: Kommentar wurde erfolgreich erstellt.
+        save:
+          error: Fehler beim Speichern des Kommentars.
+          success: Kommentar erfolgreich gespeichert.
+        delete:
+          error: ""
+          success: Kommentar wurde erfolgreich gelöscht.
+          query: Sind Sie sicher, dass Sie diesen Kommentar löschen möchten?
+        get:
+          error: Laden des Kommentars fehlgeschlagen, Kommentar nicht gefunden.
+        get_attach:
+          error: Anhang laden fehlgeschlagen. Kommentar hat keinen solchen Anhang.
+        empty: Es gibt keine Kommentare.
+      placeholders:
+        added: Kommentar zugefügt
+        deleted_user: Gelöschten Benutzer
+    attachment:
+      entity_label: Anhang
+      entity_plural_label: Anhänge
+      file: Datei
+      image: Bild
+      created_at.label: Erstellt am
+      file.label: Datei
+      hash.label: Hash
+      id.label: Identifizieren
+      updated_at.label: Aktualisiert am
+      actions:
+        delete_file: Datei löschen
+        add: Anlage hinzufügen
+        download: Download
+        remove: Löschen
+        attach: Datei hinzufügen
+      messages:
+        create:
+          error: Fehler beim Hochladen einer Anlage.
+          success: Anlage(n) wurde(n) erfolgreich hochgeladen.
+        delete:
+          error: Anhang konnte nicht entfernt werden.
+          success: Anhang erfolgreich gelöscht.
+          query: Wollen Sie diesen Anhang löschen?
+        get:
+          error: Anhang nicht gefunden
+        load:
+          error: Laden des Anhangs fehlgeschlagen, Anhang nicht gefunden.
+        upload:
+          error: Upload-Verzeichnis ist nicht beschreibbar, ist nicht vorhanden oder kein Speicherplatz auf dem Datenträger.
+      placeholders:
+        dropzone: Legen Sie die Datei hier
+    file:
+      messages:
+        dump:
+          error: Der Dateiname darf nicht leer bleiben.
+        type:
+          error: Der Wert sollte eine Datei Type sein.
+    permissions:
+      messages:
+        granted:
+          error: Nicht ausreichende Berechtigungen.
+    watcher:
+      messages:
+        watch:
+          success: Sie überwachen nun das Ticket.
+        unwatch:
+          success: Sie haben sich erfolgreich abgemeldet aus der Beobachtung der Ticket.
+    ui:
+      create: Erstellen
+      ok: Ok
+      cancel: Abbrechen
+      save: Speichern
+      delete: Löschen
+      save_and_close: Speichern und schließen
+      edit: Bearbeiten
+      add: Hinzufügen
+      change: Ändern
+      select_watcher: Benutzer auswählen
+    common:
+      general: Allgemein
+      description: Beschreibung
+      created: Erstellt
+      updated: Aktualisiert
+      not_available: NV
+      not_defined: Nicht definiert
+      no_description: Keine Beschreibung
+      delete_confirmation: Löschen bestätigen
+      filters: Filter
+      watchers: Beobachter
+      messages:
+        validation:
+          failed: Form ist ungültig. Füllen Sie alle erforderlichen Felder korrekt aus.
+    forms:
+      name: Name
+      default_assignee: Standard Zessionar
+      logoFile: Logo
+      tags: Tags
+      key: Schlüssel
+    attributes:
+      name: Name
+      subject: Betreff
+      branch: Abteilung
+      status: Status
+      priority: Priorität
+      source: Quelle
+      reporter: Reporter
+      default_assignee: Standard Zessionar
+      assignee: Bearbeiter
+      watcher: Beobachter
+      key: Schlüssel
+    email:
+      configuration: E-Mail-Konfiguration
+    dashboard:
+      support.label: Support für Armaturenbrett
+    report:
+      plural_label: Berichte
+      reports:
+        tickets_by_priority: Tickets nach Priorität
+        tickets_by_response_time: Antwortzeit
+        tickets_by_channels: Tickets von Channels
+        tickets_by_branches: Tickets von Branches
+        ticket_timeline: Ticket-Timeline
+      messages:
+        build:
+          error: Fehler beim Generieren des Berichts.
+    tickethistory:
+      entity_label: Ticket-Historie
+      entity_plural_label: Tickets Geschichte
+      id.label: Identifizieren
+      ticket_id.label: Ticket-id
+      ticket_key.label: Ticket-Schlüssel
+    tickettimeline:
+      entity_label: Ticket-Timeline
+      closed.label: Geschlossen
+      date.label: Datum
+      id.label: Identifizieren
+      new.label: Neu
+      reopen.label: Wieder öffnen
+      solved.label: Gelöst
+    watcherlist:
+      entity_label: Beobachterliste
+      entity_plural_label: Beobachterlisten
+      id.label: Identifizieren
+      ticket.label: Ticket
+      user_type.label: Benutzertyp
+    automation:
+      action:
+        move_to_branch: Zum Zweig wechseln
+      notification:
+        ticket:
+          created: Ticket wurde erstellt
+          updated: Ticket wurde aktualisiert
+          removed: Ticket wurde entfernt
+        comment:
+          created: Kommentar wurde erstellt
+          updated: Kommentar wurde aktualisiert
+          removed: Kommentar wurde entfernt
+          private:
+            created: Privater Kommentar erstellt wurde
+            updated: Privater Kommentar wurde aktualisiert
+            removed: Privater Kommentar wurde entfernt
+oro:
+  entity_extend:
+    form:
+      data_type:
+        branch_logo: Abteilungslogo
+        user_type: Benutzertyp
+        source: Quelle
+        status: Status
+        priority: Priorität
+        ticket_unique_id: Eindeutige Id Ticket
+        ticket_sequence_number: Ticket Sequenznummer
+oro_datagrid:
+  "not_found_hint %entityHint%": "Keine %entityHint% gefunden, die Ihrer Suche entsprechen. Versuchen Sie die Suchkriterien zu ändern."

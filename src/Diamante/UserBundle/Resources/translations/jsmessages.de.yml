@@ -1,0 +1,8 @@
+---
+'Reset Password Confirmation': 'Kennwortbestätigung zurücksetzen'
+'Are you sure you want to reset password for selected customer(s)?': 'Sind Sie sicher, dass Sie das Passwort für den (die) ausgewählten Kunden zurücksetzen möchten?'
+'Yes, Reset': 'Ja, zurücksetzen'
+'Password(s) for selected customer(s) successfully reset.': 'Kennwort (Kennwörter) für ausgewählten (ausgewählte) Kunden erfolgreich zurückgesetzt.'
+'Error occurred while trying to reset password(s).': 'Fehler aufgetreten beim Passwort (Passwörter) zurücksetzen.'
+'Please, select customer(s) to reset password.': 'Bitte Kunde(n) auswählen, um Passwort zurückzusetzen.'
+'Password Reset Confirmation': 'Passwortzurücksetzungsbestätigung'

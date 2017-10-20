@@ -1,0 +1,106 @@
+---
+diamante:
+  automation:
+    rule:
+      entity_label: Правило
+      entity_plural_label: Правила
+      event_triggered_entity_plural_label: Правила за дією
+      time_triggered_entity_plural_label: Правила за часом
+      details: Відомості про правила
+      messages:
+        create:
+          error: Сталася помилка під час створення правила. Правило не створено. Введіть всі необхідні дані і спробуйте ще раз.
+          success: Правило успішно створено.
+        update:
+          error: Сталася помилка під час оновлення правила. Правило не оновлюється. Введіть всі необхідні дані та повторіть спробу ще раз.
+          success: Правило успішно оновлено.
+        delete:
+          query: Ви впевнені, що хочете видалити це правило?
+          success: Правило успішно видалено.
+      status:
+        active: Активний
+        inactive: Неактивний
+      actions:
+        add: Додати правило
+        view: Переглянути правило
+        edit: Редагувати правило
+        delete: Видалити правило
+        mass:
+          remove: Видалити правила
+          activate: Активувати правила
+          deactivate: Відключити правила
+          response:
+            activate:
+              success_message: "{0} Об’єкти не були активовані|{1} Один об'єкт був активований |] 1, Inf [%count% Об'єкти були активовані"
+            deactivate:
+              success_message: "{0} Об’єкти не були відключені|{1} Один об'єкт був відключений|] 1, Inf [%count% Об'єкти були відключені"
+      time_triggered:
+        entity_label: Час запуску
+        repetition_time: Частота
+      event_triggered:
+        entity_label: Подія
+    ui:
+      create: Створити
+      ok: Ок
+      cancel: Відмінити
+      save: Зберегти
+      delete: Видалити
+      save_and_close: Зберегти та закрити
+      edit: Редагувати
+      add: Додати
+      change: Змінити
+      event_triggered:
+        create: Створити правило по дії
+      time_triggered:
+        create: Створити правило по часу
+    attributes:
+      condition: Стан
+      action: Дія
+      weight: Значення
+      target: Ціль
+      parent: Джерело
+      status: Статус
+      expression: Вираз
+      mode: Режим
+    common:
+      name: Назва
+      general: Загальні відомості
+      created: Створений
+      updated: Оновлений
+      not_available: Недоступний
+      not_defined: Невизначений
+      delete_confirmation: Підтвердити видалення
+      messages:
+        validation:
+          failed: Недоступна форма. Будь ласка, правильно заповніть всі обов'язкові поля.
+    forms:
+      name: Назва
+    condition:
+      eq: рівно
+      neq: не рівно
+      gt: більше, ніж
+      gte: більше або дорівнює
+      lt: менше ніж
+      lte: менше або рівне
+      contains: містить
+      not_contains: не містить
+      created: Створений
+      updated: Оновлений
+      removed: Видалений
+      changed: змінено
+      changed_from: змінено з
+      changed_to: змінено на
+      "true": "вірно"
+      "false": "не вірно"
+      customer: клієнт
+      admin: адміністратор
+    action:
+      update_property: Редагувати параметр
+      notify_by_email: Повідомити по електронній пошті
+    connector:
+      inclusive: Всі твердження справедливі
+      exclusive: Будь-яке з твердженнь справедливо
+    cron:
+      d: "{1} кожного дня |] 1, Inf [кожних %time% днів"
+      h: "{1} кожну годину |] 1, Inf [кожних %time% годин"
+      m: Кожних %time% хвилин

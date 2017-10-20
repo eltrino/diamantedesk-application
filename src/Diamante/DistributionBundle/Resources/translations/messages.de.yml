@@ -1,0 +1,28 @@
+---
+title: DiamanteDesk Anwendungsinstallation
+process:
+  step:
+    diamanteinstall:
+      header: Initialisierung
+    installation:
+      cache: Leeren Sie den Cache vor der Datenbank-Initialisierung
+      clear-config: Entitäts-Cache leeren
+      clear-extend: Erweiterte Entitäts-Daten löschen
+      schema-drop: Aktuelles Schema löschen
+      schema-update: Schema Aktualisierung
+      fixtures: Daten laden
+      workflows: Workflow-Definitionen laden
+      processes: Prozesskonfiguration laden
+      navigation: Init-Navigation
+      js-routing: Dump, JS-routing
+      localization: Lokalisierung ausgeben
+      assets: Ressourcendateien installieren
+      assetic: Assetic ausgeben
+      translation: Übersetzungen vorbereiten
+      requirejs: JS-Ressourcen optimieren (optional)
+      finish: Löschen Sie den Cache um die Installation abzuschließen
+    check:
+      table:
+        diamante: DiamanteDesk Anforderungen
+    final:
+      content: 'Sie können DiamanteDesk sofort verwenden. <br>Wenn Sie Hilfe oder Unterstützung benötigen treten Sie unserer Community bei <a href="https://github.com/eltrino"> Github</a> oder wenn Sie Enterprise Kunde sind, kontaktieren Sie unser engagiertes Support-Team.'

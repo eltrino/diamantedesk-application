@@ -1,0 +1,8 @@
+---
+'Reset Password Confirmation': 'Підтвердження скидання пароля'
+'Are you sure you want to reset password for selected customer(s)?': 'Ви впевнені, що хочете скинути пароль для обраних клієнтів?'
+'Yes, Reset': 'Так, скинути'
+'Password(s) for selected customer(s) successfully reset.': 'Пароль для вибраних клієнтів успішно скинуто.'
+'Error occurred while trying to reset password(s).': 'Сталася помилка під час спроби скидання паролів.'
+'Please, select customer(s) to reset password.': 'Будь ласка, виберіть клієнтів для скидання пароля.'
+'Password Reset Confirmation': 'Підтвердження скидання пароля'

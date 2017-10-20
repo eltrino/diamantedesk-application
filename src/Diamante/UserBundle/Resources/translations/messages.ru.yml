@@ -1,0 +1,64 @@
+---
+diamante:
+  user:
+    labels:
+      entity: Клиент
+      entity.plural: Клиенты
+      email: Электронная почта
+      first_name: Имя
+      last_name: Фамилия
+      active: Активен
+      id: Идентификатор
+      is_deleted: Удален
+      related_tickets: Тикеты
+      activated: E-mail подтвержден
+    actions:
+      create: Создать клиента
+      remove: Удалить клиента
+      view: Просмотр клиента
+      update: Обновить клиента
+      delete: Удалить клиента
+      reset_pwd: Сброс пароля
+      mass:
+        delete:
+          label: Удалить клиентов
+          messages:
+            success: Выбранные клиенты успешно удалены.
+            fail: Не удалось удалить выбранных клиентов.
+        reset_pwd:
+          label: Сброс паролей для клиентов
+          messages:
+            success: Пароли для выбранных %count% клиента(ов) были успешно сброшены.
+            fail: Произошла ошибка при сбросе паролей.
+    messages:
+      delete:
+        query: Вы уверены, что хотите удалить этого клиента?
+        success: Клиент успешно удален.
+      create:
+        success: Клиент успешно создан.
+      update:
+        success: Клиент успешно обновлен.
+      reset_pwd:
+        query: Вы уверены, что хотите сбросить пароль для этого клиента?
+        success: Пароль пользователя успешно сброшен.
+      remove:
+        failed:
+          related: Ошибка при удалении пользователя. Пользователь имеет связанные объекты.
+    placeholder:
+      email: 'Пожалуйста, введите адрес электронной почты'
+    details: Информация о клиенте
+    activity: Активность клиента
+    ui:
+      "yes": true
+      "no": false
+    notification:
+      created: Новый аккаунт DiamanteDesk создан.
+      force_reset: Уведомление о сбросе пароля
+    exception:
+      customer_exists: Клиент с таким электронным адресом уже существует.
+    autocomplete:
+      group:
+        assignee: '[Assignee]'
+        watchers: '[Watchers]'
+        reporter: '[Ticket Reporter]'
+        comment_author: '[Comment author]'

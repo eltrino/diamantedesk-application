@@ -1,0 +1,8 @@
+---
+'Reset Password Confirmation': 'Подтверждение сброса пароля'
+'Are you sure you want to reset password for selected customer(s)?': 'Вы уверены, что хотите сбросить пароль для выбранных клиентов?'
+'Yes, Reset': 'Да, сбросить'
+'Password(s) for selected customer(s) successfully reset.': 'Пароль(и) для выбранного клиента(ов) успешно сброшен.'
+'Error occurred while trying to reset password(s).': 'Произошла ошибка при попытке сбросить пароль(и).'
+'Please, select customer(s) to reset password.': 'Пожалуйста, выберите клиента(ов) для сброса пароля.'
+'Password Reset Confirmation': 'Подтверждение сброса пароля'

@@ -1,0 +1,322 @@
+---
+diamante:
+  desk:
+    branch:
+      entity_label: Гілка
+      entity_plural_label: Гілки
+      details: Деталі гілки
+      created_at.label: Створена в
+      description.label: Опис
+      id.label: Ідентифікатор гілки
+      key.label: Ключ гілки
+      logo.label: Логотип гілки
+      name.label: Назва гілки
+      updated_at.label: Дата зміни
+      default_assignee.label: Представник за замовчуванням
+      columns:
+        logo: Логотип
+        branch_name: Назва гілки
+        branch_key: Ключ гілки
+      actions:
+        create: Створити гілку
+        view: Переглянути гілку
+        edit: Редагувати гілку
+        remove: Видалити гілку
+        remove_mass: Видалити гілки
+      messages:
+        create:
+          error: Виникла помилка при створенні гілки. Гілка не створюється. Введіть всі необхідні дані та спробуйте ще раз.
+          success: Гілка успішно створена.
+        save:
+          error: Виникла помилка при збереженні гілки. Гілку не збережено. Введіть всі необхідні дані та спробуйте ще раз.
+          success: Гілку успішно збережено.
+        delete:
+          query: ПОПЕРЕДЖЕННЯ! Ви впевнені, що хочете видалити гілку разом з встановленими тікетами?
+          success: Гілку успішно видалено.
+          mass_success: "{1} Одна гілка була видалена.|]1,Inf[ %count% гілки були видалені."
+          error: Поточна гілка налаштована за замовчуванням для обробки електронної пошти і не може бути видалена.
+          mass_error: "{0} Поточна гілка налаштована за замовчуванням для обробки електронної пошти і не може бути видалена. | {1} Одна з гілок не може бути видалена, оскільки була налаштована за замовчуванням |] 1, Inf [ %count% гілки були видалені, за винятком гілки за замовчуванням"
+          exist_tickets_error: Одна або кілька гілок мають тікети і не можуть бути видалені.
+          move: Збережіть тікети і перемістити їх на іншу гілку.
+          select: Оберіть нову гілку
+        get:
+          error: Помилка завантаження гілки. Гілки не знайдено.
+      placeholders:
+        form: Вибрати гілку...
+        default: Поточна гілка налаштована за замовчуванням для обробки електронної пошти і не може бути видалена.
+    ticket:
+      entity_label: Тікет
+      entity_plural_label: Тікети
+      details: Деталі тікету
+      all: Усі тікети
+      created_at.label: Створена в
+      description.label: Опис
+      id.label: Ідентифікатор тікета
+      priority.label: Пріоритет
+      reporter_email.label: Доповідач електронної пошти
+      assignee.label: Замовник
+      branch.label: Гілка
+      comments.label: Коментарі
+      sequence_number.label: Порядковий номер
+      source.label: Вихідний код
+      status.label: Статус
+      subject.label: Тема
+      unique_id.label: Унікальний ідентифікатор
+      updated_at.label: Дата зміни
+      attachments.label: Вкладення
+      watcher_list.label: Списки спостерігача
+      created_via_email.label: Створений по електронній пошті
+      since_created.label: Створений з
+      since_updated.label: Оновлений з
+      since_status_updated.label: Статус оновлений з
+      since_assignee_updated.label: Представник оновлений з
+      columns:
+        key: Ключ
+        subject: Тема
+        branch: Гілка
+        assignee: Виконавець
+        reporter: Доповідач
+        priority: Пріоритет
+        status: Статус
+        created: Створений
+        updated: Оновлений
+      actions:
+        add: Додати тікет
+        edit: Редагувати тікет
+        view: Переглянути тікет
+        remove: Видалити тікет
+        delete: Видалити
+        assign: Призначити
+        create: Створити тікет
+        change_status: Змінити статус
+        move: Перемістити
+        watch: Переглянуті
+        unwatch: Не переглянуті
+        add_watcher: Додати спостерігача
+      messages:
+        create:
+          error: Сталася помилка під час створення тікета.
+          success: Тікет успішно створено.
+        save:
+          error: Сталася помилка під час збереження тікета.
+          success: Тікет успішно збережено.
+        delete:
+          query: Ви впевнені, що хочете видалити цей тікет?
+          error: Сталася помилка під час видалення квитка.
+          success: Тікет успішно вилучено.
+        reassign:
+          error: Сталася помилка під час повторного призначення тікета.
+          success: Тікет був успішно перепризначений.
+        change_status:
+          error: Сталася помилка під час спроби змінити статус тікета.
+          success: Статус успішно змінено.
+        move:
+          error: Сталася помилка під час спроби перемістити тікет.
+          success: Тікет успішно перенесено.
+        watch:
+          error: Сталася помилка під час спроби додати спостерігача.
+          success: Спостерігач успішно доданий.
+        watcher_remove:
+          success: Спостерігач успішно видалений.
+        get:
+          error: Помилка завантаження тікета, тікет не вдалося знайти.
+          attachment:
+            error: Помилка завантаження вкладення. Тікет не має такого вкладення.
+          branch:
+            error: Помилка завантаження гілки, гілку не вдалося знайти.
+          reporter:
+            error: Помилка завантаження доповідача, доповідача не вдалося знайти.
+          assignee:
+            error: Стався збій при перевірці виконавця, виконавця не вдалося знайти.
+    comment:
+      entity_label: Коментар
+      entity_plural_label: Коментарі
+      ticket_status: Cтатус тікета
+      content: Контент
+      private: Приватний
+      attachments.label: Вкладення
+      author.label: Автор
+      content.label: Контент
+      created_at.label: Створений в
+      id.label: Ідентифікатор
+      private.label: Приватний
+      ticket.label: Тікет
+      updated_at.label: Оновлено в
+      author_email.label: Електронна пошта автора
+      actions:
+        edit: Редагувати коментар
+        add: Додати коментар
+      messages:
+        create:
+          error: Сталася помилка під час створення коментаря.
+          success: Коментар успішно створено.
+        save:
+          error: Сталася помилка під час збереження коментаря.
+          success: Коментар успішно збережено.
+        delete:
+          error: ""
+          success: Коментар успішно вилучено.
+          query: Ви впевнені, що хочете видалити цей коментар?
+        get:
+          error: Помилка завантаження коментаря, коментар не знайдено.
+        get_attach:
+          error: Помилка завантаження вкладення. Коментар не має такого вкладення.
+        empty: Коментарів ще немає.
+      placeholders:
+        added: додати коментар
+        deleted_user: Віддалений користувач
+    attachment:
+      entity_label: Вкладення
+      entity_plural_label: Вкладення
+      file: Файл
+      image: Зображення
+      created_at.label: Дата створення
+      file.label: Файл
+      hash.label: Хеш
+      id.label: Ідентифікатор
+      updated_at.label: Оновлено в
+      actions:
+        delete_file: Видалити файл
+        add: Прикріпити файл
+        download: Завантажити
+        remove: Видалити
+        attach: Прикріпити файл
+      messages:
+        create:
+          error: Сталася помилка під час завантаження вкладень.
+          success: Вкладення успішно завантажено.
+        delete:
+          error: Не вдалося видалити вкладення.
+          success: Вкладення успішно вилучено.
+          query: Ви впевнені, що хочете видалити це вкладення?
+        get:
+          error: Вкладення не знайдено
+        load:
+          error: Помилка завантаження вкладення, вкладення не знайдено.
+        upload:
+          error: Завантажена директорія недоступна для запису, немає або не залишилося простору на диску.
+      placeholders:
+        dropzone: Перемістіть файл сюди
+    file:
+      messages:
+        dump:
+          error: Назва файлу не може бути порожнім рядком.
+        type:
+          error: Значення має бути типом файлу.
+    permissions:
+      messages:
+        granted:
+          error: Недостатньо прав доступу.
+    watcher:
+      messages:
+        watch:
+          success: Ви переглядаєте тікет зараз.
+        unwatch:
+          success: Ви успішно скасували підписку від перегляду тікета.
+    ui:
+      create: Створити
+      ok: Ок
+      cancel: Відмінити
+      save: Зберегти
+      delete: Видалити
+      save_and_close: Зберегти та закрити
+      edit: Редагувати
+      add: Додати
+      change: Змінити
+      select_watcher: Вибрати користувача
+    common:
+      general: Загальні відомості
+      description: Опис
+      created: Створений
+      updated: Оновлений
+      not_available: Недоступний
+      not_defined: Невизначений
+      no_description: Опис відсутній
+      delete_confirmation: Підтвердити видалення
+      filters: Фільтри
+      watchers: Спостерігачі
+      messages:
+        validation:
+          failed: Неприпустима форма. Будь ласка, заповніть правильно всі необхідні поля.
+    forms:
+      name: Назва
+      default_assignee: Представник за замовчуванням
+      logoFile: Логотип
+      tags: Теги
+      key: Ключ
+    attributes:
+      name: Назва
+      subject: Тема
+      branch: Гілка
+      status: Статус
+      priority: Пріоритет
+      source: Вихідний код
+      reporter: Доповідач
+      default_assignee: Представник за замовчуванням
+      assignee: Виконавець
+      watcher: Спостерігач
+      key: Ключ
+    email:
+      configuration: Налаштування електронної пошти
+    dashboard:
+      support.label: Підтримка моніторингу
+    report:
+      plural_label: Звіти
+      reports:
+        tickets_by_priority: Тікети за пріоритетом
+        tickets_by_response_time: Час відгуку
+        tickets_by_channels: Тікети по каналах
+        tickets_by_branches: Тікети за гілками
+        ticket_timeline: Хронологія тікетів
+      messages:
+        build:
+          error: Сталася помилка під час створення звіту.
+    tickethistory:
+      entity_label: Історія тікету
+      entity_plural_label: Історія тікетів
+      id.label: Ідентифікатор
+      ticket_id.label: Ідентифікатор тікета
+      ticket_key.label: Ключ тікета
+    tickettimeline:
+      entity_label: Хронологія тікетів
+      closed.label: Закритий
+      date.label: Дата
+      id.label: Ідентифікатор
+      new.label: Новий
+      reopen.label: Повторне відкриття
+      solved.label: Вирішено
+    watcherlist:
+      entity_label: Списки спостерігача
+      entity_plural_label: Списки спостерігача
+      id.label: Ідентифікатор
+      ticket.label: Тікет
+      user_type.label: Тип користувача
+    automation:
+      action:
+        move_to_branch: Переміститись на гілку
+      notification:
+        ticket:
+          created: Тікет був створений
+          updated: Тікет був оновлений
+          removed: Тікет був видалений
+        comment:
+          created: Коментар був створений
+          updated: Коментар був оновлений
+          removed: Коментар було видалено
+          private:
+            created: Приватний коментар був створений
+            updated: Приватний коментар був оновлений
+            removed: Приватний коментар видалено
+oro:
+  entity_extend:
+    form:
+      data_type:
+        branch_logo: Логотип гілки
+        user_type: Тип користувача
+        source: Вихідний код
+        status: Статус
+        priority: Пріоритет
+        ticket_unique_id: Унікальний ідентифікатор тікета
+        ticket_sequence_number: Порядковий номер тікету
+oro_datagrid:
+  "not_found_hint %entityHint%": "Даних %entityHint% відповідно до вашого запиту не знайдено. Спробуйте змінити критерії пошуку."

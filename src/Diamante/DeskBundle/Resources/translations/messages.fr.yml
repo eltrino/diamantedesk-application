@@ -1,0 +1,322 @@
+---
+diamante:
+  desk:
+    branch:
+      entity_label: Branche
+      entity_plural_label: Branches
+      details: Détails de la branche
+      created_at.label: Créé à
+      description.label: Description
+      id.label: Id de la branche
+      key.label: Clé de la branche
+      logo.label: Logo de la branche
+      name.label: Nom de la branche
+      updated_at.label: Mis à jour à
+      default_assignee.label: Assigné par défaut
+      columns:
+        logo: Logo
+        branch_name: Nom de la branche
+        branch_key: Clé de la branche
+      actions:
+        create: Créer une branche
+        view: Voir la branche
+        edit: Modifier la branche
+        remove: Supprimer la branche
+        remove_mass: Supprimez les branches
+      messages:
+        create:
+          error: Erreur s’est produite lors de la création d’une branche. Branche n’est pas créée. Entrez toutes les données nécessaires, puis réessayez.
+          success: Branche créée avec succès.
+        save:
+          error: Erreur s’est produite lors de l’enregistrement de la branche. Direction n’est pas enregistrée. Entrez toutes les données nécessaires, puis réessayez.
+          success: La branche a été enregistrée avec succès.
+        delete:
+          query: MISE EN GARDE ! Êtes-vous sûr de que vouloir supprimer cette branche avec tous les billets qui lui sont assignées ?
+          success: Branche supprimée avec succès.
+          mass_success: "{1} Une branche a été supprimée. |] 1, Inf [%count% branches ont été supprimés."
+          error: La branche actuelle est configurée par défaut pour le traitement des courriels et ne peut pas être supprimée.
+          mass_error: "{0} La branche actuelle est configuré par défaut pour le traitement de courrier électronique et ne peut pas être supprimé. | Impossible de supprimer{1} une des branches comme il a été configuré par défaut on |] 1, Inf [%count% branches ont été supprimés sauf la branche par défaut"
+          exist_tickets_error: Une ou plusieurs branches ont des tickets et ne peuvent pas être supprimées.
+          move: Gardez les billets et déplacez-les vers une autre branche.
+          select: Sélectionnez une nouvelle branche
+        get:
+          error: Le chargement des branches a échoué. Branche non trouvée.
+      placeholders:
+        form: Choisissez une branche...
+        default: La branche actuelle est configurée par défaut pour le traitement des courriels et ne peut pas être supprimée.
+    ticket:
+      entity_label: Ticket
+      entity_plural_label: Tickets
+      details: Détails du tiket
+      all: Tous les tickets
+      created_at.label: Créé à
+      description.label: Description
+      id.label: Tiket Id
+      priority.label: Priorité
+      reporter_email.label: Email du reporter
+      assignee.label: Assigner
+      branch.label: Branche
+      comments.label: Commentaires
+      sequence_number.label: Numéro de séquence
+      source.label: Source
+      status.label: Statut
+      subject.label: Objet
+      unique_id.label: Identifiant unique
+      updated_at.label: Mis à jour à
+      attachments.label: L`attachement
+      watcher_list.label: Liste des surveillants
+      created_via_email.label: Créé par courrier électronique à
+      since_created.label: Créé depuis
+      since_updated.label: Depuis mis à jour
+      since_status_updated.label: Depuis la mise à jour du statut
+      since_assignee_updated.label: Depuis la mise à jour du cessionnaire
+      columns:
+        key: Clé
+        subject: Objet
+        branch: Branche
+        assignee: Cessionnaire
+        reporter: Reporter
+        priority: Priorité
+        status: Statut
+        created: Créé
+        updated: Actualisé
+      actions:
+        add: Ajouter un ticket
+        edit: Modifier le tiket
+        view: Voir du tiket
+        remove: Supprimer le ticket
+        delete: Supprimer
+        assign: Assign
+        create: Créer un ticket
+        change_status: Changer le statut
+        move: Se déplacer
+        watch: Regarder
+        unwatch: Non regarder
+        add_watcher: Ajouter un observateur
+      messages:
+        create:
+          error: Une erreur s'est produite lors de la création d'un ticket.
+          success: Ticket créé avec succès.
+        save:
+          error: Une erreur s'est produite lors de l'enregistrement du ticket.
+          success: Ticket enregistré avec succès.
+        delete:
+          query: Êtes-vous sûr de vouloir supprimer cet tiket?
+          error: Une erreur s'est produite lors de la suppression du ticket.
+          success: Le ticket a été supprimé avec succès.
+        reassign:
+          error: Une erreur s'est produite lors du réassignation du ticket.
+          success: Ticket réaffecté avec succès.
+        change_status:
+          error: Une erreur s'est produite lors de la modification du statut du ticket.
+          success: Statut changé avec succès.
+        move:
+          error: Une erreur s'est produite lors de la tentative de déplacement du ticket.
+          success: Ticket remporté avec succès.
+        watch:
+          error: Une erreur s'est produite en essayant d'ajouter un observateur.
+          success: Observateur ajouté avec succès.
+        watcher_remove:
+          success: Observateur a été supprimé avec succès.
+        get:
+          error: Le chargement des tikets a échoué, le ticket n'a pas été trouvé.
+          attachment:
+            error: Le chargement des pièces jointes a échoué. Le ticket n'a pas une telle pièce jointe.
+          branch:
+            error: Le chargement des branches a échoué, la branche n'a pas été trouvée.
+          reporter:
+            error: Le chargement du rapport a échoué, le journaliste n'a pas été trouvé.
+          assignee:
+            error: La validation du cessionnaire a échoué, le cessionnaire n'a pas été trouvé.
+    comment:
+      entity_label: Commentaire
+      entity_plural_label: Commentaires
+      ticket_status: Statut du ticket
+      content: Contenu 
+      private: Privé
+      attachments.label: L`attachement
+      author.label: Auteur
+      content.label: Contenu 
+      created_at.label: Créé à
+      id.label: Identifiant
+      private.label: Privé
+      ticket.label: Ticket
+      updated_at.label: Mis à jour à
+      author_email.label: E-mail de l'auteur
+      actions:
+        edit: Éditer le commentaire
+        add: Ajouter un commentaire
+      messages:
+        create:
+          error: Une erreur s'est produite lors de la création d'un commentaire.
+          success: Commentaire créé avec succès.
+        save:
+          error: Une erreur s'est produite lors de l'enregistrement du commentaire.
+          success: Commentaire enregistré avec succès.
+        delete:
+          error: ""
+          success: Commentaire supprimé avec succès.
+          query: Êtes-vous sûr de que vouloir supprimer ce commentaire ?
+        get:
+          error: Commentaire de chargement a échoué, commentaire introuvable.
+        get_attach:
+          error: Le chargement des pièces jointes a échoué. Le commentaire n'a pas de telles pièces jointes.
+        empty: Il n'y a pas encore de commentaires.
+      placeholders:
+        added: ajouter un commentaire
+        deleted_user: Utilisateur supprimé
+    attachment:
+      entity_label: L`attachement
+      entity_plural_label: L`attachement
+      file: Fichier
+      image: Image
+      created_at.label: Créé à
+      file.label: Fichier
+      hash.label: Hash
+      id.label: Identifiant
+      updated_at.label: Mis à jour à
+      actions:
+        delete_file: Supprimer le fichier
+        add: Ajouter une pièce jointe
+        download: Télécharger
+        remove: Supprimer
+        attach: Joindre fichier
+      messages:
+        create:
+          error: Une erreur s'est produite lors du téléchargement d'une pièce jointe.
+          success: Les pièces jointes téléchargées avec succès.
+        delete:
+          error: Impossible de supprimer la pièce jointe.
+          success: Pièce jointe supprimée avec succès.
+          query: Êtes-vous sûr de vouloir supprimer cette pièce jointe ?
+        get:
+          error: Pièce jointe non trouvée
+        load:
+          error: Le chargement des pièces jointes a échoué, l'attachement n'a pas été trouvé.
+        upload:
+          error: Le répertoire de téléchargement n'est pas accessible en écriture, n'existe pas ou il ne reste plus d'espace sur le disque.
+      placeholders:
+        dropzone: Déposer le fichier ici
+    file:
+      messages:
+        dump:
+          error: Le nom de fichier ne peut pas être une chaîne vide.
+        type:
+          error: Valeur doit être un type de fichier.
+    permissions:
+      messages:
+        granted:
+          error: Pas assez de permissions.
+    watcher:
+      messages:
+        watch:
+          success: Vous regardez maintenant le tiket.
+        unwatch:
+          success: Vous avez désabonné avec succès de regarder le ticket.
+    ui:
+      create: Créer
+      ok: Bien
+      cancel: Annuler
+      save: Sauvegarder
+      delete: Supprimer
+      save_and_close: Sauvegarder et fermer
+      edit: Modifier
+      add: Ajouter
+      change: Changement
+      select_watcher: Sélecteur d'utilisateur
+    common:
+      general: Générale
+      description: Description
+      created: Créé
+      updated: Actualisé
+      not_available: N/A
+      not_defined: Non défini
+      no_description: Aucune description
+      delete_confirmation: Confirmer la suppression
+      filters: Filtres
+      watchers: Observateurs
+      messages:
+        validation:
+          failed: Le formulaire n'est pas valide. Remplissez correctement tous les champs requis.
+    forms:
+      name: Nom
+      default_assignee: Assigné par défaut
+      logoFile: Logo
+      tags: Tags
+      key: Clé
+    attributes:
+      name: Nom
+      subject: Objet
+      branch: Branche
+      status: Statut
+      priority: Priorité
+      source: Source
+      reporter: Reporter
+      default_assignee: Assigné par défaut
+      assignee: Cessionnaire
+      watcher: Observateur
+      key: Clé
+    email:
+      configuration: Configuration de l’e-mail
+    dashboard:
+      support.label: Tableau de bord de support
+    report:
+      plural_label: Rapports
+      reports:
+        tickets_by_priority: Tickets par priorité
+        tickets_by_response_time: Temps de réponse
+        tickets_by_channels: Tickets par canaux
+        tickets_by_branches: Tickets par branches
+        ticket_timeline: Chronologie des tickets
+      messages:
+        build:
+          error: Une erreur s'est produite lors de la génération du rapport.
+    tickethistory:
+      entity_label: Histoire de ticket
+      entity_plural_label: Histoire de tickets
+      id.label: Identifiant
+      ticket_id.label: Identifiant du ticket
+      ticket_key.label: Clé de ticket
+    tickettimeline:
+      entity_label: Chronologie des tickets
+      closed.label: Fermé
+      date.label: Date
+      id.label: Identifiant
+      new.label: Nouveau
+      reopen.label: Rouvrir
+      solved.label: Résolu
+    watcherlist:
+      entity_label: Liste des surveillants
+      entity_plural_label: Listes d'observateurs
+      id.label: Identifiant
+      ticket.label: Ticket
+      user_type.label: Type d'utilisateur
+    automation:
+      action:
+        move_to_branch: Passer à la branche
+      notification:
+        ticket:
+          created: Ticket a été créé
+          updated: Ticket a été mis à jour
+          removed: Ticket a été supprimé
+        comment:
+          created: Commentaire a été créé
+          updated: Commentaire a été mis à jour
+          removed: Commentaire a été supprimé
+          private:
+            created: Commentaire privé a été créé
+            updated: Commentaire privé a été mis à jour
+            removed: Commentaire privé a été supprimé
+oro:
+  entity_extend:
+    form:
+      data_type:
+        branch_logo: Logo de la branche
+        user_type: Type d'utilisateur
+        source: Source
+        status: Statut
+        priority: Priorité
+        ticket_unique_id: Identifiant unique du ticket
+        ticket_sequence_number: Numéro de séquence de ticket
+oro_datagrid:
+  "not_found_hint %entityHint%": "Aucun %entityHint% correspondant à votre recherche ont été trouvés. Essayez de modifier vos critères de recherche."

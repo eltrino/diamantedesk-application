@@ -1,0 +1,12 @@
+---
+eltrino:
+  diamantedesk:
+    branch:
+      entity_label: Гілка
+      entity_plural_label: Гілки
+    ticket:
+      entity_label: Тікет
+      entity_plural_label: Тікети
+    comment:
+      entity_label: Коментар
+      entity_plural_label: Коментарі

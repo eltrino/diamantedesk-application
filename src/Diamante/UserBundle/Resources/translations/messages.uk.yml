@@ -1,0 +1,64 @@
+---
+diamante:
+  user:
+    labels:
+      entity: Клієнт
+      entity.plural: Клієнти
+      email: Електронна пошта
+      first_name: Ім'я
+      last_name: Прізвище
+      active: Активний
+      id: Ідентифікатор
+      is_deleted: Видалений
+      related_tickets: Тікети
+      activated: Адресу електронної пошти підтверджено
+    actions:
+      create: Створити клієнта
+      remove: Видалити клієнта
+      view: Переглянути клієнта
+      update: Оновити клієнта
+      delete: Видалити клієнта
+      reset_pwd: Скинути пароль
+      mass:
+        delete:
+          label: Видалити клієнтів
+          messages:
+            success: Вибраних клієнтів успішно видалено.
+            fail: Не вдалося видалити вибраних клієнтів.
+        reset_pwd:
+          label: Скинути паролі для клієнтів
+          messages:
+            success: Паролі для обраних %count% клієнтів були успішно скинуті.
+            fail: Сталася помилка під час скидання паролів.
+    messages:
+      delete:
+        query: Ви впевнені, що хочете видалити цього користувача?
+        success: Клієнт успішно видалений.
+      create:
+        success: Клієнт успішно створений.
+      update:
+        success: Клієнт успішно оновлений.
+      reset_pwd:
+        query: Ви впевнені, що хочете скинути пароль для цього клієнта?
+        success: Пароль користувача успішно скинуто.
+      remove:
+        failed:
+          related: Помилка при видаленні користувача. Користувач має зв'язані об'єкти.
+    placeholder:
+      email: 'Будь ласка, введіть адресу електронної пошти'
+    details: Інформація про клієнта
+    activity: Активність клієнта
+    ui:
+      "yes": true
+      "no": false
+    notification:
+      created: Новий акаунт DiamanteDesk створений.
+      force_reset: Повідомлення про скидання пароля
+    exception:
+      customer_exists: Клієнт з такою електронною адресою вже існує.
+    autocomplete:
+      group:
+        assignee: '[Assignee]'
+        watchers: '[Watchers]'
+        reporter: '[Ticket Reporter]'
+        comment_author: '[Comment author]'

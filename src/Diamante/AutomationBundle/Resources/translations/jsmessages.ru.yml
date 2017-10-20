@@ -1,0 +1,13 @@
+---
+'Activate Confirmation': 'Активировать подтверждение'
+'Are you sure you want to activate selected rules?': 'Вы уверены, что хотите включить выбранные правила?'
+'Yes, Activate': 'Да, включить'
+'Rules are Activated.': 'Правила включены.'
+'Rules are not Activated.': 'Правила не включены.'
+'Please, select rule to activate.': 'Пожалуйста, выберите правило для включения.'
+'Deactivate Confirmation': 'Отключить подтверждение'
+'Are you sure you want to deactivate selected rules?': 'Вы уверены, что хотите отключить выбранные правила?'
+'Yes, Deactivate': 'Да, отключить'
+'Rules are Deactivated.': 'Правила отключены.'
+'Rules are not Deactivated.': 'Правила не отключены.'
+'Please, select rule to deactivate.': 'Пожалуйста выберите правило для отключения.'

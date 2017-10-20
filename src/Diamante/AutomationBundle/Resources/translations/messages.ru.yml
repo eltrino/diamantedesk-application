@@ -1,0 +1,106 @@
+---
+diamante:
+  automation:
+    rule:
+      entity_label: Правило
+      entity_plural_label: Правила
+      event_triggered_entity_plural_label: Правила по действию
+      time_triggered_entity_plural_label: Правила по времени
+      details: Сведения о правиле
+      messages:
+        create:
+          error: Произошла ошибка при создании правила. Правило не создается. Введите все необходимые данные и повторите попытку снова.
+          success: Правило успешно создано.
+        update:
+          error: Произошла ошибка при обновлении правила. Правило не обновляется. Введите все необходимые данные и повторите попытку снова.
+          success: Правило успешно обновлено.
+        delete:
+          query: Вы уверены, что хотите удалить это правило?
+          success: Правило, успешно удалено.
+      status:
+        active: Aктивный
+        inactive: Неактивный
+      actions:
+        add: Добавить правило
+        view: Просмотреть правило
+        edit: Редактировать правило
+        delete: Удалить правило
+        mass:
+          remove: Удалить правила
+          activate: Включить правила
+          deactivate: Отключить правила
+          response:
+            activate:
+              success_message: "{0} Объекты не были активированы|{1} Один объект был активирован|]1,Inf[ %count% Объекты были активированы"
+            deactivate:
+              success_message: "{0} Объекты не были отключены|{1} Один объект был отключен|]1,Inf[ %count% Объекты были отключены"
+      time_triggered:
+        entity_label: Время запуска
+        repetition_time: Частота использования
+      event_triggered:
+        entity_label: Событие
+    ui:
+      create: Создать
+      ok: Принять
+      cancel: Отменить
+      save: Сохранить
+      delete: Удалить
+      save_and_close: Сохранить и закрыть
+      edit: Редактировать
+      add: Добавить
+      change: Изменить
+      event_triggered:
+        create: Создать правило по действию
+      time_triggered:
+        create: Создать правило по времени
+    attributes:
+      condition: Состояние
+      action: Действие
+      weight: Значение
+      target: Цель
+      parent: Источник
+      status: Статус
+      expression: Выражение
+      mode: Режим
+    common:
+      name: Имя
+      general: Основная информация
+      created: Создан
+      updated: Обновлен
+      not_available: Недоступен
+      not_defined: Не определен
+      delete_confirmation: Подтвердите удаление
+      messages:
+        validation:
+          failed: Недопустимая форма. Пожалуйста, заполните правильно все необходимые поля.
+    forms:
+      name: Имя
+    condition:
+      eq: равно
+      neq: не равно
+      gt: больше, чем
+      gte: больше или равно
+      lt: меньше, чем
+      lte: меньше или равно
+      contains: содержит
+      not_contains: не содержит
+      created: Создан
+      updated: Обновлен
+      removed: Удален
+      changed: изменено
+      changed_from: изменено с
+      changed_to: изменено на
+      "true": "верно"
+      "false": "неверно"
+      customer: клиент
+      admin: Администратор
+    action:
+      update_property: Обновление свойств
+      notify_by_email: Уведомлять по электронной почте
+    connector:
+      inclusive: Все утверждения справедливы
+      exclusive: Любое из утверждений справедливо
+    cron:
+      d: "{1} каждый день |] 1, Inf [каждые %time% дней"
+      h: "{1} каждый час |] 1, Inf [каждые %time% часов"
+      m: Каждых %time% минут

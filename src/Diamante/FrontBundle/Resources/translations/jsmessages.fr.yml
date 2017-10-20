@@ -1,0 +1,221 @@
+---
+"Loading...": "Chargement..."
+diamante_front:
+  attachment:
+    controller:
+      alert:
+        delete_error:
+          title: Supprimer l’erreur de pièce jointe
+      message:
+        attach_success: Fichiers joints avec succès
+        delete_success: Fichier supprimé avec succès
+    model:
+      alert:
+        add_error:
+          title: Ajouter des pièces jointes erreur
+    template:
+      dropzone:
+        dropfiles: Faites glisser les fichiers ici pour joindre
+        attachfiles: Cliquez ici pour joindre des fichiers
+        read: Lecture...
+        send: Envoi...
+        receive: Recevoir...
+      button:
+        remove: Supprimer la pièce jointe
+      link:
+        download: 'Téléchargement :'
+      header:
+        file: Pièces jointes
+  comment:
+    controller:
+      alert:
+        create_error:
+          title: Créer un commentaire erreur
+        delete_error:
+          title: Supprimer le commentaire erreur
+        edit_success:
+          title: Votre commentaire a été édité
+      message:
+        post_success: Commentaire a été posté avec succès
+        delete_success: Votre commentaire a été supprimé avec succès
+    model:
+      error:
+        required: "Ne peut pas être vide"
+    template:
+      form:
+        add: Ajouter un commentaire
+        cancel: Annuler
+        save: Enregistrer les modifications
+      button:
+        edit: Éditer le commentaire
+        delete: Supprimer le commentaire
+  common:
+    template:
+      close: Fermer
+      cancel: Annuler
+      sort: Trier par
+    view:
+      alert:
+        title: Erreur
+        text: Une erreur non traitée s'est produite. S'il vous plaît essayer à nouveau!
+      modal:
+        title: Fenêtre modale
+        submit: Enregistrer les modifications
+  footer:
+    template:
+      copyright: Diamante est publié sous licence de %{license} par %{company}
+  header:
+    template:
+      new_ticket: Nouveau Ticket
+  session:
+    controller:
+      alert:
+        confirm_success:
+          title: Succès de Confirmation de l`email
+          text: Vous pouvez vous connecter et utiliser application
+        reconfirm_succes:
+          title: Succès de Confirmation de l`email
+          text: Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour activer votre compte.
+        confirm_fail:
+          title: Confirmation de l'email échoué
+          text: Code d’activation est faux
+        login_fail:
+          title: L'autorisation a échoué
+        register_succes:
+          title: Succès de l’enregistrement
+          text: Merci. Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour activer votre compte.
+        register_fail:
+          title: L'enregistrement a échoué
+        reset_info:
+          title: Info de réinitialisation de mot de passe
+          text: Nous avons fait de vous envoyer un courriel à %{email}.</br> S’il vous plaît cliquez sur le lien dans ce message pour réinitialiser votre mot de passe.
+        reset_fail:
+          title: Réinitialisation du mot de passe échoué
+          text: Code de réinitialisation est non valide ou expiré
+      message:
+        reset_success: Le mot de passe a changé avec succès, vous pouvez l'utiliser pour vous connecter
+    model:
+      alert:
+        auth_required:
+          title: Autorisation requise
+          text: Cette action nécessite une autorisation
+      error:
+        required: Ne peut pas être vide
+        email_format: '« %{email} » n’est pas une adresse email valide'
+        password_length: Doit être au moins de six (6) symboles
+    template:
+      register: Enregistrement
+      login: Se connecter
+      forgot: Amnésie ?
+      remember: Souviens-toi de moi
+      back:
+        register: Vous avez déjà un compte ? &mdash; <a href="%{url}"> Сonnecter</a>
+        reset: Retour à se <a href="%{url}"> Se connecter</a>
+      label:
+        email: Email
+        first_name: Prénom
+        last_name: Nom de famille
+        password: Mot de passe
+        new_password: Nouveau mot de passe
+      placeholder:
+        email: Saisissez l'email
+        first_name: Saisir le prénom
+        last_name: Saisir le nom
+        password: Saisissez le mot de passe
+        new_password: Saisissez le nouveau mot de passe
+      button:
+        login: Se connecter
+        register: Continuer
+        reset_password: Réinitialiser le mot de passe
+        new_password: Définir un nouveau mot de passe
+    title:
+      login: Se connecter
+      register: Enregistrement
+      reset: Réinitialiser le mot de passe
+  ticket:
+    controller:
+      alert:
+        create_error:
+          title: Créer de ticket erreur
+        edit_error:
+          title: Modifier le ticket erreur
+      message:
+        key_changed: Alors que nous travaillons activement sur votre billet, sa clé a été changée pour %{ticket_key_id}
+        ticket_update: Ticket %{ticket_update_id} mis à jour
+        status_closed: Ticket %{ticket_status_closed_id} statut modifié. État du billet est « fermé »
+        status_open: Ticket %{ticket_status_open_id} statut modifié. Statut du billet est « ouvert »
+        create_ticket: Ticket %{ticket_created_id} créé
+      edit:
+        title: Modifier le ticket %{ticket_id}
+      edit_ticket:
+        Edit Ticket: '%{key} - %{subject}'
+      search_result: Résultat de la recherche
+    model:
+      error:
+        required: Ne peut pas être vide
+    template:
+      empty_list: Vous n'avez pas encore créé de tickets.<br> Cliquez sur <a href="%{url}"> + </a> pour en créer un.
+      empty_search: Il n’y a pas de tickets correspondant à vos critères.
+      empty_view: Ce ticket n'existe pas!
+      form:
+        subject_label: Objet de ticket
+        subject_placeholder: Résumé abrégé des tickets
+        description_label: Description
+        description_placeholder: Fournissez une description détaillée de votre demande de soutien
+        priority_label: Priorité
+        low_option: Faible
+        medium_option: Médium
+        high_option: Haute
+      list:
+        key: Clé
+        date: Date
+        subject: Objet
+        priority: Priorité
+        status: Statut
+      resolve_button: Résoudre le ticket
+      reopen_button: Rouvrir le ticket
+    view:
+      all_tickets: Voir tous les tickets
+    router:
+      view_ticket: Voir du tiket
+      create_ticket: Créer un ticket
+      edit_ticket: Modifier le tiket
+  user:
+    controller:
+      message:
+        update_success: Vous avez réussi à mettre à jour votre profil
+      alert:
+        edit_error:
+          title: Modifier de l'utilisateur erreur
+      edit_user: Modifier l'utilisateur
+    model:
+      error:
+        required: Ne peut pas être vide
+        password_length: Doit être au moins de six (6) symboles
+    template:
+      form:
+        first_name_label: Prénom
+        last_name_label: Nom de famille
+        email_label: Email
+        password_label: Nouveau mot de passe
+        submit_button: Envoyer
+      logout: Connectez - Out
+  watcher:
+    controller:
+      alert:
+        add_error:
+          title: Ajouter du observateur erreur
+        delete_comment_error:
+          title: Supprimer le commentaire erreur
+      message:
+        add_success: Un nouvel observateur a été correctement ajouté au ticket
+        remove_success: Un observateur a été retiré du ticket
+      add_watcher: Ajouter un observateur
+    model:
+      error:
+        required: Ne peut pas être vide
+        email_format: '« %{email} » n’est pas une adresse email valide'
+    template:
+      email_watcher: Email du observateur
+      remove_watcher: Retirer du observateur
+      add_watcher: Ajouter un observateur

@@ -1,0 +1,221 @@
+---
+"Loading...": "Загрузка..."
+diamante_front:
+  attachment:
+    controller:
+      alert:
+        delete_error:
+          title: Ошибка удаления вложения
+      message:
+        attach_success: Файлы успешно прикреплены
+        delete_success: Файл успешно удален
+    model:
+      alert:
+        add_error:
+          title: Ошибка добавления вложений
+    template:
+      dropzone:
+        dropfiles: Перетащите файлы сюда, чтобы прикрепить
+        attachfiles: Нажмите здесь, чтобы прикрепить файлы
+        read: Чтение...
+        send: Отправка...
+        receive: Получение...
+      button:
+        remove: Удалить вложение
+      link:
+        download: 'Скачать:'
+      header:
+        file: Вложенные файлы
+  comment:
+    controller:
+      alert:
+        create_error:
+          title: Ошибка создания комментария
+        delete_error:
+          title: Ошибка удаления комментария
+        edit_success:
+          title: Ваш комментарий был отредактирован
+      message:
+        post_success: Комментарий был успешно опубликован
+        delete_success: Ваш комментарий успешно удален
+    model:
+      error:
+        required: "Не может быть пустым"
+    template:
+      form:
+        add: Добавить комментарий
+        cancel: Отменить
+        save: Сохранить изменения
+      button:
+        edit: Редактировать комментарий
+        delete: Удалить комментарий
+  common:
+    template:
+      close: Закрыть
+      cancel: Отменить
+      sort: Сортировать по
+    view:
+      alert:
+        title: Ошибка
+        text: Произошла необработанная ошибка. Пожалуйста, попробуйте снова!
+      modal:
+        title: Модальное окно
+        submit: Сохранить изменения
+  footer:
+    template:
+      copyright: Diamante выпускается под лицензией %{license} на %{company}
+  header:
+    template:
+      new_ticket: Новый тикет
+  session:
+    controller:
+      alert:
+        confirm_success:
+          title: Успешное подтверждение адреса электронной почты
+          text: Вы можете войти и использовать приложение
+        reconfirm_succes:
+          title: Успешное подтверждение адреса электронной почты
+          text: Мы отправили вам письмо на электронную почту %{email}.</br> Пожалуйста, нажмите на ссылку в этом сообщении, чтобы активировать вашу учетную запись.
+        confirm_fail:
+          title: Подтверждение электронной почты не удалось
+          text: Неправильный код активации
+        login_fail:
+          title: Ошибка авторизации
+        register_succes:
+          title: Вы успешно зарегистрировались
+          text: Спасибо. Мы отправили вам письмо по электронной почте %{email}.</br> Пожалуйста, нажмите на ссылку в этом сообщении, чтобы активировать вашу учетную запись.
+        register_fail:
+          title: Ошибка регистрации
+        reset_info:
+          title: Информация о сбросе пароля
+          text: Мы отправили вам письмо по электронной почте %{email}.</br> Пожалуйста, нажмите на ссылку в этом сообщении, чтобы сбросить ваш пароль.
+        reset_fail:
+          title: Не удалось сбросить пароль
+          text: Код сброса недействителен или устарел
+      message:
+        reset_success: Пароль успешно изменен, вы можете использовать его для входа
+    model:
+      alert:
+        auth_required:
+          title: Требуется авторизация
+          text: Это действие требует авторизации
+      error:
+        required: Не может быть пустым
+        email_format: '«%{email}» недействительный адрес электронной почты'
+        password_length: Должно быть не менее шести (6) символов
+    template:
+      register: Регистрация
+      login: Войти
+      forgot: Амнезия?
+      remember: Запомнить
+      back:
+        register: Уже есть аккаунт? &mdash; <a href="%{url}"> Вход</a>
+        reset: Вернуться к <a href="%{url}"> Войти</a>
+      label:
+        email: Электронная почта
+        first_name: Имя
+        last_name: Фамилия
+        password: Пароль
+        new_password: Новый пароль
+      placeholder:
+        email: Введите адрес электронной почты
+        first_name: Введите имя
+        last_name: Введите фамилию
+        password: Введите пароль
+        new_password: Введите новый пароль
+      button:
+        login: Войти
+        register: Продолжить
+        reset_password: Сброс пароля
+        new_password: Установить новый пароль
+    title:
+      login: Войти
+      register: Регистрация
+      reset: Сброс пароля
+  ticket:
+    controller:
+      alert:
+        create_error:
+          title: Ошибка создания тикета
+        edit_error:
+          title: Ошибка редактирования тикета
+      message:
+        key_changed: Пока мы активно работали над вашим тикетом, его ключ был изменен на %{ticket_key_id}
+        ticket_update: Обновление %{ticket_update_id} тикета
+        status_closed: Статус %{ticket_status_closed_id} тикета изменен. Статус тикета "Закрыт"
+        status_open: Статус %{ticket_status_open_id} тикета изменен. Статус тикета "Открыт"
+        create_ticket: Создан %{ticket_created_id} тикет
+      edit:
+        title: Редактировать %{ticket_id} тикет
+      edit_ticket:
+        Edit Ticket: '%{key} - %{subject}'
+      search_result: Результат поиска
+    model:
+      error:
+        required: Не может быть пустым
+    template:
+      empty_list: Вы еще не создали тикеты. <br> Нажмите <a href="%{url}"> + </a>, чтобы создать новый.
+      empty_search: Нет тикетов, соответствующих вашим критериям.
+      empty_view: Этот тикет не существует!
+      form:
+        subject_label: Тема тикета
+        subject_placeholder: Краткая сводка о тикетах
+        description_label: Описание
+        description_placeholder: Предоставить подробное описание вашего запроса на поддержку
+        priority_label: Приоритет
+        low_option: Низкий
+        medium_option: Средний
+        high_option: Высокий
+      list:
+        key: Ключ
+        date: Дата
+        subject: Название
+        priority: Приоритет
+        status: Статус
+      resolve_button: Решить тикет
+      reopen_button: Открыть снова тикет
+    view:
+      all_tickets: Посмотреть все тикеты
+    router:
+      view_ticket: Просмотреть тикет
+      create_ticket: Создать тикет
+      edit_ticket: Редактировать тикет
+  user:
+    controller:
+      message:
+        update_success: Вы успешно обновили свой профиль
+      alert:
+        edit_error:
+          title: Ошибка редактирования пользователя
+      edit_user: Редактирование пользователя
+    model:
+      error:
+        required: Не может быть пустым
+        password_length: Должно быть не менее шести (6) символов
+    template:
+      form:
+        first_name_label: Имя
+        last_name_label: Фамилия
+        email_label: Электронная почта
+        password_label: Новый пароль
+        submit_button: Отправить
+      logout: Выход
+  watcher:
+    controller:
+      alert:
+        add_error:
+          title: Ошибка добавления наблюдателя
+        delete_comment_error:
+          title: Ошибка удаления комментария
+      message:
+        add_success: Новым наблюдателем был успешно добавлен тикет
+        remove_success: Наблюдатель был удален из тикета
+      add_watcher: Добавить наблюдателя
+    model:
+      error:
+        required: Не может быть пустым
+        email_format: '«%{email}» недействительный адрес электронной почты'
+    template:
+      email_watcher: Электронная почта наблюдателя
+      remove_watcher: Удалить наблюдателя
+      add_watcher: Добавить наблюдателя

@@ -1,0 +1,106 @@
+---
+diamante:
+  automation:
+    rule:
+      entity_label: Regel
+      entity_plural_label: Regeln
+      event_triggered_entity_plural_label: Eventbasierte Regeln
+      time_triggered_entity_plural_label: Zeitbasierte Regeln
+      details: Regeldetails
+      messages:
+        create:
+          error: Fehler beim Erstellen der Regel. Regel wird nicht erstellt. Geben Sie alle erforderliche Daten und versuchen Sie es erneut.
+          success: Regel erfolgreich erstellt.
+        update:
+          error: Fehler beim Aktualisieren von der Regel. Regel wird nicht aktualisiert. Geben Sie alle erforderliche Daten und versuchen Sie es erneut.
+          success: Regel erfolgreich aktualisiert.
+        delete:
+          query: Sind Sie sicher, dass Sie diese Rolle löschen wollen?
+          success: Regel erfolgreich gelöscht.
+      status:
+        active: Aktiv
+        inactive: Inaktiv
+      actions:
+        add: Regel hinzufügen
+        view: Regel anzeigen
+        edit: Regel ändern
+        delete: Regel löschen
+        mass:
+          remove: Regeln entfernen
+          activate: Aktive Regeln
+          deactivate: Regeln deaktiviern
+          response:
+            activate:
+              success_message: "{0} Keine Entitäten wurden aktiviert |{1} eine Entität wurde aktiviert |] 1, Inf [%count% Entitäten wurden aktiviert"
+            deactivate:
+              success_message: "{0} Keine Entitäten wurden deaktiviert |{1} eine Entität wurde deaktiviert |] 1, Inf [%count% Entitäten wurden deaktiviert"
+      time_triggered:
+        entity_label: Zeitgetriggert
+        repetition_time: Frequenz
+      event_triggered:
+        entity_label: Ereignisgetriggert
+    ui:
+      create: Erstellen
+      ok: Ok
+      cancel: Abbrechen
+      save: Speichern
+      delete: Löschen
+      save_and_close: Speichern und schließen
+      edit: Bearbeiten
+      add: Hinzufügen
+      change: Ändern
+      event_triggered:
+        create: Ereignisgetriggerte Regel erstellen
+      time_triggered:
+        create: Zeitgetriggerte Regel erstellen
+    attributes:
+      condition: Bedingung
+      action: Aktion
+      weight: Verhältnis
+      target: Ziel
+      parent: Übergeordneter Eintrag
+      status: Status
+      expression: Ausdruck
+      mode: Modus
+    common:
+      name: Name
+      general: Allgemein
+      created: Erstellt
+      updated: Aktualisiert
+      not_available: NV
+      not_defined: Nicht definiert
+      delete_confirmation: Löschen bestätigen
+      messages:
+        validation:
+          failed: Formular ist ungültig. Bitte alle erforderlichen Felder korrekt ausfüllen.
+    forms:
+      name: Name
+    condition:
+      eq: ist gleich
+      neq: ist nicht gleich
+      gt: ist größer als
+      gte: ist größer als oder gleich
+      lt: ist weniger als
+      lte: ist kleiner als oder gleich
+      contains: enthält
+      not_contains: enthält nicht
+      created: Erstellt
+      updated: Aktualisiert
+      removed: Entfernt
+      changed: geändert
+      changed_from: geändert von
+      changed_to: geändert in
+      "true": "wahr"
+      "false": "falsch"
+      customer: ist Kunde
+      admin: ist Administrator
+    action:
+      update_property: Änderungseigenschaft
+      notify_by_email: Per E-Mail benachtichtigen
+    connector:
+      inclusive: All diese sind wahr
+      exclusive: Keines dieser ist wahr
+    cron:
+      d: "{1} Jeden Tag|]1,Inf[ Alle %time% Tage"
+      h: "{1} Jede Stunde|]1,Inf[ Alle %time% Stunden"
+      m: Alle %time% Minuten

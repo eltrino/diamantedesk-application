@@ -1,0 +1,12 @@
+---
+eltrino:
+  diamantedesk:
+    branch:
+      entity_label: Ветка
+      entity_plural_label: Ветки
+    ticket:
+      entity_label: Тикет
+      entity_plural_label: Тикеты
+    comment:
+      entity_label: Комментарий
+      entity_plural_label: Комментарии

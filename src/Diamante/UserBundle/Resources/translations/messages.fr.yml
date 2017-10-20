@@ -1,0 +1,64 @@
+---
+diamante:
+  user:
+    labels:
+      entity: Client
+      entity.plural: Clients
+      email: Email
+      first_name: Prénom
+      last_name: Nom de famille
+      active: Est actif
+      id: Identifiant
+      is_deleted: Est supprimé
+      related_tickets: Tickets
+      activated: Email confirmé
+    actions:
+      create: Créer le client
+      remove: Supprimer le client
+      view: Voir le client
+      update: Mise à jour client
+      delete: Supprimer le client
+      reset_pwd: Réinitialiser le mot de passe
+      mass:
+        delete:
+          label: Supprimer clients
+          messages:
+            success: Clientèle sélectionnée a été correctement supprimé.
+            fail: Échec de la suppression des clients sélectionnés.
+        reset_pwd:
+          label: Réinitialiser les mots de passe pour les clients
+          messages:
+            success: Mots de passe pour %count% clients sélectionnés ont été réinitialisées.
+            fail: Erreur s’est produite lors de la réinitialisation de mots de passe.
+    messages:
+      delete:
+        query: Êtes-vous sûr de que vouloir supprimer ce client ?
+        success: Client a été correctement supprimé.
+      create:
+        success: Client a été correctement créé.
+      update:
+        success: Client a été correctement mis à jour.
+      reset_pwd:
+        query: Êtes-vous sûr de que vouloir réinitialiser mot de passe pour ce client ?
+        success: Mot de passe utilisateur réinitialisées.
+      remove:
+        failed:
+          related: Erreur suppression utilisateur. L’utilisateur a des entités associées.
+    placeholder:
+      email: 'Entrez une adresse mail s''il vous plaît'
+    details: Détails du client
+    activity: Activité des clients
+    ui:
+      "yes": true
+      "no": false
+    notification:
+      created: Nouveau DiamanteDesk compte créé.
+      force_reset: Mot de passe réinitialiser notification
+    exception:
+      customer_exists: Client avec ce e-mail existe déjà.
+    autocomplete:
+      group:
+        assignee: '[Assignee]'
+        watchers: '[Watchers]'
+        reporter: '[Ticket Reporter]'
+        comment_author: '[Comment author]'
