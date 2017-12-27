@@ -117,100 +117,100 @@ diamante:
           error: Terjadi kesalahan saat mencoba menambahkan pengamat.
           success: Watcher berhasil menambahkan.
         watcher_remove:
-          success: Watcher successfully removed.
+          success: Watcher berhasil dihapus
         get:
-          error: Ticket loading failed, ticket not found.
+          error: Pembebanan tiket gagal, tiket tidak ditemukan.
           attachment:
-            error: Attachment loading failed. Ticket has no such attachment.
+            error: Pembebanan lampiran gagal Tiket tidak memiliki keterikatan seperti itu.
           branch:
-            error: Branch loading failed, branch not found.
+            error: Pembebanan cabang gagal, cabang tidak ditemukan.
           reporter:
-            error: Reporter loading failed, reporter not found.
+            error: Pembuat laporan gagal, reporter tidak ditemukan.
           assignee:
-            error: Assignee validation failed, assignee not found.
+            error: Validasi penugasan gagal, penerima tidak ditemukan.
     comment:
-      entity_label: Comment
+      entity_label: Komentar
       entity_plural_label: Komentar
-      ticket_status: Ticket status
-      content: Content
-      private: Private
+      ticket_status: Status tiket
+      content: Konten
+      private: Pribadi
       attachments.label: Lampiran
-      author.label: Author
-      content.label: Content
-      created_at.label: Created_at
+      author.label: Penulis
+      content.label: Konten
+      created_at.label: Dibuat di
       id.label: Id
-      private.label: Private
+      private.label: Pribadi
       ticket.label: Tiket
-      updated_at.label: Updated at
-      author_email.label: Author email
+      updated_at.label: Diperbarui pada
+      author_email.label: Email penulis
       actions:
-        edit: Edit Comment
-        add: Add Comment
+        edit: Edit Komentar
+        add: Tambahkan komentar
       messages:
         create:
-          error: Error occured while creating a comment.
-          success: Comment successfully created.
+          error: Terjadi kesalahan saat membuat komentar.
+          success: Komentar berhasil dibuat.
         save:
-          error: Error occured while saving the comment.
-          success: Comment successfully saved.
+          error: Terjadi kesalahan saat menyimpan komentar.
+          success: Komentar berhasil disimpan.
         delete:
           error: ""
-          success: Comment successfully deleted.
-          query: Are you sure you want to delete this comment?
+          success: Komentar berhasil dihapus
+          query: Anda yakin ingin menghapus komentar ini?
         get:
-          error: Comment loading failed, comment not found.
+          error: Pembatalan komentar gagal, komentar tidak ditemukan.
         get_attach:
-          error: Attachment loading failed. Comment has no such attachment.
-        empty: There are no comments yet.
+          error: Pembebanan lampiran gagal Komentar tidak memiliki keterikatan seperti itu.
+        empty: Belum ada komentar.
       placeholders:
-        added: added a comment
-        deleted_user: Deleted user
+        added: menambahkan komentar
+        deleted_user: Pengguna yang dihapus
     attachment:
-      entity_label: Attachment
+      entity_label: Lampiran
       entity_plural_label: Lampiran
-      file: File
-      image: Image
-      created_at.label: Created at
-      file.label: File
+      file: Mengajukan
+      image: Gambar
+      created_at.label: Dibuat di
+      file.label: Mengajukan
       hash.label: Hash
       id.label: Id
-      updated_at.label: Updated at
+      updated_at.label: Diperbarui pada
       actions:
-        delete_file: Delete File
-        add: Add Attachment
+        delete_file: Menghapus berkas
+        add: Tambahkan sisipan
         download: Download
         remove: Menghapus
-        attach: Attach File
+        attach: Lampirkan file
       messages:
         create:
-          error: Error occured while uploading an attachment.
-          success: Attachment(s) successfully uploaded.
+          error: Terjadi kesalahan saat mengunggah lampiran.
+          success: Attachment berhasil diupload.
         delete:
-          error: Unable to remove attachment.
-          success: Attachment successfully deleted.
-          query: Are you sure you want to delete this attachment?
+          error: Tidak dapat menghapus lampiran
+          success: Lampiran berhasil dihapus.
+          query: Yakin ingin menghapus lampiran ini?
         get:
-          error: Attachment not found
+          error: Lampiran tidak ditemukan
         load:
-          error: Attachment loading failed, attachment not found.
+          error: Pemuatan lampiran gagal, lampiran tidak ditemukan.
         upload:
-          error: Upload directory is not writable, doesn't exist or no space left on the disk.
+          error: Direktori pengunggahan tidak dapat ditulis, tidak ada atau tidak ada ruang yang tersisa di disk.
       placeholders:
-        dropzone: Drop File Here
+        dropzone: Drop File disini
     file:
       messages:
         dump:
-          error: File name cannot be an empty string.
+          error: Nama file tidak bisa menjadi string kosong.
         type:
-          error: Value should be a File type.
+          error: Nilai harus berupa jenis File.
     permissions:
       messages:
         granted:
-          error: Not enough permissions.
+          error: Tidak cukup izin.
     watcher:
       messages:
         watch:
-          success: You are watching the ticket now.
+          success: Anda sedang menonton tiket sekarang.
         unwatch:
           success: Anda telah berhasil berhenti berlangganan untuk menonton tiket.
     ui:
