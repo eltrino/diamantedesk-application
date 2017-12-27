@@ -60,21 +60,21 @@ diamante:
       target: Target
       parent: Induk
       status: Status
-      expression: Expression
+      expression: Ekspresi
       mode: Mode
     common:
-      name: Name
-      general: General
-      created: Created
-      updated: Updated
-      not_available: N/A
-      not_defined: Not defined
+      name: Nama
+      general: Umum
+      created: Dibuat
+      updated: Diperbarui
+      not_available: N / A
+      not_defined: Tak terdefinisikan
       delete_confirmation: Confirm Deletion
       messages:
         validation:
           failed: Form is invalid. Please correctly fill in all required fields.
     forms:
-      name: Name
+      name: Nama
     condition:
       eq: is equal to
       neq: is not equal to
@@ -84,8 +84,8 @@ diamante:
       lte: is less than or equals to
       contains: contains
       not_contains: not contains
-      created: Created
-      updated: Updated
+      created: Dibuat
+      updated: Diperbarui
       removed: Removed
       changed: changed
       changed_from: changed from
