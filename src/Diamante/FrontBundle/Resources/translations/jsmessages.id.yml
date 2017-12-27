@@ -126,12 +126,12 @@ diamante_front:
       button:
         login: Masuk
         register: Terus
-        reset_password: Reset Password
+        reset_password: Atur ulang kata sandi
         new_password: Tetapkan Kata Sandi Baru
     title:
       login: Masuk
       register: Pendaftaran
-      reset: Reset Password
+      reset: Atur ulang kata sandi
   ticket:
     controller:
       alert:
