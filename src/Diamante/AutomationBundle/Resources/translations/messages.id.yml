@@ -69,19 +69,19 @@ diamante:
       updated: Diperbarui
       not_available: N / A
       not_defined: Tak terdefinisikan
-      delete_confirmation: Confirm Deletion
+      delete_confirmation: Konfirmasi penghapusan
       messages:
         validation:
-          failed: Form is invalid. Please correctly fill in all required fields.
+          failed: Formulir tidak valid Harap mengisi semua kolom dengan benar.
     forms:
       name: Nama
     condition:
-      eq: is equal to
-      neq: is not equal to
-      gt: is greater than
-      gte: is greater than or equals to
-      lt: is less than
-      lte: is less than or equals to
+      eq: adalah sama dengan
+      neq: tidak sama dengan
+      gt: lebih besar dari
+      gte: lebih besar dari atau sama dengan
+      lt: kurang dari
+      lte: kurang dari atau sama dengan
       contains: contains
       not_contains: not contains
       created: Dibuat
