@@ -1,30 +1,30 @@
 ---
-title: DiamanteDesk Application Installation
+title: Instalasi Aplikasi DiamanteDesk
 process:
   step:
     diamanteinstall:
-      header: Initialization
+      header: Inisialisasi
     installation:
-      cache: Clear cache before database initialization
-      clear-config: Clear entities cache
-      clear-extend: Clear extended entities data
-      permissions: Load permissions configuration
-      crons: Load cron definitions
-      schema-drop: Drop current schema
-      schema-update: Schema update
-      fixtures: Load fixtures
-      workflows: Load workflow definitions
-      processes: Load processes configuration
-      navigation: Init navigation
+      cache: Hapus cache sebelum inisialisasi database
+      clear-config: Bersihkan entitas cache
+      clear-extend: Hapus data entitas yang diperluas
+      permissions: Muatkan konfigurasi perizinan
+      crons: Muat definisi cron
+      schema-drop: Jatuhkan skema saat ini
+      schema-update: Update skema
+      fixtures: Perlengkapan beban
+      workflows: Load definisi alur kerja
+      processes: Load proses konfigurasi
+      navigation: Navigasi awal
       js-routing: Dump JS routing
-      localization: Dump localization
-      assets: Install assets
+      localization: Lokalisasi dump
+      assets: Instal aset
       assetic: Dump assetic
-      translation: Prepare translations
-      requirejs: Optimize JS resources (optional)
-      finish: Clear cache to finalize installation
+      translation: Siapkan terjemahan
+      requirejs: Optimalkan sumber daya JS (opsional)
+      finish: Kosongkan cache untuk menyelesaikan instalasi
     check:
       table:
-        diamante: DiamanteDesk Requirements
+        diamante: Persyaratan DiamanteDesk
     final:
-      content: 'You''re lucky to start using DiamanteDesk right away.<br>If you''re looking for some help or need some support, please join our community at <a href="https://github.com/eltrino">Github</a> or contact our dedicated support team if you''re our Enterprise client.'
+      content: Anda beruntung bisa langsung menggunakan DiamanteDesk. <br> Jika Anda mencari bantuan atau memerlukan dukungan, silakan bergabung dengan komunitas kami di <a href="https://github.com/eltrino"> Github </a> atau hubungi tim dukungan kami jika Anda Kami adalah klien Enterprise kami.
