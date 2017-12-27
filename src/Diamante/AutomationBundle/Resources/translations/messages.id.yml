@@ -2,63 +2,63 @@
 diamante:
   automation:
     rule:
-      entity_label: Rule
-      entity_plural_label: Rules
-      event_triggered_entity_plural_label: Event Triggered Rules
-      time_triggered_entity_plural_label: Time Triggered Rules
-      details: Rule Details
+      entity_label: Aturan
+      entity_plural_label: Aturan
+      event_triggered_entity_plural_label: Aturan yang Dipicu Peristiwa
+      time_triggered_entity_plural_label: Aturan yang Dipicu Waktu
+      details: Rincian peraturan
       messages:
         create:
-          error: Error occurred when creating the rule. Rule is not created. Enter all required data and try again.
-          success: Rule successfully created.
+          error: Terjadi kesalahan saat membuat aturan. Aturan tidak dibuat Masukkan semua data yang diperlukan dan coba lagi.
+          success: Aturan berhasil dibuat.
         update:
-          error: Error occurred when updating the rule. Rule is not updated. Enter all required data and try again.
-          success: Rule successfully updated.
+          error: Terjadi kesalahan saat memperbarui aturan. Aturan tidak diperbarui Masukkan semua data yang diperlukan dan coba lagi.
+          success: Peraturan berhasil diperbarui
         delete:
-          query: Are you sure you want to delete this rule?
-          success: Rule successfully deleted.
+          query: Yakin ingin menghapus aturan ini?
+          success: Aturan berhasil dihapus
       status:
-        active: Active
-        inactive: Inactive
+        active: Aktif
+        inactive: Tidak aktif
       actions:
-        add: Add Rule
-        view: View Rule
-        edit: Edit Rule
-        delete: Delete Rule
+        add: Tambahkan Aturan
+        view: Lihat Aturan
+        edit: Edit Aturan
+        delete: Hapus Aturan
         mass:
-          remove: Remove Rules
-          activate: Activate Rules
-          deactivate: Deactivate Rules
+          remove: Hapus Aturan
+          activate: Aktifkan Aturan
+          deactivate: Nonaktifkan Aturan
           response:
             activate:
-              success_message: "{0} No entities were activated|{1} One entity was activated|]1,Inf[ %count% entities were activated"
+              success_message: "{0} Tidak ada entitas yang diaktifkan | {1} Satu entitas diaktifkan |] 1, Inf [ % count% entitas diaktifkan"
             deactivate:
-              success_message: "{0} No entities were deactivated|{1} One entity was deactivated|]1,Inf[ %count% entities were deactivated"
+              success_message: "{0} Tidak ada entitas yang dinonaktifkan | {1} Satu entitas dinonaktifkan |] 1, Inf [ % count% entitas dinonaktifkan"
       time_triggered:
-        entity_label: Time Triggered
-        repetition_time: Frequency
+        entity_label: Waktu Dipicu
+        repetition_time: Frekuensi
       event_triggered:
-        entity_label: Event Triggered
+        entity_label: Acara Dipicu
     ui:
-      create: Create
-      ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
+      create: Membuat
+      ok: Baik
+      cancel: Membatalkan
+      save: Menyimpan
+      delete: Menghapus
+      save_and_close: Simpan dan tutup
       edit: Edit
-      add: Add
-      change: Change
+      add: Menambahkan
+      change: Perubahan
       event_triggered:
-        create: Create Event Triggered Rule
+        create: Buat Aturan yang Dipicu Acara
       time_triggered:
-        create: Create Time Triggered Rule
+        create: Buat Aturan yang Dipicu Waktu
     attributes:
-      condition: Condition
-      action: Action
-      weight: Weight
+      condition: Kondisi
+      action: Tindakan
+      weight: Berat
       target: Target
-      parent: Parent
+      parent: Induk
       status: Status
       expression: Expression
       mode: Mode
