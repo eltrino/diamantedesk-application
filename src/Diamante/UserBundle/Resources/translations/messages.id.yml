@@ -2,63 +2,63 @@
 diamante:
   user:
     labels:
-      entity: Customer
-      entity.plural: Customers
-      email: Email
-      first_name: First Name
-      last_name: Last Name
-      active: Is Active
+      entity: Pelanggan
+      entity.plural: Pelanggan
+      email: E-mail
+      first_name: Nama depan
+      last_name: Nama keluarga
+      active: Aktif
       id: Id
-      is_deleted: Is Deleted
-      related_tickets: Tickets
-      activated: Email Confirmed
+      is_deleted: Dihapus
+      related_tickets: Tiket
+      activated: Email Dikonfirmasi
     actions:
-      create: Create Customer
-      remove: Delete Customer
-      view: View Customer
-      update: Update Customer
-      delete: Delete Customer
-      reset_pwd: Reset Password
+      create: Buat Pelanggan
+      remove: Hapus Pelanggan
+      view: Lihat pelanggan
+      update: Perbarui Pelanggan
+      delete: Hapus Pelanggan
+      reset_pwd: Atur ulang kata sandi
       mass:
         delete:
-          label: Delete сustomers
+          label: Hapus pelanggannya
           messages:
-            success: Selected customers successfully deleted.
-            fail: Failed to delete selected customers.
+            success: Pelanggan terpilih berhasil dihapus.
+            fail: Gagal menghapus pelanggan terpilih.
         reset_pwd:
-          label: Reset passwords for customers
+          label: Setel ulang kata sandi untuk pelanggan
           messages:
-            success: Passwords for %count% selected customer(s) have been successfully reset.
-            fail: Error occured while resetting passwords.
+            success: Sandi untuk %count% pelanggan terpilih telah berhasil di-reset.
+            fail: Terjadi kesalahan saat menyetel ulang kata sandi.
     messages:
       delete:
-        query: Are you sure you want to delete this customer?
-        success: Customer successfully deleted.
+        query: Yakin ingin menghapus pelanggan ini?
+        success: Pelanggan berhasil dihapus
       create:
-        success: Customer successfully created.
+        success: Pelanggan berhasil dibuat.
       update:
-        success: Customer successfully updated.
+        success: Pelanggan berhasil diperbarui.
       reset_pwd:
-        query: Are you sure you want to reset password for this customer?
-        success: User password successfully reset.
+        query: Yakin ingin menyetel ulang kata sandi untuk pelanggan ini?
+        success: Sandi pengguna berhasil diatur ulang.
       remove:
         failed:
-          related: Error deleting user. User has related entities.
+          related: Kesalahan saat menghapus pengguna Pengguna memiliki entitas terkait.
     placeholder:
-      email: 'Please enter an email address'
-    details: Customer Details
-    activity: Customer Activity
+      email: 'silahkan masukan alamat email'
+    details: detil pelanggan
+    activity: Aktivitas pelanggan
     ui:
       "yes": true
       "no": false
     notification:
-      created: New DiamanteDesk account created.
-      force_reset: Password reset notification
+      created: Akun DiamanteDesk baru dibuat.
+      force_reset: Pemberitahuan penyetelan ulang sandi
     exception:
-      customer_exists: Customer with such email already exists.
+      customer_exists: Pelanggan dengan email semacam itu sudah ada.
     autocomplete:
       group:
-        assignee: '[Assignee]'
+        assignee: '[Penerima]'
         watchers: '[Watchers]'
-        reporter: '[Ticket Reporter]'
-        comment_author: '[Comment author]'
+        reporter: '[Reporter Tiket]'
+        comment_author: '[Penulis komentar]'
