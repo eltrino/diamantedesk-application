@@ -82,25 +82,25 @@ diamante:
       gte: lebih besar dari atau sama dengan
       lt: kurang dari
       lte: kurang dari atau sama dengan
-      contains: contains
-      not_contains: not contains
+      contains: mengandung
+      not_contains: tidak berisi
       created: Dibuat
       updated: Diperbarui
-      removed: Removed
-      changed: changed
-      changed_from: changed from
-      changed_to: changed to
-      "true": "true"
-      "false": "false"
-      customer: is customer
-      admin: is admin
+      removed: Dihapus
+      changed: berubah
+      changed_from: berubah dari
+      changed_to: berubah menjadi
+      "true": "benar"
+      "false": "Salah"
+      customer: adalah pelanggan
+      admin: adalah admin
     action:
       update_property: Update property
-      notify_by_email: Notify by email
+      notify_by_email: Beritahu melalui email
     connector:
-      inclusive: All of these are true
-      exclusive: Any of these are true
+      inclusive: Semua ini benar adanya
+      exclusive: Semua ini benar adanya
     cron:
-      d: "{1} Every day|]1,Inf[ Every %time% days"
-      h: "{1} Every hour|]1,Inf[ Every %time% hours"
-      m: Every %time% minutes
+      d: "{1} Setiap hari |] 1, Inf [Setiap % waktu% hari"
+      h: "{1} Setiap jam |] 1, Inf [Setiap % waktu% jam"
+      m: Setiap % waktu% menit
