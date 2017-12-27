@@ -232,17 +232,17 @@ diamante:
       not_available: N / A
       not_defined: Tak terdefinisikan
       no_description: tidak ada deskripsi
-      delete_confirmation: Confirm Deletion
+      delete_confirmation: Konfirmasi penghapusan
       filters: Filter
       watchers: Watchers
       messages:
         validation:
-          failed: Form is invalid. Fill out all required fields correctly.
+          failed: Formulir tidak valid Isi semua bidang yang dibutuhkan dengan benar.
     forms:
       name: Nama
       default_assignee: Penerima default
       logoFile: Logo
-      tags: Tags
+      tags: Tag
       key: Kunci
     attributes:
       name: Nama
@@ -254,69 +254,69 @@ diamante:
       reporter: Reporter
       default_assignee: Penerima default
       assignee: Penerima
-      watcher: Watcher
+      watcher: Pengintai
       key: Kunci
     email:
-      configuration: Email Configuration
+      configuration: Konfigurasi Email
     dashboard:
-      support.label: Support Dashboard
+      support.label: Dukung Dasbor
     report:
-      plural_label: Reports
+      plural_label: Laporan
       reports:
-        tickets_by_priority: Tickets by Priority
-        tickets_by_response_time: Time of Response
-        tickets_by_channels: Tickets by Channels
-        tickets_by_branches: Tickets by Branches
-        ticket_timeline: Ticket Timeline
+        tickets_by_priority: Tiket menurut Prioritas
+        tickets_by_response_time: Waktu Respon
+        tickets_by_channels: Tiket menurut Saluran
+        tickets_by_branches: Tiket menurut Cabang
+        ticket_timeline: Garis Waktu Tiket
       messages:
         build:
-          error: Error occured while generating the report.
+          error: Terjadi kesalahan saat membuat laporan.
     tickethistory:
-      entity_label: Ticket History
-      entity_plural_label: Tickets History
+      entity_label: Sejarah tiket
+      entity_plural_label: Sejarah tiket
       id.label: Id
-      ticket_id.label: Ticket id
-      ticket_key.label: Ticket Key
+      ticket_id.label: Id tiket
+      ticket_key.label: Kunci tiket
     tickettimeline:
-      entity_label: Ticket Timeline
-      closed.label: Closed
-      date.label: Date
+      entity_label: Garis Waktu Tiket
+      closed.label: Tutup
+      date.label: Tanggal
       id.label: Id
-      new.label: New
-      reopen.label: Reopen
-      solved.label: Solved
+      new.label: Baru
+      reopen.label: Buka kembali
+      solved.label: Terpecahkan
     watcherlist:
       entity_label: Daftar pendengar
-      entity_plural_label: Watcher Lists
+      entity_plural_label: Daftar pengintai
       id.label: Id
       ticket.label: Tiket
-      user_type.label: User Type
+      user_type.label: Tipe Pengguna
     automation:
       action:
-        move_to_branch: Move to branch
+        move_to_branch: Pindah ke cabang
       notification:
         ticket:
-          created: Ticket was created
-          updated: Ticket was updated
-          removed: Ticket was removed
+          created: Tiket telah dibuat
+          updated: Tiket telah diperbarui
+          removed: Tiket telah dihapus
         comment:
-          created: Comment was created
-          updated: Comment was updated
-          removed: Comment was removed
+          created: Komentar telah dibuat
+          updated: Komentar telah diupdate
+          removed: Komentar telah dihapus
           private:
-            created: Private comment was created
-            updated: Private comment was updated
-            removed: Private comment was removed
+            created: Komentar pribadi telah dibuat
+            updated: Komentar pribadi telah diupdate
+            removed: Komentar pribadi telah dihapus
 oro:
   entity_extend:
     form:
       data_type:
         branch_logo: Logo Cabang
-        user_type: User Type
+        user_type: Tipe Pengguna
         source: Sumber
         status: Status
         priority: Prioritas
-        ticket_unique_id: Ticket unique id
-        ticket_sequence_number: Ticket sequence number
+        ticket_unique_id: Id unik tiket
+        ticket_sequence_number: Nomor urut tiket
 oro_datagrid:
-  "not_found_hint %entityHint%": "No %entityHint% matching your search were found. Try modifying your search criteria."
+  "not_found_hint %entityHint%": "Tidak ada % entityHint% yang cocok dengan pencarian Anda yang ditemukan. Cobalah memodifikasi kriteria pencarian Anda."
