@@ -27,4 +27,4 @@ process:
       table:
         diamante: Persyaratan DiamanteDesk
     final:
-      content: Anda beruntung bisa langsung menggunakan DiamanteDesk. <br> Jika Anda mencari bantuan atau memerlukan dukungan, silakan bergabung dengan komunitas kami di <a href="https://github.com/eltrino"> Github </a> atau hubungi tim dukungan kami jika Anda Kami adalah klien Enterprise kami.
+      content: Anda beruntung bisa langsung menggunakan DiamanteDesk.<br>Jika Anda mencari bantuan atau memerlukan dukungan, silakan bergabung dengan komunitas kami di <a href="https://github.com/eltrino">Github</a> atau hubungi tim dukungan kami jika Anda Kami adalah klien Enterprise kami.
