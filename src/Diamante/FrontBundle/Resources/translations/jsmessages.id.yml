@@ -75,7 +75,7 @@ diamante_front:
           text: Anda bisa login dan menggunakan aplikasi
         reconfirm_succes:
           title: Sukses Konfirmasi Email
-          text: Kami telah mengirimi Anda email ke %{email}.</ br>Silahkan klik link di pesan tersebut untuk mengaktifkan akun anda.
+          text: Kami telah mengirimi Anda email ke %{email}.</br>Silahkan klik link di pesan tersebut untuk mengaktifkan akun anda.
         confirm_fail:
           title: Konfirmasi Email gagal
           text: Kode aktivasi salah
@@ -88,7 +88,7 @@ diamante_front:
           title: Registrasi gagal
         reset_info:
           title: Password Reset Info
-          text: Kami telah mengirimi Anda email ke %{email}.</ br>Silahkan klik link di pesan tersebut untuk mereset password anda.
+          text: Kami telah mengirimi Anda email ke %{email}.</br>Silahkan klik link di pesan tersebut untuk mereset password anda.
         reset_fail:
           title: Reset Password Gagal
           text: Kode Reset tidak valid atau kadaluarsa
@@ -109,8 +109,8 @@ diamante_front:
       forgot: Amnesia?
       remember: Ingat saya
       back:
-        register: Sudah memiliki akun? &mdash; <a href="%{url} ">Masuk</a>
-        reset: Kembali ke <a href=" %{url} "> Masuk </a>
+        register: Sudah memiliki akun? &mdash; <a href="%{url}">Masuk</a>
+        reset: Kembali ke <a href="%{url}">Masuk</a>
       label:
         email: E-mail
         first_name: Nama depan
@@ -154,7 +154,7 @@ diamante_front:
       error:
         required: Tidak boleh kosong
     template:
-      empty_list: Anda belum membuat tiket apa pun. <br> Klik <a href=" %{url} "> + </a> untuk membuat yang baru.
+      empty_list: Anda belum membuat tiket apa pun.<br>Klik<a href="%{url}">+</a> untuk membuat yang baru.
       empty_search: Tidak ada tiket yang sesuai dengan kriteria Anda.
       empty_view: Tiket ini tidak ada!
       form:
