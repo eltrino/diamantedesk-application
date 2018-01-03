@@ -1,221 +1,229 @@
 ---
-"Loading...": "Loading..."
+"Loading...": "Pemuatan..."
 diamante_front:
   attachment:
     controller:
       alert:
         delete_error:
-          title: Delete Attachment Error
+          title: Hapus Kesalahan Lampiran
       message:
-        attach_success: Files attached successfully
-        delete_success: File deleted successfully
+        attach_success: File terlampir dengan sukses
+        delete_success: File berhasil dihapus
     model:
       alert:
         add_error:
-          title: Add Attachments Error
+          title: Tambah Lampiran Kesalahan
     template:
       dropzone:
-        dropfiles: Drop files here to attach
-        attachfiles: Click here to attach files
-        read: Reading...
-        send: Sending...
-        receive: Receiving...
+        dropfiles: Jatuhkan file disini untuk dilampirkan
+        attachfiles: Klik disini untuk melampirkan file
+        read: Bacaan...
+        send: Mengirimkan ...
+        receive: Menerima ...
       button:
-        remove: Remove Attachment
+        remove: Hapus Lampiran
       link:
         download: 'Download:'
       header:
-        file: File Attachments
+        file: Lampiran File
   comment:
     controller:
       alert:
         create_error:
-          title: Create Comment Error
+          title: Buat Kesalahan Komentar
         delete_error:
-          title: Delete Comment Error
+          title: Hapus Kesalahan Komentar
         edit_success:
-          title: Your comment has been edited
+          title: Komentar anda telah diedit
       message:
-        post_success: Comment was posted successfully
-        delete_success: Your comment was successfully deleted
+        post_success: Komentar telah berhasil dikirim
+        delete_success: Komentar anda telah berhasil dihapus
     model:
       error:
-        required: "Can't be blank"
+        required: "Tidak boleh kosong"
     template:
       form:
-        add: Add Comment
-        cancel: Cancel
-        save: Save Changes
+        add: Tambahkan komentar
+        cancel: Membatalkan
+        save: Simpan perubahan
       button:
-        edit: Edit Comment
-        delete: Delete Comment
+        edit: Edit Komentar
+        delete: Hapus Komentar
   common:
     template:
-      close: Close
-      cancel: Cancel
-      sort: Sort By
+      close: Dekat
+      cancel: Membatalkan
+      sort: Sortir dengan
     view:
       alert:
-        title: Error
-        text: An unprocessed error happened. Please try again!
+        title: Kesalahan
+        text: Terjadi kesalahan yang belum diproses. Silahkan coba lagi
       modal:
-        title: Modal Window
-        submit: Save changes
+        title: Jendela Modal
+        submit: Simpan perubahan
   footer:
     template:
-      copyright: Diamante is released under %{license} License by %{company}
+      copyright: Diamante dilepaskan di bawah lisensi%{license} oleh %{company}
   header:
     template:
-      new_ticket: New Ticket
+      new_ticket: Tiket baru
   session:
     controller:
       alert:
         confirm_success:
-          title: Email Confirmation Success
-          text: You may log in and use application
+          title: Sukses Konfirmasi Email
+          text: Anda bisa login dan menggunakan aplikasi
         reconfirm_succes:
-          title: Email Confirmation Success
-          text: We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: Sukses Konfirmasi Email
+          text: Kami telah mengirimi Anda email ke %{email}.</br>Silahkan klik link di pesan tersebut untuk mengaktifkan akun anda.
         confirm_fail:
-          title: Email Confirmation Failed
-          text: Activation code is wrong
+          title: Konfirmasi Email gagal
+          text: Kode aktivasi salah
         login_fail:
-          title: Authorization Failed
+          title: Otorisasi gagal
         register_succes:
-          title: Registration Success
-          text: Thank you. We have sent you email to %{email}.</br>Please click the link in that message to activate your account.
+          title: Registrasi berhasil
+          text: Terima kasih. Kami telah mengirimi Anda email ke %{email}.</ br>Silahkan klik link di pesan tersebut untuk mengaktifkan akun anda.
         register_fail:
-          title: Registration Failed
+          title: Registrasi gagal
         reset_info:
           title: Password Reset Info
-          text: We have sent you email to %{email}.</br>Please click the link in that message to reset your password.
+          text: Kami telah mengirimi Anda email ke %{email}.</br>Silahkan klik link di pesan tersebut untuk mereset password anda.
         reset_fail:
-          title: Password Reset Failed
-          text: Reset Code is invalid or expired
+          title: Reset Password Gagal
+          text: Kode Reset tidak valid atau kadaluarsa
       message:
-        reset_success: Password successfully changed, you can use it to log in
+        reset_success: Password berhasil diubah, Anda bisa menggunakannya untuk login
     model:
       alert:
         auth_required:
-          title: Authorization Required
-          text: This action requires authorization
+          title: Diperlukan Otorisasi
+          text: Tindakan ini membutuhkan otorisasi
       error:
-        required: Can't be blank
-        email_format: '"%{email}" is not a valid email'
-        password_length: Must be at least six (6) symbols
+        required: Tidak boleh kosong
+        email_format: '"%{email}" bukan email yang valid'
+        password_length: Harus minimal enam (6) simbol
     template:
-      register: Registration
-      login: Log In
+      register: Pendaftaran
+      login: Masuk
       forgot: Amnesia?
-      remember: Remember me
+      remember: Ingat saya
       back:
-        register: Already have an account? &mdash; <a href="%{url}">Sign In</a>
-        reset: Back to <a href="%{url}">Sign in</a>
+        register: Sudah memiliki akun? &mdash; <a href="%{url}">Masuk</a>
+        reset: Kembali ke <a href="%{url}">Masuk</a>
       label:
-        email: Email
-        first_name: First Name
-        last_name: Last Name
-        password: Password
-        new_password: New Password
+        email: E-mail
+        first_name: Nama depan
+        last_name: Nama keluarga
+        password: Kata sandi
+        new_password: kata sandi baru
       placeholder:
-        email: Enter Email
-        first_name: Enter First Name
-        last_name: Enter Last Name
-        password: Enter Password
-        new_password: Enter New Password
+        email: Masukan email
+        first_name: Masukkan nama depan
+        last_name: Masukkan Nama Belakang
+        password: Masukkan kata kunci
+        new_password: Masukan kata sandi baru
       button:
-        login: Log In
-        register: Continue
-        reset_password: Reset Password
-        new_password: Set New Password
+        login: Masuk
+        register: Terus
+        reset_password: Atur ulang kata sandi
+        new_password: Tetapkan Kata Sandi Baru
     title:
-      login: Log In
-      register: Registration
-      reset: Reset Password
+      login: Masuk
+      register: Pendaftaran
+      reset: Atur ulang kata sandi
   ticket:
     controller:
       alert:
         create_error:
-          title: Create Ticket Error
+          title: Buat Kesalahan Tiket
         edit_error:
-          title: Edit Ticket Error
+          title: Edit Kesalahan Tiket
       message:
-        key_changed: While we were actively working on your ticket, its key was changed to %{ticket_key_id}
-        ticket_update: Ticket %{ticket_update_id} updated
-        status_closed: Ticket %{ticket_status_closed_id} status changed. Ticket status is "Closed"
-        status_open: Ticket %{ticket_status_open_id} status changed. Ticket status is "Open"
-        create_ticket: Ticket %{ticket_created_id} created
+        key_changed: Saat kami aktif mengerjakan tiket Anda, kuncinya diubah menjadi %{ticket_key_id}
+        ticket_update: Tiket %{ticket_update_id} diperbarui
+        status_closed: Status tiket %{ticket_status_closed_id} berubah. Status tiket "Tertutup"
+        status_open: Status tiket %{ticket_status_open_id} berubah. Status tiket adalah "Open"
+        create_ticket: Tiket %{ticket_created_id} dibuat
       edit:
-        title: Edit Ticket %{ticket_id}
+        title: Edit Tiket %{ticket_id}
       edit_ticket:
         Edit Ticket: '%{key} - %{subject}'
-      search_result: Search Result
+      search_result: Hasil pencarian
     model:
       error:
-        required: Can't be blank
+        required: Tidak boleh kosong
     template:
-      empty_list: You have't created any tickets yet.<br>Click <a href="%{url}">+</a> to create a new one.
-      empty_search: There are no tickets matching your criteria.
-      empty_view: This ticket doesn't exist!
+      empty_list: Anda belum membuat tiket apa pun.<br>Klik<a href="%{url}">+</a> untuk membuat yang baru.
+      empty_search: Tidak ada tiket yang sesuai dengan kriteria Anda.
+      empty_view: Tiket ini tidak ada!
       form:
-        subject_label: Ticket Subject
-        subject_placeholder: Short ticket summary
-        description_label: Description
-        description_placeholder: Provide a detailed description of your support request
-        priority_label: Priority
-        low_option: Low
+        subject_label: Subjek tiket
+        subject_placeholder: Ringkasan tiket singkat
+        description_label: Deskripsi
+        description_placeholder: Berikan penjelasan rinci tentang permintaan dukungan Anda
+        priority_label: Prioritas
+        low_option: Rendah
         medium_option: Medium
-        high_option: High
+        high_option: Tinggi
       list:
-        key: Key
-        date: Date
-        subject: Subject
-        priority: Priority
+        key: Kunci
+        date: Tanggal
+        subject: Subyek
+        priority: Prioritas
         status: Status
-      resolve_button: Resolve Ticket
-      reopen_button: Reopen Ticket
+      resolve_button: Putuskan Tiket
+      reopen_button: Buka kembali tiket
     view:
-      all_tickets: View all tickets
+      all_tickets: Lihat semua tiket
     router:
-      view_ticket: View Ticket
-      create_ticket: Create Ticket
-      edit_ticket: Edit Ticket
+      view_ticket: Lihat Tiket
+      create_ticket: Buat Tiket
+      edit_ticket: Edit Tiket
   user:
     controller:
       message:
-        update_success: You have successfully updated your profile
+        update_success: Anda telah berhasil memperbarui profil Anda
       alert:
         edit_error:
-          title: Edit User Error
-      edit_user: Edit User
+          title: Edit Kesalahan Pengguna
+      edit_user: Edit pengguna
     model:
       error:
-        required: Can't be blank
-        password_length: Must be at least six (6) symbols
+        required: Tidak boleh kosong
+        password_length: Harus minimal enam (6) simbol
     template:
       form:
-        first_name_label: First Name
-        last_name_label: Last Name
-        email_label: Email
-        password_label: New Password
-        submit_button: Submit
-      logout: Log Out
+        first_name_label: Nama depan
+        last_name_label: Nama keluarga
+        email_label: E-mail
+        password_label: kata sandi baru
+        submit_button: Menyerahkan
+      logout: Keluar
   watcher:
     controller:
       alert:
         add_error:
           title: Add Watcher Error
         delete_comment_error:
-          title: Delete Comment Error
+          title: Hapus Kesalahan Komentar
       message:
-        add_success: A new watcher has been successfully added to the ticket
-        remove_success: A watcher has been removed from the ticket
-      add_watcher: Add Watcher
+        add_success: Seorang pengamat baru berhasil ditambahkan ke tiket
+        remove_success: Seorang pengamat telah dikeluarkan dari tiket
+      add_watcher: Tambahkan Watcher
     model:
       error:
-        required: Can't be blank
-        email_format: '"%{email}" is not a valid email'
+        required: Tidak boleh kosong
+        email_format: '"%{email}" bukan email yang valid'
     template:
       email_watcher: Watcher Email
-      remove_watcher: Remove Watcher
-      add_watcher: Add Watcher
+      remove_watcher: Hapus Watcher
+      add_watcher: Tambahkan Watcher
+
+
+
+
+
+
+
+

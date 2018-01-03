@@ -2,321 +2,321 @@
 diamante:
   desk:
     branch:
-      entity_label: Branch
-      entity_plural_label: Branches
-      details: Branch Details
-      created_at.label: Created At
-      description.label: Description
-      id.label: Branch Id
-      key.label: Branch Key
-      logo.label: Branch Logo
-      name.label: Branch Name
-      updated_at.label: Updated At
-      default_assignee.label: Default Assignee
+      entity_label: Cabang
+      entity_plural_label: Ranting
+      details: Rincian Cabang
+      created_at.label: Dibuat di
+      description.label: Deskripsi
+      id.label: Id Cabang
+      key.label: Kunci cabang
+      logo.label: Logo Cabang
+      name.label: Nama cabang
+      updated_at.label: Diperbarui pada
+      default_assignee.label: Penerima default
       columns:
         logo: Logo
-        branch_name: Branch Name
-        branch_key: Branch Key
+        branch_name: Nama cabang
+        branch_key: Kunci cabang
       actions:
-        create: Create Branch
-        view: View Branch
-        edit: Edit Branch
-        remove: Delete Branch
-        remove_mass: Delete Branches
+        create: Buat Cabang
+        view: Lihat Cabang
+        edit: Edit Cabang
+        remove: Hapus Cabang
+        remove_mass: Hapus Cabang
       messages:
         create:
-          error: Error occurred while creating a branch. Branch is not created. Enter all the required data and try again.
-          success: Branch successfully created.
+          error: Terjadi kesalahan saat membuat cabang. Cabang tidak dibuat. Masukkan semua data yang diperlukan dan coba lagi.
+          success: Cabang berhasil dibuat.
         save:
-          error: Error occurred while saving the branch. Branch is not saved. Enter all the required data and try again.
-          success: Branch successfully saved.
+          error: Terjadi kesalahan saat menyimpan cabang. Cabang tidak disimpan Masukkan semua data yang diperlukan dan coba lagi.
+          success: Cabang berhasil disimpan.
         delete:
           query: WARNING! Are you sure you want to delete this branch with ALL tickets assigned to it?
-          success: Branch successfully deleted.
-          mass_success: "{1} One branch was deleted.|]1,Inf[ %count% branches were deleted."
-          error: Current branch is configured as default for Email Processing and cannot be deleted.
-          mass_error: "{0} Current branch is configured as a default for Email Processing and can't be deleted.|{1} One of the branches cannot be deleted as it was configured as a default one|]1,Inf[ %count% branches were deleted except default branch"
-          exist_tickets_error: One or more branches have tickets and cannot be deleted.
-          move: Keep the tickets and move them to another branch.
-          select: Select a new branch
+          success: Cabang berhasil dihapus.
+          mass_success: "{1} Satu cabang telah dihapus. | 1, Inf [ % count% cabang telah dihapus."
+          error: Cabang saat ini dikonfigurasi sebagai default untuk Email Processing dan tidak dapat dihapus.
+          mass_error: "{0} Cabang saat ini dikonfigurasi sebagai default untuk Email Processing dan tidak dapat dihapus {1} Salah satu cabang tidak dapat dihapus karena telah dikonfigurasikan sebagai default one]] 1, cabang [ % count% cabang telah dihapus kecuali cabang default"
+          exist_tickets_error: Satu atau lebih cabang memiliki tiket dan tidak dapat dihapus.
+          move: Simpan tiket dan pindahkan ke cabang lain.
+          select: Pilih cabang baru
         get:
-          error: Branch loading failed. Branch not found.
+          error: Pembebanan cabang gagal Cabang tidak ditemukan.
       placeholders:
-        form: Choose a branch...
-        default: Current branch is configured as default for Email Processing and cannot be deleted.
+        form: Pilih cabang ...
+        default: Cabang saat ini dikonfigurasi sebagai default untuk Email Processing dan tidak dapat dihapus.
     ticket:
-      entity_label: Ticket
-      entity_plural_label: Tickets
-      details: Ticket Details
-      all: All Tickets
-      created_at.label: Created At
-      description.label: Description
-      id.label: Ticket Id
-      priority.label: Priority
+      entity_label: Tiket
+      entity_plural_label: Tiket
+      details: Rincian tiket
+      all: Semua tiket
+      created_at.label: Dibuat di
+      description.label: Deskripsi
+      id.label: Id Tiket
+      priority.label: Prioritas
       reporter_email.label: Reporter Email
-      assignee.label: Assigner
-      branch.label: Branch
-      comments.label: Comments
-      sequence_number.label: Sequence Number
-      source.label: Source
+      assignee.label: Penolong
+      branch.label: Cabang
+      comments.label: Komentar
+      sequence_number.label: Nomor Urutan
+      source.label: Sumber
       status.label: Status
-      subject.label: Subject
-      unique_id.label: Unique Id
-      updated_at.label: Updated At
-      attachments.label: Attachments
-      watcher_list.label: Watcher List
-      created_via_email.label: Created via email to
-      since_created.label: Since created
-      since_updated.label: Since updated
-      since_status_updated.label: Since status updated
-      since_assignee_updated.label: Since assignee updated
+      subject.label: Subyek
+      unique_id.label: Identitas unik
+      updated_at.label: Diperbarui pada
+      attachments.label: Lampiran
+      watcher_list.label: Daftar pendengar
+      created_via_email.label: Dibuat melalui email ke
+      since_created.label: Sejak dibuat
+      since_updated.label: Sejak diperbarui
+      since_status_updated.label: Sejak status diupdate
+      since_assignee_updated.label: Sejak pengalihan diperbarui
       columns:
-        key: Key
-        subject: Subject
-        branch: Branch
-        assignee: Assignee
+        key: Kunci
+        subject: Subyek
+        branch: Cabang
+        assignee: Penerima
         reporter: Reporter
-        priority: Priority
+        priority: Prioritas
         status: Status
-        created: Created
-        updated: Updated
+        created: Dibuat
+        updated: Diperbarui
       actions:
-        add: Add Ticket
-        edit: Edit Ticket
-        view: View Ticket
-        remove: Delete Ticket
-        delete: Delete
-        assign: Assign
-        create: Create Ticket
-        change_status: Change Status
-        move: Move
-        watch: Watch
-        unwatch: Un-watch
-        add_watcher: Add Watcher
+        add: Tambahkan Tiket
+        edit: Edit Tiket
+        view: Lihat Tiket
+        remove: Hapus Tiket
+        delete: Menghapus
+        assign: Menetapkan
+        create: Buat Tiket
+        change_status: Merubah status
+        move: Pindah
+        watch: Menonton
+        unwatch: Tidak menonton
+        add_watcher: Tambahkan Watcher
       messages:
         create:
-          error: Error occurred while creating a ticket.
-          success: Ticket successfully created.
+          error: Terjadi kesalahan saat membuat tiket.
+          success: Tiket berhasil dibuat.
         save:
-          error: Error occurred while saving the ticket.
-          success: Ticket successfully saved.
+          error: Terjadi kesalahan saat menyimpan tiket.
+          success: Tiket berhasil disimpan.
         delete:
-          query: Are you sure you want to delete this ticket?
-          error: Error occurred while deleting the ticket.
-          success: Ticket successfully deleted.
+          query: Yakin ingin menghapus tiket ini?
+          error: Terjadi kesalahan saat menghapus tiket.
+          success: Tiket berhasil dihapus
         reassign:
-          error: Error occurred while re-assiging the ticket.
-          success: Ticket successfully re-assigned.
+          error: Terjadi kesalahan saat re-assiging tiket.
+          success: Tiket berhasil ditugaskan kembali.
         change_status:
-          error: Error occurred while trying to change the ticket status.
-          success: Status successfully changed.
+          error: Terjadi kesalahan saat mencoba mengubah status tiket.
+          success: Status berhasil diubah.
         move:
-          error: Error occurred while trying to move the ticket.
-          success: Ticket successfully moved.
+          error: Terjadi kesalahan saat mencoba memindahkan tiket.
+          success: Tiket berhasil dipindahkan.
         watch:
-          error: Error occurred while trying to add a watcher.
-          success: Watcher successfully added.
+          error: Terjadi kesalahan saat mencoba menambahkan pengamat.
+          success: Watcher berhasil menambahkan.
         watcher_remove:
-          success: Watcher successfully removed.
+          success: Watcher berhasil dihapus
         get:
-          error: Ticket loading failed, ticket not found.
+          error: Pembebanan tiket gagal, tiket tidak ditemukan.
           attachment:
-            error: Attachment loading failed. Ticket has no such attachment.
+            error: Pembebanan lampiran gagal Tiket tidak memiliki keterikatan seperti itu.
           branch:
-            error: Branch loading failed, branch not found.
+            error: Pembebanan cabang gagal, cabang tidak ditemukan.
           reporter:
-            error: Reporter loading failed, reporter not found.
+            error: Pembuat laporan gagal, reporter tidak ditemukan.
           assignee:
-            error: Assignee validation failed, assignee not found.
+            error: Validasi penugasan gagal, penerima tidak ditemukan.
     comment:
-      entity_label: Comment
-      entity_plural_label: Comments
-      ticket_status: Ticket status
-      content: Content
-      private: Private
-      attachments.label: Attachments
-      author.label: Author
-      content.label: Content
-      created_at.label: Created_at
+      entity_label: Komentar
+      entity_plural_label: Komentar
+      ticket_status: Status tiket
+      content: Konten
+      private: Pribadi
+      attachments.label: Lampiran
+      author.label: Penulis
+      content.label: Konten
+      created_at.label: Dibuat di
       id.label: Id
-      private.label: Private
-      ticket.label: Ticket
-      updated_at.label: Updated at
-      author_email.label: Author email
+      private.label: Pribadi
+      ticket.label: Tiket
+      updated_at.label: Diperbarui pada
+      author_email.label: Email penulis
       actions:
-        edit: Edit Comment
-        add: Add Comment
+        edit: Edit Komentar
+        add: Tambahkan komentar
       messages:
         create:
-          error: Error occured while creating a comment.
-          success: Comment successfully created.
+          error: Terjadi kesalahan saat membuat komentar.
+          success: Komentar berhasil dibuat.
         save:
-          error: Error occured while saving the comment.
-          success: Comment successfully saved.
+          error: Terjadi kesalahan saat menyimpan komentar.
+          success: Komentar berhasil disimpan.
         delete:
           error: ""
-          success: Comment successfully deleted.
-          query: Are you sure you want to delete this comment?
+          success: Komentar berhasil dihapus
+          query: Anda yakin ingin menghapus komentar ini?
         get:
-          error: Comment loading failed, comment not found.
+          error: Pembatalan komentar gagal, komentar tidak ditemukan.
         get_attach:
-          error: Attachment loading failed. Comment has no such attachment.
-        empty: There are no comments yet.
+          error: Pembebanan lampiran gagal Komentar tidak memiliki keterikatan seperti itu.
+        empty: Belum ada komentar.
       placeholders:
-        added: added a comment
-        deleted_user: Deleted user
+        added: menambahkan komentar
+        deleted_user: Pengguna yang dihapus
     attachment:
-      entity_label: Attachment
-      entity_plural_label: Attachments
-      file: File
-      image: Image
-      created_at.label: Created at
-      file.label: File
+      entity_label: Lampiran
+      entity_plural_label: Lampiran
+      file: Mengajukan
+      image: Gambar
+      created_at.label: Dibuat di
+      file.label: Mengajukan
       hash.label: Hash
       id.label: Id
-      updated_at.label: Updated at
+      updated_at.label: Diperbarui pada
       actions:
-        delete_file: Delete File
-        add: Add Attachment
+        delete_file: Menghapus berkas
+        add: Tambahkan sisipan
         download: Download
-        remove: Delete
-        attach: Attach File
+        remove: Menghapus
+        attach: Lampirkan file
       messages:
         create:
-          error: Error occured while uploading an attachment.
-          success: Attachment(s) successfully uploaded.
+          error: Terjadi kesalahan saat mengunggah lampiran.
+          success: Attachment berhasil diupload.
         delete:
-          error: Unable to remove attachment.
-          success: Attachment successfully deleted.
-          query: Are you sure you want to delete this attachment?
+          error: Tidak dapat menghapus lampiran
+          success: Lampiran berhasil dihapus.
+          query: Yakin ingin menghapus lampiran ini?
         get:
-          error: Attachment not found
+          error: Lampiran tidak ditemukan
         load:
-          error: Attachment loading failed, attachment not found.
+          error: Pemuatan lampiran gagal, lampiran tidak ditemukan.
         upload:
-          error: Upload directory is not writable, doesn't exist or no space left on the disk.
+          error: Direktori pengunggahan tidak dapat ditulis, tidak ada atau tidak ada ruang yang tersisa di disk.
       placeholders:
-        dropzone: Drop File Here
+        dropzone: Drop File disini
     file:
       messages:
         dump:
-          error: File name cannot be an empty string.
+          error: Nama file tidak bisa menjadi string kosong.
         type:
-          error: Value should be a File type.
+          error: Nilai harus berupa jenis File.
     permissions:
       messages:
         granted:
-          error: Not enough permissions.
+          error: Tidak cukup izin.
     watcher:
       messages:
         watch:
-          success: You are watching the ticket now.
+          success: Anda sedang menonton tiket sekarang.
         unwatch:
-          success: You have successfully unsubscribed from watching the ticket.
+          success: Anda telah berhasil berhenti berlangganan untuk menonton tiket.
     ui:
-      create: Create
-      ok: Ok
-      cancel: Cancel
-      save: Save
-      delete: Delete
-      save_and_close: Save and close
+      create: Membuat
+      ok: Baik
+      cancel: Membatalkan
+      save: Menyimpan
+      delete: Menghapus
+      save_and_close: Simpan dan tutup
       edit: Edit
-      add: Add
-      change: Change
-      select_watcher: Select User
+      add: Menambahkan
+      change: Perubahan
+      select_watcher: Pilih Pengguna
     common:
-      general: General
-      description: Description
-      created: Created
-      updated: Updated
-      not_available: N/A
-      not_defined: Not defined
-      no_description: No description
-      delete_confirmation: Confirm Deletion
-      filters: Filters
+      general: Umum
+      description: Deskripsi
+      created: Dibuat
+      updated: Diperbarui
+      not_available: N / A
+      not_defined: Tak terdefinisikan
+      no_description: tidak ada deskripsi
+      delete_confirmation: Konfirmasi penghapusan
+      filters: Filter
       watchers: Watchers
       messages:
         validation:
-          failed: Form is invalid. Fill out all required fields correctly.
+          failed: Formulir tidak valid Isi semua bidang yang dibutuhkan dengan benar.
     forms:
-      name: Name
-      default_assignee: Default Assignee
+      name: Nama
+      default_assignee: Penerima default
       logoFile: Logo
-      tags: Tags
-      key: Key
+      tags: Tag
+      key: Kunci
     attributes:
-      name: Name
-      subject: Subject
-      branch: Branch
+      name: Nama
+      subject: Subyek
+      branch: Cabang
       status: Status
-      priority: Priority
-      source: Source
+      priority: Prioritas
+      source: Sumber
       reporter: Reporter
-      default_assignee: Default Assignee
-      assignee: Assignee
-      watcher: Watcher
-      key: Key
+      default_assignee: Penerima default
+      assignee: Penerima
+      watcher: Pengintai
+      key: Kunci
     email:
-      configuration: Email Configuration
+      configuration: Konfigurasi Email
     dashboard:
-      support.label: Support Dashboard
+      support.label: Dukung Dasbor
     report:
-      plural_label: Reports
+      plural_label: Laporan
       reports:
-        tickets_by_priority: Tickets by Priority
-        tickets_by_response_time: Time of Response
-        tickets_by_channels: Tickets by Channels
-        tickets_by_branches: Tickets by Branches
-        ticket_timeline: Ticket Timeline
+        tickets_by_priority: Tiket menurut Prioritas
+        tickets_by_response_time: Waktu Respon
+        tickets_by_channels: Tiket menurut Saluran
+        tickets_by_branches: Tiket menurut Cabang
+        ticket_timeline: Garis Waktu Tiket
       messages:
         build:
-          error: Error occured while generating the report.
+          error: Terjadi kesalahan saat membuat laporan.
     tickethistory:
-      entity_label: Ticket History
-      entity_plural_label: Tickets History
+      entity_label: Sejarah tiket
+      entity_plural_label: Sejarah tiket
       id.label: Id
-      ticket_id.label: Ticket id
-      ticket_key.label: Ticket Key
+      ticket_id.label: Id tiket
+      ticket_key.label: Kunci tiket
     tickettimeline:
-      entity_label: Ticket Timeline
-      closed.label: Closed
-      date.label: Date
+      entity_label: Garis Waktu Tiket
+      closed.label: Tutup
+      date.label: Tanggal
       id.label: Id
-      new.label: New
-      reopen.label: Reopen
-      solved.label: Solved
+      new.label: Baru
+      reopen.label: Buka kembali
+      solved.label: Terpecahkan
     watcherlist:
-      entity_label: Watcher List
-      entity_plural_label: Watcher Lists
+      entity_label: Daftar pendengar
+      entity_plural_label: Daftar pengintai
       id.label: Id
-      ticket.label: Ticket
-      user_type.label: User Type
+      ticket.label: Tiket
+      user_type.label: Tipe Pengguna
     automation:
       action:
-        move_to_branch: Move to branch
+        move_to_branch: Pindah ke cabang
       notification:
         ticket:
-          created: Ticket was created
-          updated: Ticket was updated
-          removed: Ticket was removed
+          created: Tiket telah dibuat
+          updated: Tiket telah diperbarui
+          removed: Tiket telah dihapus
         comment:
-          created: Comment was created
-          updated: Comment was updated
-          removed: Comment was removed
+          created: Komentar telah dibuat
+          updated: Komentar telah diupdate
+          removed: Komentar telah dihapus
           private:
-            created: Private comment was created
-            updated: Private comment was updated
-            removed: Private comment was removed
+            created: Komentar pribadi telah dibuat
+            updated: Komentar pribadi telah diupdate
+            removed: Komentar pribadi telah dihapus
 oro:
   entity_extend:
     form:
       data_type:
-        branch_logo: Branch Logo
-        user_type: User Type
-        source: Source
+        branch_logo: Logo Cabang
+        user_type: Tipe Pengguna
+        source: Sumber
         status: Status
-        priority: Priority
-        ticket_unique_id: Ticket unique id
-        ticket_sequence_number: Ticket sequence number
+        priority: Prioritas
+        ticket_unique_id: Id unik tiket
+        ticket_sequence_number: Nomor urut tiket
 oro_datagrid:
-  "not_found_hint %entityHint%": "No %entityHint% matching your search were found. Try modifying your search criteria."
+  "not_found_hint %entityHint%": "Tidak ada % entityHint% yang cocok dengan pencarian Anda yang ditemukan. Cobalah memodifikasi kriteria pencarian Anda."

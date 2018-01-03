@@ -8,6 +8,8 @@ process:
       cache: Очистити кеш до ініціалізації бази даних
       clear-config: Очистити кеш об'єктів
       clear-extend: Очистити дані розширених об'єктів
+      permissions: Load permissions configuration
+      crons: Load cron definitions
       schema-drop: Очистити поточну схему
       schema-update: Оновити схему
       fixtures: Завантаження конфігурації
