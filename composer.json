@@ -18,6 +18,10 @@
         {
             "type": "composer",
             "url": "https://packagist.orocrm.com"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/eltrino/composer.git"
         }
     ],
     "config": {
@@ -35,8 +39,8 @@
         "ezyang/htmlpurifier": "4.6.*",
         "bordeux/email-cleaner": "0.6.*",
         "michelf/php-markdown": "~1.4",
-        "hwi/oauth-bundle": "0.3.9 as 1.0"
-
+        "hwi/oauth-bundle": "0.3.9 as 1.0",
+        "composer/composer": "1.0.0-p2 as 1.0.0-p1"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
