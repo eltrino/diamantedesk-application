@@ -30,18 +30,10 @@
     "require":{
         "oro/platform": "~3.1.1",
         "oro/platform-serialised-fields": "~3.1.1",
-        "akeneo/batch-bundle": "0.4.2",
-        "monolog/monolog": "~1.22",
-        "nelmio/api-doc-bundle": "~2.13",
-        "jms/serializer-bundle": "~1.1",
-        "beberlei/assert": "2.*",
-        "zendframework/zend-mail": "~2.4",
-        "ezyang/htmlpurifier": "~4.8",
         "bordeux/email-cleaner": "0.6.*",
-        "michelf/php-markdown": "~1.4",
-        "hwi/oauth-bundle": "~0.5",
-        "ramsey/uuid": "~3.5",
-        "jms/job-queue-bundle": "1.4"
+        "michelf/php-markdown": "~1.8",
+        "ramsey/uuid": "~3.8",
+        "jms/job-queue-bundle": "1.4.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "3.1.*",
