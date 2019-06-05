@@ -1,30 +1,51 @@
 <?php
+// @codingStandardsIgnoreFile
 
-require_once __DIR__ . '/SymfonyRequirements.php';
+require_once __DIR__ . '/../var/SymfonyRequirements.php';
 
-use Symfony\Component\Process\ProcessBuilder;
+use Oro\Bundle\AssetBundle\NodeJsVersionChecker;
+use Oro\Bundle\AssetBundle\NodeJsExecutableFinder;
+
 use Symfony\Component\Intl\Intl;
-
-use Oro\Bundle\InstallerBundle\Process\PhpExecutableFinder;
-use Oro\Bundle\RequireJSBundle\DependencyInjection\Configuration as RequireJSConfiguration;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * This class specifies all requirements and optional recommendations that are necessary to run the Oro Application.
  */
 class OroRequirements extends SymfonyRequirements
 {
-    const REQUIRED_PHP_VERSION  = '5.6';
+    const REQUIRED_PHP_VERSION  = '7.1.26';
     const REQUIRED_GD_VERSION   = '2.0';
     const REQUIRED_CURL_VERSION = '7.0';
-    const REQUIRED_ICU_VERSION  = '3.8';
+    const REQUIRED_NODEJS_VERSION  = '>=6.6';
 
-    const EXCLUDE_REQUIREMENTS_MASK = '/5\.[0-5]\./';
+    const EXCLUDE_REQUIREMENTS_MASK = '/5\.[0-6]|7\.0/';
 
-    public function __construct()
+    /**
+     * @param string $env
+     */
+    public function __construct($env = 'prod')
     {
+        $phpVersion  = phpversion();
+
+        /**
+         * We should hide the deprecation varnings for php >= 7.2 because SymfonyRequirements class uses
+         * 'create_function' function that was deprecated in php 7.2.
+         *
+         * @see http://php.net/manual/en/migration72.deprecated.php#migration72.deprecated.create_function-function
+         * @see https://github.com/sensiolabs/SensioDistributionBundle/pull/336
+         */
+        if (version_compare($phpVersion, '7.2', '>=')) {
+            $oldLevel = error_reporting(E_ALL & ~E_DEPRECATED);
+        }
+
         parent::__construct();
 
-        $phpVersion  = phpversion();
+        // restore the previous report level in casse of php > 7.2.
+        if (version_compare($phpVersion, '7.2', '>=')) {
+            error_reporting($oldLevel);
+        }
+
         $gdVersion   = defined('GD_VERSION') ? GD_VERSION : null;
         $curlVersion = function_exists('curl_version') ? curl_version() : null;
         $icuVersion  = Intl::getIcuVersion();
@@ -54,10 +75,20 @@ class OroRequirements extends SymfonyRequirements
         );
 
         $this->addOroRequirement(
-            function_exists('mcrypt_encrypt'),
-            'mcrypt_encrypt() should be available',
-            'Install and enable the <strong>Mcrypt</strong> extension.'
+            function_exists('openssl_encrypt'),
+            'openssl_encrypt() should be available',
+            'Install and enable the <strong>openssl</strong> extension.'
         );
+
+        if (function_exists('iconv')) {
+            $this->addOroRequirement(
+                false !== @iconv('utf-8', 'ascii//TRANSLIT', 'check string'),
+                'iconv() must not return the false result on converting string "check string"',
+                'Check the configuration of the <strong>iconv</strong> extension, '
+                . 'as it may have been configured incorrectly'
+                . ' (iconv(\'utf-8\', \'ascii//TRANSLIT\', \'check string\') must not return false).'
+            );
+        }
 
         $this->addOroRequirement(
             class_exists('Locale'),
@@ -65,10 +96,31 @@ class OroRequirements extends SymfonyRequirements
             'Install and enable the <strong>intl</strong> extension.'
         );
 
-        $this->addOroRequirement(
-            null !== $icuVersion && version_compare($icuVersion, self::REQUIRED_ICU_VERSION, '>='),
-            'icu library must be at least ' . self::REQUIRED_ICU_VERSION,
-            'Install and enable the <strong>icu</strong> library at least ' . self::REQUIRED_ICU_VERSION . ' version'
+        $localeCurrencies = [
+            'de_DE' => 'EUR',
+            'en_CA' => 'CAD',
+            'en_GB' => 'GBP',
+            'en_US' => 'USD',
+            'fr_FR' => 'EUR',
+            'uk_UA' => 'UAH',
+        ];
+
+        foreach ($localeCurrencies as $locale => $currencyCode) {
+            $numberFormatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+
+            if ($currencyCode === $numberFormatter->getTextAttribute(\NumberFormatter::CURRENCY_CODE)) {
+                unset($localeCurrencies[$locale]);
+            }
+        }
+
+        $this->addRecommendation(
+            empty($localeCurrencies),
+            sprintf('Current version %s of the ICU library should meet the requirements', $icuVersion),
+            sprintf(
+                'There may be a problem with currency formatting in <strong>ICU</strong> %s, ' .
+                'please upgrade your <strong>ICU</strong> library.',
+                $icuVersion
+            )
         );
 
         $this->addOroRequirement(
@@ -87,6 +139,18 @@ class OroRequirements extends SymfonyRequirements
             extension_loaded('tidy'),
             'Tidy extension should be installed to make sure that any HTML is correctly converted into a text representation.',
             'Install and enable the <strong>Tidy</strong> extension.'
+        );
+
+        $this->addRecommendation(
+            !extension_loaded('phar'),
+            'Phar extension is disabled',
+            'Disable <strong>Phar</strong> extension to reduce the risk of PHP unserialization vulnerability.'
+        );
+
+        $this->addRecommendation(
+            extension_loaded('imap'),
+            'IMAP extension should be installed for valid email processing on IMAP sync.',
+            'Install and enable the <strong>IMAP</strong> extension.'
         );
 
         $tmpDir = sys_get_temp_dir();
@@ -123,25 +187,10 @@ class OroRequirements extends SymfonyRequirements
                 $this->checkFileNameLength(),
                 'Maximum supported filename length must be greater or equal 242 characters.' .
                 ' Make sure that the cache folder is not inside the encrypted directory.',
-                'Move <strong>app/cache</strong> folder outside encrypted directory.',
+                'Move <strong>var/cache</strong> folder outside encrypted directory.',
                 'Maximum supported filename length must be greater or equal 242 characters.' .
-                ' Move app/cache folder outside encrypted directory.'
+                ' Move var/cache folder outside encrypted directory.'
             );
-        }
-
-        // Web installer specific checks
-        if ('cli' !== PHP_SAPI) {
-            $output = $this->checkCliRequirements();
-
-            $requirement = new CliRequirement(
-                !$output,
-                'Requirements validation for PHP CLI',
-                'If you have multiple PHP versions installed, you need to configure ORO_PHP_PATH variable with PHP binary path used by web server'
-            );
-
-            $requirement->setOutput($output);
-
-            $this->add($requirement);
         }
 
         $baseDir = realpath(__DIR__ . '/..');
@@ -157,62 +206,85 @@ class OroRequirements extends SymfonyRequirements
             'Set the "<strong>memory_limit</strong>" setting in php.ini<a href="#phpini">*</a> to at least "512M".'
         );
 
-        $jsEngine = RequireJSConfiguration::getDefaultJsEngine();
-
-        $this->addRecommendation(
-            $jsEngine ? true : false,
-            $jsEngine ? "A JS Engine ($jsEngine) is installed" : 'JSEngine such as NodeJS should be installed',
-            'Install <strong>JSEngine</strong>.'
+        $nodeJsExecutableFinder = new NodeJsExecutableFinder();
+        $nodeJsExecutable = $nodeJsExecutableFinder->findNodeJs();
+        $nodeJsExists = null !== $nodeJsExecutable;
+        $this->addOroRequirement(
+            $nodeJsExists,
+            $nodeJsExists ? 'NodeJS is installed' : 'NodeJS must be installed',
+            'Install <strong>NodeJS</strong>.'
         );
 
         $this->addOroRequirement(
-            is_writable($baseDir . '/web/uploads'),
-            'web/uploads/ directory must be writable',
-            'Change the permissions of the "<strong>web/uploads/</strong>" directory so that the web server can write into it.'
+            NodeJsVersionChecker::satisfies($nodeJsExecutable, self::REQUIRED_NODEJS_VERSION),
+            sprintf('NodeJS "%s" version must be installed.', self::REQUIRED_NODEJS_VERSION),
+            sprintf('Upgrade <strong>NodeJS</strong> to "%s" version.', self::REQUIRED_NODEJS_VERSION)
+        );
+
+        $npmExists = null !== $nodeJsExecutableFinder->findNpm();
+        $this->addOroRequirement(
+            $npmExists,
+            $npmExists ? 'NPM is installed' : 'NPM must be installed',
+            'Install <strong>NPM</strong>.'
+        );
+
+        $this->addOroRequirement(
+            is_writable($baseDir . '/public/uploads'),
+            'public/uploads/ directory must be writable',
+            'Change the permissions of the "<strong>public/uploads/</strong>" directory so that the web server can write into it.'
         );
         $this->addOroRequirement(
-            is_writable($baseDir . '/web/media'),
-            'web/media/ directory must be writable',
-            'Change the permissions of the "<strong>web/media/</strong>" directory so that the web server can write into it.'
+            is_writable($baseDir . '/public/media'),
+            'public/media/ directory must be writable',
+            'Change the permissions of the "<strong>public/media/</strong>" directory so that the web server can write into it.'
         );
         $this->addOroRequirement(
-            is_writable($baseDir . '/web/bundles'),
-            'web/bundles/ directory must be writable',
-            'Change the permissions of the "<strong>web/bundles/</strong>" directory so that the web server can write into it.'
+            is_writable($baseDir . '/public/bundles'),
+            'public/bundles/ directory must be writable',
+            'Change the permissions of the "<strong>public/bundles/</strong>" directory so that the web server can write into it.'
+        );
+        $this->addOroRequirement(
+            is_writable($baseDir . '/var/attachment'),
+            'var/attachment/ directory must be writable',
+            'Change the permissions of the "<strong>var/attachment/</strong>" directory so that the web server can write into it.'
+        );
+        $this->addOroRequirement(
+            is_writable($baseDir . '/var/import_export'),
+            'var/import_export/ directory must be writable',
+            'Change the permissions of the "<strong>var/import_export/</strong>" directory so that the web server can write into it.'
         );
 
-        if (is_dir($baseDir . '/web/js')) {
+        if (is_dir($baseDir . '/public/js')) {
             $this->addOroRequirement(
-                is_writable($baseDir . '/web/js'),
-                'web/js directory must be writable',
-                'Change the permissions of the "<strong>web/js</strong>" directory so that the web server can write into it.'
+                is_writable($baseDir . '/public/js'),
+                'public/js directory must be writable',
+                'Change the permissions of the "<strong>public/js</strong>" directory so that the web server can write into it.'
             );
         }
 
-        if (is_dir($baseDir . '/web/css')) {
+        if (is_dir($baseDir . '/public/css')) {
             $this->addOroRequirement(
-                is_writable($baseDir . '/web/css'),
-                'web/css directory must be writable',
-                'Change the permissions of the "<strong>web/css</strong>" directory so that the web server can write into it.'
+                is_writable($baseDir . '/public/css'),
+                'public/css directory must be writable',
+                'Change the permissions of the "<strong>public/css</strong>" directory so that the web server can write into it.'
             );
         }
 
-        if (!is_dir($baseDir . '/web/css') || !is_dir($baseDir . '/web/js')) {
+        if (!is_dir($baseDir . '/public/css') || !is_dir($baseDir . '/public/js')) {
             $this->addOroRequirement(
-                is_writable($baseDir . '/web'),
-                'web directory must be writable',
-                'Change the permissions of the "<strong>web</strong>" directory so that the web server can write into it.'
+                is_writable($baseDir . '/public'),
+                'public directory must be writable',
+                'Change the permissions of the "<strong>public</strong>" directory so that the web server can write into it.'
             );
         }
 
-        if (is_file($baseDir . '/app/config/parameters.yml')) {
+        if (is_file($baseDir . '/config/parameters.yml')) {
             $this->addOroRequirement(
-                is_writable($baseDir . '/app/config/parameters.yml'),
-                'app/config/parameters.yml file must be writable',
-                'Change the permissions of the "<strong>app/config/parameters.yml</strong>" file so that the web server can write into it.'
+                is_writable($baseDir . '/config/parameters.yml'),
+                'config/parameters.yml file must be writable',
+                'Change the permissions of the "<strong>config/parameters.yml</strong>" file so that the web server can write into it.'
             );
         }
-
     }
 
     /**
@@ -239,8 +311,7 @@ class OroRequirements extends SymfonyRequirements
             $this->getRequirements(),
             function ($requirement) {
                 return !($requirement instanceof PhpIniRequirement)
-                && !($requirement instanceof OroRequirement)
-                && !($requirement instanceof CliRequirement);
+                    && !($requirement instanceof OroRequirement);
             }
         );
     }
@@ -271,19 +342,6 @@ class OroRequirements extends SymfonyRequirements
             $this->getRequirements(),
             function ($requirement) {
                 return $requirement instanceof OroRequirement;
-            }
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function getCliRequirements()
-    {
-        return array_filter(
-            $this->getRequirements(),
-            function ($requirement) {
-                return $requirement instanceof CliRequirement;
             }
         );
     }
@@ -330,9 +388,11 @@ class OroRequirements extends SymfonyRequirements
         $requirements = parent::getRequirements();
 
         foreach ($requirements as $key => $requirement) {
-            $testMessage = $requirement->getTestMessage();
-            if (preg_match_all(self::EXCLUDE_REQUIREMENTS_MASK, $testMessage, $matches)) {
-                unset($requirements[$key]);
+            if (!$requirement instanceof OroRequirement) {
+                $testMessage = $requirement->getTestMessage();
+                if (preg_match_all(self::EXCLUDE_REQUIREMENTS_MASK, $testMessage, $matches)) {
+                    unset($requirements[$key]);
+                }
             }
         }
 
@@ -378,47 +438,8 @@ class OroRequirements extends SymfonyRequirements
 
         return $fileLength >= 242;
     }
-
-    /**
-     * @return null|string
-     */
-    protected function checkCliRequirements()
-    {
-        $finder  = new PhpExecutableFinder();
-        $command = sprintf(
-            '%s %soro-check.php',
-            $finder->find(),
-            __DIR__ . DIRECTORY_SEPARATOR
-        );
-
-        return shell_exec($command);
-    }
 }
 
 class OroRequirement extends Requirement
 {
-}
-
-class CliRequirement extends Requirement
-{
-    /**
-     * @var string
-     */
-    protected $output;
-
-    /**
-     * @return string
-     */
-    public function getOutput()
-    {
-        return $this->output;
-    }
-
-    /**
-     * @param string $output
-     */
-    public function setOutput($output)
-    {
-        $this->output = $output;
-    }
 }
