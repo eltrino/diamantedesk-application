@@ -1,0 +1,18 @@
+security:
+    acl:
+        connection: default
+        cache:
+            id: security.acl.cache.doctrine
+            prefix: sf2_acl_
+    access_decision_manager:
+        strategy: unanimous
+    firewalls:
+        main:
+            organization-http-basic:
+                realm: "Secured REST Area"
+            provider: oro_user
+            http-basic: false
+            organization-form-login: false
+            logout: false
+            organization-remember-me: false
+            anonymous: true

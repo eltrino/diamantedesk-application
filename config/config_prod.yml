@@ -1,0 +1,51 @@
+imports:
+    - { resource: config.yml }
+
+#doctrine:
+#    orm:
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
+
+doctrine:
+    dbal:
+        logging:            true
+
+monolog:
+    handlers:
+        detailed_logs:
+            type:           service
+            id:             oro_logger.monolog.detailed_logs.handler
+            handler:        nested
+        nested:
+            type:           stream
+            path:           "%kernel.logs_dir%/%kernel.environment%.log"
+            level:          debug
+
+        fingers_crossed:
+            type:           fingers_crossed
+            action_level:   critical
+            handler:        deduplicated
+            buffer_size:    1000
+        deduplicated:
+            type:           deduplication
+            handler:        swift
+            buffer_size:    1000
+        swift:
+            type:           swift_mailer
+            email_prototype:
+                id:         oro_logger.message_factory
+                method:     createMessage
+            mailer:         swiftmailer.mailer.default
+            level:          debug
+            formatter:      monolog.formatter.html
+
+        # collect all log records to buffer and write them to log file on CLI command error
+        message_queue.consumer.console_error:
+            type: service
+            id: oro_message_queue.log.handler.console_error
+            handler: nested
+            level: debug
+
+oro_require_js:
+    build_logger: false
