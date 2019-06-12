@@ -65,7 +65,7 @@
             <argument type="service" id="oro_config.global"/>
         </service>
 
-        <service id="diamante.email_processing.abstract_message_provider" abstract="true" scope="prototype">
+        <service id="diamante.email_processing.abstract_message_provider" abstract="true" shared="false">
             <call method="setConfigManager">
                 <argument type="service" id="oro_config.manager"/>
             </call>
@@ -74,10 +74,10 @@
             </call>
         </service>
 
-        <service id="diamante.email_processing.raw_message_provider" class="%diamante.email_processing.raw_message_provider.class%" parent="diamante.email_processing.abstract_message_provider" scope="prototype">
+        <service id="diamante.email_processing.raw_message_provider" class="%diamante.email_processing.raw_message_provider.class%" parent="diamante.email_processing.abstract_message_provider" shared="false">
         </service>
 
-        <service id="diamante.email_processing.imap_message_provider" class="%diamante.email_processing.imap_message_provider.class%" parent="diamante.email_processing.abstract_message_provider" scope="prototype">
+        <service id="diamante.email_processing.imap_message_provider" class="%diamante.email_processing.imap_message_provider.class%" parent="diamante.email_processing.abstract_message_provider" shared="false">
         </service>
     </services>
 </container>

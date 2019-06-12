@@ -28,9 +28,9 @@ class SendChangedEntitiesToMessageQueueCompilerPass implements CompilerPassInter
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->has(self::SERVICE_ID)) {
-            $definition = $container->getDefinition(self::SERVICE_ID);
-            $definition->setClass(SendChangedEntitiesToMessageQueueListener::class);
-        }
+//        if ($container->has(self::SERVICE_ID)) {
+//            $definition = $container->getDefinition(self::SERVICE_ID);
+//            $definition->setClass(SendChangedEntitiesToMessageQueueListener::class);
+//        }
     }
 }

@@ -12,11 +12,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AnonymousAuthorizationImpl implements Authorization
 {
@@ -25,17 +26,17 @@ class AnonymousAuthorizationImpl implements Authorization
 
     /**
      * @param DoctrineDiamanteUserRepository $diamanteUserRepository
-     * @param SecurityContextInterface       $securityContext
+     * @param TokenStorageInterface          $tokenStorage
      */
     public function __construct(
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         DoctrineDiamanteUserRepository $diamanteUserRepository
     ) {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage           = $tokenStorage;
         $this->diamanteUserRepository = $diamanteUserRepository;
 
         $this->permissionsMap = array(
-            'Entity:DiamanteDeskBundle:Ticket'   => array('CREATE'),
+            'Entity:DiamanteDeskBundle:Ticket' => array('CREATE'),
         );
     }
 } 

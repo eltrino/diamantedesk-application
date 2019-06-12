@@ -34,6 +34,7 @@ class TimeTriggeredController extends Controller
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
     use Shared\ResponseHandlerTrait;
+    use Shared\RequestGetterTrait;
     use AutomationTrait;
 
     /**

@@ -242,14 +242,14 @@ datagrids:
                     options:
                       field_options:
                         multiple: true
-                        choices: @diamante.ticket.datagrid_priority_helper->getTicketPriorities
+                        choices: '@diamante.ticket.datagrid_priority_helper->getTicketPriorities'
                 status:
                     type: choice
                     data_name: i.status
                     options:
                         field_options:
                             multiple: true
-                            choices:  @diamante.ticket.datagrid_status_helper->getTicketStatuses
+                            choices:  '@diamante.ticket.datagrid_status_helper->getTicketStatuses'
                 createdAt:
                     type:      datetime
                     data_name: i.createdAt
@@ -627,7 +627,7 @@ datagrids:
                     options:
                         field_options:
                             multiple: true
-                            choices:  @diamante.ticket.datagrid_status_helper->getTicketStatuses
+                            choices:  '@diamante.ticket.datagrid_status_helper->getTicketStatuses'
                 createdAt:
                     type:      datetime
                     data_name: i.createdAt

@@ -46,7 +46,7 @@ class FilterUrlGeneratorFactory
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->token = $this->container->get('security.context')->getToken();
+        $this->token = $this->container->get('security.token_storage')->getToken();
         $this->defaultPerPage = $this->container->get('oro_config.global')
             ->get('oro_data_grid.default_per_page');
         $this->userFullName = $this->getCurrentUserFullName();

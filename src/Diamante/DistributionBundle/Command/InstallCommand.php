@@ -17,6 +17,7 @@ namespace Diamante\DistributionBundle\Command;
 
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Oro\Bundle\InstallerBundle\Command\InstallCommand as OroInstallCommand;
@@ -51,7 +52,7 @@ class InstallCommand extends OroInstallCommand
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->logger = $this->getContainer()->get('monolog.logger.diamante');
-        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
+        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('question'));
 
         if (false === $input->isInteractive()) {
             $this->validate($input);
@@ -144,7 +145,7 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('<info>Installing DiamanteDesk.</info>');
 
         $this->checkRequirementsStep($output);
-        $this->prepareStep($this->commandExecutor, $input, $output)
+        $this->prepareStep($input, $output)
                 ->loadDataStep($this->commandExecutor, $output);
 
 
@@ -182,7 +183,9 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('<info>Requirements check:</info>');
 
         if (!class_exists('DiamanteDeskRequirements')) {
-            require_once $this->getContainer()->getParameter('kernel.root_dir')
+            require_once $this->getContainer()->getParameter('kernel.project_dir')
+                . DIRECTORY_SEPARATOR
+                .'var'
                 . DIRECTORY_SEPARATOR
                 . 'DiamanteDeskRequirements.php';
         }
@@ -449,5 +452,42 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return 255;
+    }
+
+    /**
+     * @param \Requirement[]  $requirements
+     * @param string          $header
+     * @param OutputInterface $output
+     */
+    protected function renderTable(array $requirements, $header, OutputInterface $output)
+    {
+        $rows = [];
+        $verbosity = $output->getVerbosity();
+        foreach ($requirements as $requirement) {
+            if ($requirement->isFulfilled()) {
+                if ($verbosity >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+                    $rows[] = ['OK', $requirement->getTestMessage()];
+                }
+            } elseif ($requirement->isOptional()) {
+                if ($verbosity >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $rows[] = ['WARNING', $requirement->getHelpText()];
+                }
+            } else {
+                if ($verbosity >= OutputInterface::VERBOSITY_NORMAL) {
+                    $rows[] = ['ERROR', $requirement->getHelpText()];
+                }
+            }
+        }
+
+        if (!empty($rows)) {
+            $table = new Table($output);
+            $table
+                ->setHeaders(['Check  ', $header])
+                ->setRows([]);
+            foreach ($rows as $row) {
+                $table->addRow($row);
+            }
+            $table->render();
+        }
     }
 }

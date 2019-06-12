@@ -20,7 +20,7 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\RequestContext;
 
-class PortalUrlExtension extends \Twig_Extension
+class PortalURLExtension extends \Twig_Extension
 {
     /**
      * @var Router

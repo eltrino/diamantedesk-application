@@ -115,11 +115,11 @@
             <tag name="diamante_desk.property.handler"/>
         </service>
 
-        <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
-            <argument type="string">ticket</argument>
-            <argument type="constant">false</argument>
-            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-ticket-attachments-grid" method="onBuildAfter"/>
-        </service>
+<!--        <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">-->
+<!--            <argument type="string">ticket</argument>-->
+<!--            <argument type="constant">false</argument>-->
+<!--            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-ticket-attachments-grid" method="onBuildAfter"/>-->
+<!--        </service>-->
 
         <service id="diamante.event_listener.oro_user_listener" class="%diamante.oro_user.OroUserSubscriber.class%">
             <argument type="service" id="service_container"/>
@@ -177,25 +177,25 @@
 
         <service id="diamante.report.chart_type_provider" class="%diamante.report.chart_type_provider.class%"/>
 
-        <service id="diamante.mass_action.change" class="%diamante.mass_action.change.class%">
+        <service id="diamante.mass_action.change" class="%diamante.mass_action.change.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="change"/>
         </service>
 
-        <service id="diamante.mass_action.assign" class="%diamante.mass_action.assign.class%" scope="prototype">
+        <service id="diamante.mass_action.assign" class="%diamante.mass_action.assign.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="assign" />
         </service>
 
-        <service id="diamante.mass_action.move" class="%diamante.mass_action.move.class%">
+        <service id="diamante.mass_action.move" class="%diamante.mass_action.move.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="move"/>
         </service>
 
-        <service id="diamante.mass_action.watch" class="%diamante.mass_action.watch.class%">
+        <service id="diamante.mass_action.watch" class="%diamante.mass_action.watch.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="watch"/>
         </service>
 
         <service id="diamante.event_listener.grid_views_load" class="%diamante.grid_views_load.class%">
             <argument id="doctrine" type="service"/>
-            <argument id="oro_security.security_facade" type="service"/>
+            <argument id="security.token_storage" type="service"/>
             <argument id="oro_security.acl_helper" type="service"/>
             <tag name="kernel.event_listener" event="oro_datagrid.grid_views_load" method="onViewsLoad"/>
         </service>
@@ -239,7 +239,7 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="diamante.desk.automation.action.move_to_branch" class="%diamante.automation.action.move_to_branch.class%" parent="diamante_automation.action.abstract_modify_action" scope="prototype">
+        <service id="diamante.desk.automation.action.move_to_branch" class="%diamante.automation.action.move_to_branch.class%" parent="diamante_automation.action.abstract_modify_action" shared="false">
         </service>
 
         <service id="diamante_automation.action.comment_notifier" class="%diamante_automation.action.comment_notifier.class%" parent="diamante_automation.action.abstract_notifier">

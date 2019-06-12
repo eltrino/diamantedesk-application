@@ -42,9 +42,9 @@
             <argument type="service" id="diamante.branch.default_key_generator"/>
         </service>
 
-        <service id="diamante.branch.logo_handler" class="%diamante.branch.logo.handler.class%"
-                 factory-class="%diamante.branch.logo.handler.class%" factory-method="create">
-            <argument>%kernel.root_dir%</argument>
+        <service id="diamante.branch.logo_handler" class="%diamante.branch.logo.handler.class%">
+            <factory class="%diamante.branch.logo.handler.class%" method="create" />
+            <argument>%kernel.project_dir%</argument>
             <argument type="service" id="filesystem"/>
         </service>
 
@@ -70,19 +70,18 @@
 
         <service id="diamante.branch.api.service_oro" alias="diamante.branch.api.service" />
 
-        <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">
-            <argument type="string">branch</argument>
-            <argument type="constant">false</argument>
-            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-branch-tickets-grid" method="onBuildAfter"/>
-        </service>
+<!--        <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">-->
+<!--            <argument type="string">branch</argument>-->
+<!--            <argument type="constant">false</argument>-->
+<!--            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-branch-tickets-grid" method="onBuildAfter"/>-->
+<!--        </service>-->
 
         <service id="diamante.branch.placeholder" class="%diamante.branch.placeholder.class%">
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>
         </service>
 <!-- repositories start -->
-        <service id="diamante.branch.repository" class="%diamante.generic.repository.class%"
-                factory-service = "doctrine.orm.entity_manager"
-                factory-method  = "getRepository">
+        <service id="diamante.branch.repository" class="%diamante.generic.repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
             <argument type="string">%diamante.branch.entity.class%</argument>
         </service>
 <!-- repositories end -->

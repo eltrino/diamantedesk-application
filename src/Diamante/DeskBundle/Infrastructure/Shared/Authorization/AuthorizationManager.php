@@ -17,16 +17,16 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 use Diamante\UserBundle\Entity\ApiUser;
 use Oro\Bundle\UserBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
 
 class AuthorizationManager implements AuthorizationService
 {
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var string
@@ -39,10 +39,10 @@ class AuthorizationManager implements AuthorizationService
     private $authImpl;
 
     public function __construct(ContainerInterface $serviceContainer,
-                                SecurityContextInterface $securityContext)
+                                TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
-        $user = $this->getLoggedUser();
+        $this->tokenStorage = $tokenStorage;
+        $user               = $this->getLoggedUser();
 
         switch (true) {
             case ($user instanceof ApiUser):
@@ -67,7 +67,7 @@ class AuthorizationManager implements AuthorizationService
      */
     public function getLoggedUser()
     {
-        if (null === $token = $this->securityContext->getToken()) {
+        if (null === $token = $this->tokenStorage->getToken()) {
             return null;
         }
 

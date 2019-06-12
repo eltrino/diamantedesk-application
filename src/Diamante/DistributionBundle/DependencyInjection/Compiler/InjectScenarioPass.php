@@ -30,8 +30,8 @@ class InjectScenarioPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $scenario = $container->getDefinition('oro_installer.scenario');
-        $scenario->setClass('Diamante\DistributionBundle\Installer\Process\InstallerScenario');
+//        $scenario = $container->getDefinition('oro_installer.scenario');
+//        $scenario->setClass('Diamante\DistributionBundle\Installer\Process\InstallerScenario');
     }
 
 }

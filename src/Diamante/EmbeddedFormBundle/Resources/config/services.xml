@@ -36,7 +36,7 @@
             <tag name="kernel.event_listener" event="entity_form.render.before" method="addBranchField"/>
         </service>
         <service id="diamante_embedded_form.form.embedded_type_extension" class="%diamante_embedded_form.form.embedded_type_extension.class%">
-            <tag name="form.type_extension" alias="embedded_form"/>
+            <tag name="form.type_extension" extended_type="embedded_form"/>
         </service>
         <service id="diamante_embedded_form.twig.extension.dynamic_fields" class="%diamante_embedded_form.twig.extension.dynamic_fields.class%">
             <argument type="service" id="service_container"/>

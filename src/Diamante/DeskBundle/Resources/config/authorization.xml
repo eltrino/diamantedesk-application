@@ -27,22 +27,22 @@
 
     <services>
         <service id="diamante.oro_authorization.service" class="%diamante.oro_authorization.service.class%">
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="security.authorization_checker"/>
         </service>
 
         <service id="diamante.diamante_authorization.service" class="%diamante.diamante_authorization.service.class%">
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
             <argument type="service" id="diamante.user.repository" />
         </service>
 
         <service id="diamante.anonymous_authorization.service" class="%diamante.anonymous_authorization.service.class%">
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
             <argument type="service" id="diamante.user.repository" />
         </service>
 
         <service id="diamante.authorization_manager.service" class="%diamante.authorization_manager.service.class%">
             <argument type="service" id="service_container"/>
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
         </service>
     </services>
 </container>

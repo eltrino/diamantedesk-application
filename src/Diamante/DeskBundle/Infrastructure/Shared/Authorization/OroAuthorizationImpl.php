@@ -12,30 +12,32 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
-use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class OroAuthorizationImpl implements Authorization
 {
     /**
-     * @var SecurityFacade
+     * @var AuthorizationCheckerInterface
      */
-    private $securityFacade;
+    private $authorizationChecker;
 
-    public function __construct(SecurityFacade $securityFacade)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
     {
-        $this->securityFacade = $securityFacade;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
-     * @param $attributes
+     * @param      $attributes
      * @param null $object
+     *
      * @return bool
      */
     public function isGranted($attributes, $object = null)
     {
-        return $this->securityFacade->isGranted($attributes, $object);
+        return $this->authorizationChecker->isGranted($attributes, $object);
     }
 } 

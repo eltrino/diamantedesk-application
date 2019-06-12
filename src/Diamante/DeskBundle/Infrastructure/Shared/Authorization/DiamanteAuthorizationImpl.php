@@ -15,7 +15,7 @@
 namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Diamante\DeskBundle\Model\Shared\Authorization\Authorization;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
 
 class DiamanteAuthorizationImpl implements Authorization
@@ -24,13 +24,13 @@ class DiamanteAuthorizationImpl implements Authorization
 
     /**
      * @param DoctrineDiamanteUserRepository $diamanteUserRepository
-     * @param SecurityContextInterface       $securityContext
+     * @param TokenStorageInterface          $tokenStorage
      */
     public function __construct(
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         DoctrineDiamanteUserRepository $diamanteUserRepository
     ) {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->diamanteUserRepository = $diamanteUserRepository;
 
         $this->permissionsMap = array(

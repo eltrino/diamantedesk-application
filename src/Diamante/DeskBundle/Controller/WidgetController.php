@@ -21,6 +21,7 @@ abstract class WidgetController extends Controller
     use Shared\SessionFlashMessengerTrait;
     use Shared\ExceptionHandlerTrait;
     use Shared\FormHandlerTrait;
+    use Shared\RequestGetterTrait;
 
     /**
      * @param string|null $redirectUrl

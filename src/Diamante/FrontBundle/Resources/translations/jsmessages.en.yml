@@ -162,7 +162,7 @@ diamante_front:
         create_ticket: Ticket %{ticket_created_id} created
       edit:
         title: Edit Ticket %{ticket_id}
-      edit_ticket: Edit Ticket: %{key} - %{subject}
+      edit_ticket: 'Edit Ticket: %{key} - %{subject}'
       search_result: Search Result
 
     model:

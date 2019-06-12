@@ -32,58 +32,58 @@
             </call>
         </service>
 
-        <service id="diamante_automation.condition.changed" class="%diamante_automation.condition.changed.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.changed" class="%diamante_automation.condition.changed.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.changed_from" class="%diamante_automation.condition.changed_from.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.changed_from" class="%diamante_automation.condition.changed_from.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.changed_to" class="%diamante_automation.condition.changed_to.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.changed_to" class="%diamante_automation.condition.changed_to.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.like" class="%diamante_automation.condition.like.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.like" class="%diamante_automation.condition.like.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.created" class="%diamante_automation.condition.created.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.created" class="%diamante_automation.condition.created.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.eq" class="%diamante_automation.condition.eq.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.eq" class="%diamante_automation.condition.eq.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.false" class="%diamante_automation.condition.false.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.false" class="%diamante_automation.condition.false.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.gt" class="%diamante_automation.condition.gt.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.gt" class="%diamante_automation.condition.gt.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.gte" class="%diamante_automation.condition.gte.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.gte" class="%diamante_automation.condition.gte.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.is_admin" class="%diamante_automation.condition.is_admin.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.is_admin" class="%diamante_automation.condition.is_admin.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.is_customer" class="%diamante_automation.condition.is_customer.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.is_customer" class="%diamante_automation.condition.is_customer.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.lt" class="%diamante_automation.condition.lt.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.lt" class="%diamante_automation.condition.lt.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.lte" class="%diamante_automation.condition.lte.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.lte" class="%diamante_automation.condition.lte.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.neq" class="%diamante_automation.condition.neq.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.neq" class="%diamante_automation.condition.neq.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.not_like" class="%diamante_automation.condition.not_like.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.not_like" class="%diamante_automation.condition.not_like.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.removed" class="%diamante_automation.condition.removed.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.removed" class="%diamante_automation.condition.removed.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.true" class="%diamante_automation.condition.true.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.true" class="%diamante_automation.condition.true.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
-        <service id="diamante_automation.condition.updated" class="%diamante_automation.condition.updated.class%" parent="diamante_automation.condition.abstract_condition" scope="prototype">
+        <service id="diamante_automation.condition.updated" class="%diamante_automation.condition.updated.class%" parent="diamante_automation.condition.abstract_condition" shared="false">
         </service>
 
     </services>

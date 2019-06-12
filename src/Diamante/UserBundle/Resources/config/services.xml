@@ -28,9 +28,8 @@
     </parameters>
 
     <services>
-        <service id="diamante.user.repository" class="%diamante.user.repository.class%"
-                 factory-service = "doctrine.orm.entity_manager"
-                 factory-method  = "getRepository">
+        <service id="diamante.user.repository" class="%diamante.user.repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
             <argument type="string">%diamante.user.entity.class%</argument>
         </service>
 
@@ -100,9 +99,8 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%"
-                 factory-service = "doctrine.orm.entity_manager"
-                 factory-method  = "getRepository">
+        <service id="diamante.api.user.repository" class="%diamante.api.user.repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
             <argument type="string">%diamante.api.user.entity.class%</argument>
         </service>
 
@@ -111,7 +109,7 @@
         </service>
 
         <service id="diamante.user_state.service" class="%diamante.user_state.service.class%">
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
         </service>
 
         <service

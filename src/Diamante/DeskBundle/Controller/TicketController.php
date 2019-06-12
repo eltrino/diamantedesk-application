@@ -40,6 +40,7 @@ class TicketController extends Controller
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
     use Shared\ResponseHandlerTrait;
+    use Shared\RequestGetterTrait;
 
     /**
      * @Route(

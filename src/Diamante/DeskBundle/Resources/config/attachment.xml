@@ -36,8 +36,8 @@
             <argument type="string">%diamante.attachment.entity.class%</argument>
         </service>
 
-        <service id="diamante.attachment.file_storage.service" class="%diamante.attachment.file_storage.service.class%"
-                 factory-class="%diamante.attachment.file_storage.service.class%" factory-method="create">
+        <service id="diamante.attachment.file_storage.service" class="%diamante.attachment.file_storage.service.class%">
+            <factory class="%diamante.attachment.file_storage.service.class%" method="create" />
             <argument>%diamante.attachment.upload_dir.path%</argument>
             <argument type="service" id="filesystem"/>
         </service>
@@ -57,9 +57,8 @@
             <argument type="service" id="liip_imagine" />
         </service>
 <!-- repositories start -->
-        <service id="diamante.attachment.repository" class="%diamante.attachment.repository.class%"
-                factory-service = "doctrine.orm.entity_manager"
-                factory-method  = "getRepository">
+        <service id="diamante.attachment.repository" class="%diamante.attachment.repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
             <argument type="string">%diamante.attachment.entity.class%</argument>
         </service>
 <!-- repositories end -->

@@ -12,15 +12,16 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+
 namespace Diamante\DeskBundle\EventListener;
 
-use Doctrine\Common\EventSubscriber;
-use Oro\Bundle\DataGridBundle\Event\GridViewsLoadEvent;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\EventSubscriber;
 use Oro\Bundle\DataGridBundle\Entity\Repository\GridViewRepository;
+use Oro\Bundle\DataGridBundle\Event\GridViewsLoadEvent;
 use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
 use Oro\Bundle\UserBundle\Entity\User;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class GridViewsLoadListener implements EventSubscriber
 {
@@ -32,24 +33,24 @@ class GridViewsLoadListener implements EventSubscriber
     protected $registry;
 
     /** @var SecurityFacade */
-    protected $securityFacade;
+    protected $tokenStorage;
 
     /** @var AclHelper */
     protected $aclHelper;
 
     /**
-     * @param Registry $registry
-     * @param SecurityFacade $securityFacade
-     * @param AclHelper $aclHelper
+     * @param Registry              $registry
+     * @param TokenStorageInterface $tokenStorage
+     * @param AclHelper             $aclHelper
      */
     public function __construct(
         Registry $registry,
-        SecurityFacade $securityFacade,
+        TokenStorageInterface $tokenStorage,
         AclHelper $aclHelper
     ) {
-        $this->registry = $registry;
-        $this->securityFacade = $securityFacade;
-        $this->aclHelper = $aclHelper;
+        $this->registry     = $registry;
+        $this->tokenStorage = $tokenStorage;
+        $this->aclHelper    = $aclHelper;
     }
 
     public function getSubscribedEvents()
@@ -100,7 +101,13 @@ class GridViewsLoadListener implements EventSubscriber
      */
     protected function getCurrentUser()
     {
-        $user = $this->securityFacade->getLoggedUser();
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        $user = $token->getUser();
         if ($user instanceof User) {
             return $user;
         }

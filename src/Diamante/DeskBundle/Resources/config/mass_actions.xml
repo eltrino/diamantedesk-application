@@ -9,7 +9,7 @@
     </parameters>
 
     <services>
-        <service id="diamante.mass_action.delete_branch" class="%diamante.mass_action.delete_branch.class%">
+        <service id="diamante.mass_action.delete_branch" class="%diamante.mass_action.delete_branch.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="delete_branch"/>
         </service>
     </services>

@@ -149,7 +149,7 @@ datagrids:
       time:
         label: diamante.automation.rule.time_triggered.repetition_time
         frontend_type: select
-        choices: @diamante_automation.datagrid.helper->getTimeIntervalChoices
+        choices: '@diamante_automation.datagrid.helper->getTimeIntervalChoices'
 
       status:
         label: diamante.automation.attributes.status
