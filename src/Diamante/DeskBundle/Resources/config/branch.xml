@@ -70,11 +70,11 @@
 
         <service id="diamante.branch.api.service_oro" alias="diamante.branch.api.service" />
 
-<!--        <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">-->
-<!--            <argument type="string">branch</argument>-->
-<!--            <argument type="constant">false</argument>-->
-<!--            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-branch-tickets-grid" method="onBuildAfter"/>-->
-<!--        </service>-->
+        <service id="diamante_branch.event_listener.branch_tickets_view_listener" class="%oro_datagrid.event_listener.row_selection.class%">
+            <argument type="string">branch</argument>
+            <argument type="constant">false</argument>
+            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-branch-tickets-grid" method="onBuildAfter"/>
+        </service>
 
         <service id="diamante.branch.placeholder" class="%diamante.branch.placeholder.class%">
             <argument type="service" id="diamante.email_processing.mail_system_settings"/>

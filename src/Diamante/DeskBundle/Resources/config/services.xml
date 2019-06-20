@@ -115,11 +115,11 @@
             <tag name="diamante_desk.property.handler"/>
         </service>
 
-<!--        <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.base_orm_relation.class%">-->
-<!--            <argument type="string">ticket</argument>-->
-<!--            <argument type="constant">false</argument>-->
-<!--            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-ticket-attachments-grid" method="onBuildAfter"/>-->
-<!--        </service>-->
+        <service id="diamante_ticket.event_listener.ticket_attachments_view_listener" class="%oro_datagrid.event_listener.row_selection.class%">
+            <argument type="string">ticket</argument>
+            <argument type="constant">false</argument>
+            <tag name="kernel.event_listener" event="oro_datagrid.datagrid.build.after.diamante-ticket-attachments-grid" method="onBuildAfter"/>
+        </service>
 
         <service id="diamante.event_listener.oro_user_listener" class="%diamante.oro_user.OroUserSubscriber.class%">
             <argument type="service" id="service_container"/>
