@@ -144,7 +144,13 @@ class InstallCommand extends OroInstallCommand
 
         $output->writeln('<info>Installing DiamanteDesk.</info>');
 
-        $this->checkRequirementsStep($output);
+        $this->commandExecutor->runCommand(
+            'diamante:check-requirements',
+            [
+                '--process-isolation' => true,
+            ]
+        );
+        // $this->checkRequirementsStep($output);
         $this->prepareStep($input, $output)
                 ->loadDataStep($this->commandExecutor, $output);
 

@@ -14,6 +14,7 @@
         <parameter key="oro_installer.scenario.class">Diamante\DistributionBundle\Installer\Process\InstallerScenario</parameter>
         <parameter key="diamante.setup.form.class">Diamante\DistributionBundle\Form\SetupType</parameter>
         <parameter key="diamante.version.service.class">Diamante\DistributionBundle\Infrastructure\Version</parameter>
+        <parameter key="diamante.distribution.command.requirements.class">Diamante\DistributionBundle\Command\CheckRequirementsCommand</parameter>
     </parameters>
 
     <services>
@@ -64,6 +65,10 @@
 
         <service id="diamante.version.service" class="%diamante.version.service.class%">
             <argument type="service" id="oro_platform.composer.local_repo_factory"/>
+        </service>
+
+        <service id="diamante.distribution.command.check.requirements" class="%diamante.distribution.command.requirements.class%">
+            <tag name="console.command" />
         </service>
     </services>
 </container>
