@@ -33,23 +33,18 @@ EOT
             );
     }
 
-    protected function getRequirements()
-    {
-        if (!class_exists('DiamanteDeskRequirements')) {
-            require_once $this->getContainer()->getParameter('kernel.project_dir')
-                . DIRECTORY_SEPARATOR
-                . 'var'
-                . DIRECTORY_SEPARATOR
-                . 'DiamanteDeskRequirements.php';
-        }
-
-        return new \DiamanteDeskRequirements();
-    }
-
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->outputRequirements($output);
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function outputRequirements(OutputInterface $output)
     {
         $output->writeln('<info>Requirements check:</info>');
 
@@ -68,8 +63,22 @@ EOT
         }
 
         $output->writeln('');
+    }
 
-        return $this;
+    /**
+     * @return \DiamanteDeskRequirements
+     */
+    protected function getRequirements()
+    {
+        if (!class_exists('DiamanteDeskRequirements')) {
+            require_once $this->getContainer()->getParameter('kernel.project_dir')
+                . DIRECTORY_SEPARATOR
+                . 'var'
+                . DIRECTORY_SEPARATOR
+                . 'DiamanteDeskRequirements.php';
+        }
+
+        return new \DiamanteDeskRequirements();
     }
 
     /**

@@ -17,7 +17,6 @@ namespace Diamante\DistributionBundle\Command;
 
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Oro\Bundle\InstallerBundle\Command\InstallCommand as OroInstallCommand;
@@ -150,7 +149,6 @@ class InstallCommand extends OroInstallCommand
                 '--process-isolation' => true,
             ]
         );
-        // $this->checkRequirementsStep($output);
         $this->prepareStep($input, $output)
                 ->loadDataStep($this->commandExecutor, $output);
 
@@ -176,43 +174,6 @@ class InstallCommand extends OroInstallCommand
             ->info(sprintf('DiamanteDesk installation finished at %s', date('Y-m-d H:i:s')));
 
         return 0;
-    }
-
-    /**
-     * @param OutputInterface $output
-     *
-     * @return $this
-     * @throws \RuntimeException
-     */
-    protected function checkRequirementsStep(OutputInterface $output)
-    {
-        $output->writeln('<info>Requirements check:</info>');
-
-        if (!class_exists('DiamanteDeskRequirements')) {
-            require_once $this->getContainer()->getParameter('kernel.project_dir')
-                . DIRECTORY_SEPARATOR
-                .'var'
-                . DIRECTORY_SEPARATOR
-                . 'DiamanteDeskRequirements.php';
-        }
-
-        $collection = new \DiamanteDeskRequirements();
-
-        $this->renderTable($collection->getMandatoryRequirements(), 'Mandatory requirements', $output);
-        $this->renderTable($collection->getPhpIniRequirements(), 'PHP settings', $output);
-        $this->renderTable($collection->getOroRequirements(), 'Oro specific requirements', $output);
-        $this->renderTable($collection->getDiamanteDeskRequirements(), 'DiamanteDesk requirements', $output);
-        $this->renderTable($collection->getRecommendations(), 'Optional recommendations', $output);
-
-        if (count($collection->getFailedRequirements())) {
-            throw new \RuntimeException(
-                'Some system requirements are not fulfilled. Please check output messages and fix them.'
-            );
-        }
-
-        $output->writeln('');
-
-        return $this;
     }
 
     /**
@@ -458,42 +419,5 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return 255;
-    }
-
-    /**
-     * @param \Requirement[]  $requirements
-     * @param string          $header
-     * @param OutputInterface $output
-     */
-    protected function renderTable(array $requirements, $header, OutputInterface $output)
-    {
-        $rows = [];
-        $verbosity = $output->getVerbosity();
-        foreach ($requirements as $requirement) {
-            if ($requirement->isFulfilled()) {
-                if ($verbosity >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
-                    $rows[] = ['OK', $requirement->getTestMessage()];
-                }
-            } elseif ($requirement->isOptional()) {
-                if ($verbosity >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $rows[] = ['WARNING', $requirement->getHelpText()];
-                }
-            } else {
-                if ($verbosity >= OutputInterface::VERBOSITY_NORMAL) {
-                    $rows[] = ['ERROR', $requirement->getHelpText()];
-                }
-            }
-        }
-
-        if (!empty($rows)) {
-            $table = new Table($output);
-            $table
-                ->setHeaders(['Check  ', $header])
-                ->setRows([]);
-            foreach ($rows as $row) {
-                $table->addRow($row);
-            }
-            $table->render();
-        }
     }
 }
