@@ -88,12 +88,13 @@
         </service>
 
         <service id="diamante.datagrid.sorter.combined_datasource" class="%diamante.datagrid.sorter.combined_datasource_extension.class%">
-            <!--<argument id="oro_datagrid.extension.pager.orm.pager" type="service"/>-->
+            <argument id="oro_datagrid.provider.state.sorters" type="service"/>
             <tag name="oro_datagrid.extension"/>
         </service>
 
         <service id="diamante.datagrid.filter.combined_datasource" class="%diamante.datagrid.filter.combined_datasource_extension.class%">
             <argument id="oro_datagrid.configuration.provider" type="service"/>
+            <argument id="oro_filter.provider.state.filters" type="service"/>
             <argument id="translator" type="service"/>
             <tag name="oro_datagrid.extension"/>
         </service>

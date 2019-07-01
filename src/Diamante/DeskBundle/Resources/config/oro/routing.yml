@@ -25,27 +25,27 @@ diamante_desk_api_branch_oro:
         version:  latest
         _format:  json
 
-diamante_desk_api_ticket:
-    resource:     diamante.ticket.api.service_diamante
-    type:         diamante_rest_service
-    prefix:       /api/diamante/rest/{version}/desk/
-    requirements:
-        version:  latest|v1
-        _format:  xml|json
-    defaults:
-        version:  latest
-        _format:  json
+#diamante_desk_api_ticket:
+#    resource:     diamante.ticket.api.service_diamante
+#    type:         diamante_rest_service
+#    prefix:       /api/diamante/rest/{version}/desk/
+#    requirements:
+#        version:  latest|v1
+#        _format:  xml|json
+#    defaults:
+#        version:  latest
+#        _format:  json
 
-diamante_desk_api_ticket_oro:
-    resource:     diamante.ticket.api.service_oro
-    type:         diamante_rest_service
-    prefix:       /api/rest/{version}/desk/
-    requirements:
-        version:  latest|v1
-        _format:  xml|json
-    defaults:
-        version:  latest
-        _format:  json
+#diamante_desk_api_ticket_oro:
+#    resource:     diamante.ticket.api.service_oro
+#    type:         diamante_rest_service
+#    prefix:       /api/rest/{version}/desk/
+#    requirements:
+#        version:  latest|v1
+#        _format:  xml|json
+#    defaults:
+#        version:  latest
+#        _format:  json
 
 diamante_desk_api_comment:
     resource:     diamante.comment.api.service_diamante
