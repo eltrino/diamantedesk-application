@@ -12,8 +12,8 @@ matrix:
     - php: hhvm
 
 branches:
-  except:
-  - l10n_master
+  only:
+    - master
 
 before_install:
   - mysql -e 'create database diamantedesk;'
