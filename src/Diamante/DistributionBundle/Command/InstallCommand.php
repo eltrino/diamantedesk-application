@@ -147,6 +147,7 @@ class InstallCommand extends OroInstallCommand
             'diamante:check-requirements',
             [
                 '--process-isolation' => true,
+                '-vv' => true,
             ]
         );
         $this->prepareStep($input, $output)
