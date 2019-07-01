@@ -11,8 +11,6 @@
         <parameter key="diamante.distribution.user_role.listener.class">Diamante\DistributionBundle\EventListener\UserRoleListener</parameter>
         <parameter key="diamante.distribution.config.listener.class">Diamante\DistributionBundle\EventListener\ConfigurationListener</parameter>
         <parameter key="diamante.distribution.whitelist.provider.class">Diamante\DistributionBundle\Routing\Whitelist\WhitelistProviderImpl</parameter>
-        <parameter key="oro_installer.scenario.class">Diamante\DistributionBundle\Installer\Process\InstallerScenario</parameter>
-        <parameter key="diamante.setup.form.class">Diamante\DistributionBundle\Form\SetupType</parameter>
         <parameter key="diamante.version.service.class">Diamante\DistributionBundle\Infrastructure\Version</parameter>
     </parameters>
 
@@ -55,11 +53,6 @@
 
         <service id="diamante.distribution.whitelist.pattern" class="Diamante\DistributionBundle\Routing\Whitelist\Specification\Pattern">
             <tag name='diamante.routing.spec'/>
-        </service>
-
-        <service id="diamante_installer_setup" class="%diamante.setup.form.class%">
-            <argument type="string">Oro\Bundle\UserBundle\Entity\User</argument>
-            <tag name="form.type" alias="diamante_installer_setup"/>
         </service>
 
         <service id="diamante.version.service" class="%diamante.version.service.class%">
