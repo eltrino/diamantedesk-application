@@ -1,5 +1,4 @@
-assets:
-  css:
-    'diamantedesk':
-        - 'bundles/diamantedesk/css/diam.css'
-        - 'bundles/diamantedesk/css/diam.widget.css'
+css:
+  inputs:
+    - 'bundles/diamantedesk/css/diam.css'
+    - 'bundles/diamantedesk/css/diam.widget.css'
