@@ -262,56 +262,43 @@ class InstallCommand extends OroInstallCommand
         $options = [
             'user-name'      => [
                 'label'                  => 'Username',
-                'askMethod'              => 'ask',
-                'additionalAskArguments' => [],
+                'options'                => [
+                    'constructorArgs' => [LoadAdminUserData::DEFAULT_ADMIN_USERNAME]
+                ],
                 'defaultValue'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
             ],
             'user-email'     => [
                 'label'                  => 'Email',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$emailValidator],
+                'options'                => ['settings' => ['validator' => [$emailValidator]]],
                 'defaultValue'           => null,
             ],
             'user-firstname' => [
                 'label'                  => 'First name',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$firstNameValidator],
+                'options'                => ['settings' => ['validator' => [$firstNameValidator]]],
                 'defaultValue'           => null,
             ],
             'user-lastname'  => [
                 'label'                  => 'Last name',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$lastNameValidator],
+                'options'                => ['settings' => ['validator' => [$lastNameValidator]]],
                 'defaultValue'           => null,
             ],
             'user-password'  => [
                 'label'                  => 'Password',
-                'askMethod'              => 'askHiddenResponseAndValidate',
-                'additionalAskArguments' => [$passwordValidator],
+                'options'                => ['settings' => ['validator' => [$passwordValidator], 'hidden' => [true]]],
                 'defaultValue'           => null,
             ],
         ];
 
-        $commandParameters = [];
-        foreach ($options as $optionName => $optionData) {
-            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
-                $optionName,
-                $optionData['label'],
-                $optionData['defaultValue'],
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
-            );
-        }
-
-        $this->commandExecutor->runCommand('cache:clear');
+        //$this->commandExecutor->runCommand('cache:clear');  @see DIAM-1923
 
         $commandExecutor->runCommand(
             'oro:user:update',
             array_merge(
                 [
                     'user-name'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
+                    '--process-isolation' => true
                 ],
-                $commandParameters
+                $this->getCommandParametersFromOptions($options)
             )
         );
     }
@@ -336,24 +323,18 @@ class InstallCommand extends OroInstallCommand
             }
             return $value;
         };
+
         $options = [
             'organization-name' => [
                 'label'                  => 'Organization name',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$organizationNameValidator],
+                'options'                => [
+                    'constructorArgs' => [$defaultOrganizationName],
+                    'settings' => ['validator' => [$organizationNameValidator]]
+                ],
                 'defaultValue'           => $defaultOrganizationName,
             ]
         ];
-        $commandParameters = [];
-        foreach ($options as $optionName => $optionData) {
-            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
-                $optionName,
-                $optionData['label'],
-                $optionData['defaultValue'],
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
-            );
-        }
+
         $commandExecutor->runCommand(
             'oro:organization:update',
             array_merge(
@@ -361,10 +342,11 @@ class InstallCommand extends OroInstallCommand
                     'organization-name' => 'default',
                     '--process-isolation' => true,
                 ],
-                $commandParameters
+                $this->getCommandParametersFromOptions($options)
             )
         );
     }
+
     /**
      * Update system settings such as app url, company name and short name
      */
@@ -372,14 +354,14 @@ class InstallCommand extends OroInstallCommand
     {
         /** @var ConfigManager $configManager */
         $configManager = $this->getContainer()->get('oro_config.global');
+
         $options       = [
             'application-url' => [
                 'label'                  => 'Application URL',
                 'config_key'             => 'oro_ui.application_url',
-                'askMethod'              => 'ask',
-                'additionalAskArguments' => [],
             ]
         ];
+
         foreach ($options as $optionName => $optionData) {
             $configKey    = $optionData['config_key'];
             $defaultValue = $configManager->get('diamante_distribution.application_url');
@@ -387,14 +369,15 @@ class InstallCommand extends OroInstallCommand
                 $optionName,
                 $optionData['label'],
                 $defaultValue,
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
+                ['constructorArgs' => [$defaultValue]]
             );
+
             // update setting if it's not empty and not equal to default value
             if (!empty($value) && $value !== $defaultValue) {
                 $configManager->set($configKey, $value);
             }
         }
+
         $configManager->flush();
     }
 
@@ -420,5 +403,24 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return 255;
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    private function getCommandParametersFromOptions(array $options)
+    {
+        $commandParameters = [];
+        foreach ($options as $optionName => $optionData) {
+            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $optionData['defaultValue'],
+                $optionData['options']
+            );
+        }
+
+        return $commandParameters;
     }
 }
