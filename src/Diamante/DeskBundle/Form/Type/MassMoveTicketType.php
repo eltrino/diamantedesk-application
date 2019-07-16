@@ -16,7 +16,7 @@ namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MassMoveTicketType extends AbstractType
 {
@@ -32,7 +32,7 @@ class MassMoveTicketType extends AbstractType
             array(
                 'label'         => 'diamante.desk.attributes.branch',
                 'class'         => 'DiamanteDeskBundle:Branch',
-                'property'      => 'name',
+                'choice_label'      => 'name',
                 'attr'          => array('style' => "width:140px"),
                 'required'      => true
             )
@@ -42,7 +42,7 @@ class MassMoveTicketType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

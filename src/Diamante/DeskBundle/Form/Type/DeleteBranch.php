@@ -16,8 +16,6 @@ namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
 use Diamante\DeskBundle\Api\BranchService;
 
 class DeleteBranch extends AbstractType

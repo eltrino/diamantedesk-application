@@ -1,6 +1,6 @@
 datagrids:
     diamante-branch-grid:
-        extended_entity_name: %diamante.branch.entity.class%
+        extended_entity_name: '%diamante.branch.entity.class%'
         source:
             type: orm
             query:
@@ -108,7 +108,7 @@ datagrids:
                 status: { value: ['@diamante.ticket.datagrid_status_helper->getNewStatus', '@diamante.ticket.datagrid_status_helper->getOpenStatus'] }
 
     diamante-ticket-grid:
-        extended_entity_name: %diamante.ticket.entity.class%
+        extended_entity_name: '%diamante.ticket.entity.class%'
         source:
             type: orm
             query:
@@ -214,7 +214,7 @@ datagrids:
                 updatedAt:
                   data_name: updatedAt
             default:
-                updatedAt: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC
+                updatedAt: '%oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC'
         filters:
             columns:
                 key:
@@ -229,7 +229,7 @@ datagrids:
                     options:
                         field_options:
                             class: DiamanteDeskBundle:Branch
-                            property: name
+                            property_path: name
                 assigneeFullName:
                     type:      string
                     data_name: assigneeFullName
@@ -328,7 +328,7 @@ datagrids:
                     - a.id
                     - a.file
                 from:
-                    - { table: %diamante.attachment.entity.class%, alias: a }
+                    - { table: '%diamante.attachment.entity.class%', alias: a }
                 where:
                     and:
                         - a.ticket = :ticket
@@ -359,7 +359,7 @@ datagrids:
                 link:          delete_link
 
     diamante-reporter-select-grid:
-        extended_entity_name: %oro_user.entity.class%
+        extended_entity_name: '%oro_user.entity.class%'
         options:
             entityHint: user
             entity_pagination: true
@@ -402,7 +402,7 @@ datagrids:
                 enabled:
                     data_name: u.enabled
             default:
-                email: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC
+                email: '%oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC'
         filters:
             columns:
                 email:
@@ -432,7 +432,7 @@ datagrids:
             type: diamante_combined_users_datasource
 
     diamante-watcher-select-grid:
-        extended_entity_name: %oro_user.entity.class%
+        extended_entity_name: '%oro_user.entity.class%'
         options:
             entityHint: user
             entity_pagination: true
@@ -475,7 +475,7 @@ datagrids:
                 enabled:
                     data_name: u.enabled
             default:
-                email: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC
+                email: '%oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC'
         filters:
             columns:
                 email:

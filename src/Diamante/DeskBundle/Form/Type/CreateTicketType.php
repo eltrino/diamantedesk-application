@@ -19,7 +19,7 @@ use Diamante\DeskBundle\Form\DataTransformer\PriorityTransformer;
 use Diamante\DeskBundle\Form\DataTransformer\SourceTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
 
 class CreateTicketType extends AbstractType
@@ -32,7 +32,7 @@ class CreateTicketType extends AbstractType
             array(
                 'label' => 'diamante.desk.attributes.branch',
                 'class' => 'DiamanteDeskBundle:Branch',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'empty_value' => 'Choose branch...',
                 'required'    => false
             )
@@ -141,7 +141,7 @@ class CreateTicketType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

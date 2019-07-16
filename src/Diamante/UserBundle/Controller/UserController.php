@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
@@ -119,10 +120,10 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction($id, Request $request)
     {
         try {
-            if (!in_array($this->get('request')->getMethod(), ['POST', 'PUT', 'DELETE'])) {
+            if (!in_array($request->getMethod(), ['POST', 'PUT', 'DELETE'])) {
                 throw new MethodNotAllowedException("This won't work");
             }
 
@@ -222,9 +223,9 @@ class UserController extends Controller
     /**
      * @Route("/reset/massaction", name="diamante_user_reset_pwd_massaction", options={"expose" = true})
      */
-    public function massResetPasswordAction()
+    public function massResetPasswordAction(Request $request)
     {
-        $users = $this->get('request')->get('values');
+        $users = $request->get('values');
 
         if (!is_array($users)) {
             $users = explode(',', $users);
@@ -267,9 +268,9 @@ class UserController extends Controller
     /**
      * @return array
      */
-    protected function parseGridParameters()
+    protected function parseGridParameters(Request $request)
     {
         $parametersParser = $this->container->get('oro_datagrid.mass_action.parameters_parser');
-        return $parametersParser->parse($this->get('request'));
+        return $parametersParser->parse($request);
     }
 }

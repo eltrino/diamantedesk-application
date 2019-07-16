@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
-use Diamante\DeskBundle\Api\BranchService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Diamante\DeskBundle\Form\EventListener\AddMassBranchSubscriber;
