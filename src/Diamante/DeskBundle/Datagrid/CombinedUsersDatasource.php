@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Datagrid;
 use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecord;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
 

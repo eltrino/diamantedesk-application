@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
@@ -27,7 +28,9 @@ class UpdateTicketStatusType extends AbstractType
         $statusOptions = $statusTransformer->getOptions();
 
         $builder->add(
-            $builder->create('status', 'choice',
+            $builder->create(
+                'status',
+                ChoiceType::class,
                 array(
                     'label' => 'diamante.desk.attributes.status',
                     'required' => true,

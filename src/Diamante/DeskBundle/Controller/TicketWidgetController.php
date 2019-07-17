@@ -41,7 +41,7 @@ class TicketWidgetController extends WidgetController
      *
      * @return array
      */
-    public function changeStatusWidgetAction($id, Request $request)
+    public function changeStatusWidgetAction(Request $request, $id)
     {
         try {
             $ticket = $this->get('diamante.ticket.service')->loadTicket($id);

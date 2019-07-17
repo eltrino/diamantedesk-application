@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Diamante\DeskBundle\Form\Type\WatcherSelectType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,7 +29,7 @@ class MassAddWatcherTicketType extends AbstractType
     {
         $builder->add(
             'watcher',
-            'diamante_watcher_select',
+            WatcherSelectType::class,
             array(
                 'label'    => 'diamante.desk.attributes.watcher',
                 'required' => true,

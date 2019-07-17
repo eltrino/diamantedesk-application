@@ -120,7 +120,7 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function deleteAction($id, Request $request)
+    public function deleteAction(Request $request, $id)
     {
         try {
             if (!in_array($request->getMethod(), ['POST', 'PUT', 'DELETE'])) {
