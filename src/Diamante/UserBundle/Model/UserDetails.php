@@ -21,32 +21,32 @@ class UserDetails
     /**
      * @var string
      */
-    protected $id;
+    private $id;
 
     /**
      * @var string
      */
-    protected $type;
+    private $type;
 
     /**
      * @var string
      */
-    protected $email;
+    private $email;
 
     /**
      * @var string
      */
-    protected $firstName;
+    private $firstName;
 
     /**
      * @var string
      */
-    protected $lastName;
+    private $lastName;
 
     /**
      * @var null|string
      */
-    protected $avatar;
+    private $avatar;
 
 
     public function __construct($id, $type, $email, $firstName, $lastName, $avatar = null)

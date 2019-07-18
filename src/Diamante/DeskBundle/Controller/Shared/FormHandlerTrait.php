@@ -4,6 +4,7 @@ namespace Diamante\DeskBundle\Controller\Shared;
 
 
 use Diamante\DeskBundle\Exception\ValidatorException;
+use \Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
@@ -14,13 +15,14 @@ trait FormHandlerTrait
      * @throws MethodNotAllowedException
      * @throws ValidatorException
      */
-    protected function handle(Form $form)
+    protected function handle(Request $request, Form $form)
     {
-        if (false === $this->getRequest()->isMethod('POST')) {
+
+        if (false === $request->isMethod('POST')) {
             throw new MethodNotAllowedException(array('POST'), 'Form can be posted only by "POST" method.');
         }
 
-        $form->handleRequest($this->getRequest());
+        $form->handleRequest($request);
 
         if (false === $form->isValid()) {
             throw new ValidatorException('Form object validation failed, form is invalid.');
@@ -30,5 +32,5 @@ trait FormHandlerTrait
     /**
      * @return \Symfony\Component\HttpFoundation\Request
      */
-    abstract public function getRequest();
+    abstract public function getRequest() ;
 }
