@@ -39,7 +39,7 @@ class Priority implements Property, Weightable
 
         static::initValueLabelsMap();
 
-        if (false === isset(static::$valueToLabelMap[$priority]) && $priority !== '') {
+        if (false === isset(static::$valueToLabelMap[strtolower($priority)]) && $priority !== '') {
             throw new \InvalidArgumentException("Priority doesn't exist.");
         }
 
