@@ -39,7 +39,7 @@
             <tag name="form.type" alias="diamante_assignee_select_form"/>
         </service>
         <service id="diamante_ticket_form_assignee" class="%diamante_ticket_form_assignee.type.class%">
-            <tag name="form.type" alias="diamante_ticket_form_assignee"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_attachment_form" class="%diamante_attachment_form.type.class%">
             <tag name="form.type" alias="diamante_attachment_form"/>
