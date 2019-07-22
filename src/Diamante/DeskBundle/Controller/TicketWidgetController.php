@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
@@ -48,7 +49,7 @@ class TicketWidgetController extends WidgetController
             $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
             $command = $this->get('diamante.command_factory')
                 ->createUpdateStatusCommandForView($ticket);
-            $form = $this->createForm('diamante_ticket_status_form', $command);
+            $form = $this->createForm(UpdateTicketStatusType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 $response = ['form' => $form->createView()];
