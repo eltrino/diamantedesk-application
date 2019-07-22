@@ -81,7 +81,7 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
     public function remove(Entity $entity)
     {
         $this->_em->remove($entity);
-        $this->clearSearchIndex($entity);
+        // $this->clearSearchIndex($entity); TODO: Temp. commented unless method will be fixed
         $this->_em->flush($entity);
     }
 
