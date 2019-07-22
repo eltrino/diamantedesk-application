@@ -47,22 +47,22 @@ class CreateTicketType extends AbstractType
         $builder->add(
             'subject',
             TextType::class,
-            array(
+            [
                 'label' => 'diamante.desk.attributes.subject',
                 'required' => true,
-            )
+            ]
         );
 
         $builder->add(
             'description',
             OroRichTextType::class,
-            array(
+            [
                 'label' => 'diamante.desk.common.description',
                 'required' => true,
-                'attr'  => array(
-                    'class' => 'diam-ticket-description'
-                ),
-            )
+                'attr' => [
+                    'class' => 'diam-ticket-description',
+                ],
+            ]
         );
 
         $statusTransformer = new StatusTransformer();
@@ -72,11 +72,12 @@ class CreateTicketType extends AbstractType
             $builder->create(
                 'status',
                 ChoiceType::class,
-                array(
+                [
                     'label' => 'diamante.desk.attributes.status',
                     'required' => true,
-                    'choices' => $statusOptions
-                ))
+                    'choices' => $statusOptions,
+                ]
+            )
                 ->addModelTransformer($statusTransformer)
         );
 
@@ -152,11 +153,11 @@ class CreateTicketType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
-                'data_class'         => CreateTicketCommand::class,
-                'intention'          => 'ticket',
+            [
+                'data_class' => CreateTicketCommand::class,
+                'intention' => 'ticket',
                 'cascade_validation' => true,
-            )
+            ]
         );
     }
 

@@ -47,7 +47,7 @@ class Source implements Property
             $source = '';
         }
 
-        if (false === isset(static::$valueToLabelMap[strtolower($source)]) && $source !== '') {
+        if (false === isset(static::$valueToLabelMap[$source]) && $source !== '') {
             throw new \InvalidArgumentException('Given source is wrong');
         }
 
