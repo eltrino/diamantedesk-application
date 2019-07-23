@@ -30,7 +30,7 @@
 
     <services>
         <service id="diamante_ticket_status_form" class="%diamante_ticket_status_form.type.class%">
-            <tag name="form.type" alias="diamante_ticket_status_form"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_add_watcher_form" class="%diamante_add_watcher_form.type.class%">
             <tag name="form.type" alias="diamante_add_watcher_form"/>

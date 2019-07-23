@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
+use Diamante\DeskBundle\Form\Type\AddWatcherType;
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
@@ -132,7 +133,7 @@ class TicketWidgetController extends WidgetController
             $ticket = $this->get('diamante.ticket.service')->loadTicket($ticketId);
             $command = $this->get('diamante.command_factory')
                 ->addWatcherCommand($ticket);
-            $form = $this->createForm('diamante_add_watcher_form', $command);
+            $form = $this->createForm(AddWatcherType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
