@@ -42,7 +42,7 @@
             <tag name="form.type" />
         </service>
         <service id="diamante_attachment_form" class="%diamante_attachment_form.type.class%">
-            <tag name="form.type" alias="diamante_attachment_form"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_comment_form" class="%diamante_comment_form.type.class%">
             <tag name="form.type" alias="diamante_comment_form"/>
