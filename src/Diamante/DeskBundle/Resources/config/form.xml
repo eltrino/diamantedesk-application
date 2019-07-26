@@ -71,7 +71,7 @@
             <tag name="form.type" alias="diamante_reporter_select"/>
         </service>
         <service id="diamante_update_branch_form" class="%diamante_update_branch_form.type.class%">
-            <tag name="form.type" alias="diamante_update_branch_form"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_ticket_update_form" class="%diamante_ticket_update_form.type.class%">
             <tag name="form.type" />

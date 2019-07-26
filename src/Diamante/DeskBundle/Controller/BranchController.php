@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Form\Type\CreateBranchType;
+use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -108,7 +109,7 @@ class BranchController extends Controller
      * @Template("DiamanteDeskBundle:Branch:update.html.twig")
      *
      * @param int $id
-     * @return array
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function updateAction(Request $request, $id)
     {
@@ -116,11 +117,10 @@ class BranchController extends Controller
         $command = BranchCommand::fromBranch($branch);
 
         try {
-            $form = $this->createForm('diamante_update_branch_form', $command);
+            $form = $this->createForm(UpdateBranchType::class, $command);
 
             $result = $this->edit($request, $command, $form, function($command) use ($branch) {
-                $branchId = $this->get('diamante.branch.service')->updateBranch($command);
-                return $branchId;
+                return $this->get('diamante.branch.service')->updateBranch($command);
             });
         } catch (MethodNotAllowedException $e) {
             return $this->redirect(
