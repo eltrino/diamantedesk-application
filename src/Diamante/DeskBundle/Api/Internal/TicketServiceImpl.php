@@ -335,15 +335,14 @@ class TicketServiceImpl implements TicketService
         $em = $this->doctrineRegistry->getManager();
         $em->getConnection()->beginTransaction();
         try {
-            $this->ticketBuilder
-                ->setSubject($command->subject)
-                ->setDescription($command->description)
-                ->setBranchId($command->branch)
-                ->setReporter($command->reporter)
-                ->setAssignee($command->assignee)
-                ->setPriority($command->priority)
-                ->setSource($command->source)
-                ->setStatus($command->status);
+            $this->ticketBuilder->setSubject($command->subject);
+            $this->ticketBuilder->setDescription($command->description);
+            $this->ticketBuilder->setBranchId($command->branch);
+            $this->ticketBuilder->setReporter($command->reporter);
+            $this->ticketBuilder->setAssignee($command->assignee);
+            $this->ticketBuilder->setPriority($command->priority);
+            $this->ticketBuilder->setSource($command->source);
+            $this->ticketBuilder->setStatus($command->status);
 
             $ticket = $this->ticketBuilder->build();
             $em->lock($ticket->getBranch(), LockMode::PESSIMISTIC_READ);

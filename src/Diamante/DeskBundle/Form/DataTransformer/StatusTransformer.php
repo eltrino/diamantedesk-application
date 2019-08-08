@@ -20,7 +20,7 @@ use Diamante\DeskBundle\Model\Ticket\Status;
 
 class StatusTransformer implements DataTransformerInterface
 {
-    private $statusOptions = array();
+    private $statusOptions;
 
     public function __construct()
     {
@@ -35,7 +35,9 @@ class StatusTransformer implements DataTransformerInterface
     {
         if ($status instanceof Status) {
             return $status->getValue();
-        } elseif (array_key_exists($status, $this->statusOptions)) {
+        }
+
+        if (array_key_exists($status, $this->statusOptions)) {
             return $status;
         }
 
@@ -62,15 +64,16 @@ class StatusTransformer implements DataTransformerInterface
     {
         if (empty($this->statusOptions)) {
             $this->statusOptions =
-                array(
-                    Status::NEW_ONE     => Status::LABEL_NEW_ONE,
-                    Status::OPEN        => Status::LABEL_OPEN,
-                    Status::PENDING     => Status::LABEL_PENDING,
-                    Status::IN_PROGRESS => Status::LABEL_IN_PROGRESS,
-                    Status::CLOSED      => Status::LABEL_CLOSED,
-                    Status::ON_HOLD     => Status::LABEL_ON_HOLD
-                );
+                [
+                    Status::LABEL_NEW_ONE => Status::NEW_ONE,
+                    Status::LABEL_OPEN => Status::OPEN,
+                    Status::LABEL_PENDING => Status::PENDING,
+                    Status::LABEL_IN_PROGRESS => Status::IN_PROGRESS,
+                    Status::LABEL_CLOSED => Status::CLOSED,
+                    Status::LABEL_ON_HOLD => Status::ON_HOLD,
+                ];
         }
+
         return $this->statusOptions;
     }
 }
