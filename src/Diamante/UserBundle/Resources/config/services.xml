@@ -72,7 +72,7 @@
         </service>
 
         <service id="diamante.autocomplete.user.search_handler" class="%diamante.autocomplete.user.search_handler.class%">
-            <argument type="string">Diamante\UserBundle\Model\User\UserDetails</argument>
+            <argument type="string">Diamante\UserBundle\Model\UserDetails</argument>
             <argument type="service" id="diamante.user.service"/>
             <argument type="service" id="diamante.user.repository"/>
             <argument type="service" id="oro_user.autocomplete.user.search_handler"/>

@@ -15,19 +15,21 @@
  
 namespace Diamante\DeskBundle\Form\Type;
 
+use Oro\Bundle\FormBundle\Form\Type\OroEntitySelectOrCreateInlineType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DiamanteUserSelectType extends AbstractType
 {
-    public function setDefaultOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
                 'configs' => array(
                     'placeholder'             => 'oro.user.form.choose_user',
                     'result_template_twig'    => 'DiamanteDeskBundle:Search:Autocomplete/result.html.twig',
-                    'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig'
+                    'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig',
+                    'route_name'              => '',
                 ),
                 'autocomplete_alias' => 'diamante_user'
             )
@@ -36,14 +38,6 @@ class DiamanteUserSelectType extends AbstractType
 
     public function getParent()
     {
-        return 'oro_entity_create_or_select_inline';
+        return OroEntitySelectOrCreateInlineType::class;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'diamante_user_select';
-    }
-} 
+}

@@ -26,6 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
+use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
 
 class CreateTicketType extends AbstractType
 {
@@ -38,7 +39,7 @@ class CreateTicketType extends AbstractType
                 'label' => 'diamante.desk.attributes.branch',
                 'class' => 'DiamanteDeskBundle:Branch',
                 'choice_label' => 'name',
-                'empty_value' => 'Choose branch...',
+                'placeholder' => 'Choose branch...',
                 'required'    => false
             )
         );
@@ -148,11 +149,11 @@ class CreateTicketType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Diamante\DeskBundle\Api\Command\CreateTicketCommand',
+                'data_class'         => CreateTicketCommand::class,
                 'intention'          => 'ticket',
                 'cascade_validation' => true,
             )

@@ -20,6 +20,8 @@ use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Form\CommandFactory;
+use Diamante\DeskBundle\Form\Type\CreateTicketType;
+use Diamante\DeskBundle\Form\Type\UpdateTicketType;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
 use Diamante\UserBundle\Model\User;
@@ -146,43 +148,37 @@ class TicketController extends Controller
      *
      * @return array
      */
-    public function createAction($id = null)
+    public function createAction(Request $request, $id = null)
     {
         $branch = null;
-        if (!is_null($id)) {
+        if ($id !== null) {
             $branch = $this->get('diamante.branch.service')->getBranch($id);
         }
         $command = $this->get('diamante.command_factory')
             ->createCreateTicketCommand($branch, new User($this->getUser()->getId(), User::TYPE_ORO));
-
         $response = null;
-        $form = $this->createForm('diamante_ticket_form', $command);
+
+        $form = $this->createForm(CreateTicketType::class, $command);
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,
             ['full_name' => 'diamante_ticket_form[attachmentsInput][]']
         );
         try {
-            $this->handle($form);
-
+            $this->handle($request, $form);
             if (empty($command->branch)) {
                 $defaultBranchId = (int)$this->get('oro_config.manager')->get('diamante_desk.default_branch');
-
                 if (is_null($defaultBranchId)) {
                     throw new \RuntimeException("Invalid configuration. DefaultBranch must be configured");
                 }
-
                 $command->branch = $this->get('diamante.branch.service')->getBranch($defaultBranchId);
             }
-
             if ($command->assignee) {
                 $command->assignee = $command->assignee->getId();
             }
 
             $command->branch = $command->branch->getId();
-
             $ticket = $this->get('diamante.ticket.service')->createTicket($command);
-
             $this->addSuccessMessage('diamante.desk.ticket.messages.create.success');
             $response = $this->getSuccessSaveResponse(
                 'diamante_ticket_update',
@@ -193,7 +189,6 @@ class TicketController extends Controller
             $this->handleException($e);
             $response = ['form' => $formView];
         }
-
         return $response;
     }
 
@@ -210,7 +205,7 @@ class TicketController extends Controller
      *
      * @return array
      */
-    public function updateAction($key)
+    public function updateAction(Request $request, $key)
     {
         try {
             $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
@@ -218,14 +213,14 @@ class TicketController extends Controller
             $command = $this->get('diamante.command_factory')
                 ->createUpdateTicketCommand($ticket);
             $response = null;
-            $form = $this->createForm('diamante_ticket_update_form', $command);
+            $form = $this->createForm(UpdateTicketType::class, $command);
 
             $formView = $form->createView();
             $formView->children['attachmentsInput']->vars = array_replace(
                 $formView->children['attachmentsInput']->vars,
                 ['full_name' => 'diamante_ticket_form[attachmentsInput][]']
             );
-            $this->handle($form);
+            $this->handle($request, $form);
 
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
