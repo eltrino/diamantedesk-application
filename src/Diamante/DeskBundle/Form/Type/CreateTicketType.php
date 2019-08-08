@@ -17,9 +17,14 @@ namespace Diamante\DeskBundle\Form\Type;
 use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
 use Diamante\DeskBundle\Form\DataTransformer\PriorityTransformer;
 use Diamante\DeskBundle\Form\DataTransformer\SourceTransformer;
+use Oro\Bundle\FormBundle\Form\Type\OroRichTextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
 
 class CreateTicketType extends AbstractType
@@ -28,11 +33,11 @@ class CreateTicketType extends AbstractType
     {
         $builder->add(
             'branch',
-            'entity',
+            EntityType::class,
             array(
                 'label' => 'diamante.desk.attributes.branch',
                 'class' => 'DiamanteDeskBundle:Branch',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'empty_value' => 'Choose branch...',
                 'required'    => false
             )
@@ -40,7 +45,7 @@ class CreateTicketType extends AbstractType
 
         $builder->add(
             'subject',
-            'text',
+            TextType::class,
             array(
                 'label' => 'diamante.desk.attributes.subject',
                 'required' => true,
@@ -49,7 +54,7 @@ class CreateTicketType extends AbstractType
 
         $builder->add(
             'description',
-            'oro_rich_text',
+            OroRichTextType::class,
             array(
                 'label' => 'diamante.desk.common.description',
                 'required' => true,
@@ -63,7 +68,9 @@ class CreateTicketType extends AbstractType
         $statusOptions = $statusTransformer->getOptions();
 
         $builder->add(
-            $builder->create('status', 'choice',
+            $builder->create(
+                'status',
+                ChoiceType::class,
                 array(
                     'label' => 'diamante.desk.attributes.status',
                     'required' => true,
@@ -75,7 +82,7 @@ class CreateTicketType extends AbstractType
         $builder->add(
             $builder->create(
                 'attachmentsInput',
-                'file',
+                FileType::class,
                 array(
                     'label' => 'diamante.desk.attachment.file',
                     'required' => false,
@@ -92,7 +99,7 @@ class CreateTicketType extends AbstractType
         $builder->add(
             $builder->create(
                 'priority',
-                'choice',
+                ChoiceType::class,
                 array(
                     'label'    => 'diamante.desk.attributes.priority',
                     'required' => true,
@@ -108,7 +115,7 @@ class CreateTicketType extends AbstractType
         $builder->add(
             $builder->create(
                 'source',
-                'choice',
+                ChoiceType::class,
                 array(
                     'label'    => 'diamante.desk.attributes.source',
                     'required' => true,
@@ -121,7 +128,7 @@ class CreateTicketType extends AbstractType
 
         $builder->add(
             'reporter',
-            'diamante_reporter_select',
+            ReporterSelectType::class,
             array(
                 'label'    => 'diamante.desk.attributes.reporter',
                 'required' => true
@@ -130,7 +137,7 @@ class CreateTicketType extends AbstractType
 
         $builder->add(
             'assignee',
-            'diamante_assignee_select',
+            AssigneeSelectType::class,
             array(
                 'label'    => 'diamante.desk.attributes.assignee',
                 'required' => false
@@ -141,7 +148,7 @@ class CreateTicketType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -157,8 +164,17 @@ class CreateTicketType extends AbstractType
      *
      * @return string The name of this type
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'diamante_ticket_form';
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
 }

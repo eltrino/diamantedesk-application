@@ -29,6 +29,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -323,7 +324,7 @@ class TicketController extends Controller
      *
      * @return Response
      */
-    public function attachPostAction($id)
+    public function attachPostAction(Request $request, $id)
     {
         $ticketService = $this->get('diamante.ticket.service');
         $ticket = $ticketService->loadTicket($id);
@@ -345,7 +346,7 @@ class TicketController extends Controller
             $uploadedAttachments = $ticketService->addAttachmentsForTicket($command);
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');
 
-            if ($this->container->get('request')->request->get('diam-dropzone')) {
+            if ($request->get('diam-dropzone')) {
                 $response = $this->prepareDropzoneAttachmentsResponse($id, $uploadedAttachments);
             } else {
                 $response = $this->get('oro_ui.router')->redirectAfterSave(
@@ -579,11 +580,12 @@ class TicketController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return bool
      */
-    private function widgetRedirectRequested()
+    private function widgetRedirectRequested(Request $request)
     {
-        return !(bool)$this->container->get('request')->get('no_redirect');
+        return !(bool)$request->get('no_redirect');
     }
 
     /**
@@ -595,22 +597,25 @@ class TicketController extends Controller
      *
      * @Template("DiamanteDeskBundle:Ticket:widget/massAssignee.html.twig")
      *
+     * @param Request $request
      * @return array
      */
-    public function assignMassAction()
+    public function assignMassAction(Request $request)
     {
         try {
+            $values = $request->get('values');
+            $inset = $request->get('inset');
             $command = $this->get('diamante.command_factory')
-                ->createMassAssigneeTicketCommand($this->getRequest()->get('values'));
+                ->createMassAssigneeTicketCommand($values, $inset);
 
             $form = $this->createForm('diamante_ticket_form_mass_assignee', $command);
 
-            if (true === $this->widgetRedirectRequested()) {
+            if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
             }
 
-            $form->handleRequest($this->getRequest());
-            $requestAssign = $this->getRequest()->get('assignee');
+            $form->handleRequest($request);
+            $requestAssign = $request->get('assignee');
 
             if (!isset($requestAssign)) {
                 $assignee = $command->assignee;
@@ -618,7 +623,7 @@ class TicketController extends Controller
                 $assignee = $requestAssign;
             }
 
-            $ids = explode(",", $this->getRequest()->get('ids'));
+            $ids = explode(',', $request->get('ids'));
 
             foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
@@ -653,20 +658,22 @@ class TicketController extends Controller
      *
      * @return array
      */
-    public function changeStatusMassAction()
+    public function changeStatusMassAction(Request $request)
     {
         try {
+            $values = $request->get('values');
+            $inset = $request->get('inset');
             $command = $this->get('diamante.command_factory')
-                ->createChangeStatusMassCommand($this->getRequest()->get('values'));
+                ->createChangeStatusMassCommand($values, $inset);
 
             $form = $this->createForm('diamante_ticket_form_status_mass_change', $command);
 
-            if (true === $this->widgetRedirectRequested()) {
+            if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
             }
 
-            $form->handleRequest($this->getRequest());
-            $requestStatus = $this->getRequest()->get('status');
+            $form->handleRequest($request);
+            $requestStatus = $request->get('status');
 
             if (!isset($requestStatus)) {
                 $status = $command->status;
@@ -674,7 +681,7 @@ class TicketController extends Controller
                 $status = $requestStatus;
             }
 
-            $ids = explode(",", $this->getRequest()->get('ids'));
+            $ids = explode(',', $request->get('ids'));
 
             foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
@@ -707,22 +714,25 @@ class TicketController extends Controller
      * )
      * @Template("DiamanteDeskBundle:Ticket:widget/massAddWatcher.html.twig")
      *
+     * @param Request $request
      * @return array
      */
-    public function addWatcherMassAction()
+    public function addWatcherMassAction(Request $request)
     {
         try {
+            $values = $request->get('values');
+            $inset = $request->get('inset');
             $command = $this->get('diamante.command_factory')
-                ->createMassAddWatcherCommand($this->getRequest()->get('values'));
+                ->createMassAddWatcherCommand($values, $inset);
 
             $form = $this->createForm('diamante_ticket_form_mass_add_watcher', $command);
 
-            if (true === $this->widgetRedirectRequested()) {
+            if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
             }
 
-            $form->handleRequest($this->getRequest());
-            $requestWatcher = $this->getRequest()->get('branch');
+            $form->handleRequest($request);
+            $requestWatcher = $request->get('branch');
 
             if (!isset($requestWatcher)) {
                 $watcher = $command->watcher;
@@ -730,7 +740,7 @@ class TicketController extends Controller
                 $watcher = $requestWatcher;
             }
 
-            $ids = explode(",", $this->getRequest()->get('ids'));
+            $ids = explode(',',$request->get('ids'));
 
             foreach ($ids as $id) {
                 $ticket = $this->get('diamante.ticket.service')->loadTicket($id);

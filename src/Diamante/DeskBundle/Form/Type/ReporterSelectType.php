@@ -16,12 +16,12 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Diamante\DeskBundle\Entity\Ticket;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\UserTransformer;
 
 class ReporterSelectType extends DiamanteUserSelectType
 {
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

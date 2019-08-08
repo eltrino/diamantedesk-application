@@ -14,7 +14,6 @@
  */
 namespace Diamante\FrontBundle\Command;
 
-use Diamante\FrontBundle\Utility\DependencyLocator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

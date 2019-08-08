@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class WidgetController extends Controller
 {
@@ -41,6 +42,7 @@ abstract class WidgetController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return bool
      */
     protected function widgetRedirectRequested()

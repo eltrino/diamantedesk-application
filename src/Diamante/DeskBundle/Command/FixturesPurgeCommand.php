@@ -14,6 +14,13 @@
  */
 namespace Diamante\DeskBundle\Command;
 
+use Diamante\DeskBundle\Entity\Attachment;
+use Diamante\DeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Entity\Comment;
+use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Entity\TicketHistory;
+use Diamante\UserBundle\Entity\ApiUser;
+use Diamante\UserBundle\Entity\DiamanteUser;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -106,13 +113,13 @@ class FixturesPurgeCommand extends ContainerAwareCommand
     protected function getTablesList()
     {
         $entitiesMetadata = array(
-            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Branch::getClassName()),
-            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Ticket::getClassName()),
-            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Comment::getClassName()),
-            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\Attachment::getClassName()),
-            $this->entityManager->getClassMetadata(\Diamante\DeskBundle\Entity\TicketHistory::getClassName()),
-            $this->entityManager->getClassMetadata(\Diamante\UserBundle\Entity\ApiUser::getClassName()),
-            $this->entityManager->getClassMetadata(\Diamante\UserBundle\Entity\DiamanteUser::getClassName()),
+            $this->entityManager->getClassMetadata(Branch::getClassName()),
+            $this->entityManager->getClassMetadata(Ticket::getClassName()),
+            $this->entityManager->getClassMetadata(Comment::getClassName()),
+            $this->entityManager->getClassMetadata(Attachment::getClassName()),
+            $this->entityManager->getClassMetadata(TicketHistory::getClassName()),
+            $this->entityManager->getClassMetadata(ApiUser::getClassName()),
+            $this->entityManager->getClassMetadata(DiamanteUser::getClassName()),
             $this->entityManager->getClassMetadata('\Oro\Bundle\TagBundle\Entity\Tag'),
             $this->entityManager->getClassMetadata('\Oro\Bundle\TagBundle\Entity\Tagging')
         );

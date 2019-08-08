@@ -55,7 +55,7 @@
             <tag name="form.type" alias="diamante_delete_branch_form"/>
         </service>
         <service id="diamante_ticket_form" class="%diamante_ticket_form.type.class%">
-            <tag name="form.type" alias="diamante_ticket_form"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_desk_default_branch" class="%diamante_desk_default_branch.type.class%">
             <argument type="service" id="diamante.branch.service"/>

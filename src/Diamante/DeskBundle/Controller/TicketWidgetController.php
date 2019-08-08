@@ -22,6 +22,7 @@ use Diamante\UserBundle\Model\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("tickets")
@@ -40,7 +41,7 @@ class TicketWidgetController extends WidgetController
      *
      * @return array
      */
-    public function changeStatusWidgetAction($id)
+    public function changeStatusWidgetAction(Request $request, $id)
     {
         try {
             $ticket = $this->get('diamante.ticket.service')->loadTicket($id);

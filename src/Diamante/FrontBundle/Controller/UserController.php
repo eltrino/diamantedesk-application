@@ -11,7 +11,6 @@ use Diamante\FrontBundle\Api\Command\SendConfirmCommand;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
@@ -19,6 +18,7 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Patch;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @RouteResource("User")
@@ -35,9 +35,8 @@ class UserController extends FOSRestController
      *      resource=true
      * )
      */
-    public function registerAction()
+    public function registerAction(Request $request)
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
         $command = new RegisterCommand();
         $command->email = $request->get('email');
         $command->password = $request->get('password');
@@ -68,11 +67,13 @@ class UserController extends FOSRestController
      *      description="Confirm new Diamante User registration",
      *      resource=true
      * )
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmAction()
+    public function confirmAction(Request $request)
     {
         $command = new ConfirmCommand();
-        $command->hash = $this->getRequest()->get('hash');
+        $command->hash = $request->get('hash');
 
         $errors = $this->get('validator')->validate($command);
 
@@ -99,10 +100,10 @@ class UserController extends FOSRestController
      *      resource=true
      * )
      */
-    public function resetAction()
+    public function resetAction(Request $request)
     {
         $command = new ResetPasswordCommand();
-        $command->email = $this->getRequest()->get('email');
+        $command->email = $request->get('email');
         try {
             $resetService = $this->container->get('diamante.front.reset_password.service');
             $resetService->resetPassword($command);
@@ -122,12 +123,14 @@ class UserController extends FOSRestController
      *      description="Update user password",
      *      resource=true
      * )
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function passwordAction()
+    public function passwordAction(Request $request)
     {
         $command = new ChangePasswordCommand();
-        $command->hash = $this->getRequest()->get('hash');
-        $command->password = $this->getRequest()->get('password');
+        $command->hash = $request->get('hash');
+        $command->password = $request->get('password');
         try {
             $resetService = $this->container->get('diamante.front.reset_password.service');
             $resetService->changePassword($command);
@@ -146,11 +149,13 @@ class UserController extends FOSRestController
      *      description="Send email for user confirmation",
      *      resource=true
      * )
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendConfirmAction()
+    public function sendConfirmAction(Request $request)
     {
         $command = new SendConfirmCommand();
-        $command->email = $this->getRequest()->get('email');
+        $command->email = $request->get('email');
 
         try {
             $this->get('diamante.front.send_confirm.service')->send($command);

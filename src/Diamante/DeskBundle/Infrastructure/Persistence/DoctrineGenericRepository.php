@@ -14,19 +14,25 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Persistence;
 
+use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Model\Shared\Filter\PagingProperties;
 use Diamante\DeskBundle\Model\Shared\FilterableRepository;
+use Diamante\DeskBundle\Model\Ticket\TicketKey;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Diamante\DeskBundle\Model\Shared\Entity;
 use Diamante\DeskBundle\Model\Shared\Repository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
 /**
  * Class DoctrineGenericRepository
+ *
  * @package Diamante\DeskBundle\Infrastructure\Persistence
  *
- * @method \Diamante\DeskBundle\Entity\Ticket findOneByTicketKey(\Diamante\DeskBundle\Model\Ticket\TicketKey $key)
+ * @method Ticket findOneByTicketKey(TicketKey $key)
  */
 class DoctrineGenericRepository extends EntityRepository implements FilterableRepository, Repository
 {
@@ -39,7 +45,9 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
      */
     public function get($id)
     {
-        return $this->find($id);
+        /** @var Entity|null $ticket */
+        $ticket = $this->find($id);
+        return $ticket;
     }
 
     /**
@@ -52,8 +60,11 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
 
     /**
      * Store Entity
+     *
      * @param Entity $entity
      * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function store(Entity $entity)
     {
@@ -64,6 +75,8 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
     /**
      * @param Entity $entity
      * @return void
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function remove(Entity $entity)
     {
@@ -76,7 +89,7 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
      * @param array $conditions
      * @param PagingProperties $pagingProperties
      * @param null $callback
-     * @return \Doctrine\Common\Collections\Collection|static
+     * @return Collection|static
      */
     public function filter(array &$conditions, PagingProperties $pagingProperties, $callback = null)
     {
@@ -95,7 +108,7 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
     /**
      * @param array $conditions
      * @param PagingProperties $pagingProperties
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createFilterQuery(array $conditions, PagingProperties $pagingProperties)
     {
@@ -179,6 +192,7 @@ class DoctrineGenericRepository extends EntityRepository implements FilterableRe
      * Refresh search indexes to prevent transaction rollback
      *
      * @param Entity $entity
+     * @throws ORMException
      */
     public function clearSearchIndex(Entity $entity)
     {
