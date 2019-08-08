@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Api\Dto\AttachmentDto;
 use Diamante\DeskBundle\Api\TicketService;
 use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Form\CommandFactory;
+use Diamante\DeskBundle\Form\Type\AttachmentType;
 use Diamante\DeskBundle\Form\Type\CreateTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
@@ -296,7 +297,7 @@ class TicketController extends Controller
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $commandFactory = new CommandFactory();
         $form = $this->createForm(
-            'diamante_attachment_form',
+            AttachmentType::class,
             $commandFactory->createAddTicketAttachmentCommand($ticket)
         );
         $formView = $form->createView();
@@ -326,7 +327,7 @@ class TicketController extends Controller
         $response = null;
         $commandFactory = new CommandFactory();
         $form = $this->createForm(
-            'diamante_attachment_form',
+            AttachmentType::class,
             $commandFactory->createAddTicketAttachmentCommand($ticket)
         );
         $formView = $form->createView();
@@ -336,7 +337,7 @@ class TicketController extends Controller
         );
 
         try {
-            $this->handle($form);
+            $this->handle($request, $form);
             $command = $form->getData();
             $uploadedAttachments = $ticketService->addAttachmentsForTicket($command);
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');

@@ -36,6 +36,11 @@ class UpdateBranchType extends CreateBranchType
      */
     public function getName()
     {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
+    {
         return 'diamante_update_branch_form';
     }
 }

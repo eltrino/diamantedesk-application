@@ -564,7 +564,7 @@ datagrids:
                     - i.status
                     - i.createdAt
                 from:
-                    - { table:  Diamante\DeskBundle\Entity\Ticket, alias: i }
+                    - { table:  'Diamante\DeskBundle\Entity\Ticket', alias: i }
                 join:
                     left:
                         - { join: i.branch, alias: branch }
@@ -603,7 +603,7 @@ datagrids:
             columns:
                 key:
                   data_name: key
-                  apply_callback: Diamante\DeskBundle\Datagrid\SortHelper::getKeySortingFunction
+                  apply_callback: 'Diamante\DeskBundle\Datagrid\SortHelper::getKeySortingFunction'
                 subject:
                   data_name: i.subject
                 status:

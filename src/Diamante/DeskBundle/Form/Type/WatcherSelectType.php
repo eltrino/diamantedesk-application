@@ -33,7 +33,7 @@ class WatcherSelectType extends AbstractType
                     'placeholder' => 'diamante.desk.ui.select_watcher',
                     'result_template_twig'    => 'DiamanteDeskBundle:Search:Autocomplete/result.html.twig',
                     'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig',
-                    'route_name'              => 'diamante_watcher_select',
+                    'route_name'              => '',
                 ),
                 'transformer' => new UserTransformer(),
                 'grid_name' => 'diamante-watcher-select-grid',

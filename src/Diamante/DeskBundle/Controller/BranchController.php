@@ -14,12 +14,15 @@
  */
 namespace Diamante\DeskBundle\Controller;
 
+use Diamante\DeskBundle\Form\Type\CreateBranchType;
+use Diamante\DeskBundle\Form\Type\UpdateBranchType;
 use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
@@ -55,6 +58,10 @@ class BranchController extends Controller
      *      requirements={"id"="\d+"}
      * )
      * @Template
+     *
+     * @param string $id
+     *
+     * @return array|Response
      */
     public function viewAction($id)
     {
@@ -72,13 +79,13 @@ class BranchController extends Controller
      * @Route("/create", name="diamante_branch_create")
      * @Template("DiamanteDeskBundle:Branch:create.html.twig")
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $command = new BranchCommand();
         try {
-            $form = $this->createForm('diamante_branch_form', $command);
+            $form = $this->createForm(CreateBranchType::class, $command);
 
-            $result = $this->edit($command, $form, function($command) {
+            $result = $this->edit($request, $command, $form, function($command) {
                 $branch = $this->get('diamante.branch.service')->createBranch($command);
                 return $branch->getId();
             });
@@ -102,19 +109,18 @@ class BranchController extends Controller
      * @Template("DiamanteDeskBundle:Branch:update.html.twig")
      *
      * @param int $id
-     * @return array
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
         $branch = $this->get('diamante.branch.service')->getBranch($id);
         $command = BranchCommand::fromBranch($branch);
 
         try {
-            $form = $this->createForm('diamante_update_branch_form', $command);
+            $form = $this->createForm(UpdateBranchType::class, $command);
 
-            $result = $this->edit($command, $form, function($command) use ($branch) {
-                $branchId = $this->get('diamante.branch.service')->updateBranch($command);
-                return $branchId;
+            $result = $this->edit($request, $command, $form, function($command) use ($branch) {
+                return $this->get('diamante.branch.service')->updateBranch($command);
             });
         } catch (MethodNotAllowedException $e) {
             return $this->redirect(
@@ -146,11 +152,11 @@ class BranchController extends Controller
      * @param Form $form
      * @return array
      */
-    private function edit(BranchCommand $command, $form, $callback)
+    private function edit(Request $request, BranchCommand $command, $form, $callback)
     {
         $response = null;
         try {
-            $this->handle($form);
+            $this->handle($request, $form);
             if ($command->defaultAssignee) {
                 $command->defaultAssignee = $command->defaultAssignee->getId();
             }

@@ -26,7 +26,7 @@ class AddWatcherCommand implements Shared\Command
     public $id;
 
     /**
-     * @Any({@Assert\Email(), @Assert\Type(type="object"), @Assert\Null()})
+     * @Any({@Assert\Email(), @Assert\Type(type="object"), @Assert\IsNull()})
      */
     public $watcher;
 }

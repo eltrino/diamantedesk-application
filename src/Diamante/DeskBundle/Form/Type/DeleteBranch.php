@@ -15,6 +15,8 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Diamante\DeskBundle\Api\BranchService;
 
@@ -45,18 +47,18 @@ class DeleteBranch extends AbstractType
         $builder->add(
             $builder->create(
                 'newBranch',
-                'choice',
+                ChoiceType::class,
                 array(
                     'label' => 'diamante.desk.branch.messages.delete.select',
                     'required' => true,
-                    'attr' => array('style' => "width:110px"),
+                    'attr' => array('style' => 'width:110px'),
                     'choices' => $choices
                 )
             )
         )->add(
             $builder->create(
                 'moveTickets',
-                'checkbox',
+                CheckboxType::class,
                 array(
                     'label' => 'diamante.desk.branch.messages.delete.move',
                     'required' => false,
@@ -71,6 +73,11 @@ class DeleteBranch extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_delete_branch_form';
     }
