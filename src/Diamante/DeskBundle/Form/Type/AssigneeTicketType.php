@@ -14,9 +14,10 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Diamante\DeskBundle\Form\Type\AssigneeSelectType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AssigneeTicketType extends AbstractType
 {
@@ -24,7 +25,7 @@ class AssigneeTicketType extends AbstractType
     {
         $builder->add(
             'assignee',
-            'diamante_assignee_select',
+            AssigneeSelectType::class,
             array(
                 'label'    => 'diamante.desk.attributes.assignee',
                 'required' => false
@@ -35,7 +36,7 @@ class AssigneeTicketType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -52,6 +53,14 @@ class AssigneeTicketType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBlockPrefix()
     {
         return 'diamante_ticket_form_assignee';
     }

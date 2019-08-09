@@ -194,6 +194,7 @@ class DiamanteUserSearchHandler implements SearchHandlerInterface
      * @param array $users
      * @param $type
      * @return array
+     * @throws \Twig_Error_Runtime
      */
     protected function convertUsers(array $users, $type)
     {

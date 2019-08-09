@@ -17,7 +17,7 @@ namespace Diamante\FrontBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 
 /**
@@ -32,16 +32,17 @@ class IndexController extends Controller
      * )
      * @Template("DiamanteFrontBundle::index.html.twig")
      *
+     * @param Request $request
      * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $settings = $this->container->get('diamante.email_processing.mail_system_settings');
 
         return [
-            'apiUrl' => $this->getRequest()->getUriForPath('/api/diamante/rest/latest'),
-            'baseUrl' => $this->getRequest()->getBaseUrl() . $this->getRequest()->getPathInfo(),
-            'basePath' => $this->getRequest()->getBasePath(),
+            'apiUrl' => $request->getUriForPath('/api/diamante/rest/latest'),
+            'baseUrl' => $request->getBaseUrl() . $request->getPathInfo(),
+            'basePath' => $request->getBasePath(),
             'branchId' => $settings->getDefaultBranchId()
         ];
     }

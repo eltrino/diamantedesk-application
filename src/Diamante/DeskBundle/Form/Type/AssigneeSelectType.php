@@ -15,12 +15,12 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Oro\Bundle\UserBundle\Form\Type\UserSelectType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Model\Ticket\Ticket;
 
 class AssigneeSelectType extends UserSelectType
 {
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

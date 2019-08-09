@@ -15,7 +15,8 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
 
 class UpdateTicketType extends CreateTicketType
 {
@@ -28,11 +29,11 @@ class UpdateTicketType extends CreateTicketType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\UpdateTicketCommand',
+                'data_class' => UpdateTicketCommand::class,
                 'intention' => 'ticket',
                 'cascade_validation' => true
             )
@@ -44,8 +45,16 @@ class UpdateTicketType extends CreateTicketType
      *
      * @return string The name of this type
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'diamante_ticket_update_form';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return $this->getBlockPrefix();
     }
 }

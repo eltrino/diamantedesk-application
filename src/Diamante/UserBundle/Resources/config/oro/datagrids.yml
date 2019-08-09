@@ -13,7 +13,7 @@ datagrids:
           left:
             - { join: u.apiUser, alias: a }
         from:
-          - { table: %diamante.user.entity.class%, alias: u }
+          - { table: '%diamante.user.entity.class%', alias: u }
         where:
           and:
             - u.isDeleted = false

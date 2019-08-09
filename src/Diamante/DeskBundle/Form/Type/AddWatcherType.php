@@ -16,7 +16,8 @@ namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\DeskBundle\Api\Command\AddWatcherCommand;
 
 class AddWatcherType extends AbstractType
 {
@@ -28,7 +29,7 @@ class AddWatcherType extends AbstractType
     {
         $builder->add(
             'watcher',
-            'diamante_watcher_select',
+            WatcherSelectType::class,
             array(
                 'label'    => 'diamante.desk.attributes.watcher',
                 'required' => true
@@ -39,11 +40,11 @@ class AddWatcherType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\AddWatcherCommand',
+                'data_class' => AddWatcherCommand::class,
                 'intention' => 'watcher',
                 'cascade_validation' => true
             )
@@ -56,6 +57,14 @@ class AddWatcherType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
     {
         return 'diamante_add_watcher_form';
     }

@@ -61,9 +61,9 @@ class SourceTransformer implements DataTransformerInterface
         if (empty($this->sourceOptions)) {
             $this->sourceOptions =
                 array(
-                    Source::PHONE   => Source::LABEL_PHONE,
-                    Source::EMAIL   => Source::LABEL_EMAIL,
-                    Source::WEB     => Source::LABEL_WEB
+                    Source::LABEL_PHONE   => Source::PHONE,
+                    Source::LABEL_EMAIL   => Source::EMAIL,
+                    Source::LABEL_WEB     => Source::WEB
                 );
         }
         return $this->sourceOptions;

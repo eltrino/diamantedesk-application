@@ -20,10 +20,7 @@ use Diamante\DeskBundle\Model\Branch\BranchFactory;
 use Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 use Diamante\DeskBundle\Model\Branch\Logo;
-use Diamante\DeskBundle\Model\Shared\FilterableRepository;
 use Diamante\DeskBundle\Model\Shared\Repository;
-use Diamante\UserBundle\Api\UserService;
-use Diamante\UserBundle\Model\User;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Diamante\DeskBundle\Model\Shared\Authorization\AuthorizationService;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
@@ -43,7 +40,7 @@ class BranchServiceImpl implements BranchService
     private $branchFactory;
 
     /**
-     * @var \Diamante\DeskBundle\Infrastructure\Branch\BranchLogoHandler
+     * @var BranchLogoHandler
      */
     private $branchLogoHandler;
 
@@ -79,8 +76,9 @@ class BranchServiceImpl implements BranchService
     public function getAllBranches()
     {
         $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
-
-        return $this->branchRepository->getAll();
+        /** @var Branch[] $branches */
+        $branches = $this->branchRepository->getAll();
+        return $branches;
     }
 
     /**
@@ -91,9 +89,10 @@ class BranchServiceImpl implements BranchService
     public function getBranch($id)
     {
         $this->isGranted('VIEW', 'Entity:DiamanteDeskBundle:Branch');
+        /** @var Branch $branch */
         $branch = $this->branchRepository->get($id);
 
-        if (is_null($branch)) {
+        if ($branch === null) {
             throw new BranchNotFoundException();
         }
 
