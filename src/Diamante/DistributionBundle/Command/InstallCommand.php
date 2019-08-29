@@ -104,7 +104,14 @@ class InstallCommand extends OroInstallCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Determines whether translation data need to be loaded or not'
-            );
+            )
+            ->addOption(
+                'skip-download-translations',
+                null,
+                InputOption::VALUE_NONE,
+                'Determines whether translation data need to be downloaded or not'
+            )
+        ;
     }
 
     /**
@@ -150,11 +157,12 @@ class InstallCommand extends OroInstallCommand
                 '-vv' => true,
             ]
         );
-        $this->prepareStep($input, $output)
-                ->loadDataStep($this->commandExecutor, $output);
+        $this
+            // ->prepareStep($input, $output)
+            ->loadDataStep($this->commandExecutor, $output);
 
 
-        $output->writeln('<info>Administration setup.</info>');
+        $output->writeln('<info>Administration setup finished.</info>');
         $this->finalStep($this->commandExecutor, $output, $input, $input->getOption('skip-assets'));
 
         $output->writeln(
