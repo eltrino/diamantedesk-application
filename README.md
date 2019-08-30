@@ -1,5 +1,7 @@
 # DiamanteDesk Application
 
+[![Join the chat at https://gitter.im/eltrino/diamantedesk-application](https://badges.gitter.im/eltrino/diamantedesk-application.svg)](https://gitter.im/eltrino/diamantedesk-application?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **DiamanteDesk** is a customer service software that is designed to help big and small companies to really listen to their customers and convert their feedback into valuable experience. Our team is ready to go extra mile to improve customer support experience of your service.
 
 Basically, DiamanteDesk is a ticket system with 3 channels enabling communication with help desk team: though email, online portal and via a phone call. Tickets in this tool are sorted into the so-called branches. Creating separate branches enables our Clients to group tickets according to the requests of specific users, locations, issues, etc. This feature helps to quickly find the required ticket and focus on the issues of the highest priorities.
