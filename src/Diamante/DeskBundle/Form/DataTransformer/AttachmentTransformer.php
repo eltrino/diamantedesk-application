@@ -29,7 +29,7 @@ class AttachmentTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        return "";
+        return '';
     }
 
     /**
@@ -44,10 +44,6 @@ class AttachmentTransformer implements DataTransformerInterface
         }
 
         $inputs = array();
-
-        if (!$value) {
-            return $inputs;
-        }
 
         foreach ($value as $each) {
             if ($each) {

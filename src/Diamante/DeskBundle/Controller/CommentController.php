@@ -21,6 +21,7 @@ use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -108,10 +109,7 @@ class CommentController extends Controller
         $response = null;
         $form = $this->createForm('diamante_comment_form', $command);
         $formView = $form->createView();
-        $formView->children['attachmentsInput']->vars = array_replace(
-            $formView->children['attachmentsInput']->vars,
-            array('full_name' => 'diamante_comment_form[attachmentsInput][]')
-        );
+
         try {
             $this->handle($form);
             $callback($command);
@@ -174,8 +172,8 @@ class CommentController extends Controller
         $attachment = $commentService->getCommentAttachment($retrieveCommentAttachment);
 
         $filename = $attachment->getFilename();
-        $filePathname = realpath($this->container->getParameter('kernel.root_dir') . '/attachments/comment')
-            . '/' . $attachment->getFilename();
+        $filePathname = realpath($this->container->getParameter('diamante.attachment.upload_dir.path'))
+            . '/comment/' . $attachment->getFilename();
 
         if (!file_exists($filePathname)) {
             $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
