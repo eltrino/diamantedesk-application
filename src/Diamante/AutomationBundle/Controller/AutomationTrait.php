@@ -16,9 +16,7 @@
 namespace Diamante\AutomationBundle\Controller;
 
 use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
-use Diamante\DeskBundle\Controller\Shared;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Diamante\AutomationBundle\Form\Type\UpdateRuleType;
 use Symfony\Component\HttpFoundation\Response;
 
 trait AutomationTrait
@@ -68,7 +66,7 @@ trait AutomationTrait
     protected function create($type)
     {
         $command = new UpdateRuleCommand();
-        $form = $this->createForm('diamante_automation_update_rule_form', $command);
+        $form = $this->createForm(UpdateRuleType::class, $command);
         $formView = $form->createView();
 
         $configProvider = $this->container->get('diamante_automation.config.provider');
@@ -101,7 +99,7 @@ trait AutomationTrait
     protected function update($type, $id)
     {
         $command = new UpdateRuleCommand();
-        $form = $this->createForm('diamante_automation_update_rule_form', $command);
+        $form = $this->createForm(UpdateRuleType::class, $command);
         $formView = $form->createView();
 
         $rule = $this->get('diamante.rule.service')->viewRule($type, $id);

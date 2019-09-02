@@ -7,6 +7,8 @@ use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Exception\UserRemovalException;
+use Diamante\UserBundle\Form\Type\CreateDiamanteUserType;
+use Diamante\UserBundle\Form\Type\UpdateDiamanteUserType;
 use Diamante\UserBundle\Model\User;
 use JMS\AopBundle\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -60,7 +62,7 @@ class UserController extends Controller
     {
         $command = new CreateDiamanteUserCommand();
         try {
-            $form = $this->createForm('diamante_user_create', $command);
+            $form = $this->createForm(CreateDiamanteUserType::class, $command);
             $result = $this->edit($command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->createDiamanteUser($command);
                 return $userId;
@@ -100,7 +102,7 @@ class UserController extends Controller
         $command->firstName = $user->getFirstName();
 
         try {
-            $form = $this->createForm('diamante_user_update', $command);
+            $form = $this->createForm(UpdateDiamanteUserType::class, $command);
             $result = $this->edit($command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->updateDiamanteUser($command);
                 return $userId;
