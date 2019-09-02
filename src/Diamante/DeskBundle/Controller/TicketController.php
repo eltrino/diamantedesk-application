@@ -22,6 +22,9 @@ use Diamante\DeskBundle\Entity\Attachment;
 use Diamante\DeskBundle\Form\CommandFactory;
 use Diamante\DeskBundle\Form\Type\AttachmentType;
 use Diamante\DeskBundle\Form\Type\CreateTicketType;
+use Diamante\DeskBundle\Form\Type\MassAddWatcherTicketType;
+use Diamante\DeskBundle\Form\Type\MassAssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\MassChangeTicketStatusType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketType;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketMovedException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
@@ -149,7 +152,7 @@ class TicketController extends Controller
      *
      * @return array
      */
-    public function createAction(Request $request, $id = null)
+    public function createAction($id = null)
     {
         $branch = null;
         if ($id !== null) {
@@ -166,7 +169,7 @@ class TicketController extends Controller
             ['full_name' => 'diamante_ticket_form[attachmentsInput][]']
         );
         try {
-            $this->handle($request, $form);
+            $this->handle($form);
             if (empty($command->branch)) {
                 $defaultBranchId = (int)$this->get('oro_config.manager')->get('diamante_desk.default_branch');
                 if (is_null($defaultBranchId)) {
@@ -206,7 +209,7 @@ class TicketController extends Controller
      *
      * @return array
      */
-    public function updateAction(Request $request, $key)
+    public function updateAction($key)
     {
         try {
             $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
@@ -221,7 +224,7 @@ class TicketController extends Controller
                 $formView->children['attachmentsInput']->vars,
                 ['full_name' => 'diamante_ticket_form[attachmentsInput][]']
             );
-            $this->handle($request, $form);
+            $this->handle($form);
 
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
@@ -337,7 +340,7 @@ class TicketController extends Controller
         );
 
         try {
-            $this->handle($request, $form);
+            $this->handle($form);
             $command = $form->getData();
             $uploadedAttachments = $ticketService->addAttachmentsForTicket($command);
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');
@@ -604,7 +607,7 @@ class TicketController extends Controller
             $command = $this->get('diamante.command_factory')
                 ->createMassAssigneeTicketCommand($values, $inset);
 
-            $form = $this->createForm('diamante_ticket_form_mass_assignee', $command);
+            $form = $this->createForm(MassAssigneeTicketType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
@@ -662,7 +665,7 @@ class TicketController extends Controller
             $command = $this->get('diamante.command_factory')
                 ->createChangeStatusMassCommand($values, $inset);
 
-            $form = $this->createForm('diamante_ticket_form_status_mass_change', $command);
+            $form = $this->createForm(MassChangeTicketStatusType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
@@ -721,7 +724,7 @@ class TicketController extends Controller
             $command = $this->get('diamante.command_factory')
                 ->createMassAddWatcherCommand($values, $inset);
 
-            $form = $this->createForm('diamante_ticket_form_mass_add_watcher', $command);
+            $form = $this->createForm(MassAddWatcherTicketType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];

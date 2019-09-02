@@ -16,6 +16,11 @@ namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Form\Type\AddWatcherType;
 use Diamante\DeskBundle\Form\Type\AssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\MassAddWatcherTicketType;
+use Diamante\DeskBundle\Form\Type\MassAssigneeTicketType;
+use Diamante\DeskBundle\Form\Type\MassChangeTicketStatusType;
+use Diamante\DeskBundle\Form\Type\MassMoveTicketType;
+use Diamante\DeskBundle\Form\Type\MoveTicketType;
 use Diamante\DeskBundle\Form\Type\UpdateTicketStatusType;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchNotFoundException;
 use Diamante\DeskBundle\Model\Ticket\Exception\TicketNotFoundException;
@@ -58,7 +63,7 @@ class TicketWidgetController extends WidgetController
                 return $response;
             }
 
-            $this->handle($request, $form);
+            $this->handle($form);
             $this->get('diamante.ticket.service')->updateStatus($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
             $response = ['saved' => true];
@@ -89,14 +94,14 @@ class TicketWidgetController extends WidgetController
             $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
             $command = $this->get('diamante.command_factory')
                 ->createMoveTicketCommand($ticket);
-            $form = $this->createForm('diamante_ticket_form_move', $command);
+            $form = $this->createForm(MoveTicketType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 $response = ['form' => $form->createView()];
 
                 return $response;
             }
-            $this->handle($request, $form);
+            $this->handle($form);
             if ($command->branch->getId() !== $ticket->getBranch()->getId()) {
                 $this->get('diamante.ticket.service')->moveTicket($command);
                 $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
@@ -139,7 +144,7 @@ class TicketWidgetController extends WidgetController
                 return ['form' => $form->createView()];
 
             }
-            $this->handle($request, $form);
+            $this->handle($form);
 
             if (is_string($command->watcher)) {
                 $user = new DiamanteUser($command->watcher);
@@ -194,7 +199,7 @@ class TicketWidgetController extends WidgetController
         }
 
         try {
-            $this->handle($request, $form);
+            $this->handle($form);
 
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
             $this->get('diamante.ticket.service')->assignTicket($command);
@@ -255,7 +260,7 @@ class TicketWidgetController extends WidgetController
             $command = $this->get('diamante.command_factory')
                 ->createMassAssigneeTicketCommand($values, $inset);
 
-            $form = $this->createForm('diamante_ticket_form_mass_assignee', $command);
+            $form = $this->createForm(MassAssigneeTicketType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
@@ -340,7 +345,7 @@ class TicketWidgetController extends WidgetController
             $command = $this->get('diamante.command_factory')
                 ->createChangeStatusMassCommand($values, $inset);
 
-            $form = $this->createForm('diamante_ticket_form_status_mass_change', $command);
+            $form = $this->createForm(MassChangeTicketStatusType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
@@ -434,7 +439,7 @@ class TicketWidgetController extends WidgetController
             $command = $this->get('diamante.command_factory')
                 ->createMassMoveTicketCommand($values, $inset);
 
-            $form = $this->createForm('diamante_ticket_form_mass_move', $command);
+            $form = $this->createForm(MassMoveTicketType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];
@@ -536,7 +541,7 @@ class TicketWidgetController extends WidgetController
             $command = $this->get('diamante.command_factory')
                 ->createMassAddWatcherCommand($values, $inset);
 
-            $form = $this->createForm('diamante_ticket_form_mass_add_watcher', $command);
+            $form = $this->createForm(MassAddWatcherTicketType::class, $command);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 return ['form' => $form->createView()];

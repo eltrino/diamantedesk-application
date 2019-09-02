@@ -7,13 +7,14 @@ use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Exception\UserRemovalException;
+use Diamante\UserBundle\Form\Type\CreateDiamanteUserType;
+use Diamante\UserBundle\Form\Type\UpdateDiamanteUserType;
 use Diamante\UserBundle\Model\User;
-use JMS\AopBundle\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -60,7 +61,7 @@ class UserController extends Controller
     {
         $command = new CreateDiamanteUserCommand();
         try {
-            $form = $this->createForm('diamante_user_create', $command);
+            $form = $this->createForm(CreateDiamanteUserType::class, $command);
             $result = $this->edit($command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->createDiamanteUser($command);
                 return $userId;
@@ -100,7 +101,7 @@ class UserController extends Controller
         $command->firstName = $user->getFirstName();
 
         try {
-            $form = $this->createForm('diamante_user_update', $command);
+            $form = $this->createForm(UpdateDiamanteUserType::class, $command);
             $result = $this->edit($command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->updateDiamanteUser($command);
                 return $userId;
@@ -142,11 +143,11 @@ class UserController extends Controller
 
     /**
      * @param CreateDiamanteUserCommand $command
-     * @param Form $form
+     * @param FormInterface $form
      * @param \Closure $callback
      * @return array|null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    protected function edit($command, Form $form, $callback)
+    protected function edit($command, FormInterface $form, $callback)
     {
         $response = null;
 
@@ -222,6 +223,10 @@ class UserController extends Controller
 
     /**
      * @Route("/reset/massaction", name="diamante_user_reset_pwd_massaction", options={"expose" = true})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function massResetPasswordAction(Request $request)
     {
@@ -268,9 +273,9 @@ class UserController extends Controller
     /**
      * @return array
      */
-    protected function parseGridParameters(Request $request)
+    protected function parseGridParameters()
     {
         $parametersParser = $this->container->get('oro_datagrid.mass_action.parameters_parser');
-        return $parametersParser->parse($request);
+        return $parametersParser->parse($this->getRequest());
     }
 }

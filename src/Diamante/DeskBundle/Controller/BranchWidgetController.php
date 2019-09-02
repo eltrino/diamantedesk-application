@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Form\Type\DeleteBranch;
+use Diamante\DeskBundle\Form\Type\MassDeleteBranchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,16 +72,16 @@ class BranchWidgetController extends WidgetController
      *
      * @Template("DiamanteDeskBundle:Branch/widgets:deleteMassForm.html.twig")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $gridName
      * @param string $actionName
      *
      * @return array|Response
-     * @throws \LogicException
      */
     public function massActionAction(Request $request, $gridName, $actionName)
     {
         try {
-            $form = $this->createForm('diamante_mass_delete_branch_form', ['values' => $request->get('values')]);
+            $form = $this->createForm(MassDeleteBranchType::class, ['values' => $request->get('values')]);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 $response = ['form' => $form->createView()];
@@ -88,7 +89,7 @@ class BranchWidgetController extends WidgetController
                 return $response;
             }
 
-            $this->handle($request, $form);
+            $this->handle($form);
             $data = $form->getData();
 
             $iteration = 0;
@@ -141,8 +142,9 @@ class BranchWidgetController extends WidgetController
     }
 
     /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $id
-     * @param bool    $redirect
+     * @param bool $redirect
      *
      * @return array
      */
@@ -161,7 +163,7 @@ class BranchWidgetController extends WidgetController
                 throw new DefaultBranchException('diamante.desk.branch.messages.delete.error');
             }
 
-            $this->handle($request, $form);
+            $this->handle($form);
             $data = $form->getData();
 
             $tickets = [];

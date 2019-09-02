@@ -15,7 +15,11 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
+use Oro\Bundle\FormBundle\Form\Type\OroRichTextType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
@@ -28,20 +32,21 @@ class CommentType extends AbstractType
         $statusOptions = $statusTransformer->getOptions();
 
         $builder->add(
-            $builder->create('ticketStatus', 'choice',
+            $builder->create('ticketStatus',
+                ChoiceType::class,
                 array(
-                    'label' => 'diamante.desk.comment.ticket_status',
+                    'label'    => 'diamante.desk.comment.ticket_status',
                     'required' => true,
-                    'choices' => $statusOptions
+                    'choices'  => $statusOptions,
                 ))
                 ->addModelTransformer($statusTransformer)
         );
 
         $builder->add(
             'content',
-            'oro_rich_text',
+            OroRichTextType::class,
             array(
-                'label' => 'diamante.desk.comment.content',
+                'label'    => 'diamante.desk.comment.content',
                 'required' => true,
             )
         );
@@ -49,23 +54,21 @@ class CommentType extends AbstractType
         $builder->add(
             $builder->create(
                 'attachmentsInput',
-                'file',
+                FileType::class,
                 array(
                     'label'    => 'diamante.desk.attachment.entity_plural_label',
                     'required' => false,
-                    'attr' => array(
-                        'multiple' => 'multiple'
-                    )
+                    'multiple' => true,
                 )
             )->addModelTransformer(new AttachmentTransformer())
         );
 
         $builder->add(
             'private',
-            'checkbox',
+            CheckboxType::class,
             array(
-                'label' => 'diamante.desk.comment.private',
-                'required' => false
+                'label'    => 'diamante.desk.comment.private',
+                'required' => false,
             )
         );
     }
@@ -77,20 +80,18 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\CommentCommand',
-                'intention' => 'comment',
-                'cascade_validation' => true
+                'data_class'         => 'Diamante\DeskBundle\Api\Command\CommentCommand',
+                'intention'          => 'comment',
+                'cascade_validation' => true,
             )
         );
     }
 
     /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
+     * {@inheritDoc}
      */
     public function getName()
     {
-        return 'diamante_comment_form';
+        return $this->getBlockPrefix();
     }
 }
