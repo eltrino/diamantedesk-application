@@ -14,14 +14,17 @@
  */
 namespace Diamante\DistributionBundle\Migrations\Data\ORM;
 
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Oro\Bundle\DashboardBundle\Model\DashboardModel as Dashboard;
-use Oro\Bundle\DashboardBundle\Entity\Widget;
-use Oro\Bundle\DashboardBundle\Entity\WidgetState;
 use Oro\Bundle\DashboardBundle\Migrations\Data\ORM\AbstractDashboardFixture;
 
-class DefaultSupportDashboard extends AbstractDashboardFixture
+class DefaultSupportDashboard extends AbstractDashboardFixture implements DependentFixtureInterface
 {
+    public function getDependencies()
+    {
+        return ['Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadRolesData'];
+    }
+
     /**
      * @param ObjectManager $manager
      */
