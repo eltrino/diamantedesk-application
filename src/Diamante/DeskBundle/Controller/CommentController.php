@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Form\Type\CommentType;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -106,7 +107,7 @@ class CommentController extends Controller
     private function edit(CommentCommand $command, $callback, Ticket $ticket)
     {
         $response = null;
-        $form = $this->createForm('diamante_comment_form', $command);
+        $form = $this->createForm(CommentType::class, $command);
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,

@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Form\Type\DeleteBranch;
+use Diamante\DeskBundle\Form\Type\MassDeleteBranchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +81,7 @@ class BranchWidgetController extends WidgetController
     public function massActionAction(Request $request, $gridName, $actionName)
     {
         try {
-            $form = $this->createForm('diamante_mass_delete_branch_form', ['values' => $request->get('values')]);
+            $form = $this->createForm(MassDeleteBranchType::class, ['values' => $request->get('values')]);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 $response = ['form' => $form->createView()];
