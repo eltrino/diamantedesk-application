@@ -22,7 +22,7 @@
         <parameter key="diamante.attachment.entity.class">Diamante\DeskBundle\Entity\Attachment</parameter>
         <parameter key="diamante.attachment.entity.factory.class">Diamante\DeskBundle\Model\Attachment\AttachmentFactory</parameter>
         <parameter key="diamante.attachment.directory.name">attachments</parameter>
-        <parameter key="diamante.attachment.upload_dir.path">%kernel.root_dir%/%diamante.attachment.directory.name%</parameter>
+        <parameter key="diamante.attachment.upload_dir.path">%kernel.project_dir%/var/%diamante.attachment.directory.name%</parameter>
         <parameter key="diamante.attachment.manager.class">Diamante\DeskBundle\Model\Attachment\ManagerImpl</parameter>
         <parameter key="diamante.attachment.file_storage.service.class">Diamante\DeskBundle\Infrastructure\Attachment\FileStorage\LocalFileStorageService</parameter>
         <parameter key="diamante.attachment.imagine_data_loader.class">Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader\FileSystemAttachmentLoader</parameter>

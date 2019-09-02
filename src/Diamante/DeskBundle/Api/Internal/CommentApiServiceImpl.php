@@ -309,7 +309,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
      * @return void
      * @throws \RuntimeException if Comment does not exists or Comment has no particular attachment
      */
-    public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command)
+    public function removeAttachmentFromComment(RemoveCommentAttachmentCommand $command, $flush = true)
     {
         parent::removeAttachmentFromComment($command, true);
     }
