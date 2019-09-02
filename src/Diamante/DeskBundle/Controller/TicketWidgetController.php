@@ -63,7 +63,7 @@ class TicketWidgetController extends WidgetController
                 return $response;
             }
 
-            $this->handle($request, $form);
+            $this->handle($form);
             $this->get('diamante.ticket.service')->updateStatus($command);
             $this->addSuccessMessage('diamante.desk.ticket.messages.change_status.success');
             $response = ['saved' => true];
@@ -101,7 +101,7 @@ class TicketWidgetController extends WidgetController
 
                 return $response;
             }
-            $this->handle($request, $form);
+            $this->handle($form);
             if ($command->branch->getId() !== $ticket->getBranch()->getId()) {
                 $this->get('diamante.ticket.service')->moveTicket($command);
                 $this->addSuccessMessage('diamante.desk.ticket.messages.move.success');
@@ -144,7 +144,7 @@ class TicketWidgetController extends WidgetController
                 return ['form' => $form->createView()];
 
             }
-            $this->handle($request, $form);
+            $this->handle($form);
 
             if (is_string($command->watcher)) {
                 $user = new DiamanteUser($command->watcher);
@@ -199,7 +199,7 @@ class TicketWidgetController extends WidgetController
         }
 
         try {
-            $this->handle($request, $form);
+            $this->handle($form);
 
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
             $this->get('diamante.ticket.service')->assignTicket($command);

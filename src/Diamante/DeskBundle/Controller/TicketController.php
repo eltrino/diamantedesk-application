@@ -152,7 +152,7 @@ class TicketController extends Controller
      *
      * @return array
      */
-    public function createAction(Request $request, $id = null)
+    public function createAction($id = null)
     {
         $branch = null;
         if ($id !== null) {
@@ -169,7 +169,7 @@ class TicketController extends Controller
             ['full_name' => 'diamante_ticket_form[attachmentsInput][]']
         );
         try {
-            $this->handle($request, $form);
+            $this->handle($form);
             if (empty($command->branch)) {
                 $defaultBranchId = (int)$this->get('oro_config.manager')->get('diamante_desk.default_branch');
                 if (is_null($defaultBranchId)) {
@@ -209,7 +209,7 @@ class TicketController extends Controller
      *
      * @return array
      */
-    public function updateAction(Request $request, $key)
+    public function updateAction($key)
     {
         try {
             $ticket = $this->get('diamante.ticket.service')->loadTicketByKey($key);
@@ -224,7 +224,7 @@ class TicketController extends Controller
                 $formView->children['attachmentsInput']->vars,
                 ['full_name' => 'diamante_ticket_form[attachmentsInput][]']
             );
-            $this->handle($request, $form);
+            $this->handle($form);
 
             $command->assignee = $command->assignee ? $command->assignee->getId() : null;
 
@@ -340,7 +340,7 @@ class TicketController extends Controller
         );
 
         try {
-            $this->handle($request, $form);
+            $this->handle($form);
             $command = $form->getData();
             $uploadedAttachments = $ticketService->addAttachmentsForTicket($command);
             $this->addSuccessMessage('diamante.desk.attachment.messages.create.success');

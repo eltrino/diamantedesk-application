@@ -85,7 +85,7 @@ class BranchController extends Controller
         try {
             $form = $this->createForm(CreateBranchType::class, $command);
 
-            $result = $this->edit($request, $command, $form, function($command) {
+            $result = $this->edit($command, $form, function($command) {
                 $branch = $this->get('diamante.branch.service')->createBranch($command);
                 return $branch->getId();
             });
@@ -119,7 +119,7 @@ class BranchController extends Controller
         try {
             $form = $this->createForm(UpdateBranchType::class, $command);
 
-            $result = $this->edit($request, $command, $form, function($command) use ($branch) {
+            $result = $this->edit($command, $form, function($command) use ($branch) {
                 return $this->get('diamante.branch.service')->updateBranch($command);
             });
         } catch (MethodNotAllowedException $e) {
@@ -149,14 +149,14 @@ class BranchController extends Controller
     /**
      * @param BranchCommand $command
      * @param \Closure $callback
-     * @param Form $form
+     * @param \Symfony\Component\Form\FormInterface $form
      * @return array
      */
-    private function edit(Request $request, BranchCommand $command, $form, $callback)
+    private function edit(BranchCommand $command, $form, $callback)
     {
         $response = null;
         try {
-            $this->handle($request, $form);
+            $this->handle($form);
             if ($command->defaultAssignee) {
                 $command->defaultAssignee = $command->defaultAssignee->getId();
             }

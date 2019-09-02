@@ -72,11 +72,11 @@ class BranchWidgetController extends WidgetController
      *
      * @Template("DiamanteDeskBundle:Branch/widgets:deleteMassForm.html.twig")
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $gridName
      * @param string $actionName
      *
      * @return array|Response
-     * @throws \LogicException
      */
     public function massActionAction(Request $request, $gridName, $actionName)
     {
@@ -89,7 +89,7 @@ class BranchWidgetController extends WidgetController
                 return $response;
             }
 
-            $this->handle($request, $form);
+            $this->handle($form);
             $data = $form->getData();
 
             $iteration = 0;
@@ -142,8 +142,9 @@ class BranchWidgetController extends WidgetController
     }
 
     /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $id
-     * @param bool    $redirect
+     * @param bool $redirect
      *
      * @return array
      */
@@ -162,7 +163,7 @@ class BranchWidgetController extends WidgetController
                 throw new DefaultBranchException('diamante.desk.branch.messages.delete.error');
             }
 
-            $this->handle($request, $form);
+            $this->handle($form);
             $data = $form->getData();
 
             $tickets = [];
