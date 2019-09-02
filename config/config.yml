@@ -20,7 +20,7 @@ framework:
     assets:
         version: %assets_version%
         version_format: %%s?version=%%s
-    default_locale: en
+    default_locale:           "en"
     session:
         name:                 BAPID
         handler_id:           %session_handler%
@@ -83,9 +83,9 @@ stof_doctrine_extensions:
 
 services:
     twig.extension.intl:
-        class:               Twig_Extensions_Extension_Intl
-        tags:
-            - { name: twig.extension }
+         class:               Twig_Extensions_Extension_Intl
+         tags:
+             - { name: twig.extension }
 
 escape_wsse_authentication:
     authentication_provider_class: Oro\Bundle\UserBundle\Security\WsseAuthProvider
@@ -97,7 +97,7 @@ oro_translation:
 lexik_maintenance:
     authorized:
         path:                 'maintenance|.*\.js'             # "maintenance" is only for demo purposes, remove in production!
-    #        ips:                  ["127.0.0.1"]                   # Optional. Authorized ip addresses
+#        ips:                  ["127.0.0.1"]                   # Optional. Authorized ip addresses
     driver:
         class:                Lexik\Bundle\MaintenanceBundle\Drivers\FileDriver
         options:
