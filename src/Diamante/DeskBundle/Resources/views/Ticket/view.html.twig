@@ -8,7 +8,7 @@
     {% import 'OroUIBundle::macros.html.twig' as UI %}
 
 {% if resource_granted('VIEW', 'Entity:DiamanteDeskBundle:Comment') %}
-    <ol class="diam-comments unstyled">
+    <ol class="diam-comments list-unstyled">
         {% for comment in comments if comment.id  %}
             {% set imagePath = '' %}
             {% set author = 'diamante.desk.comment.placeholders.deleted_user'|trans %}
@@ -26,10 +26,10 @@
             <li class="diam-comment">
                 <div class="pull-right">
                 {% if resource_granted('EDIT', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="icon-edit hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
+                    <a href="{{ path('diamante_comment_update', {'id': comment.id}) }}" class="action" title="{{ 'diamante.desk.ui.edit'|trans }}"><i class="fa-pencil-square-o hide-text">{{ 'diamante.desk.ui.edit'|trans }}</i></a>
                 {% endif %}
                 {% if resource_granted('DELETE', 'Entity:DiamanteDeskBundle:Comment') %}
-                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': ticketKey|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="icon-trash hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
+                    <a href="#" data-url = "{{ path('diamante_comment_delete', {'commentId': comment.id, 'ticketKey': ticketKey|trim}) }}" class="delete-item-confirmation action" title="{{ 'diamante.desk.ui.delete'|trans }}"><i class="fa-trash-o hide-text">{{ 'diamante.desk.ui.delete'|trans }}</i></a>
                 {% endif %}
                 </div>
                 <div class="diam-comment-user-image">
@@ -41,9 +41,9 @@
                 {% if comment.attachments is not empty %}
                     <div class="diam-comment-attachments-box">
                         <strong class="diam-comment-attachments-title">{{ 'diamante.desk.attachment.entity_plural_label'|trans }}:</strong>
-                        <ul class="diam-comment-attachments unstyled">
+                        <ul class="diam-comment-attachments list-unstyled">
                             {% for attachment in comment.attachments %}
-                                <li><i class="icon-paper-clip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
+                                <li><i class="fa-paperclip"></i> <a class="no-hash" href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment.id, 'attachId': attachment.id}) }}">{{ attachment.filename }}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -58,7 +58,7 @@
 {% if resource_granted('CREATE', 'Entity:DiamanteDeskBundle:Comment') %}
     <p style="text-align: right;">{{ UI.button({
         'path': path('diamante_comment_create', {'id': entity.id}),
-        'iCss': 'icon-edit',
+        'iCss': 'fa-pencil-square-o',
         'title': 'diamante.desk.comment.entity_label'|trans,
         'label': 'diamante.desk.comment.entity_label'|trans
         })
@@ -195,7 +195,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
             'path': path('diamante_ticket_update', {'key': ticketKey|trim}),
-            'iCss': 'icon-edit',
+            'iCss': 'fa-pencil-square-o',
             'title': 'diamante.desk.ticket.actions.edit'|trans,
             'label': 'diamante.desk.ui.edit'|trans
         }) }}
