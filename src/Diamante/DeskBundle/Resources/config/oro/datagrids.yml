@@ -102,7 +102,9 @@ datagrids:
             query:
                 where:
                     and:
-                        - i.branch = :branch
+                        - (i.branch = :branch)
+            bind_parameters:
+                - branch
         filters:
             default:
                 status: { value: ['@diamante.ticket.datagrid_status_helper->getNewStatus', '@diamante.ticket.datagrid_status_helper->getOpenStatus'] }

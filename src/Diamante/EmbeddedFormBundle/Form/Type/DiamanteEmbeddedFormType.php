@@ -14,6 +14,7 @@
  */
 namespace Diamante\EmbeddedFormBundle\Form\Type;
 
+use Diamante\EmbeddedFormBundle\Api\Command\EmbeddedTicketCommand;
 use Oro\Bundle\EmbeddedFormBundle\Form\Type\EmbeddedFormType;
 use Oro\Component\Layout\LayoutItemInterface;
 use Oro\Component\Layout\LayoutManipulatorInterface;
@@ -29,6 +30,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Oro\Bundle\EmbeddedFormBundle\Form\Type\EmbeddedFormInterface;
 
 use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInterface
 {
@@ -44,6 +46,13 @@ class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInter
     {
         return 'diamante_embedded_form';
     }
+
+    // public function configureOptions(OptionsResolver $resolver)
+    // {
+    //     $resolver->setDefaults([
+    //         'data_class' => EmbeddedTicketCommand::class
+    //     ]);
+    // }
 
     /**
      * {@inheritdoc}

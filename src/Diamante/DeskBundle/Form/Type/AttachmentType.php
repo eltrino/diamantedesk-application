@@ -19,6 +19,10 @@ use Diamante\DeskBundle\Model\Attachment\File;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -34,11 +38,13 @@ class AttachmentType extends AbstractType
                 array(
                     'label' => 'diamante.desk.attachment.file',
                     'required' => true,
+                    'multiple' => true,
                     'attr' => array(
-                        'multiple' => 'multiple'
+                        'multiple' => true
                     )
                 )
-            )->addModelTransformer(new AttachmentTransformer())
+            )
+                ->addModelTransformer(new AttachmentTransformer())
         );
     }
 

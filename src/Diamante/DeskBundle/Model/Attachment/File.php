@@ -29,7 +29,7 @@ class File
     public function __construct($pathname)
     {
         $this->pathname = $pathname;
-        $this->filename = basename($pathname);
+        $pathname = basename($pathname);
         $this->filename = strrpos($pathname, '/') !== false ? substr($pathname, strrpos($pathname, '/') + 1) : $pathname;
     }
 

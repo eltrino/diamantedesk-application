@@ -17,8 +17,12 @@ namespace Diamante\EmbeddedFormBundle\Controller;
 use Diamante\EmbeddedFormBundle\Form\Extension\EmbeddedFormTypeExtension;
 use Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType;
 use Diamante\UserBundle\Model\User;
+use Doctrine\ORM\EntityManager;
+use Oro\Bundle\EmbeddedFormBundle\Event\EmbeddedFormSubmitAfterEvent;
+use Oro\Bundle\EmbeddedFormBundle\Event\EmbeddedFormSubmitBeforeEvent;
 use Oro\Bundle\EmbeddedFormBundle\Manager\EmbeddedFormManager;
 use Oro\Bundle\EmbeddedFormBundle\Manager\EmbedFormLayoutManager;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,29 +44,60 @@ class DiamanteEmbeddedFormController extends Controller
      *      name="diamante_embedded_form_submit",
      *      requirements={"id"="[-\d\w]+"},
      * )
+     * @param EmbeddedForm $formEntity
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function formAction(Request $request, EmbeddedForm $formEntity)
+    public function formAction(EmbeddedForm $formEntity, Request $request)
     {
         $response = new Response();
         $response->setPublic();
-        $formEntity->setFormType(DiamanteEmbeddedFormType::class);
+        // $formEntity->setFormType(DiamanteEmbeddedFormType::class);
         //$response->setEtag($formEntity->getId() . $formEntity->getUpdatedAt()->format(\DateTime::ISO8601));
         if ($response->isNotModified($request)) {
             return $response;
         }
 
+        $isInline = $request->query->getBoolean('inline');
+
         $command = new EmbeddedTicketCommand();
+
+        /** @var EntityManager $em */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /** @var EmbeddedFormManager $formManager */
         $formManager = $this->get('oro_embedded_form.manager');
-        $form        = $formManager->createForm($formEntity->getFormType(), $command);
+        $type = $formEntity->getFormType();
+        $type1 = DiamanteEmbeddedFormType::class;
+        $form        = $formManager->createForm(DiamanteEmbeddedFormType::class, $command);
 
         if (in_array($request->getMethod(), ['POST', 'PUT'])) {
-
             $data = $request->get('diamante_embedded_form');
+            $dataClass = $form->getConfig()->getOption('data_class');
+            if (isset($dataClass) && class_exists($dataClass)) {
+                $ref         = new \ReflectionClass($dataClass);
+                $constructor = $ref->getConstructor();
+                $data        = $constructor && $constructor->getNumberOfRequiredParameters()
+                    ? $ref->newInstanceWithoutConstructor()
+                    : $ref->newInstance();
+
+                $form->setData($data);
+            } else {
+                $data = [];
+            }
+            $event = new EmbeddedFormSubmitBeforeEvent($data, $formEntity);
+            $eventDispatcher = $this->get('event_dispatcher');
+            $eventDispatcher->dispatch(EmbeddedFormSubmitBeforeEvent::EVENT_NAME, $event);
+            $this->submitPostPutRequest($form, $request);
+
+            $event = new EmbeddedFormSubmitAfterEvent($data, $formEntity, $form);
+            $eventDispatcher->dispatch(EmbeddedFormSubmitAfterEvent::EVENT_NAME, $event);
 
             //Initialize Reporter
             $diamanteUserRepository = $this->get('diamante.user.repository');
             $diamanteUser = $diamanteUserRepository->findUserByEmail($data['emailAddress']);
-            if (is_null($diamanteUser)) {
+            if ($diamanteUser === null) {
                 $diamanteUser = $this->get('diamante.user_factory')->create($data['emailAddress'], $data['firstName'], $data['lastName']);
                 $diamanteUserRepository->store($diamanteUser);
             }
@@ -86,7 +121,8 @@ class DiamanteEmbeddedFormController extends Controller
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entity = $form->getData();
 
                 $command->branch = $formEntity->getBranch()->getId();
 
@@ -127,6 +163,24 @@ class DiamanteEmbeddedFormController extends Controller
 
         return $response;
     }
+    /**
+     * Submits data from post or put Request to a given form.
+     *
+     * @param FormInterface $form
+     * @param Request $request
+     * @param bool $clearMissing
+     */
+    private function submitPostPutRequest(FormInterface $form, Request $request, bool $clearMissing = true)
+    {
+        $requestData = $form->getName()
+            ? $request->request->get($form->getName(), [])
+            : $request->request->all();
 
+        $filesData = $form->getName()
+            ? $request->files->get($form->getName(), [])
+            : $request->files->all();
+
+        $form->submit(array_replace_recursive($requestData, $filesData), $clearMissing);
+    }
 
 }

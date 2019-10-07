@@ -134,7 +134,7 @@ class UserController extends Controller
             $this->get('diamante.user.service')
                 ->removeDiamanteUser($id);
             return new Response(null, 204, array(
-                'Content-Type' => $this->getRequest()->getMimeType('json')
+                'Content-Type' => $request->getMimeType('json')
             ));
         } catch (\Exception $e) {
             $this->handleException($e);

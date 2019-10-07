@@ -58,13 +58,13 @@ class AttachmentHandler implements SubscribingHandlerInterface
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format'    => 'json',
-                'type'      => 'Diamante\\DeskBundle\\Entity\\Attachment',
+                'type'      => Attachment::class,
                 'method'    => 'serializeToJson',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format'    => 'xml',
-                'type'      => 'Diamante\\DeskBundle\\Entity\\Attachment',
+                'type'      => Attachment::class,
                 'method'    => 'serializeToXml',
             ),
         );
@@ -109,7 +109,7 @@ class AttachmentHandler implements SubscribingHandlerInterface
         $metadata = $visitor->getCurrentMetadata();
         $metadata->xmlKeyValuePairs = true;
 
-        $visitor->visitArray($data, $type, $context);
+        return $visitor->visitArray($data, $type, $context);
     }
 
     /**

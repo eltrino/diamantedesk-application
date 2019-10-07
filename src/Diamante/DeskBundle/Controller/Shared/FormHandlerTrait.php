@@ -4,6 +4,7 @@ namespace Diamante\DeskBundle\Controller\Shared;
 
 
 use Diamante\DeskBundle\Exception\ValidatorException;
+use Symfony\Component\Form\FormInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -11,7 +12,7 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 trait FormHandlerTrait
 {
     /**
-     * @param Form $form
+     * @param FormInterface $form
      * @throws MethodNotAllowedException
      * @throws ValidatorException
      */
@@ -24,7 +25,7 @@ trait FormHandlerTrait
 
         $form->handleRequest($request);
 
-        if (false === $form->isValid()) {
+        if ($form->isSubmitted() && false === $form->isValid()) {
             throw new ValidatorException('Form object validation failed, form is invalid.');
         }
     }

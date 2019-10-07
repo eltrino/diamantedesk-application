@@ -224,7 +224,7 @@ class BranchController extends Controller
 
             return new Response(
                 null, 204, [
-                'Content-Type' => $this->getRequest()->getMimeType('json'),
+                'Content-Type' => $request->getMimeType('json'),
             ]
             );
         } catch (\Exception $e) {
