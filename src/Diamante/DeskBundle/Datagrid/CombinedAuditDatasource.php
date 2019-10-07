@@ -22,6 +22,7 @@ use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
 use Oro\Bundle\DataGridBundle\Event\OrmResultAfter;
 use Oro\Bundle\DataGridBundle\Event\OrmResultBefore;
 use Oro\Component\DoctrineUtils\ORM\QueryHintResolver;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Oro\Bundle\DataGridBundle\Datasource\Orm\QueryConverter\YamlConverter;
 use Diamante\DeskBundle\Model\Audit\AuditRepository;
@@ -70,18 +71,23 @@ class CombinedAuditDatasource extends AbstractDatasource
     protected $grid;
 
     /**
-     * @param Registry $doctrineRegistry
+     * @var ManagerRegistry
+     */
+    private $managerRegistry;
+
+    /**
+     * @param ManagerRegistry $managerRegistry
      * @param AuditRepository $auditRepository
      * @param EventDispatcherInterface $dispatcher
      * @param QueryHintResolver $queryHintResolver
      */
     public function __construct(
-        Registry $doctrineRegistry,
+        ManagerRegistry $managerRegistry,
         AuditRepository $auditRepository,
         EventDispatcherInterface $dispatcher,
         QueryHintResolver $queryHintResolver
     ) {
-        $this->doctrineRegistry     = $doctrineRegistry;
+        $this->managerRegistry     = $managerRegistry;
         $this->auditRepository      = $auditRepository;
 
         $this->qbDiamanteAudit      = $auditRepository->createQueryBuilder('a');
@@ -100,7 +106,9 @@ class CombinedAuditDatasource extends AbstractDatasource
 
         $queryConfig = array_intersect_key($this->config, array_flip(['query']));
         $converter = new YamlConverter();
-        $this->qbOroAudit = $converter->parse($queryConfig, $this->doctrineRegistry->getManager()->createQueryBuilder('a'));
+        // $manager = $this->doctrineRegistry->();
+        // $qb1 = $this->
+        $this->qbOroAudit = $converter->parse($queryConfig, $this->managerRegistry);
 
         if (isset($config['hints'])) {
             $this->queryHints = $config['hints'];
@@ -123,7 +131,7 @@ class CombinedAuditDatasource extends AbstractDatasource
 
             $this->queryHintResolver->resolveHints(
                 $query,
-                null !== $this->queryHints ? $this->queryHints : []
+                $this->queryHints ?? []
             );
 
             $beforeEvent = new OrmResultBefore($this->grid, $query);
@@ -204,5 +212,11 @@ class CombinedAuditDatasource extends AbstractDatasource
             $this->getQbDiamanteAudit(),
             $this->getQbOroAudit()
         ];
+    }
+
+    /** TODO: Check is its logic is right */
+    public function getQueryBuilder()
+    {
+        return $this->qbOroAudit;
     }
 }

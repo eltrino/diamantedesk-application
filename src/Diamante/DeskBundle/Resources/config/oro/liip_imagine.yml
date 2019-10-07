@@ -1,18 +1,18 @@
 liip_imagine:
-    filter_sets:
-        attach_preview_img:
-            data_loader: diamante_attachment
-            quality:          95
-            filters:
-                thumbnail:    { size: [180, 180], mode: inset }
-                strip:        ~
-        attach_preview_default:
-            quality:          95
-            filters:
-                thumbnail:    { size: [180, 180], mode: outbound, allow_upscale: true }
-                strip:        ~
-        branch_logo_preview:
-            quality:          95
-            filters:
-                thumbnail:    { size: [16, 16], mode: outbound, allow_upscale: true }
-                strip:        ~
+  filter_sets:
+    attach_preview_img:
+      data_loader: diamante_attachment
+      quality:          95
+      filters:
+        thumbnail:    { size: [180, 180], mode: inset }
+        strip:        ~
+    attach_preview_default:
+      quality:          95
+      filters:
+        thumbnail:    { size: [180, 180], mode: outbound, allow_upscale: true }
+        strip:        ~
+    branch_logo_preview:
+      quality:          95
+      filters:
+        thumbnail:    { size: [16, 16], mode: outbound, allow_upscale: true }
+        strip:        ~

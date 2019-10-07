@@ -15,6 +15,7 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Diamante\DeskBundle\Form\EventListener\AddMassBranchSubscriber;
 
@@ -44,7 +45,7 @@ class MassDeleteBranchType extends AbstractType
         $builder->add(
             $builder->create(
                 'moveMassTickets',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label'    => 'diamante.desk.branch.messages.delete.move',
                     'required' => false,
@@ -59,6 +60,11 @@ class MassDeleteBranchType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_mass_delete_branch_form';
     }

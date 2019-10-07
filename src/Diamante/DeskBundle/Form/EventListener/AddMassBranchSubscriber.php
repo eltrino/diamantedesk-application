@@ -17,6 +17,8 @@ namespace Diamante\DeskBundle\Form\EventListener;
  */
 use Diamante\DeskBundle\Api\BranchService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
@@ -71,16 +73,16 @@ class AddMassBranchSubscriber implements EventSubscriberInterface
 
         $form->add(
             'newBranch',
-            'choice',
+            ChoiceType::class,
             [
                 'label'    => 'diamante.desk.branch.messages.delete.select',
                 'required' => true,
-                'attr'     => ['style' => "width:110px"],
+                'attr'     => ['style' => 'width:110px'],
                 'choices'  => $choices
             ]
         )->add(
             'removeBranches',
-            'hidden',
+            HiddenType::class,
             [
                 'required' => false,
                 'data'     => $removeBranchList

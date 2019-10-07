@@ -17,6 +17,7 @@ namespace Diamante\EmbeddedFormBundle\EventListener;
 use Symfony\Component\HttpFoundation\Request;
 
 use Oro\Bundle\UIBundle\Event\BeforeFormRenderEvent;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class EmbeddedFormListener
 {
@@ -24,11 +25,11 @@ class EmbeddedFormListener
     protected $request;
 
     /**
-     * @param Request|null $request
+     * @param RequestStack|null $requestStack
      */
-    public function setRequest(Request $request = null)
+    public function setRequest(RequestStack $requestStack)
     {
-        $this->request = $request;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**

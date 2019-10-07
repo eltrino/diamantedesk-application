@@ -254,6 +254,8 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
      *
      * @param AddTicketAttachmentCommand $command
      * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function addAttachmentsForTicket(AddTicketAttachmentCommand $command)
     {

@@ -20,7 +20,7 @@ use Diamante\DeskBundle\Model\Ticket\Ticket;
 
 class AssigneeSelectType extends UserSelectType
 {
-    public function setDefaultOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -35,6 +35,11 @@ class AssigneeSelectType extends UserSelectType
     }
 
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_assignee_select';
     }

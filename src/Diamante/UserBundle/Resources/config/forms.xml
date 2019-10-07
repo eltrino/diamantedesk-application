@@ -11,10 +11,10 @@
 
     <services>
         <service id="diamante_user_create_form" class="%diamante.user.create.form.class%">
-            <tag name="form.type" alias="diamante_user_create"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_user_update_form" class="%diamante.user.update.form.class%">
-            <tag name="form.type" alias="diamante_user_update"/>
+            <tag name="form.type" />
         </service>
     </services>
 </container>

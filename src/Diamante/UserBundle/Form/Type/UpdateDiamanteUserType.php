@@ -15,18 +15,19 @@
 
 namespace Diamante\UserBundle\Form\Type;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 
 class UpdateDiamanteUserType extends CreateDiamanteUserType
 {
     /**
      * @inheritDoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             [
-                'data_class'         => 'Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand',
+                'data_class'         => UpdateDiamanteUserCommand::class,
                 'intention'          => 'diamante_user',
                 'cascade_validation' => true,
             ]
@@ -38,7 +39,11 @@ class UpdateDiamanteUserType extends CreateDiamanteUserType
      */
     public function getName()
     {
-        return 'diamante_user_update';
+        return $this->getBlockPrefix();
     }
 
+    public function getBlockPrefix()
+    {
+        return 'diamante_user_update';
+    }
 }

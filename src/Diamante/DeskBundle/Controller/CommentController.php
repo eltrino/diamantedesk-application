@@ -12,6 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+
 namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Api\CommentService;
@@ -19,8 +20,10 @@ use Diamante\DeskBundle\Api\Command\CommentCommand;
 use Diamante\DeskBundle\Api\Command\RemoveCommentAttachmentCommand;
 use Diamante\DeskBundle\Api\Command\RetrieveCommentAttachmentCommand;
 use Diamante\DeskBundle\Entity\Ticket;
+use Diamante\DeskBundle\Form\Type\CommentType;
 use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -48,15 +51,21 @@ class CommentController extends Controller
      * @param int $id
      * @return array
      */
-    public function createAction($id)
+    public function createAction(Request $request, $id)
     {
         $ticket = $this->get('diamante.ticket.service')->loadTicket($id);
         $command = $this->get('diamante.command_factory')
             ->createCommentCommandForCreate($ticket, new User($this->getUser()->getId(), User::TYPE_ORO));
-        return $this->edit($command, function($command) {
-            $this->get('diamante.comment.service')
-                ->postNewCommentForTicket($command);
-        }, $ticket);
+
+        return $this->edit(
+            $request,
+            $command,
+            function ($command) {
+                $this->get('diamante.comment.service')
+                    ->postNewCommentForTicket($command);
+            },
+            $ticket
+        );
     }
 
     /**
@@ -71,14 +80,20 @@ class CommentController extends Controller
      * @param int $id
      * @return array
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
         $comment = $this->get('diamante.comment.service')->loadComment($id);
         $command = $this->get('diamante.command_factory')
             ->createCommentCommandForUpdate($comment);
-        return $this->edit($command, function($command) use ($comment) {
-            $this->get('diamante.comment.service')->updateTicketComment($command);
-        }, $comment->getTicket());
+
+        return $this->edit(
+            $request,
+            $command,
+            function ($command) use ($comment) {
+                $this->get('diamante.comment.service')->updateTicketComment($command);
+            },
+            $comment->getTicket()
+        );
     }
 
     /**
@@ -91,9 +106,10 @@ class CommentController extends Controller
     public function attachmentList($id)
     {
         $comment = $this->get('diamante.comment.service')->loadComment($id);
+
         return [
             'comment_id' => $comment->getId(),
-            'attachments' => $comment->getAttachments()
+            'attachments' => $comment->getAttachments(),
         ];
     }
 
@@ -103,17 +119,17 @@ class CommentController extends Controller
      * @param Ticket $ticket
      * @return array
      */
-    private function edit(CommentCommand $command, $callback, Ticket $ticket)
+    private function edit(Request $request, CommentCommand $command, $callback, Ticket $ticket)
     {
         $response = null;
-        $form = $this->createForm('diamante_comment_form', $command);
+        $form = $this->createForm(CommentType::class, $command);
         $formView = $form->createView();
         $formView->children['attachmentsInput']->vars = array_replace(
             $formView->children['attachmentsInput']->vars,
-            array('full_name' => 'diamante_comment_form[attachmentsInput][]')
+            ['full_name' => 'diamante_comment_form[attachmentsInput][]']
         );
         try {
-            $this->handle($form);
+            $this->handle($request, $form);
             $callback($command);
 
             if ($command->id) {
@@ -121,11 +137,17 @@ class CommentController extends Controller
             } else {
                 $this->addSuccessMessage('diamante.desk.comment.messages.create.success');
             }
-            $response = $this->getSuccessSaveResponse('diamante_comment_update', 'diamante_ticket_view', ['key' => (string)$ticket->getKey()]);
+            $response =
+                $this->getSuccessSaveResponse(
+                    'diamante_comment_update',
+                    'diamante_ticket_view',
+                    ['key' => (string)$ticket->getKey()]
+                );
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = array('form' => $formView, 'ticket' => $ticket);
+            $response = ['form' => $formView, 'ticket' => $ticket];
         }
+
         return $response;
     }
 
@@ -151,7 +173,7 @@ class CommentController extends Controller
         }
 
         return $this->redirect(
-            $this->generateUrl('diamante_ticket_view', array('key' => $ticketKey))
+            $this->generateUrl('diamante_ticket_view', ['key' => $ticketKey])
         );
     }
 
@@ -183,7 +205,7 @@ class CommentController extends Controller
         }
 
         $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($filePathname);
-        $response->trustXSendfileTypeHeader();
+        $response::trustXSendfileTypeHeader();
         $response->setContentDisposition(
             \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $filename,
@@ -220,10 +242,12 @@ class CommentController extends Controller
             $this->handleException($e);
         }
 
-        $response = $this->redirect($this->generateUrl(
-            'diamante_comment_update',
-            array('id' => $commentId)
-        ));
+        $response = $this->redirect(
+            $this->generateUrl(
+                'diamante_comment_update',
+                ['id' => $commentId]
+            )
+        );
 
         return $response;
     }

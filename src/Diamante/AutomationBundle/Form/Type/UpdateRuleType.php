@@ -17,8 +17,10 @@ namespace Diamante\AutomationBundle\Form\Type;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
 
 class UpdateRuleType extends AbstractType
 {
@@ -26,6 +28,11 @@ class UpdateRuleType extends AbstractType
      * @return mixed
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_automation_update_rule_form';
     }
@@ -38,9 +45,9 @@ class UpdateRuleType extends AbstractType
     {
         $builder->add(
             'rule',
-            'hidden',
+            HiddenType::class,
             [
-                "required" => true
+                'required' => true
             ]
         );
     }
@@ -48,11 +55,11 @@ class UpdateRuleType extends AbstractType
     /**
      * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             [
-                'data_class' => 'Diamante\AutomationBundle\Api\Command\UpdateRuleCommand',
+                'data_class' => UpdateRuleCommand::class,
                 'intention'  => 'rule'
             ]
         );

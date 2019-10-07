@@ -6,14 +6,14 @@ system_configuration:
     fields:
         diamante_email_processing.mailbox_server_address:
             data_type: string
-            type: text
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
             priority: 95
             options:
                 label: 'Server Address'
 
         diamante_email_processing.mailbox_port:
             data_type: string
-            type: text
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
             priority: 90
             options:
                 label: 'Port'
@@ -21,7 +21,7 @@ system_configuration:
 
         diamante_email_processing.mailbox_ssl:
             data_type: boolean
-            type: choice
+            type: Symfony\Component\Form\Extension\Core\Type\ChoiceType
             priority: 85
             options:
                 label: 'SSL'
@@ -31,21 +31,21 @@ system_configuration:
 
         diamante_email_processing.mailbox_username:
             data_type: string
-            type: text
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
             priority: 80
             options:
                 label: 'Username'
 
         diamante_email_processing.mailbox_password:
             data_type: string
-            type: password
+            type: Symfony\Component\Form\Extension\Core\Type\PasswordType
             priority: 75
             options:
                 label: 'Password'
 
         diamante_email_processing.mailbox_delete_processed_messages:
             data_type: string
-            type: choice
+            type: Symfony\Component\Form\Extension\Core\Type\ChoiceType
             priority: 70
             options:
                 label: 'Delete Processed Messages'

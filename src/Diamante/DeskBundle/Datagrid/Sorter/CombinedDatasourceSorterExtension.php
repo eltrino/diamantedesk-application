@@ -46,6 +46,9 @@ class CombinedDatasourceSorterExtension extends OrmSorterExtension
      */
     public function visitDatasource(DatagridConfiguration $config, DatasourceInterface $datasource)
     {
-        $datasource->setSorters($this->getSortersToApply($config));
+        $sortersConfig = $this->getSorters($config);
+
+        $this->addSorterToDatasource($sortersConfig, null,$datasource);
+        // $datasource->setSorters($this->getSortersToApply($config));
     }
 }

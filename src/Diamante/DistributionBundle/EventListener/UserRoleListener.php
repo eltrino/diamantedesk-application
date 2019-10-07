@@ -18,6 +18,17 @@ namespace Diamante\DistributionBundle\EventListener;
 use Oro\Bundle\SecurityBundle\Model\AclPrivilege;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Diamante\DeskBundle\Entity\Branch;
+use Diamante\DeskBundle\Entity\Comment;
+use Oro\Bundle\EmbeddedFormBundle\Entity\EmbeddedForm;
+use Oro\Bundle\DataGridBundle\Entity\GridView;
+use Oro\Bundle\UserBundle\Entity\Group;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\NotificationBundle\Entity\EmailNotification;
+use Oro\Bundle\UserBundle\Entity\Role;
+use Oro\Bundle\TagBundle\Entity\Tag;
+use Diamante\DeskBundle\Entity\Ticket;
+use Oro\Bundle\UserBundle\Entity\User;
 
 /**
  * Class UserRoleListener
@@ -32,31 +43,31 @@ class UserRoleListener
     private static $allowedEntities = array(
         '(root)',
         //'Oro\\Bundle\\AttachmentBundle\\Entity\\Attachment',
-        'Diamante\\DeskBundle\\Entity\\Branch',
+        Branch::class,
         //'Oro\\Bundle\\OrganizationBundle\\Entity\\BusinessUnit',
         //'Oro\\Bundle\\CalendarBundle\\Entity\\Calendar',
         //'Oro\\Bundle\\CalendarBundle\\Entity\\CalendarEvent',
         //'Oro\\Bundle\\CommentBundle\\Entity\\Comment',
-        'Diamante\\DeskBundle\\Entity\\Comment',
+        Comment::class,
         //'Oro\\Bundle\\DashboardBundle\\Entity\\Dashboard',
         //'Oro\\Bundle\\EmailBundle\\Entity\\Email',
-        'Oro\\Bundle\\EmbeddedFormBundle\\Entity\\EmbeddedForm',
-        'Oro\\Bundle\\DataGridBundle\\Entity\\GridView',
-        'Oro\\Bundle\\UserBundle\\Entity\\Group',
-        'Oro\\Bundle\\IntegrationBundle\\Entity\\Channel',
+        EmbeddedForm::class,
+        GridView::class,
+        Group::class,
+        Channel::class,
         //'Oro\\Bundle\\NoteBundle\\Entity\\Note',
-        'Oro\\Bundle\\NotificationBundle\\Entity\\EmailNotification',
+        EmailNotification::class,
         //'Oro\\Bundle\\OrganizationBundle\\Entity\\Organization',
         //'Oro\\Bundle\\WorkflowBundle\\Entity\\ProcessDefinition',
         //'Oro\\Bundle\\ReportBundle\\Entity\\Report',
-        'Oro\\Bundle\\UserBundle\\Entity\\Role',
+        Role::class,
         //'Oro\\Bundle\\SegmentBundle\\Entity\\Segment',
         //'Oro\\Bundle\\CalendarBundle\\Entity\\SystemCalendar',
-        'Oro\\Bundle\\TagBundle\\Entity\\Tag',
+        Tag::class,
         //'Oro\\Bundle\\EmailBundle\\Entity\\EmailTemplate',
-        'Diamante\\DeskBundle\\Entity\\Ticket',
+        Ticket::class,
         //'Oro\\Bundle\\TrackingBundle\\Entity\\TrackingWebsite',
-        'Oro\\Bundle\\UserBundle\\Entity\\User',
+        User::class,
         //'Oro\\Bundle\\WorkflowBundle\\Entity\\WorkflowDefinition',
         //'Diamante\\DeskBundle\\Entity\\TicketHistory',
     );

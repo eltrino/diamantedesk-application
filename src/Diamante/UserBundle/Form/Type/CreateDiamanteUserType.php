@@ -16,8 +16,11 @@
 namespace Diamante\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 
 class CreateDiamanteUserType extends AbstractType
 {
@@ -28,7 +31,7 @@ class CreateDiamanteUserType extends AbstractType
     {
         $builder->add(
             'email',
-            'email',
+            EmailType::class,
             [
                 'label'         => 'diamante.user.labels.email',
                 'required'      => true
@@ -37,7 +40,7 @@ class CreateDiamanteUserType extends AbstractType
 
         $builder->add(
             'firstName',
-            'text',
+            TextType::class,
             [
                 'label'         => 'diamante.user.labels.first_name',
                 'required'      => true
@@ -46,7 +49,7 @@ class CreateDiamanteUserType extends AbstractType
 
         $builder->add(
             'lastName',
-            'text',
+            TextType::class,
             [
                 'label'         => 'diamante.user.labels.last_name',
                 'required'      => true
@@ -57,11 +60,11 @@ class CreateDiamanteUserType extends AbstractType
     /**
      * @inheritDoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             [
-                'data_class'            => 'Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand',
+                'data_class'            => CreateDiamanteUserCommand::class,
                 'intention'             => 'diamante_user',
                 'cascade_validation'    => true,
             ]
@@ -74,6 +77,11 @@ class CreateDiamanteUserType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_user_create';
     }

@@ -18,6 +18,8 @@ use Diamante\DeskBundle\Form\Type\AssigneeSelectType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\DeskBundle\Api\Command\AssigneeTicketCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class AssigneeTicketType extends AbstractType
 {
@@ -40,9 +42,9 @@ class AssigneeTicketType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\AssigneeTicketCommand',
+                'data_class' => AssigneeTicketCommand::class,
                 'intention' => 'ticket',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }

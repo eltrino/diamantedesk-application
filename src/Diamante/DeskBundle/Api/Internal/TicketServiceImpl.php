@@ -40,6 +40,7 @@ use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 
 class TicketServiceImpl implements TicketService
 {
@@ -263,13 +264,13 @@ class TicketServiceImpl implements TicketService
      *
      * @return array
      *
-     * @throws TicketNotFoundException
-     * @throws ForbiddenException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function addAttachmentsForTicket(Command\AddTicketAttachmentCommand $command)
     {
         \Assert\that($command->attachmentsInput)->nullOr()->all()
-            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+            ->isInstanceOf(AttachmentInput::class);
 
         $ticket = $this->loadTicketById($command->ticketId);
 

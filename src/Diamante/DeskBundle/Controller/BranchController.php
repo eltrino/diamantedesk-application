@@ -85,18 +85,26 @@ class BranchController extends Controller
         try {
             $form = $this->createForm(CreateBranchType::class, $command);
 
-            $result = $this->edit($request, $command, $form, function($command) {
-                $branch = $this->get('diamante.branch.service')->createBranch($command);
-                return $branch->getId();
-            });
+            $result = $this->edit(
+                $request,
+                $command,
+                $form,
+                function ($command) {
+                    $branch = $this->get('diamante.branch.service')->createBranch($command);
+
+                    return $branch->getId();
+                }
+            );
         } catch (\Exception $e) {
             $this->handleException($e);
+
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_create'
                 )
             );
         }
+
         return $result;
     }
 
@@ -119,26 +127,32 @@ class BranchController extends Controller
         try {
             $form = $this->createForm(UpdateBranchType::class, $command);
 
-            $result = $this->edit($request, $command, $form, function($command) use ($branch) {
-                return $this->get('diamante.branch.service')->updateBranch($command);
-            });
+            $result = $this->edit(
+                $request,
+                $command,
+                $form,
+                function ($command) {
+                    return $this->get('diamante.branch.service')->updateBranch($command);
+                }
+            );
         } catch (MethodNotAllowedException $e) {
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_view',
-                    array(
-                        'id' => $id
-                    )
+                    [
+                        'id' => $id,
+                    ]
                 )
             );
         } catch (\Exception $e) {
             $this->handleException($e);
+
             return $this->redirect(
                 $this->generateUrl(
                     'diamante_branch_view',
-                    array(
-                        'id' => $id
-                    )
+                    [
+                        'id' => $id,
+                    ]
                 )
             );
         }
@@ -174,17 +188,18 @@ class BranchController extends Controller
         } catch (DuplicateBranchKeyException $e) {
             $this->addErrorMessage($e->getMessage());
             $formView = $form->createView();
-            if (is_null($command->key) || empty($command->key)) {
+            if ($command->key === null || empty($command->key)) {
                 $formView->children['key']->vars = array_replace(
                     $formView->children['key']->vars,
-                    array('value' => $this->get('diamante.branch.default_key_generator')->generate($command->name))
+                    ['value' => $this->get('diamante.branch.default_key_generator')->generate($command->name)]
                 );
             }
-            $response = array('form' => $formView);
+            $response = ['form' => $formView];
         } catch (\Exception $e) {
             $this->handleException($e);
-            $response = array('form' => $form->createView());
+            $response = ['form' => $form->createView()];
         }
+
         return $response;
     }
 
@@ -198,29 +213,34 @@ class BranchController extends Controller
      * @param int $id
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         try {
             $this->get('diamante.branch.service')
                 ->deleteBranch($id);
-            if (false === $this->isDeletionRequestFromGrid()) {
+            if (false === $this->isDeletionRequestFromGrid($request)) {
                 $this->addSuccessMessage('diamante.desk.branch.messages.delete.success');
             }
-            return new Response(null, 204, array(
-                'Content-Type' => $this->getRequest()->getMimeType('json')
-            ));
+
+            return new Response(
+                null, 204, [
+                'Content-Type' => $request->getMimeType('json'),
+            ]
+            );
         } catch (\Exception $e) {
             $this->handleException($e);
+
             return new Response($e->getMessage(), 500);
         }
     }
 
     /**
+     * @param Request $request
      * @return bool
      */
-    private function isDeletionRequestFromGrid()
+    private function isDeletionRequestFromGrid(Request $request): bool
     {
-        $referer = $this->getRequest()->headers->get('referer');
+        $referer = $request->headers->get('referer');
 
         if (empty($referer)) {
             return false;

@@ -27,6 +27,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
 use Diamante\DeskBundle\Api\Command\CreateTicketCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class CreateTicketType extends AbstractType
 {
@@ -156,7 +157,7 @@ class CreateTicketType extends AbstractType
             [
                 'data_class' => CreateTicketCommand::class,
                 'intention' => 'ticket',
-                'cascade_validation' => true,
+                'constraints' => new Valid(),
             ]
         );
     }

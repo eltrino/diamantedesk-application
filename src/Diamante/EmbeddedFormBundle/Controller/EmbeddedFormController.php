@@ -18,5 +18,4 @@ use Oro\Bundle\EmbeddedFormBundle\Controller\EmbeddedFormController as BaseContr
 
 class EmbeddedFormController extends BaseController
 {
-
 }

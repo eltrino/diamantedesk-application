@@ -19,6 +19,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class UpdateTicketStatusType extends AbstractType
 {
@@ -44,13 +46,13 @@ class UpdateTicketStatusType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\UpdateStatusCommand',
+                'data_class' => UpdateStatusCommand::class,
                 'intention' => 'ticket_status',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }

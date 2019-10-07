@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Entity\Comment;
 use Diamante\DeskBundle\Model\Ticket\Filter\CommentFilterCriteriaProcessor;
 use Diamante\UserBundle\Api\UserService;
 use Diamante\UserBundle\Model\User;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 
 class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInterface
 {
@@ -94,7 +95,7 @@ class CommentApiServiceImpl extends CommentServiceImpl implements RestServiceInt
         $this->isGranted('CREATE', 'Entity:DiamanteDeskBundle:Comment');
 
         \Assert\that($command->attachmentsInput)->nullOr()->all()
-            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+            ->isInstanceOf(AttachmentInput::class);
 
         /**
          * @var $ticket \Diamante\DeskBundle\Model\Ticket\Ticket

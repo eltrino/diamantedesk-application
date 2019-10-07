@@ -157,7 +157,7 @@
         <service id="diamante.ticket.datagrid_priority_helper" class="%diamante.ticket.datagrid_priority_helper.class%"/>
 
         <service id="diamante.form.type.assignee_select" class="Diamante\DeskBundle\Form\Type\AssigneeSelectType">
-            <tag name="form.type" alias="diamante_assignee_select"/>
+            <tag name="form.type" />
         </service>
 
         <service id="diamante.form.type.reporter_select" class="Diamante\DeskBundle\Form\Type\ReporterSelectType">

@@ -21,7 +21,7 @@ use Diamante\DeskBundle\Validator\Constraints\Any;
 
 class BranchCommand implements Shared\Command
 {
-    const PERSISTENT_ENTITY = 'Diamante\DeskBundle\Entity\Branch';
+    const PERSISTENT_ENTITY = \Diamante\DeskBundle\Entity\Branch::class;
 
     /**
      * @Assert\Type(type="integer")

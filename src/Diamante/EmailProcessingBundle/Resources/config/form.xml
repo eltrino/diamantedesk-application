@@ -10,7 +10,7 @@
 
     <services>
         <service id="diamante_config_channels_help" class="%diamante_config_channels_help.type.class%">
-            <tag name="form.type" alias="diamante_config_channels_help"/>
+            <tag name="form.type" />
         </service>
     </services>
 </container>

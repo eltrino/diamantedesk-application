@@ -29,7 +29,7 @@ class AttachmentTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        return "";
+        return '';
     }
 
     /**
@@ -53,7 +53,7 @@ class AttachmentTransformer implements DataTransformerInterface
             if ($each) {
                 if (false === ($each instanceof UploadedFile)) {
                     throw new TransformationFailedException(
-                        "Every item in input files array should be an instance of the UploadedFile."
+                        'Every item in input files array should be an instance of the UploadedFile.'
                     );
                 }
                 $attachment = AttachmentInput::createFromUploadedFile($each);
