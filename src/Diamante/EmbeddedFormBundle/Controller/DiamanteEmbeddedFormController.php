@@ -14,12 +14,16 @@
  */
 namespace Diamante\EmbeddedFormBundle\Controller;
 
+use Diamante\EmbeddedFormBundle\Form\Extension\EmbeddedFormTypeExtension;
+use Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType;
 use Diamante\UserBundle\Model\User;
+use Oro\Bundle\EmbeddedFormBundle\Manager\EmbeddedFormManager;
+use Oro\Bundle\EmbeddedFormBundle\Manager\EmbedFormLayoutManager;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oro\Bundle\EmbeddedFormBundle\Entity\EmbeddedForm;
 
@@ -27,10 +31,6 @@ use Diamante\DeskBundle\Model\Ticket\Priority;
 use Diamante\DeskBundle\Model\Ticket\Source;
 use Diamante\DeskBundle\Model\Ticket\Status;
 use Diamante\EmbeddedFormBundle\Api\Command\EmbeddedTicketCommand;
-use Diamante\EmbeddedFormBundle\Form\Type\DiamanteEmbeddedFormType;
-
-use Symfony\Component\Form\Form;
-use Symfony\Component\Validator\Exception\ValidatorException;
 
 class DiamanteEmbeddedFormController extends Controller
 {
@@ -41,23 +41,23 @@ class DiamanteEmbeddedFormController extends Controller
      *      requirements={"id"="[-\d\w]+"},
      * )
      */
-    public function formAction(EmbeddedForm $formEntity)
+    public function formAction(Request $request, EmbeddedForm $formEntity)
     {
         $response = new Response();
         $response->setPublic();
+        $formEntity->setFormType(DiamanteEmbeddedFormType::class);
         //$response->setEtag($formEntity->getId() . $formEntity->getUpdatedAt()->format(\DateTime::ISO8601));
-        if ($response->isNotModified($this->getRequest())) {
+        if ($response->isNotModified($request)) {
             return $response;
         }
 
         $command = new EmbeddedTicketCommand();
-
         $formManager = $this->get('oro_embedded_form.manager');
-        $form        = $formManager->createForm($formEntity->getFormType());
+        $form        = $formManager->createForm($formEntity->getFormType(), $command);
 
-        if (in_array($this->getRequest()->getMethod(), ['POST', 'PUT'])) {
+        if (in_array($request->getMethod(), ['POST', 'PUT'])) {
 
-            $data = $this->getRequest()->get('diamante_embedded_form');
+            $data = $request->get('diamante_embedded_form');
 
             //Initialize Reporter
             $diamanteUserRepository = $this->get('diamante.user.repository');
@@ -84,7 +84,7 @@ class DiamanteEmbeddedFormController extends Controller
             }
             $command->assignee = $assignee;
 
-            $form->handleRequest($this->getRequest());
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -116,7 +116,8 @@ class DiamanteEmbeddedFormController extends Controller
         );
 
         $layoutManager = $this->get('oro_embedded_form.embed_form_layout_manager');
-        $layoutContent = $layoutManager->getLayout($formEntity, $form)->render();
+        $layout = $layoutManager->getLayout($formEntity, $form);
+        $layoutContent = $layout->render();
 
         $replaceString = '<div id="page">';
 

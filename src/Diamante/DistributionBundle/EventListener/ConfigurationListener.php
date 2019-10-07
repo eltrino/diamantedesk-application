@@ -78,11 +78,8 @@ class ConfigurationListener
 
         $result = $event->getControllerResult();
 
-        /** @var AbstractNodeDefinition $data */
-        $data = clone $result['data'];
-        $this->cleanTree($data);
-
-        $form = clone $result['form'];
+        $data = $this->cleanTree($result['data']);
+        $form = $result['form'];
         $this->clearForm($form);
 
         $result['data'] = $data;
@@ -93,21 +90,18 @@ class ConfigurationListener
     /**
      * Recursive function to remove not used config items
      *
-     * @param AbstractNodeDefinition $node
+     * @param array $node
+     * @return array
      */
-    public function cleanTree(AbstractNodeDefinition $node)
+    public function cleanTree(array $node): array
     {
-        $children = $this->getNodeChildren($node);
-
-        /** @var AbstractNodeDefinition $child */
-        foreach ($children as $key => $child) {
-            if (in_array($child->getName(), static::$disabledItems)) {
-                unset($children[$key]);
-            } else {
-                $this->cleanTree($child);
+        foreach ($node as $key => $child) {
+            if (in_array($child['id'], static::$disabledItems, true)) {
+                unset($node[$key]);
             }
         }
-        $this->setNodeChildren($node, $children);
+        $node = array_values($node);
+        return $node;
     }
 
     /**
@@ -128,35 +122,4 @@ class ConfigurationListener
             }
         }
     }
-
-    /**
-     * @param AbstractNodeDefinition $node
-     * @return array
-     */
-    protected function getNodeChildren(AbstractNodeDefinition $node)
-    {
-        $reflection = new \ReflectionClass($node);
-        if ($reflection->hasProperty('children')) {
-            $childrenProperty = $reflection->getProperty('children');
-            $childrenProperty->setAccessible(true);
-            return $childrenProperty->getValue($node);
-        }
-
-        return [];
-    }
-
-    /**
-     * @param AbstractNodeDefinition $node
-     * @param array $children
-     */
-    protected function setNodeChildren(AbstractNodeDefinition $node, array $children)
-    {
-        $reflection = new \ReflectionClass($node);
-        if ($reflection->hasProperty('children')) {
-            $childrenProperty = $reflection->getProperty('children');
-            $childrenProperty->setAccessible(true);
-            $childrenProperty->setValue($node, $children);
-        }
-    }
-
 }

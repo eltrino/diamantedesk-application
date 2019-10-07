@@ -29,14 +29,16 @@
     <services>
         <service id="diamante_embedded_form.form_type.available_embedded_form" class="%diamante_embedded_form.class%">
             <tag name="oro_embedded_form" label="Diamante Ticket"/>
-            <tag name="form.type" alias="diamante_desk_ticket_form_type"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_embedded_form.event_listener.embedded_form" class="%diamante_embedded_form.event_listener.embedded_form.class%">
-            <call method="setRequest"><argument id="request" type="service" on-invalid="ignore" strict="false"/></call>
+            <call method="setRequest">
+                <argument id="Symfony\Component\HttpFoundation\RequestStack" type="service" on-invalid="ignore" strict="false"/>
+            </call>
             <tag name="kernel.event_listener" event="entity_form.render.before" method="addBranchField"/>
         </service>
         <service id="diamante_embedded_form.form.embedded_type_extension" class="%diamante_embedded_form.form.embedded_type_extension.class%">
-            <tag name="form.type_extension" extended_type="embedded_form"/>
+            <tag name="form.type_extension" extended_type="Oro\Bundle\EmbeddedFormBundle\Form\Type\EmbeddedFormType" />
         </service>
         <service id="diamante_embedded_form.twig.extension.dynamic_fields" class="%diamante_embedded_form.twig.extension.dynamic_fields.class%">
             <argument type="service" id="service_container"/>
@@ -44,7 +46,7 @@
         </service>
         <service id="diamante_embedded_form.back_link.twig.extension" class="%diamante_embedded_form.back_link.twig.extension.class%">
             <argument type="service" id="service_container"/>
-            <tag name="twig.extension"/>
+            <tag name="twig.extension" />
         </service>
     </services>
 </container>

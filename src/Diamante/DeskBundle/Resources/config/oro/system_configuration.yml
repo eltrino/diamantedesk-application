@@ -1,54 +1,54 @@
 system_configuration:
-    groups:
-        diamante_desk_setup:
-            title: 'DiamanteDesk'
-            priority: 30
+  groups:
+    diamante_desk_setup:
+      title: 'DiamanteDesk'
+      priority: 30
 
-        diamante_desk_channels:
-            title: 'Channels'
-            icon: icon-desktop
+    diamante_desk_channels:
+      title: 'Channels'
+      icon: icon-desktop
 
-        diamante_desk_channels_general_group:
-            title: 'General'
+    diamante_desk_channels_general_group:
+      title: 'General'
 
-        diamante_desk_notifications:
-            title: 'Notifications'
-            icon: icon-bullhorn
+    diamante_desk_notifications:
+      title: 'Notifications'
+      icon: icon-bullhorn
 
-        diamante_desk_email_notifications_group:
-            title: 'Email Notifications'
+    diamante_desk_email_notifications_group:
+      title: 'Email Notifications'
 
-    fields:
-        diamante_desk.email_notification:
-            type: choice
-            data_type: boolean
-            priority: 85
-            options:
-                label: 'Enable Email Notifications'
-                choices:
-                    - No
-                    - Yes
-        diamante_desk.default_branch:
-            data_type: integer
-            type: diamante_desk_default_branch
-            options:
-                label: 'Default Branch'
+  fields:
+    diamante_desk.email_notification:
+      type: Symfony\Component\Form\Extension\Core\Type\ChoiceType
+      data_type: boolean
+      priority: 85
+      options:
+        label: 'Enable Email Notifications'
+        choices:
+          - No
+          - Yes
+    diamante_desk.default_branch:
+      data_type: integer
+      type: Diamante\DeskBundle\Form\Type\DefaultBranchType
+      options:
+        label: 'Default Branch'
 
-    tree:
-        system_configuration:
-            platform:
+  tree:
+    system_configuration:
+      platform:
+        children:
+          diamante_desk_setup:
+            children:
+              diamante_desk_channels:
                 children:
-                    diamante_desk_setup:
-                        children:
-                            diamante_desk_channels:
-                                children:
-                                    diamante_desk_channels_general_group:
-                                        priority: 300
-                                        children:
-                                            - diamante_desk.default_branch
-                            diamante_desk_notifications:
-                                children:
-                                    diamante_desk_email_notifications_group:
-                                        priority: 300
-                                        children:
-                                            - diamante_desk.email_notification
+                  diamante_desk_channels_general_group:
+                    priority: 300
+                    children:
+                      - diamante_desk.default_branch
+              diamante_desk_notifications:
+                children:
+                  diamante_desk_email_notifications_group:
+                    priority: 300
+                    children:
+                      - diamante_desk.email_notification

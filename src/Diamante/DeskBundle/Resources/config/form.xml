@@ -45,7 +45,7 @@
             <tag name="form.type" />
         </service>
         <service id="diamante_comment_form" class="%diamante_comment_form.type.class%">
-            <tag name="form.type" alias="diamante_comment_form"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_branch_form" class="%diamante_branch_form.type.class%">
             <tag name="form.type" />
@@ -59,13 +59,13 @@
         </service>
         <service id="diamante_desk_default_branch" class="%diamante_desk_default_branch.type.class%">
             <argument type="service" id="diamante.branch.service"/>
-            <tag name="form.type" alias="diamante_desk_default_branch"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_user_select" class="%diamante_user_select.type.class%">
             <tag name="form.type" alias="diamante_user_select"/>
         </service>
         <service id="diamante_ticket_form_move" class="%diamante_ticket_form_move.type.class%">
-            <tag name="form.type" alias="diamante_ticket_form_move"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_reporter_select" class="%diamante_reporter_select.type.class%">
             <tag name="form.type" alias="diamante_reporter_select"/>
@@ -80,20 +80,20 @@
             <tag name="form.type" alias="diamante_watcher_select"/>
         </service>
         <service id="diamante_ticket_form_mass_assignee" class="%diamante_ticket_form_mass_assignee.type.class%">
-            <tag name="form.type" alias="diamante_ticket_form_mass_assignee"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_ticket_form_status_mass_change" class="%diamante_ticket_form_status_mass_change.type.class%">
-            <tag name="form.type" alias="diamante_ticket_form_status_mass_change"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_ticket_form_mass_move" class="%diamante_ticket_form_mass_move.type.class%">
-            <tag name="form.type" alias="diamante_ticket_form_mass_move"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_ticket_form_mass_add_watcher" class="%diamante_ticket_form_mass_add_watcher.type.class%">
-            <tag name="form.type" alias="diamante_ticket_form_mass_add_watcher"/>
+            <tag name="form.type" />
         </service>
         <service id="diamante_mass_delete_branch_form" class="%diamante_mass_delete_branch_form.type.class%">
             <argument type="service" id="diamante.branch.mass_branch_subscriber"/>
-            <tag name="form.type" alias="diamante_mass_delete_branch_form"/>
+            <tag name="form.type" />
         </service>
     </services>
 </container>

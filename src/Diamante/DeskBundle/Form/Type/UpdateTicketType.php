@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Form\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Api\Command\UpdateTicketCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class UpdateTicketType extends CreateTicketType
 {
@@ -35,7 +36,7 @@ class UpdateTicketType extends CreateTicketType
             array(
                 'data_class' => UpdateTicketCommand::class,
                 'intention' => 'ticket',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }

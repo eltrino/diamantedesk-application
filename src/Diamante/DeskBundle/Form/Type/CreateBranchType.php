@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Api\Command\BranchCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class CreateBranchType extends AbstractType
 {
@@ -93,7 +94,7 @@ class CreateBranchType extends AbstractType
             array(
                 'data_class' => BranchCommand::class,
                 'intention' => 'branch',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }

@@ -21,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class AttachmentType extends AbstractType
 {
@@ -50,7 +51,7 @@ class AttachmentType extends AbstractType
             array(
                 'data_class' => AddTicketAttachmentCommand::class,
                 'intention' => 'attachment',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }

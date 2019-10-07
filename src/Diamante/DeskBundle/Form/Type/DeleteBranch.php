@@ -52,7 +52,7 @@ class DeleteBranch extends AbstractType
                     'label' => 'diamante.desk.branch.messages.delete.select',
                     'required' => true,
                     'attr' => array('style' => 'width:110px'),
-                    'choices' => $choices
+                    'choices' => array_flip($choices)
                 )
             )
         )->add(

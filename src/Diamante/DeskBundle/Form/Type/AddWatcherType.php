@@ -18,6 +18,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Api\Command\AddWatcherCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class AddWatcherType extends AbstractType
 {
@@ -46,7 +47,7 @@ class AddWatcherType extends AbstractType
             array(
                 'data_class' => AddWatcherCommand::class,
                 'intention' => 'watcher',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }

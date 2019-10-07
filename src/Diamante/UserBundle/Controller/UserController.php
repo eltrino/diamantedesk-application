@@ -7,6 +7,8 @@ use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Exception\UserRemovalException;
+use Diamante\UserBundle\Form\Type\CreateDiamanteUserType;
+use Diamante\UserBundle\Form\Type\UpdateDiamanteUserType;
 use Diamante\UserBundle\Model\User;
 use JMS\AopBundle\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -56,12 +58,12 @@ class UserController extends Controller
      * @Route("/create", name="diamante_user_create")
      * @Template()
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $command = new CreateDiamanteUserCommand();
         try {
-            $form = $this->createForm('diamante_user_create', $command);
-            $result = $this->edit($command, $form, function($command) {
+            $form = $this->createForm(CreateDiamanteUserType::class, $command);
+            $result = $this->edit($request, $command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->createDiamanteUser($command);
                 return $userId;
             });
@@ -85,7 +87,7 @@ class UserController extends Controller
      *
      * @return array|null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
         $command = new UpdateDiamanteUserCommand();
         /** @var DiamanteUser $user */
@@ -100,8 +102,8 @@ class UserController extends Controller
         $command->firstName = $user->getFirstName();
 
         try {
-            $form = $this->createForm('diamante_user_update', $command);
-            $result = $this->edit($command, $form, function($command) {
+            $form = $this->createForm(UpdateDiamanteUserType::class, $command);
+            $result = $this->edit($request, $command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->updateDiamanteUser($command);
                 return $userId;
             });
@@ -146,12 +148,12 @@ class UserController extends Controller
      * @param \Closure $callback
      * @return array|null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    protected function edit($command, Form $form, $callback)
+    protected function edit(Request $request, $command, Form $form, $callback)
     {
         $response = null;
 
         try {
-            $this->handle($form);
+            $this->handle($request, $form);
             $userId = $callback($command);
 
             if (isset($command->id) && ($command->id !== null)) {
@@ -175,9 +177,9 @@ class UserController extends Controller
     /**
      * @Route("/delete/massaction", name="diamante_user_delete_massaction", options={"expose"=true})
      */
-    public function massRemoveAction()
+    public function massRemoveAction(Request $request)
     {
-        $params = $this->parseGridParameters();
+        $params = $this->parseGridParameters($request);
         $repository = $this->get('diamante.user.repository');
         $users = $repository->findByDataGridParams($params);
 
@@ -205,14 +207,14 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function resetPasswordAction($id)
+    public function resetPasswordAction(Request $request, $id)
     {
         $user = new User($id, User::TYPE_DIAMANTE);
 
         try {
             $this->get('diamante.user.service')->resetPassword($user);
             return new Response(null, 204, array(
-                'Content-Type' => $this->getRequest()->getMimeType('json')
+                'Content-Type' => $request->getMimeType('json')
             ));
         } catch (\Exception $e) {
             $this->handleException($e);

@@ -1,208 +1,216 @@
 navigation:
-    menu_config:
-        items:
-            embedded_forms:
-                label: 'oro.embeddedform.entity_plural_label'
-                route: 'oro_embedded_form_list'
-                extras:
-                    position:   20
-                    routes:     ['oro_embedded_form_*']
-            diamante_branch_list:
-                label: 'diamante.desk.branch.entity_plural_label'
-                route: diamante_branch_list
-                extras:
-                    icon: icon-archive
-                    routes: ['diamante_branch_*']
-                    position: 80
-            diamante_ticket_list:
-                label: 'diamante.desk.ticket.entity_plural_label'
-                route: diamante_ticket_list
-                extras:
-                    icon: icon-check
-                    routes: ['diamante_ticket_*', 'diamante_comment_*']
-                    position: 90
-            diamante_automation_list:
-                label: 'diamante.automation.rule.entity_plural_label'
-                uri: '#'
-                extras:
-                    position: 93
-            diamante_report_list:
-                label: 'diamante.desk.report.plural_label'
-                uri: '#'
-                extras:
-                    icon: icon-bar-chart
-                    position: 95
+  menu_config:
+    items:
+      embedded_forms:
+        label: 'oro.embeddedform.entity_plural_label'
+        route: 'oro_embedded_form_list'
+        extras:
+          position:   20
+          routes:     ['oro_embedded_form_*']
+      diamante_branch_list:
+        label: 'diamante.desk.branch.entity_plural_label'
+        route: 'diamante_branch_list'
+        extras:
+          icon: fa-archive
+          routes: ['diamante_branch_*']
+          position: 80
+      diamante_ticket_list:
+        label: 'diamante.desk.ticket.entity_plural_label'
+        route: 'diamante_ticket_list'
+        extras:
+          icon: fa-check
+          routes: ['diamante_ticket_*', 'diamante_comment_*']
+          position: 90
+      diamante_automation_list:
+        label: 'diamante.automation.rule.entity_plural_label'
+        uri: '#'
+        extras:
+          position: 93
+      diamante_report_list:
+        label: 'diamante.desk.report.plural_label'
+        uri: '#'
+        extras:
+          icon: fa-chart-bar
+          position: 95
 
-            diamante_customer_management:
-                label: 'diamante.user.labels.entity.plural'
-                route: 'diamante_user_list'
-                extras:
-                    icon: icon-group
-                    position: 96
+      diamante_customer_management:
+        label: 'diamante.user.labels.entity.plural'
+        route: 'diamante_user_list'
+        extras:
+          icon: fa-users
+          position: 96
 
-            diamante_event_triggered_list:
-                label: 'diamante.automation.rule.event_triggered.entity_label'
-                route: diamante_event_triggered_list
-                extras:
-                    routes:
-                        route: 'diamante_event_triggered_*'
-                route_parameters:
-                    type: 'event_triggered'
-
-
-            diamante_time_triggered_list:
-                label: 'diamante.automation.rule.time_triggered.entity_label'
-                route: diamante_time_triggered_list
-                extras:
-                    routes:
-                        route: 'diamante_time_triggered_*'
-                route_parameters:
-                    type: 'time_triggered'
+      diamante_event_triggered_list:
+        label: 'diamante.automation.rule.event_triggered.entity_label'
+        route: 'diamante_event_triggered_list'
+        extras:
+          routes:
+            route: 'diamante_event_triggered_*'
+        route_parameters:
+          type: 'event_triggered'
 
 
-            #reports
-            diamante_report_tickets_by_priority:
-                label: 'diamante.desk.report.reports.tickets_by_priority'
-                route: diamante_report_view
-                extras:
-                    routes:
-                        route: 'diamante_report_*'
-                route_parameters:
-                    id: 'tickets_by_priority'
+      diamante_time_triggered_list:
+        label: 'diamante.automation.rule.time_triggered.entity_label'
+        route: 'diamante_time_triggered_list'
+        extras:
+          routes:
+            route: 'diamante_time_triggered_*'
+        route_parameters:
+          type: 'time_triggered'
 
-            diamante_report_time_of_response:
-                label: 'diamante.desk.report.reports.tickets_by_response_time'
-                route: diamante_report_view
-                extras:
-                    routes:
-                        route: 'diamante_report_*'
-                route_parameters:
-                    id: 'time_of_response'
 
-            diamante_report_tickets_by_channels:
-                label: 'diamante.desk.report.reports.tickets_by_channels'
-                route: diamante_report_view
-                extras:
-                    routes:
-                        route: 'diamante_report_*'
-                route_parameters:
-                    id: 'tickets_by_channels'
+      #reports
+      diamante_report_tickets_by_priority:
+        label: 'diamante.desk.report.reports.tickets_by_priority'
+        route: 'diamante_report_view'
+        extras:
+          routes:
+            route: 'diamante_report_*'
+        route_parameters:
+          id: 'tickets_by_priority'
 
-            diamante_report_tickets_by_branches:
-                label:  'diamante.desk.report.reports.tickets_by_branches'
-                route: diamante_report_view
-                extras:
-                    routes:
-                        route: 'diamante_report_*'
-                route_parameters:
-                    id: 'tickets_by_branches'
+      diamante_report_time_of_response:
+        label: 'diamante.desk.report.reports.tickets_by_response_time'
+        route: 'diamante_report_view'
+        extras:
+          routes:
+            route: 'diamante_report_*'
+        route_parameters:
+          id: 'time_of_response'
 
-            diamante_report_ticket_timeline:
-                label:  'diamante.desk.report.reports.ticket_timeline'
-                route: diamante_report_view
-                extras:
-                    routes:
-                        route: 'diamante_report_*'
-                route_parameters:
-                    id: 'ticket_timeline'
+      diamante_report_tickets_by_channels:
+        label: 'diamante.desk.report.reports.tickets_by_channels'
+        route: 'diamante_report_view'
+        extras:
+          routes:
+            route: 'diamante_report_*'
+        route_parameters:
+          id: 'tickets_by_channels'
 
-            tags_management_extra:
-                label: 'oro.tag.entity_plural_label'
-                route: 'oro_tag_index'
-                extras:
-                    position: 90
-                    routes:      ['oro_tag_*']
-                    description: 'oro.tag.menu.tag_list.description'
+      diamante_report_tickets_by_branches:
+        label:  'diamante.desk.report.reports.tickets_by_branches'
+        route: 'diamante_report_view'
+        extras:
+          routes:
+            route: 'diamante_report_*'
+        route_parameters:
+          id: 'tickets_by_branches'
 
-            oro_calendar_view_default:
-                display: false
-            oro_email_user_emails:
-                display: false
-            activities_tab:
-                display: false
-            reports_tab:
-                display: false
-            system_tab:
-                display: false
-            oro_platform_system_info:
-                display: false
-            diamante_config_tab:
-              label: 'System'
-              uri: '#'
-              extras:
-                  icon: icon-cog
-                  position: 100
-        tree:
-            application_menu:
+      diamante_report_ticket_timeline:
+        label:  'diamante.desk.report.reports.ticket_timeline'
+        route: 'diamante_report_view'
+        extras:
+          routes:
+            route: 'diamante_report_*'
+        route_parameters:
+          id: 'ticket_timeline'
+
+      tags_management_extra:
+        label: 'oro.tag.entity_plural_label'
+        route: 'oro_tag_index'
+        extras:
+          position: 90
+          routes:      ['oro_tag_*']
+          description: 'oro.tag.menu.tag_list.description'
+
+      oro_calendar_view_default:
+        display: false
+      oro_email_user_emails:
+        display: false
+      activities_tab:
+        display: false
+      reports_tab:
+        display: false
+      system_tab:
+        display: false
+      oro_platform_system_info:
+        display: false
+      oro_organization_list:
+        display: false
+      oro_business_unit_list:
+        display: false
+      user_create:
+        display: false
+      integrations_list:
+        display: false
+      diamante_config_tab:
+        label: 'System'
+        uri: '#'
+        extras:
+          icon: fa-cog
+          position: 100
+    tree:
+      application_menu:
+        children:
+          diamante_branch_list: ~
+          diamante_ticket_list: ~
+          diamante_automation_list:
+            children:
+              diamante_time_triggered_list: ~
+              diamante_event_triggered_list: ~
+          diamante_report_list:
+            children:
+              diamante_report_tickets_by_priority: ~
+              diamante_report_time_of_response: ~
+              diamante_report_tickets_by_channels: ~
+              diamante_report_tickets_by_branches: ~
+              diamante_report_ticket_timeline: ~
+          diamante_customer_management: ~
+          diamante_config_tab:
+            children:
+              tags_management_extra:
+                merge_strategy: move
+              system_configuration:
+                merge_strategy: move
+              users_management:
+                merge_strategy: move
                 children:
-                    diamante_branch_list: ~
-                    diamante_ticket_list: ~
-                    diamante_automation_list:
-                        children:
-                            diamante_time_triggered_list: ~
-                            diamante_event_triggered_list: ~
-                    diamante_report_list:
-                        children:
-                            diamante_report_tickets_by_priority: ~
-                            diamante_report_time_of_response: ~
-                            diamante_report_tickets_by_channels: ~
-                            diamante_report_tickets_by_branches: ~
-                            diamante_report_ticket_timeline: ~
-                    diamante_customer_management: ~
-                    diamante_config_tab:
-                      children:
-                        tags_management_extra:
-                          merge_strategy: move
-                        system_configuration:
-                          merge_strategy: move
-                        users_management:
-                          merge_strategy: move
-                          children:
-                            user_list:
-                              merge_strategy: move
-                            user_create:
-                              merge_strategy: move
-                            user_groups:
-                              merge_strategy: move
-                            user_roles:
-                              merge_strategy: move
-                        integrations_submenu:
-                          merge_strategy: move
-                          children:
-                            embedded_forms: ~
-                        oro_platform_system_info:
-                          merge_strategy: move
-                        audit_list:
-                          merge_strategy: move
+                  user_list:
+                    merge_strategy: move
+                  user_create:
+                    merge_strategy: move
+                  user_groups:
+                    merge_strategy: move
+                  user_roles:
+                    merge_strategy: move
+              integrations_submenu:
+                merge_strategy: move
+                children:
+                  embedded_forms: ~
+              oro_platform_system_info:
+                merge_strategy: move
+              audit_list:
+                merge_strategy: move
 
-    titles:
-        diamante_branch_list: ~
-        diamante_branch_view: '%%branch.name%%'
-        diamante_branch_create: 'Create Branch'
-        diamante_branch_update: '%%branch.name%% - Edit'
+  titles:
+    diamante_branch_list: ~
+    diamante_branch_view: '%%branch.name%%'
+    diamante_branch_create: 'Create Branch'
+    diamante_branch_update: '%%branch.name%% - Edit'
 
-        diamante_comment_create: 'Add Comment - %%ticket.subject%%'
-        diamante_comment_update: 'Edit Comment - %%ticket.subject%%'
+    diamante_comment_create: 'Add Comment - %%ticket.subject%%'
+    diamante_comment_update: 'Edit Comment - %%ticket.subject%%'
 
-        diamante_ticket_list: ~
-        diamante_ticket_view: '[%%ticket.key%%] %%ticket.subject%%'
-        diamante_ticket_create: 'Create Ticket'
-        diamante_ticket_update: '%%ticket.subject%% - Edit'
-        diamante_ticket_create_attach: 'Add Attachment'
+    diamante_ticket_list: ~
+    diamante_ticket_view: '[%%ticket.key%%] %%ticket.subject%%'
+    diamante_ticket_create: 'Create Ticket'
+    diamante_ticket_update: '%%ticket.subject%% - Edit'
+    diamante_ticket_create_attach: 'Add Attachment'
 
-        diamante_event_triggered_list: 'Event Triggered Rules'
-        diamante_event_triggered_view: '%%rule.name%%'
-        diamante_event_triggered_create: 'Create Event Triggered Rule'
-        diamante_event_triggered_update: '%%rule.name%% - Edit'
+    diamante_event_triggered_list: 'Event Triggered Rules'
+    diamante_event_triggered_view: '%%rule.name%%'
+    diamante_event_triggered_create: 'Create Event Triggered Rule'
+    diamante_event_triggered_update: '%%rule.name%% - Edit'
 
-        diamante_time_triggered_list: 'Time Triggered Rules'
-        diamante_time_triggered_view: '%%rule.name%%'
-        diamante_time_triggered_create: 'Create Time Triggered Rule'
-        diamante_time_triggered_update: '%%rule.name%% - Edit'
+    diamante_time_triggered_list: 'Time Triggered Rules'
+    diamante_time_triggered_view: '%%rule.name%%'
+    diamante_time_triggered_create: 'Create Time Triggered Rule'
+    diamante_time_triggered_update: '%%rule.name%% - Edit'
 
-        diamante_report_view: '%%report.label%%'
+    diamante_report_view: '%%report.label%%'
 
-        diamante_user_create: 'Create Customer'
-        diamante_user_view:   '%%user.fullName%% - DiamanteDesk User'
-        diamante_user_update: '%%user.name%% - Update'
-        diamante_user_list:   'Customers Management'
+    diamante_user_create: 'Create Customer'
+    diamante_user_view:   '%%user.fullName%% - DiamanteDesk User'
+    diamante_user_update: '%%user.name%% - Update'
+    diamante_user_list:   'Customers Management'

@@ -16,6 +16,7 @@ namespace Diamante\DeskBundle\Controller;
 
 use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\DeskBundle\Form\Type\DeleteBranch;
+use Diamante\DeskBundle\Form\Type\MassDeleteBranchType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class BranchWidgetController extends WidgetController
      * @Template("DiamanteDeskBundle:Branch/widgets:deleteForm.html.twig")
      *
      */
-    public function deleteBranchViewForm(Request $request, $id)
+    public function deleteBranchViewForm(Request $request, $id): array
     {
         $response = $this->deleteBranchForm($request, $id);
         $response['delete_route'] = 'diamante_branch_view_delete_form';
@@ -53,7 +54,7 @@ class BranchWidgetController extends WidgetController
      * @Template("DiamanteDeskBundle:Branch/widgets:deleteForm.html.twig")
      *
      */
-    public function deleteBranchListForm(Request $request, $id)
+    public function deleteBranchListForm(Request $request, $id): array
     {
         $response = $this->deleteBranchForm($request, $id, false);
         $response['delete_route'] = 'diamante_branch_list_delete_form';
@@ -80,7 +81,7 @@ class BranchWidgetController extends WidgetController
     public function massActionAction(Request $request, $gridName, $actionName)
     {
         try {
-            $form = $this->createForm('diamante_mass_delete_branch_form', ['values' => $request->get('values')]);
+            $form = $this->createForm(MassDeleteBranchType::class, ['values' => $request->get('values')]);
 
             if (true === $this->widgetRedirectRequested($request)) {
                 $response = ['form' => $form->createView()];
@@ -128,7 +129,6 @@ class BranchWidgetController extends WidgetController
                 $iteration
             );
             $response = $this->getWidgetResponse();
-
         } catch (DefaultBranchException $e) {
             $this->handleMassBranchException($e);
             $response = $this->getWidgetResponse();
@@ -153,6 +153,7 @@ class BranchWidgetController extends WidgetController
 
             if (true === $this->widgetRedirectRequested($request)) {
                 $response = ['form' => $form->createView()];
+
                 return $response;
             }
 
@@ -183,7 +184,6 @@ class BranchWidgetController extends WidgetController
             if ($redirect) {
                 $response['redirect'] = $this->generateUrl('diamante_branch_list');
             }
-
         } catch (DefaultBranchException $e) {
             $this->handleException($e);
             $response = $this->getWidgetResponse();
@@ -221,7 +221,7 @@ class BranchWidgetController extends WidgetController
 
         $command->branch = $branchService->getBranch($newBranchId);
 
-        if ($command->branch->getId() != $ticket->getBranch()->getId()) {
+        if ($command->branch->getId() !== $ticket->getBranch()->getId()) {
             $this->get('diamante.ticket.service')->moveTicket($command);
         }
 
@@ -239,7 +239,7 @@ class BranchWidgetController extends WidgetController
 
         $this->get('monolog.logger.diamante')
             ->error(
-                sprintf("%s: %s", $message, $e->getMessage())
+                sprintf('%s: %s', $message, $e->getMessage())
             );
 
         $this->addErrorMessage($message, $parameters, $number);
