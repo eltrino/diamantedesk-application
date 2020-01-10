@@ -163,3 +163,5 @@ oro_attachment:
         - image/gif
         - image/jpeg
         - image/png
+oro_navigation:
+    js_routing_filename_prefix: 'diamante'
