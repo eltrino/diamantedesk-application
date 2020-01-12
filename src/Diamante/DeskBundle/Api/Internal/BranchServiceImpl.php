@@ -142,12 +142,14 @@ class BranchServiceImpl implements BranchService
         $branch = $this->branchRepository->get($branchCommand->id);
 
         $assignee = $this->extractDefaultBranchAssignee($branchCommand);
-        if ($branchCommand->isRemoveLogo() || $branchCommand->logoFile) {
-            $this->removeBranchLogo($branch);
-        } 
-
         $file = $this->uploadBranchLogoIfExists($branchCommand);
-
+        if ($branchCommand->isRemoveLogo()) {
+            $this->removeBranchLogo($branch);
+            if (!$branchCommand->logoFile) {
+                $file = new Logo();
+            }
+        } 
+        
         $branch->update($branchCommand->name, $branchCommand->description, $assignee, $file);
         $this->registry->getManager()->persist($branch);
 
