@@ -1,5 +1,6 @@
 .diam-attachments {
     position: relative;
+    list-style-type: none;
 }
 .diam-attachment {
     float: left;
@@ -69,6 +70,7 @@
 
 .diam-comments {
     margin: 0 0 1em;
+    list-style-type: none;
 }
 
 .diam-comment {
