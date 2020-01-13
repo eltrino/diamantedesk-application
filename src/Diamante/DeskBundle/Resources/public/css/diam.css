@@ -345,6 +345,11 @@ div[id^="grid-audit-grid"] td.number-cell {
     border-radius: .25em;
 }
 
+.select2-chosen .diam-user-type {
+    vertical-align: bottom;
+    display: inline-block;
+}
+
 .diam-user-type.oro {
     background-color: #3984B6;
 }
