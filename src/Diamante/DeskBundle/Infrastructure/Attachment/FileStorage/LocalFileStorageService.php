@@ -14,6 +14,7 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Attachment\FileStorage;
 
+use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Diamante\DeskBundle\Model\Attachment\Services\FileStorageService;
 use Symfony\Component\Filesystem\Filesystem;
 /*
@@ -69,15 +70,27 @@ class LocalFileStorageService implements FileStorageService
         $this->fs->remove($this->uploadDir->getRealPath() . '/' . $filename);
     }
 
-    public static function create($attachmentUploadDirPath, $fs)
+    public static function create($kernelProjectDir, Filesystem $fs)
     {
+        $attachmentUploadDirPath = realpath($kernelProjectDir)
+            . DIRECTORY_SEPARATOR
+            . 'public'
+            . DIRECTORY_SEPARATOR
+            . Attachment::PATH_TO_ATTACH_DIR;
+        if (!$fs->exists($attachmentUploadDirPath)) {
+            $fs->mkdir($attachmentUploadDirPath);
+        }
+        $attachmentUploadDirPath = new \SplFileInfo($attachmentUploadDirPath);
+        if (!$attachmentUploadDirPath->isWritable()) {
+            $fs->chmod($attachmentUploadDirPath->getRealPath(), 0777);
+        }
         return new LocalFileStorageService(new \SplFileInfo($attachmentUploadDirPath), $fs);
     }
 
     /**
      * @return string
      */
-    public function getConfiguredUploadDir()
+    public function  getConfiguredUploadDir()
     {
         return $this->uploadDir->getPathname();
     }
