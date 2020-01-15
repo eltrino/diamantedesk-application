@@ -30,7 +30,7 @@ navigation:
         label: 'diamante.desk.report.plural_label'
         uri: '#'
         extras:
-          icon: fa-chart-bar
+          icon: fa-bar-chart
           position: 95
 
       diamante_customer_management:
