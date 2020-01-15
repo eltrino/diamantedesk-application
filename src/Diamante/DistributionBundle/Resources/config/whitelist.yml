@@ -4,6 +4,7 @@ whitelist:
     - 'oro_api_get_sidebars'
     - 'oro_api_cget_sidebarwidgets'
     - 'oro_api_post_sidebarwidgets'
+    - 'oro_api_post_windows'
     - 'oro_email_last'
     - 'oro_default'
     - 'oro_dashboard_itemized_widget'
