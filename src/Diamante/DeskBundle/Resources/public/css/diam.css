@@ -369,3 +369,8 @@ div[id^="grid-audit-grid"] td.number-cell {
 .desktop-version .main-menu-sided.minimized .dropdown-level-1.active .title {
     color: #545456;
 }
+
+.modal.show .modal-dialog {
+    top: 50%;
+    transform: translateY(-50%);
+}
