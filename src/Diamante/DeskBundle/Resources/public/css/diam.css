@@ -365,3 +365,12 @@ div[id^="grid-audit-grid"] td.number-cell {
     border: 1px solid #e3e3e4;
     border-width: 1px 0 0;
 }
+
+.desktop-version .main-menu-sided.minimized .dropdown-level-1.active .title {
+    color: #545456;
+}
+
+.modal.show .modal-dialog {
+    top: 50%;
+    transform: translateY(-50%);
+}
