@@ -3,6 +3,7 @@ whitelist:
     - 'oro_config_configuration_system'
     - 'oro_api_get_sidebars'
     - 'oro_api_put_sidebars'
+    - 'oro_api_patch_entity_data'
     - 'oro_api_cget_sidebarwidgets'
     - 'oro_api_post_sidebarwidgets'
     - 'oro_email_last'
