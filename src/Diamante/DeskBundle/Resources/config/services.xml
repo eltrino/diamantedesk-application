@@ -89,6 +89,7 @@
 
         <service id="diamante.datagrid.sorter.combined_datasource" class="%diamante.datagrid.sorter.combined_datasource_extension.class%">
             <argument id="oro_datagrid.provider.state.sorters" type="service"/>
+            <argument id="oro_datagrid.provider.resolver" type="service"/>
             <tag name="oro_datagrid.extension"/>
         </service>
 
