@@ -10,8 +10,8 @@ system_configuration:
             options:
                 label: 'Registration Requied'
                 choices:
-                    - No
-                    - Yes
+                    No: 0
+                    Yes: 1
 
         diamante_email_processing.mailbox_help:
             data_type: block

@@ -64,9 +64,14 @@
         <parameter key="diamante_desk.entity.abstract_property_handler.class">Diamante\DeskBundle\Infrastructure\Shared\Entity\AbstractPropertyHandler</parameter>
         <parameter key="diamante_desk.property.comment_handler.class">Diamante\DeskBundle\Infrastructure\Comment\CommentPropertyHandler</parameter>
         <parameter key="diamante_desk.entity.property_processing_manager.class">Diamante\DeskBundle\Infrastructure\Shared\Entity\PropertyProcessingManager</parameter>
+        <parameter key="diamante_desk.form.extension.country_choice.class">Diamante\DeskBundle\Form\Extension\CountryChoiceTypeExtension</parameter>
     </parameters>
 
     <services>
+        <service id="diamante_desk.form.extension.country_choice" class="%diamante_desk.form.extension.country_choice.class%">
+            <tag name="form.type_extension" extended_type="Symfony\Component\Form\Extension\Core\Type\ChoiceType" alias="choice"/>
+        </service>
+
         <service id="diamante.datagrid.extension.formatter.assignee_property" class="Diamante\DeskBundle\Datagrid\AssigneePropertyFormatter">
             <argument type="service" id="translator"/>
             <tag name="oro_datagrid.extension.formatter.property" type="assignee"/>
@@ -89,6 +94,7 @@
 
         <service id="diamante.datagrid.sorter.combined_datasource" class="%diamante.datagrid.sorter.combined_datasource_extension.class%">
             <argument id="oro_datagrid.provider.state.sorters" type="service"/>
+            <argument id="oro_datagrid.provider.resolver" type="service"/>
             <tag name="oro_datagrid.extension"/>
         </service>
 

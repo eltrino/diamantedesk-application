@@ -1,5 +1,6 @@
 .diam-attachments {
     position: relative;
+    list-style-type: none;
 }
 .diam-attachment {
     float: left;
@@ -69,6 +70,7 @@
 
 .diam-comments {
     margin: 0 0 1em;
+    list-style-type: none;
 }
 
 .diam-comment {
@@ -343,6 +345,11 @@ div[id^="grid-audit-grid"] td.number-cell {
     border-radius: .25em;
 }
 
+.select2-chosen .diam-user-type {
+    vertical-align: bottom;
+    display: inline-block;
+}
+
 .diam-user-type.oro {
     background-color: #3984B6;
 }
@@ -351,3 +358,19 @@ div[id^="grid-audit-grid"] td.number-cell {
     background-color: #1D2E81;
 }
 
+.desktop-version .side-menu-overlay .divider {
+    display: block;
+    height: 1px;
+    margin: 5px 0 5px 16px;
+    border: 1px solid #e3e3e4;
+    border-width: 1px 0 0;
+}
+
+.desktop-version .main-menu-sided.minimized .dropdown-level-1.active .title {
+    color: #545456;
+}
+
+.modal.show .modal-dialog {
+    top: 50%;
+    transform: translateY(-50%);
+}

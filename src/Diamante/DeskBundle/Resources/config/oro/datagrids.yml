@@ -231,7 +231,8 @@ datagrids:
                     options:
                         field_options:
                             class: DiamanteDeskBundle:Branch
-                            property_path: name
+                            choice_label: name
+                            query_builder: "@diamante.ticket.datagrid_branch_helper->getBranchFilterQueryBuilder"
                 assigneeFullName:
                     type:      string
                     data_name: assigneeFullName
