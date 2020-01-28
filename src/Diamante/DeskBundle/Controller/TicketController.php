@@ -555,7 +555,7 @@ class TicketController extends Controller
             if (in_array($attachment->getFile()->getExtension(), ['jpg', 'png', 'gif', 'bmp', 'jpeg'])) {
                 $previewLink = $this->get('liip_imagine.cache.manager')
                     ->getBrowserPath(
-                        'uploads/attachments/ticket/' . $attachment->getFile()->getFilename(),
+                        'ticket/' . $attachment->getFile()->getFilename(),
                         'attach_preview_img'
                     );
             } else {

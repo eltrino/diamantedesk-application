@@ -31,8 +31,6 @@ behat.yml
 /public/css
 /public/js
 /public/uploads/users/*
-/public/uploads/attachments/*
-/public/uploads/branch/*
 /public/media/cache
 /public/media/js
 /public/build.js

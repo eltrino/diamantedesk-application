@@ -18,8 +18,6 @@ use Diamante\DeskBundle\Model\Shared\Entity;
 
 class Attachment implements Entity
 {
-    const PATH_TO_ATTACH_DIR = 'uploads/attachments';
-
     /**
      * @var integer
      */

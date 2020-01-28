@@ -14,7 +14,6 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Persistence\Doctrine\DBAL\Types;
 
-use Diamante\DeskBundle\Model\Attachment\Attachment;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
 use Diamante\DeskBundle\Model\Attachment\File;
@@ -58,6 +57,6 @@ class AttachmentFileType extends StringType
             throw new \RuntimeException("Value should be a File type.");
         }
         /** @var $value File */
-        return parent::convertToDatabaseValue(Attachment::PATH_TO_ATTACH_DIR . $value->getLocation(), $platform);
+        return parent::convertToDatabaseValue($value->getPathname(), $platform);
     }
 }

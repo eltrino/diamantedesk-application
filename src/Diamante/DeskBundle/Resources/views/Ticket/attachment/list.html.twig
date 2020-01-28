@@ -7,7 +7,7 @@
             <figure>
                 <div class="diam-attachment-preview">
                 {% set attachmentExtension = attachment.file.extension %}
-                {% set attachmentPreviewSrc = attachment.file.pathname %}
+                {% set attachmentPreviewSrc = attachment.file.location %}
                 {% if attachmentExtension == '' %}
                     <img src="{{ asset('bundles/diamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
                 {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
