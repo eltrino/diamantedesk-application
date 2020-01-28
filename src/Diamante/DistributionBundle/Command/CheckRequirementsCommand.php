@@ -16,7 +16,7 @@ class CheckRequirementsCommand extends ContainerAwareCommand
     {
         $this
             ->setName('diamante:check-requirements')
-            ->setDescription('Check if Diamante Application meets an requirements')
+            ->setDescription('Check if Diamante Application meets all requirements')
             ->setHelp(
                 <<<EOT
 The <info>%command.name%</info> command checks that the application meets the system requirements.
