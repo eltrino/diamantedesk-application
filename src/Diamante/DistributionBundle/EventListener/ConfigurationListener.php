@@ -40,7 +40,7 @@ class ConfigurationListener
         //'language_languages',
         //'look_and_feel',
         //'navbar_settings',
-        'activity_list_settings',
+        //'activity_list_settings',
         'calendar_settings',
         //'grid_settings',
         //'wysiwyg_settings',
