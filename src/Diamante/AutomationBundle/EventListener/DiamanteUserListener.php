@@ -55,7 +55,12 @@ class DiamanteUserListener
         }
 
         $isDeleted = $eventArgs->hasChangedField('isDeleted');
-        $isDeletedValue = $eventArgs->getNewValue('isDeleted');
+
+        try{
+            $isDeletedValue = $eventArgs->getNewValue('isDeleted');
+        }catch (\InvalidArgumentException $exception) {
+            $isDeletedValue = false;
+        }
 
         if (!$isDeleted || !$isDeletedValue) {
             return;
