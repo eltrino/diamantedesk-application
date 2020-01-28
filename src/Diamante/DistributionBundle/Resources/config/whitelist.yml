@@ -6,6 +6,7 @@ whitelist:
     - 'oro_api_patch_entity_data'
     - 'oro_api_cget_sidebarwidgets'
     - 'oro_api_post_sidebarwidgets'
+    - 'oro_api_post_windows'
     - 'oro_api_put_sidebarwidgets'
     - 'oro_api_delete_sidebarwidgets'
     - 'oro_api_delete_windows'
