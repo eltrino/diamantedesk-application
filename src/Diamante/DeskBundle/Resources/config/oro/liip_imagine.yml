@@ -1,7 +1,6 @@
 liip_imagine:
   filter_sets:
     attach_preview_img:
-      data_loader: diamante_attachment
       quality:          95
       filters:
         thumbnail:    { size: [180, 180], mode: inset }
