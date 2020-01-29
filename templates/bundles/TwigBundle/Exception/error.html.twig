@@ -1,7 +1,6 @@
 {% extends 'OroUIBundle:Default:error.html.twig' %}
 {% block head %}
     <link rel="icon" type="image/png" href="{{ asset('bundles/diamantefront/img/logo_xs_blue.png') }}" />
-    <meta name="error" content="{{ status_code }}" />
     {{ parent() }}
 {% endblock %}
 {% block content %}
@@ -10,7 +9,7 @@
             <div class="error-page-content">
                 {% if oro_theme_logo() %}
                     <a href="{{ path('oro_default') }}">
-                        <img class="error-page-img" alt="logo" src="{{ asset('bundles/diamantefront/img/logo_xs_blue.png') }}"/>
+                        <img class="error-page-img" alt="logo" src="{{ asset('bundles/diamantefront/img/logo_auth.png') }}"/>
                     </a>
                 {% endif %}
                 <h1 class="error-page-title">{{ status_code }}. {{ status_text }}</h1>
