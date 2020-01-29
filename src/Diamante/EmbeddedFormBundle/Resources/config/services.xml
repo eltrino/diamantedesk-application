@@ -28,7 +28,7 @@
 
     <services>
         <service id="diamante_embedded_form.form_type.available_embedded_form" class="%diamante_embedded_form.class%">
-            <tag name="oro_embedded_form" label="Diamante Ticket"/>
+            <tag name="oro_embedded_form" label="Diamante Ticket" type="%diamante_embedded_form.class%"/>
             <tag name="form.type" />
         </service>
         <service id="diamante_embedded_form.event_listener.embedded_form" class="%diamante_embedded_form.event_listener.embedded_form.class%">

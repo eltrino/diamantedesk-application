@@ -26,8 +26,8 @@ system_configuration:
             options:
                 label: 'SSL'
                 choices:
-                    - No
-                    - Yes
+                    No: 0
+                    Yes: 1
 
         diamante_email_processing.mailbox_username:
             data_type: string
@@ -51,8 +51,8 @@ system_configuration:
                 label: 'Delete Processed Messages'
                 tooltip: "Some IMAP servers do not allow copy/move operations on the messages. In this case they could be removed after processing."
                 choices:
-                    - No
-                    - Yes
+                    No: 0
+                    Yes: 1
 
     tree:
         system_configuration:

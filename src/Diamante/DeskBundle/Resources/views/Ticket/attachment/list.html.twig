@@ -7,7 +7,7 @@
             <figure>
                 <div class="diam-attachment-preview">
                 {% set attachmentExtension = attachment.file.extension %}
-                {% set attachmentPreviewSrc = attachment.file.Pathname %}
+                {% set attachmentPreviewSrc = attachment.file.location %}
                 {% if attachmentExtension == '' %}
                     <img src="{{ asset('bundles/diamantedesk/img/logo_oro.png') | imagine_filter('attach_preview_default') }}" alt="{{ attachment.filename|escape }}"/>
                 {% elseif (attachmentExtension == 'jpg' or attachmentExtension == 'jpeg' or
@@ -38,7 +38,7 @@
                       method="post" enctype="multipart/form-data">
                     <label id="diam-dropzone-label" for="diam-dropzone-file"><i class="icon-plus"></i> {{ 'diamante.desk.attachment.placeholders.dropzone'|trans }}</label>
                     <span class="diam-dropzone-loader" id="diam-dropzone-loader"><i class="icon-spinner icon-spin"></i></span>
-                    <input type="hidden" name="diamante_attachment_form[_token]" value="{{ csrf_token('attachment') }}" />
+                    <input type="hidden" name="diamante_attachment_form[_token]" value="{{ csrf_token('diamante_attachment_form') }}" />
                     <input id="diam-dropzone-file" type="file" name="diamante_attachment_form[attachmentsInput][]" multiple />
                 </form>
             </div>

@@ -224,7 +224,7 @@ class TicketController extends Controller
             $formView = $form->createView();
             $formView->children['attachmentsInput']->vars = array_replace(
                 $formView->children['attachmentsInput']->vars,
-                ['full_name' => 'diamante_ticket_form[attachmentsInput][]']
+                ['full_name' => 'diamante_ticket_update_form[attachmentsInput][]']
             );
             $this->handle($request, $form);
 
@@ -553,10 +553,11 @@ class TicketController extends Controller
             );
 
             if (in_array($attachment->getFile()->getExtension(), ['jpg', 'png', 'gif', 'bmp', 'jpeg'])) {
-                $previewLink = $this->get('router')->generate(
-                    '_imagine_attach_preview_img',
-                    ['path' => $attachment->getFile()->getPathname()]
-                );
+                $previewLink = $this->get('liip_imagine.cache.manager')
+                    ->getBrowserPath(
+                        'ticket/' . $attachment->getFile()->getFilename(),
+                        'attach_preview_img'
+                    );
             } else {
                 $previewLink = '';
             }

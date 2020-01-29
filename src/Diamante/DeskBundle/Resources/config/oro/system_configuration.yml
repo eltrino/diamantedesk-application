@@ -26,8 +26,8 @@ system_configuration:
       options:
         label: 'Enable Email Notifications'
         choices:
-          - No
-          - Yes
+          No: 0
+          Yes: 1
     diamante_desk.default_branch:
       data_type: integer
       type: Diamante\DeskBundle\Form\Type\DefaultBranchType
