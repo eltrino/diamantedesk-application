@@ -25,6 +25,7 @@ use Diamante\UserBundle\Model\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -130,6 +131,10 @@ class CommentController extends Controller
         );
         try {
             $this->handle($request, $form);
+            if ($uploaded = $request->files->get('diamante_comment_form')) {
+                $attachmentDto = AttachmentInput::createFromUploadedFile($uploaded['attachmentsInput'][0]);
+                $command->attachmentsInput[] = $attachmentDto;
+            }
             $callback($command);
 
             if ($command->id) {
@@ -196,8 +201,7 @@ class CommentController extends Controller
         $attachment = $commentService->getCommentAttachment($retrieveCommentAttachment);
 
         $filename = $attachment->getFilename();
-        $filePathname = realpath($this->container->getParameter('kernel.root_dir') . '/attachments/comment')
-            . '/' . $attachment->getFilename();
+        $filePathname = realpath($attachment->getFile()->getPathname());
 
         if (!file_exists($filePathname)) {
             $this->addErrorMessage('diamante.desk.attachment.messages.get.error');
@@ -236,7 +240,7 @@ class CommentController extends Controller
         $removeCommentAttachmentCommand->attachmentId = $attachId;
 
         try {
-            $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand);
+            $commentService->removeAttachmentFromComment($removeCommentAttachmentCommand, true);
             $this->addSuccessMessage('diamante.desk.attachment.messages.delete.success');
         } catch (\Exception $e) {
             $this->handleException($e);
