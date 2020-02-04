@@ -24,6 +24,7 @@ use Oro\Bundle\InstallerBundle\CommandExecutor;
 use Oro\Bundle\InstallerBundle\Command\Provider\InputOptionProvider;
 use Symfony\Component\Console\Input\InputOption;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+use Symfony\Component\Process\Process;
 
 /**
  * @TODO ORO 2.0 Database schema dropped successfully! executes three times but looks like nothing dropped
@@ -47,6 +48,9 @@ class InstallCommand extends OroInstallCommand
      * @var InputOptionProvider
      */
     protected $inputOptionProvider;
+
+    /** @var Process */
+    private $assetsCommandProcess;
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
@@ -150,20 +154,35 @@ class InstallCommand extends OroInstallCommand
 
         $output->writeln('<info>Installing DiamanteDesk.</info>');
 
-        $this->commandExecutor->runCommand(
-            'diamante:check-requirements',
-            [
-                '--process-isolation' => true,
-                '-vv' => true,
-            ]
-        );
-        $this
-            // ->prepareStep($input, $output)
-            ->loadDataStep($this->commandExecutor, $output);
+        try{
+            $this->commandExecutor->runCommand(
+                'diamante:check-requirements',
+                [
+                    '--process-isolation' => true,
+                    '-vv' => true,
+                ]
+            );
+            $skipAssets = $input->getOption('skip-assets');
+            if (!$skipAssets) {
+                $this->startBuildAssetsProcess($input);
+            }
+            $this
+                // ->prepareStep($input, $output)
+                ->loadDataStep($this->commandExecutor, $output);
 
 
-        $output->writeln('<info>Administration setup finished.</info>');
-        $this->finalStep($this->commandExecutor, $output, $input, $input->getOption('skip-assets'));
+            $output->writeln('<info>Administration setup finished.</info>');
+            $this->finalStep($this->commandExecutor, $output, $input, $input->getOption('skip-assets'));
+
+            if (!$skipAssets) {
+                $buildAssetsProcessExitCode = $this->getBuildAssetsProcessExitCode($output);
+            }
+        } catch (\Exception $exception) {
+            $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+
+            return $this->commandExecutor->getLastCommandExitCode();
+        }
+
 
         $output->writeln(
             sprintf(
@@ -182,6 +201,7 @@ class InstallCommand extends OroInstallCommand
         $this->logger
             ->info(sprintf('DiamanteDesk installation finished at %s', date('Y-m-d H:i:s')));
 
+        //return $buildAssetsProcessExitCode ?? 0;
         return 0;
     }
 
@@ -221,7 +241,7 @@ class InstallCommand extends OroInstallCommand
                 [
                     '--process-isolation' => true,
                     '--no-interaction'    => true,
-                    '--exclude'           => ['DiamanteDistributionBundle']
+                    '--exclude'           => ['DiamanteDistributionBundle', 'DiamanteDeskBundle']
                 ]
             );
 
@@ -232,18 +252,22 @@ class InstallCommand extends OroInstallCommand
         $this->updateOrganization($commandExecutor);
         $this->updateUser($commandExecutor);
 
-        $commandExecutor->runCommand('diamante:desk:data');
-
         $commandExecutor->runCommand(
             'oro:migration:data:load',
             [
-                '--bundles' => ['DiamanteDistributionBundle'],
+                '--bundles' => ['DiamanteDistributionBundle', 'DiamanteDeskBundle'],
                 '--process-isolation' => true,
                 '--no-interaction'    => true,
             ]
         );
 
-
+        $commandExecutor->runCommand(
+            'diamante:desk:data',
+            [
+                '--process-isolation' => true,
+                '--no-debug' => true
+            ]
+        );
         $output->writeln('');
 
         return $this;
@@ -430,5 +454,60 @@ class InstallCommand extends OroInstallCommand
         }
 
         return $commandParameters;
+    }
+
+    /**
+     * @param InputInterface $input
+     */
+    private function startBuildAssetsProcess(InputInterface $input): void
+    {
+        $phpBinaryPath = CommandExecutor::getPhpExecutable();
+
+        $command = [
+            $phpBinaryPath,
+            'bin/console',
+            'oro:assets:install'
+        ];
+
+        if ($input->hasOption('symlink') && $input->getOption('symlink')) {
+            $command[] = '--symlink';
+        }
+
+        if ($input->getOption('env')) {
+            $command[] = sprintf('--env=%s', $input->getOption('env'));
+        }
+
+        $this->assetsCommandProcess = new Process(
+            $command,
+            realpath($this->getContainer()->getParameter('kernel.project_dir'))
+        );
+        $this->assetsCommandProcess->setTimeout(null);
+        $this->assetsCommandProcess->start();
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return int||null
+     */
+    private function getBuildAssetsProcessExitCode(OutputInterface $output): ?int
+    {
+        if (!$this->assetsCommandProcess) {
+            return 0;
+        }
+
+        if (!$this->assetsCommandProcess->isTerminated()) {
+            $this->assetsCommandProcess->wait();
+        }
+
+        if ($this->assetsCommandProcess->isSuccessful()) {
+            $output->writeln('Assets has been installed successfully');
+            $output->writeln($this->assetsCommandProcess->getOutput());
+        } else {
+            $output->writeln('Assets has not been installed! Please run "php bin/console oro:assets:install".');
+            $output->writeln('Error during install assets:');
+            $output->writeln($this->assetsCommandProcess->getErrorOutput());
+        }
+
+        return $this->assetsCommandProcess->getExitCode();
     }
 }
