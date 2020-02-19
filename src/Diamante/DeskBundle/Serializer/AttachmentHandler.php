@@ -11,8 +11,8 @@ use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\XmlSerializationVisitor;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class AttachmentHandler implements SubscribingHandlerInterface
 {
@@ -34,19 +34,19 @@ class AttachmentHandler implements SubscribingHandlerInterface
     protected $managerImpl;
 
     /**
-     * @var ContainerInterface
+     * @var RequestStack
      */
-    private $serviceContainer;
+    private $requestStack;
 
 
     public function __construct(
         AttachmentServiceImpl $attachmentServiceImpl,
         ManagerImpl $managerImpl,
-        ContainerInterface $serviceContainer
+        RequestStack $requestStack
     ) {
         $this->attachmentService = $attachmentServiceImpl;
         $this->managerImpl = $managerImpl;
-        $this->serviceContainer = $serviceContainer;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -126,7 +126,7 @@ class AttachmentHandler implements SubscribingHandlerInterface
         }
 
         /** @var \Symfony\Component\HttpFoundation\Request $request */
-        $request = $this->serviceContainer->get('request');
+        $request = $this->requestStack->getCurrentRequest();
 
         $data = [
             'id'         => $attachment->getId(),
