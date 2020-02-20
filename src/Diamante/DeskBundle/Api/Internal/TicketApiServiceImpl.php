@@ -457,7 +457,7 @@ class TicketApiServiceImpl extends TicketServiceImpl implements RestServiceInter
     {
         $criteriaProcessor = new TicketFilterCriteriaProcessor();
         $repository = $this->getTicketRepository();
-        $user = $this->getAuthorizationService()->getLoggedUser()->getDiamanteUser();
+        $user = $this->getAuthorizationService()->getLoggedUser();
         $userType = $this->userService->resolveCurrentUserType();
 
         $strategyProvider = new StrategyProvider(new User($user->getId(), $userType));
