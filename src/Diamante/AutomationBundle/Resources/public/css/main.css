@@ -1,0 +1,151 @@
+.diam-automation .control-group:before,
+.diam-automation .control-group:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.diam-automation .control-group:after {
+  clear: both;
+}
+.diam-automation .control-group .selector,
+.diam-automation .control-group .select2-container {
+  display: inline-block;
+  vertical-align: middle;
+}
+.diam-automation .control-group input {
+  margin-bottom: 0;
+}
+.diam-automation .control-group .value {
+  display: inline-block;
+  line-height: 28px;
+  height: 30px;
+  vertical-align: middle;
+  padding: 0 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 0;
+  font-weight: bold;
+}
+.diam-automation .control-group label.value {
+  text-transform: uppercase !important;
+}
+.diam-automation .control-group .controls {
+  margin-bottom: 10px;
+}
+.actions-list > div:before,
+.conditions-list > div:before,
+.actions-list > div:after,
+.conditions-list > div:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.actions-list > div:after,
+.conditions-list > div:after {
+  clear: both;
+}
+.actions-list .control-item,
+.conditions-list .control-item {
+  display: inline-block;
+  width: 15%;
+  vertical-align: top;
+}
+.actions-list input,
+.conditions-list input {
+  width: 100%;
+  height: 30px;
+  box-sizing: border-box;
+}
+.actions-list .select2-container,
+.conditions-list .select2-container {
+  width: 15%;
+}
+.actions-list .selector,
+.conditions-list .selector {
+  width: 15% !important;
+}
+.actions-list .selector span,
+.conditions-list .selector span {
+  width: 100% !important;
+}
+.actions-list .label,
+.conditions-list .label {
+  vertical-align: middle;
+}
+.grouping-list {
+  margin-top: 10px;
+}
+.grouping-children-list > .control-group {
+  padding: 10px 10px 10px 20px;
+  margin: 0 0 10px;
+  border: 3px solid #eee;
+}
+.diam-modal-as-dialog {
+  width: 300px;
+  margin-left: -150px;
+  top: 50%;
+  margin-top: -76px;
+  border: 1px solid #bbb;
+  background-color: #fafafa;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 1px 22px rgba(0, 0, 0, 0.4) !important;
+  -moz-box-shadow: 0 1px 22px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 1px 22px rgba(0, 0, 0, 0.4) !important;
+}
+.diam-modal-as-dialog .modal-header {
+  margin: -1px -1px 0 -1px;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid #000;
+  background-color: #404952;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#47505a), to(#363e47));
+  background-image: -webkit-linear-gradient(top, #47505a, #363e47);
+  background-image: -moz-linear-gradient(top, #47505a, #363e47);
+  background-image: linear-gradient(to bottom, #47505a, #363e47);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff47505a', endColorstr='#ff363e47', GradientType=0);
+  padding: 6px 15px;
+}
+.diam-modal-as-dialog .modal-header h3 {
+  color: #fff;
+  line-height: 20px;
+  font-size: 13px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.diam-modal-as-dialog .modal-header .close {
+  opacity: 1;
+  display: inline-block;
+  border: 1px solid #272e36;
+  width: 24px;
+  height: 22px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  line-height: 19px;
+  text-shadow: 0 1px 0 #45505c;
+  margin: 0 !important;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #6b7580;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#838d98), to(#46515d));
+  background-image: -webkit-linear-gradient(top, #838d98, #46515d);
+  background-image: -moz-linear-gradient(top, #838d98, #46515d);
+  background-image: linear-gradient(to bottom, #838d98, #46515d);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff838d98', endColorstr='#ff46515d', GradientType=0);
+}
+.diam-modal-as-dialog .modal-header .close:hover {
+  background-color: #5e6874;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#75808c), to(#3b444e));
+  background-image: -webkit-linear-gradient(top, #75808c, #3b444e);
+  background-image: -moz-linear-gradient(top, #75808c, #3b444e);
+  background-image: linear-gradient(to bottom, #75808c, #3b444e);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff75808c', endColorstr='#ff3b444e', GradientType=0);
+}
+.diam-modal-as-dialog .modal-body {
+  padding: 10px;
+}
