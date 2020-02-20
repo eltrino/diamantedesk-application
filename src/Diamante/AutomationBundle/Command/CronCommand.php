@@ -54,22 +54,7 @@ class CronCommand extends ContainerAwareCommand
         }
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $daemon = $this->getContainer()->get('oro_cron.job_daemon');
         $schedules = $em->getRepository('DiamanteAutomationBundle:Schedule')->findAll();
-
-        // check if daemon is running
-        if (!$daemon->getPid()) {
-            $output->writeln('');
-            $output->write('Daemon process not found, running.. ');
-
-            if ($pid = $daemon->run()) {
-                $output->writeln(sprintf('<info>OK</info> (pid: %u)', $pid));
-            } else {
-                $output->writeln('<error>failed</error>. Cron jobs can\'t be launched.');
-
-                return 255;
-            }
-        }
 
         foreach ($schedules as $schedule) {
             $command = $schedule->getCommand();
