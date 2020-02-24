@@ -38,6 +38,7 @@ whitelist:
     - 'oro_attachment_file'
     - 'oro_action_widget_buttons'
     - 'oro_action_operation_execute'
+    - 'oro_email_emailorigin_list'
 
     #OroUserBundle
     - 'oro_activity_list_api_get_list'
