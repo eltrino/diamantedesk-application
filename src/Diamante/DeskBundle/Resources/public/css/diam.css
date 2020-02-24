@@ -9,6 +9,16 @@
     text-align: center;
     border: 1px #e5e5e5 solid;
     border-radius: 5px;
+    color: #545456;
+}
+.diam-attachment a {
+    color: #545456;
+}
+.diam-attachment.watchers {
+    margin: 0 2em 2em 0;
+}
+.diam-attachment.watchers i {
+    margin: 2px 7px 2px 0;
 }
 .diam-attachment strong {
     font-weight: normal;
@@ -378,4 +388,10 @@ div[id^="grid-audit-grid"] td.number-cell {
 .mce-bdesk .mce-bdesk-image {
     width: 100%;
     padding-top: 5px;
+}
+
+ul.unstyled,
+ol.unstyled {
+    margin-left: 0;
+    list-style: none;
 }

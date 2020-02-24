@@ -3,11 +3,11 @@
 <div class="widget-content">
     <ul class="unstyled clearfix">
         {% for watcher in watchers %}
-            <li class="diam-attachment">
+            <li class="diam-attachment watchers">
                 <span class='{% if is_diamante_user_deleted(watcher) %}{{ "deleted-reporter" }}{% endif %}' >{{ render_user_name(watcher) }}</span>
                 <span class="pull-right">
                     <a href="{{ path('diamante_remove_watcher', { 'ticketId': ticket.id, 'user': watcher } ) }}">
-                        <i class="icon-remove hide-text" title="{{ 'diamante.desk.ui.delete'|trans }}">
+                        <i class="fa-times hide-text" title="{{ 'diamante.desk.ui.delete'|trans }}">
                             {{ 'diamante.desk.ui.delete'|trans }}
                         </i>
                     </a>
