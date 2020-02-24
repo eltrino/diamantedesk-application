@@ -374,3 +374,8 @@ div[id^="grid-audit-grid"] td.number-cell {
     top: 50%;
     transform: translateY(-50%);
 }
+
+.mce-bdesk .mce-bdesk-image {
+    width: 100%;
+    padding-top: 5px;
+}
