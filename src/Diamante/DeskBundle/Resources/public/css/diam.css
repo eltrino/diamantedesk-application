@@ -379,3 +379,7 @@ div[id^="grid-audit-grid"] td.number-cell {
     width: 100%;
     padding-top: 5px;
 }
+
+.ui-dialog-content .form-horizontal .control-group>.control-label {
+    width: auto !important;
+}
