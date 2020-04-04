@@ -405,3 +405,11 @@ div[id^="grid-audit-grid"] td.number-cell {
 .form-horizontal .control-group .controls .selector {
     max-width: 100%;
 }
+
+.oro-modal-normal.widget-setup .modal-dialog {
+    margin-top: 0;
+}
+.modal-dialog {
+    margin-top: 0;
+    margin-bottom: 0;
+}
