@@ -399,4 +399,37 @@ ol.unstyled {
 ul, ol {
     padding: 0;
     margin: 0 0 10px 25px;
+
+.ui-dialog-content .form-horizontal .control-group>.control-label {
+    width: auto !important;
+}
+
+.form-horizontal .control-group {
+    position: relative;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.form-horizontal .control-group .control-label.wrap {
+    margin-right: 24px;
+    margin-top: 10px;
+}
+
+.form-horizontal .control-group .controls {
+    min-width: 0;
+    max-width: 100%;
+    margin-top: 10px;
+    margin-left: 0;
+}
+
+.form-horizontal .control-group .controls .selector {
+    max-width: 100%;
+}
+
+.oro-modal-normal.widget-setup .modal-dialog {
+    margin-top: 0;
+}
+.modal-dialog {
+    margin-top: 0;
+    margin-bottom: 0;
 }
