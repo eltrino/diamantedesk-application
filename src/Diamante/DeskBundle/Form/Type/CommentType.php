@@ -63,9 +63,7 @@ class CommentType extends AbstractType
                 [
                     'label' => 'diamante.desk.attachment.entity_plural_label',
                     'required' => false,
-                    'attr' => [
-                        'multiple' => 'multiple',
-                    ],
+                    'multiple' => true
                 ]
             )->addModelTransformer(new AttachmentTransformer())
         );

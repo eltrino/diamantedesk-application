@@ -356,6 +356,7 @@ class TicketController extends Controller
                 );
             }
         } catch (\Exception $e) {
+            $this->logger->critical($e);
             $this->handleException($e);
             $response = new Response(
                 $this->get('translator')->trans('Error occurred while adding attachment to the ticket.'), 500

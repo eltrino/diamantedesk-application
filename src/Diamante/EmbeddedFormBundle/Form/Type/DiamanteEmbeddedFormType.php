@@ -105,9 +105,7 @@ class DiamanteEmbeddedFormType extends AbstractType implements EmbeddedFormInter
                 array(
                     'label' => 'diamante.desk.attachment.file',
                     'required' => false,
-                    'attr' => array(
-                        'multiple' => 'multiple',
-                    )
+                    'multiple' => true
                 )
             )
             ->addModelTransformer(new AttachmentTransformer())
