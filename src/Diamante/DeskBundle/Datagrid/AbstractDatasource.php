@@ -46,7 +46,7 @@ abstract class AbstractDatasource implements DatasourceInterface
     /**
      * @var array
      */
-    protected $sorters;
+    protected $sorters = [];
 
     /**
      * @param DatagridInterface $grid
