@@ -78,7 +78,7 @@ class AddMassBranchSubscriber implements EventSubscriberInterface
                 'label'    => 'diamante.desk.branch.messages.delete.select',
                 'required' => true,
                 'attr'     => ['style' => 'width:110px'],
-                'choices'  => $choices
+                'choices'  => array_flip($choices)
             ]
         )->add(
             'removeBranches',
