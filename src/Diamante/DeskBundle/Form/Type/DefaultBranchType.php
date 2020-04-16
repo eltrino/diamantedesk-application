@@ -36,7 +36,7 @@ class DefaultBranchType extends AbstractType
     {
         $choices = array();
         foreach ($this->branchService->getAllbranches() as $branch) {
-            $choices[$branch->getId()] = $branch->getName();
+            $choices[$branch->getName()] = $branch->getId();
         }
         $resolver->setDefaults(array(
             'choices' => $choices
