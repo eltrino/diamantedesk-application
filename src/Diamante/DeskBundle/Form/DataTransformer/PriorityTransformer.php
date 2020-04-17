@@ -61,9 +61,9 @@ class PriorityTransformer implements DataTransformerInterface
         if (empty($this->priorityOptions)) {
             $this->priorityOptions =
                 array(
-                    Priority::PRIORITY_LOW => Priority::PRIORITY_LOW_LABEL,
-                    Priority::PRIORITY_MEDIUM => Priority::PRIORITY_MEDIUM_LABEL,
-                    Priority::PRIORITY_HIGH => Priority::PRIORITY_HIGH_LABEL
+                    Priority::PRIORITY_LOW_LABEL => Priority::PRIORITY_LOW,
+                    Priority::PRIORITY_MEDIUM_LABEL => Priority::PRIORITY_MEDIUM,
+                    Priority::PRIORITY_HIGH_LABEL => Priority::PRIORITY_HIGH
                 );
         }
         return $this->priorityOptions;

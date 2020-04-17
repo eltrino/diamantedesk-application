@@ -21,9 +21,19 @@ use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
 use Oro\Bundle\DataGridBundle\Extension\Sorter\Configuration;
 use Diamante\DeskBundle\Datagrid\CombinedAuditDatasource;
 use Oro\Bundle\DataGridBundle\Extension\Sorter\OrmSorterExtension;
+use Oro\Bundle\DataGridBundle\Provider\State\DatagridStateProviderInterface;
+use Oro\Bundle\DataGridBundle\Provider\SystemAwareResolver;
 
 class CombinedDatasourceSorterExtension extends OrmSorterExtension
 {
+    public function __construct(
+        DatagridStateProviderInterface $sortersStateProvider,
+        SystemAwareResolver $resolver
+    ){
+        parent::__construct($sortersStateProvider);
+        $this->resolver = $resolver;
+    }
+
     /**
      * @param DatagridConfiguration $config
      *
@@ -37,15 +47,5 @@ class CombinedDatasourceSorterExtension extends OrmSorterExtension
             && is_array($columns);
 
         return $isApplicable;
-    }
-
-    /**
-     * @param DatagridConfiguration $config
-     * @param DatasourceInterface   $datasource
-     * @return void
-     */
-    public function visitDatasource(DatagridConfiguration $config, DatasourceInterface $datasource)
-    {
-        $datasource->setSorters($this->getSortersToApply($config));
     }
 }

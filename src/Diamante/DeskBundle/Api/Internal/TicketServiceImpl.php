@@ -12,6 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@eltrino.com so we can send you a copy immediately.
  */
+
 namespace Diamante\DeskBundle\Api\Internal;
 
 use Diamante\DeskBundle\Api\Command;
@@ -36,9 +37,10 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\SecurityBundle\Exception\ForbiddenException;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Oro\Bundle\UserBundle\Entity\User as OroUser;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Diamante\DeskBundle\Api\Dto\AttachmentInput;
 
 class TicketServiceImpl implements TicketService
 {
@@ -100,7 +102,7 @@ class TicketServiceImpl implements TicketService
      * @param AttachmentManager        $attachmentManager
      * @param AuthorizationService     $authorizationService
      * @param EventDispatcherInterface $dispatcher
-     * @param SecurityFacade           $securityFacade
+     * @param TokenStorageInterface    $tokenStorage
      */
     public function __construct(
         Registry $doctrineRegistry,
@@ -108,19 +110,17 @@ class TicketServiceImpl implements TicketService
         AttachmentManager $attachmentManager,
         AuthorizationService $authorizationService,
         EventDispatcherInterface $dispatcher,
-        SecurityFacade $securityFacade
+        TokenStorageInterface $tokenStorage
     ) {
-        $this->doctrineRegistry = $doctrineRegistry;
-        $this->ticketBuilder = $ticketBuilder;
-        $this->attachmentManager = $attachmentManager;
-        $this->authorizationService = $authorizationService;
-        $this->dispatcher = $dispatcher;
-
-        $this->ticketRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
-        $this->branchRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
+        $this->doctrineRegistry        = $doctrineRegistry;
+        $this->ticketBuilder           = $ticketBuilder;
+        $this->attachmentManager       = $attachmentManager;
+        $this->authorizationService    = $authorizationService;
+        $this->dispatcher              = $dispatcher;
+        $this->ticketRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
+        $this->branchRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
         $this->ticketHistoryRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:TicketHistory');
-        $this->oroUserRepository = $this->doctrineRegistry->getRepository('OroUserBundle:User');
-        $this->loggedUser = $securityFacade->getLoggedUser();
+        $this->loggedUser              = $tokenStorage->getToken() ? $tokenStorage->getToken()->getUser() : null;
     }
 
     /**
@@ -156,12 +156,12 @@ class TicketServiceImpl implements TicketService
     {
         $ticketHistory = $this->ticketHistoryRepository->findOneByTicketKey($key);
         if ($ticketHistory) {
-            $ticket = $this->ticketRepository->get($ticketHistory->getTicket()->getId());
+            $ticket     = $this->ticketRepository->get($ticketHistory->getTicket()->getId());
             $currentKey = (string)$ticket->getKey();
             throw new TicketMovedException($currentKey);
         } else {
             $ticketKey = TicketKey::from($key);
-            $ticket = $this->loadTicketByTicketKey($ticketKey);
+            $ticket    = $this->loadTicketByTicketKey($ticketKey);
         }
 
         $this->isGranted('VIEW', $ticket);
@@ -263,13 +263,13 @@ class TicketServiceImpl implements TicketService
      *
      * @return array
      *
-     * @throws TicketNotFoundException
-     * @throws ForbiddenException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function addAttachmentsForTicket(Command\AddTicketAttachmentCommand $command)
     {
         \Assert\that($command->attachmentsInput)->nullOr()->all()
-            ->isInstanceOf('Diamante\DeskBundle\Api\Dto\AttachmentInput');
+            ->isInstanceOf(AttachmentInput::class);
 
         $ticket = $this->loadTicketById($command->ticketId);
 
@@ -335,15 +335,14 @@ class TicketServiceImpl implements TicketService
         $em = $this->doctrineRegistry->getManager();
         $em->getConnection()->beginTransaction();
         try {
-            $this->ticketBuilder
-                ->setSubject($command->subject)
-                ->setDescription($command->description)
-                ->setBranchId($command->branch)
-                ->setReporter($command->reporter)
-                ->setAssignee($command->assignee)
-                ->setPriority($command->priority)
-                ->setSource($command->source)
-                ->setStatus($command->status);
+            $this->ticketBuilder->setSubject($command->subject);
+            $this->ticketBuilder->setDescription($command->description);
+            $this->ticketBuilder->setBranchId($command->branch);
+            $this->ticketBuilder->setReporter($command->reporter);
+            $this->ticketBuilder->setAssignee($command->assignee);
+            $this->ticketBuilder->setPriority($command->priority);
+            $this->ticketBuilder->setSource($command->source);
+            $this->ticketBuilder->setStatus($command->status);
 
             $ticket = $this->ticketBuilder->build();
             $em->lock($ticket->getBranch(), LockMode::PESSIMISTIC_READ);
@@ -386,11 +385,11 @@ class TicketServiceImpl implements TicketService
 
         $assignee = null;
         if ($command->assignee) {
-            $assignee = $ticket->getAssignee();
+            $assignee          = $ticket->getAssignee();
             $currentAssigneeId = empty($assignee) ? null : $assignee->getId();
 
             if ($command->assignee !== $currentAssigneeId) {
-                $assignee = $this->oroUserRepository->find($command->assignee);
+                $assignee = $this->getOroUserRepository()->find($command->assignee);
             }
         }
 
@@ -470,7 +469,7 @@ class TicketServiceImpl implements TicketService
         $this->isAssigneeGranted($ticket);
 
         if ($command->assignee !== null) {
-            $assignee = $this->oroUserRepository->find($command->assignee);
+            $assignee = $this->getOroUserRepository()->find($command->assignee);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found');
             }
@@ -516,7 +515,7 @@ class TicketServiceImpl implements TicketService
             $ticket = $this->ticketRepository->get($ticketHistory->getTicket()->getId());
         } else {
             $ticketKey = TicketKey::from($key);
-            $ticket = $this->loadTicketByTicketKey($ticketKey);
+            $ticket    = $this->loadTicketByTicketKey($ticketKey);
         }
 
         $this->isGranted('DELETE', $ticket);
@@ -603,7 +602,7 @@ class TicketServiceImpl implements TicketService
      */
     public function updatePropertiesByKey(Command\UpdatePropertiesCommand $command)
     {
-        $ticket = $this->loadTicketByKey($command->key);
+        $ticket      = $this->loadTicketByKey($command->key);
         $command->id = $ticket->getId();
 
         return $this->updateProperties($command);
@@ -624,5 +623,22 @@ class TicketServiceImpl implements TicketService
     protected function getAuthorizationService()
     {
         return $this->authorizationService;
+    }
+
+    /**
+     * Workaround for DIAM-1920/DIAM-1921
+     * This class is created during routes load (DiamanteApiBundle checks for it's annotations)
+     * At that time extended entity data is not yet build, so creation of any entity repository
+     * with extended fields will fail.
+     *
+     * @return EntityRepository
+     */
+    protected function getOroUserRepository()
+    {
+        if (!$this->oroUserRepository) {
+            $this->oroUserRepository = $this->doctrineRegistry->getRepository('OroUserBundle:User');
+        }
+
+        return $this->oroUserRepository;
     }
 }

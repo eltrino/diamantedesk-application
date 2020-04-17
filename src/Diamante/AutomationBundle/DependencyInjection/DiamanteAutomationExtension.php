@@ -70,7 +70,7 @@ class DiamanteAutomationExtension extends Extension
             $cache->write(ConfigCacheDumper::dump($config));
         }
 
-        $config = require $cache;
+        $config = require $cache->getPath();
 
         return $config;
     }

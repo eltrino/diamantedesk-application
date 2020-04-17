@@ -18,7 +18,7 @@ use Diamante\ApiBundle\Annotation\ApiDoc;
 use Diamante\ApiBundle\Routing\RestServiceInterface;
 use Diamante\DeskBundle\Api\ApiPagingService;
 use Diamante\DeskBundle\Api\Command;
-use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 use Diamante\DeskBundle\Model\Branch\Filter\BranchFilterCriteriaProcessor;
 use Diamante\DeskBundle\Model\Branch\Exception\BranchHasTicketsException;
 

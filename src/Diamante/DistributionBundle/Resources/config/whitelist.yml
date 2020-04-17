@@ -2,7 +2,15 @@ whitelist:
   simple:
     - 'oro_config_configuration_system'
     - 'oro_api_get_sidebars'
+    - 'oro_api_put_sidebars'
+    - 'oro_api_patch_entity_data'
     - 'oro_api_cget_sidebarwidgets'
+    - 'oro_api_post_sidebarwidgets'
+    - 'oro_api_post_windows'
+    - 'oro_api_put_sidebarwidgets'
+    - 'oro_api_delete_sidebarwidgets'
+    - 'oro_api_delete_windows'
+    - 'oro_email_last'
     - 'oro_default'
     - 'oro_dashboard_itemized_widget'
     - 'oro_activity_list_widget_activities'
@@ -29,6 +37,8 @@ whitelist:
     - 'oro_importexport_export_download'
     - 'oro_attachment_file'
     - 'oro_action_widget_buttons'
+    - 'oro_action_operation_execute'
+    - 'oro_email_emailorigin_list'
 
     #OroUserBundle
     - 'oro_activity_list_api_get_list'

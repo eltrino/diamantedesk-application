@@ -17,14 +17,14 @@ namespace Diamante\DeskBundle\Infrastructure\Shared\Authorization;
 
 use Diamante\DeskBundle\Model\Shared\Owned;
 use Diamante\UserBundle\Infrastructure\Persistence\Doctrine\DoctrineDiamanteUserRepository;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 trait AuthorizationImplTrait
 {
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var DoctrineDiamanteUserRepository
@@ -53,7 +53,7 @@ trait AuthorizationImplTrait
         /** @var Owned $object */
         if (is_object($object)) {
             $objectIdentity = get_class($object);
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $objectOwner = $object->getOwner();
 
             if ($attributes == 'EDIT' || $attributes == 'DELETE' || $attributes == 'VIEW') {

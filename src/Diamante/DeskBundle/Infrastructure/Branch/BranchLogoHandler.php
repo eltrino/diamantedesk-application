@@ -83,9 +83,9 @@ class BranchLogoHandler
             );
     }
 
-    public static function create($kernelRootDir, Filesystem $filesystem)
+    public static function create($kernelProjectDir, Filesystem $filesystem)
     {
-        $branchLogoDir = realpath($kernelRootDir . '/../web') . Logo::PATH_TO_LOGO_DIR;
+        $branchLogoDir = realpath($kernelProjectDir . '/public') . Logo::PATH_TO_LOGO_DIR;
         if (!$filesystem->exists($branchLogoDir)) {
             $filesystem->mkdir($branchLogoDir);
         }

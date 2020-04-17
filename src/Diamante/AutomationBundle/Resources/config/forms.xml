@@ -9,7 +9,7 @@
 
     <services>
         <service id="diamante_automation.form.update_rule.type" class="%diamante_automation.form.update_rule.type.class%">
-            <tag name="form.type" alias="diamante_automation_update_rule_form"/>
+            <tag name="form.type" />
         </service>
     </services>
 </container>

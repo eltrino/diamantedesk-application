@@ -58,24 +58,18 @@
             </call>
         </service>
 
-        <service id="diamante_automation.schedule.repository" class="%diamante.generic.repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository"
-                >
+        <service id="diamante_automation.schedule.repository" class="%diamante.generic.repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
             <argument type="string">%diamante_automation.schedule.entity.class%</argument>
         </service>
 
-        <service id="diamante_automation.event_triggered_rule.repository" class="%diamante.generic.repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository"
-                >
+        <service id="diamante_automation.event_triggered_rule.repository" class="%diamante.generic.repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
             <argument type="string">%diamante_automation.event_triggered_rule.entity.class%</argument>
         </service>
 
-        <service id="diamante_automation.time_triggered_rule.repository" class="%diamante_automation.time_triggered_rule.repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository"
-                >
+        <service id="diamante_automation.time_triggered_rule.repository" class="%diamante_automation.time_triggered_rule.repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
             <argument type="string">%diamante_automation.time_triggered_rule.entity.class%</argument>
         </service>
 
@@ -123,7 +117,7 @@
             </call>
         </service>
 
-        <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%" parent="diamante_automation.action.abstract_modify_action" scope="prototype">
+        <service id="diamante_automation.action.update_property" class="%diamante_automation.update_property.class%" parent="diamante_automation.action.abstract_modify_action" shared="false">
             <call method="setConfigurationProvider">
                 <argument type="service" id="diamante_automation.config.provider"/>
             </call>
@@ -188,24 +182,24 @@
             <argument type="service" id="diamante_automation.config.provider"/>
         </service>
 
-        <service id="diamante_automation.mass_action.activate_rule" class="%diamante_automation.mass_action.activate_rule.class%">
+        <service id="diamante_automation.mass_action.activate_rule" class="%diamante_automation.mass_action.activate_rule.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="activate_rule"/>
         </service>
 
-        <service id="diamante_automation.mass_action.deactivate_rule" class="%diamante_automation.mass_action.deactivate_rule.class%">
+        <service id="diamante_automation.mass_action.deactivate_rule" class="%diamante_automation.mass_action.deactivate_rule.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="deactivate_rule"/>
         </service>
 
         <service id="diamante_automation.mass_action.handler.activate_rule" class="%diamante_automation.mass_action.handler.activate_rule.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="translator"/>
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="security.authorization_checker"/>
         </service>
 
         <service id="diamante_automation.mass_action.handler.deactivate_rule" class="%diamante_automation.mass_action.handler.deactivate_rule.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="translator"/>
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="security.authorization_checker"/>
         </service>
 
         <service id="diamante.automation.frontend.options.resolver" class="%diamante_automation.frontend.options.resolver.class%">

@@ -1,5 +1,6 @@
 .diam-attachments {
     position: relative;
+    list-style-type: none;
 }
 .diam-attachment {
     float: left;
@@ -8,6 +9,16 @@
     text-align: center;
     border: 1px #e5e5e5 solid;
     border-radius: 5px;
+    color: #545456;
+}
+.diam-attachment a {
+    color: #545456;
+}
+.diam-attachment.watchers {
+    margin: 0 2em 2em 0;
+}
+.diam-attachment.watchers i {
+    margin: 2px 7px 2px 0;
 }
 .diam-attachment strong {
     font-weight: normal;
@@ -69,6 +80,7 @@
 
 .diam-comments {
     margin: 0 0 1em;
+    list-style-type: none;
 }
 
 .diam-comment {
@@ -343,6 +355,11 @@ div[id^="grid-audit-grid"] td.number-cell {
     border-radius: .25em;
 }
 
+.select2-chosen .diam-user-type {
+    vertical-align: bottom;
+    display: inline-block;
+}
+
 .diam-user-type.oro {
     background-color: #3984B6;
 }
@@ -351,3 +368,69 @@ div[id^="grid-audit-grid"] td.number-cell {
     background-color: #1D2E81;
 }
 
+.desktop-version .side-menu-overlay .divider {
+    display: block;
+    height: 1px;
+    margin: 5px 0 5px 16px;
+    border: 1px solid #e3e3e4;
+    border-width: 1px 0 0;
+}
+
+.desktop-version .main-menu-sided.minimized .dropdown-level-1.active .title {
+    color: #545456;
+}
+
+.modal.show .modal-dialog {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.mce-bdesk .mce-bdesk-image {
+    width: 100%;
+    padding-top: 5px;
+}
+
+ul.unstyled,
+ol.unstyled {
+    margin-left: 0;
+    list-style: none;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 0 0 10px 25px;
+}
+
+.ui-dialog-content .form-horizontal .control-group>.control-label {
+    width: auto !important;
+}
+
+.form-horizontal .control-group {
+    position: relative;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.form-horizontal .control-group .control-label.wrap {
+    margin-right: 24px;
+    margin-top: 10px;
+}
+
+.form-horizontal .control-group .controls {
+    min-width: 0;
+    max-width: 100%;
+    margin-top: 10px;
+    margin-left: 0;
+}
+
+.form-horizontal .control-group .controls .selector {
+    max-width: 100%;
+}
+
+.oro-modal-normal.widget-setup .modal-dialog {
+    margin-top: 0;
+}
+.modal-dialog {
+    margin-top: 0;
+    margin-bottom: 0;
+}

@@ -14,9 +14,15 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Oro\Bundle\FormBundle\Form\Type\OroRichTextType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\DeskBundle\Api\Command\BranchCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class CreateBranchType extends AbstractType
 {
@@ -28,7 +34,7 @@ class CreateBranchType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             array(
                 'label'    => 'diamante.desk.attributes.name',
                 'required' => true,
@@ -37,7 +43,7 @@ class CreateBranchType extends AbstractType
 
         $builder->add(
             'key',
-            'text',
+            TextType::class,
             array(
                 'label'    => 'diamante.desk.attributes.key',
                 'required' => false,
@@ -47,7 +53,7 @@ class CreateBranchType extends AbstractType
 
         $builder->add(
             'description',
-            'oro_rich_text',
+            OroRichTextType::class,
             array(
                 'label'    => 'diamante.desk.common.description',
                 'required' => false,
@@ -56,7 +62,7 @@ class CreateBranchType extends AbstractType
 
         $builder->add(
             'logoFile',
-            'file',
+            FileType::class,
             array(
                 'label'    => 'diamante.desk.attachment.image',
                 'required' => false,
@@ -66,12 +72,12 @@ class CreateBranchType extends AbstractType
 
         $builder->add(
             'removeLogo',
-            'hidden'
+            HiddenType::class
         );
 
         $builder->add(
             'defaultAssignee',
-            'diamante_assignee_select',
+            AssigneeSelectType::class,
             array(
                 'label'    => 'diamante.desk.attributes.default_assignee',
                 'required' => false
@@ -82,13 +88,13 @@ class CreateBranchType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\BranchCommand',
+                'data_class' => BranchCommand::class,
                 'intention' => 'branch',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }
@@ -99,6 +105,11 @@ class CreateBranchType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_branch_form';
     }

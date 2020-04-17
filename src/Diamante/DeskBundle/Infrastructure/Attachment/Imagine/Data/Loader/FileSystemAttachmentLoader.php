@@ -14,12 +14,30 @@
  */
 namespace Diamante\DeskBundle\Infrastructure\Attachment\Imagine\Data\Loader;
 
+use Gedmo\Uploadable\MimeType\MimeTypeGuesser;
 use Liip\ImagineBundle\Binary\Loader\FileSystemLoader;
 use Imagine\Image\ImagineInterface;
+use Liip\ImagineBundle\Binary\Loader\LoaderInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class FileSystemAttachmentLoader extends FileSystemLoader
+class FileSystemAttachmentLoader extends FileSystemLoader implements LoaderInterface
 {
+    /**
+     * @var ImagineInterface
+     */
+    private $imagine;
+
+    /**
+     * @var array
+     */
+    private $formats;
+
+    /**
+     * @var string
+     */
+    private $rootPath;
+
     /**
      * @param ImagineInterface $imagine
      */
@@ -49,9 +67,7 @@ class FileSystemAttachmentLoader extends FileSystemLoader
      */
     protected function getFileInfo($absolutePath)
     {
-        $info = new \SplFileInfo($absolutePath);
-
-        return $info;
+        return new \SplFileInfo($absolutePath);
     }
 
 

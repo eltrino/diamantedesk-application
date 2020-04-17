@@ -11,69 +11,103 @@
     ],
     "autoload": {
         "psr-4": {"": "src/"},
+        "classmap": [
+            "src/AppKernel.php",
+            "src/AppCache.php"
+        ],
         "exclude-from-classmap": ["**/Tests/"]
     },
-    "repositories": [
-        {
+    "repositories": {
+        "composer": {
             "type": "composer",
             "url": "https://packagist.orocrm.com"
+        },
+        "asset-packagist": {
+            "type": "composer",
+            "url": "https://asset-packagist.orocrm.com"
         }
-    ],
-    "config": {
-        "component-dir": "web/bundles/components",
-        "bin-dir": "bin"
     },
     "require":{
-        "php": ">=5.4.4",
-        "oro/platform": "2.1.*",
-        "oro/platform-serialised-fields": "2.1.*",
-        "akeneo/batch-bundle": "0.4.2",
-        "monolog/monolog": "~1.22",
-        "nelmio/api-doc-bundle": "~2.13",
-        "jms/serializer-bundle": "~1.1",
-        "beberlei/assert": "2.*",
-        "zendframework/zend-mail": "~2.4",
-        "ezyang/htmlpurifier": "~4.8",
+        "oro/platform": "~3.1.1",
+        "oro/platform-serialised-fields": "~3.1.1",
+        "oro/calendar-bundle": "~3.1.1",
         "bordeux/email-cleaner": "0.6.*",
-        "michelf/php-markdown": "~1.4",
-        "hwi/oauth-bundle": "~0.5",
-        "ramsey/uuid": "~3.5",
-        "jms/job-queue-bundle": "1.4"
-
+        "michelf/php-markdown": "~1.8",
+        "ramsey/uuid": "~3.8",
+        "jms/job-queue-bundle": "1.4.*",
+        "beberlei/assert": "^3.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.8.*",
+        "sensio/generator-bundle": "3.1.*",
+        "behat/behat": "3.4.*",
+        "behat/mink-extension": "2.3.*",
+        "behat/mink-selenium2-driver": "1.*",
+        "behat/symfony2-extension": "2.1.*",
+        "nelmio/alice": "2.3.*",
+        "phpunit/phpunit": "6.5.*",
+        "johnkary/phpunit-speedtrap": "2.0.*",
+        "mybuilder/phpunit-accelerator": "2.0.*",
+        "squizlabs/php_codesniffer": "3.3.*",
+        "phpmd/phpmd": "2.6.*",
+        "sebastian/phpcpd": "3.0.*",
+        "phpunit/phpcov": "4.0.*",
+        "symfony/phpunit-bridge": "3.4.*",
+        "friendsofphp/php-cs-fixer": "2.12.6",
+        "oro/twig-inspector": "1.0.*",
         "eltrino/phpunit-mockannotations": "*"
+    },
+    "config": {
+        "component-dir": "public/bundles/components",
+        "bin-dir": "bin",
+        "fxp-asset": {
+            "enabled": false
+        }
     },
     "scripts": {
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setPermissions",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+            "@build-parameters",
+            "@build-bootstrap",
+            "@install-requirements-file",
+            "@set-permissions",
+            "@install-assets",
+            "@set-assets-version"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setPermissions",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+            "@build-parameters",
+            "@build-bootstrap",
+            "@install-requirements-file",
+            "@set-permissions",
+            "@install-assets",
+            "@set-assets-version"
+        ],
+        "build-parameters": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ],
+        "build-bootstrap": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap"
+        ],
+        "install-requirements-file": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+        ],
+        "set-permissions": [
+            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setPermissions"
+        ],
+        "install-assets": [
+            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::installAssets"
+        ],
+        "set-assets-version": [
+            "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setAssetsVersion"
         ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
-        "symfony-app-dir": "app",
-        "symfony-web-dir": "web",
+        "symfony-web-dir": "public",
+        "symfony-var-dir": "var",
+        "symfony-bin-dir": "bin",
+        "symfony-tests-dir": "tests",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
-        },
-        "symfony-assets-install": "symlink",
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        },
-        "asset-installer-paths": {
-            "npm-asset-library": "web/bundles/npmassets",
-            "bower-asset-library": "web/bundles/bowerassets"
+            "file": "config/parameters.yml"
         }
     }
 }

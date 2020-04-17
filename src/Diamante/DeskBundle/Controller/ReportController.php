@@ -115,7 +115,7 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             $this->handleException($e);
             throw $this->createNotFoundException($e->getMessage(), $e);
-        };
+        }
     }
 
     /**

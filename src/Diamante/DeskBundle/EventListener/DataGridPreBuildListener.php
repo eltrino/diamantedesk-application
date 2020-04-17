@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\EventListener;
 
 use Oro\Bundle\DataGridBundle\Event\PreBuild;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DataGridPreBuildListener
 {
@@ -40,11 +41,35 @@ class DataGridPreBuildListener
         $config = $event->getConfig();
         if ($config->getName() === 'diamante-my-recent-tickets-widget-grid') {
             $parameters = $event->getParameters();
-            $currentUserId = $this->container->get('oro_security.security_facade')->getLoggedUser()->getId();
+            $currentUserId = $this->getLoggedUser()->getId();
             $parameters->add(
                 array('userId' => $currentUserId, 'reporterId' => sprintf("oro_%s", $currentUserId))
             );
         }
         return;
+    }
+
+    /**
+     * Get logged user or null
+     *
+     * @return object|null
+     */
+    private function getLoggedUser()
+    {
+        /** @var TokenStorageInterface $tokenStorage */
+        $tokenStorage = $this->container->get('security.token_storage');
+        $token = $tokenStorage->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        $user = $token->getUser();
+
+        if (!is_object($user)) {
+            return null;
+        }
+
+        return $user;
     }
 }

@@ -16,9 +16,12 @@
 namespace Diamante\AutomationBundle\Controller;
 
 use Diamante\AutomationBundle\Api\Command\UpdateRuleCommand;
+use Diamante\AutomationBundle\Form\Type\UpdateRuleType;
 use Diamante\DeskBundle\Controller\Shared;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 trait AutomationTrait
@@ -65,16 +68,17 @@ trait AutomationTrait
      *
      * @return array
      */
-    protected function create($type)
+    protected function create(Request $request, $type)
     {
         $command = new UpdateRuleCommand();
-        $form = $this->createForm('diamante_automation_update_rule_form', $command);
+        /** @var FormInterface $form */
+        $form = $this->createForm(UpdateRuleType::class, $command);
         $formView = $form->createView();
 
         $configProvider = $this->container->get('diamante_automation.config.provider');
         $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
-            $this->handle($form);
+            $this->handle($request, $form);
 
             $rule = $this->get('diamante.rule.service')->createRule($command->rule);
             $this->addSuccessMessage('diamante.automation.rule.messages.create.success');
@@ -98,10 +102,11 @@ trait AutomationTrait
      *
      * @return array
      */
-    protected function update($type, $id)
+    protected function update(Request $request, $type, $id)
     {
         $command = new UpdateRuleCommand();
-        $form = $this->createForm('diamante_automation_update_rule_form', $command);
+        /** @var FormInterface $form */
+        $form = $this->createForm(UpdateRuleType::class, $command);
         $formView = $form->createView();
 
         $rule = $this->get('diamante.rule.service')->viewRule($type, $id);
@@ -109,7 +114,7 @@ trait AutomationTrait
         $configProvider = $this->container->get('diamante_automation.config.provider');
         $config = $configProvider->prepareConfigDump($this->container->get('translator.default'));
         try {
-            $this->handle($form);
+            $this->handle($request, $form);
 
             $rule = $this->get('diamante.rule.service')->updateRule($command->rule, $id);
 

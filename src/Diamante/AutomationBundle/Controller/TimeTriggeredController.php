@@ -19,6 +19,7 @@ use Diamante\DeskBundle\Controller\Shared;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -34,6 +35,7 @@ class TimeTriggeredController extends Controller
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
     use Shared\ResponseHandlerTrait;
+    use Shared\RequestGetterTrait;
     use AutomationTrait;
 
     /**
@@ -83,13 +85,14 @@ class TimeTriggeredController extends Controller
      * )
      * @Template("DiamanteAutomationBundle:Automation:create.html.twig")
      *
+     * @param Request $request
      * @param string $type
      *
      * @return array
      */
-    public function createAction($type)
+    public function createAction(Request $request, $type)
     {
-        return $this->create($type);
+        return $this->create($request, $type);
     }
 
     /**
@@ -103,14 +106,15 @@ class TimeTriggeredController extends Controller
      * )
      * @Template("DiamanteAutomationBundle:Automation:update.html.twig")
      *
+     * @param Request $request
      * @param string $type
-     * @param int    $id
+     * @param int $id
      *
      * @return array
      */
-    public function updateAction($type, $id)
+    public function updateAction(Request $request, $type, $id)
     {
-        return $this->update($type, $id);
+        return $this->update($request, $type, $id);
     }
 
     /**

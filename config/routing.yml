@@ -1,0 +1,21 @@
+#
+# 3rd party routes
+#
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.yaml"
+
+#
+# ORO routes
+#
+oro_default:
+    path:  /
+    defaults:
+        _controller: OroDashboardBundle:Dashboard:view
+
+oro_auto_routing:
+    resource: .
+    type:     oro_auto
+
+oro_expose:
+    resource: .
+    type:     oro_expose

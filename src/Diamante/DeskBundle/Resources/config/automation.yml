@@ -1,33 +1,33 @@
 diamante_automation:
     entities:
       ticket:
-        class: "Diamante\DeskBundle\Entity\Ticket"
+        class: 'Diamante\DeskBundle\Entity\Ticket'
         frontend_label: diamante.desk.ticket.entity_label
         conditions: ['created', 'updated', 'removed']
         properties:
           status:
             frontend_label: diamante.desk.ticket.status.label
             frontend_options:
-              source: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Status::getValueToLabelMap"
+              source: '^\\Diamante\\DeskBundle\\Model\\Ticket\\Status::getValueToLabelMap'
             type: status
             conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to']
           priority:
             frontend_label: diamante.desk.ticket.priority.label
             frontend_options:
-              source: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Priority::getValueToLabelMap"
+              source: '^\\Diamante\\DeskBundle\\Model\\Ticket\\Priority::getValueToLabelMap'
             type: priority
             conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to', 'gt', 'gte', 'lt', 'lte']
           branch:
             frontend_label: diamante.desk.ticket.branch.label
             frontend_options:
-              source: "@diamante.autocomplete.branch.service->getBranches"
+              source: '@diamante.autocomplete.branch.service->getBranches'
             type: branch
             updatable: false
             conditions: ['eq', 'neq', 'like']
           assignee:
             frontend_label: diamante.desk.ticket.assignee.label
             frontend_options:
-              source: "@diamante.autocomplete.user.service->getAssigners"
+              source: '@diamante.autocomplete.user.service->getAssigners'
             type: user
             conditions: ['eq', 'neq', 'changed', 'changed_from', 'changed_to']
           reporter_email:
@@ -39,7 +39,7 @@ diamante_automation:
           source:
             frontend_label: diamante.desk.ticket.source.label
             frontend_options:
-              source: "^\\Diamante\\DeskBundle\\Model\\Ticket\\Source::getValueToLabelMap"
+              source: '^\\Diamante\\DeskBundle\\Model\\Ticket\\Source::getValueToLabelMap'
             type: source
             conditions: ['eq', 'neq']
           subject:
@@ -83,7 +83,7 @@ diamante_automation:
             conditions: ['gt', 'gte', 'lt', 'lte']
             rules: ['time_triggered']
       comment:
-        class: "Diamante\DeskBundle\Entity\Comment"
+        class: 'Diamante\DeskBundle\Entity\Comment'
         frontend_label: diamante.desk.comment.entity_label
         conditions: ['created', 'updated', 'removed']
         properties:
@@ -99,7 +99,7 @@ diamante_automation:
           author:
             frontend_label: diamante.desk.comment.author.label
             frontend_options:
-              source: "@diamante.autocomplete.user.service->getUsers"
+              source: '@diamante.autocomplete.user.service->getUsers'
             type: user
             updatable: false
             conditions: ['is_admin', 'is_customer']
@@ -112,8 +112,8 @@ diamante_automation:
 
     actions:
       move_to_branch:
-        id: @diamante.desk.automation.action.move_to_branch
+        id: '@diamante.desk.automation.action.move_to_branch'
         frontend_label: diamante.desk.automation.action.move_to_branch
         frontend_options:
-          source: "@diamante.autocomplete.branch.service->getBranches"
+          source: '@diamante.autocomplete.branch.service->getBranches'
         data_types: ['virtual']

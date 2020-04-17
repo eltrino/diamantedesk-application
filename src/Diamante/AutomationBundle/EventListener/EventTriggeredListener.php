@@ -25,6 +25,7 @@ use Diamante\DeskBundle\Entity\Ticket;
 use Diamante\UserBundle\Model\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class EventTriggeredListener
 {
@@ -130,7 +131,7 @@ class EventTriggeredListener
             $getChangeset($entity)
         );
 
-        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
+        $loggedUser = $this->getLoggedUser();
         $disableListeners = true;
 
         // don't disable listeners if you edit both comment and ticket status on create action
@@ -171,7 +172,7 @@ class EventTriggeredListener
      */
     private function getEditor($entity, $type)
     {
-        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
+        $loggedUser = $this->getLoggedUser();
 
         if (is_null($loggedUser)) {
             if (static::TICKET_TARGET == $type) {
@@ -186,5 +187,29 @@ class EventTriggeredListener
         }
 
         return $editor;
+    }
+
+    /**
+     * Get logged user or null
+     *
+     * @return object|null
+     */
+    private function getLoggedUser()
+    {
+        /** @var TokenStorageInterface $tokenStorage */
+        $tokenStorage = $this->container->get('security.token_storage');
+        $token = $tokenStorage->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        $user = $token->getUser();
+
+        if (!is_object($user)) {
+            return null;
+        }
+
+        return $user;
     }
 }

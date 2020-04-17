@@ -1,0 +1,59 @@
+imports:
+    - { resource: config.yml }
+    - { resource: parameters_test.yml, ignore_errors: true }
+    - { resource: security_test.yml }
+
+parameters:
+    doctrine.dbal.connection_factory.class: 'Oro\Component\Testing\Doctrine\PersistentConnectionFactory'
+
+framework:
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    csrf_protection: true
+    profiler:
+        enabled: false
+
+monolog:
+    handlers:
+        fingers_crossed:
+            type: fingers_crossed
+            action_level: error
+            handler: nested
+        nested:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+
+services:
+    oro_message_queue.test.message_collector:
+        class: Oro\Bundle\MessageQueueBundle\Test\Functional\MessageCollector
+        decorates: oro_message_queue.client.message_producer
+        arguments:
+            - '@oro_message_queue.test.message_collector.inner'
+
+swiftmailer:
+    logging: true
+    disable_delivery: true
+
+# configure loose default password requirements for auto-generated test users
+oro_user:
+    settings:
+        password_min_length:
+            value: 2
+        password_lower_case:
+            value: false
+        password_upper_case:
+            value: false
+        password_numbers:
+            value: false
+        password_special_chars:
+            value: false
+
+twig:
+    strict_variables: true
+    debug: false
+
+oro_message_queue:
+    transport:
+        dbal: null

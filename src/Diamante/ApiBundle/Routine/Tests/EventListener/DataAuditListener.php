@@ -15,11 +15,11 @@
 
 namespace Diamante\ApiBundle\Routine\Tests\EventListener;
 
+use Diamante\UserBundle\Entity\ApiUser;
+use Oro\Bundle\DataAuditBundle\EventListener\EntityListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
-use \Oro\Bundle\DataAuditBundle\EventListener\EntityListener;
-use Diamante\UserBundle\Entity\ApiUser;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DataAuditListener
 {
@@ -29,18 +29,18 @@ class DataAuditListener
     private $container;
 
     /**
-     * @var SecurityFacade
+     * @var TokenStorageInterface
      */
-    private $securityFacade;
+    private $tokenStorage;
 
     /**
      * @param ContainerInterface $container
-     * @param SecurityFacade     $securityFacade
+     * @param TokenStorageInterface     $tokenStorage
      */
-    public function __construct(ContainerInterface $container, SecurityFacade $securityFacade)
+    public function __construct(ContainerInterface $container, TokenStorageInterface $tokenStorage)
     {
-        $this->container      = $container;
-        $this->securityFacade = $securityFacade;
+        $this->container    = $container;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -48,11 +48,17 @@ class DataAuditListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        $env = $this->container->getParameter("kernel.environment");
-        $user = $this->securityFacade->getLoggedUser();
+        $env  = $this->container->getParameter("kernel.environment");
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token) {
+            return;
+        }
+
+        $user = $token->getUser();
 
         if ('test' == $env && $user instanceof ApiUser) {
-            $em = $this->container->get('doctrine.orm.entity_manager');
+            $em           = $this->container->get('doctrine.orm.entity_manager');
             $eventManager = $em->getEventManager();
             foreach ($eventManager->getListeners()['onFlush'] as $hash => $listener) {
                 if ($listener instanceof EntityListener) {

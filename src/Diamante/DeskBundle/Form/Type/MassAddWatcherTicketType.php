@@ -14,9 +14,12 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Diamante\DeskBundle\Form\Type\WatcherSelectType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\DeskBundle\Api\Command\MassActionCommands\MassAddWatcherCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class MassAddWatcherTicketType extends AbstractType
 {
@@ -28,7 +31,7 @@ class MassAddWatcherTicketType extends AbstractType
     {
         $builder->add(
             'watcher',
-            'diamante_watcher_select',
+            WatcherSelectType::class,
             array(
                 'label'    => 'diamante.desk.attributes.watcher',
                 'required' => true,
@@ -40,13 +43,13 @@ class MassAddWatcherTicketType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\MassActionCommands\MassAddWatcherCommand',
+                'data_class' => MassAddWatcherCommand::class,
                 'intention' => 'watcher',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }
@@ -57,6 +60,11 @@ class MassAddWatcherTicketType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_ticket_form_mass_add_watcher';
     }

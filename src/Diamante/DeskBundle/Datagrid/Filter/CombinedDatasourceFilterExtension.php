@@ -20,6 +20,7 @@ use Diamante\DeskBundle\Datagrid\CombinedUsersDatasource;
 use Oro\Bundle\DataGridBundle\Datagrid\Builder;
 use Oro\Bundle\DataGridBundle\Datagrid\Common\DatagridConfiguration;
 use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
+use Oro\Bundle\DataGridBundle\Datasource\Orm\OrmDatasource;
 use Oro\Bundle\FilterBundle\Datasource\Orm\OrmFilterDatasourceAdapter;
 use Oro\Bundle\FilterBundle\Grid\Extension\Configuration;
 use Oro\Bundle\FilterBundle\Grid\Extension\OrmFilterExtension;
@@ -48,31 +49,29 @@ class CombinedDatasourceFilterExtension extends OrmFilterExtension
     public function visitDatasource(DatagridConfiguration $config, DatasourceInterface $datasource)
     {
         $filters = $this->getFiltersToApply($config);
-        $values  = $this->getValuesToApply($config);
+        $filtersState = $this->filtersStateProvider->getStateFromParameters($config, $this->getParameters());
 
         $datasourceAdapters = [];
+        /** @var CombinedAuditDatasource $datasource */
         foreach ($datasource->getQueryBuilders() as $qb) {
             $datasourceAdapters[] = new OrmFilterDatasourceAdapter($qb);
         }
 
         foreach ($filters as $filter) {
-            $value = isset($values[$filter->getName()]) ? $values[$filter->getName()] : false;
+            $value = $filtersState[$filter->getName()] ?? null;
 
-            if ($value === false) {
+            if ($value === null) {
                 continue;
             }
 
-            $form = $filter->getForm();
-            if (!$form->isSubmitted()) {
-                $form->submit($value);
-            }
-
-            if (!$form->isValid()) {
+            $filterForm = $this->submitFilter($filter, $value);
+            if (!$filterForm->isValid()) {
                 continue;
             }
 
+            $data = $filterForm->getData();
             foreach ($datasourceAdapters as $datasourceAdapter) {
-                $filter->apply($datasourceAdapter, $form->getData());
+                $filter->apply($datasourceAdapter,$data);
             }
         }
     }

@@ -15,7 +15,7 @@
             <argument type="service" id="diamante.user.service"/>
         </service>
 
-        <service id="diamante.mass_action.reset_password" class="%diamante.mass_action.reset_password.class%">
+        <service id="diamante.mass_action.reset_password" class="%diamante.mass_action.reset_password.class%" shared="false">
             <tag name="oro_datagrid.extension.mass_action.type" type="reset_password"/>
         </service>
     </services>

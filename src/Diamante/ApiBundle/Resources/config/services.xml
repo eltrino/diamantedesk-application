@@ -56,7 +56,7 @@
 
         <service id="wsse.security.authentication.listener" class="%wsse.security.authentication.listener.class%" public="false">
             <argument type="service" id="jms_serializer"/>
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
             <argument type="service" id="security.authentication.manager" />
             <argument type="service" id="monolog.logger.diamante"/>
             <tag name="monolog.logger" channel="diamante"/>
@@ -84,13 +84,13 @@
             <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
         </service>
 
-        <service id="diamante.api.headers.container" class="%diamante.api.headers.container.class%" scope="request"/>
+        <service id="diamante.api.headers.container" class="%diamante.api.headers.container.class%" shared="false"/>
 
         <service id="diamante.api.paging.provider" class="%diamante.api.paging.provider.class%"/>
 
         <service id="diamante.api.event_listener.data_audit" class="%diamante.api.event_listener.data_audit.class%">
             <argument type="service" id="service_container"/>
-            <argument type="service" id="oro_security.security_facade"/>
+            <argument type="service" id="security.token_storage"/>
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
         </service>
     </services>

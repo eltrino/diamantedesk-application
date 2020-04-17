@@ -15,9 +15,12 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
+use Diamante\DeskBundle\Api\Command\UpdateStatusCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class UpdateTicketStatusType extends AbstractType
 {
@@ -27,7 +30,9 @@ class UpdateTicketStatusType extends AbstractType
         $statusOptions = $statusTransformer->getOptions();
 
         $builder->add(
-            $builder->create('status', 'choice',
+            $builder->create(
+                'status',
+                ChoiceType::class,
                 array(
                     'label' => 'diamante.desk.attributes.status',
                     'required' => true,
@@ -41,13 +46,13 @@ class UpdateTicketStatusType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\UpdateStatusCommand',
+                'data_class' => UpdateStatusCommand::class,
                 'intention' => 'ticket_status',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }
@@ -58,6 +63,14 @@ class UpdateTicketStatusType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
     {
         return 'diamante_ticket_status_form';
     }

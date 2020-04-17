@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use JMS\Serializer\Serializer;
@@ -30,21 +30,21 @@ use FOS\RestBundle\Util\Codes;
 class WsseListener implements ListenerInterface
 {
     protected $serializer;
-    protected $securityContext;
+    protected $tokenStorage;
     protected $authenticationManager;
     protected $logger;
 
     public function __construct(
         Serializer $serializer,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         AuthenticationManagerInterface $authenticationManager,
         Logger  $logger
     )
     {
-        $this->serializer = $serializer;
-        $this->securityContext = $securityContext;
+        $this->serializer            = $serializer;
+        $this->tokenStorage          = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
-        $this->logger = $logger;
+        $this->logger                = $logger;
     }
 
     public function handle(GetResponseEvent $event)
@@ -79,7 +79,7 @@ class WsseListener implements ListenerInterface
                         "If you didn't receive your verification email, please <a href=\"#reconfirm/$user\">click here.</a>");
                     }
 
-                return $this->securityContext->setToken($returnValue);
+                return $this->tokenStorage->setToken($returnValue);
             } else if ($returnValue instanceof Response)
             {
                 $event->setResponse($returnValue);

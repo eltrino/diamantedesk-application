@@ -16,16 +16,14 @@
 namespace Diamante\AutomationBundle\MassAction\Handlers;
 
 use Doctrine\ORM\EntityManager;
-
-use Symfony\Component\Translation\TranslatorInterface;
-
-use Oro\Bundle\DataGridBundle\Exception\LogicException;
-use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
 use Oro\Bundle\DataGridBundle\Datasource\Orm\DeletionIterableResult;
-use Oro\Bundle\SecurityBundle\SecurityFacade;
-use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionHandlerInterface;
+use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
+use Oro\Bundle\DataGridBundle\Exception\LogicException;
 use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionHandlerArgs;
+use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionHandlerInterface;
 use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionResponse;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class RuleStateMassActionHandler implements MassActionHandlerInterface
 {
@@ -41,22 +39,22 @@ abstract class RuleStateMassActionHandler implements MassActionHandlerInterface
      */
     protected $translator;
 
-    /** @var SecurityFacade */
-    protected $securityFacade;
+    /** @var AuthorizationCheckerInterface */
+    protected $authorizationChecker;
 
     /**
      * @param EntityManager       $entityManager
      * @param TranslatorInterface $translator
-     * @param SecurityFacade      $securityFacade
+     * @param AuthorizationCheckerInterface      $authorizationChecker
      */
     public function __construct(
         EntityManager $entityManager,
         TranslatorInterface $translator,
-        SecurityFacade $securityFacade
+        AuthorizationCheckerInterface $authorizationChecker
     ) {
-        $this->entityManager  = $entityManager;
-        $this->translator     = $translator;
-        $this->securityFacade = $securityFacade;
+        $this->entityManager        = $entityManager;
+        $this->translator           = $translator;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -92,7 +90,7 @@ abstract class RuleStateMassActionHandler implements MassActionHandlerInterface
                 }
 
                 if ($entity) {
-                    if ($this->securityFacade->isGranted('EDIT', $entity)) {
+                    if ($this->authorizationChecker->isGranted('EDIT', $entity)) {
                         $callback($entity);
                         $this->entityManager->persist($entity);
                         $iteration++;

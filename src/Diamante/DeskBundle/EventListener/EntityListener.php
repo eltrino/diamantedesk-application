@@ -22,6 +22,7 @@ use Diamante\DeskBundle\Loggable\LoggableManager;
 use Oro\Bundle\PlatformBundle\EventListener\OptionalListenerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class EntityListener implements OptionalListenerInterface
 {
@@ -67,7 +68,7 @@ class EntityListener implements OptionalListenerInterface
             return;
         }
 
-        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
+        $loggedUser = $this->getLoggedUser();
         if ($loggedUser instanceof ApiUser) {
             $this->loggableManager->handleLoggable($event->getEntityManager());
         }
@@ -82,7 +83,7 @@ class EntityListener implements OptionalListenerInterface
             return;
         }
 
-        $loggedUser = $this->container->get('oro_security.security_facade')->getLoggedUser();
+        $loggedUser = $this->getLoggedUser();
         if ($loggedUser instanceof ApiUser) {
             $this->loggableManager->handlePostPersist($event->getEntity(), $event->getEntityManager());
         }
@@ -90,6 +91,8 @@ class EntityListener implements OptionalListenerInterface
 
     /**
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
     public function postRemove(LifecycleEventArgs $eventArgs)
     {
@@ -109,5 +112,29 @@ class EntityListener implements OptionalListenerInterface
                 $manager->remove($record);
             }
         }
+    }
+
+    /**
+     * Get logged user or null
+     *
+     * @return object|null
+     */
+    private function getLoggedUser()
+    {
+        /** @var TokenStorageInterface $tokenStorage */
+        $tokenStorage = $this->container->get('security.token_storage');
+        $token = $tokenStorage->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        $user = $token->getUser();
+
+        if (!is_object($user)) {
+            return null;
+        }
+
+        return $user;
     }
 }

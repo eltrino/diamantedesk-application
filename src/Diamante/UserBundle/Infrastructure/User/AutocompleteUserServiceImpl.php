@@ -140,7 +140,7 @@ class AutocompleteUserServiceImpl implements AutocompleteUserService
     {
         $convertedUsers = [];
 
-        $oroUsers = $this->oroUserManager->findUsers();
+        $oroUsers = $this->oroUserManager->getRepository()->findAll();
 
         if (!empty($oroUsers)) {
             $convertedUsers = $this->convertUsers($oroUsers, User::TYPE_ORO);

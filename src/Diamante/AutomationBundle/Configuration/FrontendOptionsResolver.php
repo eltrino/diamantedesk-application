@@ -78,8 +78,8 @@ class FrontendOptionsResolver
     protected function resolveFromClass($config)
     {
         $config = trim($config, self::RESOLVE_MARKER_CLASS);
-
-        list($class, $method) = explode('::', $config);
+        [$class, $method] = explode('::', $config);
+        $class = str_replace('\\\\', '\\', $class);
 
         if (!class_exists($class)) {
             throw new \RuntimeException("Invalid configuration");

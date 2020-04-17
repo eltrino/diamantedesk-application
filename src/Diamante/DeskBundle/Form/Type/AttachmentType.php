@@ -15,9 +15,17 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Diamante\DeskBundle\Form\DataTransformer\AttachmentTransformer;
+use Diamante\DeskBundle\Model\Attachment\File;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class AttachmentType extends AbstractType
 {
@@ -26,28 +34,30 @@ class AttachmentType extends AbstractType
         $builder->add(
             $builder->create(
                 'attachmentsInput',
-                'file',
+                FileType::class,
                 array(
                     'label' => 'diamante.desk.attachment.file',
                     'required' => true,
+                    'multiple' => true,
                     'attr' => array(
-                        'multiple' => 'multiple'
+                        'multiple' => true
                     )
                 )
-            )->addModelTransformer(new AttachmentTransformer())
+            )
+                ->addModelTransformer(new AttachmentTransformer())
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\AddTicketAttachmentCommand',
+                'data_class' => AddTicketAttachmentCommand::class,
                 'intention' => 'attachment',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }
@@ -58,6 +68,14 @@ class AttachmentType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
     {
         return 'diamante_attachment_form';
     }

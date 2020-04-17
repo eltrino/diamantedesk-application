@@ -7,6 +7,8 @@ use Diamante\UserBundle\Api\Command\CreateDiamanteUserCommand;
 use Diamante\UserBundle\Api\Command\UpdateDiamanteUserCommand;
 use Diamante\UserBundle\Entity\DiamanteUser;
 use Diamante\UserBundle\Exception\UserRemovalException;
+use Diamante\UserBundle\Form\Type\CreateDiamanteUserType;
+use Diamante\UserBundle\Form\Type\UpdateDiamanteUserType;
 use Diamante\UserBundle\Model\User;
 use JMS\AopBundle\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
@@ -23,6 +26,7 @@ class UserController extends Controller
     use Shared\ExceptionHandlerTrait;
     use Shared\SessionFlashMessengerTrait;
     use Shared\ResponseHandlerTrait;
+    use Shared\RequestGetterTrait;
 
     /**
      * @Route("/", name="diamante_user_list")
@@ -54,12 +58,12 @@ class UserController extends Controller
      * @Route("/create", name="diamante_user_create")
      * @Template()
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $command = new CreateDiamanteUserCommand();
         try {
-            $form = $this->createForm('diamante_user_create', $command);
-            $result = $this->edit($command, $form, function($command) {
+            $form = $this->createForm(CreateDiamanteUserType::class, $command);
+            $result = $this->edit($request, $command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->createDiamanteUser($command);
                 return $userId;
             });
@@ -83,7 +87,7 @@ class UserController extends Controller
      *
      * @return array|null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
         $command = new UpdateDiamanteUserCommand();
         /** @var DiamanteUser $user */
@@ -98,8 +102,8 @@ class UserController extends Controller
         $command->firstName = $user->getFirstName();
 
         try {
-            $form = $this->createForm('diamante_user_update', $command);
-            $result = $this->edit($command, $form, function($command) {
+            $form = $this->createForm(UpdateDiamanteUserType::class, $command);
+            $result = $this->edit($request, $command, $form, function($command) {
                 $userId = $this->get('diamante.user.service')->updateDiamanteUser($command);
                 return $userId;
             });
@@ -118,10 +122,10 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         try {
-            if (!in_array($this->get('request')->getMethod(), ['POST', 'PUT', 'DELETE'])) {
+            if (!in_array($request->getMethod(), ['POST', 'PUT', 'DELETE'])) {
                 throw new MethodNotAllowedException("This won't work");
             }
 
@@ -130,7 +134,7 @@ class UserController extends Controller
             $this->get('diamante.user.service')
                 ->removeDiamanteUser($id);
             return new Response(null, 204, array(
-                'Content-Type' => $this->getRequest()->getMimeType('json')
+                'Content-Type' => $request->getMimeType('json')
             ));
         } catch (\Exception $e) {
             $this->handleException($e);
@@ -144,12 +148,12 @@ class UserController extends Controller
      * @param \Closure $callback
      * @return array|null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    protected function edit($command, Form $form, $callback)
+    protected function edit(Request $request, $command, Form $form, $callback)
     {
         $response = null;
 
         try {
-            $this->handle($form);
+            $this->handle($request, $form);
             $userId = $callback($command);
 
             if (isset($command->id) && ($command->id !== null)) {
@@ -173,9 +177,9 @@ class UserController extends Controller
     /**
      * @Route("/delete/massaction", name="diamante_user_delete_massaction", options={"expose"=true})
      */
-    public function massRemoveAction()
+    public function massRemoveAction(Request $request)
     {
-        $params = $this->parseGridParameters();
+        $params = $this->parseGridParameters($request);
         $repository = $this->get('diamante.user.repository');
         $users = $repository->findByDataGridParams($params);
 
@@ -203,14 +207,14 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function resetPasswordAction($id)
+    public function resetPasswordAction(Request $request, $id)
     {
         $user = new User($id, User::TYPE_DIAMANTE);
 
         try {
             $this->get('diamante.user.service')->resetPassword($user);
             return new Response(null, 204, array(
-                'Content-Type' => $this->getRequest()->getMimeType('json')
+                'Content-Type' => $request->getMimeType('json')
             ));
         } catch (\Exception $e) {
             $this->handleException($e);
@@ -221,9 +225,9 @@ class UserController extends Controller
     /**
      * @Route("/reset/massaction", name="diamante_user_reset_pwd_massaction", options={"expose" = true})
      */
-    public function massResetPasswordAction()
+    public function massResetPasswordAction(Request $request)
     {
-        $users = $this->get('request')->get('values');
+        $users = $request->get('values');
 
         if (!is_array($users)) {
             $users = explode(',', $users);
@@ -266,9 +270,9 @@ class UserController extends Controller
     /**
      * @return array
      */
-    protected function parseGridParameters()
+    protected function parseGridParameters(Request $request)
     {
         $parametersParser = $this->container->get('oro_datagrid.mass_action.parameters_parser');
-        return $parametersParser->parse($this->get('request'));
+        return $parametersParser->parse($request);
     }
 }

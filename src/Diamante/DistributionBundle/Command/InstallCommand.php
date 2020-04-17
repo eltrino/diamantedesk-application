@@ -24,6 +24,7 @@ use Oro\Bundle\InstallerBundle\CommandExecutor;
 use Oro\Bundle\InstallerBundle\Command\Provider\InputOptionProvider;
 use Symfony\Component\Console\Input\InputOption;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+use Symfony\Component\Process\Process;
 
 /**
  * @TODO ORO 2.0 Database schema dropped successfully! executes three times but looks like nothing dropped
@@ -48,10 +49,13 @@ class InstallCommand extends OroInstallCommand
      */
     protected $inputOptionProvider;
 
+    /** @var Process */
+    private $assetsCommandProcess;
+
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->logger = $this->getContainer()->get('monolog.logger.diamante');
-        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('dialog'));
+        $this->inputOptionProvider = new InputOptionProvider($output, $input, $this->getHelperSet()->get('question'));
 
         if (false === $input->isInteractive()) {
             $this->validate($input);
@@ -104,7 +108,14 @@ class InstallCommand extends OroInstallCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Determines whether translation data need to be loaded or not'
-            );
+            )
+            ->addOption(
+                'skip-download-translations',
+                null,
+                InputOption::VALUE_NONE,
+                'Determines whether translation data need to be downloaded or not'
+            )
+        ;
     }
 
     /**
@@ -143,13 +154,35 @@ class InstallCommand extends OroInstallCommand
 
         $output->writeln('<info>Installing DiamanteDesk.</info>');
 
-        $this->checkRequirementsStep($output);
-        $this->prepareStep($this->commandExecutor, $input, $output)
+        try{
+            $this->commandExecutor->runCommand(
+                'diamante:check-requirements',
+                [
+                    '--process-isolation' => true,
+                    '-vv' => true,
+                ]
+            );
+            $skipAssets = $input->getOption('skip-assets');
+            if (!$skipAssets) {
+                $this->startBuildAssetsProcess($input);
+            }
+            $this
+                // ->prepareStep($input, $output)
                 ->loadDataStep($this->commandExecutor, $output);
 
 
-        $output->writeln('<info>Administration setup.</info>');
-        $this->finalStep($this->commandExecutor, $output, $input, $input->getOption('skip-assets'));
+            $output->writeln('<info>Administration setup finished.</info>');
+            $this->finalStep($this->commandExecutor, $output, $input, $input->getOption('skip-assets'));
+
+            if (!$skipAssets) {
+                $buildAssetsProcessExitCode = $this->getBuildAssetsProcessExitCode($output);
+            }
+        } catch (\Exception $exception) {
+            $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+
+            return $this->commandExecutor->getLastCommandExitCode();
+        }
+
 
         $output->writeln(
             sprintf(
@@ -168,42 +201,8 @@ class InstallCommand extends OroInstallCommand
         $this->logger
             ->info(sprintf('DiamanteDesk installation finished at %s', date('Y-m-d H:i:s')));
 
+        //return $buildAssetsProcessExitCode ?? 0;
         return 0;
-    }
-
-    /**
-     * @param OutputInterface $output
-     *
-     * @return $this
-     * @throws \RuntimeException
-     */
-    protected function checkRequirementsStep(OutputInterface $output)
-    {
-        $output->writeln('<info>Requirements check:</info>');
-
-        if (!class_exists('DiamanteDeskRequirements')) {
-            require_once $this->getContainer()->getParameter('kernel.root_dir')
-                . DIRECTORY_SEPARATOR
-                . 'DiamanteDeskRequirements.php';
-        }
-
-        $collection = new \DiamanteDeskRequirements();
-
-        $this->renderTable($collection->getMandatoryRequirements(), 'Mandatory requirements', $output);
-        $this->renderTable($collection->getPhpIniRequirements(), 'PHP settings', $output);
-        $this->renderTable($collection->getOroRequirements(), 'Oro specific requirements', $output);
-        $this->renderTable($collection->getDiamanteDeskRequirements(), 'DiamanteDesk requirements', $output);
-        $this->renderTable($collection->getRecommendations(), 'Optional recommendations', $output);
-
-        if (count($collection->getFailedRequirements())) {
-            throw new \RuntimeException(
-                'Some system requirements are not fulfilled. Please check output messages and fix them.'
-            );
-        }
-
-        $output->writeln('');
-
-        return $this;
     }
 
     /**
@@ -242,7 +241,7 @@ class InstallCommand extends OroInstallCommand
                 [
                     '--process-isolation' => true,
                     '--no-interaction'    => true,
-                    '--exclude'           => ['DiamanteDistributionBundle']
+                    '--exclude'           => ['DiamanteDistributionBundle', 'DiamanteDeskBundle']
                 ]
             );
 
@@ -253,18 +252,22 @@ class InstallCommand extends OroInstallCommand
         $this->updateOrganization($commandExecutor);
         $this->updateUser($commandExecutor);
 
-        $commandExecutor->runCommand('diamante:desk:data');
-
         $commandExecutor->runCommand(
             'oro:migration:data:load',
             [
-                '--bundles' => ['DiamanteDistributionBundle'],
+                '--bundles' => ['DiamanteDistributionBundle', 'DiamanteDeskBundle'],
                 '--process-isolation' => true,
                 '--no-interaction'    => true,
             ]
         );
 
-
+        $commandExecutor->runCommand(
+            'diamante:desk:data',
+            [
+                '--process-isolation' => true,
+                '--no-debug' => true
+            ]
+        );
         $output->writeln('');
 
         return $this;
@@ -291,56 +294,43 @@ class InstallCommand extends OroInstallCommand
         $options = [
             'user-name'      => [
                 'label'                  => 'Username',
-                'askMethod'              => 'ask',
-                'additionalAskArguments' => [],
+                'options'                => [
+                    'constructorArgs' => [LoadAdminUserData::DEFAULT_ADMIN_USERNAME]
+                ],
                 'defaultValue'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
             ],
             'user-email'     => [
                 'label'                  => 'Email',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$emailValidator],
+                'options'                => ['settings' => ['validator' => [$emailValidator]]],
                 'defaultValue'           => null,
             ],
             'user-firstname' => [
                 'label'                  => 'First name',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$firstNameValidator],
+                'options'                => ['settings' => ['validator' => [$firstNameValidator]]],
                 'defaultValue'           => null,
             ],
             'user-lastname'  => [
                 'label'                  => 'Last name',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$lastNameValidator],
+                'options'                => ['settings' => ['validator' => [$lastNameValidator]]],
                 'defaultValue'           => null,
             ],
             'user-password'  => [
                 'label'                  => 'Password',
-                'askMethod'              => 'askHiddenResponseAndValidate',
-                'additionalAskArguments' => [$passwordValidator],
+                'options'                => ['settings' => ['validator' => [$passwordValidator], 'hidden' => [true]]],
                 'defaultValue'           => null,
             ],
         ];
 
-        $commandParameters = [];
-        foreach ($options as $optionName => $optionData) {
-            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
-                $optionName,
-                $optionData['label'],
-                $optionData['defaultValue'],
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
-            );
-        }
-
-        $this->commandExecutor->runCommand('cache:clear');
+        //$this->commandExecutor->runCommand('cache:clear');  @see DIAM-1923
 
         $commandExecutor->runCommand(
             'oro:user:update',
             array_merge(
                 [
                     'user-name'           => LoadAdminUserData::DEFAULT_ADMIN_USERNAME,
+                    '--process-isolation' => true
                 ],
-                $commandParameters
+                $this->getCommandParametersFromOptions($options)
             )
         );
     }
@@ -365,24 +355,18 @@ class InstallCommand extends OroInstallCommand
             }
             return $value;
         };
+
         $options = [
             'organization-name' => [
                 'label'                  => 'Organization name',
-                'askMethod'              => 'askAndValidate',
-                'additionalAskArguments' => [$organizationNameValidator],
+                'options'                => [
+                    'constructorArgs' => [$defaultOrganizationName],
+                    'settings' => ['validator' => [$organizationNameValidator]]
+                ],
                 'defaultValue'           => $defaultOrganizationName,
             ]
         ];
-        $commandParameters = [];
-        foreach ($options as $optionName => $optionData) {
-            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
-                $optionName,
-                $optionData['label'],
-                $optionData['defaultValue'],
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
-            );
-        }
+
         $commandExecutor->runCommand(
             'oro:organization:update',
             array_merge(
@@ -390,10 +374,11 @@ class InstallCommand extends OroInstallCommand
                     'organization-name' => 'default',
                     '--process-isolation' => true,
                 ],
-                $commandParameters
+                $this->getCommandParametersFromOptions($options)
             )
         );
     }
+
     /**
      * Update system settings such as app url, company name and short name
      */
@@ -401,14 +386,14 @@ class InstallCommand extends OroInstallCommand
     {
         /** @var ConfigManager $configManager */
         $configManager = $this->getContainer()->get('oro_config.global');
+
         $options       = [
             'application-url' => [
                 'label'                  => 'Application URL',
                 'config_key'             => 'oro_ui.application_url',
-                'askMethod'              => 'ask',
-                'additionalAskArguments' => [],
             ]
         ];
+
         foreach ($options as $optionName => $optionData) {
             $configKey    = $optionData['config_key'];
             $defaultValue = $configManager->get('diamante_distribution.application_url');
@@ -416,14 +401,15 @@ class InstallCommand extends OroInstallCommand
                 $optionName,
                 $optionData['label'],
                 $defaultValue,
-                $optionData['askMethod'],
-                $optionData['additionalAskArguments']
+                ['constructorArgs' => [$defaultValue]]
             );
+
             // update setting if it's not empty and not equal to default value
             if (!empty($value) && $value !== $defaultValue) {
                 $configManager->set($configKey, $value);
             }
         }
+
         $configManager->flush();
     }
 
@@ -449,5 +435,79 @@ class InstallCommand extends OroInstallCommand
         $output->writeln('');
 
         return 255;
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    private function getCommandParametersFromOptions(array $options)
+    {
+        $commandParameters = [];
+        foreach ($options as $optionName => $optionData) {
+            $commandParameters['--' . $optionName] = $this->inputOptionProvider->get(
+                $optionName,
+                $optionData['label'],
+                $optionData['defaultValue'],
+                $optionData['options']
+            );
+        }
+
+        return $commandParameters;
+    }
+
+    /**
+     * @param InputInterface $input
+     */
+    private function startBuildAssetsProcess(InputInterface $input): void
+    {
+        $phpBinaryPath = CommandExecutor::getPhpExecutable();
+
+        $command = [
+            $phpBinaryPath,
+            'bin/console',
+            'oro:assets:install'
+        ];
+
+        if ($input->hasOption('symlink') && $input->getOption('symlink')) {
+            $command[] = '--symlink';
+        }
+
+        if ($input->getOption('env')) {
+            $command[] = sprintf('--env=%s', $input->getOption('env'));
+        }
+
+        $this->assetsCommandProcess = new Process(
+            $command,
+            realpath($this->getContainer()->getParameter('kernel.project_dir'))
+        );
+        $this->assetsCommandProcess->setTimeout(null);
+        $this->assetsCommandProcess->start();
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return int||null
+     */
+    private function getBuildAssetsProcessExitCode(OutputInterface $output): ?int
+    {
+        if (!$this->assetsCommandProcess) {
+            return 0;
+        }
+
+        if (!$this->assetsCommandProcess->isTerminated()) {
+            $this->assetsCommandProcess->wait();
+        }
+
+        if ($this->assetsCommandProcess->isSuccessful()) {
+            $output->writeln('Assets has been installed successfully');
+            $output->writeln($this->assetsCommandProcess->getOutput());
+        } else {
+            $output->writeln('Assets has not been installed! Please run "php bin/console oro:assets:install".');
+            $output->writeln('Error during install assets:');
+            $output->writeln($this->assetsCommandProcess->getErrorOutput());
+        }
+
+        return $this->assetsCommandProcess->getExitCode();
     }
 }

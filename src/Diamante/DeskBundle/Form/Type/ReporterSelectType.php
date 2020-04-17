@@ -16,29 +16,25 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Diamante\DeskBundle\Entity\Ticket;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\UserTransformer;
 
 class ReporterSelectType extends DiamanteUserSelectType
 {
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
                 'configs' => array(
                     'placeholder' => Ticket::UNASSIGNED_LABEL,
                     'result_template_twig'    => 'DiamanteDeskBundle:Search:Autocomplete/result.html.twig',
-                    'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig'
+                    'selection_template_twig' => 'DiamanteDeskBundle:Search:Autocomplete/selection.html.twig',
+                    'route_name'              => '',
                 ),
                 'transformer' => new UserTransformer(),
                 'grid_name' => 'diamante-reporter-select-grid',
                 'autocomplete_alias' => 'diamante_user'
             )
         );
-    }
-
-    public function getName()
-    {
-        return 'diamante_reporter_select';
     }
 } 

@@ -15,7 +15,7 @@
 namespace Diamante\DeskBundle\Api;
 
 use Diamante\DeskBundle\Model\Branch\Branch;
-use Diamante\DeskBundle\Model\Branch\DuplicateBranchKeyException;
+use Diamante\DeskBundle\Model\Branch\Exception\DuplicateBranchKeyException;
 
 /**
  * Interface BranchService

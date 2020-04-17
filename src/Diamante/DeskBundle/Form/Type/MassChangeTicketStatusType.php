@@ -15,9 +15,12 @@
 namespace Diamante\DeskBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Diamante\DeskBundle\Form\DataTransformer\StatusTransformer;
+use Diamante\DeskBundle\Api\Command\MassActionCommands\MassChangeStatusCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class MassChangeTicketStatusType extends AbstractType
 {
@@ -31,11 +34,13 @@ class MassChangeTicketStatusType extends AbstractType
         $statusOptions = $statusTransformer->getOptions();
 
         $builder->add(
-            $builder->create('status', 'choice',
+            $builder->create(
+                'status',
+                ChoiceType::class,
                 array(
                     'label' => 'diamante.desk.attributes.status',
                     'required' => true,
-                    'attr' => array('style' => "width:140px"),
+                    'attr' => array('style' => 'width:140px'),
                     'choices' => $statusOptions
                 ))
                 ->addModelTransformer($statusTransformer)
@@ -45,13 +50,13 @@ class MassChangeTicketStatusType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\MassActionCommands\MassChangeStatusCommand',
+                'data_class' => MassChangeStatusCommand::class,
                 'intention' => 'ticket_status',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }
@@ -62,6 +67,11 @@ class MassChangeTicketStatusType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_ticket_form_status_mass_change';
     }

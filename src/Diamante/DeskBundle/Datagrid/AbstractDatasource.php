@@ -15,10 +15,8 @@
 namespace Diamante\DeskBundle\Datagrid;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\Query;
 use Oro\Bundle\DataGridBundle\Datagrid\DatagridInterface;
 use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractDatasource implements DatasourceInterface
 {
@@ -48,7 +46,7 @@ abstract class AbstractDatasource implements DatasourceInterface
     /**
      * @var array
      */
-    protected $sorters;
+    protected $sorters = [];
 
     /**
      * @param DatagridInterface $grid

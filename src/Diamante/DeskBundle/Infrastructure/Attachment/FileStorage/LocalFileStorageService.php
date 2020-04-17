@@ -69,7 +69,7 @@ class LocalFileStorageService implements FileStorageService
         $this->fs->remove($this->uploadDir->getRealPath() . '/' . $filename);
     }
 
-    public static function create($attachmentUploadDirPath, $fs)
+    public static function create($attachmentUploadDirPath, Filesystem $fs)
     {
         return new LocalFileStorageService(new \SplFileInfo($attachmentUploadDirPath), $fs);
     }

@@ -15,11 +15,10 @@
 
 namespace Diamante\DistributionBundle\EventListener;
 
-use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Class ShortcutListener
@@ -58,7 +57,7 @@ class LaunchpadListener
 
         $dashboard = $this->getDashboardManager()->findUserActiveOrDefaultDashboard($this->getUser());
 
-        if (!$dashboard || !$this->getSecurityFacade()->isGranted('VIEW', $dashboard->getEntity())) {
+        if (!$dashboard || !$this->getAuthorizationChecker()->isGranted('VIEW', $dashboard->getEntity())) {
             $url = $this->getRouter()->generate('diamante_ticket_list');
             $event->setResponse(new RedirectResponse($url));
         }
@@ -93,11 +92,11 @@ class LaunchpadListener
     }
 
     /**
-     * @return SecurityFacade
+     * @return AuthorizationChecker
      */
-    protected function getSecurityFacade()
+    protected function getAuthorizationChecker()
     {
-        return $this->container->get('oro_security.security_facade');
+        return $this->container->get('security.authorization_checker');
     }
 
     /**

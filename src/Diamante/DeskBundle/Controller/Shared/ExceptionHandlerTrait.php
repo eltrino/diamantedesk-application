@@ -17,6 +17,7 @@ namespace Diamante\DeskBundle\Controller\Shared;
 
 use Diamante\DeskBundle\Infrastructure\Shared\Exception\Flashable;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 trait ExceptionHandlerTrait
 {
@@ -29,7 +30,7 @@ trait ExceptionHandlerTrait
      * array
      */
     protected $ignoredExceptions = [
-        'Symfony\Component\Routing\Exception\MethodNotAllowedException'
+        MethodNotAllowedException::class
     ];
 
     /**

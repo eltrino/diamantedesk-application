@@ -14,9 +14,12 @@
  */
 namespace Diamante\DeskBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Diamante\DeskBundle\Api\Command\MassActionCommands\MassMoveTicketCommand;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class MassMoveTicketType extends AbstractType
 {
@@ -28,11 +31,11 @@ class MassMoveTicketType extends AbstractType
     {
         $builder->add(
             'branch',
-            'entity',
+            EntityType::class,
             array(
                 'label'         => 'diamante.desk.attributes.branch',
                 'class'         => 'DiamanteDeskBundle:Branch',
-                'property'      => 'name',
+                'choice_label'      => 'name',
                 'attr'          => array('style' => "width:140px"),
                 'required'      => true
             )
@@ -42,13 +45,13 @@ class MassMoveTicketType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Diamante\DeskBundle\Api\Command\MassActionCommands\MassMoveTicketCommand',
+                'data_class' => MassMoveTicketCommand::class,
                 'intention' => 'ticket',
-                'cascade_validation' => true
+                'constraints' => new Valid(),
             )
         );
     }
@@ -59,6 +62,11 @@ class MassMoveTicketType extends AbstractType
      * @return string The name of this type
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+
+    public function getBlockPrefix()
     {
         return 'diamante_ticket_form_mass_move';
     }

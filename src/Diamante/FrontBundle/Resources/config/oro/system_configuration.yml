@@ -5,17 +5,17 @@ system_configuration:
 
     fields:
         diamante_front.registration_required:
-            type: choice
+            type: Symfony\Component\Form\Extension\Core\Type\ChoiceType
             data_type: boolean
             options:
                 label: 'Registration Requied'
                 choices:
-                    - No
-                    - Yes
+                    No: 0
+                    Yes: 1
 
         diamante_email_processing.mailbox_help:
             data_type: block
-            type:  diamante_config_channels_help
+            type:  Diamante\EmailProcessingBundle\Form\Type\HelpChannelsConfigurationType
 
     tree:
         system_configuration:

@@ -10,10 +10,10 @@ placeholders:
 items:
     default_branch_notification:
         template: DiamanteDeskBundle::defaultBranchNotification.html.twig
-        applicable: @diamante.branch.placeholder->isDefault($entity$)
+        applicable: '@diamante.branch.placeholder->isDefault($entity$)'
         data:
           default_branch: [entity]
 
     diamante_orouser_ticket_grid:
         template: DiamanteDeskBundle:OroUser:Grid.html.twig
-        applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %oro_user.entity.class%)
+        applicable: '@oro_ui.placeholder.filter->isInstanceOf($entity$, %oro_user.entity.class%)'
