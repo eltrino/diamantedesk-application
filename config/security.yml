@@ -10,3 +10,11 @@ security:
       pattern:                        ^/embedded-form/submit-ticket
       provider:                       chain_provider
       anonymous:                      true
+    front_diamante:
+      pattern:        ^/portal
+      provider:       chain_provider
+      anonymous:      true
+    front_diamante_reset_password:
+      pattern:        ^/portal/password/*
+      provider:       chain_provider
+      anonymous:      true

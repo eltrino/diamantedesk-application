@@ -83,7 +83,7 @@ class BuildCommand extends ContainerAwareCommand
 
         $output->write("Building application ...");
         $this->executeProcess([
-            sprintf('%s --assets-dir=%s --public-dir=%s --base=%s --gruntfile=%s',
+            sprintf('%s --force --assets-dir=%s --public-dir=%s --base=%s --gruntfile=%s',
                 'grunt',
                 $assetsDir,
                 $publicDir,
