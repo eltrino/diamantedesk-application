@@ -120,7 +120,6 @@ class TicketServiceImpl implements TicketService
         $this->ticketRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Ticket');
         $this->branchRepository        = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:Branch');
         $this->ticketHistoryRepository = $this->doctrineRegistry->getRepository('DiamanteDeskBundle:TicketHistory');
-        $this->oroUserRepository       = $this->doctrineRegistry->getRepository('OroUserBundle:User');
         $this->loggedUser              = $tokenStorage->getToken() ? $tokenStorage->getToken()->getUser() : null;
     }
 
@@ -390,7 +389,7 @@ class TicketServiceImpl implements TicketService
             $currentAssigneeId = empty($assignee) ? null : $assignee->getId();
 
             if ($command->assignee !== $currentAssigneeId) {
-                $assignee = $this->oroUserRepository->find($command->assignee);
+                $assignee = $this->getOroUserRepository()->find($command->assignee);
             }
         }
 
@@ -470,7 +469,7 @@ class TicketServiceImpl implements TicketService
         $this->isAssigneeGranted($ticket);
 
         if ($command->assignee !== null) {
-            $assignee = $this->oroUserRepository->find($command->assignee);
+            $assignee = $this->getOroUserRepository()->find($command->assignee);
             if (is_null($assignee)) {
                 throw new \RuntimeException('Assignee loading failed, assignee not found');
             }
@@ -624,5 +623,22 @@ class TicketServiceImpl implements TicketService
     protected function getAuthorizationService()
     {
         return $this->authorizationService;
+    }
+
+    /**
+     * Workaround for DIAM-1920/DIAM-1921
+     * This class is created during routes load (DiamanteApiBundle checks for it's annotations)
+     * At that time extended entity data is not yet build, so creation of any entity repository
+     * with extended fields will fail.
+     *
+     * @return EntityRepository
+     */
+    protected function getOroUserRepository()
+    {
+        if (!$this->oroUserRepository) {
+            $this->oroUserRepository = $this->doctrineRegistry->getRepository('OroUserBundle:User');
+        }
+
+        return $this->oroUserRepository;
     }
 }
