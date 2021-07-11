@@ -6,13 +6,13 @@
 
     <div class="controls diam-comment-form-attachments">
         {% for attachment in attachments %}
-            <ul class="diam-comment-attachments unstyled">
+            <ul class="diam-comment-attachments list-unstyled">
                 <li>
                     <a class="pull-right delete-item-confirmation action" href="#"
                        data-url = "{{ path('diamante_ticket_comment_attachment_remove', {'commentId': comment_id, 'attachId': attachment.id}) }}"><i
-                                class="icon-trash hide-text"
+                                class="fa-trash-o hide-text"
                                 title="{{ 'diamante.desk.attachment.actions.delete_file'|trans }}">{{ 'diamante.desk.attachment.actions.delete_file'|trans }}</i></a>
-                    <i class="icon-paper-clip"></i>
+                    <i class="fa-paperclip"></i>
                     <a href="{{ path('diamante_ticket_comment_attachment_download', {'commentId': comment_id, 'attachId': attachment.id}) }}"
                        class="no-hash">
                         {{ attachment.filename|escape }}</a>

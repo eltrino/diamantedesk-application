@@ -9,7 +9,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
             'path': path('diamante_user_update', {'id': entity.id}),
-            'iCss': 'icon-edit',
+            'iCss': 'fa-pencil-square-o',
             'title': 'diamante.desk.branch.actions.edit'|trans,
             'label': 'diamante.desk.ui.edit'|trans
         }) }}

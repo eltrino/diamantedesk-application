@@ -1,7 +1,7 @@
 {% import 'OroUIBundle::macros.html.twig' as ui %}
 
 <div class="widget-content">
-    <ul class="unstyled clearfix">
+    <ul class="list-unstyled clearfix">
         {% for watcher in watchers %}
             <li class="diam-attachment watchers">
                 <span class='{% if is_diamante_user_deleted(watcher) %}{{ "deleted-reporter" }}{% endif %}' >{{ render_user_name(watcher) }}</span>

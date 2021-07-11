@@ -17,7 +17,7 @@
     {% if resource_granted('EDIT', entity) %}
         {{ UI.button({
             'path': path('diamante_' ~ type ~ '_update', {'type': ruleType, 'id': entity.id}),
-            'iCss': 'icon-edit',
+            'iCss': 'fa-pencil-square-o',
             'title': 'Edit Rule'|trans,
             'label': 'Edit'|trans
         }) }}
