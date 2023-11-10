@@ -35,7 +35,8 @@
         "michelf/php-markdown": "~1.8",
         "ramsey/uuid": "~3.8",
         "jms/job-queue-bundle": "1.4.*",
-        "beberlei/assert": "^3.2"
+        "beberlei/assert": "^3.2",
+        "cweagans/composer-patches": "^1.7"
     },
     "require-dev": {
         "sensio/generator-bundle": "3.1.*",
@@ -108,6 +109,11 @@
         "symfony-tests-dir": "tests",
         "incenteev-parameters": {
             "file": "config/parameters.yml"
+        },
+        "patches": {
+            "oro/platform": {
+                "UpdateEnumEntityTranslations": "patches/update_enum_entity_translations.patch"
+            }
         }
     }
 }

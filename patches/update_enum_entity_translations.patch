@@ -1,0 +1,48 @@
+Index: src/Oro/Bundle/EntityExtendBundle/Migrations/Data/ORM/UpdateEnumEntityTranslations.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Oro/Bundle/EntityExtendBundle/Migrations/Data/ORM/UpdateEnumEntityTranslations.php b/src/Oro/Bundle/EntityExtendBundle/Migrations/Data/ORM/UpdateEnumEntityTranslations.php
+--- a/src/Oro/Bundle/EntityExtendBundle/Migrations/Data/ORM/UpdateEnumEntityTranslations.php	(revision b5efc3ea6ac3e2169b38503d58f0773f171e6f80)
++++ b/src/Oro/Bundle/EntityExtendBundle/Migrations/Data/ORM/UpdateEnumEntityTranslations.php	(date 1613205951057)
+@@ -3,6 +3,7 @@
+ namespace Oro\Bundle\EntityExtendBundle\Migrations\Date\ORM;
+ 
+ use Doctrine\Common\DataFixtures\AbstractFixture;
++use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+ use Doctrine\Common\Persistence\ObjectManager;
+ use Oro\Bundle\EntityConfigBundle\Config\ConfigManager;
+ use Oro\Bundle\EntityConfigBundle\Config\Id\FieldConfigId;
+@@ -13,6 +14,7 @@
+ use Oro\Bundle\MigrationBundle\Fixture\VersionedFixtureInterface;
+ use Oro\Bundle\TranslationBundle\Entity\Translation;
+ use Oro\Bundle\TranslationBundle\Manager\TranslationManager;
++use Oro\Bundle\TranslationBundle\Migrations\Data\ORM\LoadLanguageData;
+ use Oro\Bundle\TranslationBundle\Translation\Translator;
+ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+@@ -20,7 +22,7 @@
+ /**
+  * Adds translations to enum entity in case of their absence
+  */
+-class UpdateEnumEntityTranslations extends AbstractFixture implements VersionedFixtureInterface, ContainerAwareInterface
++class UpdateEnumEntityTranslations extends AbstractFixture implements VersionedFixtureInterface, ContainerAwareInterface, DependentFixtureInterface
+ {
+     use ContainerAwareTrait;
+ 
+@@ -123,4 +125,14 @@
+ 
+         return $translationKey->getId() ?: false;
+     }
++
++    /**
++     * @inhericDoc
++     */
++    public function getDependencies()
++    {
++        return [
++            LoadLanguageData::class
++        ];
++    }
+ }
