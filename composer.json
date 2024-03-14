@@ -71,7 +71,8 @@
             "@install-requirements-file",
             "@set-permissions",
             "@install-assets",
-            "@set-assets-version"
+            "@set-assets-version",
+            "@diglin-apply-patches"
         ],
         "post-update-cmd": [
             "@build-parameters",
@@ -79,7 +80,8 @@
             "@install-requirements-file",
             "@set-permissions",
             "@install-assets",
-            "@set-assets-version"
+            "@set-assets-version",
+            "@diglin-apply-patches"
         ],
         "build-parameters": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
@@ -98,6 +100,9 @@
         ],
         "set-assets-version": [
             "Oro\\Bundle\\InstallerBundle\\Composer\\ScriptHandler::setAssetsVersion"
+        ],
+        "diglin-apply-patches": [
+            "cat ./patches/symfony/* | patch -p2 --directory=vendor/symfony || true"
         ]
     },
     "minimum-stability": "dev",

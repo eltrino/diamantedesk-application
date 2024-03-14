@@ -1,0 +1,15 @@
+diff --git a/symfony/src/Symfony/Component/Intl/Locale.php b/symfony/src/Symfony/Component/Intl/Locale.php
+index a9c36ec618b5..6e88c5629e00 100644
+--- a/symfony/src/Symfony/Component/Intl/Locale.php
++++ b/symfony/src/Symfony/Component/Intl/Locale.php
+@@ -85,7 +85,9 @@ public static function getFallback($locale)
+
+             array_pop($localeSubTags);
+
+-            return locale_compose($localeSubTags);
++            $fallback = locale_compose($localeSubTags);
++
++            return false !== $fallback ? $fallback : null;
+         }
+
+         if (false !== $pos = strrpos($locale, '_')) {
